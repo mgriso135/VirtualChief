@@ -1,0 +1,28 @@
+Nuove features implementate:
+- Miglioramento grafico
+- Analisi a consuntivo dei dati raccolti
+- Gestione allarmi via e-mail/sms
+- Report periodici di allarmi e prestazioni
+
+Modifiche rispetto a versione precedente:
+DATABASE
+FILES
+SORGENTI
+PAGINE
+
+
+BUGFIX:
+
+20130712
+- ShowPert.ascx --> quando si mostrano i dettagli di un task, se ci sono caratteri hash html, viene ritornato un errore
+Resolution:
+- Utilizzata la funzione Server.HTMLDecode quando si richiamano i tasks
+- Implementazione bugfix: ricompilare e sostituire ~/bin/Kaizen Indicator System.dll
+
+20130719
+- Variata unità di misura su grafico carico di lavoro postazione
+- Andon: i task in pausa sono di colore arancione
+- Inserite proprietà lateStart ed earlyStart nella classe Articolo
+- Sistemato bug: nella segnalazione di errore venivano segnalati i problemi anche se tutto era andato a buon fine
+- Su Andon, gli articoli da avviare sono ordinati per data inizio produzione
+- Risolto bug su Andon Reparto: se all'avvio pagina non ci sono articoli conclusi, alla conclusione di un articolo non viene mostrata la tabella di riepilogo dei prodotti terminati

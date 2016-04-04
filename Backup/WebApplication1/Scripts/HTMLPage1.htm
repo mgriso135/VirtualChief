@@ -1,0 +1,61 @@
+﻿<html> 
+<head > 
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script> 
+<script type="text/javascript" src="jquery-ui-1.8.23.custom.min.js"></script> 
+<style type="text/css"> 
+
+.canvas1 
+{ 
+    position: relative; 
+    height: 400px; 
+    width: 600px; 
+    background: #ffffcc; 
+    border: #ff0000; 
+} 
+
+</style> 
+
+<script type="text/javascript"> 
+
+var start_drag = null ; 
+var offsetx  =null ; 
+var offsety  =null ; 
+
+$(document).ready(function() { 
+
+    $('#svgintro').svg({onLoad: drawIntro}); 
+
+}); 
+
+function now_drag(evt){ 
+   if (start_drag==1){ 
+    $('#mycircle').attr('cx').baseVal.value = evt.layerX - offsetx; 
+    $('#mycircle').attr('cy').baseVal.value = evt.layerY - offsety; 
+   } 
+} 
+
+function start_dragging(evt){ 
+    start_drag = 1; 
+    offsetx = evt.layerX - $('#mycircle').attr('cx').baseVal.value  ; 
+    offsety = evt.layerY - $('#mycircle').attr('cy').baseVal.value  ; 
+
+} 
+function stop_dragging(evt){ 
+    start_drag = 0; 
+
+} 
+
+
+function drawIntro() { 
+    var svg = $('#svgintro').svg('get'); 
+    svg.describe("Example script01 - invoke an ECMAScript function from an onclick event"); 
+    svg.circle(300, 150, 50, {onmousedown:"start_dragging(evt)",onmouseup:"stop_dragging(evt)", onmousemove:"now_drag(evt)", id:"mycircle", fill:"red"}); 
+    svg.text(300, 280, "Drag It", {'font-family':"Verdana", 'font-size':20, 'text-anchor':"middle" }); 
+} 
+</script> 
+</head > 
+<body > 
+<div id="remove">this line of text is useless like my friends</div> 
+<div class="canvas1" id="svgintro" ></div> 
+</body> 
+</html> 

@@ -1,0 +1,46 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="WebApplication1.SiteMaster" %>
+<%@ Import Namespace="System.Net.Mail" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form runat="server">
+    <header>
+    <hgroup>
+       <h1>Kaizen Indicator System</h1>
+    </hgroup>
+    <nav>
+    Chi siamo | Contattaci | Help
+    </nav>
+    <br /><br />
+    <nav>
+    <span class="voceMenu"><a href="/">Dashboard</a></span>
+    <span class="voceMenu"><a href="/Processi/MacroProcessi.aspx">Process Manager</a></span>
+    <span class="voceMenu"><a href="/Produzione/produzione.aspx">Production Plan</a></span>
+    <span class="voceMenu">Standards&Procedures</span>
+    <span class="voceMenu">KPIs</span>
+    <span class="voceMenu">Audits</span>
+    <span class="voceMenu">Planning</span>
+    <span class="voceMenu"><a href="/Admin/admin.aspx">Admin</a></span>
+    </nav>
+    </header>
+
+        <section>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"/>
+        </section>
+
+    </form>
+    </body>
+<footer>
+ 
+</footer>
+
+</html>

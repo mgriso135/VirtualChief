@@ -1,0 +1,3883 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+Questo file viene utilizzato dal processo di pubblicazione/creazione pacchetto del progetto Web. È possibile personalizzare il comportamento del processo
+modificando il file MSBuild. Per ulteriori informazioni su questo argomento, visitare il sito Web all'indirizzo http://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <_PublishTargetUrl>C:\Users\Matteo\Desktop\KISOnline</_PublishTargetUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <File Include="About.aspx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Admin/admin.aspx">
+      <publishTime>01/05/2016 16:38:49</publishTime>
+    </File>
+    <File Include="Admin/configLogo.ascx">
+      <publishTime>04/25/2015 13:21:43</publishTime>
+    </File>
+    <File Include="Admin/configOrderStatusBase.ascx">
+      <publishTime>01/17/2016 12:13:18</publishTime>
+    </File>
+    <File Include="Admin/configOrderStatusBase.aspx">
+      <publishTime>01/09/2016 00:03:28</publishTime>
+    </File>
+    <File Include="Admin/configOrderStatusCustomer.ascx">
+      <publishTime>01/17/2016 12:13:18</publishTime>
+    </File>
+    <File Include="Admin/configOrderStatusCustomer.aspx">
+      <publishTime>01/08/2016 23:10:37</publishTime>
+    </File>
+    <File Include="Admin/configOrderStatusCustomer_customerList.ascx">
+      <publishTime>01/08/2016 23:04:00</publishTime>
+    </File>
+    <File Include="Admin/configWizard_TipoPERT.ascx">
+      <publishTime>10/11/2015 17:33:39</publishTime>
+    </File>
+    <File Include="Admin/kisAdmin.aspx">
+      <publishTime>10/11/2015 17:18:14</publishTime>
+    </File>
+    <File Include="Admin/manageMenu.aspx">
+      <publishTime>08/13/2013 10:25:38</publishTime>
+    </File>
+    <File Include="Admin/manageReports.ascx">
+      <publishTime>01/05/2016 18:24:25</publishTime>
+    </File>
+    <File Include="Admin/manageReports.aspx">
+      <publishTime>01/05/2016 17:29:12</publishTime>
+    </File>
+    <File Include="Admin/menuAddMainVoce.ascx">
+      <publishTime>08/13/2013 10:17:40</publishTime>
+    </File>
+    <File Include="Admin/menuAddVoceFiglia.ascx">
+      <publishTime>05/10/2013 23:36:40</publishTime>
+    </File>
+    <File Include="Admin/menuGruppi.aspx">
+      <publishTime>10/05/2013 22:05:56</publishTime>
+    </File>
+    <File Include="Admin/MenuGruppiAddVoce.ascx">
+      <publishTime>10/05/2013 22:01:38</publishTime>
+    </File>
+    <File Include="Admin/MenuGruppiList.ascx">
+      <publishTime>10/05/2013 21:42:40</publishTime>
+    </File>
+    <File Include="Admin/menuMainVociList.ascx">
+      <publishTime>08/13/2013 10:18:40</publishTime>
+    </File>
+    <File Include="Admin/menuShowFigli.ascx">
+      <publishTime>10/07/2013 22:07:16</publishTime>
+    </File>
+    <File Include="Admin/menuShowVoce.aspx">
+      <publishTime>08/13/2013 10:27:14</publishTime>
+    </File>
+    <File Include="Analysis/analysis.aspx">
+      <publishTime>01/17/2014 22:07:15</publishTime>
+    </File>
+    <File Include="Analysis/AnalysisHome.ascx">
+      <publishTime>01/09/2016 12:28:08</publishTime>
+    </File>
+    <File Include="Analysis/AvanzamentoProdotto_model.xml">
+      <publishTime>01/08/2016 22:29:06</publishTime>
+    </File>
+    <File Include="Analysis/CostificazioneProdottiTerminatiRicerca.ascx">
+      <publishTime>11/16/2015 21:19:37</publishTime>
+    </File>
+    <File Include="Analysis/CostificazioneProdottiTerminatiRicerca.aspx">
+      <publishTime>04/29/2014 22:16:15</publishTime>
+    </File>
+    <File Include="Analysis/CustomerPareto.ascx">
+      <publishTime>11/08/2015 17:09:10</publishTime>
+    </File>
+    <File Include="Analysis/CustomerPareto.aspx">
+      <publishTime>11/04/2015 22:36:32</publishTime>
+    </File>
+    <File Include="Analysis/CustomerPortfolio.ascx">
+      <publishTime>11/10/2015 21:32:37</publishTime>
+    </File>
+    <File Include="Analysis/CustomerPortfolio.aspx">
+      <publishTime>10/26/2015 21:40:12</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisCustomer.ascx">
+      <publishTime>11/23/2015 21:16:05</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisCustomer.aspx">
+      <publishTime>11/10/2015 21:35:55</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisOperatore.aspx">
+      <publishTime>02/15/2014 21:48:51</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisTask.ascx">
+      <publishTime>03/08/2016 21:53:39</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisTask.aspx">
+      <publishTime>04/05/2014 10:30:46</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisTipoProdotto.ascx">
+      <publishTime>03/08/2016 20:54:52</publishTime>
+    </File>
+    <File Include="Analysis/DetailAnalysisTipoProdotto.aspx">
+      <publishTime>03/01/2016 21:43:43</publishTime>
+    </File>
+    <File Include="Analysis/DetailCostCommessa.ascx">
+      <publishTime>03/17/2015 19:54:42</publishTime>
+    </File>
+    <File Include="Analysis/DetailCostCommessa.aspx">
+      <publishTime>03/11/2014 22:30:05</publishTime>
+    </File>
+    <File Include="Analysis/DetailTaskProduct.ascx">
+      <publishTime>03/08/2016 21:34:18</publishTime>
+    </File>
+    <File Include="Analysis/DetailTaskProduct.aspx">
+      <publishTime>04/26/2014 20:48:53</publishTime>
+    </File>
+    <File Include="Analysis/ListAnalysisOperatori.ascx">
+      <publishTime>02/13/2014 21:43:37</publishTime>
+    </File>
+    <File Include="Analysis/ListAnalysisOperatori.aspx">
+      <publishTime>02/13/2014 21:39:53</publishTime>
+    </File>
+    <File Include="Analysis/ListAnalysisTasks.ascx">
+      <publishTime>04/05/2014 10:14:01</publishTime>
+    </File>
+    <File Include="Analysis/ListAnalysisTasks.aspx">
+      <publishTime>04/05/2014 10:27:30</publishTime>
+    </File>
+    <File Include="Analysis/ListAnalysisTipoProdotto.ascx">
+      <publishTime>03/19/2014 19:11:11</publishTime>
+    </File>
+    <File Include="Analysis/ListAnalysisTipoProdotto.aspx">
+      <publishTime>03/18/2014 22:47:53</publishTime>
+    </File>
+    <File Include="Analysis/ListCommesseChiuse.ascx">
+      <publishTime>03/13/2014 21:00:45</publishTime>
+    </File>
+    <File Include="Analysis/ListCommesseChiuse.aspx">
+      <publishTime>03/06/2014 22:15:04</publishTime>
+    </File>
+    <File Include="Analysis/OperatoreTempoTasks.ascx">
+      <publishTime>02/27/2016 21:40:39</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_chooseCustomer.ascx">
+      <publishTime>01/09/2016 12:52:22</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_chooseCustomer.aspx">
+      <publishTime>01/09/2016 14:37:25</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_chooseFProducts.ascx">
+      <publishTime>03/01/2016 22:18:11</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_chooseFProducts.aspx">
+      <publishTime>01/12/2016 21:25:11</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_chooseINPProducts.ascx">
+      <publishTime>01/17/2016 10:03:25</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_chooseINPProducts.aspx">
+      <publishTime>01/09/2016 14:47:53</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_summary.ascx">
+      <publishTime>01/14/2016 22:29:32</publishTime>
+    </File>
+    <File Include="Analysis/ReportCustomerProdProgress_summary.aspx">
+      <publishTime>01/14/2016 21:42:16</publishTime>
+    </File>
+    <File Include="Andon/AndonCompletoViewFields.ascx">
+      <publishTime>03/31/2016 21:18:19</publishTime>
+    </File>
+    <File Include="Andon/AndonRepartoViewFields.ascx">
+      <publishTime>04/02/2016 19:05:57</publishTime>
+    </File>
+    <File Include="Andon/configAndonCompleto.aspx">
+      <publishTime>03/14/2016 21:20:42</publishTime>
+    </File>
+    <File Include="Andon/configFormatoUsername.ascx">
+      <publishTime>10/19/2013 22:57:32</publishTime>
+    </File>
+    <File Include="Andon/configMaxViewDaysAndonReparto.ascx">
+      <publishTime>11/05/2013 21:48:57</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/HelpPage.css">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/Api.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ApiGroup.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/CollectionModelDescription.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ComplexTypeModelDescription.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/DictionaryModelDescription.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/EnumTypeModelDescription.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/HelpPageApiModel.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ImageSample.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/InvalidSample.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/KeyValuePairModelDescription.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/ModelDescriptionLink.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/Parameters.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/Samples.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/SimpleTypeModelDescription.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/DisplayTemplates/TextSample.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/Index.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Help/ResourceModel.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Shared/_Layout.cshtml">
+      <publishTime>01/02/2016 21:53:47</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/Web.config">
+      <publishTime>01/02/2016 21:57:09</publishTime>
+    </File>
+    <File Include="Areas/HelpPage/Views/_ViewStart.cshtml">
+      <publishTime>01/02/2016 21:53:48</publishTime>
+    </File>
+    <File Include="bin/AjaxControlToolkit.dll">
+      <publishTime>01/02/2016 17:08:59</publishTime>
+    </File>
+    <File Include="bin/Antlr3.Runtime.dll">
+      <publishTime>01/02/2016 21:08:15</publishTime>
+    </File>
+    <File Include="bin/ar/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/cs/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/de/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/es/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/fr/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/GenCode128.dll">
+      <publishTime>06/02/2013 11:55:24</publishTime>
+    </File>
+    <File Include="bin/he/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/hi/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/HtmlAgilityPack.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/it/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/itextsharp.dll">
+      <publishTime>06/02/2013 11:42:04</publishTime>
+    </File>
+    <File Include="bin/itextsharp.pdfa.dll">
+      <publishTime>06/02/2013 11:42:58</publishTime>
+    </File>
+    <File Include="bin/itextsharp.xtra.dll">
+      <publishTime>06/02/2013 11:43:06</publishTime>
+    </File>
+    <File Include="bin/ja/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/Kaizen Indicator System.dll">
+      <publishTime>04/02/2016 22:28:30</publishTime>
+    </File>
+    <File Include="bin/ko/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/Microsoft.Web.Infrastructure.dll">
+      <publishTime>01/02/2016 18:54:34</publishTime>
+    </File>
+    <File Include="bin/MySql.Data.dll">
+      <publishTime>03/10/2016 23:38:24</publishTime>
+    </File>
+    <File Include="bin/Newtonsoft.Json.dll">
+      <publishTime>01/02/2016 17:29:13</publishTime>
+    </File>
+    <File Include="bin/nl/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/pt/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/ru/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/SanitizerProviders.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Formatting.dll">
+      <publishTime>01/02/2016 17:25:28</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.Primitives.dll">
+      <publishTime>01/02/2016 21:07:48</publishTime>
+    </File>
+    <File Include="bin/System.Net.Http.WebRequest.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/System.Web.Helpers.dll">
+      <publishTime>01/02/2016 21:07:38</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.dll">
+      <publishTime>01/02/2016 17:25:28</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.WebHost.dll">
+      <publishTime>01/02/2016 17:25:28</publishTime>
+    </File>
+    <File Include="bin/System.Web.Mvc.dll">
+      <publishTime>01/02/2016 21:07:39</publishTime>
+    </File>
+    <File Include="bin/System.Web.Optimization.dll">
+      <publishTime>01/02/2016 21:07:40</publishTime>
+    </File>
+    <File Include="bin/System.Web.Razor.dll">
+      <publishTime>01/02/2016 21:07:37</publishTime>
+    </File>
+    <File Include="bin/System.Web.Routing.dll">
+      <publishTime>07/09/2012 00:40:10</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Deployment.dll">
+      <publishTime>01/02/2016 21:07:38</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.dll">
+      <publishTime>01/02/2016 21:07:38</publishTime>
+    </File>
+    <File Include="bin/System.Web.WebPages.Razor.dll">
+      <publishTime>01/02/2016 21:07:38</publishTime>
+    </File>
+    <File Include="bin/tr-TR/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/WebGrease.dll">
+      <publishTime>01/02/2016 21:07:55</publishTime>
+    </File>
+    <File Include="bin/zh-CHS/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="bin/zh-CHT/AjaxControlToolkit.resources.dll">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Clienti/addCliente.ascx">
+      <publishTime>03/23/2015 21:49:19</publishTime>
+    </File>
+    <File Include="Clienti/AddCliente.aspx">
+      <publishTime>11/14/2013 21:12:27</publishTime>
+    </File>
+    <File Include="Clienti/addContattoCliente.ascx">
+      <publishTime>01/02/2014 22:13:53</publishTime>
+    </File>
+    <File Include="Clienti/Clienti.aspx">
+      <publishTime>11/14/2013 21:12:50</publishTime>
+    </File>
+    <File Include="Clienti/ContattiClienti.ascx">
+      <publishTime>01/03/2016 19:13:36</publishTime>
+    </File>
+    <File Include="Clienti/EditCliente.ascx">
+      <publishTime>03/23/2015 21:55:49</publishTime>
+    </File>
+    <File Include="Clienti/EditCliente.aspx">
+      <publishTime>01/03/2016 20:34:50</publishTime>
+    </File>
+    <File Include="Clienti/EditContattoDetails.ascx">
+      <publishTime>01/03/2014 00:01:25</publishTime>
+    </File>
+    <File Include="Clienti/EditContattoDetails.aspx">
+      <publishTime>01/02/2014 22:52:21</publishTime>
+    </File>
+    <File Include="Clienti/listClienti.ascx">
+      <publishTime>01/09/2016 00:38:16</publishTime>
+    </File>
+    <File Include="Commesse/addCommessa.ascx">
+      <publishTime>11/14/2013 21:38:05</publishTime>
+    </File>
+    <File Include="Commesse/commesse.aspx">
+      <publishTime>08/13/2013 11:28:38</publishTime>
+    </File>
+    <File Include="Commesse/linkArticoli.ascx">
+      <publishTime>03/14/2015 19:38:34</publishTime>
+    </File>
+    <File Include="Commesse/linkArticoliToCommessa.aspx">
+      <publishTime>08/13/2013 11:30:00</publishTime>
+    </File>
+    <File Include="Commesse/listArticoliCommessa.ascx">
+      <publishTime>01/09/2016 10:08:18</publishTime>
+    </File>
+    <File Include="Commesse/listCommesse.ascx">
+      <publishTime>03/14/2015 23:03:34</publishTime>
+    </File>
+    <File Include="Commesse/wzAddCliente.ascx">
+      <publishTime>03/23/2015 21:49:19</publishTime>
+    </File>
+    <File Include="Commesse/wzAddCliente.aspx">
+      <publishTime>08/10/2015 20:49:16</publishTime>
+    </File>
+    <File Include="Commesse/wzAddCommessa.ascx">
+      <publishTime>11/16/2013 22:36:21</publishTime>
+    </File>
+    <File Include="Commesse/wzAddCommessa.aspx">
+      <publishTime>12/23/2013 22:10:43</publishTime>
+    </File>
+    <File Include="Commesse/wzAddPERT.ascx">
+      <publishTime>12/08/2015 14:18:31</publishTime>
+    </File>
+    <File Include="Commesse/wzAddPERT.aspx">
+      <publishTime>12/08/2015 14:18:59</publishTime>
+    </File>
+    <File Include="Commesse/wzAssociaPERTReparto.aspx">
+      <publishTime>12/24/2013 15:28:56</publishTime>
+    </File>
+    <File Include="Commesse/wzAssociaProdottoReparto.ascx">
+      <publishTime>12/15/2013 19:14:36</publishTime>
+    </File>
+    <File Include="Commesse/wzAssociaTaskPostazioni.ascx">
+      <publishTime>11/03/2015 21:38:12</publishTime>
+    </File>
+    <File Include="Commesse/wzAssociaTaskPostazioni.aspx">
+      <publishTime>11/03/2015 21:52:11</publishTime>
+    </File>
+    <File Include="Commesse/wzCheckDeliveryDate.ascx">
+      <publishTime>12/16/2013 22:51:30</publishTime>
+    </File>
+    <File Include="Commesse/wzCheckDeliveryDate.aspx">
+      <publishTime>12/26/2013 12:03:20</publishTime>
+    </File>
+    <File Include="Commesse/wzCheckWorkLoadReparto.ascx">
+      <publishTime>12/05/2013 23:33:52</publishTime>
+    </File>
+    <File Include="Commesse/wzCheckWorkLoadReparto.aspx">
+      <publishTime>12/23/2013 23:33:25</publishTime>
+    </File>
+    <File Include="Commesse/wzEditPERT.ascx">
+      <publishTime>03/03/2016 21:13:04</publishTime>
+    </File>
+    <File Include="Commesse/wzEditPERT.aspx">
+      <publishTime>09/03/2015 22:16:41</publishTime>
+    </File>
+    <File Include="Commesse/wzEditPERT_updtable.ascx">
+      <publishTime>02/02/2016 21:08:19</publishTime>
+    </File>
+    <File Include="Commesse/wzEditPERT_updtable.aspx">
+      <publishTime>10/31/2015 18:48:45</publishTime>
+    </File>
+    <File Include="Commesse/wzImpostaAllarmiArticolo.aspx">
+      <publishTime>05/24/2014 17:15:16</publishTime>
+    </File>
+    <File Include="Commesse/wzInfoPanel.ascx">
+      <publishTime>03/14/2015 21:35:05</publishTime>
+    </File>
+    <File Include="Commesse/wzInserisciDataConsegna.ascx">
+      <publishTime>11/23/2013 11:41:38</publishTime>
+    </File>
+    <File Include="Commesse/wzInserisciDataConsegna.aspx">
+      <publishTime>12/24/2013 16:30:15</publishTime>
+    </File>
+    <File Include="Commesse/wzListArticoliNCommessa.ascx">
+      <publishTime>03/14/2015 23:05:16</publishTime>
+    </File>
+    <File Include="Commesse/wzPrintBarcordes.ascx">
+      <publishTime>05/26/2014 21:37:57</publishTime>
+    </File>
+    <File Include="Commesse/wzQuestionWorkLoad.ascx">
+      <publishTime>11/30/2013 19:29:20</publishTime>
+    </File>
+    <File Include="Commesse/wzQuestionWorkLoad.aspx">
+      <publishTime>12/24/2013 16:39:56</publishTime>
+    </File>
+    <File Include="Commesse/wzVarianteDettagli.ascx">
+      <publishTime>11/18/2013 21:49:21</publishTime>
+    </File>
+    <File Include="Configuration/configurationStatus.ascx">
+      <publishTime>04/25/2015 12:03:48</publishTime>
+    </File>
+    <File Include="Configuration/MainWizConfig.aspx">
+      <publishTime>04/25/2015 11:13:39</publishTime>
+    </File>
+    <File Include="Configuration/WizConfig.Master">
+      <publishTime>04/25/2015 12:03:48</publishTime>
+    </File>
+    <File Include="Configuration/wizConfigLogo.aspx">
+      <publishTime>04/25/2015 12:02:46</publishTime>
+    </File>
+    <File Include="Content/bootstrap-theme.css">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Content/bootstrap-theme.min.css">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Content/bootstrap.css">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Content/bootstrap.min.css">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Controllers/CustomersTest.aspx">
+      <publishTime>01/05/2016 11:39:32</publishTime>
+    </File>
+    <File Include="Data/Logo/Logo Sitecal definitivo.jpg">
+      <publishTime>01/18/2016 21:40:17</publishTime>
+    </File>
+    <File Include="Data/Logo/Logo-Kaizen_people.png">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione0.pdf">
+      <publishTime>04/07/2013 20:02:28</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione1.pdf">
+      <publishTime>04/07/2013 22:09:56</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione10.pdf">
+      <publishTime>04/07/2013 20:06:14</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione11.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione12.pdf">
+      <publishTime>04/07/2013 20:04:36</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione13.pdf">
+      <publishTime>04/07/2013 20:05:26</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione16.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione17.pdf">
+      <publishTime>04/07/2013 19:57:14</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione18.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione19.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione2.pdf">
+      <publishTime>04/07/2013 22:06:26</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione23.pdf">
+      <publishTime>12/08/2013 21:51:02</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione3.pdf">
+      <publishTime>04/07/2013 22:11:48</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione4.pdf">
+      <publishTime>03/07/2013 21:16:12</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione5.pdf">
+      <publishTime>04/07/2013 22:08:22</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione6.pdf">
+      <publishTime>03/07/2013 21:17:36</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione7.pdf">
+      <publishTime>05/07/2013 08:07:04</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione8.pdf">
+      <publishTime>04/07/2013 22:01:32</publishTime>
+    </File>
+    <File Include="Data/Postazioni/postazione9.pdf">
+      <publishTime>04/07/2013 21:44:48</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo0_2014.pdf">
+      <publishTime>02/08/2013 21:23:56</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo101_2013.pdf">
+      <publishTime>04/07/2013 22:23:24</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo102_2013.pdf">
+      <publishTime>07/08/2013 09:02:22</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo103_2013.pdf">
+      <publishTime>01/08/2013 21:37:40</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo104_2013.pdf">
+      <publishTime>07/08/2013 09:43:38</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo105_2013.pdf">
+      <publishTime>07/08/2013 09:47:26</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo108_2013.pdf">
+      <publishTime>01/08/2013 21:22:58</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo109_2013.pdf">
+      <publishTime>01/08/2013 21:35:08</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo111_2013.pdf">
+      <publishTime>01/08/2013 21:30:14</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo112_2013.pdf">
+      <publishTime>01/08/2013 21:46:34</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo113_2013.pdf">
+      <publishTime>07/08/2013 09:58:08</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo113_2013A.jpg">
+      <publishTime>07/08/2013 09:40:44</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo113_2013F.jpg">
+      <publishTime>07/08/2013 09:40:44</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo113_2013I.jpg">
+      <publishTime>07/08/2013 09:40:44</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo113_2013W.jpg">
+      <publishTime>07/08/2013 09:40:44</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo119_2013.pdf">
+      <publishTime>02/08/2013 21:24:08</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo15_2013.pdf">
+      <publishTime>12/06/2013 21:29:44</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo16_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo17_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo18_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo20_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo21_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo22_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo23_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo24_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo28_2013.pdf">
+      <publishTime>11/06/2013 21:41:22</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo29_2013.pdf">
+      <publishTime>12/06/2013 21:30:20</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo30_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo31_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo32_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo33_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo34_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo35_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo36_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo37_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo38_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo39_2013.pdf">
+      <publishTime>02/07/2013 20:45:28</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo40_2013.pdf">
+      <publishTime>05/07/2013 08:03:10</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo41_2013.pdf">
+      <publishTime>05/07/2013 10:06:02</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo42_2013.pdf">
+      <publishTime>05/07/2013 12:04:22</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo43_2013.pdf">
+      <publishTime>05/07/2013 12:05:52</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo44_2013.pdf">
+      <publishTime>06/07/2013 17:58:28</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo48_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo51_2013.pdf">
+      <publishTime>05/07/2013 12:02:20</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo52_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo53_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo54_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo55_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo56_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo57_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo58_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo59_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo60_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo61_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo62_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo73_2013.pdf">
+      <publishTime>05/07/2013 08:33:26</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo74_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo75_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo76_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo77_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo78_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo79_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo80_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo81_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo82_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo83_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo85_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo89_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo91_2013.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo95_2013.pdf">
+      <publishTime>01/08/2013 21:49:54</publishTime>
+    </File>
+    <File Include="Data/Produzione/articolo98_2013.pdf">
+      <publishTime>04/07/2013 21:11:34</publishTime>
+    </File>
+    <File Include="Data/Reports/ReportTestCustomer.pdf">
+      <publishTime>02/18/2016 21:15:33</publishTime>
+    </File>
+    <File Include="Data/Users/cart0.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Users/cart11.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Users/cart12.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Users/cart13.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Users/cart15.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Users/cart2.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Data/Users/cart6.pdf">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Default.aspx">
+      <publishTime>02/24/2016 21:36:18</publishTime>
+    </File>
+    <File Include="Eventi/ArticoloRitardo.ascx">
+      <publishTime>10/03/2013 22:30:58</publishTime>
+    </File>
+    <File Include="Eventi/ArticoloWarning.ascx">
+      <publishTime>08/13/2013 16:56:02</publishTime>
+    </File>
+    <File Include="Eventi/CommessaRitardo.ascx">
+      <publishTime>10/03/2013 22:30:28</publishTime>
+    </File>
+    <File Include="Eventi/CommessaWarning.ascx">
+      <publishTime>08/13/2013 12:01:06</publishTime>
+    </File>
+    <File Include="Eventi/RepartoRitardo.ascx">
+      <publishTime>10/03/2013 22:26:56</publishTime>
+    </File>
+    <File Include="Eventi/RepartoWarning.ascx">
+      <publishTime>08/13/2013 23:37:20</publishTime>
+    </File>
+    <File Include="Eventi/Ritardi.asmx">
+      <publishTime>07/14/2013 16:07:06</publishTime>
+    </File>
+    <File Include="Eventi/Warning.asmx">
+      <publishTime>07/15/2013 22:14:28</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.eot">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.svg">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.ttf">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="fonts/glyphicons-halflings-regular.woff">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Global.asax">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="HomePage/UserHomeBoxes.ascx">
+      <publishTime>02/24/2016 22:00:00</publishTime>
+    </File>
+    <File Include="img/air_freight.gif">
+      <publishTime>07/16/2012 11:10:44</publishTime>
+    </File>
+    <File Include="img/andon_icon.jpg">
+      <publishTime>11/01/2012 10:52:06</publishTime>
+    </File>
+    <File Include="img/customer_or_supplier.gif">
+      <publishTime>07/16/2012 11:09:22</publishTime>
+    </File>
+    <File Include="img/edit.png">
+      <publishTime>07/16/2012 18:44:48</publishTime>
+    </File>
+    <File Include="img/external_shipment.gif">
+      <publishTime>07/16/2012 11:10:18</publishTime>
+    </File>
+    <File Include="img/fifo_lane.gif">
+      <publishTime>07/16/2012 11:10:00</publishTime>
+    </File>
+    <File Include="img/iconA3.gif">
+      <publishTime>10/08/2013 21:30:49</publishTime>
+    </File>
+    <File Include="img/iconActionPlan.jpg">
+      <publishTime>07/20/2013 17:01:04</publishTime>
+    </File>
+    <File Include="img/iconAdd.jpg">
+      <publishTime>07/21/2012 15:21:14</publishTime>
+    </File>
+    <File Include="img/iconAdd2.png">
+      <publishTime>08/05/2012 14:29:30</publishTime>
+    </File>
+    <File Include="img/iconAddLink.png">
+      <publishTime>11/18/2012 11:56:28</publishTime>
+    </File>
+    <File Include="img/IconArrowDown.png">
+      <publishTime>10/05/2013 21:08:46</publishTime>
+    </File>
+    <File Include="img/iconArrowLeft.png">
+      <publishTime>07/21/2012 17:56:46</publishTime>
+    </File>
+    <File Include="img/iconArrowRight.png">
+      <publishTime>01/02/2015 11:30:32</publishTime>
+    </File>
+    <File Include="img/iconArrowUp.png">
+      <publishTime>10/05/2013 21:08:38</publishTime>
+    </File>
+    <File Include="img/iconBarcode.png">
+      <publishTime>06/02/2013 11:57:40</publishTime>
+    </File>
+    <File Include="img/iconBarcodeDoppio.png">
+      <publishTime>05/26/2014 21:32:35</publishTime>
+    </File>
+    <File Include="img/iconCalendar.png">
+      <publishTime>01/17/2013 22:28:34</publishTime>
+    </File>
+    <File Include="img/iconCancel.jpg">
+      <publishTime>07/17/2012 21:01:54</publishTime>
+    </File>
+    <File Include="img/iconCart1.jpg">
+      <publishTime>04/15/2013 19:33:32</publishTime>
+    </File>
+    <File Include="img/iconCart2.jpg">
+      <publishTime>04/15/2013 19:33:40</publishTime>
+    </File>
+    <File Include="img/iconCart3.png">
+      <publishTime>04/15/2013 19:33:46</publishTime>
+    </File>
+    <File Include="img/iconChangePlan.png">
+      <publishTime>12/08/2015 18:10:39</publishTime>
+    </File>
+    <File Include="img/iconCheckIn.jpg">
+      <publishTime>05/01/2013 16:57:38</publishTime>
+    </File>
+    <File Include="img/iconCheckIn2.png">
+      <publishTime>05/01/2013 16:57:52</publishTime>
+    </File>
+    <File Include="img/iconCheckIn3.png">
+      <publishTime>05/01/2013 16:58:16</publishTime>
+    </File>
+    <File Include="img/iconCheckIn4.jpg">
+      <publishTime>05/01/2013 17:00:00</publishTime>
+    </File>
+    <File Include="img/iconCheckIn5.jpg">
+      <publishTime>05/01/2013 17:00:22</publishTime>
+    </File>
+    <File Include="img/iconChoose.png">
+      <publishTime>02/01/2016 21:08:06</publishTime>
+    </File>
+    <File Include="img/iconClock.png">
+      <publishTime>01/22/2013 19:52:52</publishTime>
+    </File>
+    <File Include="img/iconClose.png">
+      <publishTime>07/06/2013 10:39:32</publishTime>
+    </File>
+    <File Include="img/iconComplete.png">
+      <publishTime>10/20/2012 12:42:52</publishTime>
+    </File>
+    <File Include="img/iconConfiguration.png">
+      <publishTime>01/05/2016 15:15:55</publishTime>
+    </File>
+    <File Include="img/iconConstaint.jpg">
+      <publishTime>09/19/2015 22:42:25</publishTime>
+    </File>
+    <File Include="img/iconConstraint1.png">
+      <publishTime>09/19/2015 22:42:44</publishTime>
+    </File>
+    <File Include="img/iconConstraint2.png">
+      <publishTime>09/19/2015 22:42:53</publishTime>
+    </File>
+    <File Include="img/iconConstraint3.jpg">
+      <publishTime>09/19/2015 22:43:03</publishTime>
+    </File>
+    <File Include="img/iconConstraint5.jpg">
+      <publishTime>09/19/2015 22:43:13</publishTime>
+    </File>
+    <File Include="img/iconCopyFolder.png">
+      <publishTime>11/21/2012 21:36:44</publishTime>
+    </File>
+    <File Include="img/iconCostCommessa.jpg">
+      <publishTime>01/17/2014 22:11:18</publishTime>
+    </File>
+    <File Include="img/iconCustomer.jpg">
+      <publishTime>10/26/2015 20:32:42</publishTime>
+    </File>
+    <File Include="img/iconDelete.png">
+      <publishTime>07/21/2012 16:21:02</publishTime>
+    </File>
+    <File Include="img/iconDepartment.png">
+      <publishTime>04/25/2015 11:09:11</publishTime>
+    </File>
+    <File Include="img/iconEmail.png">
+      <publishTime>07/13/2013 22:11:06</publishTime>
+    </File>
+    <File Include="img/iconExhume.png">
+      <publishTime>02/19/2016 21:28:20</publishTime>
+    </File>
+    <File Include="img/iconExpand.gif">
+      <publishTime>08/20/2012 19:14:50</publishTime>
+    </File>
+    <File Include="img/iconFactory.png">
+      <publishTime>05/12/2013 15:17:44</publishTime>
+    </File>
+    <File Include="img/iconGantt.png">
+      <publishTime>07/18/2013 21:49:30</publishTime>
+    </File>
+    <File Include="img/iconGantt2.png">
+      <publishTime>07/20/2013 17:01:12</publishTime>
+    </File>
+    <File Include="img/iconGrid.jpg">
+      <publishTime>09/03/2015 22:05:23</publishTime>
+    </File>
+    <File Include="img/iconGroup.png">
+      <publishTime>08/14/2012 13:24:00</publishTime>
+    </File>
+    <File Include="img/iconHistory.png">
+      <publishTime>05/05/2013 14:54:10</publishTime>
+    </File>
+    <File Include="img/iconHoliday.png">
+      <publishTime>02/14/2013 14:01:34</publishTime>
+    </File>
+    <File Include="img/iconKO.jpg">
+      <publishTime>04/25/2015 11:42:42</publishTime>
+    </File>
+    <File Include="img/iconKO.png">
+      <publishTime>04/25/2015 11:45:05</publishTime>
+    </File>
+    <File Include="img/iconLabor.png">
+      <publishTime>07/20/2013 17:03:22</publishTime>
+    </File>
+    <File Include="img/iconLoading.gif">
+      <publishTime>06/25/2013 20:58:26</publishTime>
+    </File>
+    <File Include="img/iconLogin.gif">
+      <publishTime>05/01/2013 16:55:22</publishTime>
+    </File>
+    <File Include="img/iconLogin2.gif">
+      <publishTime>05/01/2013 16:55:54</publishTime>
+    </File>
+    <File Include="img/iconManage.png">
+      <publishTime>11/25/2012 15:53:34</publishTime>
+    </File>
+    <File Include="img/iconManufacturing.jpg">
+      <publishTime>05/01/2013 10:33:40</publishTime>
+    </File>
+    <File Include="img/iconManufacturing2.png">
+      <publishTime>05/01/2013 10:33:48</publishTime>
+    </File>
+    <File Include="img/iconManufacturing3.png">
+      <publishTime>05/01/2013 10:33:56</publishTime>
+    </File>
+    <File Include="img/iconManufacturing4.png">
+      <publishTime>05/01/2013 10:34:04</publishTime>
+    </File>
+    <File Include="img/iconMenuItem.jpg">
+      <publishTime>05/10/2013 21:16:50</publishTime>
+    </File>
+    <File Include="img/iconMinus.png">
+      <publishTime>08/13/2012 18:42:16</publishTime>
+    </File>
+    <File Include="img/iconNewRevision.png">
+      <publishTime>11/21/2012 20:40:34</publishTime>
+    </File>
+    <File Include="img/iconOrder.jpg">
+      <publishTime>04/15/2013 22:21:56</publishTime>
+    </File>
+    <File Include="img/iconOrder2.png">
+      <publishTime>04/15/2013 22:22:00</publishTime>
+    </File>
+    <File Include="img/iconOvertime.jpg">
+      <publishTime>02/14/2013 19:34:56</publishTime>
+    </File>
+    <File Include="img/iconPareto.png">
+      <publishTime>10/26/2015 21:29:31</publishTime>
+    </File>
+    <File Include="img/iconPareto2.jpg">
+      <publishTime>10/26/2015 21:29:54</publishTime>
+    </File>
+    <File Include="img/iconPause.png">
+      <publishTime>10/17/2012 22:29:00</publishTime>
+    </File>
+    <File Include="img/iconPermessi.gif">
+      <publishTime>08/16/2012 11:45:08</publishTime>
+    </File>
+    <File Include="img/iconPermissions.png">
+      <publishTime>03/19/2013 21:37:14</publishTime>
+    </File>
+    <File Include="img/iconPhone.png">
+      <publishTime>07/13/2013 22:09:28</publishTime>
+    </File>
+    <File Include="img/iconPlay.png">
+      <publishTime>10/17/2012 22:28:50</publishTime>
+    </File>
+    <File Include="img/iconProduct.png">
+      <publishTime>03/18/2014 22:38:31</publishTime>
+    </File>
+    <File Include="img/iconProductionPlan.png">
+      <publishTime>09/23/2012 17:10:26</publishTime>
+    </File>
+    <File Include="img/iconProgress2.jpg">
+      <publishTime>05/01/2013 10:33:22</publishTime>
+    </File>
+    <File Include="img/iconQuantity.jpg">
+      <publishTime>04/16/2015 20:58:06</publishTime>
+    </File>
+    <File Include="img/iconQuestionMark.png">
+      <publishTime>07/21/2012 15:40:46</publishTime>
+    </File>
+    <File Include="img/iconRecord.png">
+      <publishTime>08/09/2012 21:48:00</publishTime>
+    </File>
+    <File Include="img/iconReport.png">
+      <publishTime>01/05/2016 16:38:11</publishTime>
+    </File>
+    <File Include="img/iconReportProductionProgress.jpg">
+      <publishTime>01/05/2016 16:31:44</publishTime>
+    </File>
+    <File Include="img/iconRubik.png">
+      <publishTime>05/05/2013 17:14:06</publishTime>
+    </File>
+    <File Include="img/iconSave.jpg">
+      <publishTime>07/17/2012 21:03:40</publishTime>
+    </File>
+    <File Include="img/iconSerialNumber1.jpg">
+      <publishTime>04/18/2013 21:17:24</publishTime>
+    </File>
+    <File Include="img/iconSerialNumber2.png">
+      <publishTime>04/18/2013 21:17:34</publishTime>
+    </File>
+    <File Include="img/iconSerialNumber3.jpg">
+      <publishTime>04/18/2013 21:17:42</publishTime>
+    </File>
+    <File Include="img/iconSetup.png">
+      <publishTime>04/11/2013 22:48:34</publishTime>
+    </File>
+    <File Include="img/iconTask.ico">
+      <publishTime>05/02/2013 21:04:56</publishTime>
+    </File>
+    <File Include="img/iconTask.jpg">
+      <publishTime>04/05/2014 09:43:18</publishTime>
+    </File>
+    <File Include="img/iconTask2.jpg">
+      <publishTime>05/02/2013 21:05:06</publishTime>
+    </File>
+    <File Include="img/iconTask3.jpg">
+      <publishTime>05/02/2013 21:06:50</publishTime>
+    </File>
+    <File Include="img/iconTimeline.jpg">
+      <publishTime>07/03/2013 22:27:22</publishTime>
+    </File>
+    <File Include="img/iconToolbox.jpg">
+      <publishTime>09/16/2012 21:17:14</publishTime>
+    </File>
+    <File Include="img/iconTrendUp.jpg">
+      <publishTime>07/20/2013 16:59:28</publishTime>
+    </File>
+    <File Include="img/iconUndo.png">
+      <publishTime>11/18/2012 17:19:40</publishTime>
+    </File>
+    <File Include="img/iconUser.png">
+      <publishTime>03/19/2013 21:30:18</publishTime>
+    </File>
+    <File Include="img/iconUserAdd.jpg">
+      <publishTime>08/14/2012 14:06:02</publishTime>
+    </File>
+    <File Include="img/iconUserConnection.jpg">
+      <publishTime>05/10/2013 21:20:06</publishTime>
+    </File>
+    <File Include="img/iconView.png">
+      <publishTime>07/22/2012 12:11:16</publishTime>
+    </File>
+    <File Include="img/iconWarning.png">
+      <publishTime>05/05/2013 16:19:08</publishTime>
+    </File>
+    <File Include="img/iconWizard.png">
+      <publishTime>12/15/2013 18:25:42</publishTime>
+    </File>
+    <File Include="img/iconWorkspace.png">
+      <publishTime>04/25/2015 11:11:12</publishTime>
+    </File>
+    <File Include="img/kanban.gif">
+      <publishTime>07/16/2012 11:10:32</publishTime>
+    </File>
+    <File Include="img/kpi.jpg">
+      <publishTime>08/05/2012 11:45:32</publishTime>
+    </File>
+    <File Include="img/kpi2.png">
+      <publishTime>08/05/2012 11:45:38</publishTime>
+    </File>
+    <File Include="img/kpi3.jpg">
+      <publishTime>08/05/2012 11:45:46</publishTime>
+    </File>
+    <File Include="img/logo_KP.jpg">
+      <publishTime>10/06/2012 18:41:42</publishTime>
+    </File>
+    <File Include="img/performance_indicator.jpg">
+      <publishTime>08/05/2012 11:45:10</publishTime>
+    </File>
+    <File Include="img/problemIcon.jpg">
+      <publishTime>11/01/2012 13:31:48</publishTime>
+    </File>
+    <File Include="img/pull.gif">
+      <publishTime>07/16/2012 11:09:56</publishTime>
+    </File>
+    <File Include="img/push.gif">
+      <publishTime>07/16/2012 11:09:48</publishTime>
+    </File>
+    <File Include="img/rail_shipment.gif">
+      <publishTime>07/16/2012 11:10:50</publishTime>
+    </File>
+    <File Include="img/safety_stock.gif">
+      <publishTime>07/16/2012 11:10:10</publishTime>
+    </File>
+    <File Include="img/supermarket.gif">
+      <publishTime>07/16/2012 11:09:52</publishTime>
+    </File>
+    <File Include="img/vsm_symbols - Copia.png">
+      <publishTime>07/14/2012 11:59:20</publishTime>
+    </File>
+    <File Include="img/vsm_symbols.png">
+      <publishTime>07/14/2012 11:59:20</publishTime>
+    </File>
+    <File Include="img/warehouse.gif">
+      <publishTime>07/16/2012 11:10:28</publishTime>
+    </File>
+    <File Include="KanbanBox/KanbanBoxCheckHealth.asmx">
+      <publishTime>03/31/2015 20:53:54</publishTime>
+    </File>
+    <File Include="KanbanBox/KanbanBoxReader.asmx">
+      <publishTime>03/21/2015 15:41:49</publishTime>
+    </File>
+    <File Include="kpi/addKPIForm.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="kpi/listKPIs.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="kpi/recordValueNow.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="kpi/showKPIRecords.ascx">
+      <publishTime>02/15/2013 18:48:30</publishTime>
+    </File>
+    <File Include="kpi/viewKPI.aspx">
+      <publishTime>01/20/2013 21:45:56</publishTime>
+    </File>
+    <File Include="Login/forgot.aspx">
+      <publishTime>08/13/2013 22:22:14</publishTime>
+    </File>
+    <File Include="Login/forgotPassword.ascx">
+      <publishTime>08/13/2013 22:23:08</publishTime>
+    </File>
+    <File Include="Login/forgotUsername.ascx">
+      <publishTime>08/13/2013 21:56:40</publishTime>
+    </File>
+    <File Include="Login/login.aspx">
+      <publishTime>05/11/2013 10:25:50</publishTime>
+    </File>
+    <File Include="Login/loginbox.ascx">
+      <publishTime>05/13/2014 22:14:36</publishTime>
+    </File>
+    <File Include="Login/Logout.aspx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Login/welcomeBox.ascx">
+      <publishTime>08/06/2013 18:15:12</publishTime>
+    </File>
+    <File Include="menuBar.ascx">
+      <publishTime>05/22/2014 21:24:00</publishTime>
+    </File>
+    <File Include="Operatori/AzioniBarcode.ascx">
+      <publishTime>06/02/2013 22:03:12</publishTime>
+    </File>
+    <File Include="Operatori/AzioniBarcode.aspx">
+      <publishTime>06/02/2013 22:04:32</publishTime>
+    </File>
+    <File Include="Operatori/AzioniBarcodeJS.aspx">
+      <publishTime>04/19/2015 17:00:36</publishTime>
+    </File>
+    <File Include="Operatori/checkInPostazione.aspx">
+      <publishTime>08/13/2013 20:55:04</publishTime>
+    </File>
+    <File Include="Operatori/doTasksPostazione.aspx">
+      <publishTime>08/13/2013 21:01:00</publishTime>
+    </File>
+    <File Include="Operatori/operatorePostazioniAttive.ascx">
+      <publishTime>08/13/2013 20:58:50</publishTime>
+    </File>
+    <File Include="Operatori/userLoginPostazione.ascx">
+      <publishTime>08/13/2013 20:56:32</publishTime>
+    </File>
+    <File Include="packages.config">
+      <publishTime>01/02/2016 21:53:49</publishTime>
+    </File>
+    <File Include="Personal/baseInfo.ascx">
+      <publishTime>08/23/2013 12:20:58</publishTime>
+    </File>
+    <File Include="Personal/HomeBoxUser.ascx">
+      <publishTime>02/24/2016 21:08:37</publishTime>
+    </File>
+    <File Include="Personal/listGruppiUtente.ascx">
+      <publishTime>08/29/2013 23:06:46</publishTime>
+    </File>
+    <File Include="Personal/my.aspx">
+      <publishTime>02/23/2016 21:23:46</publishTime>
+    </File>
+    <File Include="Personal/myChangePassword.ascx">
+      <publishTime>08/17/2015 16:51:49</publishTime>
+    </File>
+    <File Include="Personal/myEmail.ascx">
+      <publishTime>08/29/2013 22:46:36</publishTime>
+    </File>
+    <File Include="Personal/myListEventoRitardo.ascx">
+      <publishTime>08/31/2013 11:29:52</publishTime>
+    </File>
+    <File Include="Personal/myListEventoWarning.ascx">
+      <publishTime>08/31/2013 11:30:18</publishTime>
+    </File>
+    <File Include="Personal/myPhone.ascx">
+      <publishTime>08/29/2013 22:45:12</publishTime>
+    </File>
+    <File Include="Postazioni/addPostazione.ascx">
+      <publishTime>08/12/2013 21:56:10</publishTime>
+    </File>
+    <File Include="Postazioni/barCodeCheckIn.ascx">
+      <publishTime>06/02/2013 17:53:30</publishTime>
+    </File>
+    <File Include="Postazioni/editPostazione.ascx">
+      <publishTime>08/12/2013 21:45:54</publishTime>
+    </File>
+    <File Include="Postazioni/editPostazione.aspx">
+      <publishTime>08/12/2013 21:48:00</publishTime>
+    </File>
+    <File Include="Postazioni/listPostazioniOperatoriLoggati.ascx">
+      <publishTime>08/13/2013 16:00:04</publishTime>
+    </File>
+    <File Include="Postazioni/listPostazioniOperatoriLoggatiReparto.ascx">
+      <publishTime>08/13/2013 15:59:36</publishTime>
+    </File>
+    <File Include="Postazioni/managePostazioniLavoro.aspx">
+      <publishTime>08/12/2013 21:49:56</publishTime>
+    </File>
+    <File Include="Postazioni/risorsePostazione.ascx">
+      <publishTime>01/28/2016 22:05:51</publishTime>
+    </File>
+    <File Include="Postazioni/viewCalendarioPostazione.ascx">
+      <publishTime>01/28/2016 21:03:05</publishTime>
+    </File>
+    <File Include="Postazioni/viewElencoPostazioni.ascx">
+      <publishTime>08/12/2013 21:50:52</publishTime>
+    </File>
+    <File Include="Postazioni/viewPostazione.aspx">
+      <publishTime>01/28/2016 21:20:24</publishTime>
+    </File>
+    <File Include="Processi/addMacroProcesso.aspx">
+      <publishTime>03/31/2015 22:18:40</publishTime>
+    </File>
+    <File Include="Processi/addTempoCiclo.ascx">
+      <publishTime>11/02/2015 20:20:26</publishTime>
+    </File>
+    <File Include="Processi/addTempoCiclo.aspx">
+      <publishTime>10/20/2015 20:20:11</publishTime>
+    </File>
+    <File Include="Processi/boxProcesso.ascx">
+      <publishTime>11/12/2012 21:01:36</publishTime>
+    </File>
+    <File Include="Processi/CreateSubProcess.ascx">
+      <publishTime>11/17/2012 22:04:08</publishTime>
+    </File>
+    <File Include="Processi/editTask.ascx">
+      <publishTime>09/23/2015 21:42:49</publishTime>
+    </File>
+    <File Include="Processi/editTask.aspx">
+      <publishTime>09/23/2015 21:35:08</publishTime>
+    </File>
+    <File Include="Processi/editVariante.ascx">
+      <publishTime>06/21/2013 23:23:00</publishTime>
+    </File>
+    <File Include="Processi/getProcessData.asmx">
+      <publishTime>11/01/2015 12:04:23</publishTime>
+    </File>
+    <File Include="Processi/iconToolbox.jpg">
+      <publishTime>09/16/2012 21:17:14</publishTime>
+    </File>
+    <File Include="Processi/linkSubProcessVariante.ascx">
+      <publishTime>04/04/2013 23:10:50</publishTime>
+    </File>
+    <File Include="Processi/listTempiCiclo.ascx">
+      <publishTime>02/01/2016 21:15:35</publishTime>
+    </File>
+    <File Include="Processi/listTempiCiclo_OLD.ascx">
+      <publishTime>07/06/2013 16:58:36</publishTime>
+    </File>
+    <File Include="Processi/lnkProcessoVarianteReparto.aspx">
+      <publishTime>09/11/2013 23:28:30</publishTime>
+    </File>
+    <File Include="Processi/lnkProcRepartoLista.ascx">
+      <publishTime>08/13/2013 10:58:54</publishTime>
+    </File>
+    <File Include="Processi/MacroProcessi.aspx">
+      <publishTime>09/10/2013 23:02:06</publishTime>
+    </File>
+    <File Include="Processi/managePrecedenzePERT.ascx">
+      <publishTime>08/17/2013 13:32:08</publishTime>
+    </File>
+    <File Include="Processi/managePrecedenzePERT2.ascx">
+      <publishTime>10/27/2015 23:11:46</publishTime>
+    </File>
+    <File Include="Processi/pertManagePrecedenze.aspx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Processi/pertManagePrecedenze2.aspx">
+      <publishTime>10/27/2015 23:13:42</publishTime>
+    </File>
+    <File Include="Processi/showPert.ascx">
+      <publishTime>11/03/2015 20:48:36</publishTime>
+    </File>
+    <File Include="Processi/showProcesso.aspx">
+      <publishTime>11/02/2015 22:12:32</publishTime>
+    </File>
+    <File Include="Processi/updatePERT.aspx">
+      <publishTime>06/30/2013 12:41:14</publishTime>
+    </File>
+    <File Include="Produzione/addNewItemToProductionPlan.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Produzione/AndonListReparti.aspx">
+      <publishTime>08/13/2013 19:20:12</publishTime>
+    </File>
+    <File Include="Produzione/AndonReparto.aspx">
+      <publishTime>04/02/2016 20:01:05</publishTime>
+    </File>
+    <File Include="Produzione/AndonRepartoGANTT.ascx">
+      <publishTime>11/04/2013 19:39:00</publishTime>
+    </File>
+    <File Include="Produzione/AndonRepartoGANTT.aspx">
+      <publishTime>11/01/2013 14:42:21</publishTime>
+    </File>
+    <File Include="Produzione/articoliStatoI.ascx">
+      <publishTime>04/02/2016 22:14:40</publishTime>
+    </File>
+    <File Include="Produzione/articoliStatoIAndonReparto.ascx">
+      <publishTime>04/02/2016 22:03:47</publishTime>
+    </File>
+    <File Include="Produzione/avanzamentoProduzione.aspx">
+      <publishTime>04/02/2016 18:36:47</publishTime>
+    </File>
+    <File Include="Produzione/commesseDaProdurre.aspx">
+      <publishTime>08/13/2013 14:01:50</publishTime>
+    </File>
+    <File Include="Produzione/configProcessoPerProduzione.ascx">
+      <publishTime>03/15/2015 00:01:13</publishTime>
+    </File>
+    <File Include="Produzione/configuraProcesso.aspx">
+      <publishTime>08/13/2013 14:25:38</publishTime>
+    </File>
+    <File Include="Produzione/frmSolveProblem.ascx">
+      <publishTime>05/05/2013 17:33:28</publishTime>
+    </File>
+    <File Include="Produzione/HomeBoxNextProgrammedProducts.ascx">
+      <publishTime>02/24/2016 21:55:10</publishTime>
+    </File>
+    <File Include="Produzione/listArticoliINP.ascx">
+      <publishTime>02/27/2016 09:22:53</publishTime>
+    </File>
+    <File Include="Produzione/listArticoliTerminati.ascx">
+      <publishTime>02/29/2016 22:03:39</publishTime>
+    </File>
+    <File Include="Produzione/listCommesseStatoN.ascx">
+      <publishTime>03/17/2015 19:23:47</publishTime>
+    </File>
+    <File Include="Produzione/listProcessi.ascx">
+      <publishTime>04/13/2013 12:12:32</publishTime>
+    </File>
+    <File Include="Produzione/ListRepartiAndon.ascx">
+      <publishTime>03/15/2015 00:02:39</publishTime>
+    </File>
+    <File Include="Produzione/listStatusUtentiReparto.ascx">
+      <publishTime>08/10/2015 16:44:50</publishTime>
+    </File>
+    <File Include="Produzione/listTaskAvviabili.ascx">
+      <publishTime>02/19/2016 22:07:30</publishTime>
+    </File>
+    <File Include="Produzione/listTaskAvviatiPostazioneUtente.ascx">
+      <publishTime>04/16/2015 21:15:17</publishTime>
+    </File>
+    <File Include="Produzione/listTaskAvviatiUtente.ascx">
+      <publishTime>05/08/2013 21:49:14</publishTime>
+    </File>
+    <File Include="Produzione/listWarningAperti.ascx">
+      <publishTime>08/13/2013 16:35:34</publishTime>
+    </File>
+    <File Include="Produzione/listWarningApertiReparto.ascx">
+      <publishTime>08/13/2013 16:36:22</publishTime>
+    </File>
+    <File Include="Produzione/PianoProduzioneCompleto.aspx">
+      <publishTime>08/13/2013 17:11:44</publishTime>
+    </File>
+    <File Include="Produzione/productionPlan.aspx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Produzione/produzione.aspx">
+      <publishTime>08/13/2013 19:17:54</publishTime>
+    </File>
+    <File Include="Produzione/showProductionPlan.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Produzione/showProduttivitaReparto.ascx">
+      <publishTime>08/10/2015 15:25:08</publishTime>
+    </File>
+    <File Include="Produzione/solveProblem.aspx">
+      <publishTime>05/05/2013 17:22:16</publishTime>
+    </File>
+    <File Include="Produzione/statoAvanzamentoArticolo.ascx">
+      <publishTime>02/28/2016 10:49:29</publishTime>
+    </File>
+    <File Include="Produzione/statoAvanzamentoArticolo.aspx">
+      <publishTime>08/13/2013 13:21:26</publishTime>
+    </File>
+    <File Include="Produzione/StatoTasksArticolo.ascx">
+      <publishTime>06/21/2013 22:17:28</publishTime>
+    </File>
+    <File Include="Produzione/storicoProduzione.aspx">
+      <publishTime>08/13/2013 16:43:50</publishTime>
+    </File>
+    <File Include="Produzione/svcCadenza.svc">
+      <publishTime>10/13/2012 18:35:10</publishTime>
+    </File>
+    <File Include="Produzione/viewDetailsTask.ascx">
+      <publishTime>10/03/2013 21:23:04</publishTime>
+    </File>
+    <File Include="Produzione/viewDetailsTaskProduzione.aspx">
+      <publishTime>10/03/2013 20:17:22</publishTime>
+    </File>
+    <File Include="Produzione/wlListReparti.ascx">
+      <publishTime>10/08/2013 21:44:08</publishTime>
+    </File>
+    <File Include="Produzione/wlReparto.ascx">
+      <publishTime>08/13/2013 15:06:54</publishTime>
+    </File>
+    <File Include="Produzione/wlSimReparto.ascx">
+      <publishTime>01/28/2016 21:12:10</publishTime>
+    </File>
+    <File Include="Produzione/workLoadListReparti.aspx">
+      <publishTime>08/13/2013 14:49:34</publishTime>
+    </File>
+    <File Include="Produzione/WorkLoadReparti.aspx">
+      <publishTime>08/13/2013 14:58:00</publishTime>
+    </File>
+    <File Include="Produzione/WorkLoadSimReparti.aspx">
+      <publishTime>08/13/2013 15:08:36</publishTime>
+    </File>
+    <File Include="Reconnect.aspx">
+      <publishTime>02/05/2014 23:10:12</publishTime>
+    </File>
+    <File Include="renewSes.aspx">
+      <publishTime>01/19/2016 22:23:58</publishTime>
+    </File>
+    <File Include="Reparti/addFestivita.ascx">
+      <publishTime>10/03/2013 22:28:52</publishTime>
+    </File>
+    <File Include="Reparti/addReparto.ascx">
+      <publishTime>08/12/2013 16:15:12</publishTime>
+    </File>
+    <File Include="Reparti/addStraordinario.ascx">
+      <publishTime>10/03/2013 22:29:14</publishTime>
+    </File>
+    <File Include="Reparti/configAndonReparto.ascx">
+      <publishTime>10/17/2013 22:58:28</publishTime>
+    </File>
+    <File Include="Reparti/configAnticipoMinimo.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Reparti/configAvvioTasks.ascx">
+      <publishTime>10/27/2013 11:53:52</publishTime>
+    </File>
+    <File Include="Reparti/configCadenza.ascx">
+      <publishTime>10/03/2013 22:25:58</publishTime>
+    </File>
+    <File Include="Reparti/configKanban.ascx">
+      <publishTime>03/23/2015 21:27:21</publishTime>
+    </File>
+    <File Include="Reparti/configModoCalcoloTC.ascx">
+      <publishTime>09/24/2013 22:06:54</publishTime>
+    </File>
+    <File Include="Reparti/configOrariTrn.ascx">
+      <publishTime>06/21/2013 22:26:06</publishTime>
+    </File>
+    <File Include="Reparti/configOrariTurno.aspx">
+      <publishTime>04/10/2013 19:01:46</publishTime>
+    </File>
+    <File Include="Reparti/configProcessiVarianti.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Reparti/configReparto.aspx">
+      <publishTime>04/02/2016 18:56:55</publishTime>
+    </File>
+    <File Include="Reparti/configSplitTasksTurni.ascx">
+      <publishTime>08/12/2013 17:08:42</publishTime>
+    </File>
+    <File Include="Reparti/configTurni.ascx">
+      <publishTime>02/18/2016 21:39:18</publishTime>
+    </File>
+    <File Include="Reparti/controlUserTasks.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Reparti/elencoFestivita.ascx">
+      <publishTime>03/02/2013 22:37:58</publishTime>
+    </File>
+    <File Include="Reparti/elencoStraordinari.ascx">
+      <publishTime>03/05/2013 21:30:28</publishTime>
+    </File>
+    <File Include="Reparti/listReparti.ascx">
+      <publishTime>08/12/2013 16:13:40</publishTime>
+    </File>
+    <File Include="Reparti/listRepartoUtenti.ascx">
+      <publishTime>04/10/2013 22:35:50</publishTime>
+    </File>
+    <File Include="Reparti/manageCalendarFesteStraordinari.aspx">
+      <publishTime>01/23/2016 16:09:54</publishTime>
+    </File>
+    <File Include="Reparti/manageFestivita.aspx">
+      <publishTime>03/02/2013 22:10:28</publishTime>
+    </File>
+    <File Include="Reparti/managePostazioni.aspx">
+      <publishTime>11/23/2015 21:59:37</publishTime>
+    </File>
+    <File Include="Reparti/manageStraordinario.aspx">
+      <publishTime>03/05/2013 21:14:36</publishTime>
+    </File>
+    <File Include="Reparti/postazioneWorkLoad.ascx">
+      <publishTime>08/12/2013 21:53:38</publishTime>
+    </File>
+    <File Include="Reparti/processoWorkLoad.ascx">
+      <publishTime>11/03/2015 21:29:01</publishTime>
+    </File>
+    <File Include="Reparti/risorseTurno.ascx">
+      <publishTime>01/25/2016 21:47:35</publishTime>
+    </File>
+    <File Include="Reparti/risorseTurno.aspx">
+      <publishTime>01/25/2016 20:42:28</publishTime>
+    </File>
+    <File Include="Reparti/showCalendarFesteStraordinari.aspx">
+      <publishTime>01/23/2016 17:13:31</publishTime>
+    </File>
+    <File Include="Reparti/showPostazioni.ascx">
+      <publishTime>01/20/2013 20:13:08</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.js">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Scripts/bootstrap.min.js">
+      <publishTime>01/02/2016 21:08:34</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.7.2.min.js">
+      <publishTime>09/13/2012 22:53:08</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.2.js">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Scripts/jquery-1.8.2.min.js">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Scripts/jquery-2.1.4.js">
+      <publishTime>01/02/2016 17:09:44</publishTime>
+    </File>
+    <File Include="Scripts/jquery-2.1.4.min.js">
+      <publishTime>01/02/2016 17:09:44</publishTime>
+    </File>
+    <File Include="Scripts/jquery-2.1.4.min.map">
+      <publishTime>01/02/2016 17:09:44</publishTime>
+    </File>
+    <File Include="Scripts/jquery-ui-1.8.23.custom.min.js">
+      <publishTime>09/13/2012 22:53:08</publishTime>
+    </File>
+    <File Include="Scripts/jquery.eventsource.js">
+      <publishTime>10/10/2012 22:32:40</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svg.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svg.min.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svg.pack.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svganim.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svganim.min.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svganim.pack.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgdom.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgdom.min.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgdom.pack.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgfilter.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgfilter.min.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgfilter.pack.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svggraph.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svggraph.min.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svggraph.pack.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgplot.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgplot.min.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/jquery.svgplot.pack.js">
+      <publishTime>09/16/2012 11:25:10</publishTime>
+    </File>
+    <File Include="Scripts/knockout-3.4.0.debug.js">
+      <publishTime>01/02/2016 21:07:56</publishTime>
+    </File>
+    <File Include="Scripts/knockout-3.4.0.js">
+      <publishTime>01/02/2016 21:07:56</publishTime>
+    </File>
+    <File Include="Site.Master">
+      <publishTime>02/28/2016 21:13:31</publishTime>
+    </File>
+    <File Include="Styles/assets/css/bootstrap-responsive.css">
+      <publishTime>05/13/2014 22:12:24</publishTime>
+    </File>
+    <File Include="Styles/assets/css/bootstrap.css">
+      <publishTime>01/11/2016 21:20:06</publishTime>
+    </File>
+    <File Include="Styles/assets/css/docs.css">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/ico/apple-touch-icon-114-precomposed.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/ico/apple-touch-icon-144-precomposed.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/ico/apple-touch-icon-57-precomposed.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/ico/apple-touch-icon-72-precomposed.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/ico/favicon.ico">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/ico/favicon.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/img/glyphicons-halflings-white.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/img/glyphicons-halflings.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/img/iconComplete.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/img/iconLoading.gif">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/img/Logo-Kaizen_people.png">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/assets/js/application.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-affix.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-alert.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-button.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-carousel.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-collapse.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-dropdown.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-modal.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-popover.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-scrollspy.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-tab.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-tooltip.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-transition.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap-typeahead.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/bootstrap.min.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/google-code-prettify/prettify.css">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/google-code-prettify/prettify.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/holder/holder.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/html5shiv.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/jquery.js">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/js/README.md">
+      <publishTime>07/24/2013 18:45:56</publishTime>
+    </File>
+    <File Include="Styles/assets/KIS_User_Manual_0-0-1.pdf">
+      <publishTime>07/24/2013 18:45:54</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/animated-overlay.gif">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_flat_55_fbec88_40x100.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_glass_75_d0e5f5_1x400.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_glass_85_dfeffc_1x400.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_gloss-wave_55_5c9ccc_500x100.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_inset-hard_100_f5f8f9_1x100.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-bg_inset-hard_100_fcfdfd_1x100.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_217bc0_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_469bdd_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_6da8d5_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_d8e7f3_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/images/ui-icons_f9bd01_256x240.png">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.min.css">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/AUTHORS.txt">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/collapsible.html">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/custom-icons.html">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/default.html">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/fillspace.html">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/hoverintent.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/no-auto-height.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/accordion/sortable.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/categories.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/combobox.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/custom-data.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/folding.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/images/jqueryui_32x32.png">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/images/jquery_32x32.png">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/images/sizzlejs_32x32.png">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/images/transparent_1x1.png">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/images/ui-anim_basic_16x16.gif">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/london.xml">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/maxheight.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/multiple-remote.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/multiple.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/remote-jsonp.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/remote-with-cache.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/remote.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/search.php">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/autocomplete/xml.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/checkbox.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/icons.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/radio.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/splitbutton.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/button/toolbar.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/alt-field.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/animation.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/buttonbar.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/date-formats.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/date-range.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/dropdown-month-year.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/icon-trigger.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/images/calendar.gif">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/inline.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/jquery.ui.datepicker-ar.js">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/jquery.ui.datepicker-fr.js">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/jquery.ui.datepicker-he.js">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/jquery.ui.datepicker-zh-TW.js">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/localization.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/min-max.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/multiple-calendars.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/other-months.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/datepicker/show-week.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/demos.css">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/animated.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/modal-confirmation.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/modal-form.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/modal-message.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/dialog/modal.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/constrain-movement.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/cursor-style.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/delay-start.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/events.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/handle.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/revert.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/scroll.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/snap-to.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/sortable.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/draggable/visual-feedback.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/accepted-elements.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras2.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras2_min.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras3.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras3_min.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras4.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras4_min.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/images/high_tatras_min.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/photo-manager.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/propagation.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/revert.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/shopping-cart.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/droppable/visual-feedback.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/effect/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/effect/easing.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/effect/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/calendar.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/demo-config-on-tile.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/demo-config-on.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/demo-spindown-closed.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/demo-spindown-open.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/icon-docs-info.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/images/pbar-ani.gif">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/menu/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/menu/icons.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/menu/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/position/cycler.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/position/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/position/images/earth.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/position/images/flight.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/position/images/rocket.jpg">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/position/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/progressbar/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/progressbar/images/pbar-ani.gif">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/progressbar/indeterminate.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/progressbar/index.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/progressbar/label.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/animate.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/aspect-ratio.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/constrain-area.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/default.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/delay-start.html">
+      <publishTime>07/20/2013 02:26:02</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/helper.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/max-min.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/snap-to-grid.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/synchronous-resize.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/textarea.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/resizable/visual-feedback.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/selectable/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/selectable/display-grid.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/selectable/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/selectable/serialize.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/colorpicker.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/hotelrooms.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/multiple-vertical.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/range-vertical.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/range.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/rangemax.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/rangemin.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/side-scroll.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/slider-vertical.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/slider/steps.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/connect-lists-through-tabs.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/connect-lists.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/delay-start.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/display-grid.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/empty-lists.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/items.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/placeholder.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/sortable/portlets.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/currency.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/decimal.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/latlong.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/overflow.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/spinner/time.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/ajax.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/ajax/content1.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/ajax/content2.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/ajax/content3-slow.php">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/ajax/content4-broken.php">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/bottom.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/collapsible.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/manipulation.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/mouseover.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/sortable.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tabs/vertical.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/ajax/content1.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/ajax/content2.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/custom-animation.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/custom-content.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/custom-style.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/forms.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/images/st-stephens.jpg">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/images/tower-bridge.jpg">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/tracking.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/tooltip/video-player.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/widget/default.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/demos/widget/index.html">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/accordion.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/autocomplete.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/blind-effect.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/bounce-effect.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/button.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/clip-effect.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/datepicker.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/dialog.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/draggable.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/drop-effect.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/droppable.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/explode-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/fade-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/fold-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/highlight-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/jQuery.widget.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/menu.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/mouse.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/position.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/progressbar.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/puff-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/pulsate-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/resizable.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/scale-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/selectable.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/shake-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/size-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/slide-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/slider.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/sortable.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/spinner.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/tabs.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/tooltip.html">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/docs/transfer-effect.html">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/globalize.culture.de-DE.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/globalize.culture.ja-JP.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/globalize.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/jquery.mousewheel.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/jshint.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/qunit.css">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/external/qunit.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/Gruntfile.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/jquery-1.9.1.js">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/MIT-LICENSE.txt">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/package.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/README.md">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/animated-overlay.gif">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-icons_222222_256x240.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-icons_454545_256x240.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-icons_888888_256x240.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery-ui.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.accordion.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.all.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.autocomplete.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.base.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.button.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.core.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.datepicker.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.dialog.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.menu.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.progressbar.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.resizable.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.selectable.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.slider.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.spinner.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.tabs.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.theme.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/jquery.ui.tooltip.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/animated-overlay.gif">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_flat_75_ffffff_40x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_glass_55_fbf9ee_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_glass_65_ffffff_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_glass_75_dadada_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_glass_75_e6e6e6_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-bg_highlight-soft_75_cccccc_1x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-icons_222222_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-icons_454545_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-icons_888888_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery-ui.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.accordion.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.autocomplete.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.button.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.core.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.datepicker.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.dialog.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.menu.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.progressbar.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.resizable.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.selectable.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.slider.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.spinner.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.tabs.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.theme.min.css">
+      <publishTime>07/20/2013 02:26:04</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/base/minified/jquery.ui.tooltip.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/animated-overlay.gif">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_flat_55_fbec88_40x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_glass_75_d0e5f5_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_glass_85_dfeffc_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_gloss-wave_55_5c9ccc_500x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_inset-hard_100_f5f8f9_1x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-bg_inset-hard_100_fcfdfd_1x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_217bc0_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_469bdd_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_6da8d5_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_d8e7f3_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/images/ui-icons_f9bd01_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery-ui.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.accordion.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.all.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.autocomplete.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.base.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.button.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.core.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.datepicker.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.dialog.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.menu.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.progressbar.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.resizable.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.selectable.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.slider.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.spinner.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.tabs.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.theme.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/jquery.ui.tooltip.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/animated-overlay.gif">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_flat_0_aaaaaa_40x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_flat_55_fbec88_40x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_glass_75_d0e5f5_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_glass_85_dfeffc_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_glass_95_fef1ec_1x400.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_gloss-wave_55_5c9ccc_500x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_inset-hard_100_f5f8f9_1x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-bg_inset-hard_100_fcfdfd_1x100.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_217bc0_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_2e83ff_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_469bdd_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_6da8d5_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_cd0a0a_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_d8e7f3_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/images/ui-icons_f9bd01_256x240.png">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery-ui.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.accordion.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.autocomplete.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.button.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.core.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.datepicker.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.dialog.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.menu.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.progressbar.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.resizable.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.selectable.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.slider.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.spinner.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.tabs.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.theme.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/themes/redmond/minified/jquery.ui.tooltip.min.css">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.accordion.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.autocomplete.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.button.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.core.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.datepicker.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.dialog.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.draggable.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.droppable.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-blind.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-bounce.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-clip.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-drop.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-explode.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-fade.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-fold.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-highlight.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-pulsate.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-scale.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-shake.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-slide.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect-transfer.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.effect.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.menu.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.mouse.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.position.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.progressbar.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.resizable.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.selectable.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.slider.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.sortable.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.spinner.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.tabs.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.tooltip.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui.widget.jquery.json">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery-ui-i18n.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-af.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ar-DZ.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ar.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-az.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-be.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-bg.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-bs.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ca.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-cs.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-cy-GB.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-da.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-de.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-el.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-en-AU.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-en-GB.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-en-NZ.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-eo.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-es.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-et.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-eu.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-fa.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-fi.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-fo.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-fr-CA.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-fr-CH.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-fr.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-gl.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-he.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-hi.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-hr.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-hu.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-hy.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-id.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-is.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-it.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ja.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ka.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-kk.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-km.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ko.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ky.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-lb.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-lt.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-lv.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-mk.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ml.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ms.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-nb.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-nl-BE.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-nl.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-nn.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-no.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-pl.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-pt-BR.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-pt.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-rm.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ro.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ru.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-sk.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-sl.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-sq.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-sr-SR.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-sr.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-sv.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-ta.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-th.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-tj.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-tr.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-uk.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-vi.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-zh-CN.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-zh-HK.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/i18n/jquery.ui.datepicker-zh-TW.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery-ui.custom.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.accordion.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.autocomplete.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.button.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.core.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.datepicker.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.dialog.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.draggable.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.droppable.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-blind.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-bounce.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-clip.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-drop.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-explode.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-fade.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-fold.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-highlight.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-pulsate.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-scale.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-shake.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-slide.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect-transfer.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.effect.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.menu.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.mouse.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.position.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.progressbar.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.resizable.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.selectable.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.slider.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.sortable.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.spinner.js">
+      <publishTime>07/20/2013 02:26:06</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.tabs.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.tooltip.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/jquery.ui.widget.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery-ui-i18n.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-af.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ar-DZ.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ar.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-az.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-be.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-bg.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-bs.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ca.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-cs.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-cy-GB.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-da.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-de.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-el.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-en-AU.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-en-GB.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-en-NZ.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-eo.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-es.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-et.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-eu.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-fa.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-fi.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-fo.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-fr-CA.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-fr-CH.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-fr.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-gl.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-he.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-hi.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-hr.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-hu.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-hy.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-id.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-is.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-it.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ja.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ka.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-kk.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-km.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ko.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ky.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-lb.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-lt.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-lv.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-mk.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ml.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ms.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-nb.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-nl-BE.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-nl.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-nn.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-no.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-pl.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-pt-BR.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-pt.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-rm.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ro.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ru.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-sk.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-sl.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-sq.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-sr-SR.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-sr.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-sv.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-ta.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-th.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-tj.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-tr.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-uk.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-vi.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-zh-CN.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-zh-HK.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/i18n/jquery.ui.datepicker-zh-TW.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery-ui.custom.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.accordion.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.autocomplete.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.button.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.core.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.datepicker.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.dialog.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.draggable.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.droppable.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-blind.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-bounce.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-clip.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-drop.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-explode.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-fade.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-fold.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-highlight.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-pulsate.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-scale.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-shake.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-slide.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect-transfer.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.effect.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.menu.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.mouse.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.position.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.progressbar.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.resizable.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.selectable.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.slider.min.js">
+      <publishTime>07/20/2013 02:26:08</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.sortable.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.spinner.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.tabs.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.tooltip.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/development-bundle/ui/minified/jquery.ui.widget.min.js">
+      <publishTime>07/20/2013 02:26:10</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/index.html">
+      <publishTime>07/20/2013 02:26:00</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.min.js">
+      <publishTime>07/20/2013 02:26:12</publishTime>
+    </File>
+    <File Include="Styles/Site.css">
+      <publishTime>08/06/2013 15:40:00</publishTime>
+    </File>
+    <File Include="temp/charts_3/chart_3_11.png">
+      <publishTime>08/20/2013 11:11:44</publishTime>
+    </File>
+    <File Include="temp/msc_cntr_0.txt">
+      <publishTime>04/02/2016 18:05:42</publishTime>
+    </File>
+    <File Include="temp/msc_cntr_1.txt">
+      <publishTime>04/02/2016 18:07:35</publishTime>
+    </File>
+    <File Include="temp/msc_cntr_2.txt">
+      <publishTime>03/08/2016 22:09:22</publishTime>
+    </File>
+    <File Include="temp/msc_cntr_3.txt">
+      <publishTime>03/08/2016 22:10:23</publishTime>
+    </File>
+    <File Include="temp/msc_cntr_4.txt">
+      <publishTime>03/03/2016 21:26:23</publishTime>
+    </File>
+    <File Include="temp/msc_cntr_5.txt">
+      <publishTime>11/03/2015 21:30:06</publishTime>
+    </File>
+    <File Include="Users/addGruppo.ascx">
+      <publishTime>03/20/2013 21:49:38</publishTime>
+    </File>
+    <File Include="Users/addPermesso.ascx">
+      <publishTime>06/21/2013 23:16:52</publishTime>
+    </File>
+    <File Include="Users/addUser.ascx">
+      <publishTime>08/12/2013 14:20:00</publishTime>
+    </File>
+    <File Include="Users/addUserEmail.ascx">
+      <publishTime>08/12/2013 22:57:06</publishTime>
+    </File>
+    <File Include="Users/addUserPhoneNumber.ascx">
+      <publishTime>07/13/2013 16:47:32</publishTime>
+    </File>
+    <File Include="Users/editUser.aspx">
+      <publishTime>08/12/2013 22:51:16</publishTime>
+    </File>
+    <File Include="Users/editUserInfo.ascx">
+      <publishTime>08/12/2013 22:52:58</publishTime>
+    </File>
+    <File Include="Users/generaBarcode.aspx">
+      <publishTime>06/09/2013 16:06:56</publishTime>
+    </File>
+    <File Include="Users/listGruppi.ascx">
+      <publishTime>08/12/2013 23:10:24</publishTime>
+    </File>
+    <File Include="Users/listPermessi.ascx">
+      <publishTime>08/13/2013 10:15:14</publishTime>
+    </File>
+    <File Include="Users/listPermessiGruppi.ascx">
+      <publishTime>08/13/2013 10:12:12</publishTime>
+    </File>
+    <File Include="Users/listUserEmails.ascx">
+      <publishTime>08/12/2013 23:03:34</publishTime>
+    </File>
+    <File Include="Users/listUserGruppi.ascx">
+      <publishTime>08/12/2013 22:55:36</publishTime>
+    </File>
+    <File Include="Users/listUserPhoneNumber.ascx">
+      <publishTime>08/12/2013 23:04:56</publishTime>
+    </File>
+    <File Include="Users/listUsers.ascx">
+      <publishTime>08/12/2013 23:07:34</publishTime>
+    </File>
+    <File Include="Users/manageGruppi.aspx">
+      <publishTime>08/12/2013 23:16:06</publishTime>
+    </File>
+    <File Include="Users/managePermessi.aspx">
+      <publishTime>08/13/2013 10:24:36</publishTime>
+    </File>
+    <File Include="Users/manageUsers.aspx">
+      <publishTime>08/12/2013 22:48:46</publishTime>
+    </File>
+    <File Include="Users/PermessiGruppi.aspx">
+      <publishTime>03/21/2013 21:55:04</publishTime>
+    </File>
+    <File Include="Web.config">
+      <publishTime>04/02/2016 22:26:12</publishTime>
+    </File>
+    <File Include="whatsnew.ascx">
+      <publishTime>05/22/2014 21:48:49</publishTime>
+    </File>
+    <File Include="whatsnew.xml">
+      <publishTime>03/29/2016 21:42:30</publishTime>
+    </File>
+  </ItemGroup>
+</Project>

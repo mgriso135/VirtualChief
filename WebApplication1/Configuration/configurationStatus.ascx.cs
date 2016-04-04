@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using KIS.App_Code;
+
+namespace KIS.Configuration
+{
+    public partial class configurationStatus : System.Web.UI.UserControl
+    {
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            KISConfig kisCfg = new KISConfig();
+            if (kisCfg.WizLogoCompleted)
+            {
+                logoOK.Visible = true;
+                logoKO.Visible = false;
+            }
+            else
+            {
+                logoOK.Visible = false;
+                logoKO.Visible = true;
+            }
+            if (kisCfg.WizRepartiCompleted)
+            {
+                repartoOK.Visible = true;
+                repartoKO.Visible = false;
+            }
+            else
+            {
+                repartoOK.Visible = false;
+                repartoKO.Visible = true;
+            }
+
+            if (kisCfg.WizPostazioniCompleted)
+            {
+                PostazioniOK.Visible = true;
+                PostazioniKO.Visible = false;
+            }
+            else
+            {
+                PostazioniOK.Visible = false;
+                PostazioniKO.Visible = true;
+            }
+            if (kisCfg.WizUsersCompleted)
+            {
+                UtentiOK.Visible = true;
+                UtentiKO.Visible = false;
+            }
+            else
+            {
+                UtentiOK.Visible = false;
+                UtentiKO.Visible = true;
+            }
+        }
+    }
+}
