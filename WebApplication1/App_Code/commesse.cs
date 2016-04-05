@@ -129,7 +129,7 @@ namespace KIS.Commesse
             {
                 this._ID = idCommessa;
                 this._Cliente = rdr.GetString(0);
-                this._DataInserimento = rdr.GetDateTime(1);
+                this._DataInserimento =DateTime.SpecifyKind(rdr.GetDateTime(1), DateTimeKind.Utc);
                 this._Note = rdr.GetString(2);
                 //this._Year = this.DataInserimento.Year;
                 //this.loadArticoli();
@@ -439,7 +439,7 @@ namespace KIS.Commesse
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             // Ricerco l'id corretto
-            cmd.CommandText = "SELECT MAX(idcommesse) FROM commesse WHERE anno = " + DateTime.Now.Year.ToString();
+            cmd.CommandText = "SELECT MAX(idcommesse) FROM commesse WHERE anno = " + DateTime.UtcNow.Year.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             int maxCommID = 0;
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -448,7 +448,7 @@ namespace KIS.Commesse
             }
             rdr.Close();
             cmd.CommandText = "INSERT INTO commesse(idcommesse, anno, cliente, dataInserimento, note) VALUES("+maxCommID.ToString()
-                + ", " + DateTime.Now.Year.ToString() + ", '" + Cliente + "', '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + notes + "')";
+                + ", " + DateTime.UtcNow.Year.ToString() + ", '" + Cliente + "', '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + notes + "')";
             MySqlTransaction tr = conn.BeginTransaction();
             cmd.Transaction = tr;
             try

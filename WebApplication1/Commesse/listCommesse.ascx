@@ -28,7 +28,7 @@
                 </asp:hyperlink></td>
             
             <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "DataInserimento") %></td>
+            <td><%#((DateTime)DataBinder.Eval(Container.DataItem, "DataInserimento")) %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Note") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Status") %></td>
