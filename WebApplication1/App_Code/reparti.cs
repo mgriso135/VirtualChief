@@ -205,6 +205,29 @@ namespace KIS
             }
         }
 
+        private String _fusoOrario;
+        public String fusoOrario
+        {
+            get { return this._fusoOrario.Length > 0 ? this._fusoOrario : "W. Europe Standard Time"; }
+        }
+
+        public TimeZoneInfo tzFusoOrario
+        {
+            get
+            {
+                TimeZoneInfo ret;
+                try
+                {
+                    ret=TimeZoneInfo.FindSystemTimeZoneById(this._fusoOrario);
+                }
+                catch
+                {
+                    ret = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+                }
+                return ret;
+            }
+        }
+
         public Reparto()
         {
             this._id = -1;
@@ -215,7 +238,7 @@ namespace KIS
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC FROM reparti WHERE idReparto = " + repID.ToString();
+            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone FROM reparti WHERE idReparto = " + repID.ToString();
             try
             {
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -235,6 +258,11 @@ namespace KIS
                 long anticipo = rdr.GetInt32(5);
                 this._anticipoMinimoTasks = new TimeSpan(anticipo * 10000000);
                 this._ModoCalcoloTC = rdr.GetBoolean(6);
+                this._fusoOrario = "";
+                if (!rdr.IsDBNull(7))
+                { 
+                this._fusoOrario = rdr.GetString(7);
+                }
                 this.loadConfigurazioneKanban();
             }
             catch
@@ -245,6 +273,7 @@ namespace KIS
                 this._splitTasks = false;
                 this._Cadenza = new TimeSpan(0, 0, 0);
                 this._KanbanManaged = false;
+                this._fusoOrario = "";
             }
             conn.Close();
         }
@@ -254,7 +283,7 @@ namespace KIS
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC FROM reparti WHERE nome LIKE '" + name + "'";
+            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone FROM reparti WHERE nome LIKE '" + name + "'";
             try
             {
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -274,6 +303,11 @@ namespace KIS
                 long anticipo = rdr.GetInt32(5);
                 this._anticipoMinimoTasks = new TimeSpan(anticipo * 10000000);
                 this._ModoCalcoloTC = rdr.GetBoolean(6);
+                this._fusoOrario = "";
+                if (!rdr.IsDBNull(7))
+                {
+                    this._fusoOrario = rdr.GetString(7);
+                }
                 this.loadConfigurazioneKanban();
             }
             catch
@@ -284,11 +318,12 @@ namespace KIS
                 this._splitTasks = false;
                 this._Cadenza = new TimeSpan(0, 0, 0);
                 this._KanbanManaged = false;
+                this._fusoOrario = "";
             }
             conn.Close();
         }
 
-        public bool Add(String nome, String descrizione)
+        public bool Add(String nome, String descrizione, String timeZone)
         {
             bool rt;
             MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -306,8 +341,8 @@ namespace KIS
             MySqlTransaction trans = conn.BeginTransaction();
             cmd.Transaction = trans;
 
-            cmd.CommandText = "INSERT INTO reparti(idReparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC) VALUES(" 
-                + repID.ToString() + ", '" + nome + "', '" + descrizione + "', 0, 0, 0, false)";
+            cmd.CommandText = "INSERT INTO reparti(idReparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone) VALUES(" 
+                + repID.ToString() + ", '" + nome + "', '" + descrizione + "', 0, 0, 0, false, '" + timeZone + "')";
             try
             {
                 cmd.ExecuteNonQuery();

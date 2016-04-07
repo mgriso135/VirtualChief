@@ -56,5 +56,14 @@ namespace KIS.Admin {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Admin.configWizard_TipoPERT frmTipoPERT;
+        
+        /// <summary>
+        /// Controllo frmTimezone.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::KIS.Admin.configTimezone frmTimezone;
     }
 }

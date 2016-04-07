@@ -67,6 +67,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valDescrizione;
         
         /// <summary>
+        /// Controllo ddlTimezones.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlTimezones;
+        
+        /// <summary>
         /// Controllo save.
         /// </summary>
         /// <remarks>

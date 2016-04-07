@@ -1,6 +1,7 @@
 ﻿<%@ Page Title="Kaizen Indicator System" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="kisAdmin.aspx.cs" Inherits="KIS.Admin.kisAdmin" %>
 <%@ Register TagPrefix="config" TagName="logo" Src="~/Admin/configLogo.ascx" %>
 <%@ Register TagPrefix="config" TagName="tipoPERT" Src="~/Admin/configWizard_TipoPERT.ascx" %>
+<%@ Register TagPrefix="config" TagName="TimeZone" Src="~/Admin/configTimezone.ascx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
@@ -43,6 +44,19 @@
             <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
         <config:tipoPERT runat="server" id="frmTipoPERT" />
+      </div>
+    </div>
+            </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+          Fuso orario
+      </a>
+    </div>
+            <div id="collapseThree" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <config:timezone runat="server" id="frmTimezone" />
       </div>
     </div>
             </div>

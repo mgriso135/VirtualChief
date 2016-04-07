@@ -1,6 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Stories>
+  <Story id="0067">
+    <Date>03/04/2016</Date>
+    <Title>Campi custom su Andon</Title>
+    <Description>
+      <![CDATA[L'Andon è divenuto completamente personalizzabile, dando la possibilità di scegliere quali campi visualizzare,
+      sia per i prodotti che per i task.<br />
+      Per personalizzare i campi dell'Andon Completo è sufficiente accedere al menu Admin --> Configurazione Andon --> Campi da Visualizzare.<br />
+      Per personalizzare i campi dell'Andon Reparto bisogna accedere al Menu Plant --> Reparti, poi selezionare il reparto
+      desiderato ed infine espandere il menu Andon.      
+      ]]>
+    </Description>
+  </Story>
   <Story id="0032">
     <Date>08/03/2016</Date>
     <Title>Analisi per Tipo di Prodotto migliorata</Title>

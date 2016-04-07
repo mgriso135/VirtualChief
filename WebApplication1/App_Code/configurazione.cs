@@ -152,6 +152,87 @@ namespace KIS.App_Code
         }
     }
 
+    public class FusoOrario
+    {
+        public String log;
+        private String _fusoOrario;
+        public String fusoOrario
+        {
+            get { return this._fusoOrario; }
+            set
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                Boolean res = false;
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    res = true;
+                }
+                else
+                {
+                    res = false;
+                }
+                rdr.Close();
+                if (res)
+                {
+                    cmd.CommandText = "UPDATE configurazione SET valore = '"
+                        + value + "' WHERE Sezione ='Main' AND ID =-1 AND parametro = 'TimeZone'";
+                }
+                else
+                {
+                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                        + "'Main', "
+                        + "-1, "
+                        + "'TimeZone', "
+                        + "'" + value.ToString() + "'"
+                        +")";
+                }
+                MySqlTransaction tr = conn.BeginTransaction();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    log = cmd.CommandText + " <br/>" + ex.Message;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+        }
+
+        public TimeZoneInfo tzFusoOrario
+        {
+            get
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(this._fusoOrario);
+            }
+        }
+
+        public FusoOrario()
+        {
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._fusoOrario = rdr.GetString(0);
+            }
+            else
+            {
+                this._fusoOrario = "W. Europe Standard Time";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+    }
+
     public class KanbanBoxConfig : ConfigurationSection
     {
         [ConfigurationProperty("kanbanBoxEnabled", DefaultValue=false, IsRequired = false)]

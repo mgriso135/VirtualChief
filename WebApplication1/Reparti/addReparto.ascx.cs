@@ -27,6 +27,15 @@ namespace KIS.Reparti
 
             if (checkUser == true)
             {
+                if (!Page.IsPostBack)
+                { 
+                ddlTimezones.Items.Clear();
+                ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
+                ddlTimezones.DataTextField = "DisplayName";
+                ddlTimezones.DataValueField = "Id";
+                    ddlTimezones.SelectedValue = "W. Europe Standard Time";
+                    ddlTimezones.DataBind();
+                }
             }
             else
             {
@@ -38,7 +47,7 @@ namespace KIS.Reparti
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
             Reparto rp = new Reparto();
-            bool rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text));
+            bool rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
             if (rt == true)
             {
                 Response.Redirect(Request.RawUrl);

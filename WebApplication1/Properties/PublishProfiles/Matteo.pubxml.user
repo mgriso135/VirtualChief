@@ -33,11 +33,14 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Admin/configOrderStatusCustomer_customerList.ascx">
       <publishTime>01/08/2016 23:04:00</publishTime>
     </File>
+    <File Include="Admin/configTimezone.ascx">
+      <publishTime>04/08/2016 21:59:53</publishTime>
+    </File>
     <File Include="Admin/configWizard_TipoPERT.ascx">
       <publishTime>10/11/2015 17:33:39</publishTime>
     </File>
     <File Include="Admin/kisAdmin.aspx">
-      <publishTime>10/11/2015 17:18:14</publishTime>
+      <publishTime>04/08/2016 21:38:37</publishTime>
     </File>
     <File Include="Admin/manageMenu.aspx">
       <publishTime>08/13/2013 10:25:38</publishTime>
@@ -310,7 +313,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/Kaizen Indicator System.dll">
-      <publishTime>04/02/2016 22:28:30</publishTime>
+      <publishTime>04/11/2016 21:39:57</publishTime>
     </File>
     <File Include="bin/ko/AjaxControlToolkit.resources.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -319,7 +322,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/02/2016 18:54:34</publishTime>
     </File>
     <File Include="bin/MySql.Data.dll">
-      <publishTime>03/10/2016 23:38:24</publishTime>
+      <publishTime>04/14/2008 12:04:28</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>01/02/2016 17:29:13</publishTime>
@@ -367,7 +370,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/02/2016 21:07:37</publishTime>
     </File>
     <File Include="bin/System.Web.Routing.dll">
-      <publishTime>07/09/2012 00:40:10</publishTime>
+      <publishTime>09/26/2012 03:16:08</publishTime>
     </File>
     <File Include="bin/System.Web.WebPages.Deployment.dll">
       <publishTime>01/02/2016 21:07:38</publishTime>
@@ -436,7 +439,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/09/2016 10:08:18</publishTime>
     </File>
     <File Include="Commesse/listCommesse.ascx">
-      <publishTime>03/14/2015 23:03:34</publishTime>
+      <publishTime>04/05/2016 21:45:54</publishTime>
     </File>
     <File Include="Commesse/wzAddCliente.ascx">
       <publishTime>03/23/2015 21:49:19</publishTime>
@@ -3877,7 +3880,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/22/2014 21:48:49</publishTime>
     </File>
     <File Include="whatsnew.xml">
-      <publishTime>03/29/2016 21:42:30</publishTime>
+      <publishTime>04/03/2016 15:16:43</publishTime>
     </File>
   </ItemGroup>
 </Project>

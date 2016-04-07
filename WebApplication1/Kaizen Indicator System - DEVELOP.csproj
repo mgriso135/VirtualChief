@@ -195,6 +195,13 @@
     <Compile Include="Admin\configOrderStatusCustomer_customerList.ascx.designer.cs">
       <DependentUpon>configOrderStatusCustomer_customerList.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\configTimezone.ascx.cs">
+      <DependentUpon>configTimezone.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\configTimezone.ascx.designer.cs">
+      <DependentUpon>configTimezone.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\configWizard_TipoPERT.ascx.cs">
       <DependentUpon>configWizard_TipoPERT.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -759,6 +766,7 @@
     <Content Include="Admin\configOrderStatusCustomer.ascx" />
     <Content Include="Admin\configOrderStatusCustomer.aspx" />
     <Content Include="Admin\configOrderStatusCustomer_customerList.ascx" />
+    <Content Include="Admin\configTimezone.ascx" />
     <Content Include="Admin\configWizard_TipoPERT.ascx" />
     <Content Include="Admin\kisAdmin.aspx" />
     <Content Include="Admin\manageReports.ascx" />
