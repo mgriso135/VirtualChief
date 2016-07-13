@@ -1049,12 +1049,19 @@ namespace KIS
         private DateTime _lastLogin;
         public DateTime lastLogin
         {
-            get { return _lastLogin; }
+            get {
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(_lastLogin, fuso.tzFusoOrario);
+            }
             set
             {
                 if (this.authenticated == true && this.username.Length > 0)
                 {
-                    string strSQL = "UPDATE users SET lastLogin = '" + ((DateTime)value).ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE userID LIKE '" + this.username + "'";
+                    DateTime lastL = new DateTime(value.Ticks, DateTimeKind.Local);
+                    FusoOrario fuso = new FusoOrario();
+                    string strSQL = "UPDATE users SET lastLogin = '" 
+                        + TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") 
+                        + "' WHERE userID LIKE '" + this.username + "'";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -1092,7 +1099,8 @@ namespace KIS
                     this._lastLogin = rdr1.GetDateTime(4);
                 }
                 this._authenticated = true;
-                this.lastLogin = DateTime.Now;
+                FusoOrario fuso = new FusoOrario();
+                this.lastLogin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario);
                 this._ID = rdr1.GetInt32(5);
             }
             rdr1.Close();
@@ -1200,7 +1208,7 @@ namespace KIS
                 {
                     strSQL = "INSERT INTO users(userID, password, nome, cognome, tipoUtente, lastLogin, ID) VALUES('"
                         + usr + "', MD5('" + pwd + "'), '" + nome + "', '" + cognome + "', '" + typeOf + "', '"
-                        + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "',"
+                        + DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss") + "',"
                         + maxID.ToString()
                         + ")";
                     cmd = new MySqlCommand(strSQL, conn);
@@ -1365,7 +1373,7 @@ namespace KIS
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
                     cmd.CommandText = "INSERT INTO registrooperatoripostazioni(username, postazione, login, logout) VALUES("
-                        + "'"+this.username+"', "+p.id.ToString()+", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', null)";
+                        + "'"+this.username+"', "+p.id.ToString()+", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', null)";
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1405,7 +1413,7 @@ namespace KIS
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE registrooperatoripostazioni SET logout='" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "'"
+                cmd.CommandText = "UPDATE registrooperatoripostazioni SET logout='" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "'"
                     + " WHERE logout IS null AND username = '" + this.username + "' AND postazione = " + p.id.ToString();
                 try
                 {

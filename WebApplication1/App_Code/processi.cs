@@ -55,7 +55,7 @@ namespace KIS
                     maxCod = 0;
                 }
                 strSQL = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, isVSM, posx, posy, attivo) " +
-                    "VALUES(" + maxCod + ", 0, '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + nome + "', '" + Descr + 
+                    "VALUES(" + maxCod + ", 0, '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + nome + "', '" + Descr + 
                     "', " + isVSM.ToString() + ", 0, 0, 1)";
                 MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
                 rdr.Close();
@@ -134,7 +134,9 @@ namespace KIS
         private DateTime _dataRevisione;
         public DateTime dataRevisione
         {
-            get { return this._dataRevisione; }
+            get {
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._dataRevisione, fuso.tzFusoOrario); }
         }
 
         private List<variante> _variantiProcesso;
@@ -373,7 +375,7 @@ namespace KIS
         public processo()
         {
             this._processID = -1;
-            this._dataRevisione = DateTime.Now;
+            this._dataRevisione = DateTime.UtcNow;
             this._revisione = 0;
             this._processName = "NULL";
             this._processDescription = "NULL";
@@ -1038,7 +1040,7 @@ namespace KIS
                     {
                         // Aggiungo il processo
                         cmd.CommandText = "INSERT INTO processo(ProcessID, revisione, dataRevisione, Name, Description, "
-                        + " isVSM, posx, posy, attivo) VALUES(" + procID + ", 0, '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        + " isVSM, posx, posy, attivo) VALUES(" + procID + ", 0, '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
                         + "', 'New Default Process', 'New Default Process Notes', 0, 100, 100, 1)";
                         cmd.ExecuteNonQuery();
 
@@ -2006,7 +2008,7 @@ namespace KIS
                 try
                 {
                     cmd.CommandText = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, isVSM, posx, posy, attivo) " +
-                            "VALUES(" + this.processID + ", " + (this.revisione + 1).ToString() + ", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + this.processName + "', '" + this.processDescription +
+                            "VALUES(" + this.processID + ", " + (this.revisione + 1).ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + this.processName + "', '" + this.processDescription +
                             "', " + isVSM.ToString() + ", " + this.posX.ToString() + ", " + this.posY.ToString() + ", 1)";
                     cmd.ExecuteNonQuery();
 
@@ -2130,7 +2132,7 @@ namespace KIS
                 {
                     // Copio il processo originale
                     cmd.CommandText = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, ProcessoPadre, revPadre, isVSM, posx, posy, attivo) " +
-                            "VALUES(" + this.processID + ", " + (this.revisione + 1).ToString() + ", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + this.processName + "', '" + this.processDescription +
+                            "VALUES(" + this.processID + ", " + (this.revisione + 1).ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + this.processName + "', '" + this.processDescription +
                             "', " + this.processoPadre.ToString() + ", " + this.revPadre.ToString() + " , " + isVSM.ToString() + ", " + this.posX.ToString() + ", " + this.posY.ToString() + ", 1)";
                     cmd.ExecuteNonQuery();
 
@@ -2312,7 +2314,7 @@ namespace KIS
                         rdr.Close();
                         processo figlio = new processo(elencoFigli[i][0], elencoFigli[i][1]);
                         cmd.CommandText = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, processoPadre, "
-                        + "revPadre, isVSM, posx, posy, attivo) VALUES(" + newID + ", 0, '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        + "revPadre, isVSM, posx, posy, attivo) VALUES(" + newID + ", 0, '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
                         + "', '" + figlio.processName + "', '" + figlio.processDescription + "', "
                         + newPrc.processID.ToString() + ", " + newPrc.revisione.ToString()
                         + ", " + figlio.isVSM.ToString() + ", " + figlio.posX.ToString() + ", "

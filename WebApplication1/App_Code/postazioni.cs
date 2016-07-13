@@ -277,15 +277,6 @@ namespace KIS
             return rt;
         }
 
-        /* Ricerca il primo secondo disponibile della postazione!!!
-         * Ritorna un array:
-         * elemento[0] = turnoIniziale
-         * elemento[1] = tempoIniziale all'interno del turno in questione
-         */
-        /*public DateTime trovaDisponibilita(Reparto rp)
-        {
-        }*/
-
         private List<int> _ElencoIDReparti;
         public List<int> ElencoIDReparti
         {
@@ -660,13 +651,17 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
+            get {
+                Reparto rp = new Reparto(idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, rp.tzFusoOrario); }
         }
 
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
+            get {
+                Reparto rp = new Reparto(idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario); }
         }
 
         private char _Status;
@@ -714,13 +709,17 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
+            get { Reparto rp = new Reparto(idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc( this._Inizio, rp.tzFusoOrario); }
         }
 
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
+            get {
+                Reparto rp = new Reparto(idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario);
+            }
         }
 
         private char _Status;
@@ -750,8 +749,8 @@ namespace KIS
                 this._TaskProduzioneID = -1;
                 this._idPostazione = -1;
                 this._idReparto = -1;
-                this._Inizio = DateTime.Now;
-                this._Fine = DateTime.Now;
+                this._Inizio = DateTime.UtcNow;
+                this._Fine = DateTime.UtcNow;
                 this._Status = '\0';
             }
             rdr.Close();
@@ -770,14 +769,20 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
-            set { this._Inizio = value; }
+            get {
+                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, fuso.tzFusoOrario); }
+            set {
+                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                this._Inizio = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario); }
         }
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
-            set { this._Fine = value; }
+            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc( this._Fine, fuso.tzFusoOrario); }
+            set { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                this._Fine = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario); }
         }
         public IntervalloPostazione(DateTime start, DateTime end, char stat)
         {
@@ -806,21 +811,28 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
+            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, fuso.tzFusoOrario); }
         }
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
+            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, fuso.tzFusoOrario); }
         }
 
         public CalendarioPostazione(int idPost, DateTime InizioCal, DateTime FineCal)
         {
             Intervalli = new List<IntervalloLavoroPostazione>();
+            InizioCal = new DateTime(InizioCal.Ticks, DateTimeKind.Utc);
+            FineCal = new DateTime(FineCal.Ticks, DateTimeKind.Utc);
             if (InizioCal < FineCal)
             {
                 this._pstID = idPost;
                 // Trovo tutti i reparti che utilizzano la tal postazione
+                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                //this._Inizio = TimeZoneInfo.ConvertTimeToUtc(InizioCal, fuso.tzFusoOrario);
+                //this._Fine = TimeZoneInfo.ConvertTimeToUtc(FineCal, fuso.tzFusoOrario);
                 this._Inizio = InizioCal;
                 this._Fine = FineCal;
                 MySqlConnection conn = (new Dati.Dati()).mycon();

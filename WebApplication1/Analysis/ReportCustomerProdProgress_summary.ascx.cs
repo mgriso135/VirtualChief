@@ -10,7 +10,6 @@ using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using KIS;
-using KIS.App_Code;
 
 namespace KIS.Analysis
 {

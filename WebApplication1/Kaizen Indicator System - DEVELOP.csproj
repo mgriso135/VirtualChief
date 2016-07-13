@@ -654,6 +654,13 @@
       <DependentUpon>configKanban.ascx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Reparti\configRepartoTimezone.ascx.cs">
+      <DependentUpon>configRepartoTimezone.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Reparti\configRepartoTimezone.ascx.designer.cs">
+      <DependentUpon>configRepartoTimezone.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Reparti\risorseTurno.ascx.cs">
       <DependentUpon>risorseTurno.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2094,6 +2101,7 @@
       <Link>Analysis\AvanzamentoProdotto_model.xml</Link>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Reparti\configRepartoTimezone.ascx" />
     <Content Include="Reparti\risorseTurno.ascx" />
     <Content Include="Reparti\risorseTurno.aspx" />
     <Content Include="Reparti\showCalendarFesteStraordinari.aspx" />

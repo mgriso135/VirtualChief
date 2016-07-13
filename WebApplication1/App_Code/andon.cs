@@ -546,7 +546,7 @@ namespace KIS.App_Code
             get
             {
                 List<TaskProduzione> elenco = new List<TaskProduzione>();
-                DateTime maxDate = DateTime.Now.AddDays(this.MaxViewDays);
+                DateTime maxDate = DateTime.UtcNow.AddDays(this.MaxViewDays);
                 for (int i = 0; i < this._WIP.Count; i++)
                 {
                     this._WIP[i].loadTasksProduzione();

@@ -550,9 +550,10 @@ namespace KIS.App_Code
         {
             get
             {
+                FusoOrario fuso = new FusoOrario();
                 DateTime data_consegna = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                 Double consegna_timestamp = Double.Parse(this.required_date);
-                data_consegna = data_consegna.AddSeconds(consegna_timestamp).ToLocalTime();
+                data_consegna = ((TimeZoneInfo.ConvertTimeFromUtc(data_consegna, fuso.tzFusoOrario))).AddSeconds(consegna_timestamp);
                 return data_consegna;
             }
         }

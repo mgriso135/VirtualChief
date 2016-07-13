@@ -8,8 +8,9 @@ using MySql.Data.MySqlClient;
 using KIS.eventi;
 using KIS.App_Code;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;
+//using System.Net.Http.Headers;
+//using Newtonsoft.Json;
+using KIS.Configuration;
 
 namespace KIS.Commesse
 {
@@ -38,7 +39,11 @@ namespace KIS.Commesse
         private DateTime _DataInserimento;
         public DateTime DataInserimento
         {
-            get { return this._DataInserimento; }
+            get
+            {
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._DataInserimento, fuso.tzFusoOrario);
+            }
         }
 
         private List<Articolo> _Articoli;
@@ -129,7 +134,7 @@ namespace KIS.Commesse
             {
                 this._ID = idCommessa;
                 this._Cliente = rdr.GetString(0);
-                this._DataInserimento =DateTime.SpecifyKind(rdr.GetDateTime(1), DateTimeKind.Utc);
+                this._DataInserimento = DateTime.SpecifyKind(rdr.GetDateTime(1), DateTimeKind.Utc);
                 this._Note = rdr.GetString(2);
                 //this._Year = this.DataInserimento.Year;
                 //this.loadArticoli();
@@ -194,7 +199,7 @@ namespace KIS.Commesse
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = " + DateTime.Now.Year.ToString();
+            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = " + DateTime.UtcNow.Year.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             int artID = 0;
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -205,14 +210,15 @@ namespace KIS.Commesse
             {
                 artID = 0;
             }
+            FusoOrario fuso = new FusoOrario();
             rdr.Close();
             cmd.Transaction = tr;
             cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
-                + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta) VALUES(" + artID.ToString() + ", " + DateTime.Now.Year.ToString()
+                + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta) VALUES(" + artID.ToString() + ", " + DateTime.UtcNow.Year.ToString()
                 + ", " + prc.process.processID.ToString() + ", " + prc.process.revisione.ToString() + ", " + prc.variant.idVariante.ToString()
                 + ", null, 'N', null, null, " + this.ID.ToString() + ", " 
                 + this.Year.ToString() + ", " 
-                + "'" + consPrev.ToString("yyyy/MM/dd HH:mm:ss") + "', " 
+                + "'" + TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', " 
                 + "null, " 
                 + qty.ToString() + ", "
                 + qty.ToString()
@@ -243,7 +249,7 @@ namespace KIS.Commesse
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = " + DateTime.Now.Year.ToString();
+            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = " + DateTime.UtcNow.Year.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             int artID = 0;
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -256,17 +262,13 @@ namespace KIS.Commesse
             }
             rdr.Close();
             cmd.Transaction = tr;
-            /*cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
-                + "commessa, annoCommessa, dataConsegnaPrevista, planner) VALUES(" + artID.ToString() + ", " + DateTime.Now.Year.ToString()
-                + ", " + prc.process.processID.ToString() + ", " + prc.process.revisione.ToString() + ", " + prc.variant.idVariante.ToString()
-                + ", null, 'N', null, null, " + this.ID.ToString() + ", " + this.Year.ToString() + ", '" + consPrev.ToString("yyyy/MM/dd") + "', null)";
-             */
+            FusoOrario fuso = new FusoOrario();
             cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
-                + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta) VALUES(" + artID.ToString() + ", " + DateTime.Now.Year.ToString()
+                + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta) VALUES(" + artID.ToString() + ", " + DateTime.UtcNow.Year.ToString()
                 + ", " + prc.process.processID.ToString() + ", " + prc.process.revisione.ToString() + ", " + prc.variant.idVariante.ToString()
                 + ", null, 'N', null, null, " + this.ID.ToString() + ", "
                 + this.Year.ToString() + ", "
-                + "'" + consPrev.ToString("yyyy/MM/dd HH:mm:ss") + "', "
+                + "'" + TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
                 + "null, "
                 + qty.ToString() + ", "
                 + qty.ToString()
@@ -276,7 +278,7 @@ namespace KIS.Commesse
                 cmd.ExecuteNonQuery();
                 tr.Commit();
                 rt[0] = artID;
-                rt[1] = DateTime.Now.Year;
+                rt[1] = DateTime.UtcNow.Year;
             }
             catch (Exception ex)
             {
@@ -299,7 +301,7 @@ namespace KIS.Commesse
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = " + DateTime.Now.Year.ToString();
+            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = " + DateTime.UtcNow.Year.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             int artID = 0;
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -312,15 +314,15 @@ namespace KIS.Commesse
             }
             rdr.Close();
             cmd.Transaction = tr;
-
+            FusoOrario fuso = new FusoOrario();
             cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
                 + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta, kanbanCard) VALUES(" 
                 + artID.ToString() + ", " 
-                + DateTime.Now.Year.ToString()
+                + DateTime.UtcNow.Year.ToString()
                 + ", " + prc.process.processID.ToString() + ", " + prc.process.revisione.ToString() + ", " + prc.variant.idVariante.ToString()
                 + ", null, 'N', null, null, " + this.ID.ToString() + ", "
                 + this.Year.ToString() + ", "
-                + "'" + consPrev.ToString("yyyy/MM/dd HH:mm:ss") + "', "
+                + "'" + TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
                 + "null, "
                 + qty.ToString() + ", "
                 + qty.ToString() + ", "
@@ -331,7 +333,7 @@ namespace KIS.Commesse
                 cmd.ExecuteNonQuery();
                 tr.Commit();
                 rt[0] = artID;
-                rt[1] = DateTime.Now.Year;
+                rt[1] = DateTime.UtcNow.Year;
             }
             catch (Exception ex)
             {
@@ -572,7 +574,7 @@ namespace KIS.Commesse
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             // Ricerco l'id corretto
-            cmd.CommandText = "SELECT MAX(idcommesse) FROM commesse WHERE anno = " + DateTime.Now.Year.ToString();
+            cmd.CommandText = "SELECT MAX(idcommesse) FROM commesse WHERE anno = " + DateTime.UtcNow.Year.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             int maxCommID = 0;
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -581,7 +583,7 @@ namespace KIS.Commesse
             }
             rdr.Close();
             cmd.CommandText = "INSERT INTO commesse(idcommesse, anno, cliente, dataInserimento, note) VALUES(" + maxCommID.ToString()
-                + ", " + DateTime.Now.Year.ToString() + ", '" + Cliente + "', '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + notes + "')";
+                + ", " + DateTime.UtcNow.Year.ToString() + ", '" + Cliente + "', '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + notes + "')";
             MySqlTransaction tr = conn.BeginTransaction();
             cmd.Transaction = tr;
             try
@@ -743,21 +745,37 @@ namespace KIS.Commesse
         private DateTime _DataPrevistaConsegna;
         public DateTime DataPrevistaConsegna
         {
-            get { return this._DataPrevistaConsegna; }
+            get
+            {
+                DateTime consegna = this._DataPrevistaConsegna;
+                if (this.Reparto != -1)
+                {
+                    Reparto rp = new Reparto(this.Reparto);
+                    consegna = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaConsegna, rp.tzFusoOrario);
+                }
+                else
+                {
+                    FusoOrario fuso = new FusoOrario();
+                    consegna = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaConsegna, fuso.tzFusoOrario);
+                }
+
+                return consegna;
+            }
             set
             {
-                if (this.ID != -1 && value >=DateTime.Now)// && this.Status == 'N')
+                Reparto rp = new Reparto(this.Reparto);
+                if (this.ID != -1 && TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario) >= DateTime.UtcNow)// && this.Status == 'N')
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET dataconsegnaprevista = '"+value.ToString("yyyy/MM/dd HH:mm:ss")
-                        +"' WHERE id = " + this.ID.ToString() + " AND anno = " + this.Year.ToString();
+                    cmd.CommandText = "UPDATE productionplan SET dataconsegnaprevista = '" + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss")
+                        + "' WHERE id = " + this.ID.ToString() + " AND anno = " + this.Year.ToString();
                     try
                     {
-                        this._DataPrevistaConsegna = value;
+                        this._DataPrevistaConsegna = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
                         cmd.ExecuteNonQuery();
                         tr.Commit();
                     }
@@ -776,24 +794,37 @@ namespace KIS.Commesse
         public DateTime DataPrevistaFineProduzione
         {
             get 
-            { 
-                return this._DataPrevistaFineProduzione;
+            {
+                DateTime dataFine = this._DataPrevistaFineProduzione;
+                if (this.Reparto != -1)
+                {
+                    Reparto rp = new Reparto(this.Reparto);
+                    dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, rp.tzFusoOrario);
+                }
+                else
+                {
+                    FusoOrario fuso = new FusoOrario();
+                    dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, fuso.tzFusoOrario);
+                }
+
+                return dataFine;
             }
             set
             {
-                if (this.ID != -1 && value <= this._DataPrevistaConsegna && value >= DateTime.Now)
+                Reparto rp = new Reparto(this.Reparto);
+                if (this.ID != -1 && value <= this._DataPrevistaConsegna && TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario) >= DateTime.UtcNow)
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET dataPrevistaFineProduzione = '" + value.ToString("yyyy/MM/dd HH:mm:ss")
+                    cmd.CommandText = "UPDATE productionplan SET dataPrevistaFineProduzione = '" + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss")
                         + "' WHERE id = " + this.ID.ToString() + " AND anno = " + this.Year.ToString();
                     log = cmd.CommandText;
                     try
                     {
-                        this._DataPrevistaFineProduzione = value;
+                        this._DataPrevistaFineProduzione = TimeZoneInfo.ConvertTimeToUtc(value);
                         cmd.ExecuteNonQuery();
                         tr.Commit();
                     }
@@ -831,7 +862,8 @@ namespace KIS.Commesse
                 }
                 rdr.Close();
                 conn.Close();
-                return rt;
+                Reparto rp = new Reparto(this.Reparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(rt, rp.tzFusoOrario);
             }
         }
 
@@ -839,7 +871,7 @@ namespace KIS.Commesse
         {
             get
             {
-                DateTime ret = DateTime.Now.AddDays(365);
+                DateTime ret = DateTime.UtcNow.AddDays(365);
                 if (this.ID != -1)
                 {
                     this.loadTasksProduzione();
@@ -851,7 +883,8 @@ namespace KIS.Commesse
                         }
                     }
                 }
-                return ret;
+                Reparto rp = new Reparto(this.Reparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(ret, rp.tzFusoOrario);
             }
         }
 
@@ -871,7 +904,8 @@ namespace KIS.Commesse
                         }
                     }
                 }
-                return ret;
+                Reparto rp = new Reparto(this.Reparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(ret, rp.tzFusoOrario);
             }
         }
 
@@ -879,7 +913,7 @@ namespace KIS.Commesse
         {
             get
             {
-                DateTime ret = DateTime.Now.AddDays(-365);
+                DateTime ret = DateTime.UtcNow.AddDays(-365);
                 if (this.ID != -1)
                 {
                     this.loadTasksProduzione();
@@ -891,7 +925,8 @@ namespace KIS.Commesse
                         }
                     }
                 }
-                return ret;
+                Reparto rp = new Reparto(this.Reparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(ret, rp.tzFusoOrario);
             }
         }
 
@@ -1314,7 +1349,8 @@ namespace KIS.Commesse
                         }
                     }
                 }
-                return max;
+                Reparto rp = new Reparto(this.Reparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
             }
         }
 
@@ -1494,7 +1530,7 @@ namespace KIS.Commesse
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
-                DateTime inizio = DateTime.Now.AddDays(5);
+                DateTime inizio = DateTime.UtcNow.AddDays(5);
                 DateTime fine = new DateTime(1970, 1, 1);
                 this.loadTasksProduzione();
                 inizio = (from d in this.Tasks select d.DataInizioTask).Min();
@@ -1502,7 +1538,7 @@ namespace KIS.Commesse
 
                
                 Reparto rp = new Reparto(this.Reparto);
-                rp.loadCalendario(inizio.AddDays(-365), DateTime.Now);
+                rp.loadCalendario(inizio.AddDays(-365), DateTime.UtcNow);
                 this.log = inizio.ToString("dd/MM/yyyy HH:mm") + " - " + fine.ToString("dd/MM/yyyy HH:mm");
 
                 for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
@@ -1692,7 +1728,7 @@ namespace KIS.Commesse
             int ret = 1;
             if (this.ID != -1 && this.Year != -1 && (this.Status=='I' || this.Status=='P'))
             {
-                if (dFineProd >= DateTime.Now && dFineProd <= dConsegna)
+                if (dFineProd >= DateTime.UtcNow && dFineProd <= dConsegna)
                 {
                     this.DataPrevistaConsegna = dConsegna;
                     this.DataPrevistaFineProduzione = dFineProd;

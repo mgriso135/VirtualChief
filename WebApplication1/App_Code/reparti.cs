@@ -208,7 +208,32 @@ namespace KIS
         private String _fusoOrario;
         public String fusoOrario
         {
-            get { return this._fusoOrario.Length > 0 ? this._fusoOrario : "W. Europe Standard Time"; }
+            get {
+                FusoOrario fuso = new FusoOrario();
+                return this._fusoOrario.Length > 0 ? this._fusoOrario : fuso.tzFusoOrario.Id; }
+            set
+            {
+                if (this.id != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction trans = conn.BeginTransaction();
+                    cmd.CommandText = "UPDATE reparti SET timezone = '" + value.ToString() + "' WHERE idreparto = " + this.id.ToString();
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        this._fusoOrario = value;
+                        trans.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        err = ex.Message;
+                        trans.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
         }
 
         public TimeZoneInfo tzFusoOrario
@@ -260,8 +285,13 @@ namespace KIS
                 this._ModoCalcoloTC = rdr.GetBoolean(6);
                 this._fusoOrario = "";
                 if (!rdr.IsDBNull(7))
-                { 
-                this._fusoOrario = rdr.GetString(7);
+                {
+                    this._fusoOrario = rdr.GetString(7);
+                }
+                else
+                {
+                    FusoOrario fuso = new FusoOrario();
+                    this._fusoOrario = fuso.fusoOrario;
                 }
                 this.loadConfigurazioneKanban();
             }
@@ -471,24 +501,6 @@ namespace KIS
             this.loadTurni();
             double[] distanze = new double[this.Turni.Count];
 
-            // Calcolo la "distanza" in secondi di ogni turno
-            for(int i = 0; i < this.Turni.Count; i++)
-            {
-/*                DateTime prossimaData = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, Turni[i].oraInizio.Hours, Turni[i].oraInizio.Minutes, Turni[i].oraInizio.Seconds);
-                // casi: giorno della settimana ancora da venire, giorno in corso, giorno già passato
-                if (prossimaData < DateTime.Now)
-                {
-                    prossimaData = prossimaData.AddDays(1);
-                }
-                
-                while (prossimaData.DayOfWeek != this.Turni[i].GiornoInizio)
-                {
-                    prossimaData = prossimaData.AddDays(1);
-                }
-                distanze[i] = (prossimaData - DateTime.Now).TotalSeconds;
-                */
-            }
-
             // Ora trovo la distanza minima
             double min = 1000000000;
             int indexMin = -1;
@@ -693,7 +705,7 @@ namespace KIS
         {
             get { return this._PianoProduzione; }
         }
-
+        
         public void loadProductionPlan()
         {
             this._PianoProduzione = new ProductionPlan(this);
@@ -1227,12 +1239,15 @@ namespace KIS
             this._straordinari = new List<Straordinario>();
             if (this.id != -1)
             {
+                Reparto rp = new Reparto(idReparto);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
                 + "WHERE azione = 'S' AND straordinarifestivita.turno = " + this.id.ToString()
-                    + " AND datafine > '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' ORDER BY datainizio";
+                    + " AND datafine > '" 
+                    + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") 
+                    + "' ORDER BY datainizio";
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -1253,12 +1268,15 @@ namespace KIS
             this._festivita = new List<Festivita>();
             if (this.id != -1)
             {
+                Reparto rp = new Reparto(idReparto);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
                     + "WHERE azione = 'F' AND straordinarifestivita.turno = " + this.id.ToString()
-                    + " AND datafine > '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "' ORDER BY datainizio";
+                    + " AND datafine > '" 
+                    + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") 
+                    + "' ORDER BY datainizio";
                 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
@@ -1344,10 +1362,10 @@ namespace KIS
             get
             {
                 DateTime primo;
-                primo = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, OraInizio.Hours, OraInizio.Minutes, OraInizio.Seconds);
+                primo = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, OraInizio.Hours, OraInizio.Minutes, OraInizio.Seconds);
 
                 DateTime secondo;
-                secondo = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, OraFine.Hours, OraFine.Minutes, OraFine.Seconds);
+                secondo = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, OraFine.Hours, OraFine.Minutes, OraFine.Seconds);
 
                 // Ricerco la prossima data per cui DayOfWeek corrisponde a GiornoInizio
                 while (primo.DayOfWeek != GiornoInizio)
@@ -1511,7 +1529,7 @@ namespace KIS
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
                     + "INNER JOIN turniproduzione ON (turniproduzione.id = straordinarifestivita.turno) "
                     + "WHERE azione = 'F' AND turniproduzione.reparto = " + rp.id.ToString()
-                    + " AND datafine > '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "' ORDER BY datainizio";
+                    + " AND datafine > '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "' ORDER BY datainizio";
                 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
@@ -1534,6 +1552,10 @@ namespace KIS
             {
                 if (i < f)
                 {
+                    Reparto rp = new Reparto(this.idReparto);
+                    i = TimeZoneInfo.ConvertTimeToUtc(i, rp.tzFusoOrario);
+                    f = TimeZoneInfo.ConvertTimeToUtc(f, rp.tzFusoOrario);
+
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1566,7 +1588,7 @@ namespace KIS
 
                     for (int q = 0; q < crp.Turni.Count && check2 == false; q++)
                     {
-                        if ((crp.Turni[q].Inizio <= i && i <= crp.Turni[q].Fine && crp.Turni[q].Inizio <= f && f <= crp.Turni[q].Fine))
+                        if ((TimeZoneInfo.ConvertTimeToUtc(crp.Turni[q].Inizio, rp.tzFusoOrario) <= i && i <= TimeZoneInfo.ConvertTimeToUtc(crp.Turni[q].Fine, rp.tzFusoOrario) && TimeZoneInfo.ConvertTimeToUtc(crp.Turni[q].Inizio, rp.tzFusoOrario) <= f && f <= TimeZoneInfo.ConvertTimeToUtc(crp.Turni[q].Fine, rp.tzFusoOrario)))
                         {
                             check2 = true;
                         }
@@ -1649,12 +1671,17 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
+            get {
+                Reparto rp = new Reparto(this.idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, rp.tzFusoOrario);
+            }
         }
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
+            get { Reparto rp = new Reparto(this.idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario);
+            }
         }
 
         public Festivita(int idFest)
@@ -1681,8 +1708,8 @@ namespace KIS
                 this._idTurno = -1;
                 this._idFestivita = -1;
                 this._idReparto = -1;
-                this._Inizio = DateTime.Now;
-                this._Fine = DateTime.Now;
+                this._Inizio = DateTime.UtcNow;
+                this._Fine = DateTime.UtcNow;
             }
             conn.Close();
         }
@@ -1741,12 +1768,15 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
+            get {
+                Reparto rp = new Reparto(this.idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, rp.tzFusoOrario); }
         }
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
+            get { Reparto rp = new Reparto(this.idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario); }
         }
 
         public Straordinario(int idStraord)
@@ -1773,8 +1803,8 @@ namespace KIS
                 this._idTurno = -1;
                 this._idStraordinario = -1;
                 this._idReparto = -1;
-                this._Inizio = DateTime.Now;
-                this._Fine = DateTime.Now;
+                this._Inizio = DateTime.UtcNow;
+                this._Fine = DateTime.UtcNow;
             }
             conn.Close();
         }
@@ -1832,7 +1862,7 @@ namespace KIS
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
                 + "INNER JOIN turniproduzione ON (turniproduzione.id = straordinarifestivita.turno) "
                 + "WHERE azione = 'S' AND turniproduzione.reparto = " + rp.id.ToString()
-                    + " AND datafine > '" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "' ORDER BY datainizio";
+                    + " AND datafine > '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "' ORDER BY datainizio";
                 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
@@ -1855,6 +1885,9 @@ namespace KIS
             {
                 if (i < f)
                 {
+                    Reparto rp = new Reparto(this.idReparto);
+                    i = TimeZoneInfo.ConvertTimeToUtc(i, rp.tzFusoOrario);
+                    f = TimeZoneInfo.ConvertTimeToUtc(f, rp.tzFusoOrario);
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -2018,13 +2051,23 @@ namespace KIS
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { return this._Inizio; }
+            get {
+                Turno trn = new Turno(idTurno);
+                Reparto rp = new Reparto(trn.idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, rp.tzFusoOrario); 
+                //return this._Inizio;
+            }
         }
 
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { return this._Fine; }
+            get {
+                Turno trn = new Turno(idTurno);
+                Reparto rp = new Reparto(trn.idReparto);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario); 
+                //return this._Fine;
+            }
         }
 
         private int _idTurno;
@@ -2100,8 +2143,10 @@ namespace KIS
             // Se tutti i controlli sono andati a buon fine allora creo la classe altrimenti no
             if (controlli == true)
             {
-                this._Inizio = I;
-                this._Fine = F;
+                Turno trn = new Turno(idTurno);
+                Reparto rp = new Reparto(trn.idReparto);
+                this._Inizio = TimeZoneInfo.ConvertTimeToUtc(I, rp.tzFusoOrario);
+                this._Fine = TimeZoneInfo.ConvertTimeToUtc(F, rp.tzFusoOrario);
                 this._status = stat;
                 this._idOrarioTurno = -1;
                 this._idFestivita = -1;
@@ -2122,8 +2167,8 @@ namespace KIS
             }
             else
             {
-                this._Inizio = DateTime.Now;
-                this._Fine = DateTime.Now;
+                this._Inizio = DateTime.UtcNow;
+                this._Fine = DateTime.UtcNow;
                 this._status = '\0';
                 this._idOrarioTurno = -1;
                 this._idFestivita = -1;
@@ -2427,8 +2472,8 @@ namespace KIS
             }
             else
             {
-                InizioCal = DateTime.Now;
-                FineCal = DateTime.Now;
+                InizioCal = DateTime.UtcNow;
+                FineCal = DateTime.UtcNow;
                 this._idReparto = rp;
             }
         }
@@ -2744,8 +2789,8 @@ namespace KIS
             }
             else
             {
-                InizioCal = DateTime.Now;
-                FineCal = DateTime.Now;
+                InizioCal = DateTime.UtcNow;
+                FineCal = DateTime.UtcNow;
                 this._idTurno = idTurno;
             }
         }

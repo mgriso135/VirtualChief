@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
+using KIS.App_Code;
 
 namespace KIS.Login
 {
@@ -25,7 +26,7 @@ namespace KIS.Login
                     }
                     else
                     {
-                        lblInfoLogin.Text = "NOT logged in as: " + ((User)Session["user"]).username + "<br/>Last login at: " + ((User)Session["user"]).lastLogin.ToString();
+                        lblInfoLogin.Text = "NOT logged in as: " + ((User)Session["user"]).username;
                     }
                 }
                 else

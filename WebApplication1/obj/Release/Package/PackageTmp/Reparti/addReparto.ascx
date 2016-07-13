@@ -15,6 +15,10 @@
         </td>
     </tr>
     <tr>
+        <td>Fuso orario:</td>
+        <td><asp:DropDownList runat="server" ID="ddlTimezones"/></td>
+    </tr>
+    <tr>
         <td colspan="2">
             <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="/img/iconSave.jpg" Height="50px" ToolTip="Salva" ValidationGroup="addReparto" />
             <asp:ImageButton runat="server" ID="reset" OnClick="reset_Click" ImageUrl="/img/iconUndo.png" Height="50px" ToolTip="Annulla" ValidationGroup="addReparto" />

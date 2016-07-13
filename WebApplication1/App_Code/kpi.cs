@@ -6,6 +6,7 @@ using Dati;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 using KIS;
+using KIS.App_Code;
 
 namespace KIS
 {
@@ -445,8 +446,12 @@ namespace KIS
         private DateTime _date;
         public DateTime date
         {
-            get { return this._date; }
-            set { this._date = value; }
+            get {
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._date, fuso.tzFusoOrario);
+            }
+            set { FusoOrario fuso = new FusoOrario();
+                this._date = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario); }
         }
 
         private int _task;
@@ -459,7 +464,7 @@ namespace KIS
         public KpiRecord()
         {
             this._valore = 0;
-            this._date = System.DateTime.Now;
+            this._date = DateTime.UtcNow;
         }
 
     }

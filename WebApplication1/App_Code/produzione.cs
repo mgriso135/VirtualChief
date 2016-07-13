@@ -116,7 +116,20 @@ namespace KIS
         private DateTime _dataIniziale;
         public DateTime dataIniziale
         {
-            get { return this._dataIniziale; }
+            get
+            {
+                TimeZoneInfo tz = null;
+                if (this.RepartoID != -1)
+                { Reparto rp = new Reparto(this.RepartoID);
+                    tz = rp.tzFusoOrario;
+                }
+                else
+                {
+                    FusoOrario fuso = new FusoOrario();
+                    tz = fuso.tzFusoOrario;
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._dataIniziale, tz);
+            }
         }
     }
     
@@ -145,20 +158,25 @@ namespace KIS
         private DateTime _EarlyStart;
         public DateTime EarlyStart
         {
-            get { return this._EarlyStart; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStart, rp.tzFusoOrario); }
             set
             {
+                Reparto rp = new Reparto(this.RepartoID);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET earlyStart = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
+                cmd.CommandText = "UPDATE tasksproduzione SET earlyStart = '" 
+                    + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
                 {
                     cmd.ExecuteNonQuery();
                     tr.Commit();
+                    this._EarlyStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
                 }
                 catch(Exception ex)
                 {
@@ -172,15 +190,19 @@ namespace KIS
         private DateTime _LateStart;
         public DateTime LateStart
         {
-            get { return this._LateStart; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._LateStart, rp.tzFusoOrario);
+            }
             set
             {
+                Reparto rp = new Reparto(this.RepartoID);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET lateStart = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
+                cmd.CommandText = "UPDATE tasksproduzione SET lateStart = '" + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
                 {
@@ -198,15 +220,19 @@ namespace KIS
         private DateTime _EarlyFinish;
         public DateTime EarlyFinish
         {
-            get { return this._EarlyFinish; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinish, rp.tzFusoOrario); }
             set
             {
+                Reparto rp = new Reparto(this.RepartoID);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET earlyFinish = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
+                cmd.CommandText = "UPDATE tasksproduzione SET earlyFinish = '" 
+                    + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
                 {
@@ -224,15 +250,19 @@ namespace KIS
         private DateTime _LateFinish;
         public DateTime LateFinish
         {
-            get { return this._LateFinish; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinish, rp.tzFusoOrario); }
             set
             {
+                Reparto rp = new Reparto(this.RepartoID);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET lateFinish = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
+                cmd.CommandText = "UPDATE tasksproduzione SET lateFinish = '" 
+                    + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
                 {
@@ -250,12 +280,18 @@ namespace KIS
         private DateTime _StartEffettivo;
         public DateTime StartEffettivo
         {
-            get { return this._StartEffettivo; }
+            get
+            {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._StartEffettivo, rp.tzFusoOrario);
+            }
         }
         private DateTime _FinishEffettivo;
         public DateTime FinishEffettivo
         {
-            get { return this._FinishEffettivo; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._FinishEffettivo, rp.tzFusoOrario); }
         }
 
         private int _OriginalTask;
@@ -417,10 +453,10 @@ namespace KIS
                 this._TaskProduzioneID = -1;
                 this._Name = "";
                 this._Description = "";
-                this._EarlyStart = DateTime.Now;
-                this._LateStart = DateTime.Now;
-                this._EarlyFinish = DateTime.Now;
-                this._LateFinish = DateTime.Now;
+                this._EarlyStart = DateTime.UtcNow;
+                this._LateStart = DateTime.UtcNow;
+                this._EarlyFinish = DateTime.UtcNow;
+                this._LateFinish = DateTime.UtcNow;
                 this._OriginalTask = -1;
                 this._OriginalTaskRevisione = -1;
                 this._VarianteID = -1;
@@ -432,8 +468,8 @@ namespace KIS
                 this._NumOperatori = 0;
                 this._TempoCiclo = new TimeSpan(0, 0, 0);
                 this._IsCritical = false;
-                this._StartEffettivo = DateTime.Now;
-                this._FinishEffettivo = DateTime.Now;
+                this._StartEffettivo = DateTime.UtcNow;
+                this._FinishEffettivo = DateTime.UtcNow;
                 this._QuantitaPrevista = -1;
                 this._QuantitaProdotta = -1;
             }
@@ -619,7 +655,7 @@ namespace KIS
                     {
                         cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
                             + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
-                            + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', 'I', '')";
+                            + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', 'I', '')";
                         cmd.ExecuteNonQuery();
                         cmd.CommandText = "UPDATE tasksproduzione SET status = 'I' WHERE taskID = " + this.TaskProduzioneID.ToString();
                         cmd.ExecuteNonQuery();
@@ -682,7 +718,7 @@ namespace KIS
                 {
                     cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
                             + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
-                            + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', 'P', '')";
+                            + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', 'P', '')";
                     cmd.ExecuteNonQuery();
                     this.loadUtentiAttivi();
                     if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.username))
@@ -765,7 +801,7 @@ namespace KIS
                             rdr.Close();
                             cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
                                 + idEv.ToString() + ", '" + this.UtentiAttivi[i] + "', " + this.TaskProduzioneID.ToString()
-                                + ", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', 'F', '')";
+                                + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', 'F', '')";
                             cmd.ExecuteNonQuery();
                         }
                         // Imposto lo stato del task a terminato
@@ -1101,7 +1137,7 @@ namespace KIS
         {
             get
             {
-                DateTime min = DateTime.Now.AddDays(30);
+                DateTime min = DateTime.UtcNow.AddDays(30);
                 if (this.Status == 'F' || this.Status == 'I')
                 {
                     this.loadEventi();
@@ -1113,7 +1149,8 @@ namespace KIS
                         }
                     }
                 }
-                return min;
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(min, rp.tzFusoOrario);
             }
         }
 
@@ -1134,7 +1171,8 @@ namespace KIS
                         }
                     }
                 }
-                return max;
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
             }
         }
 
@@ -1181,7 +1219,7 @@ namespace KIS
                 }
                 rdr.Close();
                 cmd.CommandText = "INSERT INTO warningproduzione(id, dataChiamata, task, user) VALUES("
-                    + maxID.ToString() + ", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', " + this.TaskProduzioneID.ToString()
+                    + maxID.ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', " + this.TaskProduzioneID.ToString()
                     + ", '" + usr.username + "')";
                 cmd.ExecuteNonQuery();
 
@@ -1240,9 +1278,10 @@ namespace KIS
         {
             get
             {
+                Reparto rp = new Reparto(this.RepartoID);
                 log = "";
                 TimeSpan rit = new TimeSpan(0, 0, 0);
-                if (DateTime.Now <= this.LateStart || (this.Status == 'F' && this.DataInizioTask <= this.LateStart))
+                if (TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) <= this.LateStart || (this.Status == 'F' && this.DataInizioTask <= this.LateStart))
                 {
                     rit = new TimeSpan(0, 0, 0);
                 }
@@ -1259,7 +1298,7 @@ namespace KIS
 
                         //log = this.Status + " " + df.ToString("dd/MM/yyyy HH:mm:ss") + " " + this.LateStart.ToString("dd/MM/yyyy HH:mm:ss") + " ";
                         //log += rit.TotalHours.ToString() + "<br/>";
-                        Reparto rp = new Reparto(this.RepartoID);
+                        //Reparto rp = new Reparto(this.RepartoID);
                         rp.loadCalendario(this.LateStart.AddDays(-5), df.AddDays(5));
                         int indInizio = -1;
                         int indFine = -1;
@@ -1329,13 +1368,13 @@ namespace KIS
                         }
                         else
                         {
-                            df = DateTime.Now;
+                            df = DateTime.UtcNow;
                         }
                         rit = df - this.LateFinish;
                         //log = "Entro nel ramo 'IPF'<br />";
                         //log += df.ToString("dd/MM/yyyy HH:mm:ss") + " " + this.LateFinish.ToString("dd/MM/yyyy HH:mm:ss") + " ";
                         //log += rit.TotalHours.ToString() + "<br/>";
-                        Reparto rp = new Reparto(this.RepartoID);
+                        //Reparto rp = new Reparto(this.RepartoID);
                         rp.loadCalendario(this.LateStart.AddDays(-5), df.AddDays(5));
                         int indInizio = -1;
                         int indFine = -1;
@@ -2045,26 +2084,47 @@ namespace KIS
         private DateTime _EarlyStartDate;
         public DateTime EarlyStartDate
         {
-            get { return this._EarlyStartDate; }
-            set { this._EarlyStartDate = value; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStartDate, rp.tzFusoOrario); }
+            set {
+                Reparto rp = new Reparto(this.RepartoID);
+                this._EarlyStartDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario); }
         }
         private DateTime _LateStartDate;
         public DateTime LateStartDate
         {
-            get { return this._LateStartDate; }
-            set { this._LateStartDate = value; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._LateStartDate, rp.tzFusoOrario);
+            }
+            set {
+                Reparto rp = new Reparto(this.RepartoID);
+                this._LateStartDate = TimeZoneInfo.ConvertTimeToUtc(value);
+            }
         }
         private DateTime _EarlyFinishDate;
         public DateTime EarlyFinishDate
         {
-            get { return this._EarlyFinishDate; }
-            set { this._EarlyFinishDate = value; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinishDate, rp.tzFusoOrario);
+            }
+            set {
+                Reparto rp = new Reparto(this.RepartoID);
+                this._EarlyFinishDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
+            }
         }
         private DateTime _LateFinishDate;
         public DateTime LateFinishDate
         {
-            get { return this._LateFinishDate; }
-            set { this._LateFinishDate = value; }
+            get {
+                Reparto rp = new Reparto(this.RepartoID);
+                return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinishDate, rp.tzFusoOrario); }
+            set {
+                Reparto rp = new Reparto(this.RepartoID);
+                this._LateFinishDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
+            }
         }
         private bool _InseribileInCalendario;
         public bool InseribileInCalendario
@@ -2444,11 +2504,11 @@ namespace KIS
         {
             int rt = 1;
             Articolo art = new Articolo(this.ArticoloID, this.ArticoloAnno);
-            if (art.ID != -1 && art.DataPrevistaFineProduzione > DateTime.Now)
+            if (art.ID != -1 && TimeZoneInfo.ConvertTimeToUtc(art.DataPrevistaFineProduzione, this.RepartoProduttivo.tzFusoOrario) > DateTime.UtcNow)
             {
                 // Per prima cosa, verifico quale è la data di consegna, ed il primo turno utile in cui inserire il task
                 Reparto rp = new Reparto(art.Reparto);
-                rp.loadCalendario(DateTime.Now, art.DataPrevistaConsegna.AddDays(7));
+                rp.loadCalendario(DateTime.UtcNow, TimeZoneInfo.ConvertTimeToUtc(art.DataPrevistaConsegna, this.RepartoProduttivo.tzFusoOrario).AddDays(7));
                 // Ricerco l'ultimo turno papabile
                 TimeSpan tempoADisposizione = new TimeSpan(0, 0, 0);
                 int indInterv = -1;
@@ -2522,7 +2582,7 @@ namespace KIS
                         c++;
                         cont--;
                     }
-                    while (cont >= 0 && rp.CalendarioRep.Intervalli[cont].Inizio > DateTime.Now) //residuo.TotalSeconds > 0)
+                    while (cont >= 0 && rp.CalendarioRep.Intervalli[cont].Inizio > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.RepartoProduttivo.tzFusoOrario))
                     {
                         ElIntervalli.Add(new IntervalloTempi());
                         IntervalloTempi tm = ElIntervalli[c];
@@ -2655,7 +2715,7 @@ namespace KIS
                 // Ora controllo che tutti i task abbiano Early e Late Start e Finish Date impostato e maggiore di DateTime.Now
                 for (int i = 0; i < this.Processi.Count; i++)
                 {
-                    if (!(this.Processi[i].EarlyStartDate != null && this.Processi[i].EarlyStartDate >= DateTime.Now && this.Processi[i].LateStartDate != null && this.Processi[i].LateStartDate >= DateTime.Now && this.Processi[i].EarlyFinishDate != null && this.Processi[i].EarlyFinishDate >= DateTime.Now && this.Processi[i].LateFinishDate != null && this.Processi[i].LateFinishDate >= DateTime.Now))
+                    if (!(this.Processi[i].EarlyStartDate != null && this.Processi[i].EarlyStartDate >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.RepartoProduttivo.tzFusoOrario) && this.Processi[i].LateStartDate != null && this.Processi[i].LateStartDate >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.RepartoProduttivo.tzFusoOrario) && this.Processi[i].EarlyFinishDate != null && this.Processi[i].EarlyFinishDate >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.RepartoProduttivo.tzFusoOrario) && this.Processi[i].LateFinishDate != null && this.Processi[i].LateFinishDate >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, this.RepartoProduttivo.tzFusoOrario)))
                     {
                         log += this.Processi[i].EarlyStartDate.ToString() + " " + this.Processi[i].LateStartDate.ToString() + " " + this.Processi[i].EarlyFinishDate.ToString() + " " + this.Processi[i].LateFinishDate.ToString() + "<br/>";
                         rt = 2;
@@ -2706,10 +2766,10 @@ namespace KIS
                             + maxTaskID.ToString() + ", "
                             + "'" + this.Processi[i].Task.Task.processName + "', "
                             + "'" + this.Processi[i].Task.Task.processDescription + "', "
-                            + "'" + this.Processi[i].EarlyStartDate.ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + "'" + this.Processi[i].LateStartDate.ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + "'" + this.Processi[i].EarlyFinishDate.ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + "'" + this.Processi[i].LateFinishDate.ToString("yyyy/MM/dd HH:mm:ss") + "', "
+                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].EarlyStartDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
+                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].LateStartDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
+                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].EarlyFinishDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
+                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].LateFinishDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
                             + this.Processi[i].Task.Task.processID.ToString() + ", "
                             + this.Processi[i].Task.Task.revisione.ToString() + ", "
                             + this.MainProcess.variant.idVariante.ToString() + ", "
@@ -2989,7 +3049,9 @@ namespace KIS
         private DateTime _Data;
         public DateTime Data
         {
-            get { return this._Data; }
+            get {
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Data, fuso.tzFusoOrario); }
         }
 
         private Char _Evento;
@@ -3054,7 +3116,8 @@ namespace KIS
         private DateTime _DataChiamata;
         public DateTime DataChiamata
         {
-            get { return this._DataChiamata; }
+            get { FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._DataChiamata, fuso.tzFusoOrario); }
         }
 
         private int _TaskID;
@@ -3072,14 +3135,19 @@ namespace KIS
         private DateTime _DataRisoluzione;
         public DateTime DataRisoluzione
         {
-            get { return this._DataRisoluzione; }
+            get { FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this._DataRisoluzione, fuso.tzFusoOrario);
+            }
             set
             {
-                this._DataRisoluzione = value;
+                FusoOrario fuso = new FusoOrario();
+                this._DataRisoluzione = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET dataRisoluzione = '" + value.ToString("yyyy/MM/dd HH:mm:ss") + "' WHERE id = " + this.ID.ToString();
+                cmd.CommandText = "UPDATE warningproduzione SET dataRisoluzione = '" 
+                    + TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") 
+                    + "' WHERE id = " + this.ID.ToString();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3328,14 +3396,16 @@ namespace KIS
         {
             get
             {
-                return this.Inizio;
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this.Inizio, fuso.tzFusoOrario);
             }
         }
         public DateTime DataFine
         {
             get
             {
-                return this.Fine;
+                FusoOrario fuso = new FusoOrario();
+                return TimeZoneInfo.ConvertTimeFromUtc(this.Fine, fuso.tzFusoOrario);
             }
         }
         public TimeSpan DurataIntervallo

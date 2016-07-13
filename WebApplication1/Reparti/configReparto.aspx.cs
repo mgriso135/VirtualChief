@@ -74,6 +74,8 @@ namespace KIS.configReparto
                     frmAndonMaxDays.Visible = true;
                     frmAndonViewFields.Visible = true;
                     frmAndonViewFields.idReparto = rep.id;
+                    frmConfigTimezone.idReparto = rep.id;
+                    frmConfigTimezone.Visible = true;
                     
                     // Abilito la gestione a kanban solo se è attivo KanbanBox by Sintesia
                     frmConfigKanban.idReparto = rep.id;
@@ -118,6 +120,7 @@ namespace KIS.configReparto
                     frmAndonMaxDays.Visible = false;
                     frmConfigKanban.Visible = false;
                     frmAndonViewFields.Visible = false;
+                    frmConfigTimezone.Visible = false;
                 }
             }
             else
@@ -148,6 +151,7 @@ namespace KIS.configReparto
                 frmAndonMaxDays.idReparto = -1;
                 frmAndonMaxDays.Visible = false;
                 frmConfigKanban.Visible = false;
+                frmConfigTimezone.Visible = false;
             }
 
         }

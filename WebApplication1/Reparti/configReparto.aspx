@@ -17,6 +17,7 @@
 <%@ Register TagPrefix="Andon" TagName="MaxViewDays" Src="~/Andon/configMaxViewDaysAndonReparto.ascx" %>
 <%@ Register TagPrefix="config" TagName="Kanban" Src="~/Reparti/configKanban.ascx" %>
 <%@ Register TagPrefix="Andon" TagName="configViewFields" Src="~/Andon/AndonRepartoViewFields.ascx" %>
+<%@ Register TagPrefix="Timezone" TagName="config" Src="~/Reparti/configRepartoTimezone.ascx" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
@@ -191,6 +192,19 @@
     </div>
     </div>
 
+        <div class="accordion-group">
+            <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwelve">
+          Fuso orario
+      </a>
+    </div>
+            <div id="collapseTwelve" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <timezone:config runat="server" id="frmConfigTimezone" />
+
+      </div>
+    </div>
+    </div>
 
     </div>
     </asp:Content>
