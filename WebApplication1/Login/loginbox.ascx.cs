@@ -46,7 +46,12 @@ namespace KIS.Login
                 Session["user"] = current;
                 lblInfoLogin.Text = "Welcome, " + current.name + " " + current.cognome + "<br/>Last login at: " + ((User)Session["user"]).lastLogin.ToString();
                 tblLogin.Visible = false;
-                Response.Redirect("~/");
+                String redUrl = "~/";
+                if (!String.IsNullOrEmpty(Request.QueryString["red"]) && (Request.QueryString["red"]).Length>0)
+                {
+                    redUrl = Request.QueryString["red"] + ".aspx";
+                }
+                Response.Redirect(redUrl);
             }
             else
             {

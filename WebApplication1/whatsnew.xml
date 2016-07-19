@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Stories>
+  <Story id="0094">
+    <Date>07/07/2016</Date>
+    <Title>Gestione fuso orario</Title>
+    <Description>
+      <![CDATA[Kaizen Indicator System gestisce il fuso orario per l'intera applicazione ed anche per singolo reparto.<br />
+      In questo modo è possibile delocalizzare l'installazione del lato server di KIS, ma soprattutto è possibile gestire <i>REPARTI</i>
+      risiedenti in diverse località geografiche.
+      ]]>
+    </Description>
+  </Story>
   <Story id="0067">
     <Date>03/04/2016</Date>
     <Title>Campi custom su Andon</Title>

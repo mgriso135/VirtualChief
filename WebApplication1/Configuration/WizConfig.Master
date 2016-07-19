@@ -158,10 +158,14 @@
             <div class="tabbable tabs-left">
   <ul class="nav nav-tabs" runat="server">
       <li class="nav-header">Sezioni</li>
+      <li runat="server" id="liAdmin"><a href="wizConfigAdminUser.aspx"><asp:Image runat="server" ImageUrl="~/img/iconAdmin.png" Height="30" />Admin user</a></li>
       <li runat="server" id="liLogo"><a href="wizConfigLogo.aspx"><asp:Image runat="server" ImageUrl="~/img/logo_KP.jpg" Height="30" />Logo</a></li>
-      <li runat="server" id="liReparto" class="active"><a href="#"><asp:Image ID="Image1" runat="server" ImageUrl="~/img/iconDepartment.png" Height="30" />Reparti</a></li>
+      <li runat="server" id="liTimezone"><a href="wizConfigTimezone.aspx"><asp:Image runat="server" ImageUrl="~/img/iconTimezone.png" Height="30" />Time zone</a></li>
+      <li runat="server" id="liReparto"><a href="wizConfigReparti_Main.aspx"><asp:Image ID="Image1" runat="server" ImageUrl="~/img/iconDepartment.png" Height="30" />Reparti</a></li>
     <li runat="server" id="liPostazioni"><a href="#"><asp:Image ID="Image2" runat="server" ImageUrl="~/img/iconWorkspace.png" Height="30" />Postazioni</a></li>
       <li runat="server" id="liUtenti"><a href="#"><asp:Image ID="Image3" runat="server" ImageUrl="~/img/iconUser.png" Height="30" />Utenti</a></li>
+      <li runat="server" id="liAndon"><a href="wizConfigAndon.aspx"><asp:Image runat="server" ImageUrl="~/img/iconAndon.png" Height="30" />Andon</a></li>
+      <li runat="server" id="li1"><a href="wizCustomerReport.aspx"><asp:Image runat="server" ImageUrl="~/img/iconReportProductionProgress.jpg" Height="30" />Customer Report</a></li>
   </ul>
   <div class="tab-content">
    

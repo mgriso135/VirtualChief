@@ -54,6 +54,7 @@ namespace KIS.App_Code
                     ret = false;
                 }
                 conn.Close();
+
                 return ret;
             }
         }
@@ -74,7 +75,58 @@ namespace KIS.App_Code
             }
         }
         
-            
+        public Boolean WizAdminUserCompleted
+        {
+            get
+            {
+                Boolean ret = false;
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT groups.id, groupusers.user FROM groups INNER JOIN groupusers ON("
+                    + "groups.id = groupusers.groupid) WHERE nomegruppo LIKE 'Admin'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    ret = true;
+                }
+                else
+                {
+                    ret = false;
+                }
+                rdr.Close();
+                conn.Close();
+                return ret;
+            }
+        }
+
+        public Boolean WizTimezoneCompleted
+        {
+            get
+            {
+                Boolean ret = false;
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM configurazione WHERE parametro LIKE 'TimeZone'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    ret = true;
+                }
+                else
+                {
+                    ret = false;
+                }
+                rdr.Close();
+                conn.Close();
+                return ret;
+            }
+        }
+
+        public Boolean WizAndonCompleted { get { return false; } }
+
+        public bool WizCustomerReportCompleted { get { return false; } }
     }
 
     public class Logo

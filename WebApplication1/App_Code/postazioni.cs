@@ -678,9 +678,10 @@ namespace KIS
 
         public IntervalloLavoroPostazione(int idPost, int repID, IntervalloCalendarioReparto intCalRep)
         {
+            Reparto rp = new Reparto(idReparto);
             this._idPostazione = idPost;
-            this._Inizio = intCalRep.Inizio;
-            this._Fine = intCalRep.Fine;
+            this._Inizio = TimeZoneInfo.ConvertTimeToUtc(intCalRep.Inizio, rp.tzFusoOrario);
+            this._Fine = TimeZoneInfo.ConvertTimeToUtc(intCalRep.Fine, rp.tzFusoOrario);
             this._idReparto = repID;
             this._Status = intCalRep.Status;
             this._idTurno = intCalRep.idTurno;

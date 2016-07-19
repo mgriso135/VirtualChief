@@ -12,38 +12,37 @@ namespace KIS.Configuration
         public String section;
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (section == "Logo")
+            liLogo.Attributes.Remove("class");
+            liReparto.Attributes.Remove("class");
+            liPostazioni.Attributes.Remove("class");
+            liUtenti.Attributes.Remove("class");
+            liAdmin.Attributes.Remove("class");
+            liTimezone.Attributes.Remove("class");
+
+            switch(section)
             {
-                liLogo.Attributes.Add("class", "active");
-                liReparto.Attributes.Remove("class");
-                liPostazioni.Attributes.Remove("class");
-                liUtenti.Attributes.Remove("class");
-            }
-            else if (section == "Reparti")
-            
-                {
+                case "Admin":
+                    liAdmin.Attributes.Add("class", "active");
+                    break;
+                case "TimeZone":
+                    liTimezone.Attributes.Add("class", "active");
+                    break;
+                case "Logo":
+                    liLogo.Attributes.Add("class", "active");
+                    break;
+                case "Reparti":
                     liReparto.Attributes.Add("class", "active");
-                    liLogo.Attributes.Remove("class");
-                    liPostazioni.Attributes.Remove("class");
-                    liUtenti.Attributes.Remove("class");
-                
+                    break;
+                case "Postazioni":
+                    liPostazioni.Attributes.Add("class", "active");
+                    break;
+                case "Utenti":
+                    liUtenti.Attributes.Add("class", "active");
+                    break;
+                default:
+                    break;
             }
-            else if (section == "Postazioni")
-            {
-                liPostazioni.Attributes.Add("class", "active");
-                liLogo.Attributes.Remove("class");
-                liReparto.Attributes.Remove("class");
-                liUtenti.Attributes.Remove("class");
 
-            }
-            else if (section == "Utenti")
-            {
-                liUtenti.Attributes.Add("class", "active");
-                liLogo.Attributes.Remove("class");
-                liPostazioni.Attributes.Remove("class");
-                liReparto.Attributes.Remove("class");
-
-            }
         }
     }
 }

@@ -12,7 +12,21 @@ namespace KIS.Configuration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            
             KISConfig kisCfg = new KISConfig();
+
+            adminOK.Visible = kisCfg.WizAdminUserCompleted;
+            adminKO.Visible = !kisCfg.WizAdminUserCompleted;
+
+            timezoneOK.Visible = kisCfg.WizTimezoneCompleted;
+            timezoneKO.Visible = !kisCfg.WizTimezoneCompleted;
+
+            andonOK.Visible = kisCfg.WizAndonCompleted;
+            andonKO.Visible = !kisCfg.WizAndonCompleted;
+
+            reportOK.Visible = kisCfg.WizCustomerReportCompleted;
+            reportKO.Visible = !kisCfg.WizCustomerReportCompleted;
+
             if (kisCfg.WizLogoCompleted)
             {
                 logoOK.Visible = true;

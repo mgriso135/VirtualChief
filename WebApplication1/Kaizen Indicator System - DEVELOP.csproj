@@ -521,12 +521,61 @@
     <Compile Include="Configuration\WizConfig.Master.designer.cs">
       <DependentUpon>WizConfig.Master</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\wizConfigAdminUser.ascx.cs">
+      <DependentUpon>wizConfigAdminUser.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigAdminUser.ascx.designer.cs">
+      <DependentUpon>wizConfigAdminUser.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\wizConfigAdminUser.aspx.cs">
+      <DependentUpon>wizConfigAdminUser.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigAdminUser.aspx.designer.cs">
+      <DependentUpon>wizConfigAdminUser.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\wizConfigLogo.ascx.cs">
+      <DependentUpon>wizConfigLogo.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigLogo.ascx.designer.cs">
+      <DependentUpon>wizConfigLogo.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\wizConfigLogo.aspx.cs">
       <DependentUpon>wizConfigLogo.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Configuration\wizConfigLogo.aspx.designer.cs">
       <DependentUpon>wizConfigLogo.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\wizConfigReparti_Main.ascx.cs">
+      <DependentUpon>wizConfigReparti_Main.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigReparti_Main.ascx.designer.cs">
+      <DependentUpon>wizConfigReparti_Main.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\wizConfigReparti_Main.aspx.cs">
+      <DependentUpon>wizConfigReparti_Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigReparti_Main.aspx.designer.cs">
+      <DependentUpon>wizConfigReparti_Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\WizConfigTimezone.ascx.cs">
+      <DependentUpon>WizConfigTimezone.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\WizConfigTimezone.ascx.designer.cs">
+      <DependentUpon>WizConfigTimezone.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\WizConfigTimezone.aspx.cs">
+      <DependentUpon>WizConfigTimezone.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\WizConfigTimezone.aspx.designer.cs">
+      <DependentUpon>WizConfigTimezone.aspx</DependentUpon>
     </Compile>
     <Compile Include="Controllers\customers.cs" />
     <Compile Include="Controllers\CustomersModel.cs" />
@@ -1890,7 +1939,14 @@
     <Content Include="Commesse\wzVarianteDettagli.ascx" />
     <Content Include="Configuration\configurationStatus.ascx" />
     <Content Include="Configuration\MainWizConfig.aspx" />
+    <Content Include="Configuration\wizConfigAdminUser.ascx" />
+    <Content Include="Configuration\wizConfigAdminUser.aspx" />
+    <Content Include="Configuration\wizConfigLogo.ascx" />
     <Content Include="Configuration\wizConfigLogo.aspx" />
+    <Content Include="Configuration\wizConfigReparti_Main.ascx" />
+    <Content Include="Configuration\wizConfigReparti_Main.aspx" />
+    <Content Include="Configuration\WizConfigTimezone.ascx" />
+    <Content Include="Configuration\WizConfigTimezone.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -1914,6 +1970,8 @@
     <Content Include="img\iconAdd.jpg" />
     <Content Include="img\iconAdd2.png" />
     <Content Include="img\iconAddLink.png" />
+    <Content Include="img\iconAdmin.png" />
+    <Content Include="img\iconAndon.png" />
     <Content Include="img\IconArrowDown.png" />
     <Content Include="img\iconArrowLeft.png" />
     <Content Include="img\iconArrowRight.png" />
@@ -1999,6 +2057,7 @@
     <Content Include="img\iconTask2.jpg" />
     <Content Include="img\iconTask3.jpg" />
     <Content Include="img\iconTimeline.jpg" />
+    <Content Include="img\iconTimezone.png" />
     <Content Include="img\iconToolbox.jpg" />
     <Content Include="img\iconTrendUp.jpg" />
     <Content Include="img\iconUndo.png" />

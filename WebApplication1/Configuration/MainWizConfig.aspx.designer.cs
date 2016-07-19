@@ -20,5 +20,17 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Configuration.configurationStatus frmConfigStatus;
+        
+        /// <summary>
+        /// Proprietà Master.
+        /// </summary>
+        /// <remarks>
+        /// Proprietà generata automaticamente.
+        /// </remarks>
+        public new KIS.Configuration.WizConfig Master {
+            get {
+                return ((KIS.Configuration.WizConfig)(base.Master));
+            }
+        }
     }
 }

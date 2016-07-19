@@ -11,7 +11,7 @@ namespace KIS.Configuration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            this.Master.section = "";
         }
     }
 }
