@@ -119,7 +119,7 @@ namespace KIS.Analysis
                 artID = Int32.Parse(hArtID.Value.ToString());
                 artYear = Int32.Parse(hArtYear.Value.ToString());
             }
-            catch (Exception ex)
+            catch
             {
                 artID = -1;
                 artYear = -1;
