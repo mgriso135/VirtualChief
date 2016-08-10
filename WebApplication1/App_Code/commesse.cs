@@ -830,7 +830,7 @@ namespace KIS.Commesse
                     }
                     catch (Exception ex)
                     {
-                        this._DataPrevistaFineProduzione = new DateTime(1970, 1, 1);
+                        this._DataPrevistaFineProduzione = TimeZoneInfo.ConvertTimeToUtc(new DateTime(1970, 1, 1));
                         log += ex.Message;
                         tr.Rollback();
                     }
@@ -1118,7 +1118,8 @@ namespace KIS.Commesse
                 }
                 else
                 {
-                    this._DataPrevistaFineProduzione = new DateTime(1970, 1, 1);
+                    Reparto rp = new KIS.Reparto(this.Reparto);
+                    this._DataPrevistaFineProduzione = TimeZoneInfo.ConvertTimeToUtc(new DateTime(1970, 1, 1), rp.tzFusoOrario);
                 }
                 if (!rdr.IsDBNull(12))
                 {

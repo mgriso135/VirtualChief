@@ -37,8 +37,9 @@ namespace KIS.Produzione
                     andonCfg = new AndonCompleto();
                     andonCfg.loadCampiVisualizzati();
                     andonCfg.loadCampiVisualizzatiTasks();
-                    loadArticoli();
-                    if (artI.Count == 0)
+                artI = new List<Articolo>();
+                loadArticoli();
+                if (artI.Count == 0)
                     {
                         rptArticoliAvviati.Visible = false;
                         lblTitle.Visible = false;
@@ -63,9 +64,12 @@ namespace KIS.Produzione
 
         protected void loadArticoli()
         {
+            //ElencoArticoliInProduzione artAperti = new ElencoArticoliInProduzione();
+            //artI = artAperti.ElencoArticoli;
             ElencoCommesse elComm = new ElencoCommesse();
             elComm.loadCommesse();
             artI = new List<Articolo>();
+            
             for (int i = 0; i < elComm.Commesse.Count; i++)
             {
                 elComm.Commesse[i].loadArticoli();
@@ -120,9 +124,15 @@ namespace KIS.Produzione
                         }
 
                         Repeater rptStatoTasks = (Repeater)e.Item.FindControl("rptStatoTasks");
+                        if(rptStatoTasks!=null)
+                        { 
                             art.loadTasksProduzione();
+                            if(art.Tasks!=null && art.Tasks.Count>0)
+                            { 
                             rptStatoTasks.DataSource = art.Tasks;
                             rptStatoTasks.DataBind();
+                            }
+                        }
                     }
                     else
                     {

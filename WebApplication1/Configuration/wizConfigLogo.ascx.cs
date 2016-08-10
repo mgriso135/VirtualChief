@@ -13,27 +13,56 @@ namespace KIS.Configuration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            KISConfig cfg = new KISConfig();
+            FileUpload1.Visible = false;
+            btnUpload.Visible = false;
+            btnUpload.Enabled = false;
+            FileUpload1.Enabled = false;
 
-            if (!cfg.WizLogoCompleted)
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Configurazione Logo";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            bool checkUser = false;
+            if (Session["user"] != null)
             {
-                if (!Page.IsPostBack && !Page.IsCallback)
+                User curr = (User)Session["user"];
+                checkUser = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (checkUser == true)
+            {
+                KISConfig cfg = new KISConfig();
+                if (!cfg.WizLogoCompleted)
                 {
-                    Logo lg = new Logo();
-                    if (lg.filePath.Length > 0)
+                    FileUpload1.Visible = true;
+                    btnUpload.Visible = true;
+                    btnUpload.Enabled = true;
+                    FileUpload1.Enabled = true;
+                    if (!Page.IsPostBack && !Page.IsCallback)
                     {
-                        imgCurrentLogo.Visible = true;
-                        imgCurrentLogo.ImageUrl = lg.filePath;
+                        Logo lg = new Logo();
+                        if (lg.filePath.Length > 0)
+                        {
+                            imgCurrentLogo.Visible = true;
+                            imgCurrentLogo.ImageUrl = lg.filePath;
+                        }
                     }
+                }
+                else
+                {
+                    lbl1.Text = "Il logo è già stato configurato tramite wizard.<br />Per variarlo utilizzare il normale menu di configurazione accedendo con privilegi di Admin.";
+                    FileUpload1.Visible = false;
+                    btnUpload.Visible = false;
+                    btnUpload.Enabled = false;
+                    FileUpload1.Enabled = false;
                 }
             }
             else
             {
-                lbl1.Text = "Il logo è già stato configurato tramite wizard.<br />Per variarlo utilizzare il normale menu di configurazione accedendo con privilegi di Admin.";
-                FileUpload1.Visible = false;
-                btnUpload.Visible = false;
-                btnUpload.Enabled = false;
-                FileUpload1.Enabled = false;
+                lbl1.Text = "Please <a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigLogo\">click here</a> to login as Admin User.";
             }
         }
 

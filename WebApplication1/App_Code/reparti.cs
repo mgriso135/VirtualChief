@@ -253,6 +253,29 @@ namespace KIS
             }
         }
 
+        public Boolean FullyConfigured
+        {
+            get
+            {
+                Boolean ret = false;
+                this.loadTurni();
+                Boolean checkTurni = this.Turni.Count > 0 ? true : false;
+                Boolean checkIntervalli = false;
+                for (int i = 0; i < this.Turni.Count; i++)
+                {
+                    checkIntervalli = this.Turni[i].OrariDiLavoro.Count > 0 ? true : false;
+                }
+                Boolean checkTimezone = this.fusoOrario.Length > 0 ? true : false;
+
+                AndonReparto aRep = new AndonReparto(this.id);
+                aRep.loadCampiVisualizzati();
+                Boolean checkAndon = aRep.CampiVisualizzati.Count>0?true:false;
+
+                ret = checkTurni && checkIntervalli && checkTimezone && checkAndon;
+                return ret;
+            }
+        }
+
         public Reparto()
         {
             this._id = -1;
@@ -1139,6 +1162,8 @@ namespace KIS
 
         public Turno(int turnoID)
         {
+            this._id = -1;
+            this._idReparto = -1;
             this._straordinari = new List<Straordinario>();
             this._festivita = new List<Festivita>();
             MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -1155,18 +1180,27 @@ namespace KIS
                 this._Colore = new System.Drawing.Color();
                 this._Colore = System.Drawing.ColorTranslator.FromHtml(rdr.GetString(3));
             }
+            else
+            {
+                this._id = -1;
+                this._idReparto = -1;
+            }
             rdr.Close();
+
             // Carico gli orari di lavoro
+            this._Orari = new List<IntervalloLavorativoTurno>();
+            if (this.id!=-1)
+            { 
             cmd.CommandText = "SELECT id FROM orarilavoroturni WHERE idTurno = " + this.id.ToString()
                 + " ORDER BY giornoInizio, oraInizio";
             rdr = cmd.ExecuteReader();
-            this._Orari = new List<IntervalloLavorativoTurno>();
+            
             while (rdr.Read())
             {
                 this._Orari.Add(new IntervalloLavorativoTurno(rdr.GetInt32(0)));
             }
             rdr.Close();
-
+            }
             conn.Close();
         }
 
@@ -1548,7 +1582,7 @@ namespace KIS
         public bool Add(int idTurno, DateTime i, DateTime f)
         {
             bool rt = false;
-            if (this.idReparto != -1 && idTurno > 0)
+            if (this.idReparto != -1)// && idTurno > 0)
             {
                 if (i < f)
                 {
@@ -1584,7 +1618,7 @@ namespace KIS
 
                     // Controllo che non ci sia sovrapposizione con le pause dai turni di reparto
                     bool check2 = false;
-                    CalendarioReparto crp = new CalendarioReparto(this.idReparto, i.AddMonths(-2), f.AddMonths(1));
+                    CalendarioReparto crp = new CalendarioReparto(this.idReparto, i.AddDays(-3), f.AddDays(3));
 
                     for (int q = 0; q < crp.Turni.Count && check2 == false; q++)
                     {

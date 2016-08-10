@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using System.Web.Services;
 
 namespace KIS.Commesse
 {
@@ -34,8 +35,7 @@ namespace KIS.Commesse
                 {
                     Commessa cm = new Commessa(idCommessa, annoCommessa);
                     if (cm.ID != -1 && cm.Year != -1)
-                    {
-                        
+                    {                       
 
                         tblAddPERT.Visible = true;
                         if (!Page.IsPostBack)
@@ -78,217 +78,24 @@ namespace KIS.Commesse
             }
         }
 
-        protected void addVariante_Click(object sender, EventArgs e)
-        {
-            // Cerco se esiste un processo di tipo PERT con il nome del cliente
-            Commessa cm = new Commessa(idCommessa, annoCommessa);
-            macroProcessi elProc = new macroProcessi();
-            List<int[]> lstProc = elProc.FindByName(cm.Cliente);
-            int prcID = -1;
-            int prcRev = -1;
-            for (int i = 0; i < lstProc.Count; i++)
-            {
-                lbl1.Text += lstProc[i][0] + " " + lstProc[i][1] + "<br />";
-                processo prc = new processo(lstProc[i][0], lstProc[i][1]);
-                if (prc.isVSM == false)
-                {
-                    prcID = prc.processID;
-                    prcRev = prc.revisione;
-                    break;
-                }
-            }
-
-            int qty = -1;
-            try
-            {
-                qty = Int32.Parse(txtQtyBlank.Text);
-            }
-            catch
-            {
-                qty = -1;
-            }
-
-            if (qty > 0)
-            {
-
-                // Se non ho trovato un macroprocesso corrispondente, creo un nuovo macroprocesso
-                if (prcID == -1 && prcRev == -1)
-                {
-                    // Creo un nuovo processo
-                    macroProcessi elMacroProc = new macroProcessi();
-                    bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
-                    if (check == false)
-                    {
-                        lbl1.Text = "Si è verificato un errore.<br />";
-                    }
-                    else
-                    {
-                        elMacroProc = new macroProcessi();
-                        List<int[]> res = elMacroProc.FindByName(cm.Cliente);
-                        prcID = res[0][0];
-                        prcRev = res[0][1];
-                    }
-                }
-
-                // Aggiungo la variante al processo
-                if (prcID != -1 && prcRev != -1)
-                {
-                    processo proc = new processo(prcID, prcRev);
-                    variante var = new variante();
-                    int varID = var.add(Server.HtmlEncode(txtNomeBlankProd.Text), Server.HtmlEncode(txtDescBlankProd.Text));
-                    if (varID == -1)
-                    {
-                        lbl1.Text = "Si è verificato un errore durante l'aggiunta del nuovo prodotto.";
-                    }
-                    else
-                    {
-                        bool retAddProcVar = proc.addVariante(new variante(varID));
-                        if (retAddProcVar == true)
-                        {
-                            String page = "wzEditPERT.aspx";
-                            WizardConfig wizCfg = new WizardConfig();
-                            if (wizCfg.interfacciaPERT == "Table")
-                            {
-                                page = "wzEditPERT_updtable.aspx";
-                            }
-                            else
-                            {
-                                page = "wzEditPERT.aspx";
-                            }
-                            Response.Redirect(page + "?idCommessa=" + cm.ID.ToString() + "&annoCommessa="
-                                + cm.Year.ToString() + "&idProc=" + prcID.ToString()
-                                + "&revProc=" + prcRev.ToString() + "&idVariante=" + varID.ToString()
-                                + "&idProdotto=-1"
-                                + "&annoProdotto=-1&quantita="
-                                + qty.ToString());
-                        }
-                        else
-                        {
-                            lbl1.Text = "Si è verificato un errore durante l'aggiunta del nuovo prodotto.";
-                        }
-                    }
-                }
-            }
-            else
-            {
-                lbl1.Text = "Errore nella quantità. Verificare che sia in formato numerico.";
-            }
-        }
-
         protected void btnCopiaPERT_Click(object sender, EventArgs e)
         {
-            Commessa cm = new Commessa(idCommessa, annoCommessa);
-            int procID = -1;
-            int varID = -1;
-            int currProc = -1;
-            int qty = -1;
-
-
-            String[] splitted = ddlCopiaPERT.SelectedValue.Split(',');
-            try
+            elencoVarianti elVar = new elencoVarianti();
+            bool result = elVar.elenco.Any(v => v.nomeVariante == txtNomeCopiaProd.Text);
+            if (result)
             {
-                procID = Int32.Parse(splitted[0]);
-                varID = Int32.Parse(splitted[1]);
-                qty = Int32.Parse(txtQtyCopiaProd.Text);
-            }
-            catch
-            {
-                procID = -1;
-                varID = -1;
-                qty = -1;
-            }
-
-            if (qty > 0)
-            {
-
-                macroProcessi elProc = new macroProcessi();
-                List<int[]> lstProc = elProc.FindByName(cm.Cliente);
-                int prcID = -1;
-                int prcRev = -1;
-                for (int i = 0; i < lstProc.Count; i++)
-                {
-                    lbl1.Text += lstProc[i][0] + " " + lstProc[i][1] + "<br />";
-                    processo prc = new processo(lstProc[i][0], lstProc[i][1]);
-                    if (prc.isVSM == false)
-                    {
-                        prcID = prc.processID;
-                        prcRev = prc.revisione;
-                        break;
-                    }
-                }
-
-                // Se non ho trovato un macroprocesso corrispondente, creo un nuovo macroprocesso
-                if (prcID == -1 && prcRev == -1)
-                {
-                    // Creo un nuovo processo
-                    macroProcessi elMacroProc = new macroProcessi();
-                    bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
-                    if (check == false)
-                    {
-                        lbl1.Text = "Si è verificato un errore.<br />";
-                    }
-                    else
-                    {
-                        elMacroProc = new macroProcessi();
-                        List<int[]> res = elMacroProc.FindByName(cm.Cliente);
-                        prcID = res[0][0];
-                        prcRev = res[0][1];
-                    }
-                }
-
-                if (prcID != -1 && prcRev != -1 && varID != -1)
-                {
-                    ProcessoVariante daCopiare = new ProcessoVariante(new processo(procID), new variante(varID));
-                    processo curr = new processo(prcID, prcRev);
-                    if (curr != null && daCopiare != null && curr.processID != -1 && daCopiare.process != null && daCopiare.variant != null)
-                    {
-                        lbl1.Text = "curr: " + curr.processID.ToString() + "<br />"
-                            + "daCopiare: " + daCopiare.process.processID.ToString() + " - " + daCopiare.variant.idVariante.ToString() + "<br />";
-                        bool flagCopia = !chkCopia.Checked;
-                        bool flagCopiaTC = chkCopiaTC.Checked;
-                        bool flagCopiaReparto = chkCopiaReparti.Checked;
-                        bool flagCopiaPostazioni = chkCopiaPostazioni.Checked;
-                        if (chkCopiaPostazioni.Checked && !chkCopiaReparti.Checked)
-                        {
-                            lbl1.Text = "Errore: se copio le postazioni devo anche copiare i reparti";
-                        }
-                        else
-                        {
-                            int newVarID = daCopiare.CopyTo(curr, Server.HtmlEncode(txtNomeCopiaProd.Text), Server.HtmlEncode(txtDescCopiaProd.Text), flagCopia, flagCopiaTC, flagCopiaReparto, flagCopiaPostazioni);
-                            if (newVarID != -1)
-                            {
-                                String page = "wzEditPERT.aspx";
-                                WizardConfig wizCfg = new WizardConfig();
-                                if (wizCfg.interfacciaPERT == "Table")
-                                {
-                                    page = "wzEditPERT_updtable.aspx";
-                                }
-                                else
-                                {
-                                    page = "wzEditPERT.aspx";
-                                }
-                                Response.Redirect(page + "?idCommessa=" + cm.ID.ToString() + "&annoCommessa="
-                                + cm.Year.ToString() + "&idProc=" + prcID.ToString()
-                                + "&revProc=" + prcRev.ToString() + "&idVariante=" + newVarID.ToString()
-                                + "&idProdotto=-1"
-                                + "&annoProdotto=-1&quantita="
-                                + qty.ToString());
-                            }
-                            else
-                            {
-                                lblCopiaPERTLog.Text = "Attenzione: si è verificato un errore. Il prodotto potrebbe essere stato copiato parzialmente. Ricaricare la pagina e verificare completamente il prodotto creato.<br />";
-                            }
-                        }
-                    }
-                    else
-                    {
-                        lbl1.Text = "Errore creando i ProcessoVariante<br/>";
-                    }
-                }
+                trCopyConfirm.Visible = true;
+                txtNomeCopiaProd.Enabled = false;
+                txtDescCopiaProd.Enabled = false;
+                txtQtyCopiaProd.Enabled = false;
+                ddlCopiaPERT.Enabled = false;
+                ddlCopiaPERTClienti.Enabled = false;
+                btnCopiaPERT.Visible = false;
+                imgCopyConfirmOK.Focus();
             }
             else
             {
-                lbl1.Text = "Errore nel formato della quantità";
+                addCopyProduct();
             }
         }
 
@@ -444,6 +251,276 @@ namespace KIS.Commesse
                 ddlAddProdStandard.DataTextField = "NomeCombinato";
                 ddlAddProdStandard.DataBind();
                 ddlAddProdStandard.Focus();
+            }
+        }
+
+        protected void addVariante_Click(object sender, EventArgs e)
+        {
+            addBlankProduct();
+        }
+
+        protected void addVariante_Click1(object sender, ImageClickEventArgs e)
+        {
+            elencoVarianti elVar = new elencoVarianti();
+            bool result = elVar.elenco.Any(v => v.nomeVariante == txtNomeBlankProd.Text);
+            if (result)
+            {
+                trBlankConfirm.Visible = true;
+                txtNomeBlankProd.Enabled = false;
+                txtDescBlankProd.Enabled = false;
+                txtQtyBlank.Enabled = false;
+                addVariante.Visible = false;
+                imgBlankConfirmOK.Focus();
+            }
+            else
+            {
+                addBlankProduct();
+            }
+        }
+
+        protected void addBlankProduct()
+        {
+            trBlankConfirm.Visible = false;
+            txtNomeBlankProd.Enabled = true;
+            txtDescBlankProd.Enabled = true;
+            txtQtyBlank.Enabled = true;
+            addVariante.Visible = true;
+
+            // Cerco se esiste un processo di tipo PERT con il nome del cliente
+            Commessa cm = new Commessa(idCommessa, annoCommessa);
+            macroProcessi elProc = new macroProcessi();
+            List<int[]> lstProc = elProc.FindByName(cm.Cliente);
+            int prcID = -1;
+            int prcRev = -1;
+            for (int i = 0; i < lstProc.Count; i++)
+            {
+                lbl1.Text += lstProc[i][0] + " " + lstProc[i][1] + "<br />";
+                processo prc = new processo(lstProc[i][0], lstProc[i][1]);
+                if (prc.isVSM == false)
+                {
+                    prcID = prc.processID;
+                    prcRev = prc.revisione;
+                    break;
+                }
+            }
+
+            int qty = -1;
+            try
+            {
+                qty = Int32.Parse(txtQtyBlank.Text);
+            }
+            catch
+            {
+                qty = -1;
+            }
+
+            if (qty > 0)
+            {
+
+                // Se non ho trovato un macroprocesso corrispondente, creo un nuovo macroprocesso
+                if (prcID == -1 && prcRev == -1)
+                {
+                    // Creo un nuovo processo
+                    macroProcessi elMacroProc = new macroProcessi();
+                    bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
+                    if (check == false)
+                    {
+                        lbl1.Text = "Si è verificato un errore.<br />";
+                    }
+                    else
+                    {
+                        elMacroProc = new macroProcessi();
+                        List<int[]> res = elMacroProc.FindByName(cm.Cliente);
+                        prcID = res[0][0];
+                        prcRev = res[0][1];
+                    }
+                }
+
+                // Aggiungo la variante al processo
+                if (prcID != -1 && prcRev != -1)
+                {
+                    processo proc = new processo(prcID, prcRev);
+                    variante var = new variante();
+
+                    int varID = var.add(Server.HtmlEncode(txtNomeBlankProd.Text), Server.HtmlEncode(txtDescBlankProd.Text));
+                    if (varID == -1)
+                    {
+                        lbl1.Text = "Si è verificato un errore durante l'aggiunta del nuovo prodotto.";
+                    }
+                    else
+                    {
+                        bool retAddProcVar = proc.addVariante(new variante(varID));
+                        if (retAddProcVar == true)
+                        {
+                            String page = "wzEditPERT.aspx";
+                            WizardConfig wizCfg = new WizardConfig();
+                            if (wizCfg.interfacciaPERT == "Table")
+                            {
+                                page = "wzEditPERT_updtable.aspx";
+                            }
+                            else
+                            {
+                                page = "wzEditPERT.aspx";
+                            }
+                            Response.Redirect(page + "?idCommessa=" + cm.ID.ToString() + "&annoCommessa="
+                                + cm.Year.ToString() + "&idProc=" + prcID.ToString()
+                                + "&revProc=" + prcRev.ToString() + "&idVariante=" + varID.ToString()
+                                + "&idProdotto=-1"
+                                + "&annoProdotto=-1&quantita="
+                                + qty.ToString());
+                        }
+                        else
+                        {
+                            lbl1.Text = "Si è verificato un errore durante l'aggiunta del nuovo prodotto.";
+                        }
+                    }
+                }
+            }
+            else
+            {
+                lbl1.Text = "Errore nella quantità. Verificare che sia in formato numerico.";
+            }
+        }
+
+        protected void imgBlankConfirmKO_Click(object sender, ImageClickEventArgs e)
+        {
+            trBlankConfirm.Visible = false;
+            txtNomeBlankProd.Enabled = true;
+            txtDescBlankProd.Enabled = true;
+            txtQtyBlank.Enabled = true;
+            addVariante.Visible = true;
+        }
+
+        protected void imgCopyConfirmOK_Click(object sender, ImageClickEventArgs e)
+        {
+            addCopyProduct();
+        }
+
+        protected void imgCopyConfirmKO_Click(object sender, ImageClickEventArgs e)
+        {
+            trCopyConfirm.Visible = false;
+            txtNomeCopiaProd.Enabled = true;
+            txtDescCopiaProd.Enabled = true;
+            txtQtyCopiaProd.Enabled = true;
+            ddlCopiaPERT.Enabled = true;
+            ddlCopiaPERTClienti.Enabled = true;
+            btnCopiaPERT.Visible = true;
+        }
+
+        protected void addCopyProduct()
+        {
+            Commessa cm = new Commessa(idCommessa, annoCommessa);
+            int procID = -1;
+            int varID = -1;
+            int currProc = -1;
+            int qty = -1;
+
+
+            String[] splitted = ddlCopiaPERT.SelectedValue.Split(',');
+            try
+            {
+                procID = Int32.Parse(splitted[0]);
+                varID = Int32.Parse(splitted[1]);
+                qty = Int32.Parse(txtQtyCopiaProd.Text);
+            }
+            catch
+            {
+                procID = -1;
+                varID = -1;
+                qty = -1;
+            }
+
+            if (qty > 0)
+            {
+
+                macroProcessi elProc = new macroProcessi();
+                List<int[]> lstProc = elProc.FindByName(cm.Cliente);
+                int prcID = -1;
+                int prcRev = -1;
+                for (int i = 0; i < lstProc.Count; i++)
+                {
+                    lbl1.Text += lstProc[i][0] + " " + lstProc[i][1] + "<br />";
+                    processo prc = new processo(lstProc[i][0], lstProc[i][1]);
+                    if (prc.isVSM == false)
+                    {
+                        prcID = prc.processID;
+                        prcRev = prc.revisione;
+                        break;
+                    }
+                }
+
+                // Se non ho trovato un macroprocesso corrispondente, creo un nuovo macroprocesso
+                if (prcID == -1 && prcRev == -1)
+                {
+                    // Creo un nuovo processo
+                    macroProcessi elMacroProc = new macroProcessi();
+                    bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
+                    if (check == false)
+                    {
+                        lbl1.Text = "Si è verificato un errore.<br />";
+                    }
+                    else
+                    {
+                        elMacroProc = new macroProcessi();
+                        List<int[]> res = elMacroProc.FindByName(cm.Cliente);
+                        prcID = res[0][0];
+                        prcRev = res[0][1];
+                    }
+                }
+
+                if (prcID != -1 && prcRev != -1 && varID != -1)
+                {
+                    ProcessoVariante daCopiare = new ProcessoVariante(new processo(procID), new variante(varID));
+                    processo curr = new processo(prcID, prcRev);
+                    if (curr != null && daCopiare != null && curr.processID != -1 && daCopiare.process != null && daCopiare.variant != null)
+                    {
+                        lbl1.Text = "curr: " + curr.processID.ToString() + "<br />"
+                            + "daCopiare: " + daCopiare.process.processID.ToString() + " - " + daCopiare.variant.idVariante.ToString() + "<br />";
+                        bool flagCopia = !chkCopia.Checked;
+                        bool flagCopiaTC = chkCopiaTC.Checked;
+                        bool flagCopiaReparto = chkCopiaReparti.Checked;
+                        bool flagCopiaPostazioni = chkCopiaPostazioni.Checked;
+                        if (chkCopiaPostazioni.Checked && !chkCopiaReparti.Checked)
+                        {
+                            lbl1.Text = "Errore: se copio le postazioni devo anche copiare i reparti";
+                        }
+                        else
+                        {
+                            int newVarID = daCopiare.CopyTo(curr, Server.HtmlEncode(txtNomeCopiaProd.Text), Server.HtmlEncode(txtDescCopiaProd.Text), flagCopia, flagCopiaTC, flagCopiaReparto, flagCopiaPostazioni);
+                            if (newVarID != -1)
+                            {
+                                String page = "wzEditPERT.aspx";
+                                WizardConfig wizCfg = new WizardConfig();
+                                if (wizCfg.interfacciaPERT == "Table")
+                                {
+                                    page = "wzEditPERT_updtable.aspx";
+                                }
+                                else
+                                {
+                                    page = "wzEditPERT.aspx";
+                                }
+                                Response.Redirect(page + "?idCommessa=" + cm.ID.ToString() + "&annoCommessa="
+                                + cm.Year.ToString() + "&idProc=" + prcID.ToString()
+                                + "&revProc=" + prcRev.ToString() + "&idVariante=" + newVarID.ToString()
+                                + "&idProdotto=-1"
+                                + "&annoProdotto=-1&quantita="
+                                + qty.ToString());
+                            }
+                            else
+                            {
+                                lblCopiaPERTLog.Text = "Attenzione: si è verificato un errore. Il prodotto potrebbe essere stato copiato parzialmente. Ricaricare la pagina e verificare completamente il prodotto creato.<br />";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        lbl1.Text = "Errore creando i ProcessoVariante<br/>";
+                    }
+                }
+            }
+            else
+            {
+                lbl1.Text = "Errore nel formato della quantità";
             }
         }
     }

@@ -11,6 +11,8 @@ namespace KIS.Reparti
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            orari.Visible = false;
+            orari.idTurno = -1;
             if (!String.IsNullOrEmpty(Request.QueryString["id"]))
             {
                 int tID=-1;
@@ -32,10 +34,16 @@ namespace KIS.Reparti
                         orari.idTurno = trn.id;
                     }
                 }
+                else
+                {
+                    orari.Visible = false;
+                    orari.idTurno = -1;
+                }
             }
             else
             {
                 orari.Visible = false;
+                orari.idTurno = -1;
             }
         }
     }

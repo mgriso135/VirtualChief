@@ -39,8 +39,16 @@ namespace KIS.App_Code
         {
             get
             {
+                ElencoReparti elRep = new ElencoReparti();
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                for(int i = 0; i < elRep.elenco.Count; i++)
+                {
+                    if(elRep.elenco[i].FullyConfigured)
+                    {
+                        ret = true;
+                    }
+                }
+                /*MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Reparto' AND parametro LIKE 'Configured'";
@@ -53,7 +61,7 @@ namespace KIS.App_Code
                 {
                     ret = false;
                 }
-                conn.Close();
+                conn.Close();*/
 
                 return ret;
             }

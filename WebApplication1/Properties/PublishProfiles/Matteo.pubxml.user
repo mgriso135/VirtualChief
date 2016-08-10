@@ -6,7 +6,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>C:\inetpub\kisTest</_PublishTargetUrl>
+    <_PublishTargetUrl>G:\Sitecal20160809</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="About.aspx">
@@ -300,6 +300,15 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="bin/it/AjaxControlToolkit.resources.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
+    <File Include="bin/it/System.Net.Http.Formatting.resources.dll">
+      <publishTime>01/28/2015 03:02:48</publishTime>
+    </File>
+    <File Include="bin/it/System.Web.Http.resources.dll">
+      <publishTime>01/28/2015 03:03:00</publishTime>
+    </File>
+    <File Include="bin/it/System.Web.Http.WebHost.resources.dll">
+      <publishTime>01/28/2015 03:03:52</publishTime>
+    </File>
     <File Include="bin/itextsharp.dll">
       <publishTime>06/02/2013 11:42:04</publishTime>
     </File>
@@ -313,7 +322,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/Kaizen Indicator System.dll">
-      <publishTime>07/11/2016 21:24:30</publishTime>
+      <publishTime>08/09/2016 10:03:10</publishTime>
     </File>
     <File Include="bin/ko/AjaxControlToolkit.resources.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -454,10 +463,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>12/23/2013 22:10:43</publishTime>
     </File>
     <File Include="Commesse/wzAddPERT.ascx">
-      <publishTime>12/08/2015 14:18:31</publishTime>
+      <publishTime>07/26/2016 20:58:32</publishTime>
     </File>
     <File Include="Commesse/wzAddPERT.aspx">
-      <publishTime>12/08/2015 14:18:59</publishTime>
+      <publishTime>07/24/2016 20:55:10</publishTime>
     </File>
     <File Include="Commesse/wzAssociaPERTReparto.aspx">
       <publishTime>12/24/2013 15:28:56</publishTime>
@@ -523,16 +532,37 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>11/18/2013 21:49:21</publishTime>
     </File>
     <File Include="Configuration/configurationStatus.ascx">
-      <publishTime>04/25/2015 12:03:48</publishTime>
+      <publishTime>07/19/2016 21:38:30</publishTime>
     </File>
     <File Include="Configuration/MainWizConfig.aspx">
-      <publishTime>04/25/2015 11:13:39</publishTime>
+      <publishTime>07/18/2016 21:31:42</publishTime>
     </File>
     <File Include="Configuration/WizConfig.Master">
-      <publishTime>04/25/2015 12:03:48</publishTime>
+      <publishTime>07/19/2016 21:38:29</publishTime>
+    </File>
+    <File Include="Configuration/wizConfigAdminUser.ascx">
+      <publishTime>07/18/2016 22:42:33</publishTime>
+    </File>
+    <File Include="Configuration/wizConfigAdminUser.aspx">
+      <publishTime>07/18/2016 22:13:38</publishTime>
+    </File>
+    <File Include="Configuration/wizConfigLogo.ascx">
+      <publishTime>07/20/2016 21:53:35</publishTime>
     </File>
     <File Include="Configuration/wizConfigLogo.aspx">
-      <publishTime>04/25/2015 12:02:46</publishTime>
+      <publishTime>07/18/2016 22:05:01</publishTime>
+    </File>
+    <File Include="Configuration/wizConfigReparti_Main.ascx">
+      <publishTime>07/20/2016 22:03:44</publishTime>
+    </File>
+    <File Include="Configuration/wizConfigReparti_Main.aspx">
+      <publishTime>07/19/2016 21:36:25</publishTime>
+    </File>
+    <File Include="Configuration/WizConfigTimezone.ascx">
+      <publishTime>07/19/2016 21:14:51</publishTime>
+    </File>
+    <File Include="Configuration/WizConfigTimezone.aspx">
+      <publishTime>07/19/2016 21:06:11</publishTime>
     </File>
     <File Include="Content/bootstrap-theme.css">
       <publishTime>01/02/2016 21:08:34</publishTime>
@@ -826,7 +856,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>04/07/2013 21:11:34</publishTime>
     </File>
     <File Include="Data/Reports/ReportTestCustomer.pdf">
-      <publishTime>02/18/2016 21:15:33</publishTime>
+      <publishTime>07/18/2016 22:53:51</publishTime>
     </File>
     <File Include="Data/Users/cart0.pdf">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -926,6 +956,12 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     </File>
     <File Include="img/iconAddLink.png">
       <publishTime>11/18/2012 11:56:28</publishTime>
+    </File>
+    <File Include="img/iconAdmin.png">
+      <publishTime>07/13/2016 22:13:26</publishTime>
+    </File>
+    <File Include="img/iconAndon.png">
+      <publishTime>07/13/2016 22:20:14</publishTime>
     </File>
     <File Include="img/IconArrowDown.png">
       <publishTime>10/05/2013 21:08:46</publishTime>
@@ -1182,6 +1218,9 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="img/iconTimeline.jpg">
       <publishTime>07/03/2013 22:27:22</publishTime>
     </File>
+    <File Include="img/iconTimezone.png">
+      <publishTime>07/13/2016 22:18:42</publishTime>
+    </File>
     <File Include="img/iconToolbox.jpg">
       <publishTime>09/16/2012 21:17:14</publishTime>
     </File>
@@ -1324,7 +1363,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>08/13/2013 20:56:32</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>01/02/2016 21:53:49</publishTime>
+      <publishTime>07/25/2016 20:46:38</publishTime>
     </File>
     <File Include="Personal/baseInfo.ascx">
       <publishTime>08/23/2013 12:20:58</publishTime>
@@ -3877,13 +3916,13 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>03/21/2013 21:55:04</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>04/02/2016 22:26:12</publishTime>
+      <publishTime>08/08/2016 16:04:26</publishTime>
     </File>
     <File Include="whatsnew.ascx">
       <publishTime>05/22/2014 21:48:49</publishTime>
     </File>
     <File Include="whatsnew.xml">
-      <publishTime>04/03/2016 15:16:43</publishTime>
+      <publishTime>07/19/2016 21:27:59</publishTime>
     </File>
   </ItemGroup>
 </Project>

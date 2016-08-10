@@ -586,6 +586,7 @@
     <Compile Include="Controllers\CustomersTest.aspx.designer.cs">
       <DependentUpon>CustomersTest.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\products.cs" />
     <Compile Include="Controllers\TestClass.cs" />
     <Compile Include="HomePage\UserHomeBoxes.ascx.cs">
       <DependentUpon>UserHomeBoxes.ascx</DependentUpon>
@@ -1952,7 +1953,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Controllers\CustomersTest.aspx" />
-    <Content Include="Data\Logo\Logo Sitecal definitivo.jpg" />
     <Content Include="Eventi\ArticoloRitardo.ascx" />
     <Content Include="Eventi\ArticoloWarning.ascx" />
     <Content Include="Eventi\CommessaRitardo.ascx" />
@@ -2856,12 +2856,6 @@
     <Content Include="Styles\jquery-ui-1.10.3.custom\js\jquery-1.9.1.js" />
     <Content Include="Styles\jquery-ui-1.10.3.custom\js\jquery-ui-1.10.3.custom.js" />
     <Content Include="Styles\jquery-ui-1.10.3.custom\js\jquery-ui-1.10.3.custom.min.js" />
-    <Content Include="temp\msc_cntr_0.txt" />
-    <Content Include="temp\msc_cntr_1.txt" />
-    <Content Include="temp\msc_cntr_2.txt" />
-    <Content Include="temp\msc_cntr_3.txt" />
-    <Content Include="temp\msc_cntr_4.txt" />
-    <Content Include="temp\msc_cntr_5.txt" />
     <Content Include="Users\addGruppo.ascx" />
     <Content Include="Users\addPermesso.ascx" />
     <Content Include="Users\addUser.ascx" />
@@ -3411,15 +3405,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Data\Logo\" />
     <Folder Include="Data\Postazioni\" />
     <Folder Include="Data\Produzione\" />
     <Folder Include="Data\Users\" />
-    <Folder Include="temp\charts_0\" />
-    <Folder Include="temp\charts_1\" />
-    <Folder Include="temp\charts_2\" />
-    <Folder Include="temp\charts_3\" />
-    <Folder Include="temp\charts_4\" />
-    <Folder Include="temp\charts_5\" />
+    <Folder Include="temp\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Site.Master" />

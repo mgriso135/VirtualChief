@@ -14,28 +14,50 @@ namespace KIS.Configuration
         {
             ddlTimezones.Visible = false;
             btnSave.Visible = false;
-            KISConfig cfg = new KISConfig();
 
-            if (!cfg.WizTimezoneCompleted)
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Configurazione TimeZone";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            bool checkUser = false;
+            if (Session["user"] != null)
             {
-                ddlTimezones.Visible = true;
-                btnSave.Visible = true;
-                if (!Page.IsPostBack)
+                User curr = (User)Session["user"];
+                checkUser = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (checkUser == true)
+            {
+                KISConfig cfg = new KISConfig();
+
+                if (!cfg.WizTimezoneCompleted)
                 {
-                    ddlTimezones.Items.Clear();
-                    ddlTimezones.Items.Add(new ListItem("Select Timezone", ""));
-                    ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
-                    ddlTimezones.DataTextField = "DisplayName";
-                    ddlTimezones.DataValueField = "Id";
-                    FusoOrario fo = new FusoOrario();
-                    //ddlTimezones.SelectedValue = fo.tzFusoOrario.Id;
-                    ddlTimezones.DataBind();
+                    ddlTimezones.Visible = true;
+                    btnSave.Visible = true;
+                    if (!Page.IsPostBack)
+                    {
+                        ddlTimezones.Items.Clear();
+                        ddlTimezones.Items.Add(new ListItem("Select Timezone", ""));
+                        ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
+                        ddlTimezones.DataTextField = "DisplayName";
+                        ddlTimezones.DataValueField = "Id";
+                        FusoOrario fo = new FusoOrario();
+                        //ddlTimezones.SelectedValue = fo.tzFusoOrario.Id;
+                        ddlTimezones.DataBind();
+                    }
+                }
+                else
+                {
+                    lbl1.Text = "Timezone is already configured and it is no longer possible to change it using this wizard.<br />"
+                        + "Please log-in to the configuration section and be sure you have Admin permissions.";
                 }
             }
             else
             {
-                lbl1.Text = "Timezone is already configured and it is no longer possible to change it using this wizard.<br />"
-                    + "Please log-in to the configuration section and be sure you have Admin permissions.";
+                lbl1.Text = "Please <a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigTimezone\">click here</a> to login as Admin User.";
             }
         }
 

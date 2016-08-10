@@ -103,6 +103,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.ImageButton addProdStd;
         
         /// <summary>
+        /// Controllo upd3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upd3;
+        
+        /// <summary>
         /// Controllo txtNomeBlankProd.
         /// </summary>
         /// <remarks>
@@ -155,6 +164,33 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton addVariante;
+        
+        /// <summary>
+        /// Controllo trBlankConfirm.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trBlankConfirm;
+        
+        /// <summary>
+        /// Controllo imgBlankConfirmOK.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgBlankConfirmOK;
+        
+        /// <summary>
+        /// Controllo imgBlankConfirmKO.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgBlankConfirmKO;
         
         /// <summary>
         /// Controllo upd2.
@@ -308,5 +344,32 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCopiaPERTLog;
+        
+        /// <summary>
+        /// Controllo trCopyConfirm.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trCopyConfirm;
+        
+        /// <summary>
+        /// Controllo imgCopyConfirmOK.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgCopyConfirmOK;
+        
+        /// <summary>
+        /// Controllo imgCopyConfirmKO.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgCopyConfirmKO;
     }
 }

@@ -56,17 +56,18 @@ namespace KIS.Reparti
             DateTime fine = new DateTime(fineFest.SelectedDate.Year, fineFest.SelectedDate.Month, fineFest.SelectedDate.Day,
                 Int32.Parse(OraF.SelectedValue), Int32.Parse(MinutoF.SelectedValue), 0);
             
-            if (inizio < fine && inizio > DateTime.Now)
+            if (inizio < fine && inizio > DateTime.UtcNow)
             {
                 Turno trn = new Turno(idTurno);
                 ElencoFestivita rs = new ElencoFestivita(trn.idReparto);
                 bool ret = rs.Add(idTurno, inizio, fine);
                 if (ret == false)
                 {
-                    lbl1.Text += rs.log;
+                    lbl1.Text += "Errore: " + rs.log;
                 }
                 else
                 {
+                    lbl1.Text = "Ok";
                     Response.Redirect(Request.RawUrl);
                 }
             }

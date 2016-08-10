@@ -1,6 +1,4 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="wzAddPERT.ascx.cs" Inherits="KIS.Commesse.wzAddPERT1" %>
-
-
 <div class="span6">
     <asp:Label runat="server" ID="lbl1" />
     <h3><asp:Label runat="server" ID="lblTitle" /></h3>
@@ -45,6 +43,8 @@
     </div>
             <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
+          <asp:UpdatePanel runat="server" ID="upd3">
+              <ContentTemplate>
     <table>
                     <tr>
                         <td style="vertical-align: middle;">
@@ -59,10 +59,20 @@
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator5" runat="server" ControlToValidate="txtQtyBlank" ForeColor="Red" ErrorMessage="* Campo obbligatorio" ValidationGroup="BlankProd" />
                         </td>
                         <td style="vertical-align: middle;">
-    <asp:ImageButton runat="server" ID="addVariante" OnClick="addVariante_Click" ImageUrl="~/img/iconArrowRight.png" ToolTip="Aggiungi una nuova variante vuota" Height="40px" ValidationGroup="BlankProd" />
+    <asp:ImageButton runat="server" ID="addVariante" OnClick="addVariante_Click1" ImageUrl="~/img/iconArrowRight.png" ToolTip="Aggiungi una nuova variante vuota" Height="40px" ValidationGroup="BlankProd" />
                             </td>
     </tr>
+        <tr runat="server" id="trBlankConfirm" visible="false">
+            <td colspan="2"><div class="text-warning">Attenzione: esiste già un prodotto con lo stesso nome. <br />
+                E' consigliabile utilizzare il box <i>Aggiungi prodotto standard.</i><br />
+                Sei sicuro di voler proseguire?<br /></div>
+                <asp:ImageButton runat="server" ID="imgBlankConfirmOK" ImageUrl="~/img/iconComplete.png" Width="30" OnClick="addVariante_Click" />
+                <asp:ImageButton runat="server" ID="imgBlankConfirmKO" ImageUrl="~/img/iconKO.jpg" Width="30" OnClick="imgBlankConfirmKO_Click" />
+            </td>
+        </tr>
         </table>
+                  </ContentTemplate>
+              </asp:UpdatePanel>
           </div>
 </div>
             <div class="accordion-heading">
@@ -103,6 +113,14 @@
                         <asp:Label runat="server" ID="lblCopiaPERTLog" />
                         </td>
                     </tr>
+        <tr runat="server" id="trCopyConfirm" visible="false">
+            <td colspan="2"><div class="text-warning">Attenzione: esiste già un prodotto con lo stesso nome. <br />
+                E' consigliabile utilizzare il box <i>Aggiungi prodotto standard.</i><br />
+                Sei sicuro di voler proseguire?<br /></div>
+                <asp:ImageButton runat="server" ID="imgCopyConfirmOK" ImageUrl="~/img/iconComplete.png" Width="30" OnClick="imgCopyConfirmOK_Click" />
+                <asp:ImageButton runat="server" ID="imgCopyConfirmKO" ImageUrl="~/img/iconKO.jpg" Width="30" OnClick="imgCopyConfirmKO_Click" />
+            </td>
+        </tr>
             </table>
                   </ContentTemplate>
               </asp:UpdatePanel>

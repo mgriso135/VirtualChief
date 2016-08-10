@@ -6,7 +6,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:ScriptManager runat="server" ID="scriptMan1" />
+    <asp:ScriptManager runat="server" ID="scriptMan1" EnablePageMethods="true"/>
     <h1>Wizard: nuovo prodotto su commessa</h1>
     <ul class="breadcrumb hidden-phone">
         <li>

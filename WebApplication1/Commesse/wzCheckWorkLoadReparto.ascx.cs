@@ -72,7 +72,7 @@ namespace KIS.Commesse
                         calOre.Items.Add(new ListItem(i.ToString(), i.ToString()));
                     }
 
-                    if (art.DataPrevistaFineProduzione > new DateTime(1970, 1, 1))
+                    if (art.DataPrevistaFineProduzione > new DateTime(1971, 1, 1))
                     {
                         txtProductDate.Text = art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy");
                         calOre.SelectedValue = art.DataPrevistaFineProduzione.ToString("HH");
@@ -862,8 +862,8 @@ namespace KIS.Commesse
                 int retSim = cfgPrc.SimulaIntroduzioneInProduzione();
                 if (retSim == 1)
                 {
-                    DateTime minStart = DateTime.Now;
-                    DateTime maxStart = DateTime.Now.AddYears(1);
+                    DateTime minStart = DateTime.UtcNow;
+                    DateTime maxStart = DateTime.UtcNow.AddYears(1);
                     try
                     {
                         minStart = cfgPrc.CriticalPath.Min(lateStart => lateStart.EarlyStartDate);
@@ -871,8 +871,8 @@ namespace KIS.Commesse
                     }
                     catch
                     {
-                        minStart = DateTime.Now;
-                        maxStart = DateTime.Now.AddYears(1);
+                        minStart = DateTime.UtcNow;
+                        maxStart = DateTime.UtcNow.AddYears(1);
                     }
                     //inizio = minStart;
                     //fine = maxStart.AddDays(1);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using KIS.App_Code;
 
 namespace KIS.Configuration
 {
@@ -11,6 +12,7 @@ namespace KIS.Configuration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            frmAddReparto.Visible = false;
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
             prmUser[0] = "Reparto";
@@ -26,14 +28,44 @@ namespace KIS.Configuration
 
             if (checkUser == true)
             {
-                if (!Page.IsPostBack)
+                KISConfig cfg = new KISConfig();
+                if (!cfg.WizRepartiCompleted)
                 {
-                    ddlTimezones.Items.Clear();
-                    ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
-                    ddlTimezones.DataTextField = "DisplayName";
-                    ddlTimezones.DataValueField = "Id";
-                    ddlTimezones.SelectedValue = "W. Europe Standard Time";
-                    ddlTimezones.DataBind();
+                    frmAddReparto.Visible = true;
+                    if (!Page.IsPostBack)
+                    {
+                        ddlTimezones.Items.Clear();
+                        ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
+                        ddlTimezones.DataTextField = "DisplayName";
+                        ddlTimezones.DataValueField = "Id";
+                        ddlTimezones.SelectedValue = "W. Europe Standard Time";
+                        ddlTimezones.DataBind();
+                    }
+                }
+                else
+                {
+                    frmAddReparto.Visible = false;
+                    lbl1.Text = "Almeno un Reparto è pienamente configurato ed utilizzabile.<br />"
+                        + "Per aggiungere altri reparti o modificare quello correntemente configurato, accedere all'interfaccia di gestione dei reparti con privilegi di Admin.";
+
+                    String repartiNC = "";
+                    ElencoReparti elRep = new ElencoReparti();
+                    for (int i = 0; i < elRep.elenco.Count; i++)
+                    {
+
+                        if(!elRep.elenco[i].FullyConfigured)
+                        { 
+                            repartiNC += "<a href =\"/Reparti/configReparto.aspx"
+                                + "?id=" + elRep.elenco[i].id.ToString() + "\" target=\"_blank\">"
+                                + elRep.elenco[i].name + "</a><br />";
+                        }
+                    }
+
+                    if (repartiNC.Length > 0)
+                    {
+                        lbl1.Text += "<br /><br />I seguenti reparti non sono completamente configurati:<br />" + repartiNC;
+                    }
+
                 }
             }
             else
