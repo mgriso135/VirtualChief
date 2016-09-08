@@ -316,7 +316,7 @@ namespace KIS
                     FusoOrario fuso = new FusoOrario();
                     this._fusoOrario = fuso.fusoOrario;
                 }
-                this.loadConfigurazioneKanban();
+                //this.loadConfigurazioneKanban();
             }
             catch
             {
@@ -2082,13 +2082,18 @@ namespace KIS
             }
         }
 
+        private Reparto reparto;
+
         private DateTime _Inizio;
         public DateTime Inizio
         {
             get {
+                if (reparto == null || reparto.id == -1)
+                {
                 Turno trn = new Turno(idTurno);
-                Reparto rp = new Reparto(trn.idReparto);
-                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, rp.tzFusoOrario); 
+                reparto = new Reparto(trn.idReparto);
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, this.reparto.tzFusoOrario); 
                 //return this._Inizio;
             }
         }
@@ -2097,9 +2102,12 @@ namespace KIS
         public DateTime Fine
         {
             get {
-                Turno trn = new Turno(idTurno);
-                Reparto rp = new Reparto(trn.idReparto);
-                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario); 
+                if (reparto == null || reparto.id == -1)
+                {
+                    Turno trn = new Turno(idTurno);
+                    reparto = new Reparto(trn.idReparto);
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, this.reparto.tzFusoOrario); 
                 //return this._Fine;
             }
         }
@@ -2316,8 +2324,7 @@ namespace KIS
             Intervalli = new List<IntervalloCalendarioReparto>();
             Turni = new List<IntervalloCalendarioReparto>();
             if (InizioCal <= FineCal)
-            {
-                
+            {                
                 // Comincio con il trovare tutti i turni di lavoro del reparto
                 Reparto rep = new Reparto(rp);
                 rep.loadTurni();
@@ -2347,13 +2354,6 @@ namespace KIS
                         }
                     }
                 }
-                // Scrivo i turni sul log
-                /*for (int i = 0; i < sommaTurni.Count; i++)
-                {
-                    log += sommaTurni[i].GiornoInizio.ToString() + " " + sommaTurni[i].OraInizio.Hours + ":" + sommaTurni[i].OraInizio.Minutes
-                        + ":" + sommaTurni[i].OraInizio.Seconds + " - " + sommaTurni[i].GiornoFine.ToString() + " "
-                        + sommaTurni[i].OraFine.Hours + ":" + sommaTurni[i].OraFine.Minutes + ":" + sommaTurni[i].OraFine.Seconds + "<br/>";
-                }*/
                 
                 // Ora collego i turni al calendario per capire da quale partire
                 List<DateTime> sommaTurniData = new List<DateTime>();
@@ -2363,7 +2363,6 @@ namespace KIS
                 for (int i = 0; i < sommaTurni.Count; i++)
                 {
                     DateTime nxt = this.findNextOccurrence(sommaTurni[i].GiornoInizio, sommaTurni[i].OraInizio, InizioCal);
-                    //log += nxt.ToString("dd/MM/yyyy HH:mm:ss") + " - ";
                     sommaTurniData.Add(nxt);
                     DistI.Add(sommaTurniData[i] - InizioCal);
                     if(DistI[i] < minDist)
@@ -2371,7 +2370,6 @@ namespace KIS
                         minDist = DistI[i];
                         minIndex = i;
                     }
-                    //log += DistI[i] + " minDist: " + minDist.Ticks.ToString() + " minIndex: " + minIndex + "<br/>";
                 }
 
                 if (minIndex > -1)

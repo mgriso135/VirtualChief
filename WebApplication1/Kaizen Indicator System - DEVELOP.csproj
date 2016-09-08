@@ -2228,17 +2228,10 @@
     <Content Include="Styles\assets\css\bootstrap-responsive.css" />
     <Content Include="Styles\assets\css\bootstrap.css" />
     <Content Include="Styles\assets\css\docs.css" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-114-precomposed.png" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-144-precomposed.png" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-57-precomposed.png" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-72-precomposed.png" />
-    <Content Include="Styles\assets\ico\favicon.ico" />
-    <Content Include="Styles\assets\ico\favicon.png" />
     <Content Include="Styles\assets\img\glyphicons-halflings-white.png" />
     <Content Include="Styles\assets\img\glyphicons-halflings.png" />
     <Content Include="Styles\assets\img\iconComplete.png" />
     <Content Include="Styles\assets\img\iconLoading.gif" />
-    <Content Include="Styles\assets\img\Logo-Kaizen_people.png" />
     <Content Include="Styles\assets\js\application.js" />
     <Content Include="Styles\assets\js\bootstrap-affix.js" />
     <Content Include="Styles\assets\js\bootstrap-alert.js" />
@@ -3410,6 +3403,7 @@
     <Folder Include="Data\Postazioni\" />
     <Folder Include="Data\Produzione\" />
     <Folder Include="Data\Users\" />
+    <Folder Include="Styles\assets\ico\" />
     <Folder Include="temp\" />
   </ItemGroup>
   <ItemGroup>

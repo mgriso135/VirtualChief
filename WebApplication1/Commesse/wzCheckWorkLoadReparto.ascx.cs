@@ -37,7 +37,6 @@ namespace KIS.Commesse
             {
                 User curr = (User)Session["user"];
                 checkUser = curr.ValidatePermessi(elencoPermessi);
-
             }
 
             if (checkUser == true)
@@ -278,6 +277,7 @@ namespace KIS.Commesse
                 {
                     bool found = false;
                     // Se lo trovo nell'elenco delle postazioni selezionate...
+                    // Usare LINQ
                     for (int q = 0; q < idPostazioni.Count; q++)
                     {
                         if (rp.Postazioni[i].id == idPostazioni[q])
@@ -903,7 +903,6 @@ namespace KIS.Commesse
                     dvInfo.Visible = false;
                     lblErr.Text = "La data prevista di fine produzione non è reale.";
                 }
-
             }
             else
             {

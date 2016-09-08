@@ -642,6 +642,7 @@ namespace KIS.Commesse
             get { return this._Status; }
         }
 
+        private Reparto reparto;
         private int _Reparto;
         public int Reparto
         {
@@ -748,17 +749,12 @@ namespace KIS.Commesse
             get
             {
                 DateTime consegna = this._DataPrevistaConsegna;
-                if (this.Reparto != -1)
+                if (this.reparto == null || this.reparto.id == -1)
                 {
-                    Reparto rp = new Reparto(this.Reparto);
-                    consegna = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaConsegna, rp.tzFusoOrario);
-                }
-                else
-                {
-                    FusoOrario fuso = new FusoOrario();
-                    consegna = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaConsegna, fuso.tzFusoOrario);
+                    this.reparto = new KIS.Reparto(this.Reparto);
                 }
 
+                consegna = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaConsegna, this.reparto.tzFusoOrario);
                 return consegna;
             }
             set
@@ -796,35 +792,35 @@ namespace KIS.Commesse
             get 
             {
                 DateTime dataFine = this._DataPrevistaFineProduzione;
-                if (this.Reparto != -1)
+                if(this.reparto==null || this.reparto.id==-1)
                 {
-                    Reparto rp = new Reparto(this.Reparto);
-                    dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, rp.tzFusoOrario);
-                }
-                else
-                {
-                    FusoOrario fuso = new FusoOrario();
-                    dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, fuso.tzFusoOrario);
+                    this.reparto = new KIS.Reparto(this.Reparto);
                 }
 
+                dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, this.reparto.tzFusoOrario);
+ 
                 return dataFine;
             }
             set
             {
-                Reparto rp = new Reparto(this.Reparto);
-                if (this.ID != -1 && value <= this._DataPrevistaConsegna && TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario) >= DateTime.UtcNow)
+                if (this.reparto == null || this.reparto.id == -1)
+                {
+                    this.reparto = new KIS.Reparto(this.Reparto);
+                }
+                DateTime fineProd = TimeZoneInfo.ConvertTimeToUtc(value, this.reparto.tzFusoOrario);
+                if (this.ID != -1 && fineProd <= this.DataPrevistaConsegna && fineProd >= DateTime.UtcNow)
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET dataPrevistaFineProduzione = '" + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss")
+                    cmd.CommandText = "UPDATE productionplan SET dataPrevistaFineProduzione = '" + fineProd.ToString("yyyy/MM/dd HH:mm:ss")
                         + "' WHERE id = " + this.ID.ToString() + " AND anno = " + this.Year.ToString();
                     log = cmd.CommandText;
                     try
                     {
-                        this._DataPrevistaFineProduzione = TimeZoneInfo.ConvertTimeToUtc(value);
+                        this._DataPrevistaFineProduzione = fineProd;
                         cmd.ExecuteNonQuery();
                         tr.Commit();
                     }

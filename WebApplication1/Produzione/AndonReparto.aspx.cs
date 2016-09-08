@@ -18,8 +18,6 @@ namespace KIS.Produzione
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack && !Page.IsCallback)
-            {
                 bool check = false;
                 int repID = -1;
                 if (!String.IsNullOrEmpty(Request.QueryString["id"]))
@@ -39,6 +37,9 @@ namespace KIS.Produzione
                 {
                     Reparto rp = new Reparto(repID);
                     if (rp.id != -1)
+                    {
+                    frmShowStatusUtenti.reparto = rp.id;
+                    if (!Page.IsPostBack && !Page.IsCallback)
                     {
                         andonCfg = new KIS.App_Code.AndonReparto(rp.id);
                         andonCfg.loadCampiVisualizzati();

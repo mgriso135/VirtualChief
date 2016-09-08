@@ -652,7 +652,6 @@ namespace KIS.Operatori
             if (taskID != -1)
             {
                 TaskProduzione tsk = new TaskProduzione(taskID);
-
                 String configShowNomi = "0";
                 Reparto rp = new Reparto(tsk.RepartoID);
                 if (rp.id != -1)
@@ -660,8 +659,39 @@ namespace KIS.Operatori
                     configShowNomi = rp.AndonPostazioniFormatoUsername.ToString();
                 }
 
+                tsk.loadOperatori();
+                for (int i = 0; i < tsk.Operatori.Count; i++)
+                {
+                    if (configShowNomi == "0")
+                    {
+                        lblOperatori.Text += tsk.Operatori[i];
+                    }
+                    else if (configShowNomi == "1")
+                    {
+                        User usr = new User(tsk.Operatori[i]);
+                        lblOperatori.Text += usr.name;
+                    }
+                    else if (configShowNomi == "2")
+                    {
+                        User usr = new User(tsk.Operatori[i]);
+                        lblOperatori.Text += usr.name + " " + usr.cognome.Substring(0, 1);
+                    }
+                    else if (configShowNomi == "3")
+                    {
+                        User usr = new User(tsk.Operatori[i]);
+                        lblOperatori.Text += usr.name + " " + usr.cognome;
+                    }
+                    if (i < tsk.Operatori.Count - 1)
+                    {
+                        lblOperatori.Text += "<br />";
+                    }
+                }
+
+                // Utenti attivi -- OLD
+                /*
                 if (tsk.Status == 'I')
                 {
+                    
                     tsk.loadUtentiAttivi();
                     for (int i = 0; i < tsk.UtentiAttivi.Count; i++)
                     {
@@ -731,7 +761,7 @@ namespace KIS.Operatori
                             lblOperatori.Text += "<br />";
                         }
                     }
-                }                
+                }*/
             }
         }
 

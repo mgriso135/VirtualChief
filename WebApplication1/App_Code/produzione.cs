@@ -136,6 +136,7 @@ namespace KIS
     public class TaskProduzione
     {
         public String log;
+        public String logP {get { return this.log; } }
 
         private int _TaskProduzioneID;
         public int TaskProduzioneID
@@ -564,6 +565,26 @@ namespace KIS
             }
         }
 
+        // Utenti che hanno lavorato o stanno lavorato su questo task
+        private List<String> _Operatori;
+        public List<String> Operatori
+        {
+            get { return this._Operatori; }
+        }
+
+        public void loadOperatori()
+        {
+            this._Operatori = new List<String>();
+            List<String> utentiNonAttivi = new List<String>();
+            this.loadEventi();
+
+            for (int i =0; i < this.Eventi.Count; i++)
+            {
+                utentiNonAttivi.Add(this.Eventi[i].User);
+            }
+            this._Operatori = new List<String>(utentiNonAttivi.Distinct());
+        }
+
         public bool Start(User usr)
         {
             bool rt = false;
@@ -893,6 +914,10 @@ namespace KIS
                                     log += (fine - inizio).ToString();
                                     log += tc.ToString() + "--> OK<br/><br/>";
                                 }
+                                else // RAMO AGGIUNTO PER EVITARE CHE SE CI SONO FASI IN STATO "I", QUESTE PORTINO IL CONTO A 0
+                                {
+                                    rdr.Read();
+                                }
                             }
                         }
                         conn.Close();
@@ -929,6 +954,10 @@ namespace KIS
                                     //tc += (fine - inizio);
                                     log += (fine - inizio).ToString();
                                     log += tc.ToString() + "--> OK<br/><br/>";
+                                }
+                                else // RAMO AGGIUNTO PER EVITARE CHE SE CI SONO FASI IN STATO "I", QUESTE PORTINO IL CONTO A 0
+                                {
+                                    rdr.Read();
                                 }
                             }
                         }
@@ -1286,19 +1315,13 @@ namespace KIS
                     rit = new TimeSpan(0, 0, 0);
                 }
                 else
-                {
-                    
+                {                    
                     this.loadIntervalliDiLavoroEffettivi();
                     if (Status == 'N')
                     {
-                        //log = "Entro nel ramo 'N'<br />";
                         DateTime df = new DateTime();
-                            df = DateTime.Now;
+                            df = DateTime.UtcNow;
                             rit = df - this.LateStart;
-
-                        //log = this.Status + " " + df.ToString("dd/MM/yyyy HH:mm:ss") + " " + this.LateStart.ToString("dd/MM/yyyy HH:mm:ss") + " ";
-                        //log += rit.TotalHours.ToString() + "<br/>";
-                        //Reparto rp = new Reparto(this.RepartoID);
                         rp.loadCalendario(this.LateStart.AddDays(-5), df.AddDays(5));
                         int indInizio = -1;
                         int indFine = -1;
@@ -1341,10 +1364,8 @@ namespace KIS
                                     // Questo tiene conto del fatto che il LateFinish potrebbe essere esterno ad un intervalli di lavoro se elimino straordinari o ferie...
                                     DateTime prevFine = this.LateFinish > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateFinish : rp.CalendarioRep.Intervalli[indInizio].Fine;
                                     log += (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Hours.ToString() + ":" + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Minutes.ToString() + ":" + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Seconds.ToString() + " ";
-                                    //rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine);
                                     rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - prevFine);
                                 }
-                                //log += rit.Hours.ToString() + ":" + rit.Minutes.ToString() + ":" + rit.Seconds.ToString() + "<br/>";
                                 indInizio++;
                             }
 
@@ -1368,66 +1389,71 @@ namespace KIS
                         }
                         else
                         {
-                            df = DateTime.UtcNow;
+                            df = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
                         }
                         rit = df - this.LateFinish;
-                        //log = "Entro nel ramo 'IPF'<br />";
-                        //log += df.ToString("dd/MM/yyyy HH:mm:ss") + " " + this.LateFinish.ToString("dd/MM/yyyy HH:mm:ss") + " ";
-                        //log += rit.TotalHours.ToString() + "<br/>";
-                        //Reparto rp = new Reparto(this.RepartoID);
-                        rp.loadCalendario(this.LateStart.AddDays(-5), df.AddDays(5));
+                        DateTime uno = df < this.LateFinish ? df : this.LateFinish;
+                        DateTime due = df < this.LateFinish ? this.LateFinish : df;
+                        //rp.loadCalendario(this.LateStart.AddDays(-1), df.AddDays(1));
+                        rp.loadCalendario(uno.AddDays(-5),due.AddDays(5));
                         int indInizio = -1;
                         int indFine = -1;
                         bool foundFine = false;
+                        //try
+                        //{
+                        log = rit.TotalHours.ToString() + "<br />"
+                            + uno.ToString("dd/MM/yyyy HH:mm:ss")
+                            + due.ToString("dd/MM/yyyy HH:mm:ss")
+                            + this.TaskProduzioneID.ToString() 
+                            + " " + this.LateFinish.ToString("dd/MM/yyyy HH:mm:ss")
+                            + " " + df.ToString("dd/MM/yyyy HH:mm:ss")
+                            + "<br />";
                             for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
-                            {
-                                //log += i.ToString() + "<br />";
+                        {
+                                log+=rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " "
+                                + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                                 if (rp.CalendarioRep.Intervalli[i].Inizio <= this.LateFinish && this.LateFinish <= rp.CalendarioRep.Intervalli[i].Fine)
                                 {
-                                    //log += "indInizio: " + i.ToString() + " " + rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
+                                    log += " A";
                                     indInizio = i;
                                 }
-                                else if(rp.CalendarioRep.Intervalli[i].Fine < this.LateFinish && this.LateFinish < rp.CalendarioRep.Intervalli[i + 1].Inizio)
+                                else if((i+1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < this.LateFinish && this.LateFinish < rp.CalendarioRep.Intervalli[i + 1].Inizio)
                                 {
-                                    //log += "indInizio Esterno: " + i.ToString() + " " + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + df.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + rp.CalendarioRep.Intervalli[i + 1].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
+                                    log += " B";
                                     indInizio = i;
                                     foundFine = true;
                                 }
                                 if (rp.CalendarioRep.Intervalli[i].Inizio <= df && df <= rp.CalendarioRep.Intervalli[i].Fine)
                                 {
-                                    //log += "indFine: " + i.ToString() + " " + rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + df.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
+                                    log += " C";
                                     indFine = i;
                                     foundFine = true;
                                 }
-                                else if (rp.CalendarioRep.Intervalli[i].Fine < df && df < rp.CalendarioRep.Intervalli[i + 1].Inizio)
+                                else if ((i + 1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < df && df < rp.CalendarioRep.Intervalli[i + 1].Inizio)
                                 {
-                                    //log += "indFine Esterna: " + i.ToString() + " " + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + df.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + rp.CalendarioRep.Intervalli[i + 1].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
+                                    log += " D";
                                     indFine = i;
                                     foundFine = true;
                                 }
-                            }
+                                log += "<br/>";
+                        }
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //   this.log += ex.Message;
+                        //    rit = new TimeSpan(0, 0, 0);
+                        //}
 
-                            if (foundFine == true)
-                            {
-                                //log += "Calcolo il ritardo: <br/>";
-                                while (indInizio < indFine)
-                                {
-                                    //log += "indInizio = " + indInizio.ToString() + " rp.CalendarioRep.Intervalli.Count =" + rp.CalendarioRep.Intervalli.Count + "<br />";
-                                    if ((indInizio + 1) < rp.CalendarioRep.Intervalli.Count && indInizio > -1)
-                                    {
-                                        /*log += rp.CalendarioRep.Intervalli[indInizio + 1].Inizio.ToString("dd/MM/yyyy HH:mm:ss")
-                                            + " - "
-                                            + rp.CalendarioRep.Intervalli[indInizio].Fine.ToString("dd/MM/yyyy HH:mm:ss")
-                                            + " <br />";
-                                        log += "Tolgo " + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).TotalHours.ToString()+"<br />";//(rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Hours.ToString() + ":" + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Minutes.ToString() + ":" + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Seconds.ToString() + " ";
-                                        */
-                                        // Questo tiene conto del fatto che il LateFinish potrebbe essere esterno ad un intervalli di lavoro se elimino straordinari o ferie...
+                        log += foundFine.ToString() + " " + indInizio.ToString() + " " + indFine.ToString() + "<br />";
+                        if (foundFine == true)
+                         {
+                             while (indInizio < indFine)
+                             {
+                                 if ((indInizio + 1) < rp.CalendarioRep.Intervalli.Count && indInizio > -1)
+                                 {
                                         DateTime prevFine = this.LateFinish > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateFinish : rp.CalendarioRep.Intervalli[indInizio].Fine;
-                                        //rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine);
                                         rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - prevFine);
                                     }
-                                    //log += rit.Hours.ToString() + ":" + rit.Minutes.ToString() + ":" + rit.Seconds.ToString() + "<br/>"
-                                    //    + rit.TotalHours.ToString() + "<br />";
                                     indInizio++;
                                 }
 
@@ -1440,13 +1466,14 @@ namespace KIS
                             {
                                 rit = new TimeSpan(0, 0, 0);
                             }
-                        }
-
+                        
                     }
+                    
+                }
 
-                    if (rit.TotalHours < 0)
-                    {
-                        rit = new TimeSpan(0, 0, 0);
+                if (rit.TotalHours < 0)
+                {
+                    rit = new TimeSpan(0, 0, 0);
                 }
                 return rit;
             }
@@ -2174,14 +2201,6 @@ namespace KIS
                 }
                 rdr.Close();
                 conn.Close();
-                /*if (tsk.PostazioneDiLavoro != null)
-                {
-                    this._PostazioneDiLavoro = tsk.PostazioneDiLavoro;
-                }
-                else
-                {
-                    this._PostazioneDiLavoro = null;
-                }*/
             }
             else
             {
@@ -2230,7 +2249,6 @@ namespace KIS
             this._RepartoProduttivo = rp;
             this._Quantita = qty;
             // Carico i figli
-            art.Proc.process.loadFigli(art.Proc.variant);
             // Verifico che tutti i task in lst appartengano ai figli del processo padre
             bool check = true;
             for (int i = 0; i < lst.Count && check == true; i++)
@@ -2242,7 +2260,6 @@ namespace KIS
             if (check == true)
             {
                 MainProcess = art.Proc;
-
                 this._RepartoProduttivo = rp;
                 for (int i = 0; i < lst.Count; i++)
                 {

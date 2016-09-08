@@ -298,14 +298,18 @@
         <asp:Repeater runat="server" ID="rptStatusCommessa" Visible="false" OnItemDataBound="rptStatusCommessa_ItemDataBound">
             <HeaderTemplate>
                 <table class="table table-condensed">
+                    <thead>
                     <tr>
-                        <td>Task ID</td>
-                        <td>Nome</td>
-                        <td>Postazione</td>
-                        <td>Stato</td>
-                        <td>Ritardo</td>
-                        <td>Operatori</td>
+                        <th>Task ID</th>
+                        <th>Nome</th>
+                        <th>Postazione</th>
+                        <th>Stato</th>
+                        <th style="text-align:center;">Lavoro previsto (ore)</th>
+                        <th style="text-align:center;">Lavoro svolto (ore)</th>
+                        <th style="text-align:center;">Ritardo (ore)</th>
+                        <th>Operatori</th>
                     </tr>
+                        </thead>
             </HeaderTemplate>
             <ItemTemplate>
                 <tr runat="server" id="tr1">
@@ -323,7 +327,9 @@
                         <asp:Label runat="server" ID="lblStatus" />
                         <%# DataBinder.Eval(Container.DataItem, "Status") %>
                     </td>
-                    <td>
+                    <td style="text-align:center;"><%# Math.Round(((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoDiLavoroPrevisto")).TotalHours, 1) %></td>
+                    <td style="text-align:center;"><%# Math.Round(((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoDiLavoroEffettivo")).TotalHours, 1) %></td>
+                    <td style="text-align:center;">
                         <%# Math.Round((((TimeSpan)DataBinder.Eval(Container.DataItem, "Ritardo")).TotalHours), 1) %>
                     </td>
                     <td>
