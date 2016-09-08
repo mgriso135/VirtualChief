@@ -90,11 +90,11 @@ namespace KIS.Analysis
             ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, rev), new variante(idVar));
             if (start > new DateTime(1970,1,1) && end > start && prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.process.revisione != -1 && prcVar.variant.idVariante != -1)
             {
-                //elArticoli = new ElencoArticoli(prcVar, 'F', new DateTime(1970, 1, 1), DateTime.Now.AddDays(1));
                 elArticoli = new ElencoArticoli(prcVar, 'F', start, end);
 
                 if (elArticoli.ListArticoli.Count > 0)
                 {
+                   
                     accordion1.Visible = true;
                     chartTempi.Visible = true;
                     chartLeadTimes.Visible = true;
@@ -107,11 +107,11 @@ namespace KIS.Analysis
                         elArticoli.ListArticoli[i].loadTempoDiLavoroTotale();
                         elArticoli.ListArticoli[i].loadLeadTimes();
                         for (int j = 0; j < elArticoli.ListArticoli[i].Tasks.Count; j++)
-                        {
+                       {
                             eltasks.Add(elArticoli.ListArticoli[i].Tasks[j]);
                         }
                     }
-
+                   
                     chartTempi.Width = elArticoli.ListArticoli.Count < 12 ? 600 : chartTempi.Width = 50 * elArticoli.ListArticoli.Count;
 
                     chartTempi.Series[0].ChartType = System.Web.UI.DataVisualization.Charting.SeriesChartType.Column;
@@ -136,13 +136,7 @@ namespace KIS.Analysis
                     {
                         chartTempi.Series["media"].Points.AddY(elArticoli.TempoDiLavoroMedio.TotalHours);
                         chartTempi.Series["media"].ToolTip = "Media: #VAL{0.00} ore";
-                    }/*
-                    
-                    chartTempi.Series["media"].XValueMember = "IDCombinato";
-                    chartTempi.Series["media"].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Double;
-                    chartTempi.Series["media"].YValueMembers = "TempoDiLavoroUnitarioHoursDbl";//"TempoDiLavoroTotaleDbl";
-                    chartTempi.Series["media"].Label = "#VALY{0.00} ore";*/
-
+                    }
                     rptTempiDiLavoro.DataSource = elArticoli.ListArticoli;
                     rptTempiDiLavoro.DataBind();
 
@@ -153,7 +147,7 @@ namespace KIS.Analysis
                     rptProdotti.DataBind();
 
                     lblMediaTempoDiLavoro.Text = Math.Round(elArticoli.TempoDiLavoroMedio.TotalHours, 2).ToString() + " ore";
-
+                    
                     // Lead times
                     chartLeadTimes.Width = elArticoli.ListArticoli.Count < 12 ? 600 : chartTempi.Width = 50 * elArticoli.ListArticoli.Count;
                     chartLeadTimes.Series[0].ChartType = System.Web.UI.DataVisualization.Charting.SeriesChartType.Column;
@@ -202,7 +196,9 @@ namespace KIS.Analysis
                     rptTempiLavoroTasks.DataSource = result;
                     rptTempiLavoroTasks.DataBind();
 
+    
                     lbl1.Text = "Data loaded.<br />";
+                    
                 }
                 else
                 {

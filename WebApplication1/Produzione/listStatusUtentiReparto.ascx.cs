@@ -11,6 +11,8 @@ namespace KIS.Produzione
 {
     public partial class listStatusUtentiReparto : System.Web.UI.UserControl
     {
+        public int reparto;
+        public static Reparto rp;
         protected void Page_Load(object sender, EventArgs e)
         {
             /*List<String[]> elencoPermessi = new List<String[]>();
@@ -27,10 +29,10 @@ namespace KIS.Produzione
 
             if (checkUser == true)
             {*/
-                if (!Page.IsPostBack && !Page.IsCallback)
+            rp = new Reparto(reparto);
+            if (!Page.IsPostBack && !Page.IsCallback)
                 {
                     UserList usrList = new UserList(new Permesso("Task Produzione"));
-
                     if (usrList.listUsers.Count > 0)
                     {
                         rptUserList.DataSource = usrList.listUsers;
@@ -65,20 +67,22 @@ namespace KIS.Produzione
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
+                        Reparto rp = new Reparto(reparto);
                         User curr = new User(lblUsername.Value.ToString());
                         curr.loadTaskAvviati();
 
-                        char andonConfig = (new AndonCompleto()).PostazioniFormatoUsername;
+                        //char andonConfig = (new AndonCompleto()).PostazioniFormatoUsername;
+                        char andonConfig = rp.AndonPostazioniFormatoUsername;
 
-                        if (andonConfig == 0)
+                        if (andonConfig == '0')
                         {
                             lblUtentiAttivi.Text = curr.username;
                         }
-                        else if (andonConfig == 1)
+                        else if (andonConfig == '1')
                         {
                             lblUtentiAttivi.Text = curr.name;
                         }
-                        else if (andonConfig == 2)
+                        else if (andonConfig == '2')
                         {
                             lblUtentiAttivi.Text = curr.name + " " + curr.cognome.Substring(0, 1);
                         }

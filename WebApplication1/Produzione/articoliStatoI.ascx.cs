@@ -145,6 +145,7 @@ namespace KIS.Produzione
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
+                        tRow.Align = "Center";
                         if (art.Status == 'I')
                         {
                             for(int i = 0; i < andonCfg.CampiVisualizzati.Count; i++)

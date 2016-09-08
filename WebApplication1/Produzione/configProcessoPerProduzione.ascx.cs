@@ -151,8 +151,10 @@ namespace KIS.Produzione
                     for (int i = 0; i < configProc.Processi[ind].Precedenti.Count; i++)
                     {
                         processo s = new processo(configProc.Processi[ind].Precedenti[i]);
-                        
-                        prec.Text += s.processID.ToString() + " " + s.processName + "<br/>";
+
+                        prec.Text += s.processID.ToString() + " " + s.processName 
+                            + "("+ configProc.Processi[ind].PrecedentiPausa[i].TotalHours.ToString()
+                            +  ")"+"<br/>";
                     }
 
                     Label succ = (Label)e.Item.FindControl("lblSuccessivi");

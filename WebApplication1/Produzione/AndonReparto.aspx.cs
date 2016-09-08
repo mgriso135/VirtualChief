@@ -13,13 +13,12 @@ namespace KIS.Produzione
     public partial class AndonReparto : System.Web.UI.Page
     {
         protected List<Articolo> artNP = new List<Articolo>();
-        private int idRep;
+        //private int idRep;
         public static KIS.App_Code.AndonReparto andonCfg;
+        public static Reparto rp;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack && !Page.IsCallback)
-            {
                 bool check = false;
                 int repID = -1;
                 if (!String.IsNullOrEmpty(Request.QueryString["id"]))
@@ -37,7 +36,10 @@ namespace KIS.Produzione
                 }
                 if (repID != -1 && check == true)
                 {
-                    Reparto rp = new Reparto(repID);
+                    frmShowStatusUtenti.reparto = repID;
+                    if (!Page.IsPostBack && !Page.IsCallback)
+                    {
+                    rp = new Reparto(repID);
                     if (rp.id != -1)
                     {
                         andonCfg = new KIS.App_Code.AndonReparto(rp.id);
@@ -340,7 +342,8 @@ namespace KIS.Produzione
         protected void loadCommesse(int idRep)
         {
             //ElencoCommesseAperte elComm = new ElencoCommesseAperte();
-            Reparto rp = new Reparto(idRep);
+            //Reparto 
+                rp = new Reparto(idRep);
             ElencoArticoli elArtN =new ElencoArticoli('N', rp);
             ElencoArticoli elArtP = new ElencoArticoli('P', rp);
 
@@ -350,18 +353,6 @@ namespace KIS.Produzione
                 return p1.LateStart.CompareTo(p2.LateStart);
             });
             
-
-            /*for (int i = 0; i < elComm.Commesse.Count; i++)
-            {
-                elComm.Commesse[i].loadArticoli(rp);
-                for (int j = 0; j < elComm.Commesse[i].Articoli.Count; j++)
-                {
-                    if (elComm.Commesse[i].Articoli[j].Status == 'N' || elComm.Commesse[i].Articoli[j].Status == 'P' && elComm.Commesse[i].Articoli[j].Reparto == idRep)
-                    {
-                        artNP.Add(elComm.Commesse[i].Articoli[j]);
-                    }
-                }
-            }*/
         }
 
         protected void TimeCheck_Tick(object sender, EventArgs e)
@@ -384,7 +375,8 @@ namespace KIS.Produzione
             }
             if (repID != -1 && check == true)
             {
-                Reparto rp = new Reparto(repID);
+                //Reparto 
+                rp = new Reparto(repID);
                 if (rp.id != -1)
                 {
 

@@ -19,8 +19,9 @@
 <ItemTemplate>
 <a href="updatePERT.aspx?id=<% = Request.QueryString["id"] %>&delID=<%# DataBinder.Eval(Container.DataItem, "processID") %>&verso=prec&act=delprecedenze&variante=<% = Request.QueryString["variante"] %>">
 <asp:Image ID="Image1" runat="server" ImageUrl="/img/iconDelete.png" height="30" /></a>
-<%#DataBinder.Eval(Container.DataItem, "processName") %><br />
+<%#DataBinder.Eval(Container.DataItem, "processName") %>
 </ItemTemplate>
+    <FooterTemplate></FooterTemplate>
 </asp:Repeater>
 </td>
 <td style="text-align:center; font-size: 12px; font-weight:bold;" runat="server" id="curr"></td>
@@ -30,8 +31,9 @@
 <ItemTemplate>
 <a href="updatePERT.aspx?id=<% = Request.QueryString["id"] %>&delID=<%# DataBinder.Eval(Container.DataItem, "processID") %>&verso=succ&act=delprecedenze&variante=<% = Request.QueryString["variante"] %>">
 <asp:Image ID="Image2" runat="server" ImageUrl="/img/iconDelete.png" height="30" /></a>
-<%#DataBinder.Eval(Container.DataItem, "processName") %><br />
+<%#DataBinder.Eval(Container.DataItem, "processName") %>
 </ItemTemplate>
+    <FooterTemplate></FooterTemplate>
 </asp:Repeater>
     
 </td>

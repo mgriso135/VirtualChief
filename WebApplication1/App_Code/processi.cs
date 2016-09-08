@@ -160,6 +160,12 @@ namespace KIS
             get { return _processiSucc; }
         }
 
+        private List<int> _revisioneSucc;
+        public List<int> revisioneSucc
+        {
+            get { return _revisioneSucc; }
+        }
+
         private List<relazione> _relazioneSucc;
         public List<relazione> relazioneSucc
         {
@@ -182,6 +188,68 @@ namespace KIS
         public List<relazione> relazionePrec
         {
             get { return this._relazionePrec; }
+        }
+
+        private List<TimeSpan> _pausePrec;
+        public List<TimeSpan> pausePrec
+        { get { return this._pausePrec; } }
+
+        private List<TimeSpan> _pauseSucc;
+        public List<TimeSpan> pauseSucc
+        { get { return this._pauseSucc; } }
+
+        public Boolean setPausaPrec(TaskVariante tskPrec, TimeSpan pausa)
+        {
+            Boolean ret = false;
+            this.loadPrecedenti(tskPrec.variant);
+            bool found = false;
+            int index = -1;
+            try
+            {
+                var controllo = this.processiPrec.Where(x => x == tskPrec.Task.processID).First();
+                index = this.processiPrec.IndexOf(tskPrec.Task.processID);
+                found = true;
+            }
+            catch
+            {
+                found = false;
+            }
+
+            if(found && index!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+
+                cmd.CommandText = "UPDATE precedenzeprocessi SET pausa = '"
+                    + Math.Truncate(pausa.TotalHours).ToString() + ":"
+                    + pausa.Minutes.ToString() + ":"
+                    + pausa.Seconds.ToString()
+                    + "' WHERE "
+                    + "prec = " + tskPrec.Task.processID.ToString()
+                    + " AND revPrec = " + tskPrec.Task.revisione.ToString()
+                    + " AND succ = " + this.processID.ToString()
+                    + " AND revSucc=" + this.revisione.ToString()
+                    + " AND variante = " + tskPrec.variant.idVariante.ToString();
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = true;
+                }
+                catch(Exception ex)
+                {
+                    log = ex.Message;
+                    ret = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+
+            return ret;
         }
 
         public List<processo> subProcessi;
@@ -888,17 +956,23 @@ namespace KIS
                 MySqlCommand cmd = conn.CreateCommand();
 
                 this._processiPrec = new List<int>();
+                this._revisionePrec = new List<int>();
                 this._relazionePrec = new List<relazione>();
+                this._pausePrec = new List<TimeSpan>();
 
                 // Carico i processi precedenti
-                cmd.CommandText = "SELECT precedenzeprocessi.prec, precedenzeprocessi.revPrec, precedenzeprocessi.relazione FROM precedenzeprocessi"
+                cmd.CommandText = "SELECT precedenzeprocessi.prec, precedenzeprocessi.revPrec, precedenzeprocessi.relazione, "
+                    + "precedenzeprocessi.pausa"
+                    + " FROM precedenzeprocessi"
                     + " WHERE precedenzeprocessi.succ = " + this.processID.ToString() + " AND precedenzeprocessi.revsucc = " + this.revisione.ToString();
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
 
                 while(mysqlReader.Read())
                 {
                     this._processiPrec.Add(mysqlReader.GetInt32(0));
+                    this._revisionePrec.Add(mysqlReader.GetInt32(1));
                     this._relazionePrec.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._pausePrec.Add(mysqlReader.GetTimeSpan(3));
                 }
 
                 mysqlReader.Close();
@@ -921,9 +995,10 @@ namespace KIS
                 this._processiPrec = new List<int>();
                 this._relazionePrec = new List<relazione>();
                 this._revisionePrec = new List<int>();
+                this._pausePrec = new List<TimeSpan>();
         
                 // Carico i processi precedenti
-                cmd.CommandText = "SELECT precedenzeprocessi.prec, precedenzeprocessi.revPrec, precedenzeprocessi.relazione FROM precedenzeprocessi"
+                cmd.CommandText = "SELECT precedenzeprocessi.prec, precedenzeprocessi.revPrec, precedenzeprocessi.relazione, precedenzeprocessi.pausa FROM precedenzeprocessi"
                     + " WHERE precedenzeprocessi.succ = " + this.processID.ToString() + " AND precedenzeprocessi.revsucc = " + this.revisione.ToString()
                     + " AND precedenzeprocessi.variante = " + var.idVariante.ToString();
                 
@@ -935,6 +1010,7 @@ namespace KIS
                     this._processiPrec.Add(mysqlReader.GetInt32(0));
                     this._relazionePrec.Add(new relazione(mysqlReader.GetInt32(2)));
                     this._revisionePrec.Add(mysqlReader.GetInt32(1));
+                    this._pausePrec.Add(mysqlReader.GetTimeSpan(3));
                 }
 
                 mysqlReader.Close();
@@ -947,6 +1023,7 @@ namespace KIS
         // Carica l'array dei processi successivi
         public bool loadSuccessivi()
         {
+            this._pauseSucc = new List<TimeSpan>();
             bool res = false;
             if (this._processID != -1)
             {
@@ -954,17 +1031,22 @@ namespace KIS
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 this._processiSucc = new List<int>();
+                this._revisioneSucc = new List<int>();
                 this._relazioneSucc = new List<relazione>();
 
                 // Carico i processi successivi
-                cmd.CommandText = "SELECT precedenzeprocessi.succ, precedenzeprocessi.revSucc, precedenzeprocessi.relazione FROM precedenzeprocessi "
+                cmd.CommandText = "SELECT precedenzeprocessi.succ, precedenzeprocessi.revSucc, precedenzeprocessi.relazione, "
+                    + " precedenzeprocessi.pausa"
+                    +" FROM precedenzeprocessi "
                     + " WHERE precedenzeprocessi.prec = " + this.processID.ToString() + " AND precedenzeprocessi.revPrec = "
                     + this.revisione.ToString();
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
                 while(mysqlReader.Read())
                 {
                     this._processiSucc.Add(mysqlReader.GetInt32(0));
+                    this._revisioneSucc.Add(mysqlReader.GetInt32(1));
                     this._relazioneSucc.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._pauseSucc.Add(mysqlReader.GetTimeSpan(3));
                 }
 
                 mysqlReader.Close();
@@ -978,6 +1060,8 @@ namespace KIS
         public bool loadSuccessivi(variante var)
         {
             bool res = false;
+            this._pauseSucc = new List<TimeSpan>();
+            this._revisioneSucc = new List<int>();
             if (this.processID != -1)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -990,7 +1074,9 @@ namespace KIS
 
 
                 // Carico i processi successivi
-                cmd.CommandText = "SELECT precedenzeprocessi.succ, precedenzeprocessi.revSucc, precedenzeprocessi.relazione FROM precedenzeprocessi "
+                cmd.CommandText = "SELECT precedenzeprocessi.succ, precedenzeprocessi.revSucc, precedenzeprocessi.relazione, "
+                    + "precedenzeprocessi.pausa "
+                    +" FROM precedenzeprocessi "
                     + " WHERE precedenzeprocessi.prec = " + this.processID.ToString() + " AND precedenzeprocessi.revPrec = "
                     + this.revisione.ToString() + " AND precedenzeprocessi.variante = " + var.idVariante.ToString();
 
@@ -999,7 +1085,9 @@ namespace KIS
                 while (mysqlReader.Read())
                 {
                     this._processiSucc.Add(mysqlReader.GetInt32(0));
+                    this._revisioneSucc.Add(mysqlReader.GetInt32(1));
                     this._relazioneSucc.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._pauseSucc.Add(mysqlReader.GetTimeSpan(3));
                 }
 
                 mysqlReader.Close();

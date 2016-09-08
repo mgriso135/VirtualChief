@@ -263,7 +263,26 @@ namespace KIS.Commesse
                         for (int i = 0; i < task.Task.processiPrec.Count; i++)
                         {
                             processo proc = new processo(task.Task.processiPrec[i], task.Task.revisionePrec[i]);
-                            lblPrecedenti.Text += proc.processName + "<br />";
+                            lblPrecedenti.Text += proc.processName
+                                + " (" + Math.Truncate(task.Task.pausePrec[i].TotalHours)
+                                + ":" + task.Task.pausePrec[i].Minutes.ToString()
+                                + ":" + task.Task.pausePrec[i].Seconds.ToString()
+                                /*+ "<a href=\"wzEditPauseTasks.aspx?prec="+task.Task.processiPrec[i]
+                                +"&revPrec=" + task.Task.revisionePrec[i]
+                                + "&succ=" + task.Task.processID
+                                + "&revSucc=" + task.Task.revisione
+                                + "&variante=" + task.variant.idVariante
+                                + "\" target=\"_blank\">"*/
+                                + "<img src=\"/img/iconWait.png\" width=\"20\" style=\"border: 1; cursor: pointer; cursor: hand;\" onclick=\"return pausaTasks(" 
+                                + task.Task.processiPrec[i] + ", " 
+                                + task.Task.revisionePrec[i] + ", " 
+                                + task.Task.processID + ", "
+                                + task.Task.revisione + ", "
+                                + task.variant.idVariante
+                                + ");\" />"
+                                //+"</a>"
+                                + ")" 
+                                + "<br />";
                         }
                     }
                 }

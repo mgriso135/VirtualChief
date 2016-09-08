@@ -36,6 +36,7 @@ C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplica
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\bin\it\System.Web.Http.resources.dll
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\bin\it\System.Web.Http.WebHost.resources.dll
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\obj\Debug\Kaizen Indicator System - DEVELOP.csproj.App.config
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\obj\Debug\Kaizen Indicator System - DEVELOP.csprojResolveAssemblyReference.cache
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\obj\Debug\KIS.Properties.Resources.resources
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\obj\Debug\Kaizen Indicator System - DEVELOP.csproj.GenerateResource.Cache
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\WebApplication1\obj\Debug\Kaizen Indicator System.dll

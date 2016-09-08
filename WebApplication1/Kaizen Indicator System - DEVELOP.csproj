@@ -480,6 +480,20 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Commesse\wzEditPauseTasks.ascx.cs">
+      <DependentUpon>wzEditPauseTasks.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Commesse\wzEditPauseTasks.ascx.designer.cs">
+      <DependentUpon>wzEditPauseTasks.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Commesse\wzEditPauseTasks.aspx.cs">
+      <DependentUpon>wzEditPauseTasks.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Commesse\wzEditPauseTasks.aspx.designer.cs">
+      <DependentUpon>wzEditPauseTasks.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Commesse\wzEditPERT_updtable.ascx.cs">
       <DependentUpon>wzEditPERT_updtable.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1926,6 +1940,8 @@
     <Content Include="Commesse\wzCheckDeliveryDate.aspx" />
     <Content Include="Commesse\wzCheckWorkLoadReparto.ascx" />
     <Content Include="Commesse\wzCheckWorkLoadReparto.aspx" />
+    <Content Include="Commesse\wzEditPauseTasks.ascx" />
+    <Content Include="Commesse\wzEditPauseTasks.aspx" />
     <Content Include="Commesse\wzEditPERT.ascx" />
     <Content Include="Commesse\wzEditPERT.aspx" />
     <Content Include="Commesse\wzEditPERT_updtable.ascx" />
@@ -2066,13 +2082,13 @@
     <Content Include="img\iconUserAdd.jpg" />
     <Content Include="img\iconUserConnection.jpg" />
     <Content Include="img\iconView.png" />
+    <Content Include="img\iconWait.png" />
     <Content Include="img\iconWarning.png" />
     <Content Include="img\iconWizard.png" />
     <Content Include="img\iconWorkspace.png" />
     <Content Include="img\kpi.jpg" />
     <Content Include="img\kpi2.png" />
     <Content Include="img\kpi3.jpg" />
-    <Content Include="img\logo_KP.jpg" />
     <Content Include="img\performance_indicator.jpg" />
     <Content Include="img\problemIcon.jpg" />
     <Content Include="KanbanBox\KanbanBoxCheckHealth.asmx" />
@@ -2228,17 +2244,10 @@
     <Content Include="Styles\assets\css\bootstrap-responsive.css" />
     <Content Include="Styles\assets\css\bootstrap.css" />
     <Content Include="Styles\assets\css\docs.css" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-114-precomposed.png" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-144-precomposed.png" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-57-precomposed.png" />
-    <Content Include="Styles\assets\ico\apple-touch-icon-72-precomposed.png" />
-    <Content Include="Styles\assets\ico\favicon.ico" />
-    <Content Include="Styles\assets\ico\favicon.png" />
     <Content Include="Styles\assets\img\glyphicons-halflings-white.png" />
     <Content Include="Styles\assets\img\glyphicons-halflings.png" />
     <Content Include="Styles\assets\img\iconComplete.png" />
     <Content Include="Styles\assets\img\iconLoading.gif" />
-    <Content Include="Styles\assets\img\Logo-Kaizen_people.png" />
     <Content Include="Styles\assets\js\application.js" />
     <Content Include="Styles\assets\js\bootstrap-affix.js" />
     <Content Include="Styles\assets\js\bootstrap-alert.js" />
@@ -3410,6 +3419,7 @@
     <Folder Include="Data\Postazioni\" />
     <Folder Include="Data\Produzione\" />
     <Folder Include="Data\Users\" />
+    <Folder Include="Styles\assets\ico\" />
     <Folder Include="temp\" />
   </ItemGroup>
   <ItemGroup>

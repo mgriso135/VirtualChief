@@ -7,8 +7,8 @@
         <asp:Label runat="server" ID="lblData" />
         <asp:Repeater runat="server" ID="rptArticoliAvviati" OnItemDataBound="rptArticoliAvviati_ItemDataBound">
             <HeaderTemplate>
-                <table style="width: 100%;">
-                       <tr style="font-size:18px; font-family:Calibri; text-align:left; " runat="server" id="trHead_Prod">
+                <table style="width: 100%; text-align:center;">
+                       <tr style="font-size:18px; font-family:Calibri; text-align:center; " runat="server" id="trHead_Prod">
                     <th></th>
                 </tr>
                     

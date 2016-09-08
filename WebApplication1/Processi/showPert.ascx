@@ -103,8 +103,12 @@
            if (precSucc) {
                for (var i = 0; i < precSucc.length; i++) {
                    var old = window.document.getElementById("line" + i);
+                   var pause = window.document.getElementById("pause" + i);
                    if (old) {
                        window.document.getElementById("pertGraph").removeChild(old);
+                   }
+                   if (pause) {
+                       window.document.getElementById("pertGraph").removeChild(pause);
                    }
                }
            }
@@ -112,8 +116,10 @@
            if (precSucc)
                {
            var svgNS = "http://www.w3.org/2000/svg";
-           // Disegno le linee delle precedenze
+               // Disegno le linee delle precedenze e scrivo i tempi di pausa
            for (var i = 0; i < precSucc.length; i++) {
+
+               // Disegno le linee delle precedenze
                startx = $('#' + precSucc[i][0]).attr('cx');
                starty = $('#' + precSucc[i][0]).attr('cy');
                endx = $('#' + precSucc[i][1]).attr('cx');
@@ -126,6 +132,42 @@
                line.setAttributeNS(null, "stroke", "black");
                line.setAttributeNS(null, "id", "line" + i);
                document.getElementById("pertGraph").appendChild(line);
+
+               // Scrivo la pausa tra un task ed il successivo
+               var minx = parseInt(endx) - 40;
+               var maxx = parseInt(startx) + 40;
+               if (maxx < minx) {
+                   var swap = minx;
+                   minx = maxx;
+                   maxx = swap;
+               }
+
+               var miny = parseInt(endy);
+               var maxy = parseInt(starty);
+               if (maxy < miny) {
+                   var swap = miny;
+                   miny = maxy;
+                   maxy = swap;
+               }
+
+               var xpos = (maxx - minx) / 2 + minx;
+               var ypos = (maxy - miny) / 2 + miny;
+               // alert(xpos + " " + ypos);
+
+               var tempoP = parseFloat(precSucc[i][2]) / 3600;
+
+               var pauseTxt = document.createElementNS(svgNS, "text");
+               pauseTxt.setAttributeNS(null, "x", xpos);
+               pauseTxt.setAttributeNS(null, "y", ypos - 10);
+               pauseTxt.setAttributeNS(null, "fill", "black");
+               pauseTxt.setAttributeNS(null, "style", "cursor: pointer");
+               pauseTxt.setAttributeNS(null, "id", "pause" + i);
+               pauseTxt.appendChild(document.createTextNode(tempoP.toFixed(1) + "h"));
+               pauseTxt.setAttributeNS(null, "onclick", "openPausePage(evt, \""
+                   + precSucc[i][0] + "\", \"" + precSucc[i][3] + "\", \""
+                   + precSucc[i][1] + "\", \"" + precSucc[i][4]
+                   + "\", \"" + precSucc[i][2] + "\")");
+               document.getElementById("pertGraph").appendChild(pauseTxt);
            }
            }
        }
@@ -250,6 +292,10 @@
 
        function openLinkPage(evt, taskID, revTask) {
            window.open("pertManagePrecedenze2.aspx?id=" + taskID + "&revTaskID=" + revTask + "&variante=" + varID, "_blank", "location=no,menubar=no,location=no,height=600,width=800,menubar=no,status=no");
+       }
+
+       function openPausePage(evt, prec, revPrec, succ, revSucc) {
+           window.open("/Commesse/wzEditPauseTasks.aspx?prec=" + prec + "&revPrec=" + revPrec + "&succ=" + succ + "&revSucc=" + revSucc + "&variante=" + varID, "_blank", "location=no,menubar=no,location=no,height=600,width=800,menubar=no,status=no");
        }
 
        function closeEdit() {

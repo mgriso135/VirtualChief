@@ -230,10 +230,10 @@ namespace KIS.Commesse
                 String txtCommessa = cln.RagioneSociale+Environment.NewLine +Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
                     + " - Quantità: " + art.Quantita.ToString()
                         + Environment.NewLine + "Consegna prevista: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
-                if (art.Planner != null)
+                /*if (art.Planner != null)
                 {
                     txtCommessa += "; Disegnatore: " + art.Planner.name + " " + art.Planner.cognome;
-                }
+                }*/
                 iTextSharp.text.Paragraph commessa = new iTextSharp.text.Paragraph(txtCommessa, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                 intestazioneFoglio[1].Rowspan = 2;
                 intestazioneFoglio[1].AddElement(commessa);
@@ -442,10 +442,10 @@ namespace KIS.Commesse
                 String txtCommessa = cln.RagioneSociale+Environment.NewLine+Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
                     + " - Quantità: " + art.Quantita.ToString()
                         + Environment.NewLine + "Consegna prevista: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
-                if (art.Planner != null)
+                /*if (art.Planner != null)
                 {
                     txtCommessa += "; Disegnatore: " + art.Planner.name + " " + art.Planner.cognome;
-                }
+                }*/
                 iTextSharp.text.Paragraph commessa = new iTextSharp.text.Paragraph(txtCommessa, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                 intestazioneFoglio[1].Rowspan = 2;
                 intestazioneFoglio[1].AddElement(commessa);

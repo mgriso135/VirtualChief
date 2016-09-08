@@ -15,6 +15,11 @@ namespace KIS.Commesse
         public static List<int> idPostazioni = new List<int>();
         public static DateTime inizio, fine;
         public static List<Articolo> articoliNuovi = new List<Articolo>();
+        public static Articolo art;
+        public static Reparto rp;
+        public static TimeSpan somma;
+        public static List<KIS.caricoDiLavoro> carichi;
+        public static double[] orePostazione;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -37,7 +42,6 @@ namespace KIS.Commesse
             {
                 User curr = (User)Session["user"];
                 checkUser = curr.ValidatePermessi(elencoPermessi);
-
             }
 
             if (checkUser == true)
@@ -57,7 +61,7 @@ namespace KIS.Commesse
                 if (!Page.IsPostBack)
                 {
                     articoliNuovi = new List<Articolo>();
-                    Articolo art = new Articolo(idProdotto, annoProdotto);
+                    art = new Articolo(idProdotto, annoProdotto);
                     
                     articoliNuovi.Add(art);
 
@@ -85,14 +89,17 @@ namespace KIS.Commesse
                     dvInfo.Visible = false;
                     
                     chkLstPostazioni.Visible = false;
-                    inizio = DateTime.Now;
                     fine = inizio;
-                    Reparto rp = new Reparto(idReparto);
+                    //Reparto 
+                    rp = new Reparto(idReparto);
+                    inizio = TimeZoneInfo.ConvertTimeFromUtc( DateTime.UtcNow, rp.tzFusoOrario);
                     rp.loadPostazioni();
                     idPostazioni = new List<int>();
                     for (int i = 0; i < rp.Postazioni.Count; i++)
                     {
                         idPostazioni.Add(rp.Postazioni[i].id);
+                        chkLstPostazioni.Items.Add(new ListItem(rp.Postazioni[i].name, rp.Postazioni[i].id.ToString()));
+                        chkLstPostazioni.Items[i].Selected = true;
                     }
                     Chart1.Visible = false;
 
@@ -144,6 +151,7 @@ namespace KIS.Commesse
                                 fine = maxStart.AddDays(1);
 
                                 lbl1.Text = inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + fine.ToString("dd/MM/yyyy HH:mm:ss");
+                                loadProductionPlan();
                                 caricaGrafico();
                             }
                             else if (retSim == 2)
@@ -167,7 +175,7 @@ namespace KIS.Commesse
                 {
                     if (inizio < fine)
                     {
-                        caricaGrafico();
+                        //caricaGrafico();
                         imgGoFwd.Visible = true;
                     }
                 }
@@ -194,8 +202,8 @@ namespace KIS.Commesse
             if (res == 0)
             {
                 chkLstPostazioni.Visible = false;
-                Reparto rp = new Reparto(idReparto);
-                rp.loadPostazioni();
+                //Reparto rp = new Reparto(idReparto);
+                //rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
                 {
@@ -210,19 +218,47 @@ namespace KIS.Commesse
             else
             {
                 chkLstPostazioni.Visible = true;
-                chkLstPostazioni.Items.Clear();
-                Reparto rp = new Reparto(idReparto);
-                rp.loadPostazioni();
+                //chkLstPostazioni.Items.Clear();
+                //Reparto rp = new Reparto(idReparto);
+                //rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
                 {
-                    chkLstPostazioni.Items.Add(new ListItem(rp.Postazioni[i].name, rp.Postazioni[i].id.ToString()));
-                    chkLstPostazioni.Items[i].Selected = true;
+                    //chkLstPostazioni.Items.Add(new ListItem(rp.Postazioni[i].name, rp.Postazioni[i].id.ToString()));
+                    //chkLstPostazioni.Items[i].Selected = true;
                     idPostazioni.Add(rp.Postazioni[i].id);
                 }
                 if (inizio < fine)
                 {
                     caricaGrafico();
+                }
+            }
+        }
+
+        protected void checkFlagsPostazioni()
+        {
+            if (idPostazioni != null)
+            {
+                idPostazioni.Clear();
+            }
+            idPostazioni = new List<int>();
+            for (int i = 0; i < chkLstPostazioni.Items.Count; i++)
+            {
+                if (chkLstPostazioni.Items[i].Selected == true)
+                {
+                    int idP = -1;
+                    try
+                    {
+                        idP = Int32.Parse(chkLstPostazioni.Items[i].Value);
+                    }
+                    catch
+                    {
+                        idP = -1;
+                    }
+                    if (idP != -1)
+                    {
+                        idPostazioni.Add(idP);
+                    }
                 }
             }
         }
@@ -259,25 +295,25 @@ namespace KIS.Commesse
             }
         }
 
-        protected void caricaGrafico()
+        protected void loadProductionPlan()
         {
-            dvInfo.Visible = false;
-            Chart1.Series.Clear();
-            if (idReparto != -1 && inizio < fine)
+            somma = new TimeSpan(0, 0, 0);
+            //List<caricoDiLavoro> 
+                carichi = new List<caricoDiLavoro>();
+            if (rp.id != -1 && inizio < fine)
             {
-                Chart1.Visible = true;
-                Reparto rp = new Reparto(idReparto);
-                Chart1.Titles.Clear();
-                Chart1.Titles.Add(new System.Web.UI.DataVisualization.Charting.Title(rp.name));
-
-                rp.loadPostazioni();
-                TimeSpan somma = new TimeSpan(0, 0, 0);
+                if (rp.Postazioni == null || rp.Postazioni.Count == 0)
+                {
+                    rp.loadPostazioni();
+                }
+                
                 int cont = 0;
-                List<caricoDiLavoro> carichi = new List<caricoDiLavoro>();
+                
                 for (int i = 0; i < rp.Postazioni.Count; i++)
                 {
                     bool found = false;
                     // Se lo trovo nell'elenco delle postazioni selezionate...
+                    // Usare LINQ
                     for (int q = 0; q < idPostazioni.Count; q++)
                     {
                         if (rp.Postazioni[i].id == idPostazioni[q])
@@ -482,6 +518,104 @@ namespace KIS.Commesse
                 }
 
 
+                // QUI CARICO LE ORE PER POSTAZIONE!
+                // Ri-seleziono tutti i flag delle postazioni come checcati!
+                idPostazioni = new List<int>();
+                for (int i = 0; i < rp.Postazioni.Count; i++)
+                {
+                    idPostazioni.Add(rp.Postazioni[i].id);
+                    //chkLstPostazioni.Items.Add(new ListItem(rp.Postazioni[i].name, rp.Postazioni[i].id.ToString()));
+                    chkLstPostazioni.Items[i].Selected = true;
+                }
+
+                //double[] 
+                orePostazione = new double[idPostazioni.Count];
+                // Inserisco punti nulli in carichi per le postazioni di articoli non presenti
+                for (int i = 0; i < idPostazioni.Count; i++)
+                {
+                    orePostazione[i] = 0;
+                    bool found = false;
+                    for (int j = 0; j < carichi.Count; j++)
+                    {
+                        if (carichi[j].articolo == -1 && carichi[j].postazione.id == idPostazioni[i])
+                        {
+                            found = true;
+                        }
+                    }
+                    if (found == false)
+                    {
+                        caricoDiLavoro nullo = new caricoDiLavoro();
+                        nullo.postazione = new Postazione(idPostazioni[i]);
+                        nullo.articolo = -1;
+                        nullo.articoloAnno = -1;
+                        nullo.carico = new TimeSpan(0, 0, 1);
+                        nullo.CaricoOre = 0.1;
+                        carichi.Add(nullo);
+                    }
+
+                    // Ricerco turni di lavoro e verifico la capacità produttiva.
+                    Postazione p = new Postazione(idPostazioni[i]);
+
+                    p.loadCalendario(inizio, fine);
+
+                    for (int b = 0; b < p.Calendario.Intervalli.Count; b++)
+                    {
+                        if (p.Calendario.Intervalli[b].idReparto == idReparto && (p.Calendario.Intervalli[b].Status == 'L' || p.Calendario.Intervalli[b].Status == 'S'))
+                        {
+                            Turno turno = new Turno(p.Calendario.Intervalli[b].idTurno);
+                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(p, turno);
+
+                            lblErr.Text += p.name + " " + resPost.NumRisorse.ToString() + " " + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                            lbl1.Text += p.name + " " + resPost.NumRisorse.ToString() + " " + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+
+                            TimeSpan intervallo = new TimeSpan(0, 0, 0);
+                            if (p.Calendario.Intervalli[b].Fine < inizio)
+                            {
+                                intervallo = new TimeSpan(0, 0, 0);
+                            }
+                            else if (p.Calendario.Intervalli[b].Inizio <= inizio && p.Calendario.Intervalli[b].Fine > inizio && p.Calendario.Intervalli[b].Fine < fine)
+                            {
+                                intervallo = p.Calendario.Intervalli[b].Fine - inizio;
+                            }
+                            else if (p.Calendario.Intervalli[b].Inizio >= inizio && p.Calendario.Intervalli[b].Inizio < fine && p.Calendario.Intervalli[b].Fine >= inizio && p.Calendario.Intervalli[b].Fine <= fine)
+                            {
+                                intervallo = p.Calendario.Intervalli[b].Fine - p.Calendario.Intervalli[b].Inizio;
+                            }
+                            else if (p.Calendario.Intervalli[b].Inizio >= inizio && p.Calendario.Intervalli[b].Inizio <= fine && p.Calendario.Intervalli[b].Fine >= fine)
+                            {
+                                intervallo = fine - p.Calendario.Intervalli[b].Inizio;
+                            }
+                            else
+                            {
+                                intervallo = new TimeSpan(0, 0, 0);
+                            }
+
+                            orePostazione[i] += resPost.NumRisorse * intervallo.TotalHours;
+                        }
+                    }
+                } // FIN QUI, OREPOSTAZIONE!
+                
+            }
+        }
+
+        protected void caricaGrafico()
+        {
+            dvInfo.Visible = false;
+            Chart1.Series.Clear();
+            //loadProductionPlan();
+            lbl1.Text = somma.TotalHours.ToString();// + " " + carichi.Count.ToString();
+            if (/*idReparto != -1*/ rp.id!=-1 && inizio < fine && carichi!=null && carichi.Count >=0)
+            {
+                Chart1.Visible = true;
+                //Reparto rp = new Reparto(idReparto);
+                Chart1.Titles.Clear();
+                Chart1.Titles.Add(new System.Web.UI.DataVisualization.Charting.Title(rp.name));
+
+                // IL BLOCCONE DI CODICE ERA QUI!
+                
+
+                
+
                 if (rbPostazioni.SelectedValue == "0")
                 {
                     Chart1.Series.Clear();
@@ -538,76 +672,9 @@ namespace KIS.Commesse
                 }
                 else
                 {
-                    double[] orePostazione = new double[idPostazioni.Count];
-                    // Inserisco punti nulli in carichi per le postazioni di articoli non presenti
-                    for (int i = 0; i < idPostazioni.Count; i++)
-                    {
-                        orePostazione[i] = 0;
-                        bool found = false;
-                        for (int j = 0; j < carichi.Count; j++)
-                        {
-                            if (carichi[j].articolo == -1 && carichi[j].postazione.id == idPostazioni[i])
-                            {
-                                found = true;
-                            }
-                        }
-                        if (found == false)
-                        {
-                            caricoDiLavoro nullo = new caricoDiLavoro();
-                            nullo.postazione = new Postazione(idPostazioni[i]);
-                            nullo.articolo = -1;
-                            nullo.articoloAnno = -1;
-                            nullo.carico = new TimeSpan(0, 0, 1);
-                            nullo.CaricoOre = 0.1;
-                            carichi.Add(nullo);
-                        }
+                    
+                    // BLOCCO PER POSTAZIONE ERA QUI!
 
-                        // Ricerco turni di lavoro e verifico la capacità produttiva.
-                        Postazione p = new Postazione(idPostazioni[i]);
-
-                        p.loadCalendario(inizio, fine);
-
-                        for (int b = 0; b < p.Calendario.Intervalli.Count; b++)
-                        {
-                            if (p.Calendario.Intervalli[b].idReparto == idReparto && (p.Calendario.Intervalli[b].Status=='L' || p.Calendario.Intervalli[b].Status=='S'))
-                            {
-                                Turno turno = new Turno(p.Calendario.Intervalli[b].idTurno);
-                                RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(p, turno);
-                                /*lblTurni.Text += p.name + ";" + turno.Nome + ";" + resPost.NumRisorse + ";"
-                                    + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + ";"
-                                    + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss")
-                                    + ";" + ((TimeSpan)(p.Calendario.Intervalli[b].Fine - p.Calendario.Intervalli[b].Inizio)).TotalHours.ToString()
-                                    + "<br />";*/
-                                
-                                lblErr.Text += p.name + " " + resPost.NumRisorse.ToString() + " " + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss");
-                                lbl1.Text += p.name + " " + resPost.NumRisorse.ToString() + " " + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss");
-
-                                TimeSpan intervallo = new TimeSpan(0, 0, 0);
-                                if (p.Calendario.Intervalli[b].Fine < inizio)
-                                {
-                                    intervallo = new TimeSpan(0, 0, 0);
-                                }
-                                else if (p.Calendario.Intervalli[b].Inizio <= inizio && p.Calendario.Intervalli[b].Fine > inizio && p.Calendario.Intervalli[b].Fine < fine)
-                                {
-                                    intervallo = p.Calendario.Intervalli[b].Fine - inizio;
-                                }
-                                else if (p.Calendario.Intervalli[b].Inizio >= inizio && p.Calendario.Intervalli[b].Inizio < fine && p.Calendario.Intervalli[b].Fine >= inizio && p.Calendario.Intervalli[b].Fine <= fine)
-                                {
-                                    intervallo = p.Calendario.Intervalli[b].Fine - p.Calendario.Intervalli[b].Inizio;
-                                }
-                                else if(p.Calendario.Intervalli[b].Inizio >= inizio && p.Calendario.Intervalli[b].Inizio <= fine && p.Calendario.Intervalli[b].Fine >= fine)
-                                {
-                                    intervallo = fine - p.Calendario.Intervalli[b].Inizio;
-                                }
-                                else
-                                {
-                                    intervallo = new TimeSpan(0,0,0);
-                                }
-
-                                orePostazione[i] += resPost.NumRisorse * intervallo.TotalHours;
-                            }
-                        }
-                    }
 
                     for (int z = 0; z < articoliNuovi.Count; z++)
                     {
@@ -707,7 +774,7 @@ namespace KIS.Commesse
                             }
                             else
                             {
-                                Articolo art = new Articolo(cd.articolo, cd.articoloAnno);
+                                //Articolo art = new Articolo(cd.articolo, cd.articoloAnno);
                                 Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = art.ID.ToString() + "/" +
                                     art.Year.ToString() + " - " + art.Cliente + " - " +
                                     art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
@@ -759,7 +826,7 @@ namespace KIS.Commesse
             }
         }
 
-        protected struct caricoDiLavoro
+        /*protected struct caricoDiLavoro
         {
             public Postazione postazione;
             public int articolo;
@@ -790,10 +857,11 @@ namespace KIS.Commesse
                     }
                 }
             }
-        }
+        }*/
 
         protected void btnSaveDataFineProd_Click(object sender, ImageClickEventArgs e)
         {
+            imgGoFwd.Visible = false;
             dvErr.Visible = false;
             lblErr.Visible = false;
             int ore, min, sec, gg, mm, yy;
@@ -821,8 +889,8 @@ namespace KIS.Commesse
                 yy = -1;
                 finePrd = new DateTime(1970, 1, 1);
             }
-            Articolo art = new Articolo(idProdotto, annoProdotto);
-            if (finePrd >= DateTime.Now && finePrd <= art.DataPrevistaConsegna)
+            //Articolo art = new Articolo(idProdotto, annoProdotto);
+            if (art!=null && art.ID!=-1 && finePrd >= DateTime.Now && finePrd <= art.DataPrevistaConsegna)
             {
                 imgGoFwd.Visible = true;
                 dvErr.Visible = false;
@@ -863,7 +931,7 @@ namespace KIS.Commesse
                 if (retSim == 1)
                 {
                     DateTime minStart = DateTime.UtcNow;
-                    DateTime maxStart = DateTime.UtcNow.AddYears(1);
+                    DateTime maxStart = DateTime.UtcNow.AddMonths(1);
                     try
                     {
                         minStart = cfgPrc.CriticalPath.Min(lateStart => lateStart.EarlyStartDate);
@@ -872,7 +940,7 @@ namespace KIS.Commesse
                     catch
                     {
                         minStart = DateTime.UtcNow;
-                        maxStart = DateTime.UtcNow.AddYears(1);
+                        maxStart = DateTime.UtcNow.AddMonths(1);
                     }
                     //inizio = minStart;
                     //fine = maxStart.AddDays(1);
@@ -880,7 +948,9 @@ namespace KIS.Commesse
                     fine = maxStart;
 
                     lbl1.Text = inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + fine.ToString("dd/MM/yyyy HH:mm:ss");
+                    loadProductionPlan();
                     caricaGrafico();
+                    imgGoFwd.Visible = true;
                 }
                 else if(retSim == 2)
                 {
@@ -903,7 +973,6 @@ namespace KIS.Commesse
                     dvInfo.Visible = false;
                     lblErr.Text = "La data prevista di fine produzione non è reale.";
                 }
-
             }
             else
             {

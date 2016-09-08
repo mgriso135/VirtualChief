@@ -63,9 +63,12 @@ namespace KIS.Processi
                 // Costruisco l'array dei successivi
                 for (int j = 0; j < padre.subProcessi[i].processiSucc.Count; j++)
                 {
-                    int[] elem = new int[2];
+                    int[] elem = new int[5];
                     elem[0] = padre.subProcessi[i].processID;
                     elem[1] = padre.subProcessi[i].processiSucc[j];
+                    elem[2] = Convert.ToInt32(padre.subProcessi[i].pauseSucc[j].TotalSeconds);
+                    elem[3] = padre.subProcessi[i].revisione;
+                    elem[3] = padre.subProcessi[i].revisioneSucc[j];
                     ret.Add(elem);
                 }
             }

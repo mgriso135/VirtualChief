@@ -7,10 +7,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>KAIZEN INDICATOR SYSTEM - DEVELOP</title>
+    <title>KAIZEN INDICATOR SYSTEM</title>
     <!-- STUDIO GIORDANO -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Kaizen People &middot; Kaizen Indicator System" />
+	<meta name="description" content="Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
     <!-- FINE STUDIO GIORDANO -->
     <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
@@ -128,11 +128,7 @@
 		      <script src="~/Styles/assets/js/html5shiv.js"></script>
 		    <![endif]-->
 		<!-- Fav and touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/Styles/assets/ico/apple-touch-icon-144-precomposed.png" />
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/Styles/assets/ico/apple-touch-icon-114-precomposed.png" />
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/Styles/assets/ico/apple-touch-icon-72-precomposed.png" />
-		<link rel="apple-touch-icon-precomposed" href="~/Styles/assets/ico/apple-touch-icon-57-precomposed.png" />
-		<link rel="shortcut icon" href="~/Styles/assets/ico/favicon.png" />
+		
 
     <!-- FINE CSS GIORDANO -->
   
