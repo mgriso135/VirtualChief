@@ -42,6 +42,9 @@ namespace KIS.Produzione
                     rp = new Reparto(repID);
                     if (rp.id != -1)
                     {
+                    frmShowStatusUtenti.reparto = rp.id;
+                    if (!Page.IsPostBack && !Page.IsCallback)
+                    {
                         andonCfg = new KIS.App_Code.AndonReparto(rp.id);
                         andonCfg.loadCampiVisualizzati();
                         lblReparto.Text = rp.name;
