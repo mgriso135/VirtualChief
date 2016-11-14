@@ -376,9 +376,13 @@ namespace KIS
             conn.Close();
         }
 
-        public bool Add(String nome, String descrizione, String timeZone)
+        /*Returns
+         * IDReparto if correctly added
+         * -1 in case of error
+         */
+        public int Add(String nome, String descrizione, String timeZone)
         {
-            bool rt;
+            int rt=-1;
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
@@ -399,13 +403,13 @@ namespace KIS
             try
             {
                 cmd.ExecuteNonQuery();
-                rt = true;
                 trans.Commit();
+                rt = repID;
             }
             catch(Exception ex)
             {
                 err = ex.Message;
-                rt = false;
+                rt = -1;
                 trans.Rollback();
             }
             conn.Close();
@@ -515,7 +519,12 @@ namespace KIS
 
         public void loadCalendario(DateTime I, DateTime F)
         {
-            this.CalendarioRep = new CalendarioReparto(this.id, I, F);
+            //this.CalendarioRep = new CalendarioReparto(this.id, I, F);
+            if(this.Turni==null || this.Turni.Count == 0)
+            {
+                this.loadTurni();
+            }
+            this.CalendarioRep = new CalendarioReparto(this, I, F);
         }
 
         public Turno trovaProssimoTurno()
@@ -2104,8 +2113,11 @@ namespace KIS
             get {
                 if (reparto == null || reparto.id == -1)
                 {
-                    Turno trn = new Turno(idTurno);
-                    reparto = new Reparto(trn.idReparto);
+                    if(reparto==null||reparto.id==-1)
+                    { 
+                        Turno trn = new Turno(idTurno);
+                        reparto = new Reparto(trn.idReparto);
+                    }
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, this.reparto.tzFusoOrario); 
                 //return this._Fine;
@@ -2185,10 +2197,13 @@ namespace KIS
             // Se tutti i controlli sono andati a buon fine allora creo la classe altrimenti no
             if (controlli == true)
             {
-                Turno trn = new Turno(idTurno);
-                Reparto rp = new Reparto(trn.idReparto);
-                this._Inizio = TimeZoneInfo.ConvertTimeToUtc(I, rp.tzFusoOrario);
-                this._Fine = TimeZoneInfo.ConvertTimeToUtc(F, rp.tzFusoOrario);
+                if(reparto==null || reparto.id==-1)
+                { 
+                    Turno trn = new Turno(idTurno);
+                    reparto= new Reparto(trn.idReparto);
+                }
+                this._Inizio = TimeZoneInfo.ConvertTimeToUtc(I, reparto.tzFusoOrario);
+                this._Fine = TimeZoneInfo.ConvertTimeToUtc(F, reparto.tzFusoOrario);
                 this._status = stat;
                 this._idOrarioTurno = -1;
                 this._idFestivita = -1;
@@ -2315,6 +2330,8 @@ namespace KIS
             get { return this._idReparto; }
         }
 
+        public Reparto rep;
+
         public List<IntervalloCalendarioReparto> Turni;
 
         public List<IntervalloCalendarioReparto> Intervalli;
@@ -2340,7 +2357,7 @@ namespace KIS
                 }
                 
                 // Ri-ordino i turni di lavoro
-                IntervalloLavorativoTurno swap;
+                /*IntervalloLavorativoTurno swap;
                 for (int i = 0; i < sommaTurni.Count; i++)
                 {
                     for (int j = i; j < sommaTurni.Count; j++)
@@ -2353,7 +2370,9 @@ namespace KIS
                             sommaTurni[j] = swap;
                         }
                     }
-                }
+                }*/
+
+                sommaTurni = sommaTurni.OrderBy(x => x.Inizio).ToList();
                 
                 // Ora collego i turni al calendario per capire da quale partire
                 List<DateTime> sommaTurniData = new List<DateTime>();
@@ -2510,6 +2529,188 @@ namespace KIS
             }
         }
 
+        public CalendarioReparto(Reparto rp, DateTime InizioCal, DateTime FineCal)
+        {
+            Intervalli = new List<IntervalloCalendarioReparto>();
+            Turni = new List<IntervalloCalendarioReparto>();
+            if (InizioCal <= FineCal)
+            {
+                // Comincio con il trovare tutti i turni di lavoro del reparto
+                this.rep = rp;
+                if(rep.Turni==null || rep.Turni.Count ==0)
+                { 
+                    rep.loadTurni();
+                }
+                this._idReparto = rep.id;
+                List<IntervalloLavorativoTurno> sommaTurni = new List<IntervalloLavorativoTurno>();
+                //Turni = new List<IntervalloLavorativoTurno>();
+                for (int i = 0; i < rep.Turni.Count; i++)
+                {
+                    for (int j = 0; j < rep.Turni[i].OrariDiLavoro.Count; j++)
+                    {
+                        //sommaTurni.Add(new IntervalloLavorativoTurno(rep.Turni[i].OrariDiLavoro[j].idIntervallo));
+                        sommaTurni.Add(rep.Turni[i].OrariDiLavoro[j]);
+                    }
+                }
+
+                // Ri-ordino i turni di lavoro
+                sommaTurni = sommaTurni.OrderBy(x => x.Inizio).ToList();
+
+                // Ora collego i turni al calendario per capire da quale partire
+                List<DateTime> sommaTurniData = new List<DateTime>();
+                List<TimeSpan> DistI = new List<TimeSpan>();
+                TimeSpan minDist = new TimeSpan(1000, 23, 59, 59, 0);
+                int minIndex = -1;
+                for (int i = 0; i < sommaTurni.Count; i++)
+                {
+                    DateTime nxt = this.findNextOccurrence(sommaTurni[i].GiornoInizio, sommaTurni[i].OraInizio, InizioCal);
+                    sommaTurniData.Add(nxt);
+                    DistI.Add(sommaTurniData[i] - InizioCal);
+                    if (DistI[i] < minDist)
+                    {
+                        minDist = DistI[i];
+                        minIndex = i;
+                    }
+                }
+
+                if (minIndex > -1)
+                {
+                    DateTime attuale = InizioCal;
+                    int cont = minIndex;
+                    int contIntervalli = 0;
+                    while (attuale <= FineCal)
+                    {
+                        DateTime dtI = this.findNextOccurrence(sommaTurni[cont].GiornoInizio, sommaTurni[cont].OraInizio, attuale);
+                        DateTime dtF = this.findNextOccurrence(sommaTurni[cont].GiornoFine, sommaTurni[cont].OraFine, dtI);
+                        IntervalloCalendarioReparto intCalRep = new IntervalloCalendarioReparto('L', sommaTurni[cont].idIntervallo, dtI, dtF);
+                        Intervalli.Add(intCalRep);
+                        Turni.Add(intCalRep);
+
+                        attuale = dtF;
+                        //log += Intervalli[contIntervalli].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + Intervalli[contIntervalli].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
+                        contIntervalli++;
+                        if (cont == sommaTurni.Count - 1)
+                        {
+                            cont = 0;
+                        }
+                        else
+                        {
+                            cont++;
+                        }
+
+                    }
+                }
+
+                // ORA CARICO GLI STRAORDINARI
+                ElencoStraordinari straord = new ElencoStraordinari(this.idReparto);
+                // Ricerco il primo straordinario da inserire
+                int k = 0;
+                while (k < straord.Straordinari.Count && straord.Straordinari[k].Inizio < InizioCal && straord.Straordinari[k].Fine < FineCal)
+                {
+                    k++;
+                }
+                while (k < straord.Straordinari.Count && straord.Straordinari[k].Inizio < FineCal)
+                {
+                    DateTime st = new DateTime();
+                    DateTime en = new DateTime();
+                    if (straord.Straordinari[k].Inizio <= InizioCal && straord.Straordinari[k].Fine >= InizioCal)
+                    {
+                        st = InizioCal;
+                    }
+                    else
+                    {
+                        st = straord.Straordinari[k].Inizio;
+                    }
+                    if (straord.Straordinari[k].Fine >= FineCal)
+                    {
+                        en = FineCal;
+                    }
+                    else
+                    {
+                        en = straord.Straordinari[k].Fine;
+                    }
+                    Intervalli.Add(new IntervalloCalendarioReparto('S', straord.Straordinari[k].idStraordinario, st, en));
+                    k++;
+                }
+
+                // Ora carico le festività
+                k = 0;
+                ElencoFestivita elFest = new ElencoFestivita(this.idReparto);
+                while (k < elFest.feste.Count && elFest.feste[k].Inizio < InizioCal)
+                {
+                    log += elFest.feste[k].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " " + elFest.feste[k].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
+                    k++;
+                }
+
+                log += "<br/>" + k.ToString() + "<br/>";
+
+                while (k < elFest.feste.Count)
+                {
+                    int indInterv = 0;
+                    while (indInterv < this.Intervalli.Count && !(elFest.feste[k].Inizio >= Intervalli[indInterv].Inizio && elFest.feste[k].Fine <= Intervalli[indInterv].Fine))
+                    {
+                        indInterv++;
+                    }
+                    log += "indInterv " + indInterv.ToString() + "<br/>";
+
+                    // Se ho trovato l'intervallo corretto...
+                    if (indInterv < this.Intervalli.Count)
+                    {
+
+                        log += elFest.feste[k].Inizio.ToString("yyyy-MM-dd HH:mm:ss") + " == " + this.Intervalli[indInterv].Inizio.ToString("yyyy-MM-dd HH:mm:ss") + " " + elFest.feste[k].Fine.ToString("yyyy-MM-dd HH:mm:ss") + " == " + this.Intervalli[indInterv].Fine.ToString("yyyy-MM-dd HH:mm:ss") + "<br/>";
+                        //Primo caso: festivita copre interamente il turno
+                        if (elFest.feste[k].Inizio == this.Intervalli[indInterv].Inizio && elFest.feste[k].Fine == this.Intervalli[indInterv].Fine)
+                        {
+                            log += "Entro nell'if 1<br/>";
+                            this.Intervalli.RemoveAt(indInterv);
+                        }
+                        // Secondo caso: Iniziofest = Inizio e Finefest < FineInterv
+                        else if (elFest.feste[k].Inizio == this.Intervalli[indInterv].Inizio && elFest.feste[k].Fine < this.Intervalli[indInterv].Fine)
+                        {
+                            log += "Entro nell'if 2<br/>";
+                            DateTime i = elFest.feste[k].Fine;
+                            DateTime f = this.Intervalli[indInterv].Fine;
+                            Intervalli.Add(new IntervalloCalendarioReparto('L', this.Intervalli[indInterv].idOrarioTurno, i, f));
+                            this.Intervalli.RemoveAt(indInterv);
+                        }
+                        // Terzo caso: Iniziofest > Inizio e Finefest = FineInterv
+                        else if (elFest.feste[k].Inizio > this.Intervalli[indInterv].Inizio && elFest.feste[k].Fine == this.Intervalli[indInterv].Fine)
+                        {
+                            log += "Entro nell'if 3<br/>";
+                            DateTime i = this.Intervalli[indInterv].Inizio;
+                            DateTime f = elFest.feste[k].Inizio;
+                            Intervalli.Add(new IntervalloCalendarioReparto('L', this.Intervalli[indInterv].idOrarioTurno, i, f));
+                            this.Intervalli.RemoveAt(indInterv);
+                        }
+                        // Quarto caso: Iniziofest > Inizio e Finefest < FineInterv
+                        else if (elFest.feste[k].Inizio > this.Intervalli[indInterv].Inizio && elFest.feste[k].Fine < this.Intervalli[indInterv].Fine)
+                        {
+                            log += "Entro nell'if 4<br/>";
+                            DateTime i1 = this.Intervalli[indInterv].Inizio;
+                            DateTime f1 = elFest.feste[k].Inizio;
+                            DateTime i2 = elFest.feste[k].Fine;
+                            DateTime f2 = this.Intervalli[indInterv].Fine;
+                            int idIntervallo = this.Intervalli[indInterv].idOrarioTurno;
+                            this.Intervalli.RemoveAt(indInterv);
+                            //Intervalli.Add(new IntervalloCalendarioReparto('L', this.Intervalli[indInterv].idOrarioTurno, i1, f1));
+                            //Intervalli.Add(new IntervalloCalendarioReparto('L', this.Intervalli[indInterv].idOrarioTurno, i2, f2));
+                            Intervalli.Add(new IntervalloCalendarioReparto('L', idIntervallo, i1, f1));
+                            Intervalli.Add(new IntervalloCalendarioReparto('L', idIntervallo, i2, f2));
+                        }
+                    }
+                    k++;
+                }
+                // Riordino l'array Intervalli
+                sortIntervalli();
+            }
+            else
+            {
+                InizioCal = DateTime.UtcNow;
+                FineCal = DateTime.UtcNow;
+                this._idReparto = rp.id;
+            }
+        }
+
         protected DateTime findNextOccurrence(DayOfWeek giorno, TimeSpan orario, DateTime inizio)
         {
             DateTime ret = new DateTime(inizio.Year, inizio.Month, inizio.Day, orario.Hours, orario.Minutes, orario.Seconds);
@@ -2528,20 +2729,22 @@ namespace KIS
         {
             if (this.idReparto != -1)
             {
-                IntervalloCalendarioReparto swap;
-                for (int i = 0; i < this.Intervalli.Count; i++)
-                {
-                    for (int j = i; j < this.Intervalli.Count; j++)
-                    {
-                        if (this.Intervalli[j].Inizio < this.Intervalli[i].Inizio)
-                        {
-                            // Li scambio
-                            swap = this.Intervalli[i];
-                            this.Intervalli[i] = this.Intervalli[j];
-                            this.Intervalli[j] = swap;
-                        }
-                    }
-                }
+                /* IntervalloCalendarioReparto swap;
+                 for (int i = 0; i < this.Intervalli.Count; i++)
+                 {
+                     for (int j = i; j < this.Intervalli.Count; j++)
+                     {
+                         if (this.Intervalli[j].Inizio < this.Intervalli[i].Inizio)
+                         {
+                             // Li scambio
+                             swap = this.Intervalli[i];
+                             this.Intervalli[i] = this.Intervalli[j];
+                             this.Intervalli[j] = swap;
+                         }
+                     }
+                 }*/
+
+                this.Intervalli = this.Intervalli.OrderBy(x => x.Inizio).ToList();
             }
         }
     }

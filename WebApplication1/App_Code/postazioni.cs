@@ -251,8 +251,12 @@ namespace KIS
                 //+ " AND processo.attivo = 1";
             MySqlDataReader rdr = cmd.ExecuteReader();
             _MainProc = new List<ProcessoVariante>();
+            log = cmd.CommandText;
+            try
+            { 
             while (rdr.Read())
             {
+                    log += rdr.GetInt32(0) + " " + rdr.GetInt32(1) + " " + rdr.GetInt32(2) + "<br />";
                 ProcessoVariante daAggiungere = new ProcessoVariante(new processo(rdr.GetInt32(0), rdr.GetInt32(1)), new variante(rdr.GetInt32(2)));
                 if (daAggiungere.process != null && daAggiungere.variant != null)
                 {
@@ -271,6 +275,11 @@ namespace KIS
                         _MainProc.Add(daAggiungere);
                     }
                 }
+            }
+            }
+            catch(Exception ex)
+            {
+                log += "<br />" + ex.Message;
             }
             rdr.Close();
             conn.Close();

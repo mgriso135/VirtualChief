@@ -63,6 +63,7 @@ namespace KIS.Produzione
             if (pst.id != -1)
             {
                 pst.LoadMainProc();
+                //lbl.Text = pst.log;
                 if (pst.MainProc.Count == 0)
                 {
                     Chart1.Visible = false;

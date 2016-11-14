@@ -25,7 +25,7 @@
             </td>
             <td><%#DataBinder.Eval(Container.DataItem, "nome") %></td>
             <td>
-                <a href="configOrariTurno.aspx?id=<%#DataBinder.Eval(Container.DataItem, "id") %>">
+                <a href="/Reparti/configOrariTurno.aspx?id=<%#DataBinder.Eval(Container.DataItem, "id") %>">
                 <asp:Image  CssClass="img-circle" runat="server" ImageUrl="/img/iconClock.png" Height="30px" ToolTip="Gestisci gli orari di lavoro del turno" />
                 </a>
 

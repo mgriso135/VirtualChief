@@ -15,7 +15,7 @@
         </td>
     </tr>
     <tr>
-        <td><asp:Image ID="Image1" runat="server" ImageUrl="~/img/logo_KP.jpg" Height="60" /></td>
+        <td><asp:Image ID="Image1" runat="server" ImageUrl="~/img/LogoKIS.jpg" Height="60" /></td>
 <td><a href="wizConfigLogo.aspx"><p class="lead">Logo aziendale</p></a>
     </td>
         <td>

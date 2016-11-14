@@ -47,8 +47,8 @@ namespace KIS.Reparti
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
             Reparto rp = new Reparto();
-            bool rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
-            if (rt == true)
+            int rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
+            if (rt != -1)
             {
                 Response.Redirect(Request.RawUrl);
             }

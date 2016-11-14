@@ -22,7 +22,7 @@ namespace KIS.Produzione
                 {
                     if (!Page.IsPostBack && !Page.IsCallback)
                     {
-                        loadArticoli(repID);
+                    loadArticoli(repID);
                         andonCfg = new KIS.App_Code.AndonReparto(repID);
                         andonCfg.loadCampiVisualizzati();
                         andonCfg.loadCampiVisualizzatiTasks();

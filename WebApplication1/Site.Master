@@ -140,7 +140,7 @@
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
 <!-- End Cookie Consent plugin -->
 
-    <!-- Never expiring sessione -->
+    <!-- Never expiring session -->
     <script type="text/javascript">
         window.setInterval("renewSession();", 60000);
         function renewSession()

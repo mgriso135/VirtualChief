@@ -36,7 +36,7 @@
     </div>
             </div>
 
-        <div class="accordion-group">
+    <!--    <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
           Carico di lavoro per processo
@@ -47,7 +47,7 @@
             <postazione:workload runat="server" ID="frmPstWorkload" />
       </div>
     </div>
-            </div>
+            </div>-->
 
         <div class="accordion-group">
             <div class="accordion-heading">

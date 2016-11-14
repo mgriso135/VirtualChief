@@ -11,8 +11,8 @@ namespace KIS.Produzione
 {
     public partial class listStatusUtentiReparto : System.Web.UI.UserControl
     {
-        public int reparto;
-        public static Reparto rp;
+        public int repID;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             /*List<String[]> elencoPermessi = new List<String[]>();
@@ -29,7 +29,7 @@ namespace KIS.Produzione
 
             if (checkUser == true)
             {*/
-            rp = new Reparto(reparto);
+            Reparto rp = new Reparto(repID);
             if (!Page.IsPostBack && !Page.IsCallback)
                 {
                     UserList usrList = new UserList(new Permesso("Task Produzione"));
@@ -37,7 +37,7 @@ namespace KIS.Produzione
                     {
                         rptUserList.DataSource = usrList.listUsers;
                         rptUserList.DataBind();
-                    }
+                }
                     else
                     {
                         rptUserList.Visible = false;
@@ -67,7 +67,7 @@ namespace KIS.Produzione
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
-                        Reparto rp = new Reparto(reparto);
+                        Reparto rp = new Reparto(repID);
                         User curr = new User(lblUsername.Value.ToString());
                         curr.loadTaskAvviati();
 
@@ -114,8 +114,8 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
+            Reparto rp = new Reparto(repID);
             UserList usrList = new UserList(new Permesso("Task Produzione"));
-
             if (usrList.listUsers.Count > 0)
             {
                 rptUserList.DataSource = usrList.listUsers;

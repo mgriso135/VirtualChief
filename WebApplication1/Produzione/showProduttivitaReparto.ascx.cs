@@ -54,11 +54,11 @@ namespace KIS.Produzione
                     Reparto rp = new Reparto(repID);
                     //if (!Page.IsPostBack)
                     {
-                        rp.loadCalendario(DateTime.Now.AddDays(-7), DateTime.Now.AddDays(10));
+                        rp.loadCalendario(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-7), rp.tzFusoOrario), TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(10), rp.tzFusoOrario));
                         int curr = -1;
                         for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
                         {
-                            if (rp.CalendarioRep.Intervalli[i].Inizio <= DateTime.Now && DateTime.Now <= rp.CalendarioRep.Intervalli[i].Fine)
+                            if (rp.CalendarioRep.Intervalli[i].Inizio <= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) && TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) <= rp.CalendarioRep.Intervalli[i].Fine)
                             {
                                 curr = i;
                             }

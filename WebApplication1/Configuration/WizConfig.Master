@@ -5,10 +5,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>KAIZEN INDICATOR SYSTEM - Configuration Wizard</title>
+    <title>KAIZEN INDICATOR SYSTEM</title>
     <!-- STUDIO GIORDANO -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Kaizen People &middot; Kaizen Indicator System" />
+	<meta name="description" content="Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
     <!-- FINE STUDIO GIORDANO -->
     <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
@@ -92,29 +92,29 @@
     	            inline: true
     	        });
 
-    	        /*
-                
-                                $("#slider").slider({
-                                    range: true,
-                                    values: [17, 67]
-                                });
-                
-                
-                
-                                $("#progressbar").progressbar({
-                                    value: 20
-                                });
-                
-                
-                                // Hover states on the static widgets
-                                $("#dialog-link, #icons li").hover(
-                                    function () {
-                                        $(this).addClass("ui-state-hover");
-                                    },
-                                    function () {
-                                        $(this).removeClass("ui-state-hover");
-                                    }
-                                );*/
+/*
+
+    	        $("#slider").slider({
+    	            range: true,
+    	            values: [17, 67]
+    	        });
+
+
+
+    	        $("#progressbar").progressbar({
+    	            value: 20
+    	        });
+
+
+    	        // Hover states on the static widgets
+    	        $("#dialog-link, #icons li").hover(
+                    function () {
+                        $(this).addClass("ui-state-hover");
+                    },
+                    function () {
+                        $(this).removeClass("ui-state-hover");
+                    }
+                );*/
     	    });
 	</script>
    
@@ -126,30 +126,47 @@
 		      <script src="~/Styles/assets/js/html5shiv.js"></script>
 		    <![endif]-->
 		<!-- Fav and touch icons -->
-		<link rel="apple-touch-icon-precomposed" sizes="144x144" href="~/Styles/assets/ico/apple-touch-icon-144-precomposed.png" />
-		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/Styles/assets/ico/apple-touch-icon-114-precomposed.png" />
-		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/Styles/assets/ico/apple-touch-icon-72-precomposed.png" />
-		<link rel="apple-touch-icon-precomposed" href="~/Styles/assets/ico/apple-touch-icon-57-precomposed.png" />
-		<link rel="shortcut icon" href="~/Styles/assets/ico/favicon.png" />
+		
 
     <!-- FINE CSS GIORDANO -->
+  
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website.<br/>Navigando sul nostro sito accetti la privacy policy. Il sito utilizza i cookie di terze parti per profilare gli utenti.", "dismiss": "Chiudi e accetta", "learnMore": "More info", "link": null, "theme": "light-bottom" };
+</script>
 
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+<!-- End Cookie Consent plugin -->
 
-    <asp:ContentPlaceHolder ID="head" runat="server">
+    <!-- Never expiring session -->
+    <script type="text/javascript">
+        window.setInterval("renewSession();", 60000);
+        function renewSession()
+        {
+            document.getElementById("renewSession").src = "/renewSes.aspx?par=" + Math.random();
+        }
+    </script>
+    <!-- End Never expiring sessione -->
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
 </head>
+
 <body>
     <form id="form1" runat="server">
         <div id="wrap">
             <div class="masthead">
 				<div class="container header">
-                    <asp:Image runat="server" ID="kisLogo" CssClass="logo" ImageUrl="~/Styles/assets/img/Logo-Kaizen_people.png" />
-                    <a class="brand" href="#">Kaizen Indicator System : Configuration Wizard</a>
+                    <asp:Image runat="server" ID="kisLogo" CssClass="logo" ImageUrl="~/img/LogoKIS.jpg" Width="50" Height="50" />
+                    <p class="brand">Kaizen Indicator System : Configuration Wizard</p>
 					<div class="pull-right text-right">
 
 
 					</div>
 				</div>
+                <asp:ContentPlaceHolder ID="head" runat="server">
+        
+        </asp:ContentPlaceHolder>
             </div>
             <div class="container">
     <div class="row-fluid">
@@ -159,17 +176,17 @@
   <ul class="nav nav-tabs" runat="server">
       <li class="nav-header">Sezioni</li>
       <li runat="server" id="liAdmin"><a href="wizConfigAdminUser.aspx"><asp:Image runat="server" ImageUrl="~/img/iconAdmin.png" Height="30" />Admin user</a></li>
-      <li runat="server" id="liLogo"><a href="wizConfigLogo.aspx"><asp:Image runat="server" ImageUrl="~/img/logo_KP.jpg" Height="30" />Logo</a></li>
+      <li runat="server" id="liLogo"><a href="wizConfigLogo.aspx"><asp:Image runat="server" ImageUrl="~/img/LogoKIS.jpg" Height="30" />Logo</a></li>
       <li runat="server" id="liTimezone"><a href="wizConfigTimezone.aspx"><asp:Image runat="server" ImageUrl="~/img/iconTimezone.png" Height="30" />Time zone</a></li>
       <li runat="server" id="liReparto"><a href="wizConfigReparti_Main.aspx"><asp:Image ID="Image1" runat="server" ImageUrl="~/img/iconDepartment.png" Height="30" />Reparti</a></li>
-    <li runat="server" id="liPostazioni"><a href="#"><asp:Image ID="Image2" runat="server" ImageUrl="~/img/iconWorkspace.png" Height="30" />Postazioni</a></li>
+    <li runat="server" id="liPostazioni"><a href="wizConfigPostazioni_Main.aspx"><asp:Image ID="Image2" runat="server" ImageUrl="~/img/iconWorkspace.png" Height="30" />Postazioni</a></li>
       <li runat="server" id="liUtenti"><a href="#"><asp:Image ID="Image3" runat="server" ImageUrl="~/img/iconUser.png" Height="30" />Utenti</a></li>
       <li runat="server" id="liAndon"><a href="wizConfigAndon.aspx"><asp:Image runat="server" ImageUrl="~/img/iconAndon.png" Height="30" />Andon</a></li>
       <li runat="server" id="li1"><a href="wizCustomerReport.aspx"><asp:Image runat="server" ImageUrl="~/img/iconReportProductionProgress.jpg" Height="30" />Customer Report</a></li>
   </ul>
   <div class="tab-content">
    
-        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        <asp:ContentPlaceHolder ID="MainContent" runat="server">
         
         </asp:ContentPlaceHolder>
   </div>
@@ -177,6 +194,25 @@
             </div>
                 </div>
             </div>
+        <img id="renewSession" />
     </form>
+      
+
+    <!-- Le javascript
+		    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+<!--		<script src="../Styles/assets/js/jquery.js"></script>-->
+		<script src="../Styles/assets/js/bootstrap-transition.js"></script>
+		<script src="../Styles/assets/js/bootstrap-alert.js"></script>
+		<script src="../Styles/assets/js/bootstrap-modal.js"></script>
+		<script src="../Styles/assets/js/bootstrap-dropdown.js"></script>
+		<script src="../Styles/assets/js/bootstrap-scrollspy.js"></script>
+		<script src="../Styles/assets/js/bootstrap-tab.js"></script>
+		<script src="../Styles/assets/js/bootstrap-tooltip.js"></script>
+		<script src="../Styles/assets/js/bootstrap-popover.js"></script>
+		<script src="../Styles/assets/js/bootstrap-button.js"></script>
+		<script src="../Styles/assets/js/bootstrap-collapse.js"></script>
+		<script src="../Styles/assets/js/bootstrap-carousel.js"></script>
+		<script src="../Styles/assets/js/bootstrap-typeahead.js"></script>
 </body>
 </html>

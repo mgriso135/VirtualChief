@@ -29,9 +29,37 @@ namespace KIS.Configuration
             if (checkUser == true)
             {
                 KISConfig cfg = new KISConfig();
-                if (!cfg.WizRepartiCompleted)
+                if (cfg.WizRepartiCompleted)
                 {
-                    frmAddReparto.Visible = true;
+                    ElencoReparti elRep = new ElencoReparti();
+                    frmAddReparto.Visible = false;
+                    lbl1.Text = "Almeno un Reparto è già stato creato quindi non è strettamente necessario aggiungerne altri.<br />"
+                        + "Prima di iniziare ad usare KIS, verifica che tutti i reparti creati siano correttamente configurati.<br />";
+                    lbl1.Text+= "Per modificare i reparti già creati, accedere all'interfaccia di gestione dei reparti con privilegi di Admin.";
+
+                    String repartiNC = "";
+                    
+                    for (int i = 0; i < elRep.elenco.Count; i++)
+                    {
+
+                        if (!elRep.elenco[i].FullyConfigured)
+                        {
+                            repartiNC += "<a href =\"/Configuration/wizConfigReparti_Detail.aspx"
+                                + "?id=" + elRep.elenco[i].id.ToString() + "\" target=\"_blank\">"
+                                + elRep.elenco[i].name + "</a><br />";
+                        }
+                    }
+
+                    if (repartiNC.Length > 0)
+                    {
+                        lbl1.Text += "<br /><br />I seguenti reparti non sono completamente configurati:<br />" + repartiNC
+                            + " <br /><br /><br />";
+                    }
+
+                }
+
+
+                frmAddReparto.Visible = true;
                     if (!Page.IsPostBack)
                     {
                         ddlTimezones.Items.Clear();
@@ -41,32 +69,7 @@ namespace KIS.Configuration
                         ddlTimezones.SelectedValue = "W. Europe Standard Time";
                         ddlTimezones.DataBind();
                     }
-                }
-                else
-                {
-                    frmAddReparto.Visible = false;
-                    lbl1.Text = "Almeno un Reparto è pienamente configurato ed utilizzabile.<br />"
-                        + "Per aggiungere altri reparti o modificare quello correntemente configurato, accedere all'interfaccia di gestione dei reparti con privilegi di Admin.";
-
-                    String repartiNC = "";
-                    ElencoReparti elRep = new ElencoReparti();
-                    for (int i = 0; i < elRep.elenco.Count; i++)
-                    {
-
-                        if(!elRep.elenco[i].FullyConfigured)
-                        { 
-                            repartiNC += "<a href =\"/Reparti/configReparto.aspx"
-                                + "?id=" + elRep.elenco[i].id.ToString() + "\" target=\"_blank\">"
-                                + elRep.elenco[i].name + "</a><br />";
-                        }
-                    }
-
-                    if (repartiNC.Length > 0)
-                    {
-                        lbl1.Text += "<br /><br />I seguenti reparti non sono completamente configurati:<br />" + repartiNC;
-                    }
-
-                }
+                
             }
             else
             {
@@ -79,10 +82,10 @@ namespace KIS.Configuration
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
             Reparto rp = new Reparto();
-            bool rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
-            if (rt == true)
+            int rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
+            if (rt != -1)
             {
-                Response.Redirect(Request.RawUrl);
+                Response.Redirect("~/Configuration/wizConfigReparti_Detail.aspx?id=" + rt.ToString());
             }
             else
             {

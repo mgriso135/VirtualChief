@@ -10,150 +10,141 @@
 namespace KIS.Configuration {
     
     
-    public partial class WizConfig {
+    public partial class wizConfigReparti_Detail {
         
         /// <summary>
-        /// Controllo HeadContent.
+        /// Controllo scriptMan1.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder HeadContent;
+        protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
-        /// Controllo form1.
+        /// Controllo lbl1.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::System.Web.UI.WebControls.Label lbl1;
         
         /// <summary>
-        /// Controllo kisLogo.
+        /// Controllo lblTitle.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image kisLogo;
+        protected global::System.Web.UI.WebControls.Label lblTitle;
         
         /// <summary>
-        /// Controllo head.
+        /// Controllo lblDesc.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder head;
+        protected global::System.Web.UI.WebControls.Label lblDesc;
         
         /// <summary>
-        /// Controllo liAdmin.
+        /// Controllo titleConfig.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liAdmin;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl titleConfig;
         
         /// <summary>
-        /// Controllo liLogo.
+        /// Controllo accordion1.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liLogo;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
-        /// Controllo liTimezone.
+        /// Controllo configSplitTasksTurni.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liTimezone;
+        protected global::KIS.Reparti.configSplitTasksTurni configSplitTasksTurni;
         
         /// <summary>
-        /// Controllo liReparto.
+        /// Controllo configTurni.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liReparto;
+        protected global::KIS.Produzione.configTurni configTurni;
         
         /// <summary>
-        /// Controllo Image1.
+        /// Controllo frmEvRitardo.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image1;
+        protected global::KIS.Eventi.RepartoRitardo frmEvRitardo;
         
         /// <summary>
-        /// Controllo liPostazioni.
+        /// Controllo frmEvWarning.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liPostazioni;
+        protected global::KIS.Eventi.RepartoWarning frmEvWarning;
         
         /// <summary>
-        /// Controllo Image2.
+        /// Controllo frmModoCalcoloTC.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image2;
+        protected global::KIS.Reparti.configModoCalcoloTC frmModoCalcoloTC;
         
         /// <summary>
-        /// Controllo liUtenti.
+        /// Controllo frmConfigAndonReparto.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liUtenti;
+        protected global::KIS.Reparti.configAndonReparto frmConfigAndonReparto;
         
         /// <summary>
-        /// Controllo Image3.
+        /// Controllo frmAndonMaxDays.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image3;
+        protected global::KIS.Andon.configMaxViewDaysAndonReparto frmAndonMaxDays;
         
         /// <summary>
-        /// Controllo liAndon.
+        /// Controllo frmAndonViewFields.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liAndon;
+        protected global::KIS.Andon.AndonRepartoViewFields frmAndonViewFields;
         
         /// <summary>
-        /// Controllo li1.
+        /// Controllo frmAvvioTask.
         /// </summary>
         /// <remarks>
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl li1;
-        
-        /// <summary>
-        /// Controllo MainContent.
-        /// </summary>
-        /// <remarks>
-        /// Campo generato automaticamente.
-        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.ContentPlaceHolder MainContent;
+        protected global::KIS.Reparti.configAvvioTasks frmAvvioTask;
     }
 }

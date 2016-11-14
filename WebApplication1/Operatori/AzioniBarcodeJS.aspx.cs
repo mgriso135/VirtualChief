@@ -75,6 +75,7 @@ namespace KIS.Operatori
                 box1.Focus();
                 imgLoading.Style.Value = "visibility: hidden; height: 2px";
                 tblLogUtente.Style.Value = "visibility: hidden";
+                log.Text = "Leggi il barcode sul tuo ID personale / cartellino oppure quello relativo al task desiderato[INIZIO | PAUSA | FINE | PROBLEMA].";
             }
         }
 

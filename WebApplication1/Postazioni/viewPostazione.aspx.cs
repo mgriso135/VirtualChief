@@ -31,14 +31,18 @@ namespace KIS.Postazioni
                     lblNomePost.Text = pst.name;
                     lblDescPost.Text = pst.desc;
                     viewCalendarioPostazione.idPostazione = pst.id;
-                    frmPstWorkload.Visible = true;
-                    frmPstWorkload.postID = pst.id;
+                    //frmPstWorkload.Visible = true;
+                    //frmPstWorkload.postID = pst.id;
+                    frmPstWorkload.Visible = false;
+                    frmPstWorkload.postID = -1;
+
                     frmPstRisorse.Visible = true;
                     frmPstRisorse.idPostazione = pst.id;
                 }
                 else
                 {
                     frmPstWorkload.Visible = false;
+                    frmPstWorkload.postID = -1;
                     lblDescPost.Visible = false;
                     lblNomePost.Visible = false;
                     lbl1.Text = "Errore nei dati di input<br/>";
@@ -56,6 +60,8 @@ namespace KIS.Postazioni
                 lbl1.Text = "Errore nei dati di input<br/>";
                 viewCalendarioPostazione.idPostazione = -1;
                 frmPstRisorse.Visible = false;
+                frmPstWorkload.Visible = false;
+                frmPstWorkload.postID = -1;
             }
         }
     }

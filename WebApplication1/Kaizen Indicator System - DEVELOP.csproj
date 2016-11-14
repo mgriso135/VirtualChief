@@ -564,6 +564,20 @@
     <Compile Include="Configuration\wizConfigLogo.aspx.designer.cs">
       <DependentUpon>wizConfigLogo.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\wizConfigPostazioni_Main.aspx.cs">
+      <DependentUpon>wizConfigPostazioni_Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigPostazioni_Main.aspx.designer.cs">
+      <DependentUpon>wizConfigPostazioni_Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\wizConfigReparti_Detail.aspx.cs">
+      <DependentUpon>wizConfigReparti_Detail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigReparti_Detail.aspx.designer.cs">
+      <DependentUpon>wizConfigReparti_Detail.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\wizConfigReparti_Main.ascx.cs">
       <DependentUpon>wizConfigReparti_Main.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1961,6 +1975,8 @@
     <Content Include="Configuration\wizConfigAdminUser.aspx" />
     <Content Include="Configuration\wizConfigLogo.ascx" />
     <Content Include="Configuration\wizConfigLogo.aspx" />
+    <Content Include="Configuration\wizConfigPostazioni_Main.aspx" />
+    <Content Include="Configuration\wizConfigReparti_Detail.aspx" />
     <Content Include="Configuration\wizConfigReparti_Main.ascx" />
     <Content Include="Configuration\wizConfigReparti_Main.aspx" />
     <Content Include="Configuration\WizConfigTimezone.ascx" />
@@ -2089,6 +2105,7 @@
     <Content Include="img\kpi.jpg" />
     <Content Include="img\kpi2.png" />
     <Content Include="img\kpi3.jpg" />
+    <Content Include="img\LogoKIS.jpg" />
     <Content Include="img\performance_indicator.jpg" />
     <Content Include="img\problemIcon.jpg" />
     <Content Include="KanbanBox\KanbanBoxCheckHealth.asmx" />

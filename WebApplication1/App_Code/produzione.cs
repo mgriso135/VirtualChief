@@ -1,17 +1,10 @@
-﻿/* CHANGELOG
- * 20130714
- * Aggiunta proprietà Ritardo nella classe TaskProduzione
- * Modificato metodo generateWarning nella classe taskproduzione --> Scrive una riga anche nella tabella registroeventiproduzione
+﻿/* Developed by MATTEO GRISO
  */
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using MySql.Data;
 using MySql.Data.MySqlClient;
-using System.Globalization;
-using KIS;
 using KIS.Commesse;
 using KIS.App_Code;
 
@@ -138,6 +131,8 @@ namespace KIS
         public String log;
         public String logP {get { return this.log; } }
 
+        public Reparto rp;
+
         private int _TaskProduzioneID;
         public int TaskProduzioneID
         {
@@ -160,11 +155,17 @@ namespace KIS
         public DateTime EarlyStart
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if(this.rp==null ||rp.id==-1)
+                { 
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStart, rp.tzFusoOrario); }
             set
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -222,11 +223,17 @@ namespace KIS
         public DateTime EarlyFinish
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if(this.rp==null || rp.id==-1)
+                { 
+                this.rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinish, rp.tzFusoOrario); }
             set
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -252,7 +259,10 @@ namespace KIS
         public DateTime LateFinish
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinish, rp.tzFusoOrario); }
             set
             {
@@ -283,7 +293,10 @@ namespace KIS
         {
             get
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._StartEffettivo, rp.tzFusoOrario);
             }
         }
@@ -291,7 +304,10 @@ namespace KIS
         public DateTime FinishEffettivo
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._FinishEffettivo, rp.tzFusoOrario); }
         }
 
@@ -884,7 +900,10 @@ namespace KIS
                 TimeSpan tc = new TimeSpan(0, 0, 0);
                 if (this.TaskProduzioneID != -1 && this.RepartoID!=-1)
                 {
-                    Reparto rp = new Reparto(this.RepartoID);
+                    if (this.rp == null || rp.id == -1)
+                    {
+                        this.rp = new Reparto(this.RepartoID);
+                    }
                     log = "<br/><B>" + rp.id.ToString() + "</b> " + rp.ModoCalcoloTC.ToString() + "<br />";
                     if (rp.ModoCalcoloTC == false)
                     {
@@ -1036,7 +1055,10 @@ namespace KIS
             TimeSpan tc = new TimeSpan(0, 0, 0);
             if (this.TaskProduzioneID != -1 && this.RepartoID != -1)
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 log = "<br/><B>" + rp.id.ToString() + "</b> " + rp.ModoCalcoloTC.ToString() + "<br />";
                 if (rp.ModoCalcoloTC == false)
                 {
@@ -1169,7 +1191,10 @@ namespace KIS
                 DateTime min = DateTime.UtcNow.AddDays(30);
                 if (this.Status == 'F' || this.Status == 'I')
                 {
-                    this.loadEventi();
+                    if(this.Eventi==null||this.Eventi.Count==0)
+                    { 
+                        this.loadEventi();
+                    }
                     for (int i = 0; i < this.Eventi.Count; i++)
                     {
                         if (this.Eventi[i].Evento == 'I' && this.Eventi[i].Data < min)
@@ -1178,8 +1203,12 @@ namespace KIS
                         }
                     }
                 }
-                Reparto rp = new Reparto(this.RepartoID);
-                return TimeZoneInfo.ConvertTimeFromUtc(min, rp.tzFusoOrario);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
+                //return TimeZoneInfo.ConvertTimeFromUtc(min, rp.tzFusoOrario);
+                return min;
             }
         }
 
@@ -1191,7 +1220,10 @@ namespace KIS
                 DateTime max = new DateTime(1970, 1, 1);
                 if (this.Status == 'F')
                 {
-                    this.loadEventi();
+                    if (this.Eventi == null || this.Eventi.Count == 0)
+                    {
+                        this.loadEventi();
+                    }
                     for (int i = 0; i < this.Eventi.Count; i++)
                     {
                         if (this.Eventi[i].Evento == 'F')
@@ -1200,8 +1232,12 @@ namespace KIS
                         }
                     }
                 }
-                Reparto rp = new Reparto(this.RepartoID);
-                return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
+                //return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
+                return max;
             }
         }
 
@@ -1307,7 +1343,10 @@ namespace KIS
         {
             get
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 log = "";
                 TimeSpan rit = new TimeSpan(0, 0, 0);
                 if (TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) <= this.LateStart || (this.Status == 'F' && this.DataInizioTask <= this.LateStart))
@@ -1316,17 +1355,17 @@ namespace KIS
                 }
                 else
                 {                    
-                    this.loadIntervalliDiLavoroEffettivi();
+                    //this.loadIntervalliDiLavoroEffettivi();
                     if (Status == 'N')
                     {
                         DateTime df = new DateTime();
-                            df = DateTime.UtcNow;
+                            df = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
                             rit = df - this.LateStart;
-                        rp.loadCalendario(this.LateStart.AddDays(-5), df.AddDays(5));
+                        rp.loadCalendario(this.LateStart.AddDays(-7), df.AddDays(7));
                         int indInizio = -1;
                         int indFine = -1;
                         bool foundFine = false;
-                        for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
+                        for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && (indInizio == -1 || indFine==-1); i++)
                         {
                             //log += i.ToString() + "<br />";
                             if (rp.CalendarioRep.Intervalli[i].Inizio <= this.LateStart && this.LateStart <= rp.CalendarioRep.Intervalli[i].Fine)
@@ -1362,7 +1401,8 @@ namespace KIS
                                 if ((indInizio + 1) < rp.CalendarioRep.Intervalli.Count && indInizio > -1)
                                 {
                                     // Questo tiene conto del fatto che il LateFinish potrebbe essere esterno ad un intervalli di lavoro se elimino straordinari o ferie...
-                                    DateTime prevFine = this.LateFinish > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateFinish : rp.CalendarioRep.Intervalli[indInizio].Fine;
+                                    //DateTime prevFine = this.LateFinish > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateFinish : rp.CalendarioRep.Intervalli[indInizio].Fine;
+                                    DateTime prevFine = this.LateStart > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateStart : rp.CalendarioRep.Intervalli[indInizio].Fine;
                                     log += (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Hours.ToString() + ":" + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Minutes.ToString() + ":" + (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - rp.CalendarioRep.Intervalli[indInizio].Fine).Seconds.ToString() + " ";
                                     rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - prevFine);
                                 }
@@ -1381,7 +1421,8 @@ namespace KIS
                     }
                     else if (this.Status == 'I' || this.Status == 'P' || this.Status == 'F')
                     {
-                        this.loadIntervalliDiLavoroEffettivi();
+                        //this.loadIntervalliDiLavoroEffettivi();
+
                         DateTime df = new DateTime();
                         if (this.Status == 'F')
                         {
@@ -1395,47 +1436,47 @@ namespace KIS
                         DateTime uno = df < this.LateFinish ? df : this.LateFinish;
                         DateTime due = df < this.LateFinish ? this.LateFinish : df;
                         //rp.loadCalendario(this.LateStart.AddDays(-1), df.AddDays(1));
-                        rp.loadCalendario(uno.AddDays(-5),due.AddDays(5));
+                        rp.loadCalendario(uno.AddDays(-7),due.AddDays(7));
                         int indInizio = -1;
                         int indFine = -1;
                         bool foundFine = false;
                         //try
                         //{
-                        log = rit.TotalHours.ToString() + "<br />"
+                        /*log = rit.TotalHours.ToString() + "<br />"
                             + uno.ToString("dd/MM/yyyy HH:mm:ss")
                             + due.ToString("dd/MM/yyyy HH:mm:ss")
                             + this.TaskProduzioneID.ToString() 
                             + " " + this.LateFinish.ToString("dd/MM/yyyy HH:mm:ss")
                             + " " + df.ToString("dd/MM/yyyy HH:mm:ss")
-                            + "<br />";
-                            for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
+                            + "<br />";*/
+                            for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && (indInizio == -1 || indFine == -1); i++)
                         {
-                                log+=rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " "
-                                + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                                //log+=rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " "
+                                //+ rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                                 if (rp.CalendarioRep.Intervalli[i].Inizio <= this.LateFinish && this.LateFinish <= rp.CalendarioRep.Intervalli[i].Fine)
                                 {
-                                    log += " A";
+                                    //log += " A";
                                     indInizio = i;
                                 }
                                 else if((i+1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < this.LateFinish && this.LateFinish < rp.CalendarioRep.Intervalli[i + 1].Inizio)
                                 {
-                                    log += " B";
+                                    //log += " B";
                                     indInizio = i;
                                     foundFine = true;
                                 }
                                 if (rp.CalendarioRep.Intervalli[i].Inizio <= df && df <= rp.CalendarioRep.Intervalli[i].Fine)
                                 {
-                                    log += " C";
+                                    //log += " C";
                                     indFine = i;
                                     foundFine = true;
                                 }
                                 else if ((i + 1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < df && df < rp.CalendarioRep.Intervalli[i + 1].Inizio)
                                 {
-                                    log += " D";
+                                    //log += " D";
                                     indFine = i;
                                     foundFine = true;
                                 }
-                                log += "<br/>";
+                                //log += "<br/>";
                         }
                         //}
                         //catch (Exception ex)
@@ -1444,7 +1485,7 @@ namespace KIS
                         //    rit = new TimeSpan(0, 0, 0);
                         //}
 
-                        log += foundFine.ToString() + " " + indInizio.ToString() + " " + indFine.ToString() + "<br />";
+                        //log += foundFine.ToString() + " " + indInizio.ToString() + " " + indFine.ToString() + "<br />";
                         if (foundFine == true)
                          {
                              while (indInizio < indFine)
@@ -1586,6 +1627,8 @@ namespace KIS
                         }
 
                     }
+                    rdr.Close();
+                    conn.Close();
                     // piazzo qui la divisione!
                     // devo aggiungere le fasi a this.Intervalli
                     for (int i = 0; i < elenco.Count; i++)
@@ -1686,9 +1729,6 @@ namespace KIS
                             }
                         }
                     }
-
-
-                    conn.Close();
                 }
             }
         }
@@ -1699,7 +1739,10 @@ namespace KIS
             get
             {
                 TimeSpan tc = new TimeSpan(0, 0, 0);
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 if (rp.ModoCalcoloTC == false)
                 {
                     this.loadIntervalliDiLavoroEffettivi();
@@ -2109,26 +2152,40 @@ namespace KIS
             get { return this._RepartoID; }
         }
 
+        public Reparto rp;
+
         /* Date per EarlyStart, LateStart, EarlyFinish, LateFinish */
         private DateTime _EarlyStartDate;
         public DateTime EarlyStartDate
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStartDate, rp.tzFusoOrario); }
             set {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
+                }
                 this._EarlyStartDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario); }
         }
         private DateTime _LateStartDate;
         public DateTime LateStartDate
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateStartDate, rp.tzFusoOrario);
             }
             set {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    rp = new Reparto(this.RepartoID);
+                }
                 this._LateStartDate = TimeZoneInfo.ConvertTimeToUtc(value);
             }
         }
@@ -2136,11 +2193,17 @@ namespace KIS
         public DateTime EarlyFinishDate
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinishDate, rp.tzFusoOrario);
             }
             set {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    rp = new Reparto(this.RepartoID);
+                }
                 this._EarlyFinishDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
             }
         }
@@ -2148,10 +2211,16 @@ namespace KIS
         public DateTime LateFinishDate
         {
             get {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    rp = new Reparto(this.RepartoID);
+                }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinishDate, rp.tzFusoOrario); }
             set {
-                Reparto rp = new Reparto(this.RepartoID);
+                if (this.rp == null || rp.id == -1)
+                {
+                    rp = new Reparto(this.RepartoID);
+                }
                 this._LateFinishDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
             }
         }
@@ -3072,6 +3141,7 @@ namespace KIS
 
     public class EventoTaskProduzione
     {
+        public Reparto rp;
         private String _User;
         public String User
         {
@@ -3081,8 +3151,12 @@ namespace KIS
         public DateTime Data
         {
             get {
-                FusoOrario fuso = new FusoOrario();
-                return TimeZoneInfo.ConvertTimeFromUtc(this._Data, fuso.tzFusoOrario); }
+                if(rp==null || rp.id==null)
+                {
+                    TaskProduzione tskProd = new TaskProduzione(this.TaskProduzioneID);
+                    rp = new Reparto(tskProd.RepartoID);
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._Data, rp.tzFusoOrario); }
         }
 
         private Char _Evento;

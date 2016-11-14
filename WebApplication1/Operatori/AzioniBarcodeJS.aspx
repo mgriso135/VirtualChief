@@ -31,13 +31,12 @@
             imgLoad.style.height = 2;
 
             if (azione == "I" || azione == "A" || azione == "W" || azione == "F" || azione == "P" || azione == 'B') {
+                log.innerHTML = "Ora leggi il barcode sul tuo ID personale / cartellino.";
                 var task = tbox.value.substring(1, tbox.value.length);
-                log.innerHTML = azione + " " + task;
                 if (otherBox.value.length > 0 && otherBox.value.substring(0, 1) == "U") {
                     imgLoad.style.visibility = "visible";
                     imgLoad.style.height = "200px";
                     imgLoad.style.width = "200px";
-                    //log.innerHTML += " Postback.";
                     tblDatiUten.style.visibility = "hidden";
                     pback();
                 }
@@ -59,12 +58,11 @@
             }
             else if (azione == "U") {
                 var usr = tbox.value.substring(1, tbox.value.length);
-                log.innerHTML = azione + " " + usr;
+                log.innerHTML = "Ora leggi il barcode relativo al task desiderato [INIZIO | PAUSA | FINE | PROBLEMA].";
                 if (otherBox.value.length > 0 && (otherBox.value.substring(0, 1) == "I" || otherBox.value.substring(0, 1) == "A" || otherBox.value.substring(0, 1) == "W" || otherBox.value.substring(0, 1) == "F" || otherBox.value.substring(0, 1) == "P" || otherBox.value.substring(0, 1) == 'B')) {
                     imgLoad.style.visibility = "visible";
                     imgLoad.style.height = "200px";
                     imgLoad.style.width = "200px";
-                    //log.innerHTML += " Postback.";
                     tblDatiUten.style.visibility = "hidden";
                     pback();
                 }
@@ -112,13 +110,12 @@
 
             //log.innerHTML = azione;
             if (azione == "I" || azione == "A" || azione == "W" || azione == "F" || azione == "P" || azione == "B") {
+                log.innerHTML = "Ora leggi il barcode sul tuo ID personale / cartellino.";
                 var task = tbox.value.substring(1, tbox.value.length);
-                log.innerHTML = azione + " " + task;
                 if (otherBox.value.length > 0 && otherBox.value.substring(0, 1) == "U") {
                     imgLoad.style.visibility = "visible";
                     imgLoad.style.height = "200px";
                     imgLoad.style.width = "200px";
-                    //log.innerHTML = " Postback.";
                     tblDatiUten.style.visibility = "hidden";
                     pback();
                 }
@@ -140,7 +137,7 @@
             }
             else if (azione == "U") {
                 var usr = tbox.value.substring(1, tbox.value.length);
-                log.innerHTML = azione + " " + usr;
+                log.innerHTML = "Ora leggi il barcode relativo al task desiderato [INIZIO | PAUSA | FINE | PROBLEMA].";
                 if (otherBox.value.length > 0 && (otherBox.value.substring(0, 1) == "I" || otherBox.value.substring(0, 1) == "A" || otherBox.value.substring(0, 1) == "W" || otherBox.value.substring(0, 1) == "F" || otherBox.value.substring(0, 1) == "P" || otherBox.value.substring(0, 1) == "B")) {
                     imgLoad.style.visibility = "visible";
                     imgLoad.style.height = "200px";

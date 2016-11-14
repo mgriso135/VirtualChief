@@ -19,66 +19,64 @@ namespace KIS.Produzione
 
         protected void Page_Load(object sender, EventArgs e)
         {
-                bool check = false;
-                int repID = -1;
-                if (!String.IsNullOrEmpty(Request.QueryString["id"]))
+            bool check = false;
+            int repID = -1;
+            if (!String.IsNullOrEmpty(Request.QueryString["id"]))
+            {
+                try
                 {
-                    try
-                    {
-                        repID = Int32.Parse(Request.QueryString["id"]);
-                        check = true;
-                    }
-                    catch
-                    {
-                        repID = -1;
-                        check = false;
-                    }
+                    repID = Int32.Parse(Request.QueryString["id"]);
                 }
-                if (repID != -1 && check == true)
+                catch
                 {
-                    frmShowStatusUtenti.reparto = repID;
-                    if (!Page.IsPostBack && !Page.IsCallback)
-                    {
+                    repID = -1;
+                }
+            }
+
+            frmShowStatusUtenti.repID = repID;
+
+            if (repID != -1)
+            {
+                if (!Page.IsPostBack && !Page.IsCallback)
+                {
                     rp = new Reparto(repID);
                     if (rp.id != -1)
                     {
-                    frmShowStatusUtenti.reparto = rp.id;
-                    if (!Page.IsPostBack && !Page.IsCallback)
-                    {
-                        andonCfg = new KIS.App_Code.AndonReparto(rp.id);
-                        andonCfg.loadCampiVisualizzati();
-                        lblReparto.Text = rp.name;
-                        loadCommesse(rp.id);
-                        artNP.Sort(delegate(Articolo p1, Articolo p2)
-                        {
-                            return p1.LateStart.CompareTo(p2.LateStart);
-                        });
-                        if (artNP.Count == 0)
-                        {
-                            rptElencoArticoliNP.Visible = false;
-                            lbl1.Text = "Nessun articolo in stato N o P<br/>";
+                        frmShowStatusUtenti.repID = rp.id;
+                        frmArticoliAvviati.repID = rp.id;
+                            andonCfg = new KIS.App_Code.AndonReparto(rp.id);
+                            andonCfg.loadCampiVisualizzati();
+                            lblReparto.Text = rp.name;
+                            loadCommesse(rp);
+                            /*artNP.Sort(delegate (Articolo p1, Articolo p2)
+                            {
+                                return p1.LateStart.CompareTo(p2.LateStart);
+                            });*/
+                            if (artNP.Count == 0)
+                            {
+                                rptElencoArticoliNP.Visible = false;
+                                lbl1.Text = "Nessun articolo in stato N o P<br/>";
+                            }
+                            else
+                            {
+                                rptElencoArticoliNP.Visible = true;
+                                rptElencoArticoliNP.DataSource = artNP;
+                                rptElencoArticoliNP.DataBind();
+                            }
                         }
                         else
                         {
-                            rptElencoArticoliNP.Visible = true;
-                            rptElencoArticoliNP.DataSource = artNP;
-                            rptElencoArticoliNP.DataBind();
-                            rptElencoArticoliNP.Visible = true;
+                            frmArticoliAvviati.repID = -1;
+                            frmShowStatusUtenti.repID = -1;
                         }
-
-                        frmArticoliAvviati.repID = rp.id;
                     }
                     else
                     {
-                        frmArticoliAvviati.repID = -1;
+                        //frmArticoliAvviati.repID = -1;
+                        //frmShowStatusUtenti.repID = -1;
                     }
                 }
-                else
-                {
-                    frmArticoliAvviati.repID = -1;
-                }
             }
-        }
 
         protected void rptElencoArticoliNP_ItemDataBound(object sender, RepeaterItemEventArgs e)
         {
@@ -107,10 +105,10 @@ namespace KIS.Produzione
                 {
                     Articolo art = new Articolo(artID, artYear);
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
+                    ///*
                     if (art.ID != -1 &&tRow!=null)
                     {
-                        Cliente customer = new Cliente(art.Cliente);
-                        //Commessa cm = new Commessa(art.Commessa, art.AnnoCommessa);
+                        //Cliente customer = new Cliente(art.Cliente);
 
                         if (art.Status == 'N')
                         {
@@ -120,7 +118,6 @@ namespace KIS.Produzione
                         for (int i = 0; i < andonCfg.CampiVisualizzati.Count; i++)
                         {
                             HtmlTableCell td = new HtmlTableCell();
-                            //td.InnerHtml = andonCfg.CampiVisualizzati.Keys.ElementAt(i);
                             Commessa comm;
                             switch (andonCfg.CampiVisualizzati.Keys.ElementAt(i))
                             {
@@ -207,9 +204,7 @@ namespace KIS.Produzione
                     {
                         tRow.Visible = false;
                     }
-
-
-                    //tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
+                    //*/
                     if (tRow != null)
                     {
                         if (art.Status == 'N')
@@ -219,16 +214,17 @@ namespace KIS.Produzione
                         }
                         else if (art.Status == 'P')
                         {
+                            ///*
                             art.loadTasksProduzione();
                             bool checkYellow = false;
                             bool checkRed = false;
                             for (int i = 0; i < art.Tasks.Count; i++)
                             {
-                                if (DateTime.Now >= art.Tasks[i].EarlyStart && DateTime.Now <= art.Tasks[i].LateStart)
+                                if (TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) >= art.Tasks[i].EarlyStart && TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) <= art.Tasks[i].LateStart)
                                 {
                                     checkYellow = true;
                                 }
-                                else if (DateTime.Now >= art.Tasks[i].LateStart)
+                                else if (TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario) >= art.Tasks[i].LateStart)
                                 {
                                     checkRed = true;
                                 }
@@ -248,11 +244,10 @@ namespace KIS.Produzione
                                 tRow.BgColor = "#00FFFF";
                                 tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#00FFFF'");
                             }
+                            //*/
                         }
                         tRow.Attributes.Add("onMouseOver", "this.style.backgroundColor='#FFFF00'");
                     }
-
-
                 }
             }
             else if (e.Item.ItemType == ListItemType.Header)
@@ -261,8 +256,6 @@ namespace KIS.Produzione
                 for (int i = 0; i < andonCfg.CampiVisualizzati.Count; i++)
                 {
                     HtmlTableCell td = new HtmlTableCell("th");
-                    //td.InnerHtml = andonCfg.CampiVisualizzati.Keys.ElementAt(i);
-                    Commessa comm;
                     switch (andonCfg.CampiVisualizzati.Keys.ElementAt(i))
                     {
                         case "Commessa ID":
@@ -342,11 +335,9 @@ namespace KIS.Produzione
             }
         }
 
-        protected void loadCommesse(int idRep)
+        protected void loadCommesse(Reparto rp)
         {
-            //ElencoCommesseAperte elComm = new ElencoCommesseAperte();
-            //Reparto 
-                rp = new Reparto(idRep);
+            //rp = new Reparto(idRep);
             ElencoArticoli elArtN =new ElencoArticoli('N', rp);
             ElencoArticoli elArtP = new ElencoArticoli('P', rp);
 
@@ -378,12 +369,13 @@ namespace KIS.Produzione
             }
             if (repID != -1 && check == true)
             {
+                frmShowStatusUtenti.repID = repID;
                 //Reparto 
                 rp = new Reparto(repID);
                 if (rp.id != -1)
                 {
 
-                    loadCommesse(repID);
+                    loadCommesse(rp);
                     artNP.Sort(delegate(Articolo p1, Articolo p2)
                     {
                         return p1.LateStart.CompareTo(p2.LateStart);
