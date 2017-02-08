@@ -7,6 +7,7 @@
 <%@ Register TagPrefix="personal" TagName="eventowarning" Src="~/Personal/myListEventoWarning.ascx" %>
 <%@ Register TagPrefix="personal" TagName="changePassword" Src="~/Personal/myChangePassword.ascx" %>
 <%@ Register TagPrefix="personal" TagName="homeBoxes" Src="~/Personal/HomeBoxUser.ascx" %>
+<%@ Register TagPrefix="personal" TagName="language" Src="~/Personal/myLanguage.ascx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
@@ -20,12 +21,13 @@
 				</ul>
         <asp:hyperlink NavigateUrl="~/Login/login.aspx" runat="server" ID="lblLogin">Non sei loggato, accedi per visualizzare i tuoi dati</asp:hyperlink>
 
-    <h3><small>Dati personali di </small><asp:Label runat="server" ID="lblUsername" /></h3>
+    <h3><small><asp:label runat="server" id="lblDatiPersonali" meta:resourcekey="lblDatiPersonali" />
+        </small><asp:Label runat="server" ID="lblUsername" /></h3>
     <div class="accordion" id="accordion1" runat="server">
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Informazioni di base
+          <asp:label runat="server" lbl="lblInfoBase" meta:resourcekey="lblInfoBase" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -38,7 +40,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-                    E-mail
+                    <asp:label runat="server" lbl="lblEMail" meta:resourcekey="lblEMail" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseTwo">
@@ -51,7 +53,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-                    Telefono
+                    <asp:Label runat="server" ID="lblTelefono" meta:resourcekey="lblTelefono" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseThree">
@@ -64,7 +66,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFour">
-                    I tuoi gruppi
+                    <asp:Label runat="server" ID="lblGruppi" meta:resourcekey="lblGruppi" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseFour">
@@ -76,7 +78,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
-                    Segnalazione ritardi
+                    <asp:Label runat="server" ID="lblSegnalazioneRitardi" meta:resourcekey="lblSegnalazioneRitardi" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseFive">
@@ -88,7 +90,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSix">
-                    Segnalazione warning
+                    <asp:Label runat="server" ID="lblSegnalazioneWarning" meta:resourcekey="lblSegnalazioneWarning" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseSix">
@@ -101,7 +103,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSeven">
-                    Cambia password
+                    <asp:Label runat="server" ID="lblCambiaPassword" meta:resourcekey="lblCambiaPassword" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseSeven">
@@ -114,12 +116,25 @@
         <div class="accordion-group">
             <div class="accordion-heading">
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEight">
-                    Box informativi in HomePage
+                    <asp:Label runat="server" ID="lblInfoBox" meta:resourcekey="lblInfoBox" />
                 </a>
             </div>
             <div class="accordion-body collapse" id="collapseEight">
                 <div class="accordion-inner">
                     <personal:homeBoxes runat="server" id="frmHomeBoxes" />
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseNine">
+                    <asp:Label runat="server" ID="lblLanguage" meta:resourcekey="lblLanguage" />
+                </a>
+            </div>
+            <div class="accordion-body collapse" id="collapseNine">
+                <div class="accordion-inner">
+                    <personal:language runat="server" id="frmLanguage" />
                 </div>
             </div>
         </div>

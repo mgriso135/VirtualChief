@@ -22,6 +22,15 @@ namespace KIS.Personal {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblDescNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescNome;
+        
+        /// <summary>
         /// Controllo lblNome.
         /// </summary>
         /// <remarks>
@@ -65,6 +74,15 @@ namespace KIS.Personal {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgUndoNome;
+        
+        /// <summary>
+        /// Controllo lblDescCognome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescCognome;
         
         /// <summary>
         /// Controllo lblCognome.

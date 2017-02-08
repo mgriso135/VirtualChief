@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using KIS.eventi;
+//using KIS.eventi;
+using KIS.App_Code;
 
 namespace KIS.Eventi
 {
@@ -27,7 +28,7 @@ namespace KIS.Eventi
 
             if (checkUser == true)
             {
-                KIS.Commesse.Commessa curr = new KIS.Commesse.Commessa(commessaID, commessaAnno);
+                Commessa curr = new Commessa(commessaID, commessaAnno);
                 for (int i = 0; i < 24; i++)
                 {
                     ddlOre.Items.Add(new ListItem(i.ToString(), i.ToString()));
@@ -101,7 +102,7 @@ namespace KIS.Eventi
         protected void btnSaveRitardoGruppo_Click(object sender, ImageClickEventArgs e)
         {
 
-            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new KIS.Commesse.Commessa(commessaID, commessaAnno));
+            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new Commessa(commessaID, commessaAnno));
             int idGrp = -1;
             try
             {
@@ -138,7 +139,7 @@ namespace KIS.Eventi
 
         protected void btnSaveRitMin_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new KIS.Commesse.Commessa(commessaID, commessaAnno));
+            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new Commessa(commessaID, commessaAnno));
             int ore, min, sec;
             try
             {
@@ -166,7 +167,7 @@ namespace KIS.Eventi
 
         protected void btnUndoRitMin_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new KIS.Commesse.Commessa(commessaID, commessaAnno));
+            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new Commessa(commessaID, commessaAnno));
             if (cfgRp.RitardoMinimoDaSegnalare != null)
             {
                 ddlOre.SelectedValue = cfgRp.RitardoMinimoDaSegnalare.Hours.ToString();
@@ -224,7 +225,7 @@ namespace KIS.Eventi
             {
                 if (groupID != -1)
                 {
-                    ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new KIS.Commesse.Commessa(commessaID, commessaAnno));
+                    ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new Commessa(commessaID, commessaAnno));
                     // Ricerco il gruppo
                     cfgRp.loadGruppi();
                     bool rt = cfgRp.deleteGruppo(new Group(groupID));
@@ -263,7 +264,7 @@ namespace KIS.Eventi
 
         protected void btnSaveRitardoUtente_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new KIS.Commesse.Commessa(commessaID, commessaAnno));
+            ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new Commessa(commessaID, commessaAnno));
 
             if (ddlAddRitardoUtente.SelectedValue != "")
             {
@@ -320,7 +321,7 @@ namespace KIS.Eventi
         {
             if (e.CommandName == "deleteUtente")
             {
-                ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new KIS.Commesse.Commessa(commessaID, commessaAnno));
+                ConfigurazioneRitardoCommessa cfgRp = new ConfigurazioneRitardoCommessa(new Commessa(commessaID, commessaAnno));
                 // Ricerco il gruppo
 
                 bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));

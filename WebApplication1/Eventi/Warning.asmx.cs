@@ -8,7 +8,7 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using KIS.Commesse;
 using System.Net.Mail;
-
+using KIS.App_Code;
 namespace KIS.Eventi
 {
     /// <summary>

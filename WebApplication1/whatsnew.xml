@@ -1,6 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Stories>
+  <Story id="0075">
+    <Date>21/11/2016</Date>
+    <Title>KIS Setup</Title>
+    <Description>
+      <![CDATA[E' stato creato uno wizard di configurazione iniziale di <i>Kaizen Indicator System</i> che,
+       partendo da una installazione vergine, permette di essere operativi nel giro di pochi minuti.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0099">
+    <Date>26/10/2016</Date>
+    <Title>Andon speed up</Title>
+    <Description>
+      <![CDATA[Sono stati rivisitati completamente gli algoritmi dell'Andon per velocizzarne la visualizzazione, 
+      soprattutto in presenza di un'elevata mole di dati!
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0086">
+    <Date>22/09/2016</Date>
+    <Title>Tempi di attesa tra fine task ed inizio successivo</Title>
+    <Description>
+      <![CDATA[E' stata aggiunta la possibilità di introdurre dei tempi di attesa tra la fine di un task 
+      e l'inizio del successivo, per poter pianificare eventuali soste dei WIP tra una postazione di lavoro e l'altra.
+       I tempi di pausa sono settabili sullo Wizard Nuova Commessa, sia tramite PERT che tramite interfaccia tabellare.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0095">
+    <Date>08/09/2016</Date>
+    <Title>UI Feature: prodotti duplicati</Title>
+    <Description>
+      <![CDATA[Fino ad oggi, se il pianificatore non si accorgeva che un prodotto era già stato creato, lo poteva 
+      comunque replicare.<br />
+      Ora KIS si accorge della creazione di un potenziale prodotto duplicato ed informa prontamente l'utente, 
+      che potrà in ogni caso confermare di voler creare il prodotto!
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0098">
+    <Date>08/09/2016</Date>
+    <Title>BugFix: calcolo su commesse in corso di realizzazione</Title>
+    <Description>
+      <![CDATA[Risolto un bug di secondaria importanza che impediva il corretto calcolo dei tempi di lavoro
+       reali, in fase di realizzazione della commessa.<br />
+       Per la natura del problema, questo non inficia la validità del calcolo dei tempi di lavoro delle commesse chiuse.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0096">
+    <Date>06/09/2016</Date>
+    <Title>Riviste le info su interfaccia STATO COMMESSA</Title>
+    <Description>
+      <![CDATA[Sono state rivisitate le informazioni mostrate dall'interfaccia STATO COMMESSA 
+      (visualizzabile tramite lettore barcode, direttamente dal foglio di lavoro della commessa) per permettere
+       agli operatori di accedere ad informazioni utili ed efficaci durante il loro lavoro, in tempo zero.
+      ]]>
+    </Description>
+  </Story>
   <Story id="0094">
     <Date>07/07/2016</Date>
     <Title>Gestione fuso orario</Title>

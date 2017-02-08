@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.Processi
 {
     public partial class pertManagePrecedenze : System.Web.UI.Page

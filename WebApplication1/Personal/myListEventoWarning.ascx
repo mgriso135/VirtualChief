@@ -10,7 +10,7 @@
                     <table class="table table-bordered table-condensed table-hover table-striped">
                         <thead>
                         <tr>
-                            <td>Reparti</td>
+                            <td><asp:label runat="server" id="lblReparti" meta:resourcekey="lblReparti" /></td>
                         </tr>
                             </thead>
                         <tbody>
@@ -33,10 +33,10 @@
                     <table class="table table-bordered table-condensed table-hover table-striped">
                         <thead>
                         <tr>
-                            <td>Commesse</td>
-                            <td>Cliente</td>
-                            <td>Data Inserimento</td>
-                            <td>Stato</td>
+                            <td><asp:label runat="server" id="lblCommesse" meta:resourcekey="lblCommesse" /></td>
+                            <td><asp:label runat="server" id="lblCliente" meta:resourcekey="lblCliente" /></td>
+                            <td><asp:label runat="server" id="lblDataInserimento" meta:resourcekey="lblDataInserimento" /></td>
+                            <td><asp:label runat="server" id="lblStatus" meta:resourcekey="lblStatus" /></td>
                         </tr>
                             </thead>
                         <tbody>
@@ -61,10 +61,10 @@
                     <table class="table table-bordered table-condensed table-hover table-striped">
                         <thead>
                         <tr>
-                            <td>Articolo</td>
-                            <td>Cliente</td>
-                            <td>Data Fine Produzione</td>
-                            <td>Stato</td>
+                            <td><asp:label runat="server" id="lblArticolo" meta:resourcekey="lblArticolo" /></td>
+                            <td><asp:label runat="server" id="lblCliente2" meta:resourcekey="lblCliente" /></td>
+                            <td><asp:label runat="server" id="lblDataFineProd" meta:resourcekey="lblDataFineProd" /></td>
+                            <td><asp:label runat="server" id="lblStatus2" meta:resourcekey="lblStatus" /></td>
                         </tr>
                             </thead>
                         <tbody>

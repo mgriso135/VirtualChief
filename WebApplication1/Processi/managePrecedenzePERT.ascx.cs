@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.Processi
 {
     public partial class managePrecedenzePERT : System.Web.UI.UserControl

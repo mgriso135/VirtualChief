@@ -4,6 +4,6 @@
 <%@ Register TagPrefix="Configuration" TagName="Status" Src="~/Configuration/configurationStatus.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <Configuration:Status runat="server" id="frmConfigStatus" />
 </asp:Content>

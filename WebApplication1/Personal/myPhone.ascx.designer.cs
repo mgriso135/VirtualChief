@@ -40,6 +40,33 @@ namespace KIS.Personal {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddPhone;
         
         /// <summary>
+        /// Controllo lblPhoneNumber.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPhoneNumber;
+        
+        /// <summary>
+        /// Controllo lblAmbito.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAmbito;
+        
+        /// <summary>
+        /// Controllo lblForAlarm.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblForAlarm;
+        
+        /// <summary>
         /// Controllo txtPhone.
         /// </summary>
         /// <remarks>

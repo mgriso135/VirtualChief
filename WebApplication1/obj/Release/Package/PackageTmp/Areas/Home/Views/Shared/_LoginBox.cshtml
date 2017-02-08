@@ -1,0 +1,15 @@
+﻿@{ 
+    var sUsrName = "";
+    var sUsrData = "";
+    if(Session["user"]!=null)
+    {
+        KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
+        if(usr.authenticated)
+        {
+            sUsrName = "Benvenuto " + usr.name + " " + usr.cognome;
+            sUsrData = "Last login: " + usr.lastLogin.ToString("dd/MM/yyyy HH:mm:ss");
+        }
+    }
+}
+
+@sUsrName<br/>@sUsrData

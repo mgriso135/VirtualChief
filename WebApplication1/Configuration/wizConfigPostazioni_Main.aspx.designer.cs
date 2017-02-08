@@ -13,6 +13,15 @@ namespace KIS.Configuration {
     public partial class wizConfigPostazioni_Main {
         
         /// <summary>
+        /// Controllo lbl1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl1;
+        
+        /// <summary>
         /// Controllo frmAddPostazione.
         /// </summary>
         /// <remarks>

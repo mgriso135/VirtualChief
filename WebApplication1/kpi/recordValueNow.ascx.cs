@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Globalization;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.kpi
 {
     public partial class recordValueNow : System.Web.UI.UserControl

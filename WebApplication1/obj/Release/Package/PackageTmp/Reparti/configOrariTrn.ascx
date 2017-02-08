@@ -41,7 +41,7 @@
 <table runat="server" id="formAddOrario">
     <tr>
         <td>Inizio:</td>
-        <td><asp:DropDownList runat="server" ID="ddlDInizio">
+        <td><asp:DropDownList runat="server" ID="ddlDInizio" Width="100">
             <asp:ListItem Text="Lunedì" Value="1" />
             <asp:ListItem Text="Martedì" Value="2" />
             <asp:ListItem Text="Mercoledì" Value="3" />
@@ -51,11 +51,11 @@
             <asp:ListItem Text="Domenica" Value="0" />
             </asp:DropDownList>
         </td>
-        <td><asp:DropDownList runat="server" ID="ddlOInizio" />:<asp:DropDownList runat="server" ID="ddlMInizio" /></td>
+        <td><asp:DropDownList runat="server" ID="ddlOInizio" Width="60" />:<asp:DropDownList runat="server" ID="ddlMInizio" Width="60" /></td>
     </tr>
         <tr>
         <td>Fine:</td>
-        <td><asp:DropDownList runat="server" ID="ddlDFine">
+        <td><asp:DropDownList runat="server" ID="ddlDFine" Width="100">
             <asp:ListItem Text="Lunedì" Value="1" />
             <asp:ListItem Text="Martedì" Value="2" />
             <asp:ListItem Text="Mercoledì" Value="3" />
@@ -65,7 +65,7 @@
             <asp:ListItem Text="Domenica" Value="0" />
             </asp:DropDownList>
         </td>
-        <td><asp:DropDownList runat="server" ID="ddlOFine" />:<asp:DropDownList runat="server" ID="ddlMFine" /></td>
+        <td><asp:DropDownList runat="server" ID="ddlOFine" Width="60" />:<asp:DropDownList runat="server" ID="ddlMFine" Width="60" /></td>
     </tr>
     <tr>
         <td colspan="3" style="text-align:center;">

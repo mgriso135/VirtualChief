@@ -3,7 +3,7 @@
     <ContentTemplate>
 <table class="table table-striped table-hover table-condensed">
     <tr>
-        <td>Nome</td>
+        <td><asp:Label runat="server" ID="lblDescNome" meta:resourckey="lblDescNome" /></td>
         <td><asp:Label runat="server" ID="lblNome" />
             <asp:TextBox runat="server" ID="txtNome" />
         </td>
@@ -13,7 +13,7 @@
         </td>
     </tr>
     <tr>
-        <td>Cognome</td>
+        <td><asp:Label runat="server" ID="lblDescCognome" meta:resourckey="lblDescCognome" /></td>
         <td><asp:Label runat="server" ID="lblCognome" />
             <asp:TextBox runat="server" ID="txtCognome" />
         </td>

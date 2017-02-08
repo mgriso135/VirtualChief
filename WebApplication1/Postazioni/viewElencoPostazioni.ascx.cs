@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using KIS;
 using iTextSharp;
 using iTextSharp.text;
+using KIS.App_Code;
 
 namespace KIS.Postazioni
 {

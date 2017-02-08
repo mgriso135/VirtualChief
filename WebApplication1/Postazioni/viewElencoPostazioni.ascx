@@ -26,7 +26,7 @@
         <ItemTemplate>
         <tr runat="server" id="tr1">
         <td>
-<a href="viewPostazione.aspx?pstID=<%# DataBinder.Eval(Container.DataItem, "id") %>">
+<a href="/Postazioni/viewPostazione.aspx?pstID=<%# DataBinder.Eval(Container.DataItem, "id") %>" target="_blank">
     <asp:Image runat="server" ID="imgShow" ImageUrl="/img/iconView.png" Height="40px" />
 </a>
         </td>
@@ -34,7 +34,7 @@
             <asp:ImageButton runat="server" ID="imgBarcodePostazione" CommandName="printBarCode" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>' ToolTip="Stampa il codice a barre relativo alla postazione" ImageUrl="/img/iconBarcode.png" Height="40" />
         </td>
             <td>
-                <a href="editPostazione.aspx?pstID=<%# DataBinder.Eval(Container.DataItem, "id") %>">
+                <a href="/Postazioni/editPostazione.aspx?pstID=<%# DataBinder.Eval(Container.DataItem, "id") %>" target="_blank">
                 <asp:Image runat="server" ID="editPostazione" ImageUrl="/img/edit.png" Height="40px" ToolTip="Modifica i dati della postazione" />
                     </a>
         </td>

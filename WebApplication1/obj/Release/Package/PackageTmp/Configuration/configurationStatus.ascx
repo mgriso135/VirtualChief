@@ -15,7 +15,7 @@
         </td>
     </tr>
     <tr>
-        <td><asp:Image ID="Image1" runat="server" ImageUrl="~/img/logo_KP.jpg" Height="60" /></td>
+        <td><asp:Image ID="Image1" runat="server" ImageUrl="~/img/LogoKIS.jpg" Height="60" /></td>
 <td><a href="wizConfigLogo.aspx"><p class="lead">Logo aziendale</p></a>
     </td>
         <td>
@@ -44,7 +44,7 @@
 <tr>
     <td><asp:Image ID="Image3" runat="server" ImageUrl="~/img/iconWorkspace.png" Height="60" /></td>
     <td>
-    <a href="#"><p class="lead">Postazioni di lavoro</p></a>
+    <a href="wizConfigPostazioni_Main.aspx"><p class="lead">Postazioni di lavoro</p></a>
         </td>
     <td>
         <asp:Image runat="server" ID="PostazioniOK" ImageUrl="~/img/iconComplete.png" Height="60" Visible="false" ToolTip="Elemento configuration con successo"/>
@@ -54,7 +54,7 @@
     <tr>
         <td><asp:Image ID="Image4" runat="server" ImageUrl="~/img/iconUser.png" Height="60" /></td>
 <td>
-<a href="#"><p class="lead">Utenti ed operatori</p></a>
+<a href="wizConfigUsers_Main.aspx"><p class="lead">Utenti ed operatori</p></a>
     </td>
         <td><asp:Image runat="server" ID="UtentiOK" ImageUrl="~/img/iconComplete.png" Height="60" Visible="false" ToolTip="Elemento configuration con successo"/>
             <asp:Image runat="server" ID="UtentiKO" ImageUrl="~/img/iconWarning.png" Height="60" Visible="false"  ToolTip="Attenzione: complatare la configurazione!"/></td>
@@ -62,7 +62,7 @@
     <tr>
         <td><asp:Image ID="Image7" runat="server" ImageUrl="~/img/iconAndon.png" Height="60" /></td>
 <td>
-<a href="#"><p class="lead">Andon</p></a>
+<a href="wizConfigAndon.aspx"><p class="lead">Andon</p></a>
     </td>
         <td><asp:Image runat="server" ID="andonOK" ImageUrl="~/img/iconComplete.png" Height="60" Visible="false" ToolTip="Elemento configuration con successo"/>
             <asp:Image runat="server" ID="andonKO" ImageUrl="~/img/iconWarning.png" Height="60" Visible="false"  ToolTip="Attenzione: complatare la configurazione!"/></td>
@@ -70,7 +70,7 @@
     <tr>
         <td><asp:Image ID="Image8" runat="server" ImageUrl="~/img/iconReportProductionProgress.jpg" Height="60" /></td>
 <td>
-<a href="#"><p class="lead">Reportistica per cliente</p></a>
+<a href="wizCustomerReport.aspx"><p class="lead">Reportistica per cliente</p></a>
     </td>
         <td><asp:Image runat="server" ID="reportOK" ImageUrl="~/img/iconComplete.png" Height="60" Visible="false" ToolTip="Elemento configuration con successo"/>
             <asp:Image runat="server" ID="reportKO" ImageUrl="~/img/iconWarning.png" Height="60" Visible="false"  ToolTip="Attenzione: complatare la configurazione!"/></td>

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.Postazioni
 {
     public partial class editPostazione_ascx : System.Web.UI.UserControl

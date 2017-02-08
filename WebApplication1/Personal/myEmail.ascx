@@ -4,19 +4,19 @@
 <asp:ImageButton Height="30" runat="server" ID="imgShowFormAddEmail" ImageUrl="~/img/iconAdd2.png" OnClick="imgShowFormAddEmail_Click" />Aggiungi un indirizzo e-mail
 <table runat="server" id="frmAddEmail" class="table table-bordered table-hover table-condensed">
     <tr>
-        <td>E-mail</td>
-        <td>Ambito (es: casa, ufficio)</td>
-        <td>Per segnalazione allarmi</td>
+        <td><asp:label runat="server" id="lblEmail" meta:resourcekey="lblEmail" /></td>
+        <td><asp:label runat="server" id="lblAmbito" meta:resourcekey="lblAmbito" /></td>
+        <td><asp:label runat="server" id="lblAlarmBox" meta:resourcekey="lblAlarmBox" /></td>
     </tr>
     <tr>
         <td><asp:TextBox runat="server" ID="txtEmail" ValidationGroup="addmail" />
             <br />
-            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ValidationGroup="addmail" ControlToValidate="txtEmail" ForeColor="Red" ErrorMessage="* Campo obbligatorio" />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ValidationGroup="addmail" ControlToValidate="txtEmail" ForeColor="Red" ErrorMessage="<%$resources:valEmail %>" />
         </td>
         <td>
             <asp:TextBox runat="server" ID="txtAmbito" ValidationGroup="addmail" />
             <br />
-            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ValidationGroup="addmail" ControlToValidate="txtAmbito" ForeColor="Red" ErrorMessage="* Campo obbligatorio" />
+            <asp:RequiredFieldValidator ID="RequiredFieldValidator2" runat="server" ValidationGroup="addmail" ControlToValidate="txtAmbito" ForeColor="Red" ErrorMessage="<%$resources:valAmbito %>" />
         </td>
         <td><asp:CheckBox runat="server" ID="chkForAlarm" /></td>
         <td>
@@ -33,9 +33,9 @@
                     <thead>
                     <tr>
                         <td></td>
-                        <td>E-mail</td>
-                        <td>Ambito</td>
-                        <td>Per allarmi</td>
+                        <td><asp:label runat="server" id="lblHeadEmail" meta:resourcekey="lblHeadEmail" /></td>
+                        <td><asp:label runat="server" id="lblHeadAmbito" meta:resourcekey="lblHeadAmbito" /></td>
+                        <td><asp:label runat="server" id="lblHeadForAlarm" meta:resourcekey="lblHeadForAlarm" /></td>
                     </tr>
                         </thead>
                     <tbody>

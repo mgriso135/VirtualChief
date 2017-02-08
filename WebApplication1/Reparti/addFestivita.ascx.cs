@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Reparti
 {
     public partial class addFestivita : System.Web.UI.UserControl
@@ -55,7 +55,80 @@ namespace KIS.Reparti
                 Int32.Parse(OraI.SelectedValue), Int32.Parse(MinutoI.SelectedValue), 0);
             DateTime fine = new DateTime(fineFest.SelectedDate.Year, fineFest.SelectedDate.Month, fineFest.SelectedDate.Day,
                 Int32.Parse(OraF.SelectedValue), Int32.Parse(MinutoF.SelectedValue), 0);
-            
+
+            if (inizio < fine && inizio > DateTime.UtcNow)
+            {
+                List<TaskProduzione> lstTasks = new List<TaskProduzione>();
+                ElencoTaskProduzione elTasksI = new ElencoTaskProduzione(inizio, fine, 'I');
+                ElencoTaskProduzione elTasksN = new ElencoTaskProduzione(inizio, fine, 'N');
+                ElencoTaskProduzione elTasksP = new ElencoTaskProduzione(inizio, fine, 'P');
+
+                lstTasks.AddRange(elTasksI.Tasks);
+                lstTasks.AddRange(elTasksN.Tasks);
+                lstTasks.AddRange(elTasksP.Tasks);
+
+                var prodotti = (from t in lstTasks
+                             group t by new { t.ArticoloID, t.ArticoloAnno }
+             into grp
+                             select new
+                             {
+                                 grp.Key.ArticoloID,
+                                 grp.Key.ArticoloAnno,
+                             }).ToList();
+
+                if (lstTasks.Count>0)
+                {
+                    colSave.Visible = true;
+                    lblListProd.Text = "Attenzione: durante la festività che stai inserendo è già pianificata "
+                        + "l'esecuzione di alcuni tasks, appartenenti ai seguenti prodotti:<br />";
+                for(int i = 0; i < prodotti.Count; i++)
+                {
+                        Articolo art = new Articolo(prodotti[i].ArticoloID, prodotti[i].ArticoloAnno);
+                        lblListProd.Text += art.ID.ToString() + "/" + art.Year.ToString()
+                            + " - Cliente: " + art.RagioneSocialeCliente 
+                            + " - Data consegna prevista: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy")
+                            +"<br />";
+                }
+                    lblListProd.Text += "L'eventuale riprogrammazione dovrà essere fatta manualmente, per ogni prodotto.<br />Vuoi continuare?<br />";
+                }
+                else
+                {
+                    salva(inizio, fine);
+                }
+            }
+            else
+            {
+                lbl1.Text = "Errore nei dati di input<br/>";
+            }
+        }
+
+
+
+        protected void imgSave_Click(object sender, ImageClickEventArgs e)
+        {
+            DateTime inizio = new DateTime(inizioFest.SelectedDate.Year, inizioFest.SelectedDate.Month, inizioFest.SelectedDate.Day,
+                Int32.Parse(OraI.SelectedValue), Int32.Parse(MinutoI.SelectedValue), 0);
+            DateTime fine = new DateTime(fineFest.SelectedDate.Year, fineFest.SelectedDate.Month, fineFest.SelectedDate.Day,
+                Int32.Parse(OraF.SelectedValue), Int32.Parse(MinutoF.SelectedValue), 0);
+
+            if (inizio < fine && inizio > DateTime.UtcNow)
+            {
+                salva(inizio, fine);
+            }
+        }
+
+        protected void imgUndo_Click(object sender, ImageClickEventArgs e)
+        {
+            OraI.SelectedValue = "0";
+            OraF.SelectedValue = "0";
+            MinutoI.SelectedValue = "0";
+            MinutoF.SelectedValue = "0";
+
+            colSave.Visible = false;
+        }
+
+        protected void salva(DateTime inizio, DateTime fine)
+        {
             if (inizio < fine && inizio > DateTime.UtcNow)
             {
                 Turno trn = new Turno(idTurno);
@@ -76,6 +149,5 @@ namespace KIS.Reparti
                 lbl1.Text = "Errore nei dati di input<br/>";
             }
         }
-
     }
 }

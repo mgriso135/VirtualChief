@@ -37,6 +37,26 @@ namespace KIS
 
         }
 
+        void Application_AcquireRequestState(Object sender, EventArgs e)
+        {
+            // Code that runs on application startup
+            if(HttpContext.Current != null && HttpContext.Current.Session != null)
+            {
+                User currUser = (User)HttpContext.Current.Session["user"];
+                if(currUser!=null && currUser.username.Length>0 && currUser.Language.Length>0)
+                {
+                    System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(currUser.Language);
+                    System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(currUser.Language);
+                }
+            }
+            else
+            {
+                
+                System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("it");
+                System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("it");
+            }
+        }
+
         void Session_Start(object sender, EventArgs e)
         {
             // Codice eseguito all'avvio di una nuova sessione

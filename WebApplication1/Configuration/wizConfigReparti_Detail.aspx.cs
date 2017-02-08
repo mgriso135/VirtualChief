@@ -4,81 +4,118 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Configuration
 {
     public partial class wizConfigReparti_Detail : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!Page.IsPostBack)
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Reparto";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            bool checkUser = false;
+            if (Session["user"] != null)
             {
-                configTurni.Visible = false;
-                configSplitTasksTurni.Visible = false;
-                accordion1.Visible = false;
+                User curr = (User)Session["user"];
+                checkUser = curr.ValidatePermessi(elencoPermessi);
             }
 
-            int repID = -1;
-            if (!String.IsNullOrEmpty(Request.QueryString["id"]))
+            if (checkUser == true)
             {
-                try
+                if (!Page.IsPostBack)
                 {
-                    repID = Int32.Parse(Request.QueryString["id"]);
+                    configTurni.Visible = false;
+                    configSplitTasksTurni.Visible = false;
+                    accordion1.Visible = false;
                 }
-                catch
+
+                int repID = -1;
+                if (!String.IsNullOrEmpty(Request.QueryString["id"]))
                 {
-                    repID = -1;
-                }
-                Reparto rep = new Reparto(repID);
-                if (rep.id != -1)
-                {
-                    if (Page.IsPostBack)
+                    try
                     {
-                        lbl1.Text = Page.Request.Params.Get("__EVENTTARGET");
+                        repID = Int32.Parse(Request.QueryString["id"]);
                     }
-                    lblTitle.Text = rep.name;
-                    lblDesc.Text = rep.description;
-                    configTurni.Visible = true;
-                    configTurni.repID = rep.id;
-                    configSplitTasksTurni.Visible = true;
-                    configSplitTasksTurni.idReparto = rep.id;
-                    frmEvRitardo.Visible = true;
-                    frmEvRitardo.idReparto = rep.id;
-                    frmEvWarning.Visible = true;
-                    frmEvWarning.idReparto = rep.id;
-                    accordion1.Visible = true;
-                    frmModoCalcoloTC.idReparto = rep.id;
-                    frmModoCalcoloTC.Visible = true;
-                    frmConfigAndonReparto.idReparto = rep.id;
-                    frmConfigAndonReparto.Visible = true;
-                    frmAvvioTask.idReparto = rep.id;
-                    frmAvvioTask.Visible = true;
-                    frmAndonMaxDays.idReparto = rep.id;
-                    frmAndonMaxDays.Visible = true;
-                    frmAndonViewFields.Visible = true;
-                    frmAndonViewFields.idReparto = rep.id;
-
-
-                    // Abilito la gestione a kanban solo se è attivo KanbanBox by Sintesia
-/*                    frmConfigKanban.idReparto = rep.id;
-                    KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
-                    if (kboxCfg.KanbanBoxEnabled == true)
+                    catch
                     {
-                        frmConfigKanban.Visible = true;
+                        repID = -1;
+                    }
+                    Reparto rep = new Reparto(repID);
+                    if (rep.id != -1)
+                    {
+                        if (Page.IsPostBack)
+                        {
+                            lbl1.Text = Page.Request.Params.Get("__EVENTTARGET");
+                        }
+                        lblTitle.Text = rep.name;
+                        lblDesc.Text = rep.description;
+                        configTurni.Visible = true;
+                        configTurni.repID = rep.id;
+                        configSplitTasksTurni.Visible = true;
+                        configSplitTasksTurni.idReparto = rep.id;
+                        frmEvRitardo.Visible = true;
+                        frmEvRitardo.idReparto = rep.id;
+                        frmEvWarning.Visible = true;
+                        frmEvWarning.idReparto = rep.id;
+                        accordion1.Visible = true;
+                        frmModoCalcoloTC.idReparto = rep.id;
+                        frmModoCalcoloTC.Visible = true;
+                        frmConfigAndonReparto.idReparto = rep.id;
+                        frmConfigAndonReparto.Visible = true;
+                        frmAvvioTask.idReparto = rep.id;
+                        frmAvvioTask.Visible = true;
+                        frmAndonMaxDays.idReparto = rep.id;
+                        frmAndonMaxDays.Visible = true;
+                        frmAndonViewFields.Visible = true;
+                        frmAndonViewFields.idReparto = rep.id;
+
+
+                        // Abilito la gestione a kanban solo se è attivo KanbanBox by Sintesia
+                        /*                    frmConfigKanban.idReparto = rep.id;
+                                            KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
+                                            if (kboxCfg.KanbanBoxEnabled == true)
+                                            {
+                                                frmConfigKanban.Visible = true;
+                                            }
+                                            else
+                                            {
+                                                frmConfigKanban.Visible = false;
+                                            }*/
                     }
                     else
                     {
-                        frmConfigKanban.Visible = false;
-                    }*/
+                        lbl1.Text = "Non riesco a trovare il reparto che mi hai indicato.<br />";
+                        lblTitle.Visible = false;
+                        configTurni.Visible = false;
+                        titleConfig.Visible = false;
+                        configSplitTasksTurni.Visible = false;
+                        configSplitTasksTurni.idReparto = -1;
+                        frmEvWarning.Visible = false;
+                        frmEvWarning.idReparto = -1;
+                        accordion1.Visible = false;
+                        frmModoCalcoloTC.idReparto = -1;
+                        frmModoCalcoloTC.Visible = false;
+                        frmConfigAndonReparto.idReparto = -1;
+                        frmConfigAndonReparto.Visible = false;
+                        frmAvvioTask.idReparto = -1;
+                        frmAvvioTask.Visible = false;
+                        frmAndonMaxDays.idReparto = -1;
+                        frmAndonMaxDays.Visible = false;
+                        frmAndonViewFields.Visible = false;
+                    }
                 }
                 else
                 {
-                    lbl1.Text = "Non riesco a trovare il reparto che mi hai indicato.<br />";
-                    lblTitle.Visible = false;
+                    repID = -1;
                     configTurni.Visible = false;
                     titleConfig.Visible = false;
                     configSplitTasksTurni.Visible = false;
                     configSplitTasksTurni.idReparto = -1;
+                    frmEvRitardo.Visible = false;
                     frmEvWarning.Visible = false;
                     frmEvWarning.idReparto = -1;
                     accordion1.Visible = false;
@@ -90,12 +127,12 @@ namespace KIS.Configuration
                     frmAvvioTask.Visible = false;
                     frmAndonMaxDays.idReparto = -1;
                     frmAndonMaxDays.Visible = false;
-                    frmAndonViewFields.Visible = false;
                 }
             }
             else
             {
-                repID = -1;
+                lbl1.Text = "Please <a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigReparti_Main\">click here</a> to login as Admin User.";
                 configTurni.Visible = false;
                 titleConfig.Visible = false;
                 configSplitTasksTurni.Visible = false;

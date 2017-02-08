@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Personal
 {
     public partial class myChangePassword : System.Web.UI.UserControl
@@ -25,7 +25,7 @@ namespace KIS.Personal
                         else
                         {
                             tblChangePassword.Visible = false;
-                            lbl1.Text = "Attenzione: per cambiare la password devi impostare un indirizzo e-mail.";
+                            lbl1.Text = GetLocalResourceObject("lblAddEMail").ToString();
                         }
                 }
                 else
@@ -49,26 +49,26 @@ namespace KIS.Personal
                     int ret = curr.changePassword(oldPass, newPass1);
                     if (ret == 0)
                     {
-                        lbl1.Text = "Errore generico...";
+                        lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
                     }
                     else if (ret == 1)
                     {
-                        lbl1.Text = "Password cambiata correttamente.";
+                        lbl1.Text = GetLocalResourceObject("lblPasswordChangedOK").ToString();
                     }
                     else if (ret == 2)
                     {
-                        lbl1.Text = "Attenzione: la vecchia password fornita non è corretta.";
+                        lbl1.Text = GetLocalResourceObject("lblOldPasswordNonOK").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Vecchia password fornita non corretta.";                    
+                    lbl1.Text = GetLocalResourceObject("lblOldPasswordNonOK").ToString();
                 }
             }
             else
             {
                 tblChangePassword.Visible = false;
-                lbl1.Text = "Password fornita non corretta.";
+                lbl1.Text = GetLocalResourceObject("lblPasswordNonOK").ToString();
                 ((User)Session["user"]).logout();
                 Response.Redirect("~/Login/login.aspx");
             }

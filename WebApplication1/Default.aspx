@@ -13,8 +13,8 @@
 					</li>
 				</ul>
 <div class="page-header">
-					Benvenuto
-    <asp:label runat="server" ID="lbl1"/>
+					<asp:label runat="server" ID="lblBenvenuto" meta:resourcekey="lblBenvenuto" />
+    <asp:label runat="server" ID="lbl1" meta:resourcekey="lbl1"/>
 				</div>
     
 

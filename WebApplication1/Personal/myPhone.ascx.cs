@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Personal
 {
     public partial class myPhone : System.Web.UI.UserControl
@@ -40,7 +40,7 @@ namespace KIS.Personal
                     bool rt = curr.addPhoneNumber(Server.HtmlEncode(txtPhone.Text), Server.HtmlEncode(txtAmbito.Text), chkForAlarm.Checked);
                     if (rt == false)
                     {
-                        lbl1.Text = "Errore: non è stato possibile inserire il numero di telefono.<br/>Verificare che non sia già stato inserito e che sia un numero di telefono valido.";
+                        lbl1.Text =GetLocalResourceObject("lblErroreDuplicato").ToString();// "Errore: non è stato possibile inserire il numero di telefono.<br/>Verificare che non sia già stato inserito e che sia un numero di telefono valido.";
                     }
                     else
                     {

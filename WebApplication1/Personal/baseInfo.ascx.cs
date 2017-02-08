@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Personal
 {
     public partial class baseInfo : System.Web.UI.UserControl

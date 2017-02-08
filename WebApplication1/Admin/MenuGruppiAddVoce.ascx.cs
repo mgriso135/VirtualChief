@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using KIS.App_Code;
 
 namespace KIS.Admin
 {
@@ -35,8 +36,8 @@ namespace KIS.Admin
                     grp.loadMenu();
                     if (!Page.IsPostBack)
                     {
-                        Menu.MainMenu elencoTotale = new Menu.MainMenu();
-                        List<Menu.VoceMenu> NonGruppate = new List<Menu.VoceMenu>();
+                        MainMenu elencoTotale = new MainMenu();
+                        List<VoceMenu> NonGruppate = new List<VoceMenu>();
                         for (int i = 0; i < elencoTotale.Elenco.Count; i++)
                         {
                             bool found = false;
@@ -76,7 +77,7 @@ namespace KIS.Admin
             if (idGruppo != -1 && voceID != -1)
             {
                 Group grp = new Group(idGruppo);
-                Menu.VoceMenu vm = new Menu.VoceMenu(voceID);
+                VoceMenu vm = new VoceMenu(voceID);
 
                 if (e.CommandName == "addVoce")
                 {

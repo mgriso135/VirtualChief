@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
 using System.Drawing;
-
+using KIS.App_Code;
 namespace KIS.Produzione
 {
     public partial class configTurni : System.Web.UI.UserControl

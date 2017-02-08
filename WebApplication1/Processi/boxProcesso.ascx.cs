@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using WebApplication1;
 using System.Collections;
 using KIS;
-
+using KIS.App_Code;
 namespace MyUserControls
 {
     public partial class boxProcesso : System.Web.UI.UserControl

@@ -104,11 +104,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.IDCommessa = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione di IDCommessa avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateCommessaID_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -129,11 +129,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Cliente = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione di Cliente avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateCliente_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -154,11 +154,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.DataInserimentoOrdine = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Data Inserimento Ordine avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateCommessaDataInserimento_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -179,11 +179,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.NoteOrdine = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione delle Note della Commessa avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateCommessaNote_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -204,11 +204,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.IDProdotto = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'ID Prodotto avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoID_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -229,11 +229,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.NomeProdotto = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Nome Prodotto avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoNome_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -254,11 +254,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.NomeVariante = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Nome Variante avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoNomeVariante_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -279,11 +279,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Matricola = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Matricola avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoMatricola_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -304,11 +304,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Status = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dello Status avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoStatus_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -329,11 +329,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Reparto = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Reparto avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoReparto_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -354,11 +354,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.DataPrevistaConsegna = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Data Prevista Consegna avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoDataPrevConsegna_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -379,11 +379,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.DataPrevistaFineProduzione = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Data Prevista Fine Produzione avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoDataPrevFineProd_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -404,11 +404,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.EarlyStart = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione di EarlyStart avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoEarlyStart_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -429,11 +429,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.EarlyFinish = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione di EarlyFinish avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoEarlyFinish_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -454,11 +454,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.LateStart = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione di LateStart avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoLateStart_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -479,11 +479,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.LateFinish = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione di LateStart avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoLateFinish_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -504,11 +504,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Quantita = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Quantità Prevista avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoQtaPrevista_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -529,11 +529,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.QuantitaProdotta = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Quantità Prodotta avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoQtaProdotta_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -554,11 +554,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Ritardo = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Ritardo avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoRitardo_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -579,11 +579,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.TempoDiLavoroTotale = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Tempo di Lavoro Totale avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoTempoLavTot_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -604,11 +604,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.LeadTime = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Lead Time avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoLeadTime_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -629,11 +629,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.TempoDiLavoroPrevisto = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Tempo di Lavoro Previsto avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoTempoLavPrevisto_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -654,11 +654,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.IndicatoreCompletamentoTasks = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'Indicatore di Completamento dei Tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoIndCompletamente_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -679,11 +679,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.IndicatoreCompletamentoTempoPrevisto = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'Indicatore di Completamento dei Tasks sul Tempo Previsto avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoIndCompletamentoTempo_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -704,11 +704,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.ViewGanttTasks = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del diagramma di GANTT di avanzamento dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateProdottoGANTT_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -729,11 +729,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.ViewElencoTasks = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'elenco dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksElenco_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -754,11 +754,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_ID = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'ID dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksID_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -779,11 +779,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_Nome = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Nome dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksNome_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -804,11 +804,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_Descrizione = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Descrizione dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksDescrizione_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -829,11 +829,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_Postazione = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Postazione dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksPostazione_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -854,11 +854,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_EarlyStart = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'EarlyStart dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksEarlyStart_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -879,11 +879,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_LateStart = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del LateStart dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksLateStart_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -904,11 +904,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_EarlyFinish = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dell'EarlyFinish dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksEarlyFinish_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -929,11 +929,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_LateFinish = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del LateFinish dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksLateFinish_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -954,11 +954,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_NOperatori = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Numero di Operatori dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksNOps_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -979,11 +979,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_TempoCiclo = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Tempo Ciclo dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksTempoCiclo_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -1004,11 +1004,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_TempoDiLavoroPrevisto = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Tempo di Lavoro Previsto dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksTempoLavPrevisto_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -1029,11 +1029,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_TempoDiLavoroEffettivo = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione del Tempo di Lavoro Effettivo dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksTempoLavEffettivo_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -1054,11 +1054,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_Status = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione dello Status dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksStatus_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -1079,11 +1079,11 @@ namespace KIS.Admin
             if (check)
             {
                 cfgCust.Task_QuantitaProdotta = newValue;
-                lbl1.Text = "Aggiornamento della visualizzazione della Quantità Prodotta dei tasks avvenuto correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblUpdateTasksQtaProdotta_OK").ToString();
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.<br/ >";
+                lbl1.Text = GetLocalResourceObject("lblInputDataError").ToString();
             }
         }
 
@@ -1094,12 +1094,12 @@ namespace KIS.Admin
             {
                 configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
                 bool ret = cfgCust.DeleteConfiguration();
-                lbl1.Text = ret ? "Configurazione resettata correttamente." : "E' avvenuto un errore durante la cancellazione della configurazione.";
+                lbl1.Text = ret ? GetLocalResourceObject("lblResetConfig_Ok").ToString() : GetLocalResourceObject("lblResetConfig_Ko").ToString();
                 loadDdlDefaultValues();
             }
             else
             {
-                lbl1.Text = "Cliente non trovato.";
+                lbl1.Text = GetLocalResourceObject("lblCustomerNotFound").ToString();
             }
         }
     }

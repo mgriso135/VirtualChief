@@ -40,7 +40,7 @@ namespace KIS.Admin
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire il logo.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKO").ToString();
                 FileUpload1.Visible = false;
                 btnUpload.Visible = false;
                 btnUpload.Enabled = false;
@@ -50,7 +50,7 @@ namespace KIS.Admin
 
         protected void Upload(object sender, EventArgs e)
         {
-            lbl1.Text = "Carico...<br/>";
+            lbl1.Text = GetLocalResourceObject("lblCarico").ToString(); 
             if (FileUpload1.HasFile)
             {
                 if (FileUpload1.PostedFile.ContentLength <= 1024*1024)
@@ -98,17 +98,17 @@ namespace KIS.Admin
                     }
                     else
                     {
-                        lbl1.Text = "Formato immagine non accettato.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblFormatoKO").ToString(); 
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Attenzione: l'immagine non può essere maggiore di 1024kb. Hai cercato di caricare una immagine di " + FileUpload1.PostedFile.ContentLength + " kb";
+                    lbl1.Text = GetLocalResourceObject("lblErrorDimensioni").ToString() + FileUpload1.PostedFile.ContentLength + " kb";
                 }
             }
             else
             {
-                lbl1.Text = "File non trovato.<br />";
+                lbl1.Text = GetLocalResourceObject("lblFileNotFound").ToString();
             }
         }
     }

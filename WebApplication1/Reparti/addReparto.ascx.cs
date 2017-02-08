@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.Reparti
 {
     public partial class addReparto : System.Web.UI.UserControl

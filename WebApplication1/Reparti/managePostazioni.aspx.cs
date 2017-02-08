@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 using KIS;
-
+using KIS.App_Code;
 
 namespace KIS.Reparti
 {
@@ -55,8 +55,16 @@ namespace KIS.Reparti
                         Image1.Visible = false;
                     }
 
-                    if (procID != -1 && varID != -1 && repID != -1 && !Page.IsPostBack)
+                    
+
+                    if (procID != -1 && varID != -1 && repID != -1)
                     {
+                        caricodilavoro.var = varID;
+                        caricodilavoro.procID = procID;
+                        caricodilavoro.repID = repID;
+
+                        if(!Page.IsPostBack)
+                        { 
 
                         Reparto rep = new Reparto(repID);
                         ProcessoVariante proc = new ProcessoVariante(new processo(procID), new variante(varID));
@@ -68,9 +76,7 @@ namespace KIS.Reparti
 
                             rptTasksPostazioni.DataSource = proc.process.subProcessi;
                             rptTasksPostazioni.DataBind();
-                            caricodilavoro.var = varID;
-                            caricodilavoro.procID = procID;
-                            caricodilavoro.repID = repID;
+                        }
                         }
                     }
                 }

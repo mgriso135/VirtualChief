@@ -9,6 +9,7 @@ using System.Data;
 using Dati;
 using MyUserControls;
 using KIS;
+using KIS.App_Code;
 
 namespace KIS.Processi
 {

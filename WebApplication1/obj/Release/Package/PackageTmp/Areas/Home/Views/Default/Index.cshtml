@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+@{ 
+    var sUsrName = "";
+    var sUsrLastLogin = "";
+    if(Session["user"]!=null)
+    {
+        var usr = (KIS.App_Code.User)Session["user"];
+        sUsrName = "Benvenuto " + usr.name + " " + usr.cognome;
+        sUsrLastLogin = "Last login at " + usr.lastLogin.ToString("dd/MM/yyyy HH:mm:ss");
+    }
+}
+
+@sUsrName<br/>@sUsrLastLogin    

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using KIS.App_Code;
 
 namespace KIS.Commesse
 {
@@ -18,7 +19,7 @@ namespace KIS.Commesse
         public static Articolo art;
         public static Reparto rp;
         public static TimeSpan somma;
-        public static List<KIS.caricoDiLavoro> carichi;
+        public static List<caricoDiLavoro> carichi;
         public static double[] orePostazione;
 
         protected void Page_Load(object sender, EventArgs e)
@@ -612,10 +613,6 @@ namespace KIS.Commesse
                 Chart1.Titles.Add(new System.Web.UI.DataVisualization.Charting.Title(rp.name));
 
                 // IL BLOCCONE DI CODICE ERA QUI!
-                
-
-                
-
                 if (rbPostazioni.SelectedValue == "0")
                 {
                     Chart1.Series.Clear();
@@ -633,6 +630,7 @@ namespace KIS.Commesse
 
                     foreach (var cd in arts)
                     {
+       
                         Chart1.Series.Add(cd.articolo.ToString());
                         Chart1.Series[cd.articolo.ToString()].ChartType = System.Web.UI.DataVisualization.Charting.SeriesChartType.StackedColumn;
                         Chart1.Series[cd.articolo.ToString()].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Double;
@@ -964,7 +962,7 @@ namespace KIS.Commesse
                     dvErr.Visible = true;
                     lblErr.Visible = true;
                     dvInfo.Visible = false;
-                    lblErr.Text = "Errore generico. Non sono stati pianificati tutti i tasks.";
+                    lblErr.Text = "Errore generico. Non sono stati pianificati tutti i tasks.<br />Verifica l'impostazione di Reparto: \"Inserimento tasks in produzione\".";
                 }
                 else if (retSim == 4)
                 {

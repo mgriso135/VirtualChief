@@ -40,6 +40,15 @@ namespace KIS.Personal {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblChangePassword;
         
         /// <summary>
+        /// Controllo lblOldPassword.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblOldPassword;
+        
+        /// <summary>
         /// Controllo txtOldPassword.
         /// </summary>
         /// <remarks>
@@ -58,6 +67,15 @@ namespace KIS.Personal {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valOldPassword;
         
         /// <summary>
+        /// Controllo lblNewPassword.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewPassword;
+        
+        /// <summary>
         /// Controllo txtNewPassword1.
         /// </summary>
         /// <remarks>
@@ -74,6 +92,15 @@ namespace KIS.Personal {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valNewPassword1;
+        
+        /// <summary>
+        /// Controllo lblRipetiNewPassword.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRipetiNewPassword;
         
         /// <summary>
         /// Controllo txtNewPassword2.

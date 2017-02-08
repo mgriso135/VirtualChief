@@ -2,6 +2,6 @@
 <%@ Register TagPrefix="wizConfig" TagName="reparti" Src="~/Configuration/wizConfigReparti_Main.ascx" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <wizConfig:reparti runat="server" id="wizReparti" />
 </asp:Content>

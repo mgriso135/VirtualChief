@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.Produzione
 {
     public partial class processoWorkLoad : System.Web.UI.UserControl
@@ -55,7 +55,7 @@ namespace KIS.Produzione
             //!Page.IsPostBack && 
             if (prc.process != null && prc.variant != null)
             {
-                if (rep.PostazioniTask.Count > 0)
+                if (rep!=null && rep.id!=-1 && rep.PostazioniTask.Count > 0)
                 {
                     // Looks for Postazioni!
                     List<int> posts = new List<int>();

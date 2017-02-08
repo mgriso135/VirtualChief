@@ -6,7 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebApplication1;
 using KIS;
-
+using iTextSharp.text;
+using KIS.App_Code;
 namespace KIS.Admin
 {
     public partial class listUsers : System.Web.UI.UserControl
@@ -31,23 +32,28 @@ namespace KIS.Admin
                 }
             }
 
-            UserList lst = new UserList();
+            if (checkUser == true)
+            {
+                if(!Page.IsPostBack && !Page.IsCallback)
+                { 
+                UserList lst = new UserList();
             if (lst.numUsers > 0)
             {
-                if (checkUser == true)
-                {
+                
                     rptUsers.DataSource = lst.elencoUtenti;
                     rptUsers.DataBind();
-                }
-                else
-                {
-                    lblLstUsers.Text = "Non hai il permesso di visualizzare l'elenco degli utenti.<br/>";
-                }
+                
             }
             else
             {
                 rptUsers.Visible = false;
                 lblLstUsers.Text = "No user defined yet.<br/>";
+            }
+            }
+            }
+            else
+            {
+                lblLstUsers.Text = "Non hai il permesso di visualizzare l'elenco degli utenti.<br/>";
             }
         }
 
@@ -78,10 +84,58 @@ namespace KIS.Admin
             }
         }
 
-        protected void rptUsers_ItemCommand(object source, RepeaterCommandEventArgs e)
+
+        protected void rptUsers_ItemCommand1(object source, RepeaterCommandEventArgs e)
         {
+            String usrID = e.CommandArgument.ToString();
 
+            if(e.CommandName== "printBarcode")
+            { 
+            User usr = new User(usrID);
+            String matricola = usr.ID.ToString();
+            System.Drawing.Image code = GenCode128.Code128Rendering.MakeBarcodeImage("U" + matricola, 2, true);
+            System.Drawing.Bitmap resized = new System.Drawing.Bitmap(code, 200, 200 * (code.Height) / code.Width);
+            String savePath = Server.MapPath(@"~\Data\Users\");
+            String FileName = "cart" + usr.ID.ToString() + ".jpg";
+            try
+            {
+                code.Save(savePath + FileName);
+            }
+            catch (Exception ex)
+            {
+                    lblLstUsers.Text = "Could not save image.<br/>" + savePath + "<br/>" + ex.Message;
+            }
+
+            // Ora creo il pdf!
+            Document cartPDF = new Document(PageSize.ID_1, 10, 10, 5, 5);
+            String FileNamePDF = "cart" + usr.ID.ToString() + ".pdf";
+            // Controllo che il pdf non esista, e se esiste lo cancello.
+            if (System.IO.File.Exists(savePath + FileNamePDF))
+            {
+                System.IO.File.Delete(savePath + FileNamePDF);
+            }
+
+            System.IO.FileStream output = new System.IO.FileStream(savePath + FileNamePDF, System.IO.FileMode.Create);
+            iTextSharp.text.pdf.PdfWriter writer = iTextSharp.text.pdf.PdfWriter.GetInstance(cartPDF, output);
+            cartPDF.Open();
+            iTextSharp.text.Paragraph nome = new iTextSharp.text.Paragraph(usr.name + " " + usr.cognome);
+            cartPDF.Add(nome);
+            iTextSharp.text.Paragraph matr = new iTextSharp.text.Paragraph("Matricola: " + matricola + "; User:" + usr.username);
+            cartPDF.Add(matr);
+            iTextSharp.text.Image bCode = iTextSharp.text.Image.GetInstance(savePath + FileName);
+            bCode.SetAbsolutePosition(0, 40);
+            cartPDF.Add(bCode);
+            cartPDF.Close();
+            Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Users/" + FileNamePDF + "', '_newtab')", true);
+
+            try
+            {
+                System.IO.File.Delete(savePath + FileName);
+            }
+            catch
+            {
+            }
+            }
         }
-
     }
 }

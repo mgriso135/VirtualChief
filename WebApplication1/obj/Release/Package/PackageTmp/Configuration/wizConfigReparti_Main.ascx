@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="wizConfigReparti_Main.ascx.cs" Inherits="KIS.Configuration.wizConfigReparti_Main1" %>
-<h3>Configurazione reparti</h3>
+
+<h3>Aggiungi un reparto</h3>
 <asp:Label runat="server" ID="lbl1"  CssClass="text-info"/>
 <table runat="server" id="frmAddReparto" class="table">
     <tr>

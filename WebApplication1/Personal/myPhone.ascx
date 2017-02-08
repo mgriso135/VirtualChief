@@ -4,9 +4,9 @@
 <asp:ImageButton Height="30" runat="server" ID="imgShowFormAddPhone" ImageUrl="~/img/iconAdd2.png" OnClick="imgShowFormAddPhone_Click" />Aggiungi un numero di telefono
 <table runat="server" id="frmAddPhone" class="table table-bordered table-hover table-condensed">
     <tr>
-        <td>Numero di telefono</td>
-        <td>Ambito (es: casa, ufficio)</td>
-        <td>Per segnalazione allarmi</td>
+        <td><asp:label runat="server" id="lblPhoneNumber" meta:resourcekey="lblPhoneNumber" /></td>
+        <td><asp:label runat="server" id="lblAmbito" meta:resourcekey="lblAmbito" /></td>
+        <td><asp:label runat="server" id="lblForAlarm" meta:resourcekey="lblForAlarm" /></td>
     </tr>
     <tr>
         <td><asp:TextBox runat="server" ID="txtPhone" ValidationGroup="addphone" />
@@ -33,9 +33,9 @@
                     <thead>
                     <tr>
                         <td></td>
-                        <td>Numero di telefono</td>
-                        <td>Ambito</td>
-                        <td>Per allarmi</td>
+                        <td><asp:label runat="server" id="lblPhoneNumber2" meta:resourcekey="lblPhoneNumber" /></td>
+                        <td><asp:label runat="server" id="lblAmbito2" meta:resourcekey="lblAmbito" /></td>
+                        <td><asp:label runat="server" id="lblForAlarm2" meta:resourcekey="lblForAlarm" /></td>
                     </tr>
                         </thead>
                     <tbody>

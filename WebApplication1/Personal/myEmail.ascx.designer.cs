@@ -40,6 +40,33 @@ namespace KIS.Personal {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddEmail;
         
         /// <summary>
+        /// Controllo lblEmail.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEmail;
+        
+        /// <summary>
+        /// Controllo lblAmbito.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAmbito;
+        
+        /// <summary>
+        /// Controllo lblAlarmBox.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAlarmBox;
+        
+        /// <summary>
         /// Controllo txtEmail.
         /// </summary>
         /// <remarks>

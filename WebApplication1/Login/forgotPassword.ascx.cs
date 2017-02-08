@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Net;
 using System.Net.Mail;
-
+using KIS.App_Code;
 namespace KIS.Login
 {
     public partial class forgotPassword : System.Web.UI.UserControl

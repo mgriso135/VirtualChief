@@ -5,13 +5,14 @@
         <table class="table table-striped table-hover table-condensed">
             <thead>
             <tr>
-                <td></td>
-                <td>ID</td>
-                <td>Data inserimento</td>
-                <td>Cliente</td>
-                <td>Note</td>
-                <td>Status</td>
-                <td></td>
+                <th></th>
+                <th>ID</th>
+                <th>Data inserimento</th>
+                <th>Cliente</th>
+                <th>Ragione sociale cliente</th>
+                <th>Note</th>
+                <th>Status</th>
+                <th></th>
             </tr>
                 </thead>
             <tbody>
@@ -30,6 +31,7 @@
             <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
             <td><%#((DateTime)DataBinder.Eval(Container.DataItem, "DataInserimento")) %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>
+            <td><%#DataBinder.Eval(Container.DataItem, "RagioneSocialeCliente") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Note") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Status") %></td>
             <td>

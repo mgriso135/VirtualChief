@@ -10,6 +10,11 @@
         void (window.open("/Processi/pertManagePrecedenze2.aspx?id=" + taskID + "&revTaskID=" + revTask + "&variante=" + variante, "new_window", "height=800,width=800"));
         return false;
     }
+
+    pausaTasks = function (prec, revPrec, succ, revSucc, variante) {
+        void (window.open("/Commesse/wzEditPauseTasks.aspx?prec="+prec+"&revPrec="+revPrec+"&succ="+succ+"&revSucc="+revSucc+"&variante=" + variante, "new_window", "height=800,width=800"));
+        return false;
+    }
 </script>
 
 <asp:UpdatePanel runat="server" ID="upd1">
@@ -36,7 +41,7 @@
                         <th></th>
                         <th>Nome task</th>
                         <th>Descrizione</th>
-                        <th>Task precedenti</th>
+                        <th>Task precedenti (pausa)</th>
                         <th>Tempi ciclo</th>
                         <th></th>
                     </tr>

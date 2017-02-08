@@ -9,7 +9,7 @@ using System.Data;
 using System.Collections;
 using Dati;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS
 {
     public partial class MacroProcessi : System.Web.UI.Page

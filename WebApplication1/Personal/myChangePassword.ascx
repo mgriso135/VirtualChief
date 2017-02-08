@@ -4,28 +4,28 @@
 <asp:Label runat="server" ID="lbl1" />
 <table runat="server" id="tblChangePassword">
     <tr>
-        <td>Vecchia password:</td>
+        <td><asp:label runat="server" id="lblOldPassword" meta:resourcekey="lblOldPassword" /></td>
         <td><asp:TextBox runat="server" ID="txtOldPassword" TextMode="Password" />
             <asp:RequiredFieldValidator runat="server" ID="valOldPassword"
-                ErrorMessage="* Campo obbligatorio" ForeColor="Red" ControlToValidate="txtOldPassword"
+                ErrorMessage="<%$resources:lblCampoObbligatorio %>" ForeColor="Red" ControlToValidate="txtOldPassword"
                 ValidationGroup="changePassword"
                 />
         </td>
     </tr>
     <tr>
-        <td>Nuova password:</td>
+        <td><asp:label runat="server" id="lblNewPassword" meta:resourcekey="lblNewPassword" /></td>
         <td><asp:TextBox runat="server" ID="txtNewPassword1" TextMode="Password" />
             <asp:RequiredFieldValidator runat="server" ID="valNewPassword1"
-                ErrorMessage="* Campo obbligatorio" ForeColor="Red" ControlToValidate="txtNewPassword1"
+                ErrorMessage="<%$resources:lblCampoObbligatorio %>" ForeColor="Red" ControlToValidate="txtNewPassword1"
                 ValidationGroup="changePassword"
                 />
         </td>
     </tr>
     <tr>
-        <td>Ripeti la nuova password:</td>
+        <td><asp:label runat="server" id="lblRipetiNewPassword" meta:resourcekey="lblRipetiNewPassword" /></td>
         <td><asp:Textbox runat="server" ID="txtNewPassword2" TextMode="Password" />
             <asp:RequiredFieldValidator runat="server" ID="valNewPassword2"
-                ErrorMessage="* Campo obbligatorio" ForeColor="Red" ControlToValidate="txtNewPassword2"
+                ErrorMessage="<%$resources:lblCampoObbligatorio %>" ForeColor="Red" ControlToValidate="txtNewPassword2"
                 ValidationGroup="changePassword"
                 />
             <asp:CompareValidator id="valComparePassword" runat="server"
@@ -33,7 +33,7 @@
         ControlToCompare="txtNewPassword2"
         Type="String"
         Operator="Equal"
-        ErrorMessage="(*) Errore. I due campi NUOVA PASSWORD devono contenere il medesimo valore!"
+        ErrorMessage="<%$ resources:lblValidationError %>"
         ForeColor="Red" />
         </td>
     </tr>

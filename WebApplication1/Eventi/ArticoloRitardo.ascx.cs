@@ -4,7 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using KIS.eventi;
+//using KIS.eventi;
+using KIS.App_Code;
 using KIS.Commesse;
 
 namespace KIS.Eventi

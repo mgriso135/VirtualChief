@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Analysis
 {
     public partial class DetailAnalysisTipoProdotto : System.Web.UI.Page

@@ -8,7 +8,7 @@
 
 <asp:Repeater runat="server" ID="rptNews" DataSourceID="XmlDataSource1">
     <HeaderTemplate>
-<p class="lead">Cosa c'è di nuovo</p>
+<asp:label class="lead" runat="server" id="lblTitle"  meta:resourcekey="lblTitle"></asp:label>
         <div style="overflow: scroll; height: 400px">
     </HeaderTemplate>
     <ItemTemplate>

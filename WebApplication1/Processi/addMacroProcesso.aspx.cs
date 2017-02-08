@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using Dati;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.Processi
 {
     public partial class addMacroProcesso : System.Web.UI.Page

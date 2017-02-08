@@ -27,6 +27,8 @@
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
     <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,13 +51,21 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxControlToolkit, Version=15.1.4.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AjaxControlToolkit.15.1.4.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+    <Reference Include="AjaxControlToolkit, Version=16.1.1.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AjaxControlToolkit.16.1.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="GenCode128, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -83,9 +93,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\..\Program Files (x86)\MySQL\MySQL Connector Net 5.0.9\Binaries\.NET 2.0\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.8.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -120,7 +130,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc">
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
@@ -134,10 +144,6 @@
     </Reference>
     <Reference Include="System.Web.Routing">
       <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -448,38 +454,12 @@
     <Compile Include="Andon\AndonRepartoViewFields.ascx.designer.cs">
       <DependentUpon>AndonRepartoViewFields.ascx</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\iTextSharpEventHandler.cs" />
-    <Compile Include="App_Code\KanbanBox.cs" />
+    <Compile Include="App_Sources\iTextSharpEventHandler.cs" />
+    <Compile Include="App_Sources\KanbanBox.cs" />
     <Compile Include="App_Start\Routeconfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
-    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
-    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
-    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
-    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\CollectionModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ComplexTypeModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\DictionaryModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumTypeModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\KeyValuePairModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
-    <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
-    <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\InvalidSample.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\ObjectGenerator.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
-    <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
-    <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
+    <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
     <Compile Include="Commesse\wzEditPauseTasks.ascx.cs">
       <DependentUpon>wzEditPauseTasks.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -550,6 +530,13 @@
     <Compile Include="Configuration\wizConfigAdminUser.aspx.designer.cs">
       <DependentUpon>wizConfigAdminUser.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\wizConfigAndon.aspx.cs">
+      <DependentUpon>wizConfigAndon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigAndon.aspx.designer.cs">
+      <DependentUpon>wizConfigAndon.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Configuration\wizConfigLogo.ascx.cs">
       <DependentUpon>wizConfigLogo.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -606,6 +593,20 @@
     <Compile Include="Configuration\WizConfigTimezone.aspx.designer.cs">
       <DependentUpon>WizConfigTimezone.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Configuration\wizConfigUsers_Main.aspx.cs">
+      <DependentUpon>wizConfigUsers_Main.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizConfigUsers_Main.aspx.designer.cs">
+      <DependentUpon>wizConfigUsers_Main.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Configuration\wizCustomerReport.aspx.cs">
+      <DependentUpon>wizCustomerReport.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Configuration\wizCustomerReport.aspx.designer.cs">
+      <DependentUpon>wizCustomerReport.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Controllers\customers.cs" />
     <Compile Include="Controllers\CustomersModel.cs" />
     <Compile Include="Controllers\CustomersTest.aspx.cs">
@@ -617,6 +618,7 @@
     </Compile>
     <Compile Include="Controllers\products.cs" />
     <Compile Include="Controllers\TestClass.cs" />
+    <Compile Include="Controllers\UtentiController.cs" />
     <Compile Include="HomePage\UserHomeBoxes.ascx.cs">
       <DependentUpon>UserHomeBoxes.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -645,6 +647,13 @@
     </Compile>
     <Compile Include="Personal\myChangePassword.ascx.designer.cs">
       <DependentUpon>myChangePassword.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="Personal\myLanguage.ascx.cs">
+      <DependentUpon>myLanguage.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Personal\myLanguage.ascx.designer.cs">
+      <DependentUpon>myLanguage.ascx</DependentUpon>
     </Compile>
     <Compile Include="Postazioni\risorsePostazione.ascx.cs">
       <DependentUpon>risorsePostazione.ascx</DependentUpon>
@@ -859,6 +868,7 @@
     <Content Include="Admin\manageReports.aspx" />
     <Content Include="Analysis\analysis.aspx" />
     <Content Include="Analysis\AnalysisHome.ascx" />
+    <Content Include="Analysis\AvanzamentoProdotto_model.xml" />
     <Content Include="Analysis\CostificazioneProdottiTerminatiRicerca.ascx" />
     <Content Include="Analysis\CostificazioneProdottiTerminatiRicerca.aspx" />
     <Content Include="Analysis\CustomerPareto.ascx" />
@@ -952,7 +962,7 @@
     <Compile Include="Andon\configMaxViewDaysAndonReparto.ascx.designer.cs">
       <DependentUpon>configMaxViewDaysAndonReparto.ascx</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\andon.cs" />
+    <Compile Include="App_Sources\andon.cs" />
     <Compile Include="Andon\configAndonCompleto.aspx.cs">
       <DependentUpon>configAndonCompleto.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -960,11 +970,11 @@
     <Compile Include="Andon\configAndonCompleto.aspx.designer.cs">
       <DependentUpon>configAndonCompleto.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\clienti.cs" />
-    <Compile Include="App_Code\commesse.cs" />
-    <Compile Include="App_Code\configurazione.cs" />
-    <Compile Include="App_Code\eventi.cs" />
-    <Compile Include="App_Code\menu.cs" />
+    <Compile Include="App_Sources\clienti.cs" />
+    <Compile Include="App_Sources\commesse.cs" />
+    <Compile Include="App_Sources\configurazione.cs" />
+    <Compile Include="App_Sources\eventi.cs" />
+    <Compile Include="App_Sources\menu.cs" />
     <Compile Include="Clienti\addCliente.ascx.cs">
       <DependentUpon>addCliente.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -1911,8 +1921,8 @@
     <Compile Include="Users\PermessiGruppi.aspx.designer.cs">
       <DependentUpon>PermessiGruppi.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\kpi.cs" />
-    <Compile Include="App_Code\data.cs" />
+    <Compile Include="App_Sources\kpi.cs" />
+    <Compile Include="App_Sources\data.cs" />
     <Content Include="Admin\manageMenu.aspx" />
     <Content Include="Admin\menuAddMainVoce.ascx" />
     <Content Include="Admin\menuAddVoceFiglia.ascx" />
@@ -1924,7 +1934,6 @@
     <Content Include="Admin\menuShowVoce.aspx" />
     <Content Include="Andon\configFormatoUsername.ascx" />
     <Content Include="Andon\configMaxViewDaysAndonReparto.ascx" />
-    <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Clienti\addCliente.ascx" />
     <Content Include="Clienti\AddCliente.aspx" />
     <Content Include="Clienti\addContattoCliente.ascx" />
@@ -1973,6 +1982,7 @@
     <Content Include="Configuration\MainWizConfig.aspx" />
     <Content Include="Configuration\wizConfigAdminUser.ascx" />
     <Content Include="Configuration\wizConfigAdminUser.aspx" />
+    <Content Include="Configuration\wizConfigAndon.aspx" />
     <Content Include="Configuration\wizConfigLogo.ascx" />
     <Content Include="Configuration\wizConfigLogo.aspx" />
     <Content Include="Configuration\wizConfigPostazioni_Main.aspx" />
@@ -1981,10 +1991,14 @@
     <Content Include="Configuration\wizConfigReparti_Main.aspx" />
     <Content Include="Configuration\WizConfigTimezone.ascx" />
     <Content Include="Configuration\WizConfigTimezone.aspx" />
+    <Content Include="Configuration\wizConfigUsers_Main.aspx" />
+    <Content Include="Configuration\wizCustomerReport.aspx" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Site.css" />
+    <Content Include="Content\Site_ORIGINAL.css" />
     <Content Include="Controllers\CustomersTest.aspx" />
     <Content Include="Eventi\ArticoloRitardo.ascx" />
     <Content Include="Eventi\ArticoloWarning.ascx" />
@@ -2128,6 +2142,7 @@
     <Content Include="Personal\my.aspx" />
     <Content Include="Personal\myChangePassword.ascx" />
     <Content Include="Personal\myEmail.ascx" />
+    <Content Include="Personal\myLanguage.ascx" />
     <Content Include="Personal\myListEventoRitardo.ascx" />
     <Content Include="Personal\myListEventoWarning.ascx" />
     <Content Include="Personal\myPhone.ascx" />
@@ -2168,32 +2183,22 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Areas\HelpPage\Views\Web.config" />
-    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Samples.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
-    <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
     <Content Include="Data\Reports\ReportTestCustomer.pdf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Areas\Home\Views\web.config" />
+    <Content Include="Areas\Home\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Home\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Home\Views\Default\Index.cshtml" />
+    <Content Include="Areas\Home\Views\Shared\_LoginBox.cshtml" />
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
-    <Content Include="..\..\..\..\..\..\Google Drive\Lavori\Kaizen People\Kaizen Indicator System\Fascicolo tecnico\1-Requisiti\Stories\088\AvanzamentoProdotto_model.xml">
-      <Link>Analysis\AvanzamentoProdotto_model.xml</Link>
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Reparti\configRepartoTimezone.ascx" />
     <Content Include="Reparti\risorseTurno.ascx" />
     <Content Include="Reparti\risorseTurno.aspx" />
@@ -2202,8 +2207,20 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.4.js" />
     <Content Include="Scripts\jquery-2.1.4.min.js" />
-    <Content Include="Scripts\knockout-3.4.0.debug.js" />
-    <Content Include="Scripts\knockout-3.4.0.js" />
+    <None Include="Scripts\jquery-3.1.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.1.1.js" />
+    <Content Include="Scripts\jquery-3.1.1.min.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.js" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.4.1.debug.js" />
+    <Content Include="Scripts\knockout-3.4.1.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="whatsnew.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -3029,6 +3046,11 @@
     <Content Include="Styles\assets\js\README.md" />
     <Content Include="Styles\assets\KIS_User_Manual_0-0-1.pdf" />
     <Content Include="Scripts\jquery-2.1.4.min.map" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Utenti\Index.cshtml" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">
@@ -3038,13 +3060,13 @@
     <Compile Include="About.aspx.designer.cs">
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
-    <Compile Include="App_Code\permessi.cs" />
-    <Compile Include="App_Code\postazioni.cs" />
-    <Compile Include="App_Code\processi.cs" />
-    <Compile Include="App_Code\produzione.cs" />
-    <Compile Include="App_Code\relazioni.cs" />
-    <Compile Include="App_Code\reparti.cs" />
-    <Compile Include="App_Code\users.cs" />
+    <Compile Include="App_Sources\permessi.cs" />
+    <Compile Include="App_Sources\postazioni.cs" />
+    <Compile Include="App_Sources\processi.cs" />
+    <Compile Include="App_Sources\produzione.cs" />
+    <Compile Include="App_Sources\relazioni.cs" />
+    <Compile Include="App_Sources\reparti.cs" />
+    <Compile Include="App_Sources\users.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -3432,6 +3454,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="App_GlobalResources\" />
+    <Folder Include="Areas\Home\Models\" />
     <Folder Include="Data\Logo\" />
     <Folder Include="Data\Postazioni\" />
     <Folder Include="Data\Produzione\" />
@@ -3446,6 +3470,38 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_LocalResources\Default.aspx.resx" />
+    <Content Include="App_LocalResources\Default.aspx.it.resx" />
+    <Content Include="App_LocalResources\whatsnew.ascx.resx" />
+    <Content Include="App_LocalResources\whatsnew.ascx.en.resx" />
+    <Content Include="App_LocalResources\whatsnew.ascx.es.resx" />
+    <Content Include="App_LocalResources\whatsnew.ascx.it.resx" />
+    <Content Include="App_LocalResources\Default.aspx.es.resx" />
+    <Content Include="Personal\App_LocalResources\my.aspx.resx" />
+    <Content Include="Personal\App_LocalResources\my.aspx.es.resx" />
+    <Content Include="Personal\App_LocalResources\my.aspx.it.resx" />
+    <Content Include="Personal\App_LocalResources\myLanguage.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\myLanguage.ascx.it.resx" />
+    <Content Include="Personal\App_LocalResources\myLanguage.ascx.en.resx" />
+    <Content Include="Personal\App_LocalResources\myLanguage.ascx.es.resx" />
+    <Content Include="Admin\App_LocalResources\admin.aspx.resx" />
+    <Content Include="Admin\App_LocalResources\admin.aspx.it.resx" />
+    <Content Include="Admin\App_LocalResources\admin.aspx.en.resx" />
+    <Content Include="Admin\App_LocalResources\admin.aspx.es.resx" />
+    <Content Include="Personal\App_LocalResources\baseInfo.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\listGruppiUtente.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\myChangePassword.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\myEmail.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\myListEventoRitardo.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\myListEventoWarning.ascx.resx" />
+    <Content Include="Personal\App_LocalResources\myPhone.ascx.resx" />
+    <Content Include="Admin\App_LocalResources\configLogo.ascx.resx" />
+    <Content Include="Admin\App_LocalResources\configOrderStatusBase.ascx.resx" />
+    <Content Include="Admin\App_LocalResources\configOrderStatusBase.aspx.resx" />
+    <Content Include="Admin\App_LocalResources\configOrderStatusBase.aspx.it.resx" />
+    <Content Include="Admin\App_LocalResources\configOrderStatusBase.aspx.es.resx" />
+    <Content Include="Admin\App_LocalResources\configOrderStatusBase.aspx.en.resx" />
+    <Content Include="Admin\App_LocalResources\configOrderStatusCustomer.ascx.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -3477,10 +3533,12 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
-  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
-    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
-    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

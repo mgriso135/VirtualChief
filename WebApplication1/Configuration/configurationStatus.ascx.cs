@@ -68,6 +68,12 @@ namespace KIS.Configuration
                 UtentiOK.Visible = false;
                 UtentiKO.Visible = true;
             }
+
+            andonOK.Visible = kisCfg.WizAndonCompleted;
+            andonKO.Visible = !kisCfg.WizAndonCompleted;
+
+            reportOK.Visible = kisCfg.WizCustomerReportCompleted;
+            reportKO.Visible = !kisCfg.WizCustomerReportCompleted;
         }
     }
 }

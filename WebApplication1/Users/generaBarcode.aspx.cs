@@ -6,7 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using iTextSharp;
 using iTextSharp.text;
-
+using KIS.App_Code;
 namespace KIS.Users
 {
     public partial class generaBarcode : System.Web.UI.Page
@@ -95,6 +95,18 @@ namespace KIS.Users
                     }
 
                     lbl1.Text = "<a href=\"manageUsers.aspx\">Torna indietro</a>";
+
+                    /*String redUrl = "~/";
+                    if (!String.IsNullOrEmpty(Request.QueryString["red"]) && (Request.QueryString["red"]).Length > 0)
+                    {
+                        redUrl = Request.QueryString["red"] + ".aspx";
+                    }
+                    else
+                    {
+                        redUrl = "/Users/manageUsers.aspx";
+                    }
+                    Response.Redirect(redUrl);*/
+
                 }
                 else
                 {

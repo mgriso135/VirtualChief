@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Kaizen Indicator System</title>
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/modernizr-2.6.2.js"></script>
+
+    <script type="text/javascript">
+    window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website.<br/>Navigando sul nostro sito accetti la privacy policy. Il sito utilizza i cookie di terze parti per profilare gli utenti.", "dismiss": "Chiudi e accetta", "learnMore": "More info", "link": null, "theme": "light-bottom" };
+    </script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    <!-- End Cookie Consent plugin -->
+    <!-- Never expiring session -->
+    <script type="text/javascript">
+        window.setInterval("renewSession();", 60000);
+        function renewSession()
+        {
+            document.getElementById("renewSession").src = "/renewSes.aspx?par=" + Math.random();
+        }
+    </script>
+    <!-- End Never expiring sessione -->
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        
+            <div class="container header">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                </div>
+                <asp:Image runat="server" ID="kisLogo" CssClass="logo" />
+                @Html.ActionLink("Kaizen Indicator System", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <div class="pull-right text-right">
+
+                    <!-- Login Box -->
+                    @Html.Partial("_LoginBox")
+
+                </div>
+
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>A</li>
+                        <li>B</li>
+                        <li>C</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p class="muted credit">
+                <small>
+                    &copy; @DateTime.Now.Year
+                    <a href="#">Matteo Griso</a> - tutti i diritti riservati | informazioni:
+                    <a href="mailto:mgrisoster@gmail.com">mgrisoster@gmail.com</a>
+                </small>
+            </p>
+        </footer>
+    </div>
+
+    <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+</body>
+</html>

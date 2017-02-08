@@ -9,7 +9,7 @@
         <asp:Label runat="server" ID="lblData" />
         <asp:Repeater runat="server" ID="rptArticoliAvviati" OnItemDataBound="rptArticoliAvviati_ItemDataBound">
             <HeaderTemplate>
-                <table>
+                <table style="text-align:center;">
                     <thead>
                        <tr runat="server" id="trHead_Prod">
                     <th></th>

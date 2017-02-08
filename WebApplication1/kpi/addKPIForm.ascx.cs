@@ -8,7 +8,7 @@ using MySql.Data.MySqlClient;
 using System.Data;
 using Dati;
 using KIS;
-
+using KIS.App_Code;
 namespace KIS.kpi
 {
     public partial class addKPIForm : System.Web.UI.UserControl

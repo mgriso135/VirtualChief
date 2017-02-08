@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-
+using KIS.App_Code;
 namespace KIS.Admin
 {
     public partial class MenuGruppiList : System.Web.UI.UserControl
@@ -56,7 +56,7 @@ namespace KIS.Admin
 
             if (voceID != -1 && idGruppo!=-1)
             {
-                Menu.VoceMenu vm = new Menu.VoceMenu(voceID);
+                VoceMenu vm = new VoceMenu(voceID);
                 Group grp = new Group(idGruppo);
                 if (e.CommandName == "MoveUp" || e.CommandName == "MoveDown")
                 {

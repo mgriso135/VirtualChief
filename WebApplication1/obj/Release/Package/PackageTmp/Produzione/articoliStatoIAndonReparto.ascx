@@ -7,8 +7,8 @@
         <asp:Label runat="server" ID="lblData" />
         <asp:Repeater runat="server" ID="rptArticoliAvviati" OnItemDataBound="rptArticoliAvviati_ItemDataBound">
             <HeaderTemplate>
-                <table style="width: 100%;">
-                       <tr style="font-size:18px; font-family:Calibri; text-align:left; " runat="server" id="trHead_Prod">
+                <table style="width: 100%; text-align:center;">
+                       <tr style="font-size:18px; font-family:Calibri; text-align:center; " runat="server" id="trHead_Prod">
                     <th></th>
                 </tr>
                     
@@ -16,7 +16,7 @@
             <ItemTemplate>
                 <tr runat="server" id="tr1" style="font-size:20px; font-family:Calibri; border-bottom: 1px dashed blue; border-top: 1px dashed blue;border-left:1px dashed blue; border-right:1px dashed blue; font-weight:bold;">
                     <td><asp:HyperLink runat="server" ID="lnkStatoArticolo" NavigateUrl='<%# "statoAvanzamentoArticolo.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno=" + DataBinder.Eval(Container.DataItem, "Year") %>' Target="_blank">
-                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Height="30" ToolTip="Visualizza lo stato di avanzamento dell'articolo" />
+                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Width="40" ToolTip="Visualizza lo stato di avanzamento dell'articolo" />
                         </asp:HyperLink>
                     <asp:HiddenField runat="server" ID="lblIDArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
                     <asp:HiddenField runat="server" ID="lblAnnoArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "Year") %>' /></td>

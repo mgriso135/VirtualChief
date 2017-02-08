@@ -22,6 +22,42 @@ namespace KIS.Admin {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblMenuAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMenuAdmin;
+        
+        /// <summary>
+        /// Controllo lblMenuConfigReports.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMenuConfigReports;
+        
+        /// <summary>
+        /// Controllo lblMenuReportStatoProdotti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMenuReportStatoProdotti;
+        
+        /// <summary>
+        /// Controllo lblTitoloConfigReportAvanzamentoProdotti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitoloConfigReportAvanzamentoProdotti;
+        
+        /// <summary>
         /// Controllo accordion1.
         /// </summary>
         /// <remarks>
@@ -29,6 +65,15 @@ namespace KIS.Admin {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
+        
+        /// <summary>
+        /// Controllo lblConfigGenerica.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblConfigGenerica;
         
         /// <summary>
         /// Controllo upd1.
@@ -47,6 +92,15 @@ namespace KIS.Admin {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Admin.configOrderStatusBase1 frmCfgReportOrderStatusBase;
+        
+        /// <summary>
+        /// Controllo lblConfigSpecificaCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblConfigSpecificaCliente;
         
         /// <summary>
         /// Controllo UpdatePanel1.

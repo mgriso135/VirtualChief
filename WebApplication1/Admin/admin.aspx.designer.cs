@@ -13,6 +13,15 @@ namespace KIS.kpi {
     public partial class admin {
         
         /// <summary>
+        /// Controllo lblPageHeader.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPageHeader;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace KIS.kpi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkLogin;
+        
+        /// <summary>
+        /// Controllo lblNeedToLogin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNeedToLogin;
         
         /// <summary>
         /// Controllo tblOptions.
@@ -58,6 +76,15 @@ namespace KIS.kpi {
         protected global::System.Web.UI.WebControls.Image Image2;
         
         /// <summary>
+        /// Controllo lblMainConfig.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMainConfig;
+        
+        /// <summary>
         /// Controllo A1.
         /// </summary>
         /// <remarks>
@@ -74,6 +101,15 @@ namespace KIS.kpi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image1;
+        
+        /// <summary>
+        /// Controllo lblGestioneUtenti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGestioneUtenti;
         
         /// <summary>
         /// Controllo lnkGruppi.
@@ -94,6 +130,15 @@ namespace KIS.kpi {
         protected global::System.Web.UI.WebControls.Image imgAdminGroups;
         
         /// <summary>
+        /// Controllo lblGestioneGruppi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGestioneGruppi;
+        
+        /// <summary>
         /// Controllo lnkManagePermessi.
         /// </summary>
         /// <remarks>
@@ -110,6 +155,15 @@ namespace KIS.kpi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgAdminPermessi;
+        
+        /// <summary>
+        /// Controllo lblGestionePermessi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGestionePermessi;
         
         /// <summary>
         /// Controllo lnkMenu.
@@ -130,6 +184,15 @@ namespace KIS.kpi {
         protected global::System.Web.UI.WebControls.Image imgMenu;
         
         /// <summary>
+        /// Controllo lblGestioneMenu.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGestioneMenu;
+        
+        /// <summary>
         /// Controllo lnkReports.
         /// </summary>
         /// <remarks>
@@ -146,5 +209,14 @@ namespace KIS.kpi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image3;
+        
+        /// <summary>
+        /// Controllo lblCfgReports.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCfgReports;
     }
 }
