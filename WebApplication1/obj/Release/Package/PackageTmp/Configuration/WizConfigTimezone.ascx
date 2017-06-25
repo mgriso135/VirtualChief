@@ -26,7 +26,7 @@
         init();
     });
     </script> 
-        <h3>Select Timezone</h3>
+        <h3><asp:Literal runat="server" ID="lblSelTimezone" Text="<%$Resources:lblSelTimezone %>" /></h3>
         <asp:DropDownList runat="server" AppendDataBoundItems="true" ID="ddlTimezones">
         </asp:DropDownList>
         <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="40" OnClick="btnSave_Click" />

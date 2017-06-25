@@ -22,6 +22,24 @@ namespace KIS.Login {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblLogin;
         
         /// <summary>
+        /// Controllo lblLoginBox.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblLoginBox;
+        
+        /// <summary>
+        /// Controllo lblUsername.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUsername;
+        
+        /// <summary>
         /// Controllo usr.
         /// </summary>
         /// <remarks>
@@ -38,6 +56,15 @@ namespace KIS.Login {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valName;
+        
+        /// <summary>
+        /// Controllo lblPassword.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblPassword;
         
         /// <summary>
         /// Controllo pwd.
@@ -92,5 +119,14 @@ namespace KIS.Login {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink forgotPassword;
+        
+        /// <summary>
+        /// Controllo lblForgot.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblForgot;
     }
 }

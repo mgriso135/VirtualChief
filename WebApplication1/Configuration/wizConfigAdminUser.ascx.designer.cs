@@ -13,6 +13,15 @@ namespace KIS.Configuration {
     public partial class wizConfigAdminUser1 {
         
         /// <summary>
+        /// Controllo lblTitleAdminCfg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleAdminCfg;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable tblInputNewUser;
+        
+        /// <summary>
+        /// Controllo lblNewUser.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNewUser;
         
         /// <summary>
         /// Controllo lblName.
@@ -173,6 +191,24 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CompareValidator valComparePassword;
+        
+        /// <summary>
+        /// Controllo lblIdioma.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblIdioma;
+        
+        /// <summary>
+        /// Controllo ddlLanguages.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlLanguages;
         
         /// <summary>
         /// Controllo btnSaveUser.

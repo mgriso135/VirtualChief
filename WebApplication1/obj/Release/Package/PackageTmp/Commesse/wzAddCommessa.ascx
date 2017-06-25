@@ -4,10 +4,12 @@
 <table runat="server" id="frmAddCommessa" class="table table-bordered table-hover">
     <tr><td>Cliente</td><td>
         <asp:DropDownList runat="server" ID="ddlCliente" /><br />
-        <a href="../Commesse/wzAddCliente.aspx">Aggiungi un nuovo cliente</a>
+        <a href="../Commesse/wzAddCliente.aspx">
+            <asp:Label runat="server" ID="lblAggiungiCliente" meta:resourcekey="lblAggiungiCliente" />
+            </a>
         </td></tr>
-    <tr><td>Note</td><td><asp:TextBox runat="server" ID="txtNote" TextMode="MultiLine" />
-        <asp:RequiredFieldValidator runat="server" ID="valNote" ForeColor="Red" ControlToValidate="txtNote" ErrorMessage="* il campo non può essere vuoto" ValidationGroup="commessa" />
+    <tr><td><asp:Label runat="server" ID="lblNote" meta:resourcekey="lblNote" /></td><td><asp:TextBox runat="server" ID="txtNote" TextMode="MultiLine" />
+        <asp:RequiredFieldValidator runat="server" ID="valNote" ForeColor="Red" ControlToValidate="txtNote" ErrorMessage="<%$Resources:valReqField %>" ValidationGroup="commessa" />
                      </td></tr>
     <tr>
         <td colspan="2" style="text-align:center;">

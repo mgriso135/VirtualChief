@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="barCodeCheckIn.ascx.cs" Inherits="KIS.Postazioni.barCodeCheckIn" %>
 
-<script language="javascript">
+<script lang="javascript">
     
 </script>
 

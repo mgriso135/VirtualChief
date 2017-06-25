@@ -23,7 +23,7 @@ namespace KIS.Users
                     catch
                     {
                         grpID = -1;
-                        lbl1.Text = "Errore.<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                         lstPermGruppi.Visible = false;
                     }
             }

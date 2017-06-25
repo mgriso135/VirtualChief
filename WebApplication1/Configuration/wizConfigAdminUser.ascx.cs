@@ -20,7 +20,7 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Admin già presente. Se si è dimenticato lo username o la password, utilizzare l'apposita interfaccia.";
+                lbl1.Text = GetLocalResourceObject("lblAdminPresente").ToString();
                 tblInputNewUser.Visible = false;
             }
         }
@@ -31,15 +31,15 @@ namespace KIS.Configuration
             int rt = utn.add(Server.HtmlEncode(inputUsername.Text), inputPassword.Text, Server.HtmlEncode(inputNome.Text), Server.HtmlEncode(inputCognome.Text), "Admin");
             if (rt == 2)
             {
-                lblEsito.Text = "Error: username già presente<br/>" + utn.log;
+                lblEsito.Text = GetLocalResourceObject("lblErrorUsernameDuplicato").ToString()+"<br/>" + utn.log;
             }
             else if (rt == 0)
             {
-                lblEsito.Text = "Error: generic<br/>" + utn.log;
+                lblEsito.Text = GetLocalResourceObject("lblErroreGenerico").ToString()+"<br/>" + utn.log;
             }
             else
             {
-                lblEsito.Text = "Utente aggiunto correttamente";
+                lblEsito.Text = GetLocalResourceObject("lblUserAdded").ToString();
                 GroupList grpList = new GroupList();
                 int adminGroupID = -1;
                 for (int i = 0; i < grpList.Elenco.Count; i++)
@@ -54,6 +54,8 @@ namespace KIS.Configuration
                 {
                     Group adminGroup = new Group(adminGroupID);
                     User adm = new User(Server.HtmlEncode(inputUsername.Text));
+                    adm.Language = ddlLanguages.SelectedValue;
+
                     if (adminGroup.ID != -1 && adm.username.Length>0)
                     {
                         Boolean addRT = adm.addGruppo(adminGroup);
@@ -63,17 +65,17 @@ namespace KIS.Configuration
                         }
                         else
                         {
-                            lblEsito.Text = "FATAL ERROR: cannot link user to Admin group. Contact our technical service.";
+                            lblEsito.Text = GetLocalResourceObject("lblFatalError").ToString();
                         }
                     }
                     else
                     {
-                        lblEsito.Text = "FATAL ERROR: Admin group or Admin user not found.";
+                        lblEsito.Text = GetLocalResourceObject("lblFatalError2").ToString();
                     }
                 }
                 else
                 {
-                    lblEsito.Text = "FATAL ERROR: il gruppo Admin non esiste!";
+                    lblEsito.Text = GetLocalResourceObject("lblFatalError3").ToString();
                 }
                 //Response.Redirect(Request.RawUrl);
             }

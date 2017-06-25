@@ -7,11 +7,28 @@
 // </generato automaticamente>
 //------------------------------------------------------------------------------
 
-namespace KIS.Postazioni
-{
+namespace KIS.Postazioni {
     
     
     public partial class editPostazione {
+        
+        /// <summary>
+        /// Controllo lblNavPostazioni.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavPostazioni;
+        
+        /// <summary>
+        /// Controllo lblNavModPostazione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavModPostazione;
         
         /// <summary>
         /// Controllo editPst.

@@ -45,19 +45,19 @@ namespace KIS.Reparti
                     }
                     else
                     {
-                        lbl1.Text = "Reparto non trovato.";
+                        lbl1.Text = GetLocalResourceObject("lblRepartoNotFound").ToString();
                         rbList.Visible = false;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore.";
+                    lbl1.Text = GetLocalResourceObject("lblErrore").ToString();
                     rbList.Visible = false;
                 }
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di modificare il modo di calcolo del tempo ciclo.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rbList.Visible = false;
             }
         }
@@ -81,17 +81,17 @@ namespace KIS.Reparti
                     lbl1.Text += rp.log;
                     if (rp.ModoCalcoloTC == val)
                     {
-                        lbl1.Text = "Modifiche salvate correttamente.";
-                    }
+                    lbl1.Text = GetLocalResourceObject("lblModificheOk").ToString();
+                }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore nel cambio di opzione.";
-                    }
+                    lbl1.Text = GetLocalResourceObject("lblModificheKo").ToString();
+                }
                 }
                 else
                 {
-                    lbl1.Text = "Reparto non trovato.";
-                }
+                lbl1.Text = GetLocalResourceObject("lblRepartoNotFound").ToString();
+            }
             
         }
     }

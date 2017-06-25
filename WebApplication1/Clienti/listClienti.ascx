@@ -6,17 +6,17 @@
         <table class="table table-hover table-striped">
             <thead>
                 <th></th>
-                <th>Codice</th>
-                <th>Ragione Sociale</th>
-                <th>Partita IVA</th>
-                <th>Codice Fiscale</th>
-                <th>Indirizzo</th>
-                <th>Citta</th>
-                <th>Provincia</th>
-                <th>CAP</th>
-                <th>Stato</th>
-                <th>Telefono</th>
-                <th>Email</th>
+                <th><asp:label runat="server" ID="lblTHCodCliente" meta:resourcekey="lblTHCodCliente" /></th>
+                <th><asp:label runat="server" ID="lblTHRagSoc" meta:resourcekey="lblTHRagSoc" /></th>
+                <th><asp:label runat="server" ID="lblTHPIva" meta:resourcekey="lblTHPIva" /></th>
+                <th><asp:label runat="server" ID="lblTHCodFiscale" meta:resourcekey="lblTHCodFiscale" /></th>
+                <th><asp:label runat="server" ID="lblTHIndirizzo" meta:resourcekey="lblTHIndirizzo" /></th>
+                <th><asp:label runat="server" ID="lblTHCitta" meta:resourcekey="lblTHCitta" /></th>
+                <th><asp:label runat="server" ID="lblTHProvincia" meta:resourcekey="lblTHProvincia" /></th>
+                <th><asp:label runat="server" ID="lblTHCAP" meta:resourcekey="lblTHCAP" /></th>
+                <th><asp:label runat="server" ID="lblTHStato" meta:resourcekey="lblTHStato" /></th>
+                <th><asp:label runat="server" ID="lblTHTelefono" meta:resourcekey="lblTHTelefono" /></th>
+                <th><asp:label runat="server" ID="lblTHEmail" meta:resourcekey="lblTHEmail" /></th>
             </thead>
             <tbody>
     </HeaderTemplate>

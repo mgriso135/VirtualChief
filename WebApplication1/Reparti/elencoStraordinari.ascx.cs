@@ -46,7 +46,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare l'elenco degli straordinari.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptStraord.Visible = false;
             }
         }

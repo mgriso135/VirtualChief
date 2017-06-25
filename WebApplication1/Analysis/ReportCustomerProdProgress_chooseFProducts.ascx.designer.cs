@@ -22,6 +22,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblTitleSelProduct.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleSelProduct;
+        
+        /// <summary>
         /// Controllo frmReport.
         /// </summary>
         /// <remarks>
@@ -58,6 +67,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Label lbl1;
         
         /// <summary>
+        /// Controllo lblFiltraProdData1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFiltraProdData1;
+        
+        /// <summary>
         /// Controllo txtProductDateStart.
         /// </summary>
         /// <remarks>
@@ -65,6 +83,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProductDateStart;
+        
+        /// <summary>
+        /// Controllo lblFiltraProdData2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFiltraProdData2;
         
         /// <summary>
         /// Controllo txtProductDateEnd.

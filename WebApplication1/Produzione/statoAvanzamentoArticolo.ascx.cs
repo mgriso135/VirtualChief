@@ -39,7 +39,7 @@ namespace KIS.Produzione
                         lblDataFineProduzione.Text = art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy");
                         lblIDCommessa.Text = art.Commessa.ToString();
                         lblMatricola.Text = art.Matricola;
-                        lblProcesso.Text = art.Proc.process.processName + " rev. " + art.Proc.process.revisione.ToString();
+                        lblProcesso.Text = art.Proc.process.processName;
                         Reparto rep = new Reparto(art.Reparto);
                         lblReparto.Text = rep.name;
                         lblStatus.Text = art.Status.ToString();
@@ -72,7 +72,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare lo stato di avanzamento dell'articolo.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptTasks.Visible = false;
             }
         }
@@ -209,17 +209,17 @@ namespace KIS.Produzione
                             art.loadTasksProduzione();
                             rptTasks.DataSource = art.Tasks;
                             rptTasks.DataBind();
-                            lblInfo.Text = "Task riesumato correttamente.<br />";
+                            lbl1.Text = GetLocalResourceObject("lblRiesumaOk").ToString();
                         }
                         else
                         {
-                            lblInfo.Text = "E' avvenuto un errore durante la riesumazione del task.<br />";
+                            lblInfo.Text = GetLocalResourceObject("lblRiesumaKo").ToString(); 
                         }
                     }
                 }
                 else
                 {
-                    lblInfo.Text = "Non hai i permessi per riesumare un task.<br />";
+                    lblInfo.Text = GetLocalResourceObject("lblRiesumaPermessoKo").ToString();
                 }
             }
         }

@@ -22,6 +22,33 @@ namespace KIS.Andon {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblNavAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAdmin;
+        
+        /// <summary>
+        /// Controllo lblNavAndonCfg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAndonCfg;
+        
+        /// <summary>
+        /// Controllo lblNavAndonCfg2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAndonCfg2;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -40,6 +67,15 @@ namespace KIS.Andon {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblAccVisUtenti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccVisUtenti;
+        
+        /// <summary>
         /// Controllo frmFormatoUsername.
         /// </summary>
         /// <remarks>
@@ -47,6 +83,15 @@ namespace KIS.Andon {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Andon.configFormatoUsername frmFormatoUsername;
+        
+        /// <summary>
+        /// Controllo lblAccVisCampiAndon.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccVisCampiAndon;
         
         /// <summary>
         /// Controllo frmViewFields.

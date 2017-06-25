@@ -46,16 +46,17 @@ namespace KIS.Analysis
                     }
                     if (somma.Days > 0)
                     {
-                        lblOreTot.Text = somma.Days.ToString() + " giorni, ";
+                        lblOreTot.Text = somma.Days.ToString() + " "
+                            +GetLocalResourceObject("lblGiorni").ToString() +", ";
                     }
-                    lblOreTot.Text = Math.Round(somma.TotalHours, 2).ToString() + " ore";
+                    lblOreTot.Text = Math.Round(somma.TotalHours, 2).ToString() + " "+ GetLocalResourceObject("lblOre").ToString();
                     rptArticoli.DataSource = comm.Articoli;
                     rptArticoli.DataBind();
                 }
             }
             else
             {
-                lbl1.Text = "Non hai i permessi per visualizzare la costificazione della commessa.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
     }

@@ -23,7 +23,9 @@ namespace KIS.Operatori
                     bool rt = elabora();
                     if (rt == true)
                     {
-                        log.Text += "<br /><span style='color: green; font-size:20px; font-weight: bold'>Operazione andata a buon fine.</span>";
+                        log.Text += "<br /><span style='color: green; font-size:20px; font-weight: bold'>"
+                            + GetLocalResourceObject("lblOperazioneOK").ToString()
+                            +"</span>";
                         box2.Text = "";
                         box1.Text = "";
                         box1.Focus();
@@ -63,7 +65,9 @@ namespace KIS.Operatori
                             {
                                 art.QuantitaProdotta = newQty;
                             }
-                            log.Text += "<br/>Quantità effettiva prodotta: " + tsk.QuantitaProdotta.ToString();
+                            log.Text += "<br/>"
+                                + GetLocalResourceObject("lblQtaEffProdotta").ToString()
+                                + ": " + tsk.QuantitaProdotta.ToString();
                             imgChangeQty.Visible = false;
                         }
                     }
@@ -76,7 +80,7 @@ namespace KIS.Operatori
                 box1.Focus();
                 imgLoading.Style.Value = "visibility: hidden; height: 2px";
                 tblLogUtente.Style.Value = "visibility: hidden";
-                log.Text = "Leggi il barcode sul tuo ID personale / cartellino oppure quello relativo al task desiderato[INIZIO | PAUSA | FINE | PROBLEMA].";
+                log.Text = GetLocalResourceObject("lblNowReadBarcodeTaskAction").ToString();
             }
         }
 
@@ -142,14 +146,14 @@ namespace KIS.Operatori
                         {
                             //log.Text = "Eseguo il check-in";
                             // Entro nella postazione
-                            log.Text = usr.name + " accede alla postazione " + p.name;
+                            log.Text = usr.name + " "+GetLocalResourceObject("lblAccedeAllaPostazione").ToString() +" " + p.name;
                             rt = usr.DoCheckIn(p);
                         }
                         else
                         {
                             //log.Text = "Eseguo il check-out";
                             // Esco dalla postazione
-                            log.Text = usr.name + " esce dalla postazione " + p.name;
+                            log.Text = usr.name + " " + GetLocalResourceObject("lblEsceDallaPostazione").ToString() + " " + p.name;
                             rt = usr.DoCheckOut(p);
                         }
 
@@ -204,11 +208,14 @@ namespace KIS.Operatori
                 //Session["user"] = usr;
                 if (action == "I")
                 {
-                    log.Text = usr.name + " fa partire il task " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
+                    log.Text = usr.name +" "
+                        + GetLocalResourceObject("lblFaPartireIlTask").ToString()+" " + tsk.TaskProduzioneID.ToString() 
+                        + " " + tsk.Name;
                     rt = tsk.Start(usr);
                     if (rt == false)
                     {
-                        log.Text += "<br /><br/>E' avvenuto un errore. Ciò è accaduto perché:<br/> ";
+                        log.Text += "<br /><br/>"+GetLocalResourceObject("lblErrorReason").ToString()
+                            +":<br/> ";
 
                         // Controllo che il task non sia già avviato
                         usr.loadTaskAvviati();
@@ -216,7 +223,7 @@ namespace KIS.Operatori
                         {
                             if (usr.TaskAvviati[i] == tsk.TaskProduzioneID)
                             {
-                                log.Text += "- Stai già svolgendo il task " + tsk.Name + " (ID: " + 
+                                log.Text += "- "+GetLocalResourceObject("lblErrorReason1").ToString()+" " + tsk.Name + " (ID: " + 
                                     tsk.TaskProduzioneID.ToString() + ")<br />";
                             }
                         }
@@ -224,8 +231,10 @@ namespace KIS.Operatori
                         // Controllo che il task non sia già completato
                         if (tsk.Status == 'F')
                         {
-                            log.Text += "- Il task " + tsk.Name + " (ID: " +
-                                    tsk.TaskProduzioneID.ToString() + ") è già stato completato<br />";
+                            log.Text += "- "+GetLocalResourceObject("lblErrorReason2A").ToString()+" " + tsk.Name + " (ID: " +
+                                    tsk.TaskProduzioneID.ToString() + ") "
+                                    +GetLocalResourceObject("lblErrorReason2B").ToString() 
+                                    +"<br />";
                         }
 
                         // Controllo che l'utente sia loggato in postazione
@@ -242,7 +251,7 @@ namespace KIS.Operatori
                         if (foundPost == false)
                         {
                             Postazione pst = new Postazione(tsk.PostazioneID);
-                            log.Text += "- Devi prima accedere alla postazione " + pst.name + "<br />";
+                            log.Text += "- " + GetLocalResourceObject("lblErrorReason3").ToString() + " " + pst.name + "<br />";
                         }
 
                         tsk.loadPrecedenti();
@@ -251,8 +260,11 @@ namespace KIS.Operatori
                             TaskProduzione prec = new TaskProduzione(tsk.IdPrecedenti[i]);
                             if (prec.Status != 'F')
                             {
-                                log.Text += "- Il task precedente \"" + prec.Name + "\" (ID: " + prec.TaskProduzioneID.ToString() + ")"
-                                    + " non è ancora completato.<br />";
+                                log.Text += "- " + GetLocalResourceObject("lblErrorReason4A").ToString() + " \"" + prec.Name 
+                                    + "\" (ID: " + prec.TaskProduzioneID.ToString() + ")"
+                                    + " "
+                                    + GetLocalResourceObject("lblErrorReason4B").ToString() +
+                                    ".<br />";
                             }
                         }
 
@@ -261,7 +273,7 @@ namespace KIS.Operatori
                         Reparto rp = new Reparto(tsk.RepartoID);
                         if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && usr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
                         {
-                            log.Text += "Hai già avviato il numero massimo possibile di tasks. Devi finire o metterne in pausa qualcuno prima di continuare. I tuoi task attualmente in corso sono:<br /><UL>";
+                            log.Text += GetLocalResourceObject("lblMaxTasksReached").ToString()+ ":<br /><UL>";
                             for (int i = 0; i < usr.TaskAvviati.Count; i++)
                             {
                                 TaskProduzione tskAttivo = new TaskProduzione(usr.TaskAvviati[i]);
@@ -270,10 +282,10 @@ namespace KIS.Operatori
                                 log.Text += "<li>"
                                     + tskAttivo.TaskProduzioneID.ToString() + " "
                                     + tskAttivo.Name
-                                    + " Postazione: " + tskAttivo.PostazioneName
-                                    + " Prodotto: " + art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante
-                                    + " Commessa: " + cm.ID.ToString() + "/" + cm.Year.ToString()
-                                    + " Cliente: " + cm.Cliente
+                                    + " " + GetLocalResourceObject("lblTHPostazione").ToString()+": " + tskAttivo.PostazioneName
+                                    + " " + GetLocalResourceObject("lblTHProdotto").ToString() + ": " + art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante
+                                    + " " + GetLocalResourceObject("lblTHCommessa").ToString() + ": " + cm.ID.ToString() + "/" + cm.Year.ToString()
+                                    + " " + GetLocalResourceObject("lblTHCliente").ToString() + ": " + cm.Cliente
                                     + "</li>";
 
                             }
@@ -285,15 +297,18 @@ namespace KIS.Operatori
                 {
                     tblLogUtente.Style.Value = "visibility: visible";
                     rptPostazioniAttive.Visible = true;
-                    log.Text = usr.name + " mette in pausa il task " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
+                    log.Text = usr.name + " " + GetLocalResourceObject("lblMetteInPausa")
+                        + " " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
                     rt = tsk.Pause(usr);
                     if (rt == false)
                     {
-                        log.Text += "<br /><br/>E' avvenuto un errore. Ciò è accaduto perché:<br/>";
+                        log.Text += "<br /><br/>" + GetLocalResourceObject("lblErrorReason") +":<br/>";
                         if (tsk.Status == 'F')
                         {
-                            log.Text += "- Il task " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")"
-                                + " è in stato completato.<br />";
+                            log.Text += "- "+ GetLocalResourceObject("lblErrorReason2A")
+                                +" " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")"
+                                + " "
+                                + GetLocalResourceObject("lblErrorReason2B") + ".<br />";
                         }
 
                         // Controllo che l'utente stia effettivamente lavorando sul task
@@ -308,8 +323,9 @@ namespace KIS.Operatori
                         }
                         if (foundtask == false && tsk.Status != 'F')
                         {
-                            log.Text += "- Non stai attualmente lavorando sul task " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")."
-                                + " E' necessario avviare il task prima di metterlo in pausa.<br />";
+                            log.Text += "- "+GetLocalResourceObject("lblYouAreNotWorking1").ToString()
+                                +" " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")."
+                                + " " + GetLocalResourceObject("lblYouAreNotWorking2").ToString()+".<br />";
                         }
                     }
                 }
@@ -318,15 +334,17 @@ namespace KIS.Operatori
                     tblLogUtente.Style.Value = "visibility: visible";
                     rptPostazioniAttive.Visible = true;
 
-                    log.Text = usr.name + " completa il task " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
+                    log.Text = usr.name + " " + GetLocalResourceObject("lblCompletaTask").ToString()
+                        + " " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
                     rt = tsk.Complete(usr);
                     if (rt == false)
                     {
-                        log.Text += "<br /><br/>E' avvenuto un errore. Ciò è accaduto perché:<br/>";
+                        log.Text += "<br /><br/>" + GetLocalResourceObject("lblErrorReason").ToString() + ":<br/>";
                         if (tsk.Status == 'F')
                         {
-                            log.Text += "- Il task " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")"
-                                + " è già in stato completato.<br />";
+                            log.Text += "- " + GetLocalResourceObject("lblErrorReason2A").ToString()
+                                +" " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")"
+                                + " " + GetLocalResourceObject("lblErrorReason2B").ToString() + ".<br />";
                         }
                         // Controllo che l'utente stia effettivamente lavorando sul task
                         usr.loadTaskAvviati();
@@ -340,8 +358,9 @@ namespace KIS.Operatori
                         }
                         if (foundtask == false && tsk.Status != 'F')
                         {
-                            log.Text += "- Non stai attualmente lavorando sul task " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")."
-                                + " E' necessario avviare il task prima di segnalare che è completato.<br />";
+                            log.Text += "- " + GetLocalResourceObject("lblYouAreNotWorking1").ToString()
+                                + " " + tsk.Name + " (ID: " + tsk.TaskProduzioneID.ToString() + ")."
+                                + " " + GetLocalResourceObject("lblYouAreNotWorking3").ToString()+".<br />";
                         }
 
                         usr.loadPostazioniAttive();
@@ -356,7 +375,8 @@ namespace KIS.Operatori
                         if (checkpost == false)
                         {
                             Postazione pst = new Postazione(tsk.PostazioneID);
-                            log.Text += "- Non hai effettuato l'accesso alla postazione " + pst.name + "<br />";
+                            log.Text += "- " + GetLocalResourceObject("lblNonAcceduto").ToString()
+                                + " " + pst.name + "<br />";
                         }
                     }
                     else
@@ -370,12 +390,13 @@ namespace KIS.Operatori
                     tblLogUtente.Style.Value = "visibility: visible";
                     rptPostazioniAttive.Visible = true;
 
-                    log.Text = usr.name + " segnala un problema sul task " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
+                    log.Text = usr.name + " " + GetLocalResourceObject("lblSegnalaUnProblema").ToString()
+                        + " " + tsk.TaskProduzioneID.ToString() + " " + tsk.Name;
                     rt = tsk.generateWarning(usr);
                     if (rt == false)
                     {
-                        log.Text += "<br /><br/>E' avvenuto un errore. Ciò può essere accaduto perché:<br/>"
-                                + "- Il task non è stato avviato da te<br/>";
+                        log.Text += "<br /><br/>" + GetLocalResourceObject("lblErrorReason").ToString() + ":<br/>"
+                                + "- " + GetLocalResourceObject("lblErrorReason5").ToString() + "<br/>";
                     }
                 }
                 loadTaskAvviati(usr);
@@ -412,23 +433,23 @@ namespace KIS.Operatori
                     yearComm = -1;
                 }
 
-                log.Text = "Prodotto " + idComm.ToString() + "/" + yearComm.ToString() + "<br />";
+                log.Text = GetLocalResourceObject("lblTHProdotto").ToString() + " " + idComm.ToString() + "/" + yearComm.ToString() + "<br />";
                 Articolo art = new Articolo(idComm, yearComm);
                 if (art.ID != -1)
                 {
                     rptStatusCommessa.Visible = true;
-                    log.Text = "Stato avanzamento prodotto " + art.ID.ToString()
+                    log.Text = GetLocalResourceObject("lblStatoProdotto").ToString() + " " + art.ID.ToString()
                         + "/"
                         + art.Year.ToString()
                         + " " + art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante
-                        + " Cliente: " + art.Cliente;
+                        + " "+GetLocalResourceObject("lblTHCliente").ToString() + ": " + art.Cliente;
                     art.loadTasksProduzione();
                     rptStatusCommessa.DataSource = art.Tasks;
                     rptStatusCommessa.DataBind();
                 }
                 else
                 {
-                    log.Text = "Errore: prodotto non trovato.";
+                    log.Text = GetLocalResourceObject("lblErrorProductNotFound").ToString();
                 }
                 rt = true;
 
@@ -628,17 +649,17 @@ namespace KIS.Operatori
                     Label lblStatus = (Label)e.Item.FindControl("lblStatus");
                     if (tsk.Status == 'F')
                     {
-                        lblStatus.Text = "Finito";
+                        lblStatus.Text = GetLocalResourceObject("lblFinito").ToString();// "Finito";
                         tRow.BgColor = "#ADFF2F";
                     }
                     else if (tsk.Status == 'I')
                     {
-                        lblStatus.Text = "In corso";
+                        lblStatus.Text = GetLocalResourceObject("lblInCorso").ToString(); //"In corso";
                         tRow.BgColor = "#ADD8E6";
                     }
                     else if (tsk.Status == 'N')
                     {
-                        lblStatus.Text = "Non ancora iniziato";
+                        lblStatus.Text = GetLocalResourceObject("lblNonStarted").ToString(); //"Non ancora iniziato";
                         tRow.BgColor = "#FFFFFF";
                     }
                     else if (tsk.Status == 'P')

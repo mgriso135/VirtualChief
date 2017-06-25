@@ -51,7 +51,7 @@ namespace KIS.Reparti
             else
             {
                 splitTasks.Enabled = false;
-                lbl1.Text = "Non hai il permesso di gestire il reparto.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 

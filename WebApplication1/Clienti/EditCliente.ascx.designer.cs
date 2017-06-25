@@ -31,6 +31,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblData;
         
         /// <summary>
+        /// Controllo lblCodCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCodCliente;
+        
+        /// <summary>
         /// Controllo txtCodCli.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.TextBox txtCodCli;
         
         /// <summary>
+        /// Controllo lblRagSocCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRagSocCliente;
+        
+        /// <summary>
         /// Controllo txtRagSoc.
         /// </summary>
         /// <remarks>
@@ -47,6 +65,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtRagSoc;
+        
+        /// <summary>
+        /// Controllo lblPartitaIVA.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPartitaIVA;
         
         /// <summary>
         /// Controllo txtPIva.
@@ -67,6 +94,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.CustomValidator valPIva;
         
         /// <summary>
+        /// Controllo lblCodFiscale.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCodFiscale;
+        
+        /// <summary>
         /// Controllo txtCodFiscale.
         /// </summary>
         /// <remarks>
@@ -85,6 +121,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.CustomValidator valCodFiscale;
         
         /// <summary>
+        /// Controllo lblIndirizzo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblIndirizzo;
+        
+        /// <summary>
         /// Controllo txtIndirizzo.
         /// </summary>
         /// <remarks>
@@ -94,6 +139,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.TextBox txtIndirizzo;
         
         /// <summary>
+        /// Controllo lblCitta.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCitta;
+        
+        /// <summary>
         /// Controllo txtCitta.
         /// </summary>
         /// <remarks>
@@ -101,6 +155,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCitta;
+        
+        /// <summary>
+        /// Controllo lblProvincia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProvincia;
         
         /// <summary>
         /// Controllo txtProvincia.
@@ -121,6 +184,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.CustomValidator valProvincia;
         
         /// <summary>
+        /// Controllo lblCAP.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCAP;
+        
+        /// <summary>
         /// Controllo txtCAP.
         /// </summary>
         /// <remarks>
@@ -128,6 +200,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCAP;
+        
+        /// <summary>
+        /// Controllo lblStato.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStato;
         
         /// <summary>
         /// Controllo txtStato.
@@ -139,6 +220,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.TextBox txtStato;
         
         /// <summary>
+        /// Controllo lblTelefono.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTelefono;
+        
+        /// <summary>
         /// Controllo txtTelefono.
         /// </summary>
         /// <remarks>
@@ -148,6 +238,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.TextBox txtTelefono;
         
         /// <summary>
+        /// Controllo lblEMail.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEMail;
+        
+        /// <summary>
         /// Controllo txtEmail.
         /// </summary>
         /// <remarks>
@@ -155,6 +254,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmail;
+        
+        /// <summary>
+        /// Controllo lblKBBox.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblKBBox;
         
         /// <summary>
         /// Controllo ddlKanban.

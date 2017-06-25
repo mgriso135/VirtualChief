@@ -44,7 +44,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire le festività.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 tblAddFest.Visible = false;
             }
         }
@@ -79,17 +79,19 @@ namespace KIS.Reparti
                 if (lstTasks.Count>0)
                 {
                     colSave.Visible = true;
-                    lblListProd.Text = "Attenzione: durante la festività che stai inserendo è già pianificata "
-                        + "l'esecuzione di alcuni tasks, appartenenti ai seguenti prodotti:<br />";
+                    lblListProd.Text = GetLocalResourceObject("lblWarnTasksPlanned").ToString()
+                        + "<br />";
                 for(int i = 0; i < prodotti.Count; i++)
                 {
                         Articolo art = new Articolo(prodotti[i].ArticoloID, prodotti[i].ArticoloAnno);
                         lblListProd.Text += art.ID.ToString() + "/" + art.Year.ToString()
-                            + " - Cliente: " + art.RagioneSocialeCliente 
-                            + " - Data consegna prevista: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy")
+                            + " - "+GetLocalResourceObject("lblWarnTasksPlanned2").ToString()+": " 
+                            + art.RagioneSocialeCliente 
+                            + " - "+GetLocalResourceObject("lblWarnTasksPlanned3").ToString()+": " 
+                            + art.DataPrevistaConsegna.ToString("dd/MM/yyyy")
                             +"<br />";
                 }
-                    lblListProd.Text += "L'eventuale riprogrammazione dovrà essere fatta manualmente, per ogni prodotto.<br />Vuoi continuare?<br />";
+                    lblListProd.Text += GetLocalResourceObject("lblWarnTasksPlanned4").ToString();
                 }
                 else
                 {
@@ -98,7 +100,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorInput").ToString();
             }
         }
 
@@ -129,24 +131,24 @@ namespace KIS.Reparti
 
         protected void salva(DateTime inizio, DateTime fine)
         {
-            if (inizio < fine && inizio > DateTime.UtcNow)
+            Turno trn = new Turno(idTurno);
+            Reparto rp = new Reparto(trn.idReparto);
+            if (inizio < fine && inizio > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario))
             {
-                Turno trn = new Turno(idTurno);
                 ElencoFestivita rs = new ElencoFestivita(trn.idReparto);
                 bool ret = rs.Add(idTurno, inizio, fine);
                 if (ret == false)
                 {
-                    lbl1.Text += "Errore: " + rs.log;
+                    lbl1.Text = GetLocalResourceObject("ErrorOrario").ToString();
                 }
                 else
                 {
-                    lbl1.Text = "Ok";
                     Response.Redirect(Request.RawUrl);
                 }
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorInput").ToString();
             }
         }
     }

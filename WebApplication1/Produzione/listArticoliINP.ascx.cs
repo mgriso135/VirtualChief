@@ -50,7 +50,7 @@ namespace KIS.Produzione
             else
             {
                 rptArticoli.Visible = false;
-                lbl1.Text = "Non hai il permesso di visualizzare il piano di produzione.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -237,7 +237,7 @@ namespace KIS.Produzione
                         logo.ScaleToFit(50 * logo.Width / logo.Height, 50);
                         cartPDF.Add(logo);
 
-                        String txtPostazione = "Postazione " + art.Tasks[i].PostazioneName;
+                        String txtPostazione = GetLocalResourceObject("lblBPostazione").ToString()+" " + art.Tasks[i].PostazioneName;
                         iTextSharp.text.Paragraph posta = new iTextSharp.text.Paragraph(txtPostazione, new Font(Font.FontFamily.TIMES_ROMAN, 40, Font.BOLD));
                         posta.Alignment = Element.ALIGN_CENTER;
                         cartPDF.Add(posta);
@@ -246,7 +246,7 @@ namespace KIS.Produzione
                         commessa.Alignment = Element.ALIGN_CENTER;
                         cartPDF.Add(commessa);
                         String txtArticolo = art.ID.ToString() + "/" + art.Year.ToString() + " - " + Server.HtmlDecode(art.Proc.process.processName) + " " + Server.HtmlDecode(art.Proc.variant.nomeVariante)
-                            + " - Quantità: " + art.Quantita.ToString();
+                            + " - "+ GetLocalResourceObject("lblBQuantita").ToString() + ": " + art.Quantita.ToString();
                         iTextSharp.text.Paragraph articolo = new iTextSharp.text.Paragraph(txtArticolo, new Font(Font.FontFamily.TIMES_ROMAN, 20, Font.NORMAL));
                         cartPDF.Add(articolo);
 
@@ -270,24 +270,24 @@ namespace KIS.Produzione
                             + Environment.NewLine
                             + "Tempo ciclo previsto: " + art.Tasks[i].TempoC.Hours.ToString() + "H:" + art.Tasks[i].TempoC.Minutes.ToString() + "mm:" + art.Tasks[i].TempoC.Seconds.ToString() + ":ss"
                         +Environment.NewLine
-                        */+ "Numero operatore previsti: " + art.Tasks[i].NumOperatori.ToString();
+                        */+ GetLocalResourceObject("lblBNumOp").ToString() + ": " + art.Tasks[i].NumOperatori.ToString();
                         iTextSharp.text.Paragraph task = new iTextSharp.text.Paragraph(txtTask, new Font(Font.FontFamily.TIMES_ROMAN, 16, Font.NORMAL));
                         cartPDF.Add(task);
                         iTextSharp.text.Image ICode = iTextSharp.text.Image.GetInstance(savePath + FileName + "I.jpg");
                         cartPDF.Add(ICode);
-                        iTextSharp.text.Paragraph didascalia = new iTextSharp.text.Paragraph("INIZIO" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph didascalia = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPInizio").ToString() + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         cartPDF.Add(didascalia);
                         iTextSharp.text.Image ACode = iTextSharp.text.Image.GetInstance(savePath + FileName + "A.jpg");
                         cartPDF.Add(ACode);
-                        didascalia = new iTextSharp.text.Paragraph("PAUSA" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        didascalia = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPPausa").ToString() + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         cartPDF.Add(didascalia);
                         iTextSharp.text.Image FCode = iTextSharp.text.Image.GetInstance(savePath + FileName + "F.jpg");
                         cartPDF.Add(FCode);
-                        didascalia = new iTextSharp.text.Paragraph("FINE" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        didascalia = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPFine").ToString() + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         cartPDF.Add(didascalia);
                         iTextSharp.text.Image WCode = iTextSharp.text.Image.GetInstance(savePath + FileName + "W.jpg");
                         cartPDF.Add(WCode);
-                        didascalia = new iTextSharp.text.Paragraph("SEGNALA UN PROBLEMA" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        didascalia = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPProblema").ToString() + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         cartPDF.Add(didascalia);
 
                         try
@@ -368,8 +368,9 @@ namespace KIS.Produzione
 
                         Cliente cln = new Cliente(art.Cliente);
                         String txtCommessa =cln.RagioneSociale + Environment.NewLine+ Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
-                            + " - Quantità: " + art.Quantita.ToString()
-                                + Environment.NewLine + "Consegna prevista: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
+                            + " - "+GetLocalResourceObject("lblBQuantita").ToString()+": " + art.Quantita.ToString()
+                                + Environment.NewLine + GetLocalResourceObject("lblDataConsegna").ToString()
+                                + ": " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
                         /*if (art.Planner != null)
                         {
                             txtCommessa += "; Disegnatore: " + art.Planner.name + " " + art.Planner.cognome;
@@ -382,7 +383,7 @@ namespace KIS.Produzione
                         StatusCode.Save(savePath + "articolo" + art.ID.ToString() + "_" + art.Year.ToString() + "STATUS.jpg");
                         iTextSharp.text.Image statusCode = iTextSharp.text.Image.GetInstance(savePath + "articolo" + art.ID.ToString() + "_" + art.Year.ToString() + "STATUS.jpg");
 
-                        iTextSharp.text.Paragraph statusProd = new iTextSharp.text.Paragraph("STATO PRODOTTO", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph statusProd = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPStatoProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         statusProd.Alignment = Element.ALIGN_CENTER;
                         statusCode.Alignment = Element.ALIGN_CENTER;
                         intestazioneFoglio[2].AddElement(statusProd);
@@ -393,10 +394,10 @@ namespace KIS.Produzione
                         float[] widths = new float[] { 150, (490 - 300), 150 };
                         tabIntest.SetWidths(widths);
 
-                        iTextSharp.text.Paragraph noteOC = new iTextSharp.text.Paragraph("OC: ", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph noteOC = new iTextSharp.text.Paragraph("", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         intestazioneFoglio[3].AddElement(noteOC);
 
-                        iTextSharp.text.Paragraph inizioProd = new iTextSharp.text.Paragraph("Inizio: " + art.EarlyStart.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph inizioProd = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPInizio").ToString()+": " + art.EarlyStart.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         intestazioneFoglio[4].AddElement(inizioProd);
 
                         tabIntest.AddCell(intestazioneFoglio[0]);
@@ -445,7 +446,8 @@ namespace KIS.Produzione
                             posta.Alignment = Element.ALIGN_LEFT;
 
 
-                            String txtTask = tabIntest.TotalWidth.ToString() + "Numero operatori previsti: " + art.Tasks[i].NumOperatori.ToString();
+                            String txtTask = tabIntest.TotalWidth.ToString() + GetLocalResourceObject("lblBNumOp").ToString() +": " 
+                                + art.Tasks[i].NumOperatori.ToString();
                             iTextSharp.text.Paragraph task = new iTextSharp.text.Paragraph(txtPostazione + "; " + txtTask, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                             intestCella[0].AddElement(task);
                             intestCella[0].Colspan = 4;
@@ -464,16 +466,16 @@ namespace KIS.Produzione
 
                             celle[0].Padding = 5;
                             celle[0].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "I.jpg"));
-                            Paragraph pin = new iTextSharp.text.Paragraph("INIZIO", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                            Paragraph pin = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPInizio").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                             celle[0].AddElement(pin);
                             celle[1].Padding = 5;
-                            celle[1].AddElement(new iTextSharp.text.Paragraph("PAUSA", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
+                            celle[1].AddElement(new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPPausa").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
                             celle[1].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "A.jpg"));
                             celle[2].Padding = 5;
                             celle[2].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "F.jpg"));
-                            celle[2].AddElement(new iTextSharp.text.Paragraph("FINE", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
+                            celle[2].AddElement(new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPFine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
                             celle[3].Padding = 5;
-                            celle[3].AddElement(new iTextSharp.text.Paragraph("PROBLEMA", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
+                            celle[3].AddElement(new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPProblema").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
                             celle[3].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "W.jpg"));
 
                             PdfPRow riga = new PdfPRow(celle);
@@ -499,20 +501,20 @@ namespace KIS.Produzione
                         tabNote2.WidthPercentage = 100;
 
                         PdfPCell cellNote2 = new PdfPCell();
-                        iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph("Codice FOM:" + Environment.NewLine + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                        iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph("" + Environment.NewLine + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                         parCellNote2.Alignment = Element.ALIGN_LEFT;
                         cellNote2.AddElement(parCellNote2);
                         tabNote2.AddCell(cellNote2);
 
 
-                        parCellNote2 = new iTextSharp.text.Paragraph("Info lastre:" + Environment.NewLine + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                        parCellNote2 = new iTextSharp.text.Paragraph("" + Environment.NewLine + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                         parCellNote2.Alignment = Element.ALIGN_LEFT;
                         cellNote2 = new PdfPCell();
                         cellNote2.AddElement(parCellNote2);
                         tabNote2.AddCell(cellNote2);
                         cartPDF.Add(tabNote2);
 
-                        String txtNote = "Note: ";
+                        String txtNote = GetLocalResourceObject("lblPNote").ToString()+":";
                         iTextSharp.text.Paragraph noteField = new iTextSharp.text.Paragraph(txtNote, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         noteField.Alignment = Element.ALIGN_LEFT;
                         cartPDF.Add(noteField);
@@ -579,12 +581,9 @@ namespace KIS.Produzione
 
                         Cliente cln = new Cliente(art.Cliente);
                         String txtCommessa = cln.RagioneSociale + Environment.NewLine+ Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
-                            + " - Quantità: " + art.Quantita.ToString()
-                                + Environment.NewLine + "Consegna prevista: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
-                                /*if(art.Planner!=null)
-                                {
-                                    txtCommessa += "; Disegnatore: " + art.Planner.name + " " + art.Planner.cognome;
-                                }*/
+                            + " - "+ GetLocalResourceObject("lblPQuantita").ToString() + ": " + art.Quantita.ToString()
+                                + Environment.NewLine + GetLocalResourceObject("lblDataConsegna").ToString()+": " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
+
                         iTextSharp.text.Paragraph commessa = new iTextSharp.text.Paragraph(txtCommessa, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                         intestazioneFoglio[1].Rowspan = 2;
                         intestazioneFoglio[1].AddElement(commessa);
@@ -593,7 +592,7 @@ namespace KIS.Produzione
                         StatusCode.Save(savePath + "articolo" + art.ID.ToString() + "_" + art.Year.ToString() + "STATUS.jpg");
                         iTextSharp.text.Image statusCode = iTextSharp.text.Image.GetInstance(savePath + "articolo" + art.ID.ToString() + "_" + art.Year.ToString() + "STATUS.jpg");
 
-                        iTextSharp.text.Paragraph statusProd = new iTextSharp.text.Paragraph("STATO PRODOTTO", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph statusProd = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPStatoProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         statusProd.Alignment = Element.ALIGN_CENTER;
                         statusCode.Alignment = Element.ALIGN_CENTER;
                         intestazioneFoglio[2].AddElement(statusProd);
@@ -604,10 +603,10 @@ namespace KIS.Produzione
                         float[] widths = new float[] { 150, (490 - 300), 150 };
                         tabIntest.SetWidths(widths);
 
-                        iTextSharp.text.Paragraph noteOC = new iTextSharp.text.Paragraph("OC: ", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph noteOC = new iTextSharp.text.Paragraph("", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         intestazioneFoglio[3].AddElement(noteOC);
 
-                        iTextSharp.text.Paragraph inizioProd = new iTextSharp.text.Paragraph("Inizio: " + art.EarlyStart.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                        iTextSharp.text.Paragraph inizioProd = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPInizio").ToString()+": " + art.EarlyStart.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                         intestazioneFoglio[4].AddElement(inizioProd);
 
                         tabIntest.AddCell(intestazioneFoglio[0]);
@@ -663,7 +662,7 @@ namespace KIS.Produzione
                             posta.Alignment = Element.ALIGN_LEFT;
 
 
-                            String txtTask = "Numero operatori previsti: " + art.Tasks[i].NumOperatori.ToString();
+                            String txtTask = GetLocalResourceObject("lblBNumOp").ToString()+": " + art.Tasks[i].NumOperatori.ToString();
                             iTextSharp.text.Paragraph task = new iTextSharp.text.Paragraph(txtPostazione + "; " + txtTask, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                             intestCella[0].AddElement(task);
                             intestCella[0].Colspan = 4;
@@ -682,19 +681,19 @@ namespace KIS.Produzione
 
                             celle[0].Padding = 5;
                             celle[0].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "I.jpg"));
-                            Paragraph pin = new iTextSharp.text.Paragraph("INIZIO", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
+                            Paragraph pin = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPInizio").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL));
                             celle[0].HorizontalAlignment = Element.ALIGN_CENTER;
                             celle[0].AddElement(pin);
                             celle[1].Padding = 5;
-                            celle[1].AddElement(new iTextSharp.text.Paragraph("PAUSA", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
+                            celle[1].AddElement(new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPPausa").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
                             celle[1].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "A.jpg"));
                             celle[1].HorizontalAlignment = Element.ALIGN_CENTER;
                             celle[2].Padding = 5;
                             celle[2].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "F.jpg"));
-                            celle[2].AddElement(new iTextSharp.text.Paragraph("FINE", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
+                            celle[2].AddElement(new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPFine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
                             celle[2].HorizontalAlignment = Element.ALIGN_CENTER;
                             celle[3].Padding = 5;
-                            celle[3].AddElement(new iTextSharp.text.Paragraph("PROBLEMA", new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
+                            celle[3].AddElement(new iTextSharp.text.Paragraph(GetLocalResourceObject("lblPProblema").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL)));
                             celle[3].AddElement(iTextSharp.text.Image.GetInstance(savePath + FileName + "W.jpg"));
                             celle[3].HorizontalAlignment = Element.ALIGN_CENTER;
 
@@ -721,13 +720,13 @@ namespace KIS.Produzione
                         tabNote2.WidthPercentage = 100;
                         
                         PdfPCell cellNote2 = new PdfPCell();
-                        iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph("Codice FOM:" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                        iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph("" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                         parCellNote2.Alignment = Element.ALIGN_LEFT;
                         cellNote2.AddElement(parCellNote2);
                         tabNote2.AddCell(cellNote2);
 
 
-                        parCellNote2 = new iTextSharp.text.Paragraph("Info lastre:" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                        parCellNote2 = new iTextSharp.text.Paragraph("" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                         parCellNote2.Alignment = Element.ALIGN_LEFT;
                         cellNote2 = new PdfPCell();
                         cellNote2.AddElement(parCellNote2);
@@ -735,7 +734,7 @@ namespace KIS.Produzione
                         cartPDF.Add(tabNote2);
 
 
-                        String txtNote = "Note: ";
+                        String txtNote = GetLocalResourceObject("lblPNote").ToString()+": ";
                         iTextSharp.text.Paragraph noteField = new iTextSharp.text.Paragraph(txtNote, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         noteField.Alignment = Element.ALIGN_LEFT;
                         cartPDF.Add(noteField);
@@ -918,7 +917,7 @@ namespace KIS.Produzione
 
         protected void lnkClienteDown_Click(object sender, EventArgs e)
         {
-            var artINPSorted = artINP.OrderBy(x => x.Cliente);
+            var artINPSorted = artINP.OrderBy(x => x.RagioneSocialeCliente);
             rptArticoli.DataSource = artINPSorted;
             rptArticoli.DataBind();
             ordine = "ClienteUp";
@@ -926,7 +925,7 @@ namespace KIS.Produzione
 
         protected void lnkClienteUp_Click(object sender, EventArgs e)
         {
-            var artINPSorted = artINP.OrderByDescending(x => x.Cliente);
+            var artINPSorted = artINP.OrderByDescending(x => x.RagioneSocialeCliente);
             rptArticoli.DataSource = artINPSorted;
             rptArticoli.DataBind();
             ordine = "ClienteDown";

@@ -14,11 +14,12 @@ namespace KIS.Clienti
             frmEditCliente.Visible = false;
             frmContattiClienti.Visible = false;
             frmAddContatto.Visible = false;
+            lnkCustomer.Visible = false;
 
-            if(!String.IsNullOrEmpty(Request.QueryString["idCliente"]))
+            if (!String.IsNullOrEmpty(Request.QueryString["idCliente"]))
             {
                 String codCliente = Request.QueryString["idCliente"];
-                if (codCliente.Length > 0)
+                if (!String.IsNullOrEmpty(codCliente) && codCliente.Length > 0)
                 {
                     frmEditCliente.codCliente = codCliente;
                     frmEditCliente.Visible = true;
@@ -26,6 +27,8 @@ namespace KIS.Clienti
                     frmContattiClienti.idCliente = codCliente;
                     frmAddContatto.Visible = true;
                     frmAddContatto.idCliente = codCliente;
+                    lnkCustomer.Visible = true;
+                    lnkCustomer.NavigateUrl += "?idCliente=" + codCliente.ToString();
                 }
             }
             

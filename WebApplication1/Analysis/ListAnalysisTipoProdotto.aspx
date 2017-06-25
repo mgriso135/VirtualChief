@@ -5,11 +5,14 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx">
+                            <asp:Label runat="server" ID="lblNavAnalisiDati" meta:resourcekey="lblNavAnalisiDati" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="ListAnalysisTipoProdotto.aspx">Selezione tipo di prodotto</a>
+						<a href="ListAnalysisTipoProdotto.aspx">
+                            <asp:Label runat="server" ID="lblNavSelProdotto" meta:resourcekey="lblNavSelProdotto" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

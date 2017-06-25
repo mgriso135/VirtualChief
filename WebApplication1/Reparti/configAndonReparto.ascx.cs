@@ -37,13 +37,13 @@ namespace KIS.Reparti
                     else
                     {
                         rbList.Visible = false;
-                        lbl1.Text = "Errore: reparto non trovato.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrorRepNotFound").ToString();
                     }
                 }
             }
             else
             {
-                lbl1.Text = "Non hai i permessi necessari per modificare la configurazione dell'andon di reparto.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rbList.Visible = false;
             }
         }

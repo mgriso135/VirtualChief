@@ -9,21 +9,20 @@
             });
 </script>
 
-<h3>Stato avanzamento produzione articolo</h3>
+<h3><asp:Literal runat="server" ID="lblStatoProduzione" Text="<%$Resources:lblStatoProduzione %>" /></h3>
 
 
 <table>
-    <tr><td>ID Commessa</td><td><asp:Label runat="server" ID="lblIDCommessa" />/<asp:Label runat="server" ID="lblAnnoCommessa" /></td></tr>
-    <tr><td>Articolo</td><td><asp:Label runat="server" ID="lblID" />/<asp:Label runat="server" ID="lblAnno" /></td></tr>
-    <tr><td>Processo</td><td><asp:Label runat="server" ID="lblProcesso" /></td></tr>
-    <tr><td>Variante</td><td><asp:Label runat="server" ID="lblVariante" /></td></tr>
-    <tr><td>Quantità Prevista</td><td><asp:Label runat="server" ID="lblQuantita" /></td></tr>
-    <tr runat="server" id="trQtaProd"><td>Quantità Prodotta</td><td><asp:Label runat="server" ID="lblQuantitaProdotta" /></td></tr>
-    <tr><td>Reparto</td><td><asp:Label runat="server" ID="lblReparto" /></td></tr>
-    <tr><td>Matricola</td><td><asp:Label runat="server" ID="lblMatricola" /></td></tr>
-    <tr><td>Status</td><td><asp:Label runat="server" ID="lblStatus" /></td></tr>
-    <tr><td>Data fine produzione</td><td><asp:Label runat="server" ID="lblDataFineProduzione" /></td></tr>
-    <tr><td>Data consegna</td><td><asp:Label runat="server" ID="lblDataConsegna" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDIDCommessa" Text="<%$Resources:lblTDIDCommessa %>" /></td><td><asp:Label runat="server" ID="lblIDCommessa" />/<asp:Label runat="server" ID="lblAnnoCommessa" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDProdotto" Text="<%$Resources:lblTDProdotto %>" /></td><td><asp:Label runat="server" ID="lblID" />/<asp:Label runat="server" ID="lblAnno" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDTipoProd" Text="<%$Resources:lblTDTipoProd %>" /></td><td><asp:Label runat="server" ID="lblProcesso" /> - <asp:Label runat="server" ID="lblVariante" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDQtaPrev" Text="<%$Resources:lblTDQtaPrev %>" /></td><td><asp:Label runat="server" ID="lblQuantita" /></td></tr>
+    <tr runat="server" id="trQtaProd"><td><asp:Literal runat="server" ID="lblTDQtaProd" Text="<%$Resources:lblTDQtaProd %>" /></td><td><asp:Label runat="server" ID="lblQuantitaProdotta" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDReparto" Text="<%$Resources:lblTDReparto %>" /></td><td><asp:Label runat="server" ID="lblReparto" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDMatricola" Text="<%$Resources:lblTDMatricola %>" /></td><td><asp:Label runat="server" ID="lblMatricola" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDStatus" Text="<%$Resources:lblTDStatus %>" /></td><td><asp:Label runat="server" ID="lblStatus" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDDataFineProd" Text="<%$Resources:lblTDDataFineProd %>" /></td><td><asp:Label runat="server" ID="lblDataFineProduzione" /></td></tr>
+    <tr><td><asp:Literal runat="server" ID="lblTDDataConsegna" Text="<%$Resources:lblTDDataConsegna %>" /></td><td><asp:Label runat="server" ID="lblDataConsegna" /></td></tr>
     </table>
 <br />
 
@@ -36,23 +35,23 @@
             <HeaderTemplate>
                 <table style="border:1px dashed blue">
                     <tr style="font-family: Calibri; font-size: 18px; font-weight: bold;">
-                        <td>ID</td>
-                        <td>Nome</td>
-                        <td>Status</td>
-                        <td>Quantità</td>
-                        <td>Early Start</td>
-                        <td>Late Start</td>
-                        <td>Early Finish</td>
-                        <td>Late Finish</td>
-                        <td>Postazione</td>
-                        <td>Data effettiva inizio task</td>
-                        <td>Data effettiva fine task</td>
-                        <td>Tempo di lavoro previsto (ore)</td>
-                        <td>Tempo di lavoro effettivo (ore)</td>
-                        <td>Tempo ciclo previsto (ore)</td>
-                        <td>Tempo ciclo effettivo (ore)</td>
-                        <td>Ritardo (ore)</td>
-                        <td>Riesuma</td>
+                        <td><asp:Literal runat="server" ID="lblTDID" Text="<%$Resources:lblTDID %>" /></td>
+                        <td><asp:Literal runat="server" ID="lblTDNome" Text="<%$Resources:lblTDNome %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDStatus %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDQta %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDEarlyStart %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDLateStart %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDEarlyFinish %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDLateFinish %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDPostazione %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDDataInizio %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDDataFine %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDTempoPrevisto %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDTempoEffettivo %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDTempoCicloPrev %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDTempoCicloEff %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDRitardo %>" /></td>
+                        <td><asp:Literal runat="server" Text="<%$Resources:lblTDRiesuma %>" /></td>
                     </tr>
             </HeaderTemplate>
             <ItemTemplate>
@@ -90,7 +89,7 @@
             </ItemTemplate>
             <FooterTemplate>
                 <tr>
-                    <td colspan="12"><asp:label runat="server" CssClass="lead">TOTALE</asp:label></td>
+                    <td colspan="12"><asp:label runat="server" CssClass="lead"><asp:literal runat="server" ID="lblTotale" Text="<%$Resources:lblTotale %>"/></asp:label></td>
                     <td colspan="5">
                         <asp:Label CssClass="lead" runat="server" ID="lblTotTempoDiLavoro" />
                     </td>

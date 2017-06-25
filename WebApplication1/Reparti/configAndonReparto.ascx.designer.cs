@@ -22,6 +22,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblTitleAndonRep.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleAndonRep;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>

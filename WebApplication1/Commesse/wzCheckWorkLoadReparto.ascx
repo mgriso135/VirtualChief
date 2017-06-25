@@ -11,7 +11,7 @@
 
 <script type="text/javascript">
     function FireConfirm() {
-        if (confirm('Stai per lanciare il prodotto in produzione. Nessuna ulteriore modifica sarà possibile. Vuoi proseguire?'))
+        if (confirm('<asp:literal runat="server" text="<%$Resources:lblConfirmLaunch%>"/>'))
             return true;
         else
             return false;
@@ -30,17 +30,17 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
                     <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Data fine produzione
+                        <asp:Label runat="server" ID="lblAccDataFineProd" Text="<%$Resources:lblAccDataFineProd %>" />
     </a>
                 </div>
                 <div id="collapseOne" class="accordion-body collapse">
       <div class="accordion-inner">
           
-          Data:&nbsp;<asp:textbox runat="server" id="txtProductDate" Width="100px"  />
+          <asp:Label runat="server" ID="lblData" Text="<%$Resources:lblData %>" />:&nbsp;<asp:textbox runat="server" id="txtProductDate" Width="100px"  />
           <br />
-          Ore:<asp:DropDownList runat="server" ID="calOre" CssClass="dropdown" Width="70px" />
-          &nbsp;mm:<asp:DropDownList runat="server" ID="calMinuti" CssClass="dropdown"  Width="70px" />
-          &nbsp;ss:<asp:DropDownList runat="server" ID="calSecondi" CssClass="dropdown" Width="70px" />
+          <asp:Label runat="server" ID="lblOre" Text="<%$Resources:lblOre %>" />:<asp:DropDownList runat="server" ID="calOre" CssClass="dropdown" Width="70px" />
+          &nbsp;<asp:Label runat="server" ID="lblMinuti" Text="<%$Resources:lblMinuti %>" />:<asp:DropDownList runat="server" ID="calMinuti" CssClass="dropdown"  Width="70px" />
+          &nbsp;<asp:Label runat="server" ID="lblSecondi" Text="<%$Resources:lblSecondi %>" />:<asp:DropDownList runat="server" ID="calSecondi" CssClass="dropdown" Width="70px" />
           <br />
           <asp:ImageButton runat="server" ImageUrl="~/img/iconSave.jpg" Height="30" ID="btnSaveDataFineProd" OnClick="btnSaveDataFineProd_Click" />
 
@@ -51,15 +51,15 @@
              <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Postazioni di lavoro
+          <asp:Label runat="server" ID="lblPostazioni" Text="<%$Resources:lblPostazioni %>" />
     </a></div>
                 <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:UpdatePanel ID="UpdatePanel1" runat="server">
               <ContentTemplate>
     <asp:RadioButtonList CssClass="radio" runat="server" id="rbPostazioni" AutoPostBack="true" OnSelectedIndexChanged="rbPostazioni_SelectedIndexChanged">
-    <asp:ListItem Selected="True" Value="0">Visualizza i tempi complessivi per il reparto</asp:ListItem>
-    <asp:ListItem Value="1">Suddividi i tempi per postazione</asp:ListItem>
+    <asp:ListItem Selected="True" Value="0" Text="<%$Resources:lblVisualizzaTempiComplessivi %>"></asp:ListItem>
+    <asp:ListItem Value="1" Text="<%$Resources:lblTempiPost %>"></asp:ListItem>
 </asp:RadioButtonList>
 <asp:CheckBoxList runat="server" CssClass="checkbox" AutoPostBack="true" ID="chkLstPostazioni" OnSelectedIndexChanged="chkLstPostazioni_SelectedIndexChanged" >
 

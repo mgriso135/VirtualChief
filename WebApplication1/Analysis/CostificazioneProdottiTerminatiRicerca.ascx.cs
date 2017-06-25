@@ -53,7 +53,7 @@ namespace KIS.Analysis
             }
             else
             {
-                lbl1.Text = "Non hai i permessi necessari per visualizzare la pagina.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -83,7 +83,7 @@ namespace KIS.Analysis
                 else
                 {
                     rptArticoliTerminati.Visible = false;
-                    lbl1.Text = "Attenzione: i campi richiesti non sono stati compilati in maniera corretta, oppure non è stato trovato l'articolo ricercato.";
+                    lbl1.Text = GetLocalResourceObject("lblErroreCampi").ToString();
                 }
             }
             else if (due.Checked == true)
@@ -172,7 +172,7 @@ namespace KIS.Analysis
                     else
                     {
                         rptArticoliTerminati.Visible = false;
-                        lbl1.Text = "Errore: selezionare almeno un criterio di ricerca.";
+                        lbl1.Text = GetLocalResourceObject("lblErroreNoCriteria").ToString();
                     }
                 
             }

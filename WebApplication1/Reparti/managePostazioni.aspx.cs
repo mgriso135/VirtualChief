@@ -45,7 +45,7 @@ namespace KIS.Reparti
                     }
                     catch
                     {
-                        lbl1.Text = "Errore";
+                        lbl1.Text = "Error.";
                         procID = -1;
                         varID = -1;
                         repID = -1;
@@ -72,7 +72,9 @@ namespace KIS.Reparti
                         {
                             lnkManageProcesso.NavigateUrl += "?id=" + proc.process.processID.ToString() + "&variante=" + proc.variant.idVariante.ToString();
                             lnkProcReparto.NavigateUrl += proc.process.processID.ToString() + "&rev=" + proc.process.revisione.ToString() + "&var=" + proc.variant.idVariante.ToString();
-                            lblTitle.Text = "Reparto: " + rep.name + "<br/>Processo: " + proc.process.processName + " - " + proc.variant.nomeVariante;
+                            lblTitle.Text = GetLocalResourceObject("lblReparto").ToString() + ": " + rep.name 
+                                    + "<br/>"+ GetLocalResourceObject("lblProdotto").ToString() + ": " 
+                                    + proc.process.processName + " - " + proc.variant.nomeVariante;
 
                             rptTasksPostazioni.DataSource = proc.process.subProcessi;
                             rptTasksPostazioni.DataBind();
@@ -83,7 +85,7 @@ namespace KIS.Reparti
                 else
                 {
                     lblTitle.Visible = false;
-                    lbl1.Text = "Errore.<br/>";
+                    lbl1.Text = "Error.<br/>";
                     lblTitle.Visible = false;
                     caricodilavoro.Visible = false;
                     imgShowAddPostazioni.Visible = false;
@@ -97,7 +99,8 @@ namespace KIS.Reparti
                 caricodilavoro.Visible = false;
                 imgShowAddPostazioni.Visible = false;
                 Image1.Visible = false;
-                lbl1.Text = "Non hai il permesso di gestire le postazioni di lavoro.<br/>";
+                lbl1.Text = "";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -171,11 +174,10 @@ namespace KIS.Reparti
                 bool rt = rp.DeleteLinkTaskFromPostazione(new TaskVariante(new processo(taskID), new variante(varID)));
                 if (rt == false)
                 {
-                    lbl1.Text = "ERRORE!";
+                    lbl1.Text = "ERROR!";
                 }
                 else
                 {
-                    lbl1.Text = "DOVREI FARE IL REDIRECT!!!!";
                     Response.Redirect(Request.RawUrl);
                 }
             }
@@ -201,7 +203,7 @@ namespace KIS.Reparti
                         bool rt = rp.LinkTaskToPostazione(eccolo, new Postazione(postID));
                         if (rt == false)
                         {
-                            lbl1.Text = "ERRORE!";
+                            lbl1.Text = "ERROR!";
                         }
                         else
                         {

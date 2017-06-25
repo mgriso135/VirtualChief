@@ -40,6 +40,15 @@ namespace KIS.Users {
         protected global::System.Web.UI.HtmlControls.HtmlTable tbEdit;
         
         /// <summary>
+        /// Controllo lblNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNome;
+        
+        /// <summary>
         /// Controllo tbNome.
         /// </summary>
         /// <remarks>
@@ -47,6 +56,15 @@ namespace KIS.Users {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbNome;
+        
+        /// <summary>
+        /// Controllo lblCognome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCognome;
         
         /// <summary>
         /// Controllo tbCognome.

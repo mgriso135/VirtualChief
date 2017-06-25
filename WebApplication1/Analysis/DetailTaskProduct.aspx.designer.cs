@@ -13,6 +13,24 @@ namespace KIS.Analysis {
     public partial class DetailTaskProduct {
         
         /// <summary>
+        /// Controllo lblNavAnalisiDati.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAnalisiDati;
+        
+        /// <summary>
+        /// Controllo lblNavSelTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavSelTask;
+        
+        /// <summary>
         /// Controllo lnkNavigation.
         /// </summary>
         /// <remarks>
@@ -22,6 +40,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.HyperLink lnkNavigation;
         
         /// <summary>
+        /// Controllo lblNavAnalisiTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAnalisiTask;
+        
+        /// <summary>
         /// Controllo lnkNavigation2.
         /// </summary>
         /// <remarks>
@@ -29,6 +56,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkNavigation2;
+        
+        /// <summary>
+        /// Controllo lblNavAnalisiTaskProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAnalisiTaskProd;
         
         /// <summary>
         /// Controllo lbl1.

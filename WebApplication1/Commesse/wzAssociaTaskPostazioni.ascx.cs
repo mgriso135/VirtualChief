@@ -12,6 +12,7 @@ namespace KIS.Commesse
     public partial class wzAssociaTaskPostazioni1 : System.Web.UI.UserControl
     {
         public int idCommessa, annoCommessa, idProcesso, revProcesso, idVariante, idReparto, idProdotto, annoProdotto;
+        public String matricola;
         protected void Page_Load(object sender, EventArgs e)
         {
             List<String[]> elencoPermessi = new List<String[]>();
@@ -38,7 +39,10 @@ namespace KIS.Commesse
                     {
                         //lnkManageProcesso.NavigateUrl += "?id=" + proc.process.processID.ToString() + "&variante=" + proc.variant.idVariante.ToString();
                         //lnkProcReparto.NavigateUrl += proc.process.processID.ToString() + "&rev=" + proc.process.revisione.ToString() + "&var=" + proc.variant.idVariante.ToString();
-                        lblTitle.Text = "Reparto: " + rep.name + "<br/>Processo: " + proc.process.processName + " - " + proc.variant.nomeVariante;
+                        lblTitle.Text = GetLocalResourceObject("lblReparto") 
+                            + ": " + rep.name + "<br/>"+
+                            GetLocalResourceObject("lblProdotto")
+                            + ": " + proc.process.processName + " - " + proc.variant.nomeVariante;
 
                         rptTasksPostazioni.DataSource = proc.process.subProcessi;
                         rptTasksPostazioni.DataBind();
@@ -49,7 +53,7 @@ namespace KIS.Commesse
             {
                 lblTitle.Visible = false;
                 lblTitle.Visible = false;
-                lbl1.Text = "Non hai il permesso di gestire le postazioni di lavoro.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -123,7 +127,7 @@ namespace KIS.Commesse
                 bool rt = rp.DeleteLinkTaskFromPostazione(new TaskVariante(new processo(taskID), new variante(idVariante)));
                 if (rt == false)
                 {
-                    lbl1.Text = "ERRORE!";
+                    lbl1.Text = "ERROR!";
                 }
                 else
                 {
@@ -159,7 +163,7 @@ namespace KIS.Commesse
                             + " " + eccolo.variant.idVariante.ToString();*/
                         if (rt == false)
                         {
-                            lbl1.Text = "ERRORE!";
+                            lbl1.Text = "ERROR!";
                         }
                         else
                         {

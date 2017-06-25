@@ -13,6 +13,15 @@ namespace KIS.Analysis {
     public partial class ReportCustomerProdProgress_summary1 {
         
         /// <summary>
+        /// Controllo lblSelProdF.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSelProdF;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -47,6 +56,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgGoBack;
+        
+        /// <summary>
+        /// Controllo lblFormato.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFormato;
         
         /// <summary>
         /// Controllo ddlFormato.

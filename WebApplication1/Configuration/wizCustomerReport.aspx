@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="MainContent" runat="server">
-    <h3>Configurazione Customer Report Generico</h3>
+    <h3><asp:Literal runat="server" ID="lblTitleCfgReport" Text="<%$Resources:lblTitleCfgReport %>" /></h3>
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <asp:Label runat="server" ID="lbl1" />
     <wizConfig:CustomerReport runat="server" ID="frmConfigCustomerReport" />

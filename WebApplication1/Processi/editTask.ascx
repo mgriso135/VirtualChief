@@ -2,13 +2,13 @@
 
 <table style="background-color: white; border: 1px dashed black;">
         <tr>
-            <td>Nome:</td>
+            <td><asp:Literal runat="server" ID="lblNome" Text="<%$Resources:lblNome %>" />:</td>
             <td>
     <asp:TextBox runat="server" ID="editTaskNome" />
                 </td>
             </tr>
         <tr>
-            <td>Descrizione:</td>
+            <td><asp:Literal runat="server" ID="lblDescrizione" Text="<%$Resources:lblDescrizione %>" />:</td>
             <td>
     <asp:TextBox runat="server" TextMode="MultiLine" ID="editTaskDesc" />
         </td>

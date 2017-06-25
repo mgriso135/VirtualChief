@@ -49,6 +49,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.Image Image1;
         
         /// <summary>
+        /// Controllo lblVerificaCarico.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblVerificaCarico;
+        
+        /// <summary>
         /// Controllo lnkFwdCheckWorkLoad.
         /// </summary>
         /// <remarks>
@@ -65,6 +74,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgGoFwd1;
+        
+        /// <summary>
+        /// Controllo lblPianificaDiretto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPianificaDiretto;
         
         /// <summary>
         /// Controllo lnkFwdDeliveryDate.

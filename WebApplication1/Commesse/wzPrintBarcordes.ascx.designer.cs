@@ -31,6 +31,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl frmPrintBarcodes;
         
         /// <summary>
+        /// Controllo lblStampaBarcodes.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblStampaBarcodes;
+        
+        /// <summary>
         /// Controllo imgPrintOrdini.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgPrintOrdini;
+        
+        /// <summary>
+        /// Controllo lblStampaFogliMultipliA4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStampaFogliMultipliA4;
         
         /// <summary>
         /// Controllo imgPrintOrdiniSingolo.
@@ -49,6 +67,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.ImageButton imgPrintOrdiniSingolo;
         
         /// <summary>
+        /// Controllo lblStampaFogliSingoliA4.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStampaFogliSingoliA4;
+        
+        /// <summary>
         /// Controllo imgPrintOrdiniSingoloA3.
         /// </summary>
         /// <remarks>
@@ -56,5 +83,14 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgPrintOrdiniSingoloA3;
+        
+        /// <summary>
+        /// Controllo Label1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
     }
 }

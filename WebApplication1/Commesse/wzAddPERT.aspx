@@ -7,14 +7,16 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <asp:ScriptManager runat="server" ID="scriptMan1" EnablePageMethods="true"/>
-    <h1>Wizard: nuovo prodotto su commessa</h1>
+    <h1><asp:Label runat="server" ID="lblTitleWizOrdine" meta:resourcekey="lblTitleWizOrdine" /></h1>
     <ul class="breadcrumb hidden-phone">
         <li>
-		    <a href="wzAddCommessa.aspx">Nuova commessa</a>
+		    <a href="wzAddCommessa.aspx">
+                <asp:Label runat="server" ID="lblNavNewOrder" meta:resourcekey="lblNavNewOrder" /></a>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink NavigateUrl="wzAddPERT.aspx" runat="server" id="lnkAddPert"><b style="font-size: 14px;">Descrivi il prodotto</b></asp:hyperlink>
+		    <asp:hyperlink NavigateUrl="wzAddPERT.aspx" runat="server" id="lnkAddPert"><b style="font-size: 14px;">
+                <asp:Label runat="server" ID="lblNavDescrProduct" meta:resourcekey="lblNavDescrProduct" /></b></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
 	</ul>

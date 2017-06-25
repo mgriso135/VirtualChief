@@ -7,13 +7,13 @@
     <asp:Label runat="server" ID="lblTitoloRisorsa" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx"><asp:literal runat="server" ID="lblNavAdmin" Text="<%$Resources:lblNavAdmin %>" /></a>
 						<span class="divider">/</span>
-						<a href="/Reparti/configReparto.aspx">Reparti</a>
+						<a href="/Reparti/configReparto.aspx"><asp:literal runat="server" ID="lblNavReparti" Text="<%$Resources:lblNavReparti %>" /></a>
 						<span class="divider">/</span>
-                        <asp:hyperlink navigateurl="~/Reparti/configReparto.aspx?id=" runat="server" id="lnkReparto">Configurazione Reparto</asp:hyperlink>
+                        <asp:hyperlink navigateurl="~/Reparti/configReparto.aspx?id=" runat="server" id="lnkReparto"><asp:literal runat="server" ID="lblNavConfigReparti" Text="<%$Resources:lblNavConfigReparti %>" /></asp:hyperlink>
 						<span class="divider">/</span>
-                        <asp:hyperlink navigateurl="~/Reparti/risorseTurno.aspx.aspx?idTurno=" runat="server" id="lnkRisorseTurno">Risorse produttive</asp:hyperlink>
+                        <asp:hyperlink navigateurl="~/Reparti/risorseTurno.aspx.aspx?idTurno=" runat="server" id="lnkRisorseTurno"><asp:literal runat="server" ID="lblNavRisorseProd" Text="<%$Resources:lblNavRisorseProd %>" /></asp:hyperlink>
 						<span class="divider">/</span>
 					</li>
 				</ul>

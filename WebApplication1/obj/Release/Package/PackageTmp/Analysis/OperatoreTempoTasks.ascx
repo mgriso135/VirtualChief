@@ -14,11 +14,13 @@
 <div class="row-fluid" runat="server" id="boxMain">
         <div class="span12">
             <center>
-            Date di analisi</center>
+                <asp:Label runat="server" ID="lblDateAnalisi" meta:resourcekey="lblDateAnalisi" />
+            </center>
             <div class="row-fluid">
         <div class="span6">
             <center>
-    Data inizio:<asp:textbox runat="server" id="txtStart" Width="100px"  /><br />
+                <asp:Label runat="server" ID="lblDataInizio" meta:resourcekey="lblDataInizio" />
+    <asp:textbox runat="server" id="txtStart" Width="100px"  /><br />
             HH:<asp:DropDownList runat="server" ID="hhStart" Width="60" />
             mm:<asp:DropDownList runat="server" ID="mmStart" Width="60" />
             ss:<asp:DropDownList runat="server" ID="ssStart" Width="60" />
@@ -26,7 +28,8 @@
             </div>
         <div class="span6">
             <center>
-    Data fine:<asp:textbox runat="server" id="txtEnd" Width="100px"  /><br />
+                <asp:Label runat="server" ID="lblDataFine" meta:resourcekey="lblDataFine" />
+    <asp:textbox runat="server" id="txtEnd" Width="100px"  /><br />
             HH:<asp:DropDownList runat="server" ID="hhEnd" Width="60" />
             mm:<asp:DropDownList runat="server" ID="mmEnd" Width="60" />
             ss:<asp:DropDownList runat="server" ID="ssEnd" Width="60" />
@@ -48,7 +51,8 @@
         <div class="span6">
         
 
-Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
+<asp:Label runat="server" ID="lblTempoTotaleAttivo" meta:resourcekey="lblTempoTotaleAttivo" />&nbsp;
+<asp:Label runat="server" ID="lblTotaleTempo" />
 
             <div class="accordion" id="accordion1" runat="server">
 
@@ -56,7 +60,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
                 <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-    Intervalli di tempo lavorati</a></div>
+          <asp:Label runat="server" ID="lblIntervalliLavorati" meta:resourcekey="lblIntervalliLavorati" />
+    </a></div>
                 <div id="collapseOne" class="accordion-body collapse">
       <div class="accordion-inner">
 <asp:Repeater runat="server" ID="rptDetailTasks">
@@ -64,11 +69,11 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
         <table class="table table-bordered table-hover table-striped table-condensed">
             <thead>
             <tr>
-                <th>TaskID</th>
-                <th>Descrizione</th>
-                <th>Inizio</th>
-                <th>Fine</th>
-                <th>Durata Intervallo</th>
+                <th><asp:Label runat="server" ID="lblTHTaskID" meta:resourcekey="lblTHTaskID" /></th>
+                <th><asp:Label runat="server" ID="lblTHTaskDescrizione" meta:resourcekey="lblTHTaskDescrizione" /></th>
+                <th><asp:Label runat="server" ID="lblTHTaskInizio" meta:resourcekey="lblTHTaskInizio" /></th>
+                <th><asp:Label runat="server" ID="LablblTHTaskFineel2" meta:resourcekey="lblTHTaskFine" /></th>
+                <th><asp:Label runat="server" ID="lblTHTaskDurataIntervallo" meta:resourcekey="lblTHTaskDurataIntervallo" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -96,7 +101,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
                 <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-    Dettagli per postazione</a></div>
+          <asp:Label runat="server" ID="lblDettagliPostazione" meta:resourcekey="lblDettagliPostazione" />
+    </a></div>
                 <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:Repeater runat="server" ID="rptDetailsPostazione">
@@ -104,8 +110,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
         <table class="table table-bordered table-hover table-striped table-condensed">
             <thead>
             <tr>
-                <th>Postazione</th>
-                <th>Ore lavorate</th>
+                <th><asp:Label runat="server" ID="lblTHPostazione" meta:resourcekey="lblTHPostazione" /></th>
+                <th><asp:Label runat="server" ID="lblTHOreLav" meta:resourcekey="lblTHOreLav" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -131,7 +137,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
                 <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-    Dettagli tipologia di attività</a></div>
+          <asp:Label runat="server" ID="lblTHDettagliAttivita" meta:resourcekey="lblTHDettagliAttivita" />
+    </a></div>
                 <div id="collapseThree" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:Repeater runat="server" ID="rptTipoTasks">
@@ -139,8 +146,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
         <table class="table table-bordered table-hover table-striped table-condensed">
             <thead>
             <tr>
-                <th>Task</th>
-                <th>Ore lavorate</th>
+                <th><asp:Label runat="server" ID="lblTHTask" meta:resourcekey="lblTHTask" /></th>
+                <th><asp:Label runat="server" ID="lblTHOreLavorate" meta:resourcekey="lblTHOreLavorate" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -148,7 +155,9 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
     <ItemTemplate>
         <tr>
             <td><%#DataBinder.Eval(Container.DataItem, "NomeTask") %></td>
-            <td><%# Math.Round(((TimeSpan)DataBinder.Eval(Container.DataItem, "Tempo")).TotalHours, 2) + " ore"%></td>
+            <td><%# Math.Round(((TimeSpan)DataBinder.Eval(Container.DataItem, "Tempo")).TotalHours, 2) + " " %>
+                <asp:Label runat="server" ID="lblOre" meta:resourcekey="lblOre" />
+            </td>
         </tr>
     </ItemTemplate>
     <FooterTemplate>
@@ -164,7 +173,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
                 <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFour">
-    Giorni presenza</a></div>
+          <asp:Label runat="server" ID="lblGiorniPresenza" meta:resourcekey="lblGiorniPresenza" />
+    </a></div>
                 <div id="collapseFour" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:Repeater runat="server" ID="rptGiorniPresenza">
@@ -172,7 +182,7 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
         <table class="table table-bordered table-hover table-striped table-condensed">
             <thead>
             <tr>
-                <th>Giorni presenza attiva</th>
+                <th><asp:Label runat="server" ID="lblTHGiorniPresenzaAttiva" meta:resourcekey="lblTHGiorniPresenzaAttiva" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -199,7 +209,8 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
                 <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
-    Dettagli prodotto</a></div>
+          <asp:Label runat="server" ID="lblTHDettagliProd" meta:resourcekey="lblTHDettagliProd" />
+    </a></div>
                 <div id="collapseFive" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:Repeater runat="server" ID="rptProdotto">
@@ -207,10 +218,10 @@ Tempo totale attivo: <asp:Label runat="server" ID="lblTotaleTempo" />
         <table class="table table-bordered table-hover table-striped table-condensed">
             <thead>
             <tr>
-                <th>Cliente</th>
-                <th>Prodotto</th>
-                <th>Nome prodotto</th>
-                <th>Ore lavorate</th>
+                <th><asp:Label runat="server" ID="lblTHCliente" meta:resourcekey="lblTHCliente" /></th>
+                <th><asp:Label runat="server" ID="lblTHProdotto" meta:resourcekey="lblTHProdotto" /></th>
+                <th><asp:Label runat="server" ID="lblTHNomeProdotto" meta:resourcekey="lblTHNomeProdotto" /></th>
+                <th><asp:Label runat="server" ID="lblTHOreLavorate2" meta:resourcekey="lblTHOreLavorate" /></th>
             </tr>
                 </thead>
             <tbody>

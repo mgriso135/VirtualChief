@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="Main">
+        <s:complexType />
+      </s:element>
+      <s:element name="MainResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="MainResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="MainSoapIn">
+    <wsdl:part name="parameters" element="tns:Main" />
+  </wsdl:message>
+  <wsdl:message name="MainSoapOut">
+    <wsdl:part name="parameters" element="tns:MainResponse" />
+  </wsdl:message>
+  <wsdl:portType name="KanbanBoxReaderSoap">
+    <wsdl:operation name="Main">
+      <wsdl:input message="tns:MainSoapIn" />
+      <wsdl:output message="tns:MainSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="KanbanBoxReaderSoap" type="tns:KanbanBoxReaderSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Main">
+      <soap:operation soapAction="http://tempuri.org/Main" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="KanbanBoxReaderSoap12" type="tns:KanbanBoxReaderSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Main">
+      <soap12:operation soapAction="http://tempuri.org/Main" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="KanbanBoxReader">
+    <wsdl:port name="KanbanBoxReaderSoap" binding="tns:KanbanBoxReaderSoap">
+      <soap:address location="http://kis.localhost/KanbanBox/KanbanBoxReader.asmx" />
+    </wsdl:port>
+    <wsdl:port name="KanbanBoxReaderSoap12" binding="tns:KanbanBoxReaderSoap12">
+      <soap12:address location="http://kis.localhost/KanbanBox/KanbanBoxReader.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

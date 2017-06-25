@@ -75,7 +75,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire i turni di lavoro.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptTurni.Visible = false;
                 showAddTurno.Visible = false;
                 addTurno.Visible = false;
@@ -109,18 +109,18 @@ namespace KIS.Produzione
                     }
                     else
                     {
-                        lbl1.Text += "Errore: non sono riuscito ad aggiungere il turno.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrorAddTurno").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: reparto non trovato.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorRepNotFound").ToString();
                 }
 
             }
             else
             {
-                lbl1.Text = "Errore: reparto non trovato.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorRepNotFound").ToString();
             }
         }
 
@@ -148,18 +148,18 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            lbl1.Text = "Errore: non sono riuscito a cancellare il turno. Mi dispiace.<br />";
+                            lbl1.Text = GetLocalResourceObject("lblErrorDelTurno").ToString();
                         }
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: reparto non trovato.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorRepNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: non trovato il reparto.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorRepNotFound").ToString();
             }
         }
 

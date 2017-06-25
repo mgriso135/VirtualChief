@@ -53,7 +53,7 @@ namespace KIS.Eventi
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire gli warning del singolo articolo.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddWarningGruppo.Visible = false;
                 btnShowAddWarningGruppo.Visible = false;
                 btnShowAddWarningUtente.Visible = false;
@@ -68,7 +68,7 @@ namespace KIS.Eventi
                 frmAddWarningGruppo.Visible = true;
                 GroupList elencoGruppi = new GroupList();
                 ddlAddWarningGruppo.Items.Clear();
-                ddlAddWarningGruppo.Items.Add(new ListItem("Seleziona un gruppo", ""));
+                ddlAddWarningGruppo.Items.Add(new ListItem(lbl1.Text = GetLocalResourceObject("lblGruppiSel").ToString(), ""));
                 ddlAddWarningGruppo.DataSource = elencoGruppi.Elenco;
                 ddlAddWarningGruppo.DataTextField = "Nome";
                 ddlAddWarningGruppo.DataValueField = "ID";
@@ -105,7 +105,7 @@ namespace KIS.Eventi
                     }
                     else
                     {
-                        lbl1.Text += "Errore." + cfgRp.log;
+                        lbl1.Text += "Error. " + cfgRp.log;
                     }
                 }
             }
@@ -166,12 +166,11 @@ namespace KIS.Eventi
                     bool rt = cfgRp.deleteGruppo(new Group(groupID));
                     if (rt == true)
                     {
-                        lbl1.Text = "OK!";
                         Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore.";
+                        lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
                     }
                 }
             }
@@ -184,7 +183,7 @@ namespace KIS.Eventi
                 frmAddWarningUtente.Visible = true;
                 UserList elencoUtenti = new UserList();
                 ddlAddWarningUtente.Items.Clear();
-                ddlAddWarningUtente.Items.Add(new ListItem("Seleziona un utente", ""));
+                ddlAddWarningUtente.Items.Add(new ListItem(GetLocalResourceObject("lblUtentiSel").ToString(), ""));
                 ddlAddWarningUtente.DataSource = elencoUtenti.elencoUtenti;
                 ddlAddWarningUtente.DataTextField = "FullName";
                 ddlAddWarningUtente.DataValueField = "username";
@@ -233,12 +232,11 @@ namespace KIS.Eventi
                 bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));
                 if (rt == true)
                 {
-                    lbl1.Text = "OK!";
                     Response.Redirect(Request.RawUrl);
                 }
                 else
                 {
-                    lbl1.Text = "E' avvenuto un errore.";
+                    lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
                 }
             }
         }
@@ -259,7 +257,7 @@ namespace KIS.Eventi
                     }
                     else
                     {
-                        lbl1.Text += "Errore." + cfgRp.log;
+                        lbl1.Text += "Error. " + cfgRp.log;
                     }
                 }
             }

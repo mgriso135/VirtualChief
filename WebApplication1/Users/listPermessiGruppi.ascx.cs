@@ -60,7 +60,7 @@ namespace KIS.Users
             }
             else
             {
-                lbl1.Text = "Non hai il permesso<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptPermessi.Visible = false;
             }
             

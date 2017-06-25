@@ -39,7 +39,7 @@ namespace KIS.Admin
             else
             {
                 rptFigli.Visible = false;
-                lbl1.Text = "Errore: non hai il permesso di visualizzare le voci di menu.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -75,7 +75,7 @@ namespace KIS.Admin
                     }
                     else
                     {
-                        lbl1.Text = "Errore: cancella i figli del menu<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblDeleteError").ToString();
                     }
                 }
                 else if (e.CommandName == "edit")

@@ -9,8 +9,8 @@
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <asp:Label runat="server" ID="lbl1" />
-    Aggiungi uno straordinario
+    <h4><asp:Literal runat="server" ID="lblAddStraordinario" Text="<%$Resources:lblAddStraordinario %>" /></h4>
     <straordinario:add runat="server" ID="addStraord" />
-    Elenco straordinari
+    <h4><asp:Literal runat="server" ID="lblListStraordinari" Text="<%$Resources:lblListStraordinari %>" /></h4>
     <straordinario:list runat="server" id="listStraord" />
 </asp:Content>

@@ -13,6 +13,24 @@ namespace KIS.Analysis {
     public partial class ListCommesseChiuse {
         
         /// <summary>
+        /// Controllo lblNavAnalisiDati.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAnalisiDati;
+        
+        /// <summary>
+        /// Controllo lblNavCostCommesse.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavCostCommesse;
+        
+        /// <summary>
         /// Controllo frmCommesseChiuse.
         /// </summary>
         /// <remarks>

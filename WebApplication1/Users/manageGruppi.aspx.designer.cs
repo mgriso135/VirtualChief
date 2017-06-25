@@ -13,6 +13,24 @@ namespace KIS.Users {
     public partial class manageGruppi {
         
         /// <summary>
+        /// Controllo lblNavAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAdmin;
+        
+        /// <summary>
+        /// Controllo lblNavGestGruppi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavGestGruppi;
+        
+        /// <summary>
         /// Controllo frmAddGruppo.
         /// </summary>
         /// <remarks>

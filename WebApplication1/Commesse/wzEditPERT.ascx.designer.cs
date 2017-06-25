@@ -31,6 +31,24 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblAddTask;
         
         /// <summary>
+        /// Controllo lblAddNewTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAddNewTask;
+        
+        /// <summary>
+        /// Controllo lblLinkTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLinkTask;
+        
+        /// <summary>
         /// Controllo ddlTasks.
         /// </summary>
         /// <remarks>
@@ -103,6 +121,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.HiddenField editTaskVarianteID;
         
         /// <summary>
+        /// Controllo lblNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNome;
+        
+        /// <summary>
         /// Controllo editTaskNome.
         /// </summary>
         /// <remarks>
@@ -110,6 +137,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox editTaskNome;
+        
+        /// <summary>
+        /// Controllo lblDescrizione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescrizione;
         
         /// <summary>
         /// Controllo editTaskDesc.
@@ -173,6 +209,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updDeleteTask;
+        
+        /// <summary>
+        /// Controllo lblDeleteProcess.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDeleteProcess;
         
         /// <summary>
         /// Controllo lblEdit1.

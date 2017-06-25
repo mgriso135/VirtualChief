@@ -7,25 +7,31 @@ AutoEventWireup="true" CodeBehind="addMacroProcesso.aspx.cs" Inherits="KIS.Proce
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="MacroProcessi.aspx">Process Manager</a>
+						<a href="MacroProcessi.aspx">
+                            <asp:Literal runat="server" ID="lblNavProcessMan" Text="<%$Resources:lblNavProcessMan %>" />
+                            </a>
 						<span class="divider">/</span>
-                        <a href="AddMacroProcesso.aspx">Aggiungi un processo di primo livello</a>
+                        <a href="AddMacroProcesso.aspx">
+                            <asp:Literal runat="server" ID="lblNavAddProc" Text="<%$Resources:lblNavAddProc %>" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
 <asp:Label runat="server" ID="lbl1" />
-    <h3>Aggiungi un processo di primo livello</h3>
+    <h3><asp:Literal runat="server" ID="lblTitleAddProc" Text="<%$Resources:lblTitleAddProc %>" /></h3>
 <table runat="server" id="frmAddProc" class="table table-bordered">
-<tr><td>Nome processo</td><td><asp:TextBox runat="server" ID="ProcName" /></td>
-<td><asp:RequiredFieldValidator runat="server" ControlToValidate="ProcName" ErrorMessage="Il nome del processo non può essere nullo" ForeColor="Red" /></td>
+<tr><td><asp:Literal runat="server" ID="lblNomeProc" Text="<%$Resources:lblNomeProc %>" />
+    </td><td><asp:TextBox runat="server" ID="ProcName" /></td>
+<td><asp:RequiredFieldValidator runat="server" ControlToValidate="ProcName" ErrorMessage="<%$Resources:lblValReqField %>" ForeColor="Red" /></td>
 </tr>
 <tr><td>Descrizione processo</td><td><asp:TextBox runat="server" ID="ProcDesc" 
         Height="50px" Width="250" TextMode="MultiLine" /></td>
-<td><asp:RequiredFieldValidator runat="server" ControlToValidate="ProcDesc" ErrorMessage="La descrizione del processo non può essere nulla" ForeColor="Red" /></td>
+<td><asp:RequiredFieldValidator runat="server" ControlToValidate="ProcDesc" ErrorMessage="<%$Resources:lblValReqField %>" ForeColor="Red" /></td>
         </tr>
 
-<tr>
-<td>Tipo di grafico per i subprocessi:</td>
+<tr runat="server" visible="false">
+<td><asp:Literal runat="server" ID="lblTipoGrafico" Text="<%$Resources:lblTipoGrafico %>" />
+    </td>
 <td>
 <asp:DropDownList runat="server" ID="vsm">
 <asp:ListItem Value="True" Text="Value-Stream Map" />
@@ -35,6 +41,6 @@ AutoEventWireup="true" CodeBehind="addMacroProcesso.aspx.cs" Inherits="KIS.Proce
 </td>
 </tr>
 <tr><td colspan="2">
-    <asp:Button runat="server" Text="Aggiungi macroprocesso" ID="btnAddMacroProc" OnClick="btnAddMacroProc_Click" OnClientClick="this.value='processing';this.style.display='hidden';" /></td></tr>
+    <asp:Button runat="server" Text="<%$Resources:lblBtnAddLineaProd %>" ID="btnAddMacroProc" OnClick="btnAddMacroProc_Click" OnClientClick="this.value='processing';this.style.display='hidden';" /></td></tr>
 </table>
 </asp:Content>

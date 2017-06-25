@@ -11,6 +11,7 @@ namespace KIS.Commesse
     public partial class wzCheckWorkLoadReparto1 : System.Web.UI.UserControl
     {
         public int idCommessa, annoCommessa, idProc, revProc, idVariante, idReparto, idProdotto, annoProdotto;
+        public string matricola;
 
         public static List<DateTime> list = new List<DateTime>();
         public static List<int> idPostazioni = new List<int>();
@@ -57,7 +58,8 @@ namespace KIS.Commesse
                 + "&idVariante=" + idVariante.ToString()
                 +"&idReparto=" + idReparto.ToString()
                 + "&idProdotto=" + idProdotto.ToString()
-                + "&annoProdotto=" + annoProdotto.ToString();
+                + "&annoProdotto=" + annoProdotto.ToString()
+                + "&matricola=" + matricola.ToString();
 
                 if (!Page.IsPostBack)
                 {
@@ -157,15 +159,15 @@ namespace KIS.Commesse
                             }
                             else if (retSim == 2)
                             {
-                                lblErr.Text = "Errore durante la simulazione dell'introduzione in produzione. Non c'è tempo sufficiente per completare il prodotto entro tale data.";
+                                lblErr.Text = GetLocalResourceObject("lblError1").ToString();
                             }
                             else if (retSim == 3)
                             {
-                                lblErr.Text = "Errore generico. Non sono stati pianificati tutti i tasks.";
+                                lblErr.Text = GetLocalResourceObject("lblErrorGenerico").ToString();
                             }
                             else if (retSim == 4)
                             {
-                                lblErr.Text = "La data prevista di fine produzione non è reale.";
+                                lblErr.Text = GetLocalResourceObject("lblErrorData").ToString();
                             }
 
                         }
@@ -183,7 +185,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare il carico di lavoro del reparto";
+                lblErr.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 chkLstPostazioni.Visible = false;
                 rbPostazioni.Visible = false;
             }
@@ -208,7 +210,7 @@ namespace KIS.Commesse
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
                 {
-                    lbl1.Text += "Aggiungo " + rp.Postazioni[i].name + "<br />";
+                    lbl1.Text += GetLocalResourceObject("lblAggiungo") + " " + rp.Postazioni[i].name + "<br />";
                     idPostazioni.Add(rp.Postazioni[i].id);
                 }
                 if (inizio < fine)
@@ -512,7 +514,8 @@ namespace KIS.Commesse
                         else
                         {
                             dvInfo.Visible = true;
-                            lbl1.Text += "Non posso simulare l'introduzione in produzione dell'articolo " + articoliNuovi[i].ID.ToString() + "/" + articoliNuovi[i].Year.ToString() + " perché mancano alcuni tempi ciclo.<br />";
+                            lbl1.Text += GetLocalResourceObject("lblErrorCantSimulate1").ToString()  + " " + articoliNuovi[i].ID.ToString() + "/" + articoliNuovi[i].Year.ToString() 
+                                + " " + GetLocalResourceObject("lblErrorCantSimulate2").ToString() +".<br />";
                         }
                     }
 
@@ -643,7 +646,7 @@ namespace KIS.Commesse
                         int ind = Chart1.Series[cd.articolo.ToString()].Points.Count - 1;
                         if (cd.articolo == -1)
                         {
-                            Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = "Carico di lavoro fissato: " + String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                            Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = GetLocalResourceObject("lblCaricoFissato").ToString() + ": " + String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                         }
                         else
                         {
@@ -651,10 +654,10 @@ namespace KIS.Commesse
                             Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = art.ID.ToString() + "/" +
                                 art.Year.ToString() + " - " + art.Cliente + " - " +
                                 art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
-                                " - carico di lavoro: " + String.Format("{0:0.00}", cd.CaricoOre.ToString()) + " ore";
+                                " - " + GetLocalResourceObject("lblCaricoDiLavoro").ToString() + ": " + String.Format("{0:0.00}", cd.CaricoOre.ToString()) + " "+ GetLocalResourceObject("lblOre").ToString();
                             Chart1.Series[cd.articolo.ToString()].AxisLabel = art.RepartoNome;
                         }
-                        Chart1.Series[cd.articolo.ToString()].Points[ind].Label = String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                        Chart1.Series[cd.articolo.ToString()].Points[ind].Label = String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                         Chart1.Series[cd.articolo.ToString()].Points[ind].Color = cd.colore;
 
                         if (cd.CaricoOre == 0)
@@ -709,7 +712,7 @@ namespace KIS.Commesse
 
                     for (int q = 0; q < idPostazioni.Count; q++)
                     {
-                        lbl1.Text += "Postazione: " + q.ToString() + "<br />";
+                        lbl1.Text += GetLocalResourceObject("lblPostazione").ToString() + ": " + q.ToString() + "<br />";
                         List<caricoDiLavoro> caricoPst = new List<caricoDiLavoro>();
 
                         double totOre = 0;
@@ -761,14 +764,14 @@ namespace KIS.Commesse
 
                             int indice = Chart1.Series[cd.articolo.ToString()].Points.AddXY(q, cd.CaricoOre);
                             Chart1.Series[cd.articolo.ToString()].Points[indice].Color = cd.colore;
-                            Chart1.Series[cd.articolo.ToString()].Points[indice].Label = String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                            Chart1.Series[cd.articolo.ToString()].Points[indice].Label = String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                             Chart1.Series[cd.articolo.ToString()].Points[indice].AxisLabel = p.name;
                             //lbl1.Text += q.ToString() + " " + Chart1.Series[cd.articolo.ToString()].Points[ind].XValue.ToString() + " " +
                             //    Chart1.Series[cd.articolo.ToString()].Points[ind].YValues[0].ToString() + "<br />";
 
                             if (cd.articolo == -1)
                             {
-                                Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = "Carico di lavoro fissato: " + String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                                Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = GetLocalResourceObject("lblCaricoFissato").ToString()+": " + String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                             }
                             else
                             {
@@ -776,8 +779,8 @@ namespace KIS.Commesse
                                 Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = art.ID.ToString() + "/" +
                                     art.Year.ToString() + " - " + art.Cliente + " - " +
                                     art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
-                                    " Postazione " + p.name +
-                                    " - carico di lavoro: " + String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                                    " "+ GetLocalResourceObject("lblPostazione").ToString() + " " + p.name +
+                                    " - "+ GetLocalResourceObject("lblCaricoDiLavoro").ToString()+": " + String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                             }
                             if (cd.CaricoOre < 0.01)
                             {
@@ -799,8 +802,8 @@ namespace KIS.Commesse
                         Chart1.Series["risorse"].Points[indRes].BorderWidth = 2;
                         if (orePostazione[q] > 0)
                         {
-                            Chart1.Series["risorse"].Points[indRes].Label = "Limite capacità " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " ore";
-                            Chart1.Series["risorse"].Points[indRes].ToolTip = "Limite capacità " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " ore";
+                            Chart1.Series["risorse"].Points[indRes].Label = GetLocalResourceObject("lblLimiteCapacita").ToString()+ " " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " " + GetLocalResourceObject("lblOre").ToString();
+                            Chart1.Series["risorse"].Points[indRes].ToolTip = GetLocalResourceObject("lblLimiteCapacita").ToString() + " " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " " + GetLocalResourceObject("lblOre").ToString();
                         }
                         Chart1.Series["risorse"].Points[indRes].AxisLabel = p.name;
                         if (orePostazione[q] < 0.01)
@@ -817,45 +820,13 @@ namespace KIS.Commesse
                 }
 
                 dvInfo.Visible = true;
-                lbl1.Text = "Carico di lavoro complessivo del reparto "
+                lbl1.Text = GetLocalResourceObject("lblCaricoComplessivo1").ToString() +" "
                     + rp.name
-                    + " nel periodo " + inizio.ToString("dd/MM/yyyy") + " - " + fine.ToString("dd/MM/yyyy") + ": <b>"
-                    + String.Format("{0:0.00}", somma.TotalHours) + " ore</b><br />";
+                    + " "+ GetLocalResourceObject("lblCaricoComplessivo2").ToString() + " " 
+                    + inizio.ToString("dd/MM/yyyy") + " - " + fine.ToString("dd/MM/yyyy") + ": <b>"
+                    + String.Format("{0:0.00}", somma.TotalHours) + " "+ GetLocalResourceObject("lblOre").ToString()+"</b><br />";
             }
         }
-
-        /*protected struct caricoDiLavoro
-        {
-            public Postazione postazione;
-            public int articolo;
-            public int articoloAnno;
-            public TimeSpan carico;
-            public double caricoOre
-            {
-                get
-                {
-                    return carico.TotalHours;
-                }
-            }
-
-            public double CaricoOre;
-            public bool DaProgrammare;
-
-            public System.Drawing.Color colore
-            {
-                get
-                {
-                    if (DaProgrammare == false)
-                    {
-                        return System.Drawing.Color.Yellow;
-                    }
-                    else
-                    {
-                        return System.Drawing.Color.FromArgb((articolo * articoloAnno) % 255, (Math.Abs(articoloAnno - articolo)) % 255, (articoloAnno / (articolo + 1)) % 255);
-                    }
-                }
-            }
-        }*/
 
         protected void btnSaveDataFineProd_Click(object sender, ImageClickEventArgs e)
         {
@@ -955,21 +926,21 @@ namespace KIS.Commesse
                     dvErr.Visible = true;
                     lblErr.Visible = true;
                     dvInfo.Visible = false;
-                    lblErr.Text = "Errore durante la simulazione dell'introduzione in produzione. Non c'è tempo sufficiente per completare il prodotto entro tale data.";
+                    lblErr.Text = GetLocalResourceObject("lblError1").ToString();
                 }
                 else if (retSim == 3)
                 {
                     dvErr.Visible = true;
                     lblErr.Visible = true;
                     dvInfo.Visible = false;
-                    lblErr.Text = "Errore generico. Non sono stati pianificati tutti i tasks.<br />Verifica l'impostazione di Reparto: \"Inserimento tasks in produzione\".";
+                    lblErr.Text = GetLocalResourceObject("lblErrorGenerico2").ToString();
                 }
                 else if (retSim == 4)
                 {
                     dvErr.Visible = true;
                     lblErr.Visible = true;
                     dvInfo.Visible = false;
-                    lblErr.Text = "La data prevista di fine produzione non è reale.";
+                    lblErr.Text = GetLocalResourceObject("lblErrorData").ToString();
                 }
             }
             else
@@ -977,14 +948,14 @@ namespace KIS.Commesse
                 if (finePrd >= art.DataPrevistaConsegna)
                 {
                     dvErr.Visible = true;
-                    lblErr.Text = "Non posso fare la modifica perché la data inserita è maggiore della data di consegna richiesta dal cliente. Rivedi la data di consegna.";
+                    lblErr.Text = GetLocalResourceObject("lblErrorData2").ToString();
                     Chart1.Visible = false;
                     dvInfo.Visible = false;
                 }
                 else
                 {
                     dvErr.Visible = true;
-                    lblErr.Text = "Non posso accettare una data di consegna richiesta antecedente ad oggi.";
+                    lblErr.Text = GetLocalResourceObject("lblErrorData3").ToString();
                     Chart1.Visible = false;
                     dvInfo.Visible = false;
                 }
@@ -997,7 +968,6 @@ namespace KIS.Commesse
 
         protected void imgGoFwd_Click(object sender, ImageClickEventArgs e)
         {
-            lbl1.Text = "ENTRO!";
             List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
             Articolo art = new Articolo(idProdotto, annoProdotto);
 
@@ -1025,7 +995,6 @@ namespace KIS.Commesse
                     int rt = prcCfg.LanciaInProduzione();
                     if (rt == 1)
                     {
-                        lbl1.Text = "Articolo inserito correttamente in produzione<br/>";
                         Response.Redirect("wzImpostaAllarmiArticolo.aspx?idCommessa=" + art.Commessa.ToString()
                         + "&annoCommessa=" + art.AnnoCommessa.ToString()
                         + "&idProc=" + art.Proc.process.processID.ToString()
@@ -1033,32 +1002,33 @@ namespace KIS.Commesse
                         + "&idVariante=" + art.Proc.variant.idVariante.ToString()
                         + "&idReparto=" + art.Reparto.ToString()
                         + "&idProdotto=" + art.ID.ToString()
-                        + "&annoProdotto=" + art.Year.ToString());
+                        + "&annoProdotto=" + art.Year.ToString()
+                        + "&matricola=" + matricola.ToString());
                     }
                     else if (rt == 3)
                     {
-                        lbl1.Text = "Articolo già lanciato in produzione<br />";
+                        lbl1.Text = GetLocalResourceObject("lblProdottoP").ToString();
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore: " + prcCfg.log;
+                        lbl1.Text = GetLocalResourceObject("lblErrorGenerico3").ToString()+": " + prcCfg.log;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore in fase di simulazione<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorSim").ToString();
                 }
             }
             else if (art.Status == 'I' || art.Status == 'P')
             {
-                lblErr.Text = "Prodotto già iniziato.<br/>"
-                    + "Data fine produzione: " + art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
+                lblErr.Text = GetLocalResourceObject("lblProdottoI").ToString()+".<br/>"
+                    + GetLocalResourceObject("lblAccDataFineProd").ToString()
+                    + ": " + art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
                 if(art.DataPrevistaFineProduzione <= art.DataPrevistaConsegna && art.DataPrevistaFineProduzione>=DateTime.Now)
                 {
                     int ret = art.SpostaPianificazione(art.DataPrevistaFineProduzione, art.DataPrevistaConsegna);
                     if (ret == 1)
                     {
-                        lbl1.Text = "Pianificazione articolo spostata correttamente<br/>";
                         Response.Redirect("wzImpostaAllarmiArticolo.aspx?idCommessa=" + art.Commessa.ToString()
                         + "&annoCommessa=" + art.AnnoCommessa.ToString()
                         + "&idProc=" + art.Proc.process.processID.ToString()
@@ -1066,28 +1036,29 @@ namespace KIS.Commesse
                         + "&idVariante=" + art.Proc.variant.idVariante.ToString()
                         + "&idReparto=" + art.Reparto.ToString()
                         + "&idProdotto=" + art.ID.ToString()
-                        + "&annoProdotto=" + art.Year.ToString());
+                        + "&annoProdotto=" + art.Year.ToString()
+                        + "&matricola=" + matricola.ToString());
                     }
                     else if (ret == 0)
                     {
-                        lblErr.Text = "Errore generico.";
+                        lblErr.Text = GetLocalResourceObject("lblErroreGenerico4").ToString();
                     }
                     else if (ret == 2)
                     {
-                        lblErr.Text = "Status non = I oppure articolo inesistente";
+                        lblErr.Text = GetLocalResourceObject("lblErroreGenerico4").ToString();
                     }
                     else if (ret == 3)
                     {
-                        lblErr.Text = "Le date fine produzione e date consegna impostate non sono corrette";
+                        lblErr.Text = GetLocalResourceObject("lblErroreGenerico5").ToString();
                     }
                     else if (ret == 4)
                     {
-                        lblErr.Text = "E' avvenuto un errore in fase di simulazione del lancio in produzione";
+                        lblErr.Text = GetLocalResourceObject("lblErroreGenerico4").ToString();
                     }
                 }
                 else
                 {
-                    lblErr.Text += "Impossibile ripianificare il prodotto a causa di un'incongruenza con le date di consegna o di fine produzione.";
+                    lblErr.Text = GetLocalResourceObject("lblErroreGenerico6").ToString();
                 }
             }
 

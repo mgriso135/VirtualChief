@@ -14,6 +14,14 @@ namespace KIS.Clienti
         public int idContatto;
         protected void Page_Load(object sender, EventArgs e)
         {
+            String risorse = "";// "<script type=\"text/javascript\">";
+            risorse += "var Resources = {";
+            risorse += "delNumTelefono: '" + GetLocalResourceObject("lbldelNumTelefono").ToString() + "',";
+            risorse += "delEmail: '" + GetLocalResourceObject("lbldelEmail").ToString() + "',";
+            risorse += "};";
+            //risorse += "</script>";
+            Page.ClientScript.RegisterClientScriptBlock(GetType(), "risorse", risorse, true);
+
             tblContatto.Visible = false;
             btnShowAddPhone.Visible = false;
             btnShowAddEmail.Visible = false;
@@ -33,40 +41,45 @@ namespace KIS.Clienti
 
             if (checkUser == true)
             {
+                
+
+                tblContatto.Visible = true;
+                btnShowAddPhone.Visible = true;
+                btnShowAddEmail.Visible = true;
                 Contatto contCln = new Contatto(idContatto);
                 if (contCln.ID != -1)
                 {
-                    tblContatto.Visible = true;
-                    btnShowAddPhone.Visible = true;
-                    btnShowAddEmail.Visible = true;
-
-                    if (contCln.Phones.Count > 0)
-                    {
-                        rptPhones.Visible = true;
-                    }
-                    else
-                    {
-                        rptPhones.Visible = false;
-                    }
-
-                    if (contCln.Emails.Count > 0)
-                    {
-                        rptEmails.Visible = true;
-                    }
-                    else
-                    {
-                        rptEmails.Visible = false;
-                    }
+                    
 
                     if (!Page.IsPostBack)
                     {
+                        contCln.loadEmails();
+                        contCln.loadPhones();
+                        if (contCln.Phones.Count > 0)
+                        {
+                            rptPhones.Visible = true;
+                        }
+                        else
+                        {
+                            rptPhones.Visible = false;
+                        }
+
+                        if (contCln.Emails.Count > 0)
+                        {
+                            rptEmails.Visible = true;
+                        }
+                        else
+                        {
+                            rptEmails.Visible = false;
+                        }
+
                         txtNominativo.Text = contCln.Nominativo;
                         txtRuolo.Text = contCln.Ruolo;
                         rptPhones.DataSource = contCln.Phones;
                         rptPhones.DataBind();
 
                         rptEmails.DataSource = contCln.Emails;
-                        rptEmails.DataBind();
+                        rptEmails.DataBind();                        
                     }
                 }
             }
@@ -85,7 +98,7 @@ namespace KIS.Clienti
             }
             else
             {
-                lbl1.Text = "Errore.";
+                lbl1.Text = GetLocalResourceObject("lblErrore").ToString();
             }
         }
 
@@ -121,7 +134,7 @@ namespace KIS.Clienti
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore. " + cln.log;
+                        lbl1.Text = GetLocalResourceObject("lblErrore").ToString() + " " + cln.log;
                     }
                 }
             }
@@ -153,7 +166,7 @@ namespace KIS.Clienti
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore. " + cnt.log;
+                        lbl1.Text = GetLocalResourceObject("lblErrore")+" " + cnt.log;
                     }
                 }
             }
@@ -204,12 +217,12 @@ namespace KIS.Clienti
                         }
                         else
                         {
-                            lbl1.Text = "Si è verificato un errore. " + cnt.log;
+                            lbl1.Text = GetLocalResourceObject("lblErrore")+" " + cnt.log;
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Formato indirizzo e-mail non corretto.";
+                        lbl1.Text = GetLocalResourceObject("lblMailFormatKo").ToString();
                     }
                 }
             }
@@ -243,7 +256,7 @@ namespace KIS.Clienti
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore. " + cln.log;
+                        lbl1.Text = GetLocalResourceObject("lblErrore") + " " + cln.log;
                     }
                 }
             }

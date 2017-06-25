@@ -14,24 +14,24 @@
     }
 
     </script> 
-<h3>Gestione pause tra tasks</h3>
+<h3><asp:Label runat="server" ID="lblTitlePause" Text="<%$Resources:lblTitlePause %>" /></h3>
 <asp:Label runat="server" id="lbl1" />
 
 <table runat="server" id="tblPausa">
     <thead>
     <tr>
-        <th>Task precedente</th>
-        <th>Pausa&nbsp;<asp:Image runat="server" ID="imgWait" ImageUrl="~/img/iconWait.png" Width="40" /></th>
-        <th>Task successivo</th>
+        <th><asp:Label runat="server" ID="lblTHTaskPrec" Text="<%$Resources:lblTHTaskPrec %>" /></th>
+        <th><asp:Label runat="server" ID="lblTHPausa" Text="<%$Resources:lblTHPausa %>" />&nbsp;<asp:Image runat="server" ID="imgWait" ImageUrl="~/img/iconWait.png" Width="40" /></th>
+        <th><asp:Label runat="server" ID="lblTHTaskSucc" Text="<%$Resources:lblTHTaskSucc %>" /></th>
     </tr>
         </thead>
     <tbody>
     <tr>
         <td style="text-align:center;"><asp:Label runat="server" ID="lblNomePrec" /></td>
         <td style="text-align:center;">
-            <asp:DropDownList runat="server" ID="ddlHour" Width="70" />hh:
-            <asp:DropDownList runat="server" ID="ddlMinutes" Width="60" />mm:
-            <asp:DropDownList runat="server" ID="ddlSeconds" Width="60" />ss
+            <asp:DropDownList runat="server" ID="ddlHour" Width="70" Text="<%$Resources:lblHOre %>" />:
+            <asp:DropDownList runat="server" ID="ddlMinutes" Width="60" Text="<%$Resources:lblMMinuti %>" />:
+            <asp:DropDownList runat="server" ID="ddlSeconds" Width="60" Text="<%$Resources:lblSSecondi %>" />
         </td>
         <td style="text-align:center;"><asp:Label runat="server" ID="lblNomeSucc" /></td>
     </tr>

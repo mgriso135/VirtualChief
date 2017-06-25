@@ -7,11 +7,19 @@
 // </generato automaticamente>
 //------------------------------------------------------------------------------
 
-namespace KIS.Postazioni
-{
+namespace KIS.Postazioni {
     
     
     public partial class editPostazione_ascx {
+        
+        /// <summary>
+        /// Controllo lblTitleModPostazione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleModPostazione;
         
         /// <summary>
         /// Controllo err.
@@ -23,6 +31,15 @@ namespace KIS.Postazioni
         protected global::System.Web.UI.WebControls.Label err;
         
         /// <summary>
+        /// Controllo lblNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNome;
+        
+        /// <summary>
         /// Controllo postName.
         /// </summary>
         /// <remarks>
@@ -30,6 +47,15 @@ namespace KIS.Postazioni
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox postName;
+        
+        /// <summary>
+        /// Controllo lblDescrizione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDescrizione;
         
         /// <summary>
         /// Controllo postDesc.

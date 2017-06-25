@@ -1,14 +1,15 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="editPostazione.ascx.cs" Inherits="KIS.Postazioni.editPostazione_ascx" %>
 
-<h3>Modifica postazione di lavoro</h3>
+<h3><asp:Literal runat="server" ID="lblTitleModPostazione" Text="<%$Resources:lblTitleModPostazione %>" />
+    </h3>
 <asp:Label runat="server" ID="err" />
 <table class="table">
     
-    <tr><td>Nome</td>
+    <tr><td><asp:Literal runat="server" ID="lblNome" Text="<%$Resources:lblNome %>" /></td>
         <td><asp:TextBox runat="server" ID="postName" /></td>
     </tr>
     <tr>
-        <td>Descrizione:</td>
+        <td><asp:Literal runat="server" ID="lblDescrizione" Text="<%$Resources:lblDescrizione %>" /></td>
         <td><asp:TextBox TextMode="MultiLine" runat="server" ID="postDesc" /></td>
     </tr>
     <tr>

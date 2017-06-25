@@ -49,7 +49,7 @@ namespace KIS.Commesse
                     txtNomeVariante.Visible = false;
                     imgEditNomeVariante.Visible = false;
                     tblDatiProdotto.Visible = false;
-                    lbl1.Text = "Non hai il permesso di modificare i dati di base del prodotto.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
 
                 }
             

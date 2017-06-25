@@ -5,21 +5,21 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx"><asp:Label runat="server" ID="lblNavAnalisi" meta:resourcekey="lblNavAnalisi" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="CustomerPortfolio.aspx">Portafoglio clienti</a>
+						<a href="CustomerPortfolio.aspx"><asp:Label runat="server" ID="lblNavPortafoglioClienti" meta:resourcekey="lblNavPortafoglioClienti" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
     <div class="row-fluid">
         <div class="span11">
-    <h1>Portafoglio clienti</h1>
+    <h1><asp:Label runat="server" ID="lblTitlePortafoglioClienti" meta:resourcekey="lblNavPortafoglioClienti" /></h1>
             </div>
         <div class="span1">
             <asp:HyperLink runat="server" ID="lnkCustomerPareto" NavigateUrl="CustomerPareto.aspx">
-        <asp:Image runat="server" ID="imgCustomerPareto" ToolTip="Mostra il diagramma di Pareto clienti" AlternateText="Mostra il diagramma di Pareto clienti" ImageUrl="~/img/iconPareto.png" />
+        <asp:Image runat="server" ID="imgCustomerPareto" ToolTip="<%$resources:lblTTShowPareto %>" AlternateText="<%$resources:lblTTShowPareto %>" ImageUrl="~/img/iconPareto.png" />
     </asp:HyperLink>
                   </div>
         </div>

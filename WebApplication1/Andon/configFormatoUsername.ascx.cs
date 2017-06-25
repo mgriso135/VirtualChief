@@ -35,7 +35,7 @@ namespace KIS.Andon
             }
             else
             {
-                lbl1.Text = "Non hai i permessi necessari per modificare la configurazione dell'Andon.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rbList.Visible = false;
             }
         }

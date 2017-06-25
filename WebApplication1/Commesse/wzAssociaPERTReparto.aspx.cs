@@ -31,6 +31,11 @@ namespace KIS.Commesse
             sIDProdotto = Request.QueryString["idProdotto"];
             sAnnoProdotto = Request.QueryString["annoProdotto"];
             sQuantita = Request.QueryString["quantita"];
+            String matricola = Request.QueryString["matricola"];
+            if(String.IsNullOrEmpty(matricola) || matricola.Length==0)
+            {
+                matricola = "";
+            }
 
             if (!String.IsNullOrEmpty(sIDCommessa) && !String.IsNullOrEmpty(sAnnoCommessa) && !String.IsNullOrEmpty(sIDProc) && !String.IsNullOrEmpty(sRevProc) && !String.IsNullOrEmpty(sIDVariante) && !String.IsNullOrEmpty(sIDProdotto) && !String.IsNullOrEmpty(sAnnoProdotto) && !String.IsNullOrEmpty(sQuantita))
             {
@@ -77,6 +82,7 @@ namespace KIS.Commesse
                     frmAssociaPERTReparto.idProdotto = idProdotto;
                     frmAssociaPERTReparto.annoProdotto = annoProdotto;
                     frmAssociaPERTReparto.quantita = qty;
+                    frmAssociaPERTReparto.matricola = matricola;
 
                     lnkAddPert.NavigateUrl = "wzAddPERT.aspx?idCommessa=" + idCommessa.ToString()
                             + "&annoCommessa=" + annoCommessa.ToString();
@@ -87,7 +93,8 @@ namespace KIS.Commesse
                     + "&idVariante=" + idVariante.ToString()
                     + "&idProdotto=" + idProdotto.ToString()
                     + "&annoProdotto=" + annoProdotto.ToString()
-                    +"&quantita="+qty.ToString();
+                    +"&quantita="+qty.ToString()
+                    +"&matricola="+matricola.ToString();
 
                     lnkAssociaReparto.NavigateUrl = "wzAssociaPERTReparto.aspx?idCommessa=" + idCommessa.ToString()
                     + "&annoCommessa=" + annoCommessa.ToString()
@@ -96,7 +103,8 @@ namespace KIS.Commesse
                     + "&idVariante=" + idVariante.ToString()
                     + "&idProdotto=" + idProdotto.ToString()
                     + "&annoProdotto=" + annoProdotto.ToString()
-                    + "&quantita=" + qty.ToString(); ;
+                    + "&quantita=" + qty.ToString()
+                    + "&matricola=" + matricola.ToString();
 
                 }
                 else

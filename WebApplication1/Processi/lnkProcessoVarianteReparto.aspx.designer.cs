@@ -31,6 +31,24 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.HyperLink lnkManageProcesso;
         
         /// <summary>
+        /// Controllo lblNavCreaProcesso.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavCreaProcesso;
+        
+        /// <summary>
+        /// Controllo lblNavAssociaReparto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAssociaReparto;
+        
+        /// <summary>
         /// Controllo LinkButton1.
         /// </summary>
         /// <remarks>
@@ -38,6 +56,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton LinkButton1;
+        
+        /// <summary>
+        /// Controllo lblNavAssociaPostazioni.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAssociaPostazioni;
         
         /// <summary>
         /// Controllo dvInfo.
@@ -56,6 +83,24 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblTooltip;
+        
+        /// <summary>
+        /// Controllo Literal1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal1;
+        
+        /// <summary>
+        /// Controllo Literal2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal2;
         
         /// <summary>
         /// Controllo lblNomeProc.

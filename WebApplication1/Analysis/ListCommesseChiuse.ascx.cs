@@ -26,6 +26,7 @@ namespace KIS.Analysis
             if (checkUser == true)
             {
                 ElencoCommesse lstComm = new ElencoCommesse();
+                lstComm.loadCommesse();
                 var lstCommChiuse = (from comm in lstComm.Commesse
                                      where comm.Status == 'F'
                                      select comm).ToList();

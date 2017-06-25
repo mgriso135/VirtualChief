@@ -22,8 +22,8 @@
             <HeaderTemplate>
                 <table class="table table-striped table-hover table-condensed">
                 <thead>
-                    <th>Postazione</th>
-                    <th>Numero risorse</th>
+                    <th><asp:Literal runat="server" ID="lblTHPostazione" Text="<%$Resources:lblTHPostazione %>" /></th>
+                    <th><asp:Literal runat="server" ID="lblTHNumRisorse" Text="<%$Resources:lblTHNumRisorse %>" /></th>
                 </thead><tbody></HeaderTemplate>
             <ItemTemplate>
                 <tr runat="server" id="tr1">

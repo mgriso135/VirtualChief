@@ -4,13 +4,13 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h3>Ripristino dati dimenticati</h3>
+    <h3><asp:literal runat="server" ID="lblTitleRipristinoDati" Text="<%$Resources:lblTitle %>" /></h3>
     <asp:Label runat="server" ID="lbl1" />
     <div id="row-fluid">
         <span class="span12">
         <asp:RadioButtonList runat="server" ID="rbMain" CssClass="radio" AutoPostBack="true" OnSelectedIndexChanged="btnScelta_Click">
-            <asp:ListItem Value="username">Ho dimenticato lo username</asp:ListItem>
-            <asp:ListItem Value="password">Ho dimenticato la password</asp:ListItem>
+            <asp:ListItem Value="username" Text="<%$Resources:lblForgotUsername %>"></asp:ListItem>
+            <asp:ListItem Value="password" Text="<%$Resources:lblForgotPassword %>"></asp:ListItem>
         </asp:RadioButtonList>
             </span>
     </div>

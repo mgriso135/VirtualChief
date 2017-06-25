@@ -89,7 +89,7 @@ namespace KIS.Processi
                             }
                             else
                             {
-                                lbl1.Text = "Sono stati passati alla funzione dei dati errati.<br />";
+                                lbl1.Text = GetLocalResourceObject("lblDataError").ToString();
                             }
                         }
                     }
@@ -101,15 +101,15 @@ namespace KIS.Processi
 
                         if (controllo == 0)
                         {
-                            lbl1.Text = "<span style='color:red;'>GENERIC ERROR</span>";
+                            lbl1.Text = "<span style='color:red;'>"+GetLocalResourceObject("lblGenericError").ToString()+"</span>";
                         }
                         else if (controllo == 2)
                         {
-                            lbl1.Text = "<span style='color:red;'>ATTENZIONE: processo inconsistente. Esiste almeno un task che non ha né precedenti né successivi</span>";
+                            lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotLinked").ToString() + "</span>";
                         }
                         else if (controllo == 5)
                         {
-                            lbl1.Text = "<span style='color:red;'>ATTENZIONE: a qualche task manca il \"Tempo ciclo\"</span>";
+                            lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotTempoCiclo").ToString() + "</span>";
                         }
                         lbl1.Text += "<br/>" + padre.log;
                         
@@ -136,12 +136,12 @@ namespace KIS.Processi
                 }
                 else
                 {
-                    lbl1.Text = "Errore: querystring non presente, errato o processo non trovato.<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblDataError").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire il PERT.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKO").ToString();
                 //imgAddTaskPert.Visible = false;
             }
         }
@@ -194,16 +194,16 @@ namespace KIS.Processi
                 {
                     tsk.Task.processName = Server.HtmlEncode(editTaskNome.Text);
                     tsk.Task.processDescription = Server.HtmlEncode(editTaskDesc.Text);
-                    lblEdit1.Text = "Modifiche apportate correttamente.";
+                    lblEdit1.Text = GetLocalResourceObject("lblModificheOK").ToString();
                 }
                 else
                 {
-                    lblEdit1.Text = "Errore: non sono riuscito a trovare il task di cui mi stai parlando.";
+                    lblEdit1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                 }
             }
             else
             {
-                lblEdit1.Text = "Errore nell'identificazione del task.";
+                lblEdit1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
             }
             editTaskSave.Focus();
         }
@@ -233,12 +233,12 @@ namespace KIS.Processi
                 }
                 else
                 {
-                    lblEdit1.Text = "Errore: non sono riuscito a trovare il task di cui mi stai parlando.";
+                    lblEdit1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                 }
             }
             else
             {
-                lblEdit1.Text = "Errore nell'identificazione del task.";
+                lblEdit1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
             }
             editTaskSave.Focus();
         }
@@ -270,7 +270,7 @@ namespace KIS.Processi
                     bool rt = tc.Delete();
                     if (rt == true)
                     {
-                        lblEdit1.Text = "Tempo ciclo cancellato correttamente.";
+                        lblEdit1.Text = GetLocalResourceObject("lblTCDeletedOK").ToString();
                         prc.loadTempiCiclo();
                         rptTempi.DataSource = prc.Tempi.Tempi;
                         rptTempi.DataBind();
@@ -293,15 +293,15 @@ namespace KIS.Processi
 
             if (controllo == 0)
             {
-                lbl1.Text = "<span style='color:red;'>GENERIC ERROR</span>";
+                lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblGenericError").ToString() + "</span>";
             }
             else if (controllo == 2)
             {
-                lbl1.Text = "<span style='color:red;'>ATTENZIONE: processo inconsistente. Esiste almeno un task che non ha né precedenti né successivi</span>";
+                lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotLinked").ToString() + "</span>";
             }
             else if (controllo == 5)
             {
-                lbl1.Text = "<span style='color:red;'>ATTENZIONE: a qualche task manca il \"Tempo ciclo\"</span>";
+                lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotTempoCiclo").ToString() + "</span>";
             }
         }
 
@@ -337,7 +337,7 @@ namespace KIS.Processi
             }
             else
             {
-                lbl1.Text = "Errore!";
+                lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
             }
         }
     }

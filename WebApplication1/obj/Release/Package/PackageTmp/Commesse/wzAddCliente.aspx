@@ -6,11 +6,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-		    <a href="wzAddCommessa.aspx">Prodotto su commessa</a>
+		    <a href="wzAddCommessa.aspx">
+                <asp:Label runat="server" ID="lblNavProdCommessa" meta:resourcekey="lblWizOrdine" /></a>
 			<span class="divider">/</span>
 	    </li>
                     <li>
-						<a href="#"><b>Nuovo cliente</b></a>
+						<a href="<%=Request.RawUrl %>"><b><asp:Label runat="server" ID="lblNavNuovoCliente" meta:resourcekey="lblNavNuovoCliente" /></b></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

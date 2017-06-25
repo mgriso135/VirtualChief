@@ -32,12 +32,12 @@ namespace KIS.Analysis
                 {
                     lnkProdReportF.Visible = false;
                     lnkProdReportINP.Visible = false;
-                    lbl1.Text = "Cliente non trovato.";
+                    lbl1.Text = GetLocalResourceObject("lblCustomerNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: dati di input non validi.";
+                lbl1.Text = GetLocalResourceObject("lblErrorInput").ToString();
                 lnkProdReportF.Visible = false;
                 lnkProdReportINP.Visible = false;
             }

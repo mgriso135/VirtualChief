@@ -112,6 +112,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.Label lblDataRevisione;
         
         /// <summary>
+        /// Controllo lblTipoDiagramma.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTipoDiagramma;
+        
+        /// <summary>
         /// Controllo vsm.
         /// </summary>
         /// <remarks>
@@ -128,24 +137,6 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList inputVSM;
-        
-        /// <summary>
-        /// Controllo Add.
-        /// </summary>
-        /// <remarks>
-        /// Campo generato automaticamente.
-        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
-        /// </remarks>
-        protected global::KIS.kpi.addKPIForm Add;
-        
-        /// <summary>
-        /// Controllo ListKPI.
-        /// </summary>
-        /// <remarks>
-        /// Campo generato automaticamente.
-        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
-        /// </remarks>
-        protected global::KIS.kpi.listKPIs ListKPI;
         
         /// <summary>
         /// Controllo imgEdit.
@@ -193,6 +184,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.Label lblTitoloVarianti;
         
         /// <summary>
+        /// Controllo lblSelProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSelProdotto;
+        
+        /// <summary>
         /// Controllo lblVarianti.
         /// </summary>
         /// <remarks>
@@ -202,6 +202,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.Label lblVarianti;
         
         /// <summary>
+        /// Controllo lblNuovoProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNuovoProdotto;
+        
+        /// <summary>
         /// Controllo addVariante.
         /// </summary>
         /// <remarks>
@@ -209,6 +218,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton addVariante;
+        
+        /// <summary>
+        /// Controllo lblAddProdottoBlank.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAddProdottoBlank;
         
         /// <summary>
         /// Controllo trCopiaPERT.
@@ -229,6 +247,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.Label lblCopiaPERT;
         
         /// <summary>
+        /// Controllo lblCopiaProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCopiaProd;
+        
+        /// <summary>
         /// Controllo ddlCopiaPERT.
         /// </summary>
         /// <remarks>
@@ -247,6 +274,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.CheckBox chkCopia;
         
         /// <summary>
+        /// Controllo lblRiutilizzaTasks.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblRiutilizzaTasks;
+        
+        /// <summary>
         /// Controllo chkCopiaTC.
         /// </summary>
         /// <remarks>
@@ -254,6 +290,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCopiaTC;
+        
+        /// <summary>
+        /// Controllo lblCopiaTempiCiclo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCopiaTempiCiclo;
         
         /// <summary>
         /// Controllo chkCopiaReparti.
@@ -265,6 +310,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.CheckBox chkCopiaReparti;
         
         /// <summary>
+        /// Controllo lblCopiaReparti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCopiaReparti;
+        
+        /// <summary>
         /// Controllo chkCopiaPostazioni.
         /// </summary>
         /// <remarks>
@@ -272,6 +326,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCopiaPostazioni;
+        
+        /// <summary>
+        /// Controllo lblCopiaPostazioni.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCopiaPostazioni;
         
         /// <summary>
         /// Controllo btnCopiaPERT.
@@ -355,6 +418,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl tblPertNavBar;
         
         /// <summary>
+        /// Controllo lblNavCreaProc.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavCreaProc;
+        
+        /// <summary>
         /// Controllo lnkLinkReparto.
         /// </summary>
         /// <remarks>
@@ -362,6 +434,24 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkLinkReparto;
+        
+        /// <summary>
+        /// Controllo lblNavAssociaProcRep.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAssociaProcRep;
+        
+        /// <summary>
+        /// Controllo lblNavAssociaProcPost.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAssociaProcPost;
         
         /// <summary>
         /// Controllo containerVSM.

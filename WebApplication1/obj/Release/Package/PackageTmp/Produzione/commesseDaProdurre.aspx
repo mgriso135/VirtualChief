@@ -5,9 +5,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="produzione.aspx">Produzione</a>
+						<a href="produzione.aspx"><asp:literal runat="server" ID="lblNavProduzione" Text="<%$Resources:lblNavProduzione %>" /></a>
 						<span class="divider">/</span>
-                        <a href="commesseDaProdurre.aspx">Nuove commesse</a>
+                        <a href="commesseDaProdurre.aspx"><asp:literal runat="server" ID="lblNavNuoveCommesse" Text="<%$Resources:lblNavNuoveCommesse %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

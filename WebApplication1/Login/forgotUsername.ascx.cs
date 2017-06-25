@@ -47,18 +47,18 @@ namespace KIS.Login
                             mMessage.Subject = "KIS - Recupero username";
                             mMessage.IsBodyHtml = true;
 
-                            mMessage.Body = "Tu, o qualcuno per conto tuo, ha richiesto l'invio del tuo username.<br/>"
-                                + "Per motivi di sicurezza questo viene inviato esclusivamente alla tua e-mail.<br />"
-                                + "Lo username richiesto è: " + lista.elencoUtenti[i].username + "<br/><br/><br/>KIS Robot";
+                            mMessage.Body = GetLocalResourceObject("lblMail1").ToString()
+                                +GetLocalResourceObject("lblMail2").ToString()
+                                + ": " + lista.elencoUtenti[i].username + "<br/><br/><br/>KIS Robot";
                             SmtpClient smtpcli = new SmtpClient();
                             try
                             {
                                 smtpcli.Send(mMessage);
-                                lbl1.Text = "Abbiamo inviato l'informazione richiesta al tuo indirizzo e-mail.<br />";
+                                lbl1.Text = GetLocalResourceObject("lblMailSendOK").ToString();
                             }
                             catch
                             {
-                                lbl1.Text = "E' avvenuto un errore imprevisto. Verificare l'indirizzo e-mail e riprovare.<br />";
+                                lbl1.Text = GetLocalResourceObject("lblMailSendKO").ToString(); 
                             }
                         }
                     }
@@ -66,12 +66,12 @@ namespace KIS.Login
 
                 if (found == false)
                 {
-                    lbl1.Text = "Non abbiamo trovato nessun utente con l'indirizzo e-mail da te segnalato. Per favore verifica che sia quello corretto.<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblMailNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "L'indirizzo e-mail inserito non è valido.<br />";
+                lbl1.Text = GetLocalResourceObject("lblMailNotValid").ToString(); 
             }
             txtEmail.Text = "";
         }

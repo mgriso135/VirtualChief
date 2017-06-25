@@ -122,7 +122,8 @@ namespace KIS.Processi
             }
             else
             {
-                lblCheck.Text = "Non hai il permesso di gestire il PERT.<br/>";
+                lblCheck.Text = GetLocalResourceObject("lblPermessoKo").ToString();
+
                 tblPrecedenze.Visible = false;
             }
         }

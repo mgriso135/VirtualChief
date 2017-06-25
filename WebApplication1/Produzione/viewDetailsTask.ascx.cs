@@ -37,12 +37,12 @@ namespace KIS.Produzione
                 }
                 else
                 {
-                    lbl1.Text = "Task non trovato.";
+                    lbl1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare i dettagli del task di produzione.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 

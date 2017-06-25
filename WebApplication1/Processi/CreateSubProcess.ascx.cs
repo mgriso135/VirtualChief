@@ -40,7 +40,7 @@ namespace MyUserControls
             }
             else
             {
-                lbl1.Text = "Padre o variante di riferimento non riconosciuti.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblNotFound").ToString();
             }
         }
   

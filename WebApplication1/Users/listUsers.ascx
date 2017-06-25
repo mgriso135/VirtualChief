@@ -6,11 +6,11 @@
 <table class="table table-condensed table-striped table-hover">
     <thead>
 <tr>
-    <td></td>
-    <td></td>
-<td>Username</td>
-<td>Nome</td>
-<td>Cognome</td>
+    <th></th>
+    <th></th>
+<th><asp:literal runat="server" id="lblUsername" Text="<%$Resources:lblUsername %>" /></th>
+<th><asp:literal runat="server" id="lblNome" Text="<%$Resources:lblNome %>" /></th>
+<th><asp:literal runat="server" id="lblCognome" Text="<%$Resources:lblCognome %>" /></th>
     
 </tr>
         </thead>
@@ -29,7 +29,7 @@
                     <asp:image CssClass="img-rounded" runat="server" ID="imgGeneraBarcode" ImageUrl="/img/iconBarcode.png" Height="40" ToolTip="Genera il cartellino" />
                 </asp:HyperLink>
                 -->
-                <asp:imagebutton CssClass="img-rounded" runat="server" ID="imgGeneraBarcode2" ImageUrl="/img/iconBarcode.png" Height="40" ToolTip="Genera il cartellino" CommandName="printBarcode" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "username") %>' />
+                <asp:imagebutton CssClass="img-rounded" runat="server" ID="imgGeneraBarcode2" ImageUrl="/img/iconBarcode.png" Height="40" ToolTip="<%$Resources:lblPrintCard %>" CommandName="printBarcode" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "username") %>' />
             </td>
             <td style="font-size: 12px; font-family: Calibri;"><%# DataBinder.Eval(Container.DataItem, "username") %>
             </td>

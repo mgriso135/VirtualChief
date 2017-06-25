@@ -8,15 +8,15 @@
 
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx"><asp:label runat="server" id="lblNavAnalisi" meta:resourcekey="lblNavAnalisi" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="ListAnalysisOperatori.aspx">Selezione operatore</a>
+						<a href="ListAnalysisOperatori.aspx"><asp:label runat="server" id="lblNavSelezionaOp" meta:resourcekey="lblNavSelezionaOp" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<asp:hyperlink runat="server" id="lnkNavCurr">Dettagli attività operatore</asp:hyperlink>
+						<asp:hyperlink runat="server" id="lnkNavCurr"><asp:label runat="server" id="lblNavDetailAttivita" meta:resourcekey="lblNavDetailAttivita" /></asp:hyperlink>
 						<span class="divider">/</span>
 					</li>
 				</ul>

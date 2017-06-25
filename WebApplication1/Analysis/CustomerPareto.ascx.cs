@@ -123,7 +123,7 @@ namespace KIS.Analysis
                 Chart1.Series["customers"].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.String;
                 Chart1.Series["customers"].YValueMembers = "TempoDiLavoroDbl";
                 Chart1.Series["customers"].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Double;
-                Chart1.Series["customers"].ToolTip = "#VALX: #VALY ore";
+                Chart1.Series["customers"].ToolTip = "#VALX: #VALY " + GetLocalResourceObject("lblChartOre").ToString();
                 Chart1.DataSource = clientiOrdered;
                 Chart1.DataBind();
             }

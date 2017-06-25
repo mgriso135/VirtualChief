@@ -86,19 +86,19 @@ namespace KIS.Analysis
                     else
                     {
                         frmReport.Visible = false;
-                        lbl1.Text = "Elenco di prodotti non impostato.";
+                        lbl1.Text = GetLocalResourceObject("lblErrorNullArray").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Cliente non trovato.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorCustomerNotFound").ToString();
                     frmReport.Visible = false;
                     rpt1.Visible = false;
                 }
             }
             else
             {
-                lbl1.Text = "Non hai i permessi per eseguire il report.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmReport.Visible = false;
                 rpt1.Visible = false;
             }
@@ -112,7 +112,7 @@ namespace KIS.Analysis
                     printReportPDF();
                     break;
                 default:
-                    lbl1.Text = "Nessun formato selezionato.";
+                    lbl1.Text = GetLocalResourceObject("lblNoFormatSelected").ToString();
                     break;
             }
         }
@@ -165,7 +165,7 @@ namespace KIS.Analysis
 
                 intestazioneFoglio[0].AddElement(logo);
                 intestazioneFoglio[0].VerticalAlignment = Element.ALIGN_MIDDLE;
-                iTextSharp.text.Paragraph titolo = new iTextSharp.text.Paragraph("Report avanzamento produzione\n" + customer.RagioneSociale, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
+                iTextSharp.text.Paragraph titolo = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblReportAvanzamento").ToString()+"\n" + customer.RagioneSociale, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                 titolo.Alignment = Element.ALIGN_LEFT;
                 intestazioneFoglio[1].AddElement(titolo);
 
@@ -183,7 +183,7 @@ namespace KIS.Analysis
                     if (lstProd.Count > 0)
                     {
                         configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
-                        iTextSharp.text.Paragraph par = new Paragraph("Prodotti in corso di realizzazione", new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
+                        iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdI").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
 
@@ -197,7 +197,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -211,7 +211,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Cliente", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportCliente").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -226,7 +226,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data ricevimento ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataRicOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -241,7 +241,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Note ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNoteOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -257,7 +257,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("ID prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportIDProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -272,7 +272,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Linea prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportLineaProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -287,7 +287,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Nome prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNomeProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -302,7 +302,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Matricola", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportMatricola").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -317,12 +317,12 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt1 = new Paragraph("In produzione", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt1 = new Paragraph(GetLocalResourceObject("lblReportStatusInProduzione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
                             }
@@ -332,7 +332,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Reparto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportReparto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -347,7 +347,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista consegna", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevConsegna").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -362,7 +362,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista fine produzione", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevFineProd").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -377,7 +377,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdEarlyStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -392,7 +392,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdEarlyFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -407,7 +407,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdLateStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -422,7 +422,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdLateFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -437,7 +437,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità pezzi richiesti", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportQuantita").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -467,7 +467,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Giorni di ritardo", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportGGRitardo").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -512,7 +512,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro previste", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTempoLavPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -527,7 +527,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("% completamento tasks (n° tasks terminati / n° tasks totali)", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportIndCompletamento").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -542,7 +542,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("% completamento tasks su tempo di lavoro previsto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportIndCompletamentoTempo").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -557,7 +557,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Timeline avanzamento\n", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTimeline").ToString()+"\n", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 cl[0].Colspan = 2;
                                                                 
@@ -601,7 +601,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] clT = new PdfPCell[1];
                                 clT[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt = new Paragraph("Elenco tasks", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD));
+                                iTextSharp.text.Paragraph txt = new Paragraph(GetLocalResourceObject("lblReportElencoTasks").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD));
                                 clT[0].AddElement(txt);
                                 clT[0].Colspan = 2;
                                 tbl.AddCell(clT[0]);
@@ -615,7 +615,7 @@ namespace KIS.Analysis
                                     {
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Task ID", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskID").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
@@ -633,7 +633,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Nome task", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskNome").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -650,7 +650,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Descrizione task", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskDescrizione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -667,7 +667,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Postazione di lavoro", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskPostazione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -684,7 +684,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskEarlyStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -701,7 +701,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskEarlyFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -718,7 +718,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskLateStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -735,7 +735,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskLateFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -752,7 +752,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Numero operatori assegnati", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskNOps").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -769,7 +769,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Tempo ciclo previsto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskTempoCicloPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -786,7 +786,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro previste", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskOreLavPreviste").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -820,7 +820,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -830,13 +830,13 @@ namespace KIS.Analysis
                                         switch (lstProd[i].Tasks[j].Status)
                                             {
                                             case 'I': 
-                                                status = "In produzione"; break;
+                                                status = GetLocalResourceObject("lblReportTaskInProduzione").ToString(); break;
                                             case 'N':
-                                                status = "Non ancora iniziato";break;
+                                                status = GetLocalResourceObject("lblReportTaskNotStarted").ToString();break;
                                             case 'P':
-                                                status = "In pausa";break;
+                                                status = GetLocalResourceObject("lblReportTaskInPausa").ToString();break;
                                             case 'F':
-                                                status = "Terminato";
+                                                status = GetLocalResourceObject("lblReportTaskTerminato").ToString();
                                                 break;
                                             default:
                                                 status = "#ND";
@@ -853,7 +853,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskQuantitaProdotta").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -882,7 +882,7 @@ namespace KIS.Analysis
                     if (lstProd.Count > 0)
                     {
                         configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
-                        iTextSharp.text.Paragraph par = new Paragraph("Prodotti pianificati in produzione", new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
+                        iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdP").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
 
@@ -896,7 +896,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -910,7 +910,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Cliente", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportCliente").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -925,7 +925,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data ricevimento ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataRicOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -940,7 +940,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Note ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNoteOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -956,7 +956,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("ID prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportIDProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -971,7 +971,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Linea prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportLineaProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -986,7 +986,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Nome prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNomeProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1001,7 +1001,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Matricola", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportMatricola").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1016,12 +1016,12 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt1 = new Paragraph("Pianificato in produzione", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt1 = new Paragraph(GetLocalResourceObject("lblReportStatusPianificato").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
                             }
@@ -1031,7 +1031,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Reparto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportReparto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1046,7 +1046,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista consegna", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevConsegna").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1061,7 +1061,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista fine produzione", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevFineProd").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1076,7 +1076,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdEarlyStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1091,7 +1091,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdEarlyFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1106,7 +1106,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdLateStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1121,7 +1121,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdLateFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1136,7 +1136,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità pezzi richiesti", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportQuantita").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1166,7 +1166,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Giorni di ritardo", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportGGRitardo").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1211,7 +1211,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro previste", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTempoLavPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1256,7 +1256,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Timeline avanzamento\n", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTimeline").ToString() + "\n", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 cl[0].Colspan = 2;
 
@@ -1300,7 +1300,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] clT = new PdfPCell[1];
                                 clT[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt = new Paragraph("Elenco tasks", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD));
+                                iTextSharp.text.Paragraph txt = new Paragraph(GetLocalResourceObject("lblReportElencoTasks").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD));
                                 clT[0].AddElement(txt);
                                 clT[0].Colspan = 2;
                                 tbl.AddCell(clT[0]);
@@ -1316,7 +1316,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Task ID", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskID").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1333,7 +1333,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Nome task", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskNome").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1350,7 +1350,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Descrizione task", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskDescrizione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1367,7 +1367,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Postazione di lavoro", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskPostazione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1384,7 +1384,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskEarlyStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1401,7 +1401,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskEarlyFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1418,7 +1418,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskLateStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1435,7 +1435,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskLateFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1452,7 +1452,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Numero operatori assegnati", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskNOps").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1469,7 +1469,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Tempo ciclo previsto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskTempoCicloPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1486,7 +1486,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro previste", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTempoLavPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1520,7 +1520,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -1530,13 +1530,13 @@ namespace KIS.Analysis
                                         switch (lstProd[i].Tasks[j].Status)
                                         {
                                             case 'I':
-                                                status = "In produzione"; break;
+                                                status = GetLocalResourceObject("lblReportTaskInProduzione").ToString(); break;
                                             case 'N':
-                                                status = "Non ancora iniziato"; break;
+                                                status = GetLocalResourceObject("lblReportTaskNotStarted").ToString(); break;
                                             case 'P':
-                                                status = "In pausa"; break;
+                                                status = GetLocalResourceObject("lblReportTaskInPausa").ToString(); break;
                                             case 'F':
-                                                status = "Terminato";
+                                                status = GetLocalResourceObject("lblReportTaskTerminato").ToString();
                                                 break;
                                             default:
                                                 status = "#ND";
@@ -1581,7 +1581,7 @@ namespace KIS.Analysis
                     if (lstProd.Count > 0)
                     {
                         configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
-                        iTextSharp.text.Paragraph par = new Paragraph("Prodotti da pianificare in produzione", new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
+                        iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdN").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
 
@@ -1595,7 +1595,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1609,7 +1609,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Cliente", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportCliente").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1624,7 +1624,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data ricevimento ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataRicOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1639,7 +1639,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Note ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNoteOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1655,7 +1655,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("ID prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportIDProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1670,7 +1670,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Linea prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportLineaProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1685,7 +1685,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Nome prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNomeProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1700,7 +1700,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Matricola", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportMatricola").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1715,12 +1715,12 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt1 = new Paragraph("Da pianificare", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt1 = new Paragraph(GetLocalResourceObject("lblReportStatusDaPianificare").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
                             }
@@ -1745,7 +1745,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista consegna", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevConsegna").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -1835,7 +1835,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità pezzi richiesti", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportQuantita").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2222,7 +2222,7 @@ namespace KIS.Analysis
                     if (lstProd.Count > 0)
                     {
                         configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
-                        iTextSharp.text.Paragraph par = new Paragraph("Prodotti terminati", new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
+                        iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdF").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
 
@@ -2236,7 +2236,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2250,7 +2250,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Cliente", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportCliente").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2265,7 +2265,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data ricevimento ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataRicOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2280,7 +2280,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Note ordine", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNoteOrdine").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2296,7 +2296,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("ID prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportIDProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2311,7 +2311,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Linea prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportLineaProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2326,7 +2326,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Nome prodotto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportNomeProdotto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2341,7 +2341,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Matricola", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportMatricola").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2356,12 +2356,12 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt1 = new Paragraph("Finito", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt1 = new Paragraph(GetLocalResourceObject("lblReportStatusFinito").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
                             }
@@ -2371,7 +2371,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Reparto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportReparto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2386,7 +2386,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista consegna", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevConsegna").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2401,7 +2401,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Data prevista fine produzione", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportDataPrevFineProd").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2416,7 +2416,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdEarlyStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2431,7 +2431,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdEarlyFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2446,7 +2446,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdLateStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2461,7 +2461,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportProdLateFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2476,7 +2476,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità pezzi richiesti", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportQuantita").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2491,7 +2491,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità pezzi realizzati", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportQuantitaProdotta").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2506,7 +2506,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Giorni di ritardo", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportGGRitardo").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2521,7 +2521,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro impiegate", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTempoLavImpiegato").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2536,7 +2536,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Lead Time", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportLeadTime").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2552,7 +2552,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro previste", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTempoLavPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 tbl.AddCell(cl[0]);
 
@@ -2597,7 +2597,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] cl = new PdfPCell[2];
                                 cl[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt0 = new Paragraph("Timeline avanzamento\n", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTimeline").ToString() + "\n", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[0].AddElement(txt0);
                                 cl[0].Colspan = 2;
 
@@ -2641,7 +2641,7 @@ namespace KIS.Analysis
                             {
                                 PdfPCell[] clT = new PdfPCell[1];
                                 clT[0] = new PdfPCell();
-                                iTextSharp.text.Paragraph txt = new Paragraph("Elenco tasks", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD));
+                                iTextSharp.text.Paragraph txt = new Paragraph(GetLocalResourceObject("lblReportElencoTasks").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.BOLD));
                                 clT[0].AddElement(txt);
                                 clT[0].Colspan = 2;
                                 tbl.AddCell(clT[0]);
@@ -2656,7 +2656,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Task ID", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskID").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2673,7 +2673,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Nome task", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskNome").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2690,7 +2690,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Descrizione task", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskDescrizione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2707,7 +2707,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Postazione di lavoro", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskPostazione").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2724,7 +2724,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskEarlyStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2741,7 +2741,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Prima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskEarlyFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2758,7 +2758,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data inizio programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskLateStart").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2775,7 +2775,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ultima data fine programmata", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskLateFinish").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2792,7 +2792,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Numero operatori assegnati", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskNOps").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2809,7 +2809,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Tempo ciclo previsto", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskTempoCicloPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2826,7 +2826,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro previste", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTempoLavPrevisto").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2843,7 +2843,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Ore di lavoro effettive", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskTempoLavImpiegato").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2860,7 +2860,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Status", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskStatus").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2870,13 +2870,13 @@ namespace KIS.Analysis
                                         switch (lstProd[i].Tasks[j].Status)
                                         {
                                             case 'I':
-                                                status = "In produzione"; break;
+                                                status = GetLocalResourceObject("lblReportTaskInProduzione").ToString(); break;
                                             case 'N':
-                                                status = "Non ancora iniziato"; break;
+                                                status = GetLocalResourceObject("lblReportTaskNotStarted").ToString(); break;
                                             case 'P':
-                                                status = "In pausa"; break;
+                                                status = GetLocalResourceObject("lblReportTaskInPausa").ToString(); break;
                                             case 'F':
-                                                status = "Terminato";
+                                                status = GetLocalResourceObject("lblReportTaskTerminato").ToString();
                                                 break;
                                             default:
                                                 status = "#ND";
@@ -2893,7 +2893,7 @@ namespace KIS.Analysis
                                         PdfPCell[] cl = new PdfPCell[2];
                                         cl[0] = new PdfPCell();
                                         cl[0].BackgroundColor = new BaseColor(bgColor);
-                                        iTextSharp.text.Paragraph txt0 = new Paragraph("Quantità", new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
+                                        iTextSharp.text.Paragraph txt0 = new Paragraph(GetLocalResourceObject("lblReportTaskQuantitaProdotta").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                         cl[0].AddElement(txt0);
                                         tbl.AddCell(cl[0]);
 
@@ -2922,7 +2922,7 @@ namespace KIS.Analysis
             }
             else
             {
-                lbl1.Text = "Cliente non trovato.";
+                lbl1.Text = GetLocalResourceObject("lblErrorCustomerNotFound").ToString();
             }
         }
     }

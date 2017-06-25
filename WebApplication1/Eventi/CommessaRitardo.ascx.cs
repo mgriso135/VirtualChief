@@ -68,7 +68,7 @@ namespace KIS.Eventi
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire gli allarmi di ritardo della commessa.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddRitardoGruppo.Visible = false;
                 btnShowAddRitardoGruppo.Visible = false;
                 btnShowAddRitardoUtente.Visible = false;
@@ -86,7 +86,7 @@ namespace KIS.Eventi
                 frmAddRitardoGruppo.Visible = true;
                 GroupList elencoGruppi = new GroupList();
                 ddlAddRitardoGruppo.Items.Clear();
-                ddlAddRitardoGruppo.Items.Add(new ListItem("Seleziona un gruppo", ""));
+                ddlAddRitardoGruppo.Items.Add(new ListItem(GetLocalResourceObject("lblGruppiSel").ToString(), ""));
                 ddlAddRitardoGruppo.DataSource = elencoGruppi.Elenco;
                 ddlAddRitardoGruppo.DataTextField = "Nome";
                 ddlAddRitardoGruppo.DataValueField = "ID";
@@ -124,7 +124,7 @@ namespace KIS.Eventi
                     }
                     else
                     {
-                        lbl1.Text += "Errore." + cfgRp.log;
+                        lbl1.Text += "Error. " + cfgRp.log;
                     }
                 }
             }
@@ -160,7 +160,7 @@ namespace KIS.Eventi
             }
             else
             {
-                lbl1.Text = "E' avvenuto un errore.";
+                lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
             }
             btnSaveRitMin.Focus();
         }
@@ -231,12 +231,11 @@ namespace KIS.Eventi
                     bool rt = cfgRp.deleteGruppo(new Group(groupID));
                     if (rt == true)
                     {
-                        lbl1.Text = "OK!";
                         Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore.";
+                        lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
                     }
                 }
             }
@@ -249,7 +248,7 @@ namespace KIS.Eventi
                 frmAddRitardoUtente.Visible = true;
                 UserList elencoUtenti = new UserList();
                 ddlAddRitardoUtente.Items.Clear();
-                ddlAddRitardoUtente.Items.Add(new ListItem("Seleziona un utente", ""));
+                ddlAddRitardoUtente.Items.Add(new ListItem(GetLocalResourceObject("lblUtentiSel").ToString(), ""));
                 ddlAddRitardoUtente.DataSource = elencoUtenti.elencoUtenti;
                 ddlAddRitardoUtente.DataTextField = "FullName";
                 ddlAddRitardoUtente.DataValueField = "username";
@@ -278,7 +277,7 @@ namespace KIS.Eventi
                     }
                     else
                     {
-                        lbl1.Text += "Errore." + cfgRp.log;
+                        lbl1.Text += "Error. " + cfgRp.log;
                     }
                 }
             }
@@ -327,12 +326,11 @@ namespace KIS.Eventi
                 bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));
                 if (rt == true)
                 {
-                    lbl1.Text = "OK!";
                     Response.Redirect(Request.RawUrl);
                 }
                 else
                 {
-                    lbl1.Text = "E' avvenuto un errore.";
+                    lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
                 }
             }
         }

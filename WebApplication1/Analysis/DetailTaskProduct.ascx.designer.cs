@@ -31,6 +31,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblProdotto;
         
         /// <summary>
+        /// Controllo lblProdDataInizio1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProdDataInizio1;
+        
+        /// <summary>
         /// Controllo txtProductDateStart.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProductDateStart;
+        
+        /// <summary>
+        /// Controllo lblProdDataFine1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProdDataFine1;
         
         /// <summary>
         /// Controllo txtProductDateEnd.
@@ -67,6 +85,24 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblAccTempiLavGlobali.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccTempiLavGlobali;
+        
+        /// <summary>
+        /// Controllo lblTempoLavMedio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTempoLavMedio;
+        
+        /// <summary>
         /// Controllo lblMediaTempoDiLavoro.
         /// </summary>
         /// <remarks>
@@ -92,6 +128,24 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptTempiLavoro;
+        
+        /// <summary>
+        /// Controllo lblAccTempiCicloGlobali.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccTempiCicloGlobali;
+        
+        /// <summary>
+        /// Controllo lblMedia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMedia;
         
         /// <summary>
         /// Controllo lblMediaTempiCiclo.

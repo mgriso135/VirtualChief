@@ -42,7 +42,7 @@ namespace KIS.Admin
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire il fuso orario.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermesso_KO").ToString();
             }
         }
 

@@ -42,7 +42,7 @@ namespace KIS.Processi
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di associare processivarianti al reparto.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -145,12 +145,11 @@ namespace KIS.Processi
                     }
                     if (rt == true)
                     {
-                        lbl1.Text = "Operazione andata a buon fine.<br/>";
                         Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore.<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                     }
                     lbl1.Text += prcVar.log;
                 }

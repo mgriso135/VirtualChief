@@ -31,6 +31,15 @@ namespace KIS.Postazioni {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmCalInizioFine;
         
         /// <summary>
+        /// Controllo lblDataInizio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDataInizio;
+        
+        /// <summary>
         /// Controllo txtCalInizio.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace KIS.Postazioni {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtCalInizio;
+        
+        /// <summary>
+        /// Controllo lblDataFine.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDataFine;
         
         /// <summary>
         /// Controllo txtCalFine.

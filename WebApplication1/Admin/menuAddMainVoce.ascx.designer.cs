@@ -31,6 +31,15 @@ namespace KIS.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblFormAdd;
         
         /// <summary>
+        /// Controllo lblTitolo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitolo;
+        
+        /// <summary>
         /// Controllo txtTitolo.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace KIS.Admin {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valTitolo;
         
         /// <summary>
+        /// Controllo lblDescrizione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescrizione;
+        
+        /// <summary>
         /// Controllo txtDesc.
         /// </summary>
         /// <remarks>
@@ -65,6 +83,15 @@ namespace KIS.Admin {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valDesc;
+        
+        /// <summary>
+        /// Controllo lblURL.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblURL;
         
         /// <summary>
         /// Controllo txtURL.

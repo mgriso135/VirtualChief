@@ -19,11 +19,10 @@
     </script> 
 <table runat="server" id="frmCalInizioFine">
     <tr>
-        <td>Data inizio calendario:&nbsp;
+        <td><asp:literal runat="server" id="lblDataInizio" Text="<%$Resources:lblDataInizio %>" />:&nbsp;
             <asp:TextBox runat="server" ID="txtCalInizio" Width="80" />
         </td>
-        <td>
-            Data fine calendario:&nbsp;
+        <td><asp:literal runat="server" id="lblDataFine" Text="<%$Resources:lblDataFine %>" />:&nbsp;
             <asp:TextBox runat="server" ID="txtCalFine" Width="80" />
         </td>
         <td>

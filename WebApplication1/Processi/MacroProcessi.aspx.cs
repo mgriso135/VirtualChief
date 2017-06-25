@@ -37,7 +37,7 @@ namespace KIS
             }
             else
             {
-                lblErr.Text += "Non hai il permesso di visualizzare i macroprocessi.<br/>";
+                lblErr.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptMacroProc.Visible = false;
             }
         }

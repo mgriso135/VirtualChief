@@ -22,6 +22,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.Label lbl;
         
         /// <summary>
+        /// Controllo lblPostazione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblPostazione;
+        
+        /// <summary>
         /// Controllo lblNomePost.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNomePost;
+        
+        /// <summary>
+        /// Controllo lblCaricoPerProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCaricoPerProd;
         
         /// <summary>
         /// Controllo Chart1.

@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lblCommessa_Cliente.Text" xml:space="preserve">
+    <value>Order: customer</value>
+  </data>
+  <data name="lblCommessa_DataInserimento.Text" xml:space="preserve">
+    <value>Order: date of receipt</value>
+  </data>
+  <data name="lblCommessa_IDCommessa.Text" xml:space="preserve">
+    <value>Order: ID</value>
+  </data>
+  <data name="lblCommessa_Note.Text" xml:space="preserve">
+    <value>Order: notes</value>
+  </data>
+  <data name="lblInputDataError" xml:space="preserve">
+    <value>Input data error.&lt;br/ &gt;</value>
+  </data>
+  <data name="lblOpzioni.Text" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="lblParametro.Text" xml:space="preserve">
+    <value>Parameters</value>
+  </data>
+  <data name="lblProdotto_DataPrevConsegna.Text" xml:space="preserve">
+    <value>Product: requested delivery date</value>
+  </data>
+  <data name="lblProdotto_DataPrevFineProd.Text" xml:space="preserve">
+    <value>Product: expected completion date</value>
+  </data>
+  <data name="lblProdotto_EarlyFinish.Text" xml:space="preserve">
+    <value>Product: Early Finish</value>
+  </data>
+  <data name="lblProdotto_EarlyStart.Text" xml:space="preserve">
+    <value>Product: Early Start</value>
+  </data>
+  <data name="lblProdotto_ElencoTasks.Text" xml:space="preserve">
+    <value>Product: tasks list</value>
+  </data>
+  <data name="lblProdotto_GANTT.Text" xml:space="preserve">
+    <value>Product: show GANTT for task progress</value>
+  </data>
+  <data name="lblProdotto_IDProdotto.Text" xml:space="preserve">
+    <value>Product: ID</value>
+  </data>
+  <data name="lblProdotto_IndComplTasks.Text" xml:space="preserve">
+    <value>Product: completion indicator (no. completed tasks / total no. tasks)</value>
+  </data>
+  <data name="lblProdotto_IndComplTasksTempo.Text" xml:space="preserve">
+    <value>Product: expected time completion indicator (expected time for completed tasks / total expected working hours)</value>
+  </data>
+  <data name="lblProdotto_LateFinish.Text" xml:space="preserve">
+    <value>Product: Late Finish</value>
+  </data>
+  <data name="lblProdotto_LateStart.Text" xml:space="preserve">
+    <value>Product: Late Start</value>
+  </data>
+  <data name="lblProdotto_LeadTime.Text" xml:space="preserve">
+    <value>Product: Lead time</value>
+  </data>
+  <data name="lblProdotto_LineaProdotto.Text" xml:space="preserve">
+    <value>Product: Type of product</value>
+  </data>
+  <data name="lblProdotto_Matricola.Text" xml:space="preserve">
+    <value>Product: serial number</value>
+  </data>
+  <data name="lblProdotto_NomeProdotto.Text" xml:space="preserve">
+    <value>Product: name</value>
+  </data>
+  <data name="lblProdotto_QtaPrevista.Text" xml:space="preserve">
+    <value>Product: requested quantity</value>
+  </data>
+  <data name="lblProdotto_QtaProdotta.Text" xml:space="preserve">
+    <value>Product: produced quantity</value>
+  </data>
+  <data name="lblProdotto_Reparto.Text" xml:space="preserve">
+    <value>Product: department</value>
+  </data>
+  <data name="lblProdotto_Ritardo.Text" xml:space="preserve">
+    <value>Product: delay</value>
+  </data>
+  <data name="lblProdotto_Status.Text" xml:space="preserve">
+    <value>Product: status</value>
+  </data>
+  <data name="lblProdotto_TempoLavPrevisto.Text" xml:space="preserve">
+    <value>Product: expected working time</value>
+  </data>
+  <data name="lblProdotto_TempoLavTotale.Text" xml:space="preserve">
+    <value>Product: real total working time</value>
+  </data>
+  <data name="lblTaskInfo.Text" xml:space="preserve">
+    <value>If parameter "Product: tasks list" is set on Visible:</value>
+  </data>
+  <data name="lblTask_Descrizione.Text" xml:space="preserve">
+    <value>Task: description</value>
+  </data>
+  <data name="lblTask_EarlyFinish.Text" xml:space="preserve">
+    <value>Task: EarlyFinish</value>
+  </data>
+  <data name="lblTask_EarlyStart.Text" xml:space="preserve">
+    <value>Task: EarlyStart</value>
+  </data>
+  <data name="lblTask_ID.Text" xml:space="preserve">
+    <value>Task: ID</value>
+  </data>
+  <data name="lblTask_LateFinish.Text" xml:space="preserve">
+    <value>Task: LateFinish</value>
+  </data>
+  <data name="lblTask_LateStart.Text" xml:space="preserve">
+    <value>Task: LateStart</value>
+  </data>
+  <data name="lblTask_Nome.Text" xml:space="preserve">
+    <value>Task: Name</value>
+  </data>
+  <data name="lblTask_NOps.Text" xml:space="preserve">
+    <value>Task: Number of operators</value>
+  </data>
+  <data name="lblTask_Postazione.Text" xml:space="preserve">
+    <value>Task: workplace</value>
+  </data>
+  <data name="lblTask_QtaProdotta.Text" xml:space="preserve">
+    <value>Task: produced quantity</value>
+  </data>
+  <data name="lblTask_Status.Text" xml:space="preserve">
+    <value>Task: Status</value>
+  </data>
+  <data name="lblTask_TempoCiclo.Text" xml:space="preserve">
+    <value>Task: cycle time</value>
+  </data>
+  <data name="lblTask_TempoLavEffettivo.Text" xml:space="preserve">
+    <value>Task: real working time</value>
+  </data>
+  <data name="lblTask_TempoLavPrevisto.Text" xml:space="preserve">
+    <value>Task: expected working time</value>
+  </data>
+  <data name="lblUpdateCliente_OK" xml:space="preserve">
+    <value>Customer parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateCommessaDataInserimento_OK" xml:space="preserve">
+    <value>Order: date of receipt parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateCommessaID_OK" xml:space="preserve">
+    <value>Order: ID parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateCommessaNote_OK" xml:space="preserve">
+    <value>Order: notes parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoDataPrevConsegna_OK" xml:space="preserve">
+    <value>Product: requested delivery date parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoDataPrevFineProd_OK" xml:space="preserve">
+    <value>Product: expected completion date parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoEarlyFinish_OK" xml:space="preserve">
+    <value>Product: EarlyFinish parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoEarlyStart_OK" xml:space="preserve">
+    <value>Product: EarlyStart parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoGANTT_OK" xml:space="preserve">
+    <value>Product: show GANTT for task progress parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoID_OK" xml:space="preserve">
+    <value>Product: ID parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoIndCompletamente_OK" xml:space="preserve">
+    <value>Product: completion indicator parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoIndCompletamentoTempo_OK" xml:space="preserve">
+    <value>Product: expected time completion indicator parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoLateFinish_OK" xml:space="preserve">
+    <value>Product: LateFinish parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoLateStart_OK" xml:space="preserve">
+    <value>Product: LateStart parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoLeadTime_OK" xml:space="preserve">
+    <value>Product: Lead time parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoMatricola_OK" xml:space="preserve">
+    <value>Product: serial number parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoNomeVariante_OK" xml:space="preserve">
+    <value>Product: Name parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoNome_OK" xml:space="preserve">
+    <value>Product: Type of product parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoQtaPrevista_OK" xml:space="preserve">
+    <value>Product: requested quantity parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoQtaProdotta_OK" xml:space="preserve">
+    <value>Product: produced quantity parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoReparto_OK" xml:space="preserve">
+    <value>Product: department parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoRitardo_OK" xml:space="preserve">
+    <value>Product: Delay parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoStatus_OK" xml:space="preserve">
+    <value>Product: Status parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateProdottoTempoLavPrevisto_OK" xml:space="preserve">
+    <value>Product: expected working time avvenuto correttamente.</value>
+  </data>
+  <data name="lblUpdateProdottoTempoLavTot_OK" xml:space="preserve">
+    <value>Product: real total working time parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksDescrizione_OK" xml:space="preserve">
+    <value>Task: description parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksEarlyFinish_OK" xml:space="preserve">
+    <value>Task: EarlyFinish parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksEarlyStart_OK" xml:space="preserve">
+    <value>Task: EarlyStart parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksElenco_OK" xml:space="preserve">
+    <value>Product: tasks list parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksID_OK" xml:space="preserve">
+    <value>Task: ID parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksLateFinish_OK" xml:space="preserve">
+    <value>Task: LateFinish parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksLateStart_OK" xml:space="preserve">
+    <value>Task: LateStart parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksNome_OK" xml:space="preserve">
+    <value>Task: Name parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksNOps_OK" xml:space="preserve">
+    <value>Task: Number of operatorss parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksPostazione_OK" xml:space="preserve">
+    <value>Task: workplace parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksQtaProdotta_OK" xml:space="preserve">
+    <value>Task: produced quantity parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksStatus_OK" xml:space="preserve">
+    <value>Task: Status parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksTempoCiclo_OK" xml:space="preserve">
+    <value>Task: cycle time parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksTempoLavEffettivo_OK" xml:space="preserve">
+    <value>Task: real working time parameter visualization updated successfully.</value>
+  </data>
+  <data name="lblUpdateTasksTempoLavPrevisto_OK" xml:space="preserve">
+    <value>Task: expected working time parameter visualization updated successfully.</value>
+  </data>
+  <data name="NonVisibile" xml:space="preserve">
+    <value>Non visible</value>
+  </data>
+  <data name="Visibile" xml:space="preserve">
+    <value>Visible</value>
+  </data>
+</root>

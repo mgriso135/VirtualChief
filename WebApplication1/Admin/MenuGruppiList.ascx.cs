@@ -82,7 +82,7 @@ namespace KIS.Admin
                     bool rt = grp.DeleteMenu(vm);
                     if (rt == false)
                     {
-                        lbl1.Text = "E' avvenuto un errore durante la rimozione della voce dal gruppo.<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblDeleteVoiceError").ToString();
                     }
                     else
                     {

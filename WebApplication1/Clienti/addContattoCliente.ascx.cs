@@ -46,7 +46,7 @@ namespace KIS.Clienti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di aggiungere contatti.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -72,12 +72,12 @@ namespace KIS.Clienti
                     int rt = cln.AddContatto(Server.HtmlEncode(txtNominativo.Text), Server.HtmlEncode(txtRuolo.Text));
                     if (rt >= 0)
                     {
-                        lbl1.Text = "Contatto aggiunto.";
+                        lbl1.Text = GetLocalResourceObject("lblAddOk").ToString();
                         Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore. " + cln.log;
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString() + cln.log;
                     }
                 }
             }

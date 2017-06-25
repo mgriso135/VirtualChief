@@ -40,6 +40,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.RadioButton uno;
         
         /// <summary>
+        /// Controllo lblRicercaPerIDProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRicercaPerIDProd;
+        
+        /// <summary>
         /// Controllo txtIDArticolo.
         /// </summary>
         /// <remarks>
@@ -67,6 +76,24 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.RadioButton due;
         
         /// <summary>
+        /// Controllo lblRicercaPerProdCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRicercaPerProdCliente;
+        
+        /// <summary>
+        /// Controllo lblProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblProdotto;
+        
+        /// <summary>
         /// Controllo ddlTipoProdotto.
         /// </summary>
         /// <remarks>
@@ -74,6 +101,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlTipoProdotto;
+        
+        /// <summary>
+        /// Controllo lblCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCliente;
         
         /// <summary>
         /// Controllo ddlCliente.
@@ -94,6 +130,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.CheckBox chkConsideraDate;
         
         /// <summary>
+        /// Controllo lblFiltroDataProd1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFiltroDataProd1;
+        
+        /// <summary>
         /// Controllo txtProductDateStart.
         /// </summary>
         /// <remarks>
@@ -101,6 +146,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProductDateStart;
+        
+        /// <summary>
+        /// Controllo lblFiltroDataProd2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFiltroDataProd2;
         
         /// <summary>
         /// Controllo txtProductDateEnd.

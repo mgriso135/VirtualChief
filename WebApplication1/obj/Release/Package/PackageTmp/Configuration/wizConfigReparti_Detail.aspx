@@ -22,14 +22,15 @@
     <br />
     <br />
 
-    <h2 runat="server" id="titleConfig">Configurazione del reparto</h2>
+    <h2 runat="server" id="titleConfig"><asp:Literal runat="server" id="lblTitleDeptCfg" Text="<%$Resources:lblTitleDeptCfg %>" /></h2>
 
     <div class="accordion" id="accordion1" runat="server">
         
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Inserimento tasks in produzione
+          <asp:Literal runat="server" id="lblNavTaskLaunch" Text="<%$Resources:lblNavTaskLaunch %>" />
+          
       </a>
     </div>
             <div id="collapseTwo" class="accordion-body collapse">
@@ -42,11 +43,11 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
-          Turni di lavoro
+          <asp:Literal runat="server" id="lblNavWorkShift" Text="<%$Resources:lblNavWorkShift %>" />
       </a>
     </div>
             <div id="collapseFive" class="accordion-body collapse">
-      <div class="accordion-inner">sdsd
+      <div class="accordion-inner">
         <config:turni runat="server" id="configTurni" />
       </div>
     </div>
@@ -54,7 +55,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSix">
-          Allarme ritardi
+          <asp:Literal runat="server" id="lblDelayWarn" Text="<%$Resources:lblDelayWarn %>" />
       </a>
     </div>
             <div id="collapseSix" class="accordion-body collapse">
@@ -67,7 +68,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSeven">
-          Allarme warning
+          <asp:Literal runat="server" id="lblProblemWarn" Text="<%$Resources:lblProblemWarn %>" />
       </a>
     </div>
             <div id="collapseSeven" class="accordion-body collapse">
@@ -80,7 +81,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEight">
-          Modalità calcolo tempo ciclo
+          <asp:Literal runat="server" id="lblCalcoloTC" Text="<%$Resources:lblCalcoloTC %>" />
       </a>
     </div>
             <div id="collapseEight" class="accordion-body collapse">
@@ -93,7 +94,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseNine">
-          Andon
+          <asp:Literal runat="server" id="lblAndon" Text="<%$Resources:lblAndon %>" />
       </a>
     </div>
             <div id="collapseNine" class="accordion-body collapse">
@@ -110,7 +111,7 @@
     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTen">
-          Avvio task
+          <asp:Literal runat="server" id="lblTaskExecution" Text="<%$Resources:lblTaskExecution %>" />
       </a>
     </div>
             <div id="collapseTen" class="accordion-body collapse">

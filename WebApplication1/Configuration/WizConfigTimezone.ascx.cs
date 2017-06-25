@@ -50,33 +50,17 @@ namespace KIS.Configuration
                 }
                 else
                 {
-                    lbl1.Text = "Timezone is already configured and it is no longer possible to change it using this wizard.<br />"
-                        + "Please log-in to the configuration section and be sure you have Admin permissions.";
+                    lbl1.Text = GetLocalResourceObject("lblTimezoneConfigured").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigTimezone\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigTimezone\">" +
+                    GetLocalResourceObject("lblLnkLoginAdmin").ToString()
+                    +".</a>";
             }
         }
-
-        /*protected void ddlTimezones_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if(ddlTimezones.SelectedValue.Length > 0)
-            { 
-            TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
-            FusoOrario current = new FusoOrario();
-            current.fusoOrario = ddlTimezones.SelectedValue;
-            lbl1.Text = ddlTimezones.SelectedIndex + " - " + ddlTimezones.SelectedValue + "<br/>" + tz.Id
-                + " <br />" + current.log;
-            Response.Redirect("~/Configuration/MainWizConfig.aspx");
-            }
-            else
-            {
-                lbl1.Text = "Please choose a Timezone.";
-            }
-        }*/
 
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
@@ -85,13 +69,12 @@ namespace KIS.Configuration
                 TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
                 FusoOrario current = new FusoOrario();
                 current.fusoOrario = ddlTimezones.SelectedValue;
-                lbl1.Text = ddlTimezones.SelectedIndex + " - " + ddlTimezones.SelectedValue + "<br/>" + tz.Id
-                    + " <br />" + current.log;
+                
                 Response.Redirect("~/Configuration/MainWizConfig.aspx");
             }
             else
             {
-                lbl1.Text = "Please choose a Timezone.";
+                lbl1.Text = GetLocalResourceObject("lblChooseTimezone").ToString();
             }
         }
     }

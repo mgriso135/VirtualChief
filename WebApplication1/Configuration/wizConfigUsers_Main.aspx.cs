@@ -38,8 +38,10 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigUsers_Main\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigUsers_Main\">"
+                    + GetLocalResourceObject("lblLnkLoginAdmin").ToString()
+                    +".</a>";
                 frmAddUser.Visible = false;
                 frmListUser.Visible = false;
             }

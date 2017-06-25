@@ -41,7 +41,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl.Text = "Non hai il permesso di visualizzare il carico di lavoro della postazione.<br />";
+                lbl.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 Chart1.Visible = false;
             }
         }
@@ -74,7 +74,9 @@ namespace KIS.Produzione
                     {
                         TimeSpan carico = pst.calculateWorkLoad(pst.MainProc[k]);
                         Chart1.Series["WorkLoad"].Points.AddXY(pst.MainProc[k].process.processName + " : " + pst.MainProc[k].variant.nomeVariante, Math.Round(carico.TotalHours,2));
-                        Chart1.Series["WorkLoad"].Points[cont].ToolTip = pst.MainProc[k].process.processName + " : " + pst.MainProc[k].variant.nomeVariante + " - Tempo ciclo: " + carico.TotalHours.ToString() + " ore";
+                        Chart1.Series["WorkLoad"].Points[cont].ToolTip = pst.MainProc[k].process.processName + " : " + pst.MainProc[k].variant.nomeVariante 
+                            + " - "+GetLocalResourceObject("lblTempoCiclo").ToString() +": " 
+                            + carico.TotalHours.ToString() + " ore";
                         cont++;
                     }
                 }

@@ -13,6 +13,24 @@ namespace KIS.Commesse {
     public partial class wzImpostaAllarmiArticolo {
         
         /// <summary>
+        /// Controllo lblTitleWizNewOrder.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleWizNewOrder;
+        
+        /// <summary>
+        /// Controllo lblNewOrder.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewOrder;
+        
+        /// <summary>
         /// Controllo lnkAddPert.
         /// </summary>
         /// <remarks>
@@ -20,6 +38,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkAddPert;
+        
+        /// <summary>
+        /// Controllo lblDescProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescProd;
         
         /// <summary>
         /// Controllo lnkEditPert.
@@ -76,6 +103,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.HyperLink lnkImpostaAllarmi;
         
         /// <summary>
+        /// Controllo lblImpostaAllarmi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblImpostaAllarmi;
+        
+        /// <summary>
         /// Controllo imgTick.
         /// </summary>
         /// <remarks>
@@ -83,6 +119,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgTick;
+        
+        /// <summary>
+        /// Controllo Label1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
         
         /// <summary>
         /// Controllo InfoPanel.
@@ -110,6 +155,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton lnkShowTabAlarms;
+        
+        /// <summary>
+        /// Controllo lblImpostaAllarmi2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblImpostaAllarmi2;
         
         /// <summary>
         /// Controllo tblAlarms.
@@ -155,5 +209,14 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgNuovoArticolo;
+        
+        /// <summary>
+        /// Controllo lblAddProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAddProdotto;
     }
 }

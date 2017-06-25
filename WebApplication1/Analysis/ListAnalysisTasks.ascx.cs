@@ -38,7 +38,7 @@ namespace KIS.Analysis
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare l'analisi dati dei tasks";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
     }

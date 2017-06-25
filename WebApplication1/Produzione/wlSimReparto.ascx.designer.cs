@@ -31,6 +31,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblAccCalendario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAccCalendario;
+        
+        /// <summary>
         /// Controllo upd1.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblDataIniziale.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDataIniziale;
+        
+        /// <summary>
         /// Controllo txtProductDateStart.
         /// </summary>
         /// <remarks>
@@ -47,6 +65,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProductDateStart;
+        
+        /// <summary>
+        /// Controllo lblDataFinale.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDataFinale;
         
         /// <summary>
         /// Controllo txtProductDateEnd.
@@ -67,6 +94,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.ImageButton btnUpdateDate;
         
         /// <summary>
+        /// Controllo lblAccPostazione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAccPostazione;
+        
+        /// <summary>
         /// Controllo rbPostazioni.
         /// </summary>
         /// <remarks>
@@ -83,6 +119,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBoxList chkLstPostazioni;
+        
+        /// <summary>
+        /// Controllo lblAccProdottiNew.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAccProdottiNew;
         
         /// <summary>
         /// Controllo rptProdotti.
@@ -110,6 +155,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl dvErr;
+        
+        /// <summary>
+        /// Controllo lblAttenzione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAttenzione;
         
         /// <summary>
         /// Controllo lblErr.

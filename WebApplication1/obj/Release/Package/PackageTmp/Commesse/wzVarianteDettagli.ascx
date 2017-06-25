@@ -10,7 +10,7 @@
         <td>
 <asp:Label runat="server" ID="lblNomeVariante" />
 <asp:TextBox runat="server" ID="txtNomeVariante" Visible="false" />
-<asp:RequiredFieldValidator runat="server" ID="val1" ControlToValidate="txtNomeVariante" ForeColor="Red" ErrorMessage="* Campo obbligatorio" />
+<asp:RequiredFieldValidator runat="server" ID="val1" ControlToValidate="txtNomeVariante" ForeColor="Red" ErrorMessage="<%$Resources:lblValReqField %>" />
 </td>
         
         </tr>
@@ -18,7 +18,7 @@
         <td>
             <asp:Label runat="server" ID="lblDescVariante" />
 <asp:TextBox runat="server" ID="txtDescVariante" TextMode="MultiLine" Visible="false" />
-<asp:RequiredFieldValidator runat="server" ID="val2" ControlToValidate="txtDescVariante" ForeColor="Red" ErrorMessage="* Campo obbligatorio" />
+<asp:RequiredFieldValidator runat="server" ID="val2" ControlToValidate="txtDescVariante" ForeColor="Red" ErrorMessage="<%$Resources:lblValReqField %>" />
         </td>
     </tr>
     </table>

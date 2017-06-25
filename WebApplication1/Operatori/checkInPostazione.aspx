@@ -9,11 +9,11 @@
     <asp:ScriptManager runat="server" ID="scriptMan" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="#">WorkPlace</a>
+						<a href="#"><asp:literal runat="server" id="lblNavWorkPlace" Text="<%$Resources:lblNavWorkPlace %>" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="checkInPostazione.aspx">Web Gemba</a>
+						<a href="checkInPostazione.aspx"><asp:literal runat="server" id="lblNavWebGemba" Text="<%$Resources:lblNavWebGemba %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

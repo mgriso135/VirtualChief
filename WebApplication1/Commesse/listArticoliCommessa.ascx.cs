@@ -42,7 +42,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare gli articoli.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptArticoliCommessa.Visible = false;
             }
         }
@@ -163,14 +163,14 @@ namespace KIS.Commesse
                             }
                             else
                             {
-                                lbl1.Text = "Non posso cancellarlo perché lo status non è 'N', quindi il processo produttivo è già iniziato.<br/>";
+                                lbl1.Text = GetLocalResourceObject("lblCannotDelete").ToString();
                             }
                         }
                     }
                 }
                 else
                 {
-                    lbl1.Text += "Error<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrore").ToString();
                 }
             }
             else if (e.CommandName == "editData")
@@ -190,7 +190,7 @@ namespace KIS.Commesse
                         }
                         else
                         {
-                            lbl1.Text = "Non puoi più cambiare la data di consegna.<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblCantChangeDate").ToString();
                         }
                     }
                 }
@@ -214,7 +214,7 @@ namespace KIS.Commesse
                         }
                         else
                         {
-                            lbl1.Text = "Errore: la data di consegna non può essere antecedente ad oggi.<br />";
+                            lbl1.Text = GetLocalResourceObject("lblInvalidDate").ToString();
                         }
                     }
                 }
@@ -244,12 +244,14 @@ namespace KIS.Commesse
                     comm.loadArticoli();
                     rptArticoliCommessa.DataSource = comm.Articoli;
                     rptArticoliCommessa.DataBind();
-                    lbl1.Text = "La pianificazione del prodotto " + art.ID.ToString()
-                    + "/" + art.Year.ToString() + " è stata rimossa con successo.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblDepianificaSuccess1").ToString()
+                        + " " + art.ID.ToString()
+                    + "/" + art.Year.ToString() + " " 
+                    + GetLocalResourceObject("lblDepianificaSuccess2").ToString();
                 }
                 else
                 {
-                    lbl1.Text += "E' avvenuto un errore.<br/>" + art.log;
+                    lbl1.Text = GetLocalResourceObject("lblErrore").ToString()+"<br />" + art.log;
                 }
             }
         }

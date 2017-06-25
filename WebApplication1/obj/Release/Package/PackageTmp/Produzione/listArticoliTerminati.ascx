@@ -3,7 +3,8 @@
 
 <table>
     <thead>
-    <tr><td>Inizio</td><td>Fine</td></tr></thead>
+    <tr><td><asp:Literal runat="server" ID="lblInizio" Text="<%$Resources:lblInizio %>" />
+        </td><td><asp:Literal runat="server" ID="lblFine" Text="<%$Resources:lblFine %>" /></td></tr></thead>
     <tbody>
     <tr><td><asp:Calendar runat="server" ID="calInizio" OnSelectionChanged="calInizio_SelectionChanged" /></td>
         <td><asp:Calendar runat="server" ID="calFine" OnSelectionChanged="calFine_SelectionChanged" /></td>
@@ -18,19 +19,18 @@
             <thead>
             <tr>
                 <th></th>
-                <th>Commessa</th>
-                <th>Cliente</th>
-                <th>Articolo</th>
-                <th>Matricola</th>
-                <th>Processo</th>
-                <th>Variante</th>
-                <th>Quantità</th>
-                <th>Reparto</th>
-                <th>Data Fine Attività</th>
-                <th>Data Prevista Consegna</th>
-                <th>Tempo di lavoro</th>
-                <th>Ritardo</th>
-                <th>Riesuma</th>
+                <th><asp:Literal runat="server" ID="lblOrdine" Text="<%$Resources:lblOrdine %>" /></th>
+                <th><asp:Literal runat="server" ID="lblCliente" Text="<%$Resources:lblCliente %>" /></th>
+                <th><asp:Literal runat="server" ID="lblProdotto" Text="<%$Resources:lblProdotto %>" /></th>
+                <th><asp:Literal runat="server" ID="lblMatricola" Text="<%$Resources:lblMatricola %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTipoOrdine" Text="<%$Resources:lblTipoProdotto %>" /></th>
+                <th><asp:Literal runat="server" ID="lblQuantita" Text="<%$Resources:lblQuantita %>" /></th>
+                <th><asp:Literal runat="server" ID="lblReparto" Text="<%$Resources:lblReparto %>" /></th>
+                <th><asp:Literal runat="server" ID="lblDataFineAtt" Text="<%$Resources:lblDataFineAtt %>" /></th>
+                <th><asp:Literal runat="server" ID="lblDataPrevConsegna" Text="<%$Resources:lblDataPrevConsegna %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTempoLavoro" Text="<%$Resources:lblTempoLavoro %>" /></th>
+                <th><asp:Literal runat="server" ID="lblRitardo" Text="<%$Resources:lblRitardo %>" /></th>
+                <th><asp:Literal runat="server" ID="lblRiesuma" Text="<%$Resources:lblRiesuma %>" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -44,8 +44,7 @@
             <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Matricola") %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "Proc.Process.ProcessName") %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "Proc.Variant.nomeVariante") %></td>
+            <td><%#DataBinder.Eval(Container.DataItem, "Proc.Process.ProcessName") %>&nbsp;-&nbsp;<%#DataBinder.Eval(Container.DataItem, "Proc.Variant.nomeVariante") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "QuantitaProdotta") %>&nbsp;(<%#DataBinder.Eval(Container.DataItem, "Quantita") %>)</td>
             <td><%#DataBinder.Eval(Container.DataItem, "RepartoNome") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "DataFineAttivita") %></td>

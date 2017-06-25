@@ -49,7 +49,8 @@ namespace KIS.Commesse
                             ddlCopiaPERT.DataTextField = "NomeCombinato";
                             ddlCopiaPERT.DataBind();
 
-                            lblTitle.Text = "Cliente: " + cm.Cliente;
+                            lblTitle.Text = GetLocalResourceObject("lblCliente").ToString()
+                                +": " + cm.Cliente;
 
                             PortafoglioClienti portCli = new PortafoglioClienti();
                             ddlCopiaPERTClienti.DataSource = portCli.Elenco;
@@ -74,7 +75,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai i permessi di aggiungere diagrammi di PERT.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -190,26 +191,27 @@ namespace KIS.Commesse
                             + "&revProc=" + prcVar.process.revisione.ToString()
                             + "&idVariante=" + prcVar.variant.idVariante.ToString()
                             + "&idProdotto=-1&annoProdotto=-1&quantita="
-                            + qty.ToString());
+                            + qty.ToString()
+                            +"&matricola=" + Server.HtmlEncode(txtStdMatricola.Text.ToString()));
                         }
                         else
                         {
-                            lbl1.Text = "Attenzione: il prodotto richiesto è inesistente.";
+                            lbl1.Text = GetLocalResourceObject("lblErrProdStdInesistente").ToString();
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Attenzione: commessa non trovata.";
+                        lbl1.Text = GetLocalResourceObject("lblErrOrdineNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Attenzione: verificare che la quantità inserita sia corretta.";
+                    lbl1.Text = GetLocalResourceObject("lblErrQta").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: devi prima selezionare un prodotto.";
+                lbl1.Text = GetLocalResourceObject("lblErrNoProdSelected").ToString();
             }
         }
 
@@ -245,7 +247,7 @@ namespace KIS.Commesse
 
                 ddlAddProdStandard.Items.Clear();
                 
-                ddlAddProdStandard.Items.Add(new ListItem("", "Nessuna selezione"));
+                ddlAddProdStandard.Items.Add(new ListItem("", GetLocalResourceObject("lblNoSelection").ToString()));
                 ddlAddProdStandard.DataSource = sorted;
                 ddlAddProdStandard.DataValueField = "IDCombinato2";
                 ddlAddProdStandard.DataTextField = "NomeCombinato";
@@ -325,7 +327,7 @@ namespace KIS.Commesse
                     bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
                     if (check == false)
                     {
-                        lbl1.Text = "Si è verificato un errore.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErr").ToString() + "<br />";
                     }
                     else
                     {
@@ -345,7 +347,7 @@ namespace KIS.Commesse
                     int varID = var.add(Server.HtmlEncode(txtNomeBlankProd.Text), Server.HtmlEncode(txtDescBlankProd.Text));
                     if (varID == -1)
                     {
-                        lbl1.Text = "Si è verificato un errore durante l'aggiunta del nuovo prodotto.";
+                        lbl1.Text = GetLocalResourceObject("lblErrAddingProduct").ToString();
                     }
                     else
                     {
@@ -367,18 +369,19 @@ namespace KIS.Commesse
                                 + "&revProc=" + prcRev.ToString() + "&idVariante=" + varID.ToString()
                                 + "&idProdotto=-1"
                                 + "&annoProdotto=-1&quantita="
-                                + qty.ToString());
+                                + qty.ToString()
+                                + "&matricola=" + Server.HtmlEncode(txtMatricolaBlank.Text.ToString()));
                         }
                         else
                         {
-                            lbl1.Text = "Si è verificato un errore durante l'aggiunta del nuovo prodotto.";
+                            lbl1.Text = GetLocalResourceObject("lblErrAddingProduct").ToString();
                         }
                     }
                 }
             }
             else
             {
-                lbl1.Text = "Errore nella quantità. Verificare che sia in formato numerico.";
+                lbl1.Text = GetLocalResourceObject("lblErrQta").ToString();
             }
         }
 
@@ -457,7 +460,7 @@ namespace KIS.Commesse
                     bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
                     if (check == false)
                     {
-                        lbl1.Text = "Si è verificato un errore.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErr").ToString() + "<br />";
                     }
                     else
                     {
@@ -482,7 +485,7 @@ namespace KIS.Commesse
                         bool flagCopiaPostazioni = chkCopiaPostazioni.Checked;
                         if (chkCopiaPostazioni.Checked && !chkCopiaReparti.Checked)
                         {
-                            lbl1.Text = "Errore: se copio le postazioni devo anche copiare i reparti";
+                            lbl1.Text = GetLocalResourceObject("lblErrPostRep").ToString();
                         }
                         else
                         {
@@ -504,23 +507,24 @@ namespace KIS.Commesse
                                 + "&revProc=" + prcRev.ToString() + "&idVariante=" + newVarID.ToString()
                                 + "&idProdotto=-1"
                                 + "&annoProdotto=-1&quantita="
-                                + qty.ToString());
+                                + qty.ToString()
+                                +"&matricola="+ Server.HtmlEncode(txtMatricolaCopiaProd.Text.ToString()));
                             }
                             else
                             {
-                                lblCopiaPERTLog.Text = "Attenzione: si è verificato un errore. Il prodotto potrebbe essere stato copiato parzialmente. Ricaricare la pagina e verificare completamente il prodotto creato.<br />";
+                                lbl1.Text = GetLocalResourceObject("lblErrPartialCopy").ToString() + "<br />";
                             }
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Errore creando i ProcessoVariante<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblErr").ToString() + "<br />";
                     }
                 }
             }
             else
             {
-                lbl1.Text = "Errore nel formato della quantità";
+                lbl1.Text = GetLocalResourceObject("lblErrQta").ToString() + "<br />";
             }
         }
     }

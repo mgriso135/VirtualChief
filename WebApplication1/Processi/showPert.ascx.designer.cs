@@ -22,6 +22,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblTitleLnkTaskEsistente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleLnkTaskEsistente;
+        
+        /// <summary>
         /// Controllo ddlTasks.
         /// </summary>
         /// <remarks>
@@ -103,6 +112,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.HiddenField editTaskVarianteID;
         
         /// <summary>
+        /// Controllo lblNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNome;
+        
+        /// <summary>
         /// Controllo editTaskNome.
         /// </summary>
         /// <remarks>
@@ -110,6 +128,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox editTaskNome;
+        
+        /// <summary>
+        /// Controllo lblDescrizione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDescrizione;
         
         /// <summary>
         /// Controllo editTaskDesc.
@@ -173,6 +200,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updDeleteTask;
+        
+        /// <summary>
+        /// Controllo lblDeleteProc.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDeleteProc;
         
         /// <summary>
         /// Controllo lblEdit1.

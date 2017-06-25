@@ -40,6 +40,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblAccProdStandard.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccProdStandard;
+        
+        /// <summary>
         /// Controllo upd1.
         /// </summary>
         /// <remarks>
@@ -58,6 +67,24 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblAddPERT;
         
         /// <summary>
+        /// Controllo lblAccProdStandard1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccProdStandard1;
+        
+        /// <summary>
+        /// Controllo lblSelezionaProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSelezionaProdotto;
+        
+        /// <summary>
         /// Controllo ddlAddProdStandard.
         /// </summary>
         /// <remarks>
@@ -65,6 +92,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlAddProdStandard;
+        
+        /// <summary>
+        /// Controllo lblQuantita.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblQuantita;
         
         /// <summary>
         /// Controllo txtStdQty.
@@ -85,6 +121,33 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator4;
         
         /// <summary>
+        /// Controllo lblMatricola.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMatricola;
+        
+        /// <summary>
+        /// Controllo txtStdMatricola.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStdMatricola;
+        
+        /// <summary>
+        /// Controllo lblFiltraCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFiltraCliente;
+        
+        /// <summary>
         /// Controllo ddlStdFiltroCliente.
         /// </summary>
         /// <remarks>
@@ -103,6 +166,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.ImageButton addProdStd;
         
         /// <summary>
+        /// Controllo lblAccAggiungiProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccAggiungiProdotto;
+        
+        /// <summary>
         /// Controllo upd3.
         /// </summary>
         /// <remarks>
@@ -112,6 +184,24 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.UpdatePanel upd3;
         
         /// <summary>
+        /// Controllo Label1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label1;
+        
+        /// <summary>
+        /// Controllo lblNomeNuovoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNomeNuovoProd;
+        
+        /// <summary>
         /// Controllo txtNomeBlankProd.
         /// </summary>
         /// <remarks>
@@ -119,6 +209,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNomeBlankProd;
+        
+        /// <summary>
+        /// Controllo lblDescNuovoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescNuovoProd;
         
         /// <summary>
         /// Controllo txtDescBlankProd.
@@ -139,6 +238,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator1;
         
         /// <summary>
+        /// Controllo lblQuantita2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblQuantita2;
+        
+        /// <summary>
         /// Controllo txtQtyBlank.
         /// </summary>
         /// <remarks>
@@ -155,6 +263,24 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator5;
+        
+        /// <summary>
+        /// Controllo lblMatricola2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMatricola2;
+        
+        /// <summary>
+        /// Controllo txtMatricolaBlank.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMatricolaBlank;
         
         /// <summary>
         /// Controllo addVariante.
@@ -175,6 +301,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlTableRow trBlankConfirm;
         
         /// <summary>
+        /// Controllo lblErrorDuplicate.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblErrorDuplicate;
+        
+        /// <summary>
         /// Controllo imgBlankConfirmOK.
         /// </summary>
         /// <remarks>
@@ -191,6 +326,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgBlankConfirmKO;
+        
+        /// <summary>
+        /// Controllo lblAccAggiungiProdCopia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccAggiungiProdCopia;
         
         /// <summary>
         /// Controllo upd2.
@@ -220,6 +364,24 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.Label lblCopiaPERT;
         
         /// <summary>
+        /// Controllo lblAccAggiungiProdCopia1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccAggiungiProdCopia1;
+        
+        /// <summary>
+        /// Controllo lblNomeNuovoProd2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNomeNuovoProd2;
+        
+        /// <summary>
         /// Controllo txtNomeCopiaProd.
         /// </summary>
         /// <remarks>
@@ -236,6 +398,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator2;
+        
+        /// <summary>
+        /// Controllo lblDescNuovoProd2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescNuovoProd2;
         
         /// <summary>
         /// Controllo txtDescCopiaProd.
@@ -256,6 +427,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator3;
         
         /// <summary>
+        /// Controllo lblQuantita3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblQuantita3;
+        
+        /// <summary>
         /// Controllo txtQtyCopiaProd.
         /// </summary>
         /// <remarks>
@@ -274,6 +454,33 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator RequiredFieldValidator6;
         
         /// <summary>
+        /// Controllo Label2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Label2;
+        
+        /// <summary>
+        /// Controllo txtMatricolaCopiaProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMatricolaCopiaProd;
+        
+        /// <summary>
+        /// Controllo lblSelBaseProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSelBaseProd;
+        
+        /// <summary>
         /// Controllo ddlCopiaPERT.
         /// </summary>
         /// <remarks>
@@ -281,6 +488,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCopiaPERT;
+        
+        /// <summary>
+        /// Controllo lblFiltraCliente3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFiltraCliente3;
         
         /// <summary>
         /// Controllo ddlCopiaPERTClienti.
@@ -301,6 +517,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.CheckBox chkCopia;
         
         /// <summary>
+        /// Controllo lblRiutilizzaTasks.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRiutilizzaTasks;
+        
+        /// <summary>
         /// Controllo chkCopiaTC.
         /// </summary>
         /// <remarks>
@@ -308,6 +533,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCopiaTC;
+        
+        /// <summary>
+        /// Controllo lblCopiaTempiCiclo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCopiaTempiCiclo;
         
         /// <summary>
         /// Controllo chkCopiaReparti.
@@ -319,6 +553,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.CheckBox chkCopiaReparti;
         
         /// <summary>
+        /// Controllo lblCopiaReparti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCopiaReparti;
+        
+        /// <summary>
         /// Controllo chkCopiaPostazioni.
         /// </summary>
         /// <remarks>
@@ -326,6 +569,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkCopiaPostazioni;
+        
+        /// <summary>
+        /// Controllo lblCopiaPostazioni.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCopiaPostazioni;
         
         /// <summary>
         /// Controllo btnCopiaPERT.
@@ -353,6 +605,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTableRow trCopyConfirm;
+        
+        /// <summary>
+        /// Controllo lblErrorDuplicate2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblErrorDuplicate2;
         
         /// <summary>
         /// Controllo imgCopyConfirmOK.

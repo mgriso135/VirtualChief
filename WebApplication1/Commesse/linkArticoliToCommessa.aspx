@@ -8,19 +8,20 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="commesse.aspx">Commesse</a>
+						<a href="commesse.aspx">
+                            <asp:Label runat="server" ID="lblNavCommesse" meta:resourcekey="lblNavCommesse" /></a>
 						<span class="divider">/</span>
-                        <a href="<%# Request.RawUrl %>">Dettaglio commessa</a>
+                        <a href="<%# Request.RawUrl %>"><asp:Label runat="server" ID="lblNavDettaglioCommesse" meta:resourcekey="lblNavDettaglioCommesse" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <h3>Aggiunta articoli a commessa</h3>
+    <h3><asp:Label runat="server" ID="lblTitleAddProdotto" meta:resourcekey="lblTitleAddProdotto" /></h3>
     
-    Commessa: <asp:Label runat="server" ID="lblIDCommessa" />
+    <asp:Label runat="server" ID="lblCommessa" meta:resourcekey="lblCommessa" />: <asp:Label runat="server" ID="lblIDCommessa" />
     <br />
-    Data inserimento: <asp:Label runat="server" ID="lblDataCommessa" />
+    <asp:Label runat="server" ID="lblDataInserimento" meta:resourcekey="lblDataInserimento" />:&nbsp;<asp:Label runat="server" ID="lblDataCommessa" />
     <br />
-    Note: <asp:Label runat="server" ID="lblNote" />
+    <asp:Label runat="server" ID="lblLNote" meta:resourcekey="lblLNote" />: <asp:Label runat="server" ID="lblNote" />
     <br /><br />
     <asp:label runat="server" ID="lbl1" />
     <commessa:linkArticoli id="frmLinkArticolo" runat="server" />

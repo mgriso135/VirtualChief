@@ -13,6 +13,15 @@ namespace KIS.Analysis {
     public partial class ReportCustomerProdProgress_chooseCustomer1 {
         
         /// <summary>
+        /// Controllo lblTitleScegliCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleScegliCliente;
+        
+        /// <summary>
         /// Controllo upd1.
         /// </summary>
         /// <remarks>

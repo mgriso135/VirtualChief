@@ -22,6 +22,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Label lbl1;
         
         /// <summary>
+        /// Controllo lblTitleSelProducts.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleSelProducts;
+        
+        /// <summary>
         /// Controllo frmReport.
         /// </summary>
         /// <remarks>
@@ -58,6 +67,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblAccProdI.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccProdI;
+        
+        /// <summary>
         /// Controllo upd1.
         /// </summary>
         /// <remarks>
@@ -85,6 +103,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Label lblI;
         
         /// <summary>
+        /// Controllo lblAccProdP.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccProdP;
+        
+        /// <summary>
         /// Controllo UpdatePanel1.
         /// </summary>
         /// <remarks>
@@ -110,6 +137,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblP;
+        
+        /// <summary>
+        /// Controllo lblAccProdN.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAccProdN;
         
         /// <summary>
         /// Controllo upd3.

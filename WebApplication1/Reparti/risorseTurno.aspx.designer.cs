@@ -31,6 +31,24 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.WebControls.Label lblTitoloRisorsa;
         
         /// <summary>
+        /// Controllo lblNavAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAdmin;
+        
+        /// <summary>
+        /// Controllo lblNavReparti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavReparti;
+        
+        /// <summary>
         /// Controllo lnkReparto.
         /// </summary>
         /// <remarks>
@@ -40,6 +58,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.WebControls.HyperLink lnkReparto;
         
         /// <summary>
+        /// Controllo lblNavConfigReparti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavConfigReparti;
+        
+        /// <summary>
         /// Controllo lnkRisorseTurno.
         /// </summary>
         /// <remarks>
@@ -47,6 +74,15 @@ namespace KIS.Reparti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkRisorseTurno;
+        
+        /// <summary>
+        /// Controllo lblNavRisorseProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavRisorseProd;
         
         /// <summary>
         /// Controllo frmRisorsePostazioni.

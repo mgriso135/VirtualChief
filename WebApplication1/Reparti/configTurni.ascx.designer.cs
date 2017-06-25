@@ -13,6 +13,15 @@ namespace KIS.Produzione {
     public partial class configTurni {
         
         /// <summary>
+        /// Controllo lblTitleTurni.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleTurni;
+        
+        /// <summary>
         /// Controllo upd1.
         /// </summary>
         /// <remarks>
@@ -67,6 +76,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.ImageButton showAddTurno;
         
         /// <summary>
+        /// Controllo lblTTAddTurno.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTTAddTurno;
+        
+        /// <summary>
         /// Controllo addTurno.
         /// </summary>
         /// <remarks>
@@ -76,6 +94,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.HtmlControls.HtmlTable addTurno;
         
         /// <summary>
+        /// Controllo lblNomeTurno.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNomeTurno;
+        
+        /// <summary>
         /// Controllo nomeTurno.
         /// </summary>
         /// <remarks>
@@ -83,6 +110,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox nomeTurno;
+        
+        /// <summary>
+        /// Controllo lblColore.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblColore;
         
         /// <summary>
         /// Controllo coloreTurno.

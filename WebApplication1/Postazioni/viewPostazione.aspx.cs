@@ -22,7 +22,7 @@ namespace KIS.Postazioni
                 catch
                 {
                     pstID = -1;
-                    lbl1.Text = "Errore nei dati di input<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrorInputData").ToString();
                     viewCalendarioPostazione.Visible = false;
                 }
                 if (pstID != -1)
@@ -31,21 +31,15 @@ namespace KIS.Postazioni
                     lblNomePost.Text = pst.name;
                     lblDescPost.Text = pst.desc;
                     viewCalendarioPostazione.idPostazione = pst.id;
-                    //frmPstWorkload.Visible = true;
-                    //frmPstWorkload.postID = pst.id;
-                    frmPstWorkload.Visible = false;
-                    frmPstWorkload.postID = -1;
 
                     frmPstRisorse.Visible = true;
                     frmPstRisorse.idPostazione = pst.id;
                 }
                 else
                 {
-                    frmPstWorkload.Visible = false;
-                    frmPstWorkload.postID = -1;
                     lblDescPost.Visible = false;
                     lblNomePost.Visible = false;
-                    lbl1.Text = "Errore nei dati di input<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrorInputData").ToString();
                     viewCalendarioPostazione.Visible = false;
                     viewCalendarioPostazione.idPostazione = -1;
                     frmPstRisorse.Visible = false;
@@ -57,11 +51,9 @@ namespace KIS.Postazioni
                 lblDescPost.Visible = false;
                 lblNomePost.Visible = false;
                 viewCalendarioPostazione.Visible = false;
-                lbl1.Text = "Errore nei dati di input<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorInputData").ToString();
                 viewCalendarioPostazione.idPostazione = -1;
                 frmPstRisorse.Visible = false;
-                frmPstWorkload.Visible = false;
-                frmPstWorkload.postID = -1;
             }
         }
     }

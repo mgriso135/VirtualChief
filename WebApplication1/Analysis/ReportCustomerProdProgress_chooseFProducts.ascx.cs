@@ -55,13 +55,13 @@ namespace KIS.Analysis
                 }
                 else
                 {
-                    lbl1.Text = "Cliente non trovato.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorCustomerNotFound").ToString();
                     frmReport.Visible = false;
                 }
             }
             else
             {
-                lbl1.Text = "Non hai i permessi per eseguire il report.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmReport.Visible = false;
             }
         }
@@ -103,7 +103,7 @@ namespace KIS.Analysis
             }
             else
             {
-                lbl1.Text = "Errore nelle date inserite.";
+                lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
                 rptProductsF.Visible = false;
             }
         }
@@ -135,7 +135,9 @@ namespace KIS.Analysis
                         List<Articolo> swap = (List<Articolo>)Session["prodF"];
                         swap.Add(art);
                         Session["prodF"] = swap;
-                        lbl1.Text = "Prodotto " + art.ID.ToString() + "/" + art.Year.ToString() + " aggiunto alla lista.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblProdotto").ToString()
+                            + " " + art.ID.ToString() + "/" + art.Year.ToString() 
+                            + " " + GetLocalResourceObject("lblAddToList").ToString() + ".<br />";
                     }
                     else
                     {
@@ -144,23 +146,25 @@ namespace KIS.Analysis
                         if (itemToRemove != null)
                         {
                             swap.Remove(itemToRemove);
-                            lbl1.Text += "Prodotto " + art.ID.ToString() + "/" + art.Year.ToString() + " rimosso dalla lista.<br />";
+                            lbl1.Text += GetLocalResourceObject("lblProdotto").ToString() + " " 
+                                + art.ID.ToString() + "/" + art.Year.ToString()
+                                + " " + GetLocalResourceObject("lblRemovedFromList").ToString() + ".<br />";
                         }
                         else
                         {
-                            lbl1.Text = "Item not found!<br />";
+                            lbl1.Text = GetLocalResourceObject("lblItemNotFound").ToString();
                         }
                         Session["prodF"] = swap;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: prodotto non trovato.";
+                    lbl1.Text = GetLocalResourceObject("lblItemNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.";
+                lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
             }
         }
 

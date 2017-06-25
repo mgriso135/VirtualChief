@@ -17,9 +17,9 @@
             <HeaderTemplate>
                 <table class="table table-striped table-hover table-condensed">
                 <thead>
-                    <th>Reparto</th>
-                    <th>Turno</th>
-                    <th>Numero risorse</th>
+                    <th><asp:literal runat="server" ID="lblReparto" Text="<%$Resources:lblReparto %>" /></th>
+                    <th><asp:literal runat="server" ID="lblTurno" Text="<%$Resources:lblTurno %>" /></th>
+                    <th><asp:literal runat="server" ID="lblNumRisorse" Text="<%$Resources:lblNumRisorse %>" /></th>
                 </thead><tbody></HeaderTemplate>
             <ItemTemplate>
                 <tr runat="server" id="tr1">

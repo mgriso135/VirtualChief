@@ -34,7 +34,7 @@ namespace KIS.Analysis
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare l'analisi dati per gli operatori.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
     }

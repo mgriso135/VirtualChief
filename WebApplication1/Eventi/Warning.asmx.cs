@@ -115,8 +115,8 @@ namespace KIS.Eventi
                 if (MailList.Count > 0)
                 {
                     System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
-                    mMessage.From = new MailAddress("tools@kaizenpeople.it", "robot@kis");
-                    mMessage.To.Add(new MailAddress("tools@kaizenpeople.it", "robot@kis"));
+                    mMessage.From = new MailAddress("kaizenindicatorsystem@yahoo.com", "Scheduler@KaizenIndicatorSystem");
+                    mMessage.To.Add(new MailAddress("kaizenindicatorsystem@yahoo.com", "Scheduler@KaizenIndicatorSystem"));
                     for (int q = 0; q < MailList.Count; q++)
                     {
                         mMessage.CC.Add(MailList[q]);

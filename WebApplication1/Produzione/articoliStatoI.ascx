@@ -2,7 +2,7 @@
 <%@ Reference Control="~/Produzione/StatoTasksArticolo.ascx" %>
 
 
-<h5 runat="server" id="lblTitle">Articoli avviati</h5>
+<h5 runat="server" id="lblTitle" Text="<%$Resources:lblTitle %>" />
 <asp:UpdatePanel runat="server" ID="upd1" UpdateMode="Conditional">
     <ContentTemplate>
         <asp:Label runat="server" ID="lbl1" />

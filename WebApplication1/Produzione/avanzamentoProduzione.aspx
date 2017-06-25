@@ -7,10 +7,11 @@
 <head id="Head1" runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     
-    <title>KAIZEN INDICATOR SYSTEM - DEVELOP</title>
+    <title>Kaizen Indicator System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Kaizen People &middot; Kaizen Indicator System" />
+	<meta name="description" content="Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" />
     <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
@@ -130,7 +131,6 @@
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/Styles/assets/ico/apple-touch-icon-114-precomposed.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/Styles/assets/ico/apple-touch-icon-72-precomposed.png" />
 		<link rel="apple-touch-icon-precomposed" href="~/Styles/assets/ico/apple-touch-icon-57-precomposed.png" />
-		<link rel="shortcut icon" href="~/Styles/assets/ico/favicon.png" />
 
     <!-- FINE CSS GIORDANO -->
     </head>
@@ -140,15 +140,19 @@
     <asp:ScriptManager ID="scriptMan1" runat="server" />
     <ul class="breadcrumb hidden-phone">
                     <li>
-						<a href="produzione.aspx">Produzione</a>
+						<a href="produzione.aspx">
+                            <asp:Label runat="server" ID="lblNavProduzione" meta:resourcekey="lblNavProduzione" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
                     <li>
-						<a href="<%#Request.RawUrl %>">Andon completo</a>
+						<a href="<%#Request.RawUrl %>">
+                            <asp:Label runat="server" ID="lblNavAndonCompleto" meta:resourcekey="lblNavAndonCompleto" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <h3>Andon completo</h3>
+    <h3><asp:Label runat="server" ID="lblNavAndonCompleto1" meta:resourcekey="lblNavAndonCompleto" /></h3>
     
     <div class="row-fluid">
         <warning:listOpen runat="server" id="frmListWarningAperti" />
@@ -163,7 +167,7 @@
         <div class="span9">
             <asp:UpdatePanel runat="server" ID="updStatoArticoli" UpdateMode="Conditional">
         <ContentTemplate>
-            <h5>Articoli da avviare</h5>
+            <h5><asp:Label runat="server" ID="lblTitleArticoliDaAvviare" meta:resourcekey="lblTitleArticoliDaAvviare" /></h5>
             <asp:Label runat="server" ID="lbl1" />
 
             
@@ -180,7 +184,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><asp:HyperLink runat="server" ID="lnkStatoArticolo" NavigateUrl='<%# "statoAvanzamentoArticolo.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno=" + DataBinder.Eval(Container.DataItem, "Year") %>' Target="_blank">
-                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Width="40" ToolTip="Visualizza lo stato di avanzamento dell'articolo" />
+                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Width="40" ToolTip="<%$resources:lblTTStatoAvanzamento %>" />
                         </asp:HyperLink><asp:HiddenField runat="server" ID="lblIDArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
                     <asp:HiddenField runat="server" ID="lblAnnoArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "Year") %>' /></td>
                 

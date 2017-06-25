@@ -13,6 +13,33 @@ namespace KIS.Users {
     public partial class editUser {
         
         /// <summary>
+        /// Controllo lblNavAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAdmin;
+        
+        /// <summary>
+        /// Controllo lblNavGestUsuarios.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavGestUsuarios;
+        
+        /// <summary>
+        /// Controllo lblNavModUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavModUsuario;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>

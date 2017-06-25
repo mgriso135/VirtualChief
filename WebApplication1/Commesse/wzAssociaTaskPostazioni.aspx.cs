@@ -30,6 +30,7 @@ namespace KIS.Commesse
             String sIDProdotto = Request.QueryString["idProdotto"];
             String sAnnoProdotto = Request.QueryString["annoProdotto"];
             String sQuantita = Request.QueryString["quantita"];
+            String matricola = Request.QueryString["matricola"];
 
             if (!String.IsNullOrEmpty(sIDCommessa) && !String.IsNullOrEmpty(sAnnoCommessa) && !String.IsNullOrEmpty(sIDProc) && !String.IsNullOrEmpty(sRevProc) && !String.IsNullOrEmpty(sIDVariante) && !String.IsNullOrEmpty(sIDReparto) && !String.IsNullOrEmpty(sQuantita))
             {
@@ -83,6 +84,7 @@ namespace KIS.Commesse
                         frmAssociaTasksPostazioni.idReparto = rp.id;
                         frmAssociaTasksPostazioni.idProdotto = idProdotto;
                         frmAssociaTasksPostazioni.annoProdotto = annoProdotto;
+                        frmAssociaTasksPostazioni.matricola = matricola;
                         frmAssociaTasksPostazioni.Visible = true;
 
                         imgShowAddPostazioni.Visible = true;
@@ -103,7 +105,8 @@ namespace KIS.Commesse
                         + "&idReparto=" + rp.id.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                         + "&annoProdotto=" + annoProdotto.ToString()
-                        +"&quantita=" + quantita.ToString();
+                        +"&quantita=" + quantita.ToString()
+                        +"&matricola="+matricola.ToString();
 
                         rp.loadPostazioniTask(prcVar);
                         prcVar.process.loadFigli(prcVar.variant);
@@ -121,7 +124,8 @@ namespace KIS.Commesse
                         + "&idReparto=" + rp.id.ToString() 
                         + "&idProdotto=" + idProdotto.ToString()
                         + "&annoProdotto=" + annoProdotto.ToString()
-                        + "&quantita=" + quantita.ToString(); ;
+                        + "&quantita=" + quantita.ToString()
+                        + "&matricola=" + matricola.ToString();
 
                         lnkAddPert.NavigateUrl = "wzAddPERT.aspx?idCommessa=" + idCommessa.ToString()
                             + "&annoCommessa=" + annoCommessa.ToString();
@@ -132,7 +136,8 @@ namespace KIS.Commesse
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&quantita=" + quantita.ToString();
+                            + "&quantita=" + quantita.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         lnkAssociaReparto.NavigateUrl = "wzAssociaPERTReparto.aspx?idCommessa=" + idCommessa.ToString()
                         + "&annoCommessa=" + annoCommessa.ToString()
@@ -141,7 +146,9 @@ namespace KIS.Commesse
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&quantita=" + quantita.ToString();
+                            + "&quantita=" + quantita.ToString() 
+                            + "&matricola=" + matricola.ToString();
+
 
                         lnkAssociaTasks.NavigateUrl = "wzAssociaTaskPostazioni.aspx?idCommessa=" + idCommessa.ToString()
                         + "&annoCommessa=" + annoCommessa.ToString()
@@ -151,7 +158,8 @@ namespace KIS.Commesse
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
                             + "&idReparto=" + idReparto.ToString()
-                            + "&quantita=" + quantita.ToString();
+                            + "&quantita=" + quantita.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         InfoPanel.Visible = true;
                         InfoPanel.idCommessa = cm.ID;

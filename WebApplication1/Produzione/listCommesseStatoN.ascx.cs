@@ -40,13 +40,13 @@ namespace KIS.Produzione
                     else
                     {
                         rptStatoN.Visible = false;
-                        lbl1.Text = "Complimenti, tutte le righe d'ordine sono state programmate in produzione.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblNothingToPlan").ToString();
                     }
                 }
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare gli articoli da inserire in produzione";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptStatoN.Visible = false;
             }
         }
@@ -220,7 +220,7 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            lbl1.Text = "Errore: data antecedente a quella attuale, oppure eccedente la data di prevista consegna.<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
                         }
                         showChangeFP.Visible = true;
                         changeFP.Visible = false;
@@ -235,7 +235,7 @@ namespace KIS.Produzione
                     }
                     else
                     {
-                        lbl1.Text = "ERRORE!<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblErrorGeneric").ToString();
                     }
                 }
                 else if (e.CommandName == "undoFP")

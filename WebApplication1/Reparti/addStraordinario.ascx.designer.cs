@@ -31,6 +31,24 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblAddStraord;
         
         /// <summary>
+        /// Controllo lblTHStart.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTHStart;
+        
+        /// <summary>
+        /// Controllo lblTHEnd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTHEnd;
+        
+        /// <summary>
         /// Controllo inizioStraord.
         /// </summary>
         /// <remarks>

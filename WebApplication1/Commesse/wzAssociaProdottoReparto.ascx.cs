@@ -12,6 +12,7 @@ namespace KIS.Commesse
     public partial class wzAssociaProdottoReparto : System.Web.UI.UserControl
     {
         public int idProc, revProc, idVar, idCommessa, annoCommessa, idProdotto, annoProdotto, quantita;
+        public string matricola;
         protected void Page_Load(object sender, EventArgs e)
         {
             rptReparti.Visible = false;
@@ -33,6 +34,9 @@ namespace KIS.Commesse
             if (checkUser == true)
             {
                 lnkGoBack.Visible = true;
+
+                matricola = (String.IsNullOrEmpty(matricola) || matricola.Length == 0) ? "" : matricola;
+
                 String page = "wzEditPERT.aspx";
                 WizardConfig wizCfg = new WizardConfig();
                 if (wizCfg.interfacciaPERT == "Table")
@@ -50,7 +54,8 @@ namespace KIS.Commesse
                 + "&idVariante=" + idVar.ToString()
                 + "&idProdotto=" + idProdotto.ToString()
                 + "&annoProdotto=" + annoProdotto.ToString()
-                + "&quantita=" + quantita.ToString();
+                + "&quantita=" + quantita.ToString()
+                + "&matricola=" + matricola.ToString();
 
                 if (idProc != -1 && revProc != -1 && idVar != -1)
                 {
@@ -84,7 +89,7 @@ namespace KIS.Commesse
                         }
                         else
                         {
-                            lbl1.Text = "Dati incoerenti.";
+                            lbl1.Text = GetLocalResourceObject("lblDataKo").ToString();
                             rptReparti.Visible = false;
                             lnkGoBack.Visible = false;
                             imgGoBack.Visible = false;
@@ -95,7 +100,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di associare il processo produttivo al reparto.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptReparti.Visible = false;
                 lnkGoBack.Visible = false;
                 imgGoBack.Visible = false;
@@ -186,7 +191,7 @@ namespace KIS.Commesse
             catch
             {
                 idReparto = -1;
-                lbl1.Text = "Errore: reparto non riconosciuto.";
+                lbl1.Text = GetLocalResourceObject("lblRepartoNotFound").ToString();
             }
 
             if (idReparto != -1)
@@ -204,16 +209,17 @@ namespace KIS.Commesse
                 +"&idReparto=" + rp.id.ToString()
                 + "&idProdotto=" + idProdotto.ToString()
                 + "&annoProdotto=" + annoProdotto.ToString()
-                + "&quantita=" + quantita.ToString());
+                + "&quantita=" + quantita.ToString()
+                + "&matricola=" + matricola.ToString());
                 }
                 else
                 {
-                    lbl1.Text = "Attenzione: reparto non trovato.1";
+                    lbl1.Text = GetLocalResourceObject("lblRepartoNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Attenzione: reparto non trovato.2";
+                lbl1.Text = GetLocalResourceObject("lblRepartoNotFound").ToString();
             }
         }
 

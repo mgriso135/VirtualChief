@@ -8,13 +8,13 @@
         <table style="border:1px dotted blue">
             <tr>
                 <td></td>
-                <td>Operatore</td>
-                <td>Nome</td>
+                <td><asp:literal runat="server" id="lblOperatore" Text="<%$Resources:lblOperatore %>" /></td>
+                <td><asp:literal runat="server" id="lblNome" Text="<%$Resources:lblNome %>" /></td>
             </tr>
     </HeaderTemplate>
     <ItemTemplate>
         <tr>
-            <td><asp:ImageButton runat="server" ID="imgDeleteOp" CommandName="deleteOP" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "username") %>' ImageUrl="/img/iconDelete.png" Height="30px" ToolTip="Rimuove l'operatore dal reparto" /></td>
+            <td><asp:ImageButton runat="server" ID="imgDeleteOp" CommandName="deleteOP" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "username") %>' ImageUrl="/img/iconDelete.png" Height="30px" ToolTip="<%$Resources:lblTTDeleteOp %>" /></td>
             <td><%#DataBinder.Eval(Container.DataItem, "username") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "FullName") %></td>
         </tr>
@@ -24,7 +24,7 @@
     </FooterTemplate>
 </asp:Repeater>
 
-<asp:ImageButton runat="server" ID="imgShowAddFrm" ImageUrl="/img/iconUserAdd.jpg" Height="40" ToolTip="Aggiungi un operatore al reparto" OnClick="imgShowAddFrm_Click" />
+<asp:ImageButton runat="server" ID="imgShowAddFrm" ImageUrl="/img/iconUserAdd.jpg" Height="40" ToolTip="<%$Resources:lblAddOp %>" OnClick="imgShowAddFrm_Click" />
 <table runat="server" id="frmAddOperator" style="border:1px dashed blue">
     <tr><td>Utente</td>
         <td><asp:DropDownList runat="server" ID="ddlUser" /></td>

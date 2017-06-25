@@ -22,6 +22,33 @@ namespace KIS.Admin {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblNavAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAdmin;
+        
+        /// <summary>
+        /// Controllo lblNavSysCfg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavSysCfg;
+        
+        /// <summary>
+        /// Controllo lblTitleSysCfg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleSysCfg;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -40,6 +67,15 @@ namespace KIS.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblLogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLogo;
+        
+        /// <summary>
         /// Controllo configLogo.
         /// </summary>
         /// <remarks>
@@ -49,6 +85,15 @@ namespace KIS.Admin {
         protected global::KIS.Admin.configLogo configLogo;
         
         /// <summary>
+        /// Controllo lblPERT.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPERT;
+        
+        /// <summary>
         /// Controllo frmTipoPERT.
         /// </summary>
         /// <remarks>
@@ -56,6 +101,15 @@ namespace KIS.Admin {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Admin.configWizard_TipoPERT frmTipoPERT;
+        
+        /// <summary>
+        /// Controllo lblFusoOrario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblFusoOrario;
         
         /// <summary>
         /// Controllo frmTimezone.

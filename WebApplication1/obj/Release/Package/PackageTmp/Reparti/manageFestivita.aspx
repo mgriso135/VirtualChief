@@ -8,8 +8,9 @@
 </asp:Content>
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-    Aggiungi una festivita
-    <festivita:add runat="server" ID="addFest" />
-    Elenco festivita
+    <asp:Literal runat="server" ID="lblAddFestivita" Text="<%$Resources:lblAddFestivita %>" />
+    <festivita:add runat="server" ID="addFest" /><br />
+    <br />
+    <asp:Literal runat="server" ID="lblElencoFestivita" Text="<%$Resources:lblElencoFestivita %>" />
     <festivita:list runat="server" id="listFest" />
 </asp:Content>

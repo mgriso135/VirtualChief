@@ -59,7 +59,7 @@ namespace KIS.Produzione
                     else
                     {
                         rptElencoArticoliNP.Visible = false;
-                        lbl1.Text = "Non ci sono più articoli da avviare. Verifica di aver lanciato tutte le commesse in produzione.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblNoMoreProducts").ToString();
                     }
                 }
             //}
@@ -111,46 +111,46 @@ namespace KIS.Produzione
                             Commessa comm;
                             switch (andonCfg.CampiVisualizzati.Keys.ElementAt(i))
                             {
-                                case "Commessa ID":
+                                case "CommessaID":
                                     td.InnerHtml = art.Commessa + "/" + art.AnnoCommessa;
                                     break;
-                                case "Commessa Codice Cliente":
+                                case "CommessaCodiceCliente":
                                     td.InnerHtml = art.Cliente;
                                     break;
-                                case "Commessa RagioneSociale Cliente":
+                                case "CommessaRagioneSocialeCliente":
                                     td.InnerHtml = art.RagioneSocialeCliente;
                                     break;
-                                case "Commessa Data Inserimento":
+                                case "CommessaDataInserimento":
                                     comm = new Commessa(art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.DataInserimento.ToString("dd/MM/yyyy");
                                     break;
-                                case "Commessa Note":
+                                case "CommessaNote":
                                     comm = new Commessa(art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.Note;
                                     break;
-                                case "Prodotto ID":
+                                case "ProdottoID":
                                     comm = new Commessa(art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = art.ID.ToString() + "/" + art.Year.ToString();
                                     break;
-                                case "Prodotto LineaProdotto":
+                                case "ProdottoLineaProdotto":
                                     td.InnerHtml = art.Proc.process.processName;
                                     break;
-                                case "Prodotto NomeProdotto":
+                                case "ProdottoNomeProdotto":
                                     td.InnerHtml = art.Proc.variant.nomeVariante;
                                     break;
-                                case "Prodotto Matricola":
+                                case "ProdottoMatricola":
                                     td.InnerHtml = art.Matricola;
                                     break;
-                                case "Prodotto Status":
+                                case "ProdottoStatus":
                                     td.InnerHtml = art.Status.ToString();
                                     break;
                                 case "Reparto":
                                     td.InnerHtml = art.RepartoNome;
                                     break;
-                                case "Data Prevista Consegna":
+                                case "DataPrevistaConsegna":
                                     td.InnerHtml = art.DataPrevistaConsegna.ToString("dd/MM/yyyy");
                                     break;
-                                case "Data Prevista Fine Produzione":
+                                case "DataPrevistaFineProduzione":
                                     td.InnerHtml = art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy");
                                     break;
                                 case "EarlyStart":
@@ -165,23 +165,23 @@ namespace KIS.Produzione
                                 case "LateFinish":
                                     td.InnerHtml = art.LateFinish.ToString("dd/MM/yyyy HH:mm:ss");
                                     break;
-                                case "Prodotto Quantita":
+                                case "ProdottoQuantita":
                                     td.InnerHtml = art.Quantita.ToString();
                                     break;
-                                case "Prodotto Quantita Realizzata":
+                                case "ProdottoQuantitaRealizzata":
                                     td.InnerHtml = art.QuantitaProdotta.ToString();
                                     break;
-                                case "Prodotto Ritardo":
+                                case "ProdottoRitardo":
                                     td.InnerHtml = Math.Round(art.Ritardo.TotalHours, 2).ToString();
                                     break;
-                                case "Prodotto Tempo di Lavoro Totale":
+                                case "ProdottoTempodiLavoroTotale":
                                     art.loadTempoDiLavoroTotale();
                                     td.InnerHtml = Math.Round(art.TempoDiLavoroTotale.TotalHours, 2).ToString();
                                     break;
-                                case "Prodotto Indicatore Completamento Tasks":
+                                case "ProdottoIndicatoreCompletamentoTasks":
                                     td.InnerHtml = Math.Round(art.IndicatoreCompletamentoTasks, 1).ToString() + "%";
                                     break;
-                                case "Prodotto Indicatore Completamento Tempo Previsto":
+                                case "ProdottoIndicatoreCompletamentoTempoPrevisto":
                                     td.InnerHtml = Math.Round(art.IndicatoreCompletamentoTempoPrevisto, 1).ToString() + "%";
                                     break;
                                 default:
@@ -252,74 +252,74 @@ namespace KIS.Produzione
                     Commessa comm;
                     switch (andonCfg.CampiVisualizzati.Keys.ElementAt(i))
                     {
-                        case "Commessa ID":
-                            td.InnerHtml = "ID Commessa";
+                        case "CommessaID":
+                            td.InnerHtml = GetLocalResourceObject("CommessaID").ToString();
                             break;
-                        case "Commessa Codice Cliente":
-                            td.InnerHtml = "Codice cliente";
+                        case "CommessaCodiceCliente":
+                            td.InnerHtml = GetLocalResourceObject("CommessaCodiceCliente").ToString();
                             break;
-                        case "Commessa RagioneSociale Cliente":
-                            td.InnerHtml = "Ragione sociale cliente";
+                        case "CommessaRagioneSocialeCliente":
+                            td.InnerHtml = GetLocalResourceObject("CommessaRagioneSocialeCliente").ToString();
                             break;
-                        case "Commessa Data Inserimento":
-                            td.InnerHtml = "Data inserimento commessa";
+                        case "CommessaDataInserimento":
+                            td.InnerHtml = GetLocalResourceObject("CommessaDataInserimento").ToString();
                             break;
-                        case "Commessa Note":
-                            td.InnerHtml = "Note commessa";
+                        case "CommessaNote":
+                            td.InnerHtml = GetLocalResourceObject("CommessaNote").ToString();
                             break;
-                        case "Prodotto ID":
-                            td.InnerHtml = "ID Prodotto";
+                        case "ProdottoID":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoID").ToString();
                             break;
-                        case "Prodotto LineaProdotto":
-                            td.InnerHtml = "Linea prodotto";
+                        case "ProdottoLineaProdotto":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoLineaProdotto").ToString();
                             break;
-                        case "Prodotto NomeProdotto":
-                            td.InnerHtml = "Nome prodotto";
+                        case "ProdottoNomeProdotto":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoNomeProdotto").ToString();
                             break;
-                        case "Prodotto Matricola":
-                            td.InnerHtml = "Matricola";
+                        case "ProdottoMatricola":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoMatricola").ToString();
                             break;
-                        case "Prodotto Status":
-                            td.InnerHtml = "Status";
+                        case "ProdottoStatus":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoStatus").ToString();
                             break;
                         case "Reparto":
-                            td.InnerHtml = "Reparto";
+                            td.InnerHtml = GetLocalResourceObject("Reparto").ToString();
                             break;
-                        case "Data Prevista Consegna":
-                            td.InnerHtml = "Data prevista consegna";
+                        case "DataPrevistaConsegna":
+                            td.InnerHtml = GetLocalResourceObject("DataPrevistaConsegna").ToString();
                             break;
-                        case "Data Prevista Fine Produzione":
-                            td.InnerHtml = "Data prevista fine produzione";
+                        case "DataPrevistaFineProduzione":
+                            td.InnerHtml = GetLocalResourceObject("DataPrevistaFineProduzione").ToString();
                             break;
                         case "EarlyStart":
-                            td.InnerHtml = "Early start";
+                            td.InnerHtml = GetLocalResourceObject("EarlyStart").ToString();
                             break;
                         case "LateStart":
-                            td.InnerHtml = "Late Start";
+                            td.InnerHtml = GetLocalResourceObject("LateStart").ToString();
                             break;
                         case "EarlyFinish":
-                            td.InnerHtml = "Early Finish";
+                            td.InnerHtml = GetLocalResourceObject("EarlyFinish").ToString();
                             break;
                         case "LateFinish":
-                            td.InnerHtml = "Late Finish";
+                            td.InnerHtml = GetLocalResourceObject("LateFinish").ToString();
                             break;
-                        case "Prodotto Quantita":
-                            td.InnerHtml = "Quantità prevista";
+                        case "ProdottoQuantita":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoQuantita").ToString();
                             break;
-                        case "Prodotto Quantita Realizzata":
-                            td.InnerHtml = "Quantità realizzata";
+                        case "ProdottoQuantitaRealizzata":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoQuantitaRealizzata").ToString();
                             break;
-                        case "Prodotto Ritardo":
-                            td.InnerHtml = "Ritardo";
+                        case "ProdottoRitardo":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoRitardo").ToString();
                             break;
-                        case "Prodotto Tempo di Lavoro Totale":
-                            td.InnerHtml = "Tempo di lavoro totale";
+                        case "ProdottoTempodiLavoroTotale":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoTempodiLavoroTotale").ToString();
                             break;
-                        case "Prodotto Indicatore Completamento Tasks":
-                            td.InnerHtml = "Indicatore Completamento Tasks";
+                        case "ProdottoIndicatoreCompletamentoTasks":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoIndicatoreCompletamentoTasks").ToString();
                             break;
-                        case "Prodotto Indicatore Completamento Tempo Previsto":
-                            td.InnerHtml = "Indicatore Completamento Tempo Previsto";
+                        case "ProdottoIndicatoreCompletamentoTempoPrevisto":
+                            td.InnerHtml = GetLocalResourceObject("ProdottoIndicatoreCompletamentoTempoPrevisto").ToString();
                             break;
                         default:
                             break;

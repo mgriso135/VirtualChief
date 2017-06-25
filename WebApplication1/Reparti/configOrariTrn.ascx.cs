@@ -85,7 +85,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire i turni di lavoro.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmTurno.Visible = false;
                 formAddOrario.Visible = false;
                 imgAddOrario.Visible = false;
@@ -126,7 +126,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Errore.<br/>";
+                lbl1.Text = "Error.<br/>";
             }
         }
 
@@ -182,7 +182,7 @@ namespace KIS.Reparti
                 bool rt = t.AddOrario(dayInizio, oInizio, dayFine, oFine);
                 if (rt == false)
                 {
-                    lbl1.Text = "Errore durante l'aggiunta del nuovo orario di lavoro<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorAdd").ToString();
                 }
                 else
                 {

@@ -105,7 +105,7 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            lblFineProgrammate.Text = "<span style=\"font-size: 12px;\">Nessun intervallo produttivo rilevato.</span>";
+                            lblFineProgrammate.Text = "<span style=\"font-size: 12px;\">"+ GetLocalResourceObject("lblNoTimeSpan").ToString()+ "</span>";
                         }
                     }
                 }

@@ -6,11 +6,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="produzione.aspx">Produzione</a>
+						<a href="produzione.aspx"><asp:literal runat="server" id="lblNavProduzione" Text="<%$Resources:lblNavProduzione %>" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="AndonListReparti.aspx">Andon Reparto</a>
+						<a href="AndonListReparti.aspx"><asp:literal runat="server" id="lblNavAndonRep" Text="<%$Resources:lblNavAndonRep %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

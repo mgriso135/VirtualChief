@@ -2,7 +2,6 @@
 
 <asp:Repeater runat="server" ID="rptCommesseChiuse">
     <HeaderTemplate>
-        
     </HeaderTemplate>
     <ItemTemplate>
         <div class="row-fluid">

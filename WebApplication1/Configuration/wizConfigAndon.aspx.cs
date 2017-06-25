@@ -40,8 +40,8 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigAndon\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigAndon\">"+ GetLocalResourceObject("lblLnkLogin").ToString() + ".</a>";
                 frmFormatoUsername.Visible = false;
                 frmViewFields.Visible = false;
                 accordion1.Visible = false;

@@ -40,7 +40,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare i reparti.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptListReparti.Visible = false;
             }
         }

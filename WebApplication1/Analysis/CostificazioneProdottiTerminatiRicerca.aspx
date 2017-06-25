@@ -5,11 +5,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx"><asp:label runat="server" id="lblNavAnalisiDati" meta:resourcekey="lblNavAnalisiDati" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="CostificazioneProdottiTerminatiRicerca.aspx">Costificazione prodotti: ricerca</a>
+						<a href="CostificazioneProdottiTerminatiRicerca.aspx"><asp:label runat="server" id="lblNavCostificazione" meta:resourcekey="lblNavCostificazione" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

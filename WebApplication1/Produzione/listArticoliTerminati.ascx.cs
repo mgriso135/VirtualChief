@@ -42,7 +42,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lblDate.Text = "Non hai il permesso di visualizzare gli articoli terminati.<br/>";
+                lblDate.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptArticoliTerminati.Visible = false;
             }
         }
@@ -50,8 +50,9 @@ namespace KIS.Produzione
         protected void loadArticoliTerminati()
         {
             List<Articolo> lstArticoliTerminati = new List<Articolo>();
-            lblDate.Text = "<span style=\"font-size: 20px; font-weight: bold\">Articoli terminati tra " 
-                + Inizio.ToString("dd/MM/yyyy") + " e " 
+            lblDate.Text = "<span style=\"font-size: 20px; font-weight: bold\">"
+                +GetLocalResourceObject("lblProdottiTerm1").ToString()+" " 
+                + Inizio.ToString("dd/MM/yyyy") + " "+GetLocalResourceObject("lblProdottiTerm2").ToString()+" " 
                 + Fine.ToString("dd/MM/yyyy") + "</span>";
             /*ElencoCommesse elComm = new ElencoCommesse();
             for (int i = 0; i < elComm.Commesse.Count; i++)
@@ -158,16 +159,16 @@ namespace KIS.Produzione
                             if (ret)
                             {
                                 loadArticoliTerminati();
-                                lbl1.Text = "Prodotto riesumato correttamente. Tutti i task sono stati messi in pausa.<br />";
+                                lbl1.Text = GetLocalResourceObject("lblRiesumaOk").ToString();
                             }
                             else
                             {
-                                lbl1.Text = "E' avvenuto un errore finché provavamo a riportare in vita il prodotto " + art.ID.ToString() + "/" + art.Year.ToString() + "<br />" +art.log;
+                                lbl1.Text = GetLocalResourceObject("lblRiesumaKo").ToString();
                             }
                         }
                         else
                         {
-                            lbl1.Text = "Non hai il permesso di riesumare il prodotto " + art.ID.ToString() + "/" + art.Year.ToString() + "<br />";
+                            lbl1.Text = GetLocalResourceObject("lblPermessoRiesumaKo").ToString();
                         }
                         break;
                     default:

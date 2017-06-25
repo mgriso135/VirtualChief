@@ -48,7 +48,7 @@ namespace KIS.Admin
             else
             {
                 tblOptions.Visible = false;
-                lbl1.Text = "Utente non riconosciuto.";
+                lbl1.Text = GetLocalResourceObject("lblAccessoKO").ToString();
             }
         }
     }

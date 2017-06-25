@@ -49,7 +49,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire gli straordinari di reparto.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 tblAddStraord.Visible = false;
             }
         }
@@ -61,26 +61,26 @@ namespace KIS.Reparti
             DateTime fine = new DateTime(fineStraord.SelectedDate.Year, fineStraord.SelectedDate.Month, fineStraord.SelectedDate.Day,
                 Int32.Parse(OraF.SelectedValue), Int32.Parse(MinutoF.SelectedValue), 0);
             lbl1.Text = inizio.ToString("yyyy/MM/dd HH:mm:ss") + " " + fine.ToString("yyyy/MM/dd HH:mm:ss");
-            if (inizio < fine && inizio > DateTime.Now)
+
+            Turno trn = new Turno(idTurno);
+            Reparto rp = new Reparto(trn.idReparto);
+            if (inizio < fine && TimeZoneInfo.ConvertTimeToUtc(inizio, rp.tzFusoOrario) > DateTime.UtcNow)
             {
-                Turno trn = new Turno(idTurno);
+                //Turno trn = new Turno(idTurno);
                 ElencoStraordinari rs = new ElencoStraordinari(trn.idReparto);
                 bool ret = rs.Add(trn.id, inizio, fine);
                 if (ret == false)
                 {
-                    lbl1.Text = "Errore: probabilmente c'è una sovrapposizione tra lo straordinario inserito ed altri straordinari / festività, o i turni di lavoro. Verificare con il grafico nella pagina precedente.<br/>";
-                    lbl1.Text += rs.log;
+                    lbl1.Text = GetLocalResourceObject("lblErrorSovra").ToString();
                 }
                 else
                 {
-                    lbl1.Text += "Aggiunto correttamente";
-                    lbl1.Text = rs.log;
                     Response.Redirect(Request.RawUrl);
                 }
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorInput").ToString();
             }
         }
     }

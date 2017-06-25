@@ -7,7 +7,8 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-    Calendario</a></div>
+          <asp:Literal runat="server" ID="lblAccCalendario" Text="<%$Resources:lblAccCalendario %>" />
+</a></div>
                 <div id="collapseOne" class="accordion-body collapse in">
       <div class="accordion-inner">
     <asp:Calendar runat="server" ID="calDate" OnSelectionChanged="calDate_SelectionChanged" OnDayRender="calDate_PreRender" />
@@ -16,12 +17,12 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-    Postazioni di lavoro</a></div>
+          <asp:Literal runat="server" ID="lblAccPostazione" Text="<%$Resources:lblAccPostazioni %>" /></a></div>
                 <div id="collapseTwo" class="accordion-body collapse">
     <div class="accordion-inner">
 <asp:RadioButtonList CssClass="radio" runat="server" id="rbPostazioni" AutoPostBack="true" OnSelectedIndexChanged="rbPostazioni_SelectedIndexChanged">
-    <asp:ListItem Selected="True" Value="0">Visualizza i tempi complessivi per il reparto</asp:ListItem>
-    <asp:ListItem Value="1">Suddividi i tempi per postazione</asp:ListItem>
+    <asp:ListItem Selected="True" Value="0" Text="<%$Resources:lblVisTempiGlobal %>"></asp:ListItem>
+    <asp:ListItem Value="1" Text="<%$Resources:lblVisTempiPostazione %>"></asp:ListItem>
 </asp:RadioButtonList>
 <asp:CheckBoxList runat="server" ID="chkLstPostazioni" OnSelectedIndexChanged="chkLstPostazioni_SelectedIndexChanged" AutoPostBack="true">
 

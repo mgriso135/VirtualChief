@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="userLoginPostazione.ascx.cs" Inherits="KIS.Operatori.userLoginPostazione" %>
-<h3>Check-in postazione di lavoro</h3>
+<h3><asp:Literal runat="server" ID="lblTitleCheckIn" Text="<%$Resources:lblTitleCheckIn %>" /></h3>
 <asp:Label runat="server" ID="lblNome" />
 
 <asp:UpdatePanel runat="server" ID="upd1" UpdateMode="Conditional">
@@ -12,14 +12,14 @@
                 <td></td>
                 <td></td>
                 <td></td>
-                <td>Utenti loggati</td>
+                <td><asp:Literal runat="server" ID="lblUserInPlace" Text="<%$Resources:lblUserInPlace %>" /></td>
             </tr>
                 </thead>
             <tbody>
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1" style="border: 1px dashed groove; font-size:16px; font-family: Calibri;">
-        <td><asp:ImageButton ToolTip="Esegui il check in nella postazione" runat="server" ID="btnCheckIn" ImageUrl="/img/iconCheckIn4.jpg" Height="40" CommandName="checkIn" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' /></td>
+        <td><asp:ImageButton ToolTip="<%$Resources:lblCheckIn %>" runat="server" ID="btnCheckIn" ImageUrl="/img/iconCheckIn4.jpg" Height="40" CommandName="checkIn" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' /></td>
         <td><asp:HiddenField runat="server" ID="id" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
             <%#DataBinder.Eval(Container.DataItem, "ID") %></td>
         <td><%#DataBinder.Eval(Container.DataItem, "name") %></td>

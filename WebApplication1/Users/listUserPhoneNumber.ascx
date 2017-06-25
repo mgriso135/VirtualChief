@@ -6,12 +6,12 @@
         <table class="table table-bordered table-hover">
             <thead>
         <tr>
-            <td></td>
-            <td></td>
-            <td>Numero di telefono</td>
-            <td>Ambito</td>
-            <td>Per allarmi</td>
-            <td></td>
+            <th></th>
+            <th></th>
+            <th><asp:Literal runat="server" ID="lblTHNumTel" Text="<%$Resources:lblTHNumTel %>" /></th>
+            <th><asp:Literal runat="server" ID="lblTHAmbito" Text="<%$Resources:lblTHAmbito %>" /></th>
+            <th><asp:Literal runat="server" ID="lblTHForAlarms" Text="<%$Resources:lblTHForAlarms %>" /></th>
+            <th></th>
         </tr>
                 </thead>
             <tbody>

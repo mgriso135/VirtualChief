@@ -38,7 +38,7 @@ namespace KIS.Processi
             }
             else
             {
-                lblErr.Text = "Non hai il permesso di modificare la variante.<br />";
+                lblErr.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmEditVariante.Visible = false;
             }
         }
@@ -58,7 +58,7 @@ namespace KIS.Processi
             }
             else
             {
-                lblErr.Text = "Something went wrong<br/>";
+                lblErr.Text = GetLocalResourceObject("lblError").ToString();
             }
         }
 

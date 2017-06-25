@@ -30,7 +30,7 @@ namespace KIS.Clienti
 
             if (checkUser == true)
             {
-                if (codCliente.Length > 0)
+                if (!String.IsNullOrEmpty(codCliente) && codCliente.Length > 0)
                 {
                     Cliente cli = new Cliente(codCliente);
                     if (cli.CodiceCliente.Length > 0)
@@ -91,7 +91,7 @@ namespace KIS.Clienti
                             cli.KanbanManaged = false;
                         }
 
-                        lbl1.Text = "Aggiornamento eseguito.";
+                        lbl1.Text = GetLocalResourceObject("lblUpdateOk").ToString();
                     }
                 }
             }

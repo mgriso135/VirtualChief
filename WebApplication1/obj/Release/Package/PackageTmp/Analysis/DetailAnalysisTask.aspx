@@ -5,16 +5,18 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx">
+                            <asp:Label runat="server" id="lblNavAnalysis" meta:resourcekey="lblNavAnalysis" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="ListAnalysisTasks.aspx">Selezione task</a>
+						<a href="ListAnalysisTasks.aspx"><asp:Label runat="server" id="lblNavTaskSelection" meta:resourcekey="lblNavTaskSelection" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
 						<asp:HyperLink NavigateUrl="DetailAnalysisTask.aspx" runat="server" id="lnkNavigation">
-                            Analisi task</asp:HyperLink>
+                            <asp:Label runat="server" id="lblNavAnalisiTask" meta:resourcekey="lblNavAnalisiTask" />
+                            </asp:HyperLink>
 						<span class="divider">/</span>
 					</li>
 				</ul>

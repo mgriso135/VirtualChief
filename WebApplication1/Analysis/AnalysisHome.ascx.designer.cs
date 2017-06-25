@@ -49,6 +49,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Image imgCostArticolo;
         
         /// <summary>
+        /// Controllo lblCostProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCostProdotto;
+        
+        /// <summary>
         /// Controllo boxCostCommessa.
         /// </summary>
         /// <remarks>
@@ -74,6 +83,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgCostCommessa;
+        
+        /// <summary>
+        /// Controllo lblCostCommessa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCostCommessa;
         
         /// <summary>
         /// Controllo boxAnalisiOperatori.
@@ -103,6 +121,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Image imgAnalisiOperatori;
         
         /// <summary>
+        /// Controllo lblAnalisiOp.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAnalisiOp;
+        
+        /// <summary>
         /// Controllo boxAnalisiTipoProdotto.
         /// </summary>
         /// <remarks>
@@ -128,6 +155,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgAnalisiTipoProdotto;
+        
+        /// <summary>
+        /// Controllo lblAnalisiTipoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAnalisiTipoProd;
         
         /// <summary>
         /// Controllo boxAnalisiTasks.
@@ -157,6 +193,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Image imgAnalisiTasks;
         
         /// <summary>
+        /// Controllo lblAnalisiTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAnalisiTask;
+        
+        /// <summary>
         /// Controllo boxAnalisiClienti.
         /// </summary>
         /// <remarks>
@@ -184,6 +229,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Image imgCustomerAnalysis;
         
         /// <summary>
+        /// Controllo lblAnalisiCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAnalisiCliente;
+        
+        /// <summary>
         /// Controllo boxReportAvanzamentoOrdini.
         /// </summary>
         /// <remarks>
@@ -209,5 +263,14 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image1;
+        
+        /// <summary>
+        /// Controllo lblReportCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblReportCliente;
     }
 }

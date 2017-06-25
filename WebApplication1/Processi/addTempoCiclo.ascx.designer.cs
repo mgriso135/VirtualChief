@@ -13,6 +13,15 @@ namespace KIS.Processi {
     public partial class addTempoCiclo {
         
         /// <summary>
+        /// Controllo lblAddTC.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAddTC;
+        
+        /// <summary>
         /// Controllo imgShowFrmAddTempo.
         /// </summary>
         /// <remarks>
@@ -58,6 +67,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddTempo;
         
         /// <summary>
+        /// Controllo lblNumOp.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNumOp;
+        
+        /// <summary>
         /// Controllo ddlNumOp.
         /// </summary>
         /// <remarks>
@@ -65,6 +83,24 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlNumOp;
+        
+        /// <summary>
+        /// Controllo lblSetup.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSetup;
+        
+        /// <summary>
+        /// Controllo lblOre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblOre;
         
         /// <summary>
         /// Controllo oreSetup.
@@ -76,6 +112,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.DropDownList oreSetup;
         
         /// <summary>
+        /// Controllo lblMinuti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblMinuti;
+        
+        /// <summary>
         /// Controllo minSetup.
         /// </summary>
         /// <remarks>
@@ -83,6 +128,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList minSetup;
+        
+        /// <summary>
+        /// Controllo lblSecondi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSecondi;
         
         /// <summary>
         /// Controllo secSetup.
@@ -94,6 +148,24 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.DropDownList secSetup;
         
         /// <summary>
+        /// Controllo lblTempoCiclo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTempoCiclo;
+        
+        /// <summary>
+        /// Controllo Literal1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal1;
+        
+        /// <summary>
         /// Controllo ore.
         /// </summary>
         /// <remarks>
@@ -103,6 +175,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.WebControls.DropDownList ore;
         
         /// <summary>
+        /// Controllo Literal2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal2;
+        
+        /// <summary>
         /// Controllo minuti.
         /// </summary>
         /// <remarks>
@@ -110,6 +191,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList minuti;
+        
+        /// <summary>
+        /// Controllo Literal3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal3;
         
         /// <summary>
         /// Controllo secondi.
@@ -128,6 +218,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkDefault;
+        
+        /// <summary>
+        /// Controllo lblDefault.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDefault;
         
         /// <summary>
         /// Controllo btnSave.

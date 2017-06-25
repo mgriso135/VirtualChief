@@ -31,6 +31,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblCommessa;
         
         /// <summary>
+        /// Controllo lblDescIDCommessa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescIDCommessa;
+        
+        /// <summary>
         /// Controllo lblIDComm.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblIDComm;
+        
+        /// <summary>
+        /// Controllo lblDescCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescCliente;
         
         /// <summary>
         /// Controllo lblCliente.
@@ -49,6 +67,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Label lblCliente;
         
         /// <summary>
+        /// Controllo lblDescDataInserimento.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescDataInserimento;
+        
+        /// <summary>
         /// Controllo lblDataInserimento.
         /// </summary>
         /// <remarks>
@@ -58,6 +85,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Label lblDataInserimento;
         
         /// <summary>
+        /// Controllo lblDescNote.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescNote;
+        
+        /// <summary>
         /// Controllo lblNote.
         /// </summary>
         /// <remarks>
@@ -65,6 +101,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblNote;
+        
+        /// <summary>
+        /// Controllo lblDescOreLav.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescOreLav;
         
         /// <summary>
         /// Controllo lblOreTot.

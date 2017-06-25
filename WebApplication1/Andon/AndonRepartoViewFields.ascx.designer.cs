@@ -40,6 +40,15 @@ namespace KIS.Andon {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl frmContainer;
         
         /// <summary>
+        /// Controllo lblTitleCampiVis.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleCampiVis;
+        
+        /// <summary>
         /// Controllo lblInfo.
         /// </summary>
         /// <remarks>

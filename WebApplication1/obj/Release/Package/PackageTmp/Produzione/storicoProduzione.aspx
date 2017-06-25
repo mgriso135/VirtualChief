@@ -5,11 +5,12 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="produzione.aspx">Produzione</a>
+						<a href="produzione.aspx"><asp:Literal runat="server" ID="lblNavProd" Text="<%$Resources:lblNavProd %>" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="<%#Request.RawUrl %>">Storico produzione</a>
+						<a href="<%#Request.RawUrl %>"><asp:Literal runat="server" ID="lblNavStoricoProd" Text="<%$Resources:lblNavStoricoProd %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

@@ -40,6 +40,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.WebControls.HyperLink lnkManageProcesso;
         
         /// <summary>
+        /// Controllo lblCreaProcProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCreaProcProd;
+        
+        /// <summary>
         /// Controllo lnkProcReparto.
         /// </summary>
         /// <remarks>
@@ -47,6 +56,24 @@ namespace KIS.Reparti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkProcReparto;
+        
+        /// <summary>
+        /// Controllo lblAssociaProdRep.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAssociaProdRep;
+        
+        /// <summary>
+        /// Controllo Literal1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal Literal1;
         
         /// <summary>
         /// Controllo lbl1.

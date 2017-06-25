@@ -40,7 +40,7 @@ namespace KIS.Admin
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di aggiungere utenti.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 tblInputNewUser.Visible = false;
                 btnUserAdd.Visible = false;
                 btnUserAdd.Enabled = false;
@@ -66,15 +66,14 @@ namespace KIS.Admin
             int rt = utn.add(inputUsername.Text, inputPassword.Text, inputNome.Text, inputCognome.Text, tipoUtente.SelectedValue);
             if (rt == 2)
             {
-                lblEsito.Text = "Error: username già presente<br/>" + utn.log;
+                lbl1.Text = GetLocalResourceObject("lblUserYaexistente").ToString();
             }
             else if (rt == 0)
             {
-                lblEsito.Text = "Error: generic<br/>" + utn.log;
+                lblEsito.Text = GetLocalResourceObject("lblErrorGen").ToString()+ "<br/>" + utn.log;
             }
             else
             {
-                lblEsito.Text = "Utente aggiunto correttamente";
                 Response.Redirect(Request.RawUrl);
             }
             

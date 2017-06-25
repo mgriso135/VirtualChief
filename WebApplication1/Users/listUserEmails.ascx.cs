@@ -37,7 +37,7 @@ namespace KIS.Users
             else
             {
                 rptUserEmails.Visible = false;
-                lbl1.Text = "Non hai il permesso di visualizzare gli indirizzi e-mail degli utenti.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -88,7 +88,7 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore." + usrMail.log;
+                        lbl1.Text = "Error. " + usrMail.log;
                     }
                 }
                 else if (e.CommandName == "edit")

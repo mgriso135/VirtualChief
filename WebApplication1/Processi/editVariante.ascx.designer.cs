@@ -31,6 +31,15 @@ namespace KIS.Processi {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmEditVariante;
         
         /// <summary>
+        /// Controllo lblNomeVar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNomeVar;
+        
+        /// <summary>
         /// Controllo nomeVar.
         /// </summary>
         /// <remarks>
@@ -56,6 +65,15 @@ namespace KIS.Processi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton save;
+        
+        /// <summary>
+        /// Controllo lblDescVariante.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDescVariante;
         
         /// <summary>
         /// Controllo descVar.

@@ -32,8 +32,10 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigPostazioni_Main\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigPostazioni_Main\">"
+                    + GetLocalResourceObject("lblLnkLoginAdmin").ToString()
+                    +"</a>";
                 frmAddPostazione.Visible = false;
                 frmListPostazioni.Visible = false;
             }

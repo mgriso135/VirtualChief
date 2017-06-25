@@ -22,6 +22,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.Image imgTitle;
         
         /// <summary>
+        /// Controllo lblTitleCfgDelay.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgDelay;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,24 @@ namespace KIS.Eventi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbl1;
+        
+        /// <summary>
+        /// Controllo lblSegnalaMaggioreDi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSegnalaMaggioreDi;
+        
+        /// <summary>
+        /// Controllo lblOre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblOre;
         
         /// <summary>
         /// Controllo ddlOre.
@@ -76,6 +103,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.ImageButton btnUndoRitMin;
         
         /// <summary>
+        /// Controllo lblGruppiSegnala.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblGruppiSegnala;
+        
+        /// <summary>
         /// Controllo btnShowAddRitardoGruppo.
         /// </summary>
         /// <remarks>
@@ -85,6 +121,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.ImageButton btnShowAddRitardoGruppo;
         
         /// <summary>
+        /// Controllo lblGruppiAdd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblGruppiAdd;
+        
+        /// <summary>
         /// Controllo frmAddRitardoGruppo.
         /// </summary>
         /// <remarks>
@@ -92,6 +137,15 @@ namespace KIS.Eventi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddRitardoGruppo;
+        
+        /// <summary>
+        /// Controllo lblGruppiSel.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblGruppiSel;
         
         /// <summary>
         /// Controllo ddlAddRitardoGruppo.
@@ -130,6 +184,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.Repeater rptListGruppi;
         
         /// <summary>
+        /// Controllo lblUtentiList.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUtentiList;
+        
+        /// <summary>
         /// Controllo btnShowAddRitardoUtente.
         /// </summary>
         /// <remarks>
@@ -139,6 +202,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.ImageButton btnShowAddRitardoUtente;
         
         /// <summary>
+        /// Controllo lblUtentiAdd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUtentiAdd;
+        
+        /// <summary>
         /// Controllo frmAddRitardoUtente.
         /// </summary>
         /// <remarks>
@@ -146,6 +218,15 @@ namespace KIS.Eventi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddRitardoUtente;
+        
+        /// <summary>
+        /// Controllo lblUtentiSel.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUtentiSel;
         
         /// <summary>
         /// Controllo ddlAddRitardoUtente.

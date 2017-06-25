@@ -8,9 +8,10 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="produzione.aspx">Produzione</a>
+						<a href="produzione.aspx"><asp:Literal runat="server" ID="lblNavProduzione" Text="<%$Resources:lblNavProduzione %>" />
+                            </a>
 						<span class="divider">/</span>
-                        <a href="<%#Request.RawUrl %>">Stato avanzamento prodotto</a>
+                        <a href="<%#Request.RawUrl %>"><asp:Literal runat="server" ID="lblNavStato" Text="<%$Resources:lblNavProduzione %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

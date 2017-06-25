@@ -6,8 +6,8 @@
                 <table class="table table-striped table-condensed table-hover">
                     <thead>
                         <tr>
-                            <td>Nome</td>
-                            <td>Descrizione</td>
+                            <td><asp:Label runat="server" ID="lblNome" meta:resourcekey="lblNome" /></td>
+                            <td><asp:Label runat="server" ID="lblDescrizione" meta:resourcekey="lblDescrizione" /></td>
                         </tr>
                     </thead>
                     <tbody>

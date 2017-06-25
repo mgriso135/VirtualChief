@@ -13,6 +13,24 @@ namespace KIS.Login {
     public partial class forgotPassword {
         
         /// <summary>
+        /// Controllo lblDisclaimer.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDisclaimer;
+        
+        /// <summary>
+        /// Controllo lblUsername.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUsername;
+        
+        /// <summary>
         /// Controllo txtUsername.
         /// </summary>
         /// <remarks>

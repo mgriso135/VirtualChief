@@ -40,6 +40,15 @@ namespace KIS.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblInputNewUser;
         
         /// <summary>
+        /// Controllo lblTHNewUser.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTHNewUser;
+        
+        /// <summary>
         /// Controllo lblName.
         /// </summary>
         /// <remarks>
@@ -182,6 +191,15 @@ namespace KIS.Admin {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CompareValidator valComparePassword;
+        
+        /// <summary>
+        /// Controllo lblTipoUtente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTipoUtente;
         
         /// <summary>
         /// Controllo tipoUtente.

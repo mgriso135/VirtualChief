@@ -31,6 +31,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTitle;
         
         /// <summary>
+        /// Controllo lblTasksAvviati.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTasksAvviati;
+        
+        /// <summary>
         /// Controllo lblUser.
         /// </summary>
         /// <remarks>

@@ -10,8 +10,8 @@
         <table class="table table-striped table-hover table-condensed">
         <thead>
         <tr>
-            <td>Task</td>
-            <td>Postazione</td>
+            <td><asp:label runat="server" id="lblTask" Text="<%$Resources:lblTask %>" /></td>
+            <td><asp:label runat="server" id="lblPostazione" Text="<%$Resources:lblPostazione %>" /></td>
         </tr>
             </thead>
             <tbody>

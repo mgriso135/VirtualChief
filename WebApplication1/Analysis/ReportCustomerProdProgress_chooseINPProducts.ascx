@@ -8,24 +8,26 @@
                 var prmN = Sys.WebForms.PageRequestManager.getInstance();
                 prmI.add_endRequest(function () {
                     $("#<%=lblI.ClientID%>").delay(1000).fadeOut("slow", function () {
-                        $(this).text('')
+                        $(this).text('&nbsp;')
                     });
                 });
                 prmP.add_endRequest(function () {
                     $("#<%=lblP.ClientID%>").delay(1000).fadeOut("slow", function () {
-                        $(this).text('&nbsp;a')
+                        $(this).text('&nbsp;')
                     });
                 });
                 prmN.add_endRequest(function () {
                     $("#<%=lblN.ClientID%>").delay(1000).fadeOut("slow", function () {
-                        $(this).text('&nbsp;a')
+                        $(this).text('&nbsp;')
                     });
                 });
             });
 </script>
         <asp:Label runat="server" ID="lbl1" />
         <div class="row-fluid">
-            <div class="span12"><h3>Seleziona prodotti da inserire nel report</h3>
+            <div class="span12"><h3>
+                <asp:Label runat="server" ID="lblTitleSelProducts" meta:resourcekey="lblTitleSelProducts" />
+                </h3>
                 </div>
             </div>
 
@@ -41,7 +43,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Prodotti in fase di produzione
+          <asp:Label runat="server" ID="lblAccProdI" meta:resourcekey="lblAccProdI" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -75,7 +77,7 @@
                     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Prodotti pianificati ma non avviati
+          <asp:Label runat="server" ID="lblAccProdP" meta:resourcekey="lblAccProdP" />
       </a>
     </div>
             <div id="collapseTwo" class="accordion-body collapse">
@@ -110,7 +112,7 @@
                     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-          Prodotti da pianificare
+          <asp:Label runat="server" ID="lblAccProdN" meta:resourcekey="lblAccProdN" />
       </a>
     </div>
             <div id="collapseThree" class="accordion-body collapse">

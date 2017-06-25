@@ -11,9 +11,11 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     		<ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="managePostazioniLavoro.aspx">Gestione postazioni di lavoro</a>
+						<a href="managePostazioniLavoro.aspx">
+                            <asp:Literal runat="server" ID="lblNavGestPostazioni" Text="<%$Resources:lblNavGestPostazioni %>" />
+                            </a>
 						<span class="divider">/</span>
-                        <a href='<%# Request.RawUrl %>'>Configurazione postazione</a>
+                        <a href='<%# Request.RawUrl %>'><asp:Literal runat="server" ID="lblNavCfgPostazione" Text="<%$Resources:lblNavCfgPostazione %>" /></a>
                         <span class="divider">/</span>
 					</li>
 				</ul>
@@ -26,7 +28,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Calendario postazione
+          <asp:Literal runat="server" ID="lblCalPostazione" Text="<%$Resources:lblCalPostazione %>" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -35,24 +37,10 @@
       </div>
     </div>
             </div>
-
-    <!--    <div class="accordion-group">
-            <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Carico di lavoro per processo
-      </a>
-    </div>
-            <div id="collapseTwo" class="accordion-body collapse">
-      <div class="accordion-inner">
-            <postazione:workload runat="server" ID="frmPstWorkload" />
-      </div>
-    </div>
-            </div>-->
-
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-          Risorse produttive per turno
+          <asp:Literal runat="server" ID="lblRisorseTurno" Text="<%$Resources:lblRisorseTurno %>" />
       </a>
     </div>
             <div id="collapseThree" class="accordion-body collapse">

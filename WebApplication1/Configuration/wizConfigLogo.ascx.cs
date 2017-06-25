@@ -52,7 +52,7 @@ namespace KIS.Configuration
                 }
                 else
                 {
-                    lbl1.Text = "Il logo è già stato configurato tramite wizard.<br />Per variarlo utilizzare il normale menu di configurazione accedendo con privilegi di Admin.";
+                    lbl1.Text = GetLocalResourceObject("lblLogoConfigured").ToString();
                     FileUpload1.Visible = false;
                     btnUpload.Visible = false;
                     btnUpload.Enabled = false;
@@ -61,14 +61,16 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigLogo\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigLogo\">" 
+                    +GetLocalResourceObject("lblLnkLogin").ToString()
+                    +".</a>";
             }
         }
 
         protected void Upload(object sender, EventArgs e)
         {
-            lbl1.Text = "Carico...<br/>";
+            lbl1.Text = "Loading...<br/>";
             if (FileUpload1.HasFile)
             {
                 if (FileUpload1.PostedFile.ContentLength <= 1024 * 1024)
@@ -110,7 +112,7 @@ namespace KIS.Configuration
                             KISConfig cfg = new KISConfig();
                             if (cfg.WizLogoCompleted)
                             {
-                                lbl1.Text = "Logo caricato correttamente.";
+                                lbl1.Text = GetLocalResourceObject("lblUploadOk").ToString();
                             }
                             Response.Redirect("~/Configuration/MainWizConfig.aspx");
                         }
@@ -121,17 +123,17 @@ namespace KIS.Configuration
                     }
                     else
                     {
-                        lbl1.Text = "Formato immagine non accettato.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrFormatKo").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Attenzione: l'immagine non può essere maggiore di 1024kb. Hai cercato di caricare una immagine di " + FileUpload1.PostedFile.ContentLength + " kb";
+                    lbl1.Text = GetLocalResourceObject("lblErrSize").ToString()+ " " + FileUpload1.PostedFile.ContentLength + " kb"; ;
                 }
             }
             else
             {
-                lbl1.Text = "File non trovato.<br />";
+                lbl1.Text = GetLocalResourceObject("lblErrFileNotFound").ToString();
             }
         }
     }

@@ -36,7 +36,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di aggiungere commesse.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddCommessa.Visible = false;
             }
         }
@@ -61,7 +61,8 @@ namespace KIS.Commesse
             int rt = el.Add(client, note);
             if (rt != -1)
             {
-                Response.Redirect("wzAddPERT.aspx?idCommessa=" + rt.ToString() + "&annoCommessa=" + DateTime.Now.Year.ToString());
+                FusoOrario fuso = new FusoOrario();
+                Response.Redirect("wzAddPERT.aspx?idCommessa=" + rt.ToString() + "&annoCommessa=" + TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario).Year.ToString());
             }
             else
             {

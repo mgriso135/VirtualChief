@@ -41,7 +41,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di collegari gli articoli in produzione.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 ddlArticoli.Visible = false;
                 frmLinkArticolo.Visible = false;
             }
@@ -50,10 +50,10 @@ namespace KIS.Commesse
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
             bool check = true;
-            if (consegnaprevista.SelectedDate < DateTime.Now)
+            if (consegnaprevista.SelectedDate < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario()).tzFusoOrario))
             {
                 check = false;
-                lbl1.Text = "Errore: data di consegna prevista non valida.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
             }
             int procID = -1;
             int varID = -1;
@@ -67,13 +67,13 @@ namespace KIS.Commesse
             {
                 qty = -1;
                 check = false;
-                lbl1.Text = "Errore nel formato del campo quantità. Verifica che sia un numero.<br />";
+                lbl1.Text = GetLocalResourceObject("lblErrorFormatQty").ToString();
             }
             ProcessoVariante artic = null;
             if (ddlArticoli.SelectedValue == "-1")
             {
                 check = false;
-                lbl1.Text = "Errore: articolo non selezionato<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorProdNotSel").ToString();
             }
             else
             {
@@ -122,7 +122,7 @@ namespace KIS.Commesse
                     }
                     else
                     {
-                        lbl1.Text = "Error<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                     }
                 }
             }
@@ -131,7 +131,7 @@ namespace KIS.Commesse
         protected void btnUndo_Click(object sender, ImageClickEventArgs e)
         {
             ddlArticoli.SelectedValue = "-1";
-            consegnaprevista.SelectedDate = DateTime.Now;
+            consegnaprevista.SelectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario()).tzFusoOrario);
         }
     }
 }

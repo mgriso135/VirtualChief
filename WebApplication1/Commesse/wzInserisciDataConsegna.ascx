@@ -11,7 +11,8 @@
 <table runat="server" id="tbl">
     <tr>
         <td style="vertical-align:top;">
-        Data consegna richiesta
+            <asp:Label runat="server" ID="lblDataConsegna" Text="<%$Resources:lblDataConsegna %>" />
+        
         </td>
         <td>
             <asp:Label runat="server" ID="lblCalendar" />

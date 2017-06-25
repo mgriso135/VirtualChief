@@ -21,6 +21,8 @@ namespace KIS.Admin
                 {
                     frmConfigOrderCustomer.Visible = true;
                     frmConfigOrderCustomer.codCliente = customer.CodiceCliente;
+                    lnkCurrentPage.Visible = true;
+                    lnkCurrentPage.NavigateUrl = "~/Admin/configOrderStatusCustomer.aspx?id="+customer.CodiceCliente.ToString();
                 }
                 else
                 {

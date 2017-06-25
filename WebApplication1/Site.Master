@@ -7,12 +7,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>KAIZEN INDICATOR SYSTEM</title>
-    <!-- STUDIO GIORDANO -->
+    <title>Kaizen Indicator System</title>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="description" content="Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
-    <!-- FINE STUDIO GIORDANO -->
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" />
     <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
@@ -183,7 +183,7 @@
             <div id="footer">
 			<div class="container">
 				<div class="static-link">
-					<a href="#" title="Chi siamo">
+					<a href="https://plus.google.com/b/115967301889976366537/115967301889976366537" target="_blank" title="Chi siamo">
 						<i class="icon-user"></i>&nbsp;Chi siamo</a>
 					<a href="#" title="Contatti">
 						<i class="icon-info-sign"></i>&nbsp;Contatti</a>
@@ -191,7 +191,7 @@
 						<i class="icon-question-sign"></i>&nbsp;Help</a>
 				</div>
 				<p class="muted credit"><small>&copy; 2013
-						<a href="#">Matteo Griso</a> - tutti i diritti riservati | informazioni:
+						<a href="https://plus.google.com/+MatteoGriso135" target="_blank">Matteo Griso</a> - tutti i diritti riservati | informazioni:
 						<a href="mailto:mgrisoster@gmail.com">mgrisoster@gmail.com</a>; Skype: m.griso
                         
 				                        </small>

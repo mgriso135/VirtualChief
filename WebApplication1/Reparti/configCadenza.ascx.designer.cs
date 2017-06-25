@@ -31,6 +31,24 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblTaktTime.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTaktTime;
+        
+        /// <summary>
+        /// Controllo lblOre.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblOre;
+        
+        /// <summary>
         /// Controllo ore.
         /// </summary>
         /// <remarks>
@@ -40,6 +58,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.TextBox ore;
         
         /// <summary>
+        /// Controllo lblMM.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblMM;
+        
+        /// <summary>
         /// Controllo minuti.
         /// </summary>
         /// <remarks>
@@ -47,6 +74,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox minuti;
+        
+        /// <summary>
+        /// Controllo lblSS.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSS;
         
         /// <summary>
         /// Controllo secondi.

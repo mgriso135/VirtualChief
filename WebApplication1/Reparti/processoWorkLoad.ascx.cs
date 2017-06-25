@@ -34,7 +34,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl.Text = "Non hai il permesso di visualizzare il carico di lavoro della postazione.<br />";
+                lbl.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 Chart1.Visible = false;
             }
         }
@@ -98,16 +98,18 @@ namespace KIS.Produzione
                         {
                             TimeSpan carico = pst.calculateWorkLoad(prc);
                             Chart1.Series["WorkLoad"].Points.AddXY(pst.name, carico.TotalHours);
-                            Chart1.Series["WorkLoad"].Points[cont].ToolTip = pst.name + " - Tempo ciclo: " + carico.TotalHours.ToString() + " ore";
+                            Chart1.Series["WorkLoad"].Points[cont].ToolTip = pst.name + " - "+GetLocalResourceObject("lblTempoCiclo").ToString()+": " 
+                                + carico.TotalHours.ToString() + " "+ GetLocalResourceObject("lblOre").ToString();
                             cont++;
                             if (rep.Cadenza != null && rep.Cadenza.TotalSeconds > 0)
                             {
                                 Chart1.Series["Cadenza"].Points.AddXY(pst.name, rep.Cadenza.TotalHours);
                                 if (carico > rep.Cadenza)
                                 {
-                                    lbl.Text += "<span style='color:red'>Attenzione: per il processo " + prc.process.processName
-                                        + " - variante " + prc.variant.nomeVariante + " il carico di lavoro della postazione " + pst.name
-                                            + " è superiore alla cadenza. Ci saranno dei vincoli sul mix da rispettare.</span><br/>";
+                                    lbl.Text += "<span style='color:red'>"+GetLocalResourceObject("lblCaricoOverload1").ToString()+" " + prc.process.processName
+                                        + " - " + prc.variant.nomeVariante + " "+ GetLocalResourceObject("lblCaricoOverload2").ToString()
+                                        +" " + pst.name + " " + GetLocalResourceObject("lblCaricoOverload3").ToString()
+                                            + "</span><br/>";
                                 }
                             }
                         }

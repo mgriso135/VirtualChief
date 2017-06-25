@@ -35,7 +35,7 @@ namespace KIS.Produzione
                 else
                 {
                     rptPostazioniTasks.Visible = false;
-                    lblErr.Text = "Non posso mostrare i tasks perché il processo è una VALUE-STREAM MAP e non un PERT.<br />";
+                    lblErr.Text = GetLocalResourceObject("lblErrorProcType").ToString();
                 }
             }
             
@@ -139,13 +139,13 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            lblErr.Text = "Errore sul database";
-                        }
+                        lblErr.Text = GetLocalResourceObject("lblErrorDb").ToString();
+                    }
                     }
                     else
                     {
-                        lblErr.Text += "Errore: task o postazione non trovati.<br />";
-                    }
+                    lblErr.Text = GetLocalResourceObject("lblErrTaskPostNotFound").ToString();
+                }
             }
             else if (taskID != -1 && ddl.SelectedValue == "")
             {
@@ -157,13 +157,13 @@ namespace KIS.Produzione
                     bool rt = task.deleteTaskFromPostazioni();
                     if (rt == false)
                     {
-                        lblErr.Text = "Errore: non riesco a cancellare l'associazione del task con la postazione.<br />";
+                        lblErr.Text = GetLocalResourceObject("lblErrDelTask").ToString();
                     }
                 }
             }
             else
             {
-                lblErr.Text += "Errore: ID di postazione o del task non validi<br/>";
+                lblErr.Text = GetLocalResourceObject("lblErrTaskPostNotFound").ToString();
             }
         }
     }

@@ -22,11 +22,14 @@ namespace KIS.Login
                     tblLogout.Visible = true;
                     if (((User)Session["user"]).authenticated == true)
                     {
-                        lblInfoLogin.Text = "Logged in as: " + ((User)Session["user"]).username + "<br/>Last login at: " + ((User)Session["user"]).lastLogin.ToString();
+                        lblInfoLogin.Text =GetLocalResourceObject("lblLoggedIn1").ToString()
+                            + ": " + ((User)Session["user"]).username 
+                            + "<br/>"
+                            + GetLocalResourceObject("lblLoggedIn2").ToString()+": " + ((User)Session["user"]).lastLogin.ToString();
                     }
                     else
                     {
-                        lblInfoLogin.Text = "NOT logged in as: " + ((User)Session["user"]).username;
+                        lblInfoLogin.Text = GetLocalResourceObject("lblNotLoggedIn").ToString()+": " + ((User)Session["user"]).username;
                     }
                 }
                 else
@@ -44,7 +47,6 @@ namespace KIS.Login
             if (current.authenticated == true)
             {
                 Session["user"] = current;
-                lblInfoLogin.Text = "Welcome, " + current.name + " " + current.cognome + "<br/>Last login at: " + ((User)Session["user"]).lastLogin.ToString();
                 tblLogin.Visible = false;
                 String redUrl = "~/";
                 if (!String.IsNullOrEmpty(Request.QueryString["red"]) && (Request.QueryString["red"]).Length>0)
@@ -55,7 +57,7 @@ namespace KIS.Login
             }
             else
             {
-                lblInfoLogin.Text = "Errore: username non trovato o password non corretta.";
+                lblInfoLogin.Text = GetLocalResourceObject("lblErrorWrongAccess").ToString();
             }
         }
 

@@ -13,6 +13,15 @@ namespace KIS.Analysis {
     public partial class DetailAnalysisTask1 {
         
         /// <summary>
+        /// Controllo lblTitleStorico.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleStorico;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Label taskRev;
         
         /// <summary>
+        /// Controllo lblConsideraProd1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblConsideraProd1;
+        
+        /// <summary>
         /// Controllo txtProductDateStart.
         /// </summary>
         /// <remarks>
@@ -56,6 +74,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtProductDateStart;
+        
+        /// <summary>
+        /// Controllo lblConsideraProd2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblConsideraProd2;
         
         /// <summary>
         /// Controllo txtProductDateEnd.
@@ -94,6 +121,24 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.Repeater rptProdotti;
         
         /// <summary>
+        /// Controllo lblTempoGlobal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTempoGlobal;
+        
+        /// <summary>
+        /// Controllo lblMedia.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMedia;
+        
+        /// <summary>
         /// Controllo lblMediaTempoDiLavoro.
         /// </summary>
         /// <remarks>
@@ -119,6 +164,24 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptTempiLavoro;
+        
+        /// <summary>
+        /// Controllo lblTHTempoCicloGlobal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTHTempoCicloGlobal;
+        
+        /// <summary>
+        /// Controllo lblMedia2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMedia2;
         
         /// <summary>
         /// Controllo lblMediaTempiCiclo.

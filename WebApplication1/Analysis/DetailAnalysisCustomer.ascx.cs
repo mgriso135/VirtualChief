@@ -103,7 +103,7 @@ namespace KIS.Analysis
 
                     customer.loadTempoDiLavoro(startPeriod, endPeriod);
                     lblMonths.Visible = true;
-                    lblMonths.Text = customer.TempoDiLavoro.TotalHours.ToString();
+                    lblMonths.Text = Math.Round(customer.TempoDiLavoro.TotalHours,2).ToString();
 
                     lnkMonths.Visible = true;
                     lnkDays.Visible = true;
@@ -181,7 +181,7 @@ namespace KIS.Analysis
                 Chart1.Series["interv"].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                 Chart1.Series["interv"].YValueMembers = "TempoDiLavoro";
                 Chart1.Series["interv"].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Double;
-                Chart1.Series["interv"].ToolTip = "#VALX: #VALY ore";
+                Chart1.Series["interv"].ToolTip = "#VALX: #VALY " + GetLocalResourceObject("lblOre");
                 Chart1.DataSource = intervSorted.ToList();
                 int qtaIntervalli = intervSorted.ToList().Count * 30;
                 if (qtaIntervalli < 600)
@@ -223,7 +223,7 @@ namespace KIS.Analysis
                 Chart1.Series["interv"].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Auto;
                 Chart1.Series["interv"].YValueMembers = "TempoDiLavoro";
                 Chart1.Series["interv"].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Double;
-                Chart1.Series["interv"].ToolTip = "#VALX: #VALY ore";
+                Chart1.Series["interv"].ToolTip = "#VALX: #VALY " + GetLocalResourceObject("lblOre").ToString();
                 Chart1.DataSource = intervSorted.ToList();
                 int qtaIntervalli = intervSorted.ToList().Count * 30;
                 if (qtaIntervalli < 600)

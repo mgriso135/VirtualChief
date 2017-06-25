@@ -13,6 +13,15 @@ namespace KIS.Configuration {
     public partial class wizConfigLogo1 {
         
         /// <summary>
+        /// Controllo lblTitleLogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleLogo;
+        
+        /// <summary>
         /// Controllo FileUpload1.
         /// </summary>
         /// <remarks>

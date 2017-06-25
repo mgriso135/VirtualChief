@@ -36,7 +36,7 @@ namespace KIS.Users
             else
             {
                 rptGruppi.Visible = false;
-                lbl1.Text = "Non hai il permesso di visualizzare i gruppi<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -121,12 +121,12 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore: Gruppo non trovato<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: id non valido<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                 }
             }
             else if (e.CommandName == "delete")
@@ -151,12 +151,12 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore: gruppo non trovato<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: id non valido<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                 }
             }
             else if(e.CommandName == "mngPermessi")
@@ -182,12 +182,12 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore: gruppo non trovato<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: id non valido<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                 }
             }
             else if (e.CommandName == "mngMenu")
@@ -213,12 +213,12 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore: gruppo non trovato<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: id non valido<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblGroupNotFound").ToString();
                 }
             }
 

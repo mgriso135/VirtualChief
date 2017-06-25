@@ -6,22 +6,25 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Wizard: nuovo prodotto su commessa</h1>
+    <h1><asp:Label runat="server" ID="lblWizNuovoOrd" meta:resourcekey="lblWizNuovoOrd" /></h1>
     <ul class="breadcrumb hidden-phone">
         <li>
-		    <a href="wzAddCommessa.aspx">Nuova commessa</a>
+		    <a href="wzAddCommessa.aspx"><asp:Label runat="server" ID="lblNavNewOrdine" meta:resourcekey="lblNavNewOrdine" /></a>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" id="lnkAddPert">Descrivi il prodotto</asp:hyperlink>
+		    <asp:hyperlink runat="server" id="lnkAddPert">
+                <asp:Label runat="server" ID="lblNavDescrProd" meta:resourcekey="lblNavDescrProd" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink ID="lnkEditPert" runat="server">Descrivi il processo produttivo</asp:hyperlink>
+		    <asp:hyperlink ID="lnkEditPert" runat="server">
+                <asp:Label runat="server" ID="lblNavDescrProcesso" meta:resourcekey="lblNavDescrProcesso" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaReparto"><b style="font-size: 14px;">Seleziona il reparto produttivo</b></asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaReparto"><b style="font-size: 14px;">
+                <asp:Label runat="server" ID="lblNavSelReparto" meta:resourcekey="lblNavSelReparto" /></b></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
 	</ul>

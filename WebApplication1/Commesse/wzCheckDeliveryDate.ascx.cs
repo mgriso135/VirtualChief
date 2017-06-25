@@ -71,7 +71,7 @@ namespace KIS.Commesse
                 }
                 else
                 {
-                    lbl1.Text = "Attenzione: il prodotto non esiste o è già stato pianificato in produzione.";
+                    lbl1.Text = GetLocalResourceObject("lblProductNotFound").ToString();
                 }
             }
             else
@@ -121,29 +121,28 @@ namespace KIS.Commesse
                     }
                     else if (rt == 3)
                     {
-                        lbl1.Text = "Articolo già lanciato in produzione<br />";
+                        lbl1.Text = GetLocalResourceObject("lblProductAlreadyPlanned").ToString();
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore: " + prcCfg.log;
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString()+ ": " + prcCfg.log;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore in fase di simulazione<br />";
+                    lbl1.Text=GetLocalResourceObject("lblError").ToString();
                 }
             }
             else if (art.Status == 'I' || art.Status == 'P')
             {
-                lbl1.Text = "Prodotto già iniziato.<br/>"
-                    + "Data fine produzione: " + art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss") + "<br />"
-                    + "Data consegna: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
+                lbl1.Text = GetLocalResourceObject("lblProdottoI").ToString()+".<br/>"
+                    + GetLocalResourceObject("lblDataFineProd").ToString() + ": " + art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss") + "<br />"
+                    + GetLocalResourceObject("lblDataConsegna").ToString() + ": " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
                 if (art.DataPrevistaFineProduzione <= art.DataPrevistaConsegna && art.DataPrevistaFineProduzione >= DateTime.Now)
                 {
                     int ret = art.SpostaPianificazione(art.DataPrevistaFineProduzione, art.DataPrevistaConsegna);
                     if (ret == 1)
                     {
-                        lbl1.Text += "Pianificazione articolo spostata correttamente<br/>";
                         Response.Redirect("wzImpostaAllarmiArticolo.aspx?idCommessa=" + art.Commessa.ToString()
                         + "&annoCommessa=" + art.AnnoCommessa.ToString()
                         + "&idProc=" + art.Proc.process.processID.ToString()
@@ -155,24 +154,24 @@ namespace KIS.Commesse
                     }
                     else if (ret == 0)
                     {
-                        lbl1.Text = "Errore generico.";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                     }
                     else if (ret == 2)
                     {
-                        lbl1.Text = "Status non = I oppure articolo inesistente";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                     }
                     else if (ret == 3)
                     {
-                        lbl1.Text = "Le date fine produzione e date consegna impostate non sono corrette";
+                        lbl1.Text = GetLocalResourceObject("lblErrorDatas").ToString();
                     }
                     else if (ret == 4)
                     {
-                        lbl1.Text = "E' avvenuto un errore in fase di simulazione del lancio in produzione";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: le date di consegna e la data di fine produzione impostate non sono coerenti.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorDatas").ToString();
                 }
             }
         }
@@ -200,12 +199,12 @@ namespace KIS.Commesse
                     if (dataFineProd <= art.DataPrevistaConsegna)
                     {
                         art.DataPrevistaFineProduzione = dataFineProd;
-                        lbl1.Text = "Data di fine produzione impostata correttamente.";
+                        lbl1.Text = GetLocalResourceObject("lblDataFineProdOk").ToString();
                         imgGoFwd.Visible = true;
                     }
                     else
                     {
-                        lbl1.Text = "Attenzione: la data di fine produzione impostata è posteriore alla data di consegna richiesta.";
+                        lbl1.Text = GetLocalResourceObject("lblDataFineProdKo").ToString();
                     }
                 }
             }

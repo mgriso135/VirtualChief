@@ -84,9 +84,9 @@ namespace KIS.Reparti
                     crt.Series["Turno" + i.ToString()].Color = tr.Colore;
                     crt.Series["Turno" + i.ToString()].BorderColor = tr.Colore;
                     crt.Series["Turno" + i.ToString()].Points.AddXY(trn.CalendarioTrn.Turni[i].Inizio.ToOADate(), 4);
-                    crt.Series["Turno" + i.ToString()].Points[0].ToolTip = tr.Nome + " inizio: " + trn.CalendarioTrn.Turni[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Turno" + i.ToString()].Points[0].ToolTip = tr.Nome + " "+GetLocalResourceObject("lblInizio").ToString()+": " + trn.CalendarioTrn.Turni[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
                     crt.Series["Turno" + i.ToString()].Points.AddXY(trn.CalendarioTrn.Turni[i].Fine.ToOADate(), 4);
-                    crt.Series["Turno" + i.ToString()].Points[1].ToolTip = tr.Nome + " fine: " + trn.CalendarioTrn.Turni[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Turno" + i.ToString()].Points[1].ToolTip = tr.Nome + " "+GetLocalResourceObject("lblFine").ToString()+": " + trn.CalendarioTrn.Turni[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                 }
             }
 
@@ -102,15 +102,15 @@ namespace KIS.Reparti
                     crt.Series["Straordinario" + i.ToString()].BorderWidth = 20;
                     crt.Series["Straordinario" + i.ToString()].Color = System.Drawing.Color.Green;
                     crt.Series["Straordinario" + i.ToString()].Points.AddXY(trn.straordinari[i].Inizio.ToOADate(), 3);
-                    crt.Series["Straordinario" + i.ToString()].Points[0].ToolTip = "Straordinario inizio: " + trn.straordinari[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Straordinario" + i.ToString()].Points[0].ToolTip = GetLocalResourceObject("lblStraordInizio").ToString()+ ": " + trn.straordinari[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
                     crt.Series["Straordinario" + i.ToString()].Points.AddXY(trn.straordinari[i].Fine.ToOADate(), 3);
-                    crt.Series["Straordinario" + i.ToString()].Points[1].ToolTip = "Straordinario fine: " + trn.straordinari[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Straordinario" + i.ToString()].Points[1].ToolTip = GetLocalResourceObject("lblStraordFine").ToString() + ": " + trn.straordinari[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                     DateTime fin = trn.straordinari[i].Fine;
                     if (trn.straordinari[i].Fine >= fineCal)
                     {
                         fin = fineCal;
                     }
-                    crt.Series["Straordinario" + i.ToString()].Points[1].ToolTip = "Straordinario fine: " + fin.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Straordinario" + i.ToString()].Points[1].ToolTip = GetLocalResourceObject("lblStraordFine").ToString() + ": " + fin.ToString("dd/MM/yyyy HH:mm:ss");
                 }
 
             }
@@ -128,14 +128,14 @@ namespace KIS.Reparti
                     crt.Series["Festivita" + i.ToString()].BorderWidth = 20;
                     crt.Series["Festivita" + i.ToString()].Color = System.Drawing.Color.Red;
                     crt.Series["Festivita" + i.ToString()].Points.AddXY(trn.festivita[i].Inizio.ToOADate(), 2);
-                    crt.Series["Festivita" + i.ToString()].Points[0].ToolTip = "Festivita inizio: " + trn.festivita[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Festivita" + i.ToString()].Points[0].ToolTip = GetLocalResourceObject("lblFestInizio").ToString() + ": " + trn.festivita[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
                     crt.Series["Festivita" + i.ToString()].Points.AddXY(trn.festivita[i].Fine.ToOADate(), 2);
                     DateTime fin = trn.festivita[i].Fine;
                     if (trn.festivita[i].Fine >= fineCal)
                     {
                         fin = fineCal;
                     }
-                    crt.Series["Festivita" + i.ToString()].Points[1].ToolTip = "Festivita fine: " + fin.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Festivita" + i.ToString()].Points[1].ToolTip = GetLocalResourceObject("lblFestFine").ToString() + ": " + fin.ToString("dd/MM/yyyy HH:mm:ss");
                 }
             }
 
@@ -152,15 +152,15 @@ namespace KIS.Reparti
                     crt.Series["Intervallo" + i.ToString()].BorderWidth = 20;
                     crt.Series["Intervallo" + i.ToString()].Color = System.Drawing.Color.GreenYellow;
                     crt.Series["Intervallo" + i.ToString()].Points.AddXY(trn.CalendarioTrn.Intervalli[i].Inizio.ToOADate(), 1);
-                    crt.Series["Intervallo" + i.ToString()].Points[0].ToolTip = "Inizio: " + trn.CalendarioTrn.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Intervallo" + i.ToString()].Points[0].ToolTip = GetLocalResourceObject("lblInizio").ToString()+": " + trn.CalendarioTrn.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss");
                     crt.Series["Intervallo" + i.ToString()].Points.AddXY(trn.CalendarioTrn.Intervalli[i].Fine.ToOADate(), 1);
-                    crt.Series["Intervallo" + i.ToString()].Points[1].ToolTip = "Fine: " + trn.CalendarioTrn.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Intervallo" + i.ToString()].Points[1].ToolTip = GetLocalResourceObject("lblFine").ToString() + ": " + trn.CalendarioTrn.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                     DateTime fin = trn.CalendarioTrn.Intervalli[i].Fine;
                     if (trn.CalendarioTrn.Intervalli[i].Fine >= fineCal)
                     {
                         fin = fineCal;
                     }
-                    crt.Series["Intervallo" + i.ToString()].Points[1].ToolTip = "Fine: " + fin.ToString("dd/MM/yyyy HH:mm:ss");
+                    crt.Series["Intervallo" + i.ToString()].Points[1].ToolTip = GetLocalResourceObject("lblFine").ToString() + ": " + fin.ToString("dd/MM/yyyy HH:mm:ss");
                 }
             }
         }
@@ -174,7 +174,7 @@ namespace KIS.Reparti
             }
             else
             {
-                inCal = DateTime.Now;
+                inCal = DateTime.UtcNow;
             }
             Turno trn = new Turno(idTurno);
                 trn.loadCalendario(inCal, fiCal);

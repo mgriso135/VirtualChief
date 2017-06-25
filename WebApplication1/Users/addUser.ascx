@@ -4,68 +4,70 @@
 <br />
 <table class="table table-condensed table-hover" runat="server" id="tblInputNewUser">
     <thead>
-<tr><td colspan="2" style="font-size:14px; font-weight: bold;">Nuovo utente</td></tr>
+<tr><th>
+    <asp:literal runat="server" ID="lblTHNewUser" Text="<%$Resources:lblTHNewUser %>" />
+    </th></tr>
         </thead>
     <tbody>
 <tr>
-<td><asp:Label runat="server" ID="lblName">Nome:</asp:Label></td>
+<td><asp:Label runat="server" ID="lblName" Text="<%$Resources:lblNome %>">:</asp:Label></td>
 <td><asp:TextBox runat="server" ID="inputNome" />
 <asp:RequiredFieldValidator id="valNome" runat="server"
         ControlToValidate="inputNome" 
-        ErrorMessage="(*) Errore... Il campo NOME è un campo obbligatorio!"
+        ErrorMessage="<%$Resources:lblReqField %>"
         ForeColor="Red" />
 </td>
 </tr>
 <tr>
-<td><asp:Label runat="server" ID="lblCognome">Cognome:</asp:Label></td>
+<td><asp:Label runat="server" ID="lblCognome" Text="<%$Resources:lblCognome %>">:</asp:Label></td>
 <td><asp:TextBox runat="server" ID="inputCognome" />
 <asp:RequiredFieldValidator id="valCognome" runat="server"
         ControlToValidate="inputCognome" 
-        ErrorMessage="(*) Errore... Il campo NOME è un campo obbligatorio!"
+        ErrorMessage="<%$Resources:lblReqField %>"
         ForeColor="Red" />
 </td>
 </tr>
 <tr>
-<td><asp:Label runat="server" ID="lblUsername">Username:</asp:Label></td>
+<td><asp:Label runat="server" ID="lblUsername" Text="<%$Resources:lblUsername %>">:</asp:Label></td>
 <td><asp:TextBox runat="server" ID="inputUsername" />
 <asp:RequiredFieldValidator id="valUsername" runat="server"
         ControlToValidate="inputUsername" 
-        ErrorMessage="(*) Errore... Il campo NOME è un campo obbligatorio!"
+        ErrorMessage="<%$Resources:lblReqField %>"
         ForeColor="Red" />
 </td>
 </tr>
 <tr>
-<td><asp:Label runat="server" ID="lblPassword">Password:</asp:Label></td>
+<td><asp:Label runat="server" ID="lblPassword" Text="<%$Resources:lblPassword1 %>">:</asp:Label></td>
 <td><asp:TextBox runat="server" ID="inputPassword" TextMode="Password" />
 <asp:RequiredFieldValidator id="valPassword" runat="server"
         ControlToValidate="inputPassword" 
-        ErrorMessage="(*) Errore... Il campo NOME è un campo obbligatorio!"
+        ErrorMessage="<%$Resources:lblReqField %>"
         ForeColor="Red" />
 </td>
 </tr>
 <tr>
-<td><asp:Label runat="server" ID="lblRptPassword">Ripeti password:</asp:Label></td>
+<td><asp:Label runat="server" ID="lblRptPassword" Text="<%$Resources:lblPassword2 %>">:</asp:Label></td>
 <td><asp:TextBox runat="server" ID="inputPassword2" TextMode="Password" />
 <asp:RequiredFieldValidator id="valPassword2" runat="server"
         ControlToValidate="inputPassword2" 
-        ErrorMessage="(*) Errore... Il campo NOME è un campo obbligatorio!"
+        ErrorMessage="<%$Resources:lblReqField %>"
         ForeColor="Red" /><br />
 <asp:CompareValidator id="valComparePassword" runat="server"
         ControlToValidate="inputPassword"
         ControlToCompare="inputPassword2"
         Type="String"
         Operator="Equal"
-        ErrorMessage="(*) Errore... I due campi password devono contenere il medesimo valore!"
+        ErrorMessage="<%$Resources:lblCampiCoincidenti %>"
         ForeColor="Red" >
     </asp:CompareValidator>
 </td>
 </tr>
 <tr>
-<td>Tipo di utente:</td>
+<td><asp:Literal runat="server" ID="lblTipoUtente" Text="<%$Resources:lblTipoUtente %>" />:</td>
 <td>
 <asp:DropDownList ID="tipoUtente" runat="server">
-<asp:ListItem runat="server" Value="User" Text="Utente" />
-<asp:ListItem runat="server" Value="Admin" Text="Admin" />
+<asp:ListItem runat="server" Value="User" Text="<%$Resources:lblUtente %>" />
+<asp:ListItem runat="server" Value="Admin" Text="<%$Resources:lblAdmin %>" />
 </asp:DropDownList>
 </td>
 </tr>

@@ -2,19 +2,19 @@
 
 <table runat="server" id="frmLinkArticolo" class="table table-condensed">
     <tr>
-        <td>Articolo:</td>
+        <td><asp:Label runat="server" ID="lblProdotto" meta:resourcekey="lblProdotto" />:</td>
         <td><asp:DropDownList runat="server" ID="ddlArticoli" AppendDataBoundItems="true">
             <asp:ListItem Text="Scegli un processo" Value="-1" />
             </asp:DropDownList></td>
     </tr>
     <tr>
-        <td>Quantità</td>
+        <td><asp:Label runat="server" ID="lblQuantita" meta:resourcekey="lblQuantita" /></td>
         <td><asp:TextBox runat="server" ID="txtQuantita" />
-            <asp:RequiredFieldValidator runat="server" ID="valNote" ForeColor="Red" ControlToValidate="txtQuantita" ErrorMessage="* il campo non può essere vuoto" ValidationGroup="articolo" />
+            <asp:RequiredFieldValidator runat="server" ID="valNote" ForeColor="Red" ControlToValidate="txtQuantita" ErrorMessage="<%$resources:valReqField %>" ValidationGroup="articolo" />
         </td>
     </tr>
     <tr>
-        <td>Data consegna prevista:</td>
+        <td><asp:Label runat="server" ID="lblDataConsegnaPrevista" meta:resourcekey="lblDataConsegnaPrevista" />:</td>
         <td><asp:Calendar runat="server" ID="consegnaprevista" /></td>
     </tr>
     <tr><td colspan="2" style="text-align:center;">

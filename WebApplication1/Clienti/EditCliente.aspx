@@ -8,21 +8,25 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="Clienti.aspx">Anagrafica clienti</a>
+						<a href="Clienti.aspx">
+                            <asp:Label runat="server" ID="lblNavAnagClienti" meta:resourcekey="lblNavAnagClienti" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
                     <li>
-						<a href="#">Modifica cliente</a>
+						<asp:hyperlink runat="server" ID="lnkCustomer" NavigateUrl="EditCliente.aspx">
+                            <asp:Label runat="server" ID="lblNavModCliente" meta:resourcekey="lblNavModCliente" />
+                            </asp:hyperlink>
 						<span class="divider">/</span>
 					</li>
 				</ul>
     <div class="row-fluid">
         <div class="span8">
-            <h3>Informazioni di base</h3>
+            <h3><asp:Label runat="server" ID="lblTitleBaseInfo" meta:resourcekey="lblTitleBaseInfo" /></h3>
     <Clienti:Edit runat="server" ID="frmEditCliente" />
             </div>
         <div class="span4">
-            <h3>Contatti</h3>
+            <h3><asp:Label runat="server" ID="lblTitleContatti" meta:resourcekey="lblTitleContatti" /></h3>
             <Contatti:Add runat="server" id="frmAddContatto" />
             <br />
             <Clienti:Contatti runat="server" id="frmContattiClienti" />

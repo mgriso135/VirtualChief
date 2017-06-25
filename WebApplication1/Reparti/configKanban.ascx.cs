@@ -46,7 +46,7 @@ namespace KIS.Reparti
             else
             {
                 rb1.Visible = false;
-                lbl1.Text = "Non hai il permesso di gestire la configurazione del kanban dei reparti";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -61,7 +61,7 @@ namespace KIS.Reparti
             {
                 rp.KanbanManaged = true;
             }
-            lbl1.Text = "Impostazione aggiornata.";
+            lbl1.Text = GetLocalResourceObject("lblModificaOk").ToString();
         }
 
     }

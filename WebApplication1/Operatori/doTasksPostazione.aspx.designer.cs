@@ -22,6 +22,33 @@ namespace KIS.Operatori {
         protected global::System.Web.UI.ScriptManager scriptMan;
         
         /// <summary>
+        /// Controllo lblWorkplace.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblWorkplace;
+        
+        /// <summary>
+        /// Controllo lblNavWebGemba.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavWebGemba;
+        
+        /// <summary>
+        /// Controllo lblNavPostazione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavPostazione;
+        
+        /// <summary>
         /// Controllo lblPostazione.
         /// </summary>
         /// <remarks>

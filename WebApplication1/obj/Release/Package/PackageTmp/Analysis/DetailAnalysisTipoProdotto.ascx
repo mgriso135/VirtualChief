@@ -50,10 +50,10 @@
 <div class="row-fluid" runat="server" id="container">
     <div class="span12">
         <table>
-            <tr><td>Data inizio periodo analisi:</td>
+            <tr><td><asp:Label runat="server" ID="lblDataInizio" meta:resourcekey="lblDataInizio" /></td>
                 <td><asp:TextBox runat="server" ID="txtStart" /></td>
             </tr>
-            <tr><td>Data fine periodo analisi:</td>
+            <tr><td><asp:Label runat="server" ID="lblDataFine" meta:resourcekey="lblDataFine" /></td>
                 <td><asp:TextBox runat="server" ID="txtEnd" /></td>
             </tr>
             <tr>
@@ -69,7 +69,7 @@
             <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-          Prodotti
+          <asp:Label runat="server" ID="lblProducts" meta:resourcekey="lblProducts" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -93,16 +93,16 @@
     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-          Tempi di lavoro
+          <asp:Label runat="server" ID="lblTempiDiLavoro" meta:resourcekey="lblTempiDiLavoro" />
       </a>
     </div>
             <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
-          Media:&nbsp;<asp:Label runat="server" ID="lblMediaTempoDiLavoro" />
+          <asp:Label runat="server" ID="lblMedia" meta:resourcekey="lblMedia" /><asp:Label runat="server" ID="lblMediaTempoDiLavoro" />
         <br />
             <asp:Chart runat="server" ID="chartTempi" Width="600">
                 <Titles>
-                    <asp:Title Name="titoloChartTempi" Text="Tempo di lavoro unitario" Font="Calibri, 20pt, style=Bold" />
+                    <asp:Title Name="titoloChartTempi" Text="<%$resources:lblChartTempoLavUnitario %>" Font="Calibri, 20pt, style=Bold" />
                 </Titles>
                 <ChartAreas>
                     <asp:ChartArea Name="ChartArea1">
@@ -120,11 +120,11 @@
               <HeaderTemplate>
                   <table class="table table-striped table-hover table-condensed">
                       <tr>
-                          <th>ID</th>
-                          <th>Cliente</th>
-                          <th>Quantità</th>
-                          <th>Tempo di lavoro totale [ore]</th>
-                          <th>Tempo di lavoro unitario  [ore]</th>
+                          <th><asp:Label runat="server" ID="lblTHID" meta:resourcekey="lblTHID" /></th>
+                          <th><asp:Label runat="server" ID="lblTHCliente" meta:resourcekey="lblTHCliente" /></th>
+                          <th><asp:Label runat="server" ID="lblTHQuantita" meta:resourcekey="lblTHQuantita" /></th>
+                          <th><asp:Label runat="server" ID="lblTempoLavTotale" meta:resourcekey="lblTempoLavTotale" /></th>
+                          <th><asp:Label runat="server" ID="lblTempoLavUnitario" meta:resourcekey="lblTempoLavUnitario" /></th>
                           </tr>
               </HeaderTemplate>
               <ItemTemplate>
@@ -145,16 +145,16 @@
     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-          Lead times
+          <asp:Label runat="server" ID="lblLeadTimes" meta:resourcekey="lblLeadTimes" />
       </a>
     </div>
             <div id="collapseThree" class="accordion-body collapse">
       <div class="accordion-inner">
           
-           Media:&nbsp;<asp:Label runat="server" ID="lblMediaLeadTimes" /><br />
+           <asp:Label runat="server" ID="lblMedia1" meta:resourcekey="lblMedia" /><asp:Label runat="server" ID="lblMediaLeadTimes" /><br />
             <asp:Chart runat="server" ID="chartLeadTimes" Width="600">
                 <Titles>
-                    <asp:Title Name="titoloChartTempi" Text="Lead times" Font="Calibri, 20pt, style=Bold" />
+                    <asp:Title Name="titoloChartTempi" Text="<%$resources:lblLeadTimes %>" Font="Calibri, 20pt, style=Bold" />
                 </Titles>
                 <ChartAreas>
                     <asp:ChartArea Name="ChartArea1">
@@ -171,10 +171,10 @@
               <HeaderTemplate>
                   <table class="table table-striped table-hover table-condensed">
                       <tr>
-                          <th>ID</th>
-                          <th>Cliente</th>
-                          <th>Quantità</th>
-                          <th>Lead Time [ore]</th>
+                          <th><asp:Label runat="server" ID="lblTHID" meta:resourcekey="lblTHID" /></th>
+                          <th><asp:Label runat="server" ID="lblTHCliente" meta:resourcekey="lblTHCliente" /></th>
+                          <th><asp:Label runat="server" ID="lblTHQuantita" meta:resourcekey="lblTHQuantita" /></th>
+                          <th><asp:Label runat="server" ID="lblTHLeadTime" meta:resourcekey="lblTHLeadTime" /></th>
                           </tr>
               </HeaderTemplate>
               <ItemTemplate>
@@ -188,7 +188,7 @@
               <FooterTemplate>
                   <tr>
                       <td colspan="3">
-                          <b>MEDIA:</b>
+                          <b><asp:Label runat="server" ID="lblMedia2" meta:resourcekey="lblMedia" /></b>
                       </td>
                       <td>
                           <b><asp:Label runat="server" ID="lblLTMedio" /></b>
@@ -203,7 +203,7 @@
     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
-          Tempi di lavoro per task
+          <asp:Label runat="server" ID="lblTempoLavTask" meta:resourcekey="lblTempoLavTask" />
       </a>
     </div>
             <div id="collapseFour" class="accordion-body collapse">
@@ -214,9 +214,9 @@
                   <table class="table table-striped table-hover table-condensed">
                       <tr>
                           <th></th>
-                          <th>Task</th>
-                          <th>Quantità prodotta</th>
-                          <th>Tempo medio unitario [ore]</th>
+                          <th><asp:Label runat="server" ID="lblTHTask" meta:resourcekey="lblTHTask" /></th>
+                          <th><asp:Label runat="server" ID="lblTHQtaProd" meta:resourcekey="lblTHQtaProd" /></th>
+                          <th><asp:Label runat="server" ID="lblTHTaskTempoMedioUnitario" meta:resourcekey="lblTHTaskTempoMedioUnitario" /></th>
                           </tr>
               </HeaderTemplate>
               <ItemTemplate>

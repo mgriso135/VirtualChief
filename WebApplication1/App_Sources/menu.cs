@@ -145,15 +145,18 @@ namespace KIS.App_Code
                     {
                         cmd.CommandText = "DELETE FROM menualbero WHERE idFiglio = " + this.ID.ToString();
                         cmd.ExecuteNonQuery();
+                        cmd.CommandText = "DELETE FROM menugruppi WHERE idVoce = " + this.ID.ToString();
+                        cmd.ExecuteNonQuery();
                         cmd.CommandText = "DELETE FROM menuvoci WHERE id = " + this.ID.ToString();
                         cmd.ExecuteNonQuery();
+                        rt = true;
                     }
-                    catch
+                    catch(Exception ex)
                     {
                         rt = false;
+                        this.log = ex.Message;
                     }
                     conn.Close();
-                    rt = true;
                 }
                 else
                 {

@@ -22,6 +22,24 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblNavAnalisiDati.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAnalisiDati;
+        
+        /// <summary>
+        /// Controllo lblNavReportAvanProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavReportAvanProd;
+        
+        /// <summary>
         /// Controllo lnkProdReportINP.
         /// </summary>
         /// <remarks>
@@ -31,6 +49,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.WebControls.HyperLink lnkProdReportINP;
         
         /// <summary>
+        /// Controllo lblNavChooseProds.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavChooseProds;
+        
+        /// <summary>
         /// Controllo lnkProdReportF.
         /// </summary>
         /// <remarks>
@@ -38,6 +65,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkProdReportF;
+        
+        /// <summary>
+        /// Controllo lblNavChooseProdsF.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavChooseProdsF;
         
         /// <summary>
         /// Controllo lbl1.

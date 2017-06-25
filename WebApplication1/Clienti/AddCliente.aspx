@@ -6,11 +6,13 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="Clienti.aspx">Anagrafica clienti</a>
+						<a href="Clienti.aspx">
+                            <asp:Label runat="server" ID="lblNavAnagrafica" meta:resourcekey="lblNavAnagrafica" /></a>
 						<span class="divider">/</span>
 					</li>
                     <li>
-						<a href="#">Nuovo cliente</a>
+						<a href="#">
+                            <asp:Label runat="server" ID="lblNavNewCustomer" meta:resourcekey="lblNavNewCustomer" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

@@ -8,10 +8,11 @@
 <head id="Head1" runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     
-    <title>KAIZEN INDICATOR SYSTEM - DEVELOP</title>
+    <title>Kaizen Indicator System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Kaizen People &middot; Kaizen Indicator System" />
+	<meta name="description" content="Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" />
     <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
     <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
 	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
@@ -131,7 +132,6 @@
 		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="~/Styles/assets/ico/apple-touch-icon-114-precomposed.png" />
 		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="~/Styles/assets/ico/apple-touch-icon-72-precomposed.png" />
 		<link rel="apple-touch-icon-precomposed" href="~/Styles/assets/ico/apple-touch-icon-57-precomposed.png" />
-		<link rel="shortcut icon" href="~/Styles/assets/ico/favicon.png" />
 
     <!-- FINE CSS GIORDANO -->
     </head>
@@ -164,7 +164,7 @@
         <div class="span12">
             <asp:UpdatePanel runat="server" ID="updStatoArticoli" UpdateMode="Conditional">
         <ContentTemplate>
-            <h5>Articoli da avviare</h5>
+            <h5><asp:literal runat="server" id="lblProdottiCoda" Text="<%$Resources:lblProdottiCoda %>" /></h5>
             <asp:Label runat="server" ID="lbl1" />
 
     <asp:Repeater runat="server" ID="rptElencoArticoliNP" OnItemDataBound="rptElencoArticoliNP_ItemDataBound">
@@ -178,7 +178,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1" style="font-size:14px; font-family:Calibri">
                 <td><asp:HyperLink runat="server" ID="lnkStatoArticolo" NavigateUrl='<%# "statoAvanzamentoArticolo.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno=" + DataBinder.Eval(Container.DataItem, "Year") %>' Target="_blank">
-                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Width="40" ToolTip="Visualizza lo stato di avanzamento dell'articolo" />
+                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Width="40" ToolTip="<%$Resources:lblTTStatoAvanzamento %>" />
                         </asp:HyperLink><asp:HiddenField runat="server" ID="lblIDArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
                     <asp:HiddenField runat="server" ID="lblAnnoArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "Year") %>' />
 </td>

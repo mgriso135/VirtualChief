@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="processovariante" TagName="addTempo" Src="~/Processi/addTempoCiclo.ascx" %>
 
 <asp:ScriptManager runat="server" ID="scriptMan1" EnablePageMethods="true" EnableScriptGlobalization="true" />
-<b>Collega un task già esistente alla variante:&nbsp;</b>
+<b><asp:Literal runat="server" ID="lblTitleLnkTaskEsistente" Text="<%$Resources:lblTitleLnkTaskEsistente %>" />:&nbsp;</b>
 <asp:DropDownList runat="server" ID="ddlTasks" />
 <img src="/img/iconSave.jpg" style="height:40px; cursor: pointer" onclick="linkExistingTask()" />
 <br /><asp:Label runat="server" ID="Label1" />
@@ -525,21 +525,23 @@
             <img src="/img/iconClose.png" style="height: 20px" onclick="closeEdit();" />
             </td></tr>
         <tr>
-            <td>Nome:</td>
+            <td><asp:Literal runat="server" ID="lblNome" Text="<%$Resources:lblNome %>" />:</td>
             <td>
     <asp:TextBox runat="server" ID="editTaskNome" />
                 </td>
             </tr>
         <tr>
-            <td>Descrizione:</td>
+            <td><asp:Literal runat="server" ID="lblDescrizione" Text="<%$Resources:lblDescrizione %>" />:</td>
             <td>
     <asp:TextBox runat="server" TextMode="MultiLine" ID="editTaskDesc" />
         </td>
         </tr>
+        <tr>
         <td colspan="2">
     <asp:ImageButton runat="server" ID="editTaskSave" ImageUrl="/img/iconSave.jpg" Height="40" OnClick="editTaskSave_Click" />
     <asp:ImageButton runat="server" ID="editTaskUndo" ImageUrl="/img/iconUndo.png" Height="40" OnClick="editTaskUndo_Click" />
             </td>
+            </tr>
         <tr>
             <td colspan="2" style="border:1px dashed blue;">
                 <processovariante:addTempo runat="server" ID="frmAddTempoCiclo" />
@@ -550,15 +552,15 @@
         <table style="border: 1px dashed blue">
             <tr>
                 <td></td>
-                <td>Numero operatori</td>
-                <td>Setup</td>
-                <td>Tempo ciclo</td>
-                <td>Default</td>
+                <td><asp:Literal runat="server" ID="lblNumOp" Text="<%$Resources:lblNumOp %>" /></td>
+                <td><asp:Literal runat="server" ID="lblSetup" Text="<%$Resources:lblSetup %>" /></td>
+                <td><asp:Literal runat="server" ID="lblTempoCiclo" Text="<%$Resources:lblTempoCiclo %>" /></td>
+                <td><asp:Literal runat="server" ID="lblDefault" Text="<%$Resources:lblDefault %>" /></td>
             </tr>
     </HeaderTemplate>
     <ItemTemplate>
         <tr>
-            <td><asp:ImageButton runat="server" ID="btnDelete" ImageUrl="/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' ToolTip="Cancella il tempo ciclo" /></td>
+            <td><asp:ImageButton runat="server" ID="btnDelete" ImageUrl="/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' ToolTip="<%$Resources:lblTTDeleteTC %>" /></td>
             <td><%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "TempoSetup") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Tempo") %></td>
@@ -577,7 +579,8 @@
             <td colspan="2">
                 <asp:UpdatePanel runat="server" ID="updDeleteTask">
                     <ContentTemplate>
-                        <img src="/img/iconDelete.png" style="height: 30px; cursor:pointer;" onclick="deleteSubProcess()" />CANCELLA IL PROCESSO
+                        <img src="/img/iconDelete.png" style="height: 30px; cursor:pointer;" onclick="deleteSubProcess()" />
+                        <asp:Literal runat="server" ID="lblDeleteProc" Text="<%$Resources:lblDeleteProc %>" />
                         </ContentTemplate>
                     </asp:UpdatePanel>
                     </td>

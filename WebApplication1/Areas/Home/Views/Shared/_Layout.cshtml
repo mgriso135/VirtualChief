@@ -26,35 +26,28 @@
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse">
         
-            <div class="container header">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
+        <div class="container header">
 
-                </div>
-                <asp:Image runat="server" ID="kisLogo" CssClass="logo" />
-                @Html.ActionLink("Kaizen Indicator System", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-                <div class="pull-right text-right">
+            <div class="navbar-header">
+                @Html.Partial("_Logo")
+            </div>
+            @Html.ActionLink("Kaizen Indicator System", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <div class="pull-right text-right">
 
-                    <!-- Login Box -->
+                <!-- Login Box -->
+                <span class="navbar-text">
                     @Html.Partial("_LoginBox")
+                </span>
 
-                </div>
-
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>A</li>
-                        <li>B</li>
-                        <li>C</li>
-                    </ul>
-                </div>
             </div>
         </div>
+                <div class="container">
+                    @Html.Partial("_MainMenu")
+                </div>
+            </div>
+        
 
 
     <div class="container body-content">
@@ -65,7 +58,8 @@
                 <small>
                     &copy; @DateTime.Now.Year
                     <a href="#">Matteo Griso</a> - tutti i diritti riservati | informazioni:
-                    <a href="mailto:mgrisoster@gmail.com">mgrisoster@gmail.com</a>
+                    <a href="mailto:mgrisoster@gmail.com">mgrisoster@gmail.com</a>;
+                    Skype: m.griso
                 </small>
             </p>
         </footer>

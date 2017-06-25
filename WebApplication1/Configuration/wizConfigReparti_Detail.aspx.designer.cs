@@ -58,6 +58,15 @@ namespace KIS.Configuration {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl titleConfig;
         
         /// <summary>
+        /// Controllo lblTitleDeptCfg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleDeptCfg;
+        
+        /// <summary>
         /// Controllo accordion1.
         /// </summary>
         /// <remarks>
@@ -65,6 +74,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
+        
+        /// <summary>
+        /// Controllo lblNavTaskLaunch.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavTaskLaunch;
         
         /// <summary>
         /// Controllo configSplitTasksTurni.
@@ -76,6 +94,15 @@ namespace KIS.Configuration {
         protected global::KIS.Reparti.configSplitTasksTurni configSplitTasksTurni;
         
         /// <summary>
+        /// Controllo lblNavWorkShift.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavWorkShift;
+        
+        /// <summary>
         /// Controllo configTurni.
         /// </summary>
         /// <remarks>
@@ -83,6 +110,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Produzione.configTurni configTurni;
+        
+        /// <summary>
+        /// Controllo lblDelayWarn.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDelayWarn;
         
         /// <summary>
         /// Controllo frmEvRitardo.
@@ -94,6 +130,15 @@ namespace KIS.Configuration {
         protected global::KIS.Eventi.RepartoRitardo frmEvRitardo;
         
         /// <summary>
+        /// Controllo lblProblemWarn.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblProblemWarn;
+        
+        /// <summary>
         /// Controllo frmEvWarning.
         /// </summary>
         /// <remarks>
@@ -103,6 +148,15 @@ namespace KIS.Configuration {
         protected global::KIS.Eventi.RepartoWarning frmEvWarning;
         
         /// <summary>
+        /// Controllo lblCalcoloTC.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCalcoloTC;
+        
+        /// <summary>
         /// Controllo frmModoCalcoloTC.
         /// </summary>
         /// <remarks>
@@ -110,6 +164,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Reparti.configModoCalcoloTC frmModoCalcoloTC;
+        
+        /// <summary>
+        /// Controllo lblAndon.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAndon;
         
         /// <summary>
         /// Controllo frmConfigAndonReparto.
@@ -137,6 +200,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Andon.AndonRepartoViewFields frmAndonViewFields;
+        
+        /// <summary>
+        /// Controllo lblTaskExecution.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTaskExecution;
         
         /// <summary>
         /// Controllo frmAvvioTask.

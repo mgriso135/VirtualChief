@@ -32,7 +32,6 @@ namespace KIS.Operatori
                     box1.Text = "";
                     box2.Text = "";
                     box1.Focus();
-                    //log.Text += "<br/>ERRORE!";
                 }
             }
             else
@@ -57,7 +56,6 @@ namespace KIS.Operatori
                     box1.Text = "";
                     box2.Text = "";
                     box1.Focus();
-                    //log.Text += "<br/>ERRORE!";
                 }
             }
             else
@@ -123,7 +121,6 @@ namespace KIS.Operatori
                         //log.Text = check.ToString();
                         if (check == false)
                         {
-                            //log.Text = "Eseguo il check-in";
                             // Entro nella postazione
                             rt = usr.DoCheckIn(p);
                         }
@@ -150,7 +147,6 @@ namespace KIS.Operatori
             }
             else if (((Stask[0] == 'I' || Stask[0] == 'A' || Stask[0] == 'F' || Stask[0] == 'W') && Sutente[0] == 'U') || (((Sutente[0] == 'I' || Sutente[0] == 'A' || Sutente[0] == 'F' || Sutente[0] == 'W') && Stask[0] == 'U')))
             {
-                log.Text = "ENTRO NELL'IF<BR/>";
                 if ((Sutente[0] == 'I' || Sutente[0] == 'A' || Sutente[0] == 'F' || Sutente[0] == 'W') && Stask[0] == 'U')
                 {
                     // Li scambio

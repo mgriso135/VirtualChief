@@ -31,6 +31,15 @@ namespace KIS.Users {
         protected global::System.Web.UI.WebControls.Label lblNome;
         
         /// <summary>
+        /// Controllo lblMatricola1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblMatricola1;
+        
+        /// <summary>
         /// Controllo lblMatricola.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace KIS.Users {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMatricola;
+        
+        /// <summary>
+        /// Controllo lblUser.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUser;
         
         /// <summary>
         /// Controllo lblUsername.

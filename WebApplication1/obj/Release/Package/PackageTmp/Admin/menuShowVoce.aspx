@@ -7,11 +7,11 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx"><asp:label runat="server" id="lblNavAdmin" meta:resourcekey="lblNavAdmin" /></a>
 						<span class="divider">/</span>
-						<a href="manageMenu.aspx">Gestione menu</a>
+						<a href="manageMenu.aspx"><asp:label runat="server" id="lblGestioneMenu" meta:resourcekey="lblGestioneMenu" /></a>
 						<span class="divider">/</span>
-                        <a href="<%#Request.RawUrl %>">Gestione voce di secondo livello</a>
+                        <a href="<%#Request.RawUrl %>"><asp:label runat="server" id="lblNavGestioneVoce" meta:resourcekey="lblNavGestioneVoce" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

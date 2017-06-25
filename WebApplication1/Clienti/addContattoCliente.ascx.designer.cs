@@ -40,6 +40,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.Table tblAddContatto;
         
         /// <summary>
+        /// Controllo lblNominativo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNominativo;
+        
+        /// <summary>
         /// Controllo txtNominativo.
         /// </summary>
         /// <remarks>
@@ -56,6 +65,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valNominativo;
+        
+        /// <summary>
+        /// Controllo lblRuolo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRuolo;
         
         /// <summary>
         /// Controllo txtRuolo.

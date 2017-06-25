@@ -58,7 +58,7 @@ namespace KIS.Processi
             }
             else
             {
-                lbl1.Text = "<br />Non hai il permesso di aggiungere tempi ciclo.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddTempo.Visible = false;
                 imgShowFrmAddTempo.Visible = false;
             }
@@ -120,7 +120,7 @@ namespace KIS.Processi
                 ssecondi = -1;
                 task = -1;
                 varianteID = -1;
-                lbl1.Text += "Errore.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblError").ToString();
                 soreSetup = -1;
                 sminSetup = -1;
                 ssecSetup = -1;
@@ -151,7 +151,7 @@ namespace KIS.Processi
                     }
                     else
                     {
-                        lbl1.Text = "Tempo ciclo aggiunto correttamente.<br />Ricaricare per visualizzarlo nell'elenco.";
+                        lbl1.Text = GetLocalResourceObject("lblTCAddOk").ToString();
                         //btnSave.Focus();
                     }
                 }

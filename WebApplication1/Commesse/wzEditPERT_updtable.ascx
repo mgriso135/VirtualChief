@@ -22,12 +22,12 @@
         <table class="table table-hover table-condensed table-striped" runat="server" id="tblAddTask">
     <tr>
         <td>
-<b>Aggiungi un nuovo task al prodotto</b>&nbsp;<asp:ImageButton runat="server" ID="imgAddTaskPert" ImageUrl="/img/iconAdd.jpg" OnClick="addTaskPert" Height="40" />
+<b><asp:Label runat="server" ID="lblAddNewTask" Text="<%$Resources:lblAddNewTask %>" /></b>&nbsp;<asp:ImageButton runat="server" ID="imgAddTaskPert" ImageUrl="/img/iconAdd.jpg" OnClick="addTaskPert" Height="40" />
             </td>
             </tr>
     <tr>
         <td>
-<b>Collega un task esistente alla variante</b>&nbsp;
+<b><asp:Label runat="server" ID="lblLinkTask" Text="<%$Resources:lblLinkTask %>" /></b>&nbsp;
 <asp:DropDownList runat="server" ID="ddlTaskEsistenti" />
 <asp:ImageButton runat="server" ID="btnLnkTask" ImageUrl="/img/iconSave.jpg" Height="40px" OnClick="btnLnkTask_Click" />
             </td>
@@ -39,10 +39,10 @@
                     <thead>
                     <tr>
                         <th></th>
-                        <th>Nome task</th>
-                        <th>Descrizione</th>
-                        <th>Task precedenti (pausa)</th>
-                        <th>Tempi ciclo</th>
+                        <th><asp:Label runat="server" ID="lblTHNomeTask" Text="<%$Resources:lblTHNomeTask %>" /></th>
+                        <th><asp:Label runat="server" ID="lblTHDescTask" Text="<%$Resources:lblTHDescTask %>" /></th>
+                        <th><asp:Label runat="server" ID="lblTHTaskPrec" Text="<%$Resources:lblTHTaskPrec %>" /></th>
+                        <th><asp:Label runat="server" ID="lblTHTempiCiclo" Text="<%$Resources:lblTHTempiCiclo %>" /></th>
                         <th></th>
                     </tr>
                     </thead>

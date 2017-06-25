@@ -78,7 +78,7 @@ namespace KIS.Produzione
                 valButtons.Visible = false;
                 editCadenza.Visible = false;
                 editCadenza.Enabled = false;
-                lbl1.Text = "Non hai il permesso di gestire il reparto (la cadenza nella fattispecie).<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 

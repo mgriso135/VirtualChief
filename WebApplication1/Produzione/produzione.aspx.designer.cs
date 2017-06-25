@@ -13,6 +13,15 @@ namespace KIS.ProduzioneUI {
     public partial class produzioneUI {
         
         /// <summary>
+        /// Controllo lblNavProduzione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavProduzione;
+        
+        /// <summary>
         /// Controllo lnkNuoveCommesse.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace KIS.ProduzioneUI {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgNuoveCommesse;
+        
+        /// <summary>
+        /// Controllo lblNuoviOrdini.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNuoviOrdini;
         
         /// <summary>
         /// Controllo HyperLink1.
@@ -49,6 +67,15 @@ namespace KIS.ProduzioneUI {
         protected global::System.Web.UI.WebControls.Image Image2;
         
         /// <summary>
+        /// Controllo lblCapacitaProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCapacitaProd;
+        
+        /// <summary>
         /// Controllo HyperLink2.
         /// </summary>
         /// <remarks>
@@ -65,6 +92,15 @@ namespace KIS.ProduzioneUI {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image3;
+        
+        /// <summary>
+        /// Controllo lblPianoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblPianoProd;
         
         /// <summary>
         /// Controllo lnkProdottiLanciati.
@@ -85,6 +121,15 @@ namespace KIS.ProduzioneUI {
         protected global::System.Web.UI.WebControls.Image imgProdottiLanciati;
         
         /// <summary>
+        /// Controllo lblAndonGenerale.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAndonGenerale;
+        
+        /// <summary>
         /// Controllo lnkAndonReparto.
         /// </summary>
         /// <remarks>
@@ -103,6 +148,15 @@ namespace KIS.ProduzioneUI {
         protected global::System.Web.UI.WebControls.Image Image1;
         
         /// <summary>
+        /// Controllo lblAndonReparto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAndonReparto;
+        
+        /// <summary>
         /// Controllo lnkStoricoProduzione.
         /// </summary>
         /// <remarks>
@@ -119,5 +173,14 @@ namespace KIS.ProduzioneUI {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgStoricoProduzione;
+        
+        /// <summary>
+        /// Controllo lblStoricoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblStoricoProd;
     }
 }

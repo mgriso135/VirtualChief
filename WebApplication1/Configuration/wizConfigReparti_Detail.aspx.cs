@@ -88,7 +88,7 @@ namespace KIS.Configuration
                     }
                     else
                     {
-                        lbl1.Text = "Non riesco a trovare il reparto che mi hai indicato.<br />";
+                        lbl1.Text = GetLocalResourceObject("lblDeptNotFound").ToString()+ ".<br />";
                         lblTitle.Visible = false;
                         configTurni.Visible = false;
                         titleConfig.Visible = false;
@@ -131,8 +131,10 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigReparti_Main\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigReparti_Main\">"
+                    + GetLocalResourceObject("lblLnkLogin").ToString()
+                    +".</a>";
                 configTurni.Visible = false;
                 titleConfig.Visible = false;
                 configSplitTasksTurni.Visible = false;

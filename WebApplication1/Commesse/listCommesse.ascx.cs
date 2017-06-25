@@ -47,7 +47,7 @@ namespace KIS.Commesse
                 else
                 {
                     rptCommesse.Visible = false;
-                    lbl1.Text = "Non puoi visualizzare le commesse.<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 }
         }
 
@@ -150,18 +150,18 @@ namespace KIS.Commesse
                             }
                             else
                             {
-                                lbl1.Text = "Devi prima cancellare gli articoli collegati alla commessa.<br />";
+                                lbl1.Text = GetLocalResourceObject("lblErrorNeedToDelete").ToString();
                             }
                         }
                         else
                         {
-                            lbl1.Text = "Non posso cancellare la commessa perché già in corso di esecuzione.<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblErrorCantDelete").ToString();
                         }
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore nei dati di input.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorInputData").ToString();
                 }
             }
         }

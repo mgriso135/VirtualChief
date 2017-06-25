@@ -30,7 +30,9 @@ $(function () { // DOM ready
     </script>
 
 <div class="row-fluid">
-            <div class="span12"><h3>Seleziona prodotti finiti da inserire nel report</h3>
+            <div class="span12"><h3>
+                <asp:Label runat="server" ID="lblTitleSelProduct" meta:resourcekey="lblTitleSelProduct" />
+                </h3>
                 </div>
             </div>
 
@@ -42,7 +44,11 @@ $(function () { // DOM ready
             </div>
             <div class="span8">
                         <asp:Label runat="server" ID="lbl1" CssClass="text-info" /><br />
-                Filtra prodotti con data prevista produzione compresa tra <asp:textbox runat="server" id="txtProductDateStart" Width="100px"  /> e <asp:textbox runat="server" id="txtProductDateEnd" Width="100px"  />
+                <asp:Label runat="server" ID="lblFiltraProdData1" meta:resourcekey="lblFiltraProdData1" />&nbsp;
+                <asp:textbox runat="server" id="txtProductDateStart" Width="100px"  />
+                &nbsp;
+                <asp:Label runat="server" ID="lblFiltraProdData2" meta:resourcekey="lblFiltraProdData2" />
+                &nbsp;<asp:textbox runat="server" id="txtProductDateEnd" Width="100px"  />
                 <asp:ImageButton runat="server" ID="btnSearch" ImageUrl="~/img/iconView.png" Width="40" OnClick="btnSearch_Click" />
             
             <asp:Repeater runat="server" ID="rptProductsF" OnItemDataBound="rptProductsF_ItemDataBound">

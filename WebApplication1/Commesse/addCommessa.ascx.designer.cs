@@ -22,6 +22,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.ImageButton btnShowFrmAddCommessa;
         
         /// <summary>
+        /// Controllo lblTxtAddCommessa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTxtAddCommessa;
+        
+        /// <summary>
         /// Controllo frmAddCommessa.
         /// </summary>
         /// <remarks>
@@ -31,6 +40,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddCommessa;
         
         /// <summary>
+        /// Controllo lblCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCliente;
+        
+        /// <summary>
         /// Controllo ddlCliente.
         /// </summary>
         /// <remarks>
@@ -38,6 +56,24 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlCliente;
+        
+        /// <summary>
+        /// Controllo lblAddCliente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAddCliente;
+        
+        /// <summary>
+        /// Controllo lblNote.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNote;
         
         /// <summary>
         /// Controllo txtNote.

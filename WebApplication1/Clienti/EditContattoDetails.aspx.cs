@@ -12,6 +12,8 @@ namespace KIS.Clienti
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            lnkModCustomer.Visible = false;
+            lnkContattoDetail.Visible = false;
             frmEditContatto.Visible = false;
             String strIDContatto = Request.QueryString["idContatto"];
             if (!String.IsNullOrEmpty(strIDContatto))
@@ -33,6 +35,10 @@ namespace KIS.Clienti
                     {
                         frmEditContatto.Visible = true;
                         frmEditContatto.idContatto = contCln.ID;
+                        lnkModCustomer.Visible = true;
+                        lnkModCustomer.NavigateUrl += "?idCliente="+contCln.Cliente;
+                        lnkContattoDetail.Visible = true;
+                        lnkContattoDetail.NavigateUrl += "?idContatto=" + contCln.ID.ToString();
                     }
                 }
             }

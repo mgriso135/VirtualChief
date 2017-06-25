@@ -29,13 +29,13 @@ namespace KIS.Configuration
             if (checkUser == true)
             {
                 KISConfig cfg = new KISConfig();
+                ElencoReparti elRep = new ElencoReparti();
                 if (cfg.WizRepartiCompleted)
                 {
-                    ElencoReparti elRep = new ElencoReparti();
                     frmAddReparto.Visible = false;
-                    lbl1.Text = "Almeno un Reparto è già stato creato quindi non è strettamente necessario aggiungerne altri.<br />"
-                        + "Prima di iniziare ad usare KIS, verifica che tutti i reparti creati siano correttamente configurati.<br />";
-                    lbl1.Text+= "Per modificare i reparti già creati, accedere all'interfaccia di gestione dei reparti con privilegi di Admin.";
+                    lbl1.Text = GetLocalResourceObject("lblDeptConfigured").ToString();
+
+                }
 
                     String repartiNC = "";
                     
@@ -52,12 +52,9 @@ namespace KIS.Configuration
 
                     if (repartiNC.Length > 0)
                     {
-                        lbl1.Text += "<br /><br />I seguenti reparti non sono completamente configurati:<br />" + repartiNC
+                        lbl1.Text += "<br /><br />"+GetLocalResourceObject("lblDeptConfigured2") +":<br />" + repartiNC
                             + " <br /><br /><br />";
                     }
-
-                }
-
 
                 frmAddReparto.Visible = true;
                     if (!Page.IsPostBack)
@@ -73,8 +70,10 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizConfigReparti_Main\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizConfigReparti_Main\">"
+                    + GetLocalResourceObject("lblLnkLogin").ToString()
+                    + "</a>";
                 frmAddReparto.Visible = false;
             }
         }

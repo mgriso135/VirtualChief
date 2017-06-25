@@ -1,21 +1,71 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Web
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kaizen Indicator System - DEVELOP", "WebApplication1\Kaizen Indicator System - DEVELOP.csproj", "{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}"
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kaizen Indicator System", "WebApplication1\Kaizen Indicator System.csproj", "{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "KISInstaller", "KISInstaller\KISInstaller.vdproj", "{B54AC60F-BF90-42F0-A345-4603713B1D32}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KISScheduler", "ConsoleApplication1\ConsoleApplication1\KISScheduler.csproj", "{39EBA2F1-D009-4FF3-A99E-3965505617F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoxCheckHealthScheduler", "KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler.csproj", "{F16BEBEF-29DC-4F8F-8B99-1FE45C25E98B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KanbanBoxReaderScheduler", "KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler.csproj", "{F996026C-09C5-4946-ABC8-0EF8FD050BF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Default = Debug|Default
 		Release|Any CPU = Release|Any CPU
+		Release|Default = Release|Default
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Debug|Default.ActiveCfg = Debug|Any CPU
+		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Debug|Default.Build.0 = Debug|Any CPU
 		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Release|Default.ActiveCfg = Release|Any CPU
+		{6C76E996-2D5B-45AA-8FD8-86EB40DCEECF}.Release|Default.Build.0 = Release|Any CPU
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Debug|Any CPU.ActiveCfg = Debug
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Debug|Default.ActiveCfg = Debug
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Debug|Default.Build.0 = Debug
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Release|Any CPU.ActiveCfg = Release
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Release|Any CPU.Build.0 = Release
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Release|Default.ActiveCfg = Release
+		{B54AC60F-BF90-42F0-A345-4603713B1D32}.Release|Default.Build.0 = Release
+		{39EBA2F1-D009-4FF3-A99E-3965505617F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39EBA2F1-D009-4FF3-A99E-3965505617F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39EBA2F1-D009-4FF3-A99E-3965505617F8}.Debug|Default.ActiveCfg = Debug|Any CPU
+		{39EBA2F1-D009-4FF3-A99E-3965505617F8}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{39EBA2F1-D009-4FF3-A99E-3965505617F8}.Release|Default.ActiveCfg = Debug|Any CPU
+		{F16BEBEF-29DC-4F8F-8B99-1FE45C25E98B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F16BEBEF-29DC-4F8F-8B99-1FE45C25E98B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F16BEBEF-29DC-4F8F-8B99-1FE45C25E98B}.Debug|Default.ActiveCfg = Debug|Any CPU
+		{F16BEBEF-29DC-4F8F-8B99-1FE45C25E98B}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F16BEBEF-29DC-4F8F-8B99-1FE45C25E98B}.Release|Default.ActiveCfg = Debug|Any CPU
+		{F996026C-09C5-4946-ABC8-0EF8FD050BF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F996026C-09C5-4946-ABC8-0EF8FD050BF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F996026C-09C5-4946-ABC8-0EF8FD050BF9}.Debug|Default.ActiveCfg = Debug|Any CPU
+		{F996026C-09C5-4946-ABC8-0EF8FD050BF9}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{F996026C-09C5-4946-ABC8-0EF8FD050BF9}.Release|Default.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Default = Debug|Default
+		Release|Any CPU = Release|Any CPU
+		Release|Default = Release|Default
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Default = Debug|Default
+		Release|Any CPU = Release|Any CPU
+		Release|Default = Release|Default
 	EndGlobalSection
 EndGlobal

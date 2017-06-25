@@ -42,7 +42,7 @@ namespace KIS.Postazioni
             }
             else
             {
-                lbl1.Text = "Errore: non hai il permesso di visualizzare le postazioni di lavoro.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptPostazioni.Visible = false;
             }
         }
@@ -117,13 +117,13 @@ namespace KIS.Postazioni
                             }
                             else
                             {
-                                lbl1.Text = "Some error occured.<br />" + p.log;
+                                lbl1.Text = GetLocalResourceObject("lblGenericError").ToString() + ": " + p.log;
                             }
 
                         }
                         else
                         {
-                            lbl1.Text = "Attenzione: i seguenti task appartengono ancora alla postazione da cancellare. Rimuovere l'associazione task-postazione PRIMA di eliminare la postazione.<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblDelKOTasks").ToString() + "<br />"; 
                             for (int i = 0; i < p.tasks.Count; i++)
                             {
                                 lbl1.Text += p.tasks[i].processName + "<br/>";
@@ -133,7 +133,7 @@ namespace KIS.Postazioni
                     
                     else
                     {
-                        lbl1.Text = "Postazione non trovata/2.<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblPostazioneNotFound").ToString();
                     }
                 }
                else if (e.CommandName == "printBarCode")
@@ -198,7 +198,7 @@ namespace KIS.Postazioni
             }
             else
             {
-                lbl1.Text = "Postazione non trovata.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPostazioneNotFound").ToString();
             }
             
         }

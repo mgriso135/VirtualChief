@@ -30,7 +30,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lblErr.Text = "Attenzione. Non hai il permesso di aggiungere postazioni di lavoro.<br/>";
+                lblErr.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddPostazione.Visible = false;
             }
         }
@@ -51,7 +51,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lblErr.Text = "Some error occured.<br/>";
+                lblErr.Text = GetLocalResourceObject("lblGenericError").ToString();
             }
         }
     }

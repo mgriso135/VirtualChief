@@ -82,11 +82,11 @@ namespace MyUserControls
 
             if (res == 0)
             {
-                lbl2.Text += "<br/><span style=\"color:red;\">GENERIC ERROR: PROCESS NOT DELETED OR PROCESS NOT FOUND</span><br/>";
+                lbl2.Text += "<br/><span style=\"color:red;\">"+GetLocalResourceObject("lblGenericError").ToString()+"</span><br/>";
             }
             else if(res == 2)
             {
-                lbl2.Text += "<br/><span style=\"color:red;\">ERROR: PROCESS NOT DELETED BECAUSE OF SUB-PROCESSES.<br/>YOU NEED TO DELETE ALL SUB-PROCESSES BEFORE DELETING A PROCESS.</span><br/>";
+                lbl2.Text += "<br/><span style=\"color:red;\">"+GetLocalResourceObject("lblErrorSubP").ToString()+"</span><br/>";
             }
             else if (res == 1)
             {
@@ -147,12 +147,12 @@ namespace MyUserControls
                 }
                 else
                 {
-                    lbl2.Text += "Il processo NON ha un solo precedente e un solo successivo.<br/>";
+                    lbl2.Text = GetLocalResourceObject("lblErrorVSM2").ToString();
                 }
             }
             else
             {
-                lbl2.Text += "Process not found<br/>";
+                lbl2.Text = GetLocalResourceObject("lblErrorNotFound").ToString();
             }
             Response.Redirect(Request.RawUrl);
         }
@@ -197,7 +197,7 @@ namespace MyUserControls
                 }
                 else if (proc.processiPrec.Count == 0 && proc.processiSucc.Count == 1)
                 {
-                    lbl2.Text += "Primo processo dello stream.<br/>";
+                    lbl2.Text = GetLocalResourceObject("lblVSMPrimoProc").ToString();
                     // E' il primo processo dello stream
                     processo successivo = new processo(proc.processiSucc[0]);
                     successivo.loadPrecedenti();
@@ -213,12 +213,12 @@ namespace MyUserControls
                 }
                 else
                 {
-                    lbl2.Text += "Il processo NON ha un solo precedente e un solo successivo.<br/>";
+                    lbl2.Text = GetLocalResourceObject("lblErrorVSM2").ToString();
                 }
             }
             else
             {
-                lbl2.Text += "Process not found<br/>";
+                lbl2.Text = GetLocalResourceObject("lblErrorNotFound").ToString();
             }
                 
         }

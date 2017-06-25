@@ -13,6 +13,15 @@ namespace KIS.Produzione {
     public partial class frmSolveProblem {
         
         /// <summary>
+        /// Controllo lblSolveWarning.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSolveWarning;
+        
+        /// <summary>
         /// Controllo tblResolution.
         /// </summary>
         /// <remarks>
@@ -20,6 +29,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable tblResolution;
+        
+        /// <summary>
+        /// Controllo lblCausa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCausa;
         
         /// <summary>
         /// Controllo txtCausa.
@@ -38,6 +56,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valCausa;
+        
+        /// <summary>
+        /// Controllo lblRisoluzione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblRisoluzione;
         
         /// <summary>
         /// Controllo txtRisoluzione.

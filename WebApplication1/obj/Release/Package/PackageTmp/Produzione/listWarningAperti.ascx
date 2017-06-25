@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="listWarningAperti.ascx.cs" Inherits="KIS.Produzione.listWarningAperti" %>
 <asp:UpdatePanel runat="server" ID="upd1" UpdateMode="Conditional">
     <ContentTemplate>
-<h3 id="lblTitle" runat="server">Warning aperti</h3>
+<h3 id="lblTitle" runat="server"><asp:literal runat="server" id="lblWarningAperti" text="<%$Resources:lblWarningAperti %>" /></h3>
         <asp:Label runat="server" ID="lblData" />
         <asp:Label runat="server" ID="lbl1" />
         <asp:Repeater runat="server" ID="rptWarnings">

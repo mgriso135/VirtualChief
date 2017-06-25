@@ -13,6 +13,15 @@ namespace KIS.Commesse {
     public partial class wzEditPauseTasks1 {
         
         /// <summary>
+        /// Controllo lblTitlePause.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitlePause;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -31,6 +40,24 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblPausa;
         
         /// <summary>
+        /// Controllo lblTHTaskPrec.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTHTaskPrec;
+        
+        /// <summary>
+        /// Controllo lblTHPausa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTHPausa;
+        
+        /// <summary>
         /// Controllo imgWait.
         /// </summary>
         /// <remarks>
@@ -38,6 +65,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image imgWait;
+        
+        /// <summary>
+        /// Controllo lblTHTaskSucc.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTHTaskSucc;
         
         /// <summary>
         /// Controllo lblNomePrec.

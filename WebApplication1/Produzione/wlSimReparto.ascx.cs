@@ -112,8 +112,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare il carico di lavoro del reparto";
-                //calDate.Visible = false;
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 txtProductDateEnd.Visible = false;
                 txtProductDateStart.Visible = false;
                 chkLstPostazioni.Visible = false;
@@ -140,7 +139,7 @@ namespace KIS.Produzione
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
                 {
-                    lbl1.Text += "Aggiungo " + rp.Postazioni[i].name + "<br />";
+                    lbl1.Text += GetLocalResourceObject ("lblAggiungo").ToString() + " " + rp.Postazioni[i].name + "<br />";
                     idPostazioni.Add(rp.Postazioni[i].id);
                 }
                 if (inizio < fine)
@@ -420,7 +419,9 @@ namespace KIS.Produzione
                         else
                         {
                             dvInfo.Visible = true;
-                            lbl1.Text += "Non posso simulare l'introduzione in produzione dell'articolo " + articoliNuovi[i].ID.ToString() + "/" + articoliNuovi[i].Year.ToString() + " perché mancano alcuni tempi ciclo.<br />";
+                            lbl1.Text = GetLocalResourceObject("lblErrorSim1").ToString()+" "
+                                + articoliNuovi[i].ID.ToString() + "/" + articoliNuovi[i].Year.ToString()
+                                +" "+ GetLocalResourceObject("lblErrorSim2").ToString();
                         }
                     }
 
@@ -456,7 +457,7 @@ namespace KIS.Produzione
                         int ind = Chart1.Series[cd.articolo.ToString()].Points.Count - 1;
                         if (cd.articolo == -1)
                         {
-                            Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = "Carico di lavoro fissato: " + String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                            Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = GetLocalResourceObject("lblCaricoFissato").ToString() +": " + String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                         }
                         else
                         {
@@ -464,10 +465,12 @@ namespace KIS.Produzione
                             Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = art.ID.ToString() + "/" +
                                 art.Year.ToString() + " - " + art.Cliente + " - " +
                                 art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
-                                " - carico di lavoro: " + String.Format("{0:0.00}", cd.CaricoOre.ToString()) + " ore";
+                                " - "+ GetLocalResourceObject("lblCaricodilavoro").ToString()
+                                +": " + String.Format("{0:0.00}", cd.CaricoOre.ToString()) + " "+ GetLocalResourceObject("lblOre").ToString();
                             Chart1.Series[cd.articolo.ToString()].AxisLabel = art.RepartoNome;
                         }
-                        Chart1.Series[cd.articolo.ToString()].Points[ind].Label = String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                        Chart1.Series[cd.articolo.ToString()].Points[ind].Label = String.Format("{0:0.00}", cd.CaricoOre) 
+                            + " " + GetLocalResourceObject("lblOre").ToString();
                         Chart1.Series[cd.articolo.ToString()].Points[ind].Color = cd.colore;
 
                         if (cd.CaricoOre == 0)
@@ -519,11 +522,7 @@ namespace KIS.Produzione
                             {
                                 Turno turno = new Turno(p.Calendario.Intervalli[b].idTurno);
                                 RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(p, turno);
-                                /*lblTurni.Text += p.name + ";" + turno.Nome + ";" + resPost.NumRisorse + ";"
-                                    + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + ";"
-                                    + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss")
-                                    + ";" + ((TimeSpan)(p.Calendario.Intervalli[b].Fine - p.Calendario.Intervalli[b].Inizio)).TotalHours.ToString()
-                                    + "<br />";*/
+
                                 TimeSpan intervallo = new TimeSpan(0, 0, 0);
                                 if (p.Calendario.Intervalli[b].Fine < inizio)
                                 {
@@ -641,7 +640,7 @@ namespace KIS.Produzione
 
                                     if (cd.articolo == -1)
                                     {
-                                        Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = "Carico di lavoro fissato: " + String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                                        Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = GetLocalResourceObject("lblCaricoFissato").ToString()+ ": " + String.Format("{0:0.00}", cd.CaricoOre) + " "+ GetLocalResourceObject("lblOre").ToString();
                                     }
                                     else
                                     {
@@ -649,8 +648,8 @@ namespace KIS.Produzione
                                         Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = art.ID.ToString() + "/" +
                                             art.Year.ToString() + " - " + art.Cliente + " - " +
                                             art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
-                                            " Postazione " + p.name +
-                                            " - carico di lavoro: " + String.Format("{0:0.00}", cd.CaricoOre) + " ore";
+                                            " "+GetLocalResourceObject("lblPostazione").ToString()+" " + p.name +
+                                            " - "+ GetLocalResourceObject("lblCaricodilavoro").ToString() + ": " + String.Format("{0:0.00}", cd.CaricoOre) + " "+GetLocalResourceObject("lblOre").ToString();
                                     }
                                     if (cd.CaricoOre < 0.01)
                                     {
@@ -672,8 +671,8 @@ namespace KIS.Produzione
                         Chart1.Series["risorse"].Points[indRes].BorderWidth = 2;
                         if (orePostazione[q] > 0)
                         {
-                            Chart1.Series["risorse"].Points[indRes].Label = "Limite capacità " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " ore";
-                            Chart1.Series["risorse"].Points[indRes].ToolTip = "Limite capacità " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " ore";
+                            Chart1.Series["risorse"].Points[indRes].Label = GetLocalResourceObject("lblLimiteCapacita").ToString()+ " " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " "+GetLocalResourceObject("lblOre").ToString();
+                            Chart1.Series["risorse"].Points[indRes].ToolTip = GetLocalResourceObject("lblLimiteCapacita").ToString() + " " + p.name + ": " + String.Format(orePostazione[q].ToString()) + " " + GetLocalResourceObject("lblOre").ToString();
                         }
                         Chart1.Series["risorse"].Points[indRes].AxisLabel = p.name;
                         if (orePostazione[q] < 0.01)
@@ -690,10 +689,11 @@ namespace KIS.Produzione
                 }
 
                 dvInfo.Visible = true;
-                lbl1.Text = "Carico di lavoro complessivo del reparto "
+                lbl1.Text = GetLocalResourceObject("lblcaricocomplessivo").ToString() + " "
                     + rp.name 
-                    + " nel periodo " + inizio.ToString("dd/MM/yyyy") + " - " + fine.ToString("dd/MM/yyyy") + ": <b>"
-                    + String.Format("{0:0.00}", somma.TotalHours) + " ore</b><br />";
+                    + " "+GetLocalResourceObject("lblNelPeriodo").ToString()+" " + inizio.ToString("dd/MM/yyyy") 
+                    + " - " + fine.ToString("dd/MM/yyyy") + ": <b>"
+                    + String.Format("{0:0.00}", somma.TotalHours) + " "+GetLocalResourceObject("lblOre").ToString()+"</b><br />";
             }
         }
 
@@ -753,7 +753,7 @@ namespace KIS.Produzione
                     dvErr.Visible = true;
                     lblErr.Visible = true;
                     txtProductDate.Text = art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy");
-                    lblErr.Text = "Non posso fare la modifica perché la data inserita è maggiore della data di consegna richiesta.<br />";
+                lblErr.Text = GetLocalResourceObject("lblErrorModData").ToString()+ "<br />";
                 }
         }
 

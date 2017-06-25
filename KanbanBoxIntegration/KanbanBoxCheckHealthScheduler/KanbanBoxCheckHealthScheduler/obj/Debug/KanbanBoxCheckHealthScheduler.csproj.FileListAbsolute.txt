@@ -1,0 +1,6 @@
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\bin\Debug\KanbanBoxCheckHealthScheduler.exe.config
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\bin\Debug\KanbanBoxCheckHealthScheduler.exe
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\bin\Debug\KanbanBoxCheckHealthScheduler.pdb
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\obj\Debug\KanbanBoxCheckHealthScheduler.csprojResolveAssemblyReference.cache
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\obj\Debug\KanbanBoxCheckHealthScheduler.exe
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxCheckHealthScheduler\KanbanBoxCheckHealthScheduler\obj\Debug\KanbanBoxCheckHealthScheduler.pdb

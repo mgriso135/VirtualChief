@@ -33,7 +33,7 @@ namespace KIS.Processi
             else
             {
                 frmAddProc.Visible = false;
-                lbl1.Text = "Errore: non hai il permesso di aggiungere macroprocessi.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -43,7 +43,6 @@ namespace KIS.Processi
             bool vsmV = bool.Parse(vsm.SelectedValue);
             if(proc.Add(Server.HtmlEncode(ProcName.Text), Server.HtmlEncode(ProcDesc.Text), vsmV))
             {
-                lbl1.Text = "Processo aggiunto correttamente. <a href=\"/Processi/MacroProcessi.aspx\">Torna all'elenco dei processi</a><br/>";
                 ProcName.Enabled = false;
                 ProcDesc.Enabled = false;
                 vsm.Enabled = false;
@@ -51,7 +50,7 @@ namespace KIS.Processi
             }
             else
             {
-                lbl1.Text = "OOOOOPS, si è verificato un errore.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblError").ToString();
             }
         }
     }

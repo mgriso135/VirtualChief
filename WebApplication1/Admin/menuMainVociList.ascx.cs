@@ -93,6 +93,7 @@ namespace KIS.Admin
                 {
                     VoceMenu vm = new VoceMenu(vID);
                     bool rt = vm.Delete();
+                    
                     if (rt == true)
                     {
                         Response.Redirect(Request.RawUrl);

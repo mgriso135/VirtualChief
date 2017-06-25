@@ -13,6 +13,33 @@ namespace KIS.Admin {
     public partial class menuShowVoce {
         
         /// <summary>
+        /// Controllo lblNavAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAdmin;
+        
+        /// <summary>
+        /// Controllo lblGestioneMenu.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblGestioneMenu;
+        
+        /// <summary>
+        /// Controllo lblNavGestioneVoce.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavGestioneVoce;
+        
+        /// <summary>
         /// Controllo lblTitolo.
         /// </summary>
         /// <remarks>

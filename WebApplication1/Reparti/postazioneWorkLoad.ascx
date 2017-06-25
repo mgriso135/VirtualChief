@@ -3,7 +3,8 @@
 
 <asp:Label runat="server" ID="lbl" />
 
-<h3>Postazione <asp:Label runat="server" ID="lblNomePost" /> - carico di lavoro per processo</h3>
+<h3><asp:Literal runat="server" ID="lblPostazione" Text="<%$Resources:lblPostazione %>" />&nbsp;
+    <asp:Label runat="server" ID="lblNomePost" />&nbsp;-&nbsp;<asp:Literal runat="server" ID="lblCaricoPerProd" Text="<%$Resources:lblCaricoPerProd %>" /></h3>
 <asp:chart ID="Chart1" runat="server" width="1000px" onload="Chart1_Load">
 <ChartAreas>
     <asp:ChartArea Name="ChartArea1">

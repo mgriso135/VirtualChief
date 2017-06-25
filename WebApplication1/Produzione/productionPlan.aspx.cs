@@ -31,7 +31,7 @@ namespace KIS.Produzione
                 if (repID != -1)
                 {
                     Reparto current = new Reparto(repID);
-                    lblTitle.Text = "Programma di produzione del reparto " + current.name;
+                    lblTitle.Text = GetLocalResourceObject("lblProgrammaProd").ToString() + " " + current.name;
                     if (current.id != -1)
                     {
                         if (!Page.IsPostBack)

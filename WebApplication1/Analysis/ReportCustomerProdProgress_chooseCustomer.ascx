@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ReportCustomerProdProgress_chooseCustomer.ascx.cs" Inherits="KIS.Analysis.ReportCustomerProdProgress_chooseCustomer1" %>
-<h3>Scegli il cliente</h3>
+<h3><asp:label runat="server" id="lblTitleScegliCliente" meta:resourcekey="lblTitleScegliCliente" /></h3>
 <asp:updatepanel runat="server" ID="upd1">
     <ContentTemplate>
         <script>

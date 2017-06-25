@@ -45,7 +45,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire le festività.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptFest.Visible = false;
             }
         }

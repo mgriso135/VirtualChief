@@ -60,15 +60,21 @@ namespace KIS.Commesse
                     lbl1.Text = "";
             if (controllo == 0)
                     {
-                        lbl1.Text = "<span style='color:red;'>GENERIC ERROR</span>";
+                        lbl1.Text = "<span style='color:red;'>"
+                    + GetLocalResourceObject("lblErrorGeneric").ToString()
+                    +"</span>";
                     }
                     else if (controllo == 2)
                     {
-                        lbl1.Text = "<span style='color:red;'>ATTENZIONE: processo inconsistente. Esiste almeno un task che non ha né precedenti né successivi</span>";
+                        lbl1.Text = "<span style='color:red;'>"
+                    + GetLocalResourceObject("lblErrorProcNotConsistent").ToString()
+                    + "</span>";
                     }
                     else if (controllo == 5)
                     {
-                        lbl1.Text = "<span style='color:red;'>ATTENZIONE: a qualche task manca il \"Tempo ciclo\"</span>";
+                        lbl1.Text = "<span style='color:red;'>"
+                    + GetLocalResourceObject("lblErrorTCNotFound").ToString()
+                    + "</span>";
                     }
 
 
@@ -117,7 +123,9 @@ namespace KIS.Commesse
                                 else
                                 {
                                     controllo = false;
-                                    lbl1.Text = "<span style='color: red'>Attenzione: ci sono dei sottoprocessi associati al task</span><br/>";
+                                    lbl1.Text = "<span style='color: red'>"
+                                    + GetLocalResourceObject("lblWarningSubProcesses").ToString()
+                                    +"</span><br/>";
                                 }
                             }
 
@@ -132,7 +140,8 @@ namespace KIS.Commesse
                                 else
                                 {
                                     controllo = false;
-                                    lbl1.Text = "<span style='color: red'>Attenzione: ci sono delle varianti da cancellare</span><br/>";
+                                    lbl1.Text = "<span style='color: red'>"
+                                    + GetLocalResourceObject("lblWarningVarianti").ToString()+"</span><br/>";
                                 }
                             }
 
@@ -143,7 +152,8 @@ namespace KIS.Commesse
                                 if (prc.Tempi.Tempi.Count > 0)
                                 {
                                     controllo = false;
-                                    lbl1.Text = "<span style='color: red'>Prima di procedere devi cancellare i tempi ciclo associati al task</span><br/>";
+                                    lbl1.Text = "<span style='color: red'>"
+                                    + GetLocalResourceObject("lblWarningTC").ToString() + "</span><br/>";
                                 }
                                 else
                                 {
@@ -169,7 +179,8 @@ namespace KIS.Commesse
                                 {
                                     processo prc2 = new processo(taskID, taskRev);
                                     int res = prc2.delete();
-                                    lbl1.Text = "<br/><span style=\"color:red;\">Task cancellato... Attendi il refresh dei dati</span><br/>";
+                                    lbl1.Text = "<br/><span style=\"color:red;\">"
+                                    +GetLocalResourceObject("lblTaskDeletedOk").ToString()+"</span><br/>";
                                 }
                                 else
                                 {
@@ -231,10 +242,9 @@ namespace KIS.Commesse
                     int n_ops = task.getDefaultTempo().NumeroOperatori;
                     if (n_ops != -1)
                     {
-                        lblTCDef.Text = "<br />Default: "
+                        lblTCDef.Text = "<br />" + GetLocalResourceObject("lblDefault").ToString() + ": "
                             + Math.Truncate(tDef.TotalHours) + ":" + tDef.Minutes + ":" + tDef.Seconds
-                            + " (" + n_ops.ToString() + " operator";
-                        lblTCDef.Text += n_ops == 1 ? "e)" : "i)";
+                            + " (" + n_ops.ToString() + " " + GetLocalResourceObject("lblOperatori").ToString();
                     }
                     else
                     {
@@ -328,12 +338,12 @@ namespace KIS.Commesse
                 }
                 else
                 {
-                    lbl1.Text = "Errore. Verifica che il task non sia già stato aggiunto a questo processo produttivo.";
+                    lbl1.Text = GetLocalResourceObject("lblTaskAlreadyAdded").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore!";
+                lbl1.Text = GetLocalResourceObject("lblErrorGeneric").ToString();
             }
         }
 
@@ -350,7 +360,7 @@ namespace KIS.Commesse
                 }
                 else
                 {
-                    lbl1.Text = "Si è verificato un errore.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorGeneric").ToString();
                 }
             }
             else

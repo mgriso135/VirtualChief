@@ -13,6 +13,24 @@ namespace KIS.Commesse {
     public partial class wzQuestionWorkLoad {
         
         /// <summary>
+        /// Controllo lblWizNewOrder.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblWizNewOrder;
+        
+        /// <summary>
+        /// Controllo lblNewOrder.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewOrder;
+        
+        /// <summary>
         /// Controllo lnkAddPert.
         /// </summary>
         /// <remarks>
@@ -65,6 +83,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkLancio;
+        
+        /// <summary>
+        /// Controllo lblLancioProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLancioProd;
         
         /// <summary>
         /// Controllo lbl1.

@@ -41,7 +41,7 @@ namespace KIS.Analysis
             }
             else
             {
-                lbl1.Text = "Non hai i permessi per visualizzare l'analisi dati del tipo di prodotto.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 container.Visible = false;
             }
         }
@@ -117,11 +117,11 @@ namespace KIS.Analysis
                     chartTempi.Series[0].ChartType = System.Web.UI.DataVisualization.Charting.SeriesChartType.Column;
                     chartTempi.Series[0].IsValueShownAsLabel = true;
                     chartTempi.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                    chartTempi.Series[0].ToolTip = "Prodotto #VALX, #VAL{0.00} ore di lavoro";
+                    chartTempi.Series[0].ToolTip = "Prodotto #VALX, #VAL{0.00} " + GetLocalResourceObject("lblChartOreLav").ToString();
                     chartTempi.Series[0].XValueMember = "IDCombinato";
                     chartTempi.Series[0].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.Double;
                     chartTempi.Series[0].YValueMembers = "TempoDiLavoroUnitarioHoursDbl";//"TempoDiLavoroTotaleDbl";
-                    chartTempi.Series[0].Label = "#VALY{0.00} ore";
+                    chartTempi.Series[0].Label = "#VALY{0.00} " + GetLocalResourceObject("lblChartOre").ToString();
 
                     chartTempi.DataSource = elArticoli.ListArticoli;
                     chartTempi.DataBind();
@@ -135,7 +135,7 @@ namespace KIS.Analysis
                     for (int q = 0; q < elArticoli.ListArticoli.Count; q++)
                     {
                         chartTempi.Series["media"].Points.AddY(elArticoli.TempoDiLavoroMedio.TotalHours);
-                        chartTempi.Series["media"].ToolTip = "Media: #VAL{0.00} ore";
+                        chartTempi.Series["media"].ToolTip = "Media: #VAL{0.00} " + GetLocalResourceObject("lblChartOre").ToString();
                     }
                     rptTempiDiLavoro.DataSource = elArticoli.ListArticoli;
                     rptTempiDiLavoro.DataBind();
@@ -146,17 +146,17 @@ namespace KIS.Analysis
                     rptProdotti.DataSource = elArticoli.ListArticoli;
                     rptProdotti.DataBind();
 
-                    lblMediaTempoDiLavoro.Text = Math.Round(elArticoli.TempoDiLavoroMedio.TotalHours, 2).ToString() + " ore";
+                    lblMediaTempoDiLavoro.Text = Math.Round(elArticoli.TempoDiLavoroMedio.TotalHours, 2).ToString() + " " + GetLocalResourceObject("lblChartOre").ToString();
                     
                     // Lead times
                     chartLeadTimes.Width = elArticoli.ListArticoli.Count < 12 ? 600 : chartTempi.Width = 50 * elArticoli.ListArticoli.Count;
                     chartLeadTimes.Series[0].ChartType = System.Web.UI.DataVisualization.Charting.SeriesChartType.Column;
                     chartLeadTimes.Series[0].IsValueShownAsLabel = true;
                     chartLeadTimes.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                    chartLeadTimes.Series[0].ToolTip = "Prodotto #VALX, #VAL{0.00} ore di lavoro";
+                    chartLeadTimes.Series[0].ToolTip = "Prodotto #VALX, #VAL{0.00} " + GetLocalResourceObject("lblChartOreLav").ToString();
                     chartLeadTimes.Series[0].XValueMember = "IDCombinato";
                     chartLeadTimes.Series[0].YValueMembers = "LeadTimeDbl";
-                    chartLeadTimes.Series[0].Label = "#VALY{0.00} ore";
+                    chartLeadTimes.Series[0].Label = "#VALY{0.00} " + GetLocalResourceObject("lblChartOre").ToString();
                     chartLeadTimes.DataSource = elArticoli.ListArticoli;
                     chartLeadTimes.DataBind();
 
@@ -169,7 +169,7 @@ namespace KIS.Analysis
                     for (int q = 0; q < elArticoli.ListArticoli.Count; q++)
                     {
                         chartLeadTimes.Series["media"].Points.AddY(elArticoli.LeadTimeMedio.TotalHours);
-                        chartLeadTimes.Series["media"].ToolTip = "Media: #VAL{0.00} ore";
+                        chartLeadTimes.Series["media"].ToolTip = "Media: #VAL{0.00} " + GetLocalResourceObject("lblChartOre").ToString();
                     }
 
                     lblMediaLeadTimes.Text = Math.Round(elArticoli.LeadTimeMedio.TotalHours, 2).ToString() + " ore";
@@ -196,9 +196,8 @@ namespace KIS.Analysis
                     rptTempiLavoroTasks.DataSource = result;
                     rptTempiLavoroTasks.DataBind();
 
-    
-                    lbl1.Text = "Data loaded.<br />";
-                    
+                    lbl1.Text = GetLocalResourceObject("lblDataLoaded").ToString();
+
                 }
                 else
                 {
@@ -207,7 +206,7 @@ namespace KIS.Analysis
                     rptLeadTimes.Visible = false;
                     rptProdotti.Visible = false;
                     rptTempiDiLavoro.Visible = false;
-                    lbl1.Text = "Nessun prodotto trovato.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblProductNotFound").ToString();
                 }
             }
         }

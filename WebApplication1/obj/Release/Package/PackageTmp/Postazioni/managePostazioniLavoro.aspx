@@ -9,11 +9,13 @@
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="managePostazioniLavoro.aspx">Gestione postazioni di lavoro</a>
+						<a href="managePostazioniLavoro.aspx">
+                            <asp:Literal runat="server" ID="lblNavManagePostazioni" Text="<%$Resources:lblNavManagePostazioni %>" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="/img/iconAdd2.png" Height="60px" ToolTip="Aggiungi una nuova postazione di lavoro" />
+    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblTTAddPostazione %>" />
     <br />
     <postazione:add runat="server" ID="addPostazioni" />
 

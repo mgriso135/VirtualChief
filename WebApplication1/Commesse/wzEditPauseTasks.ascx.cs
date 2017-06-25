@@ -59,22 +59,24 @@ namespace KIS.Commesse
 
                         if (ret)
                         {
-                            lblInfo.Text = "Modifica apportata correttamente.";
+                                lblInfo.Text = GetLocalResourceObject("lblModificaOk").ToString(); 
                                 Response.Write("<script language='javascript'>window.close();</script>");
                             }
                         else
                         {
-                            lblInfo.Text = "Errore " + tsk.Task.log + " A";
+                            lblInfo.Text = "Error " + tsk.Task.log;
                         }
                         }
                         else
                         {
-                            lblInfo.Text = "Errore nei dati di input: " + ore + ":" + minuti + ":" + secondi;
+                            lblInfo.Text = GetLocalResourceObject("lblErrorData").ToString()+ ": " + ore + ":" + minuti + ":" + secondi;
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Errore: il processo " + prec + ", " + revPrec + " non appartiene ai successivi del task "
+                        lbl1.Text = GetLocalResourceObject("lblErrorDipendenza1").ToString()+ " " + prec + ", " + revPrec + " "
+                            + GetLocalResourceObject("lblErrorDipendenza2").ToString()
+                            + " "
                             + tsk.Task.processName + ", " + tsk.variant.nomeVariante;
                         tblPausa.Visible = false;
                     }
@@ -116,7 +118,9 @@ namespace KIS.Commesse
                     }
                     else
                     {
-                        lbl1.Text = "Errore: il processo " + prec + ", " + revPrec + " non appartiene ai successivi del task "
+                        lbl1.Text = GetLocalResourceObject("lblErrorDipendenza1").ToString()+" " 
+                            + prec + ", " + revPrec + " "+ GetLocalResourceObject("lblErrorDipendenza2").ToString()
+                            +" "
                             + tsk.Task.processName + ", " + tsk.variant.nomeVariante;
                         tblPausa.Visible = false;
                     }
@@ -188,7 +192,10 @@ namespace KIS.Commesse
                         }
                         else
                         {
-                            lbl1.Text = "Errore: il processo " + prec + ", " + revPrec + " non appartiene ai successivi del task "
+                            lbl1.Text = GetLocalResourceObject("lblErrorDipendenza1").ToString()
+                                +" " + prec + ", " + revPrec 
+                                + " " + GetLocalResourceObject("lblErrorDipendenza2").ToString()
+                                +" "
                                 + tsk.Task.processName + ", " + tsk.variant.nomeVariante;
                         }
                     }
@@ -196,7 +203,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire le pause tra 2 tasks.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
             }
     }

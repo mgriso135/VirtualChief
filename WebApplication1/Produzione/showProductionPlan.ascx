@@ -6,9 +6,9 @@
 <HeaderTemplate>
 <table style="border: 2px dashed green">
 <tr style="font-size: 16px; font-weight: bold">
-<td>Matricola</td>
-<td>Status</td>
-    <td>Inizio previsto</td>
+<td><asp:Literal runat="server" ID="lblMatricola" Text="<%$Resources:lblMatricola %>" /></td>
+<td><asp:Literal runat="server" ID="lblStatus" Text="<%$Resources:lblStatus %>" /></td>
+    <td><asp:Literal runat="server" ID="lblInizioPrev" Text="<%$Resources:lblInizioPrev %>" /></td>
 </tr>
 </HeaderTemplate>
 <ItemTemplate>

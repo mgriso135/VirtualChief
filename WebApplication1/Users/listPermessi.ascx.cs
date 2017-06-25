@@ -36,7 +36,7 @@ namespace KIS.Users
             else
             {
                 rptPermessi.Visible = false;
-                lbl1.Text = "Non hai il permesso di gestire i permessi.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -124,18 +124,18 @@ namespace KIS.Users
                         }
                         else
                         {
-                            lbl1.Text = "Errore: permesso non trovato<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblPermNotFound").ToString();
                         }
 
                     }
                     else
                     {
-                        lbl1.Text = "Errore: id non valido<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblPermNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: nome o descrizione non possono avere valore nullo<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrNotNull").ToString();
                 }
                 
             }
@@ -167,12 +167,12 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore: permesso non trovato<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblPermNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: id non valido<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblPermNotFound").ToString();
                 }
             }
         }

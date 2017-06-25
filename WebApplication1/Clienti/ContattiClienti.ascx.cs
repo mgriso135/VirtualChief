@@ -29,7 +29,7 @@ namespace KIS.Clienti
             if (checkUser == true)
             {
                 rptContattiClienti.Visible = false;
-                if (idCliente.Length > 0)
+                if (!String.IsNullOrEmpty(idCliente) && idCliente.Length > 0)
                 {
                     Cliente cln = new Cliente(idCliente);
                     if (cln.CodiceCliente.Length > 0)
@@ -126,7 +126,7 @@ namespace KIS.Clienti
                 }
                 else
                 {
-                    lbl1.Text = "Errore: impossibile trovare il contatto da cancellare.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblError").ToString();
                 }
             }
         }

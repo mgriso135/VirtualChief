@@ -55,7 +55,7 @@ namespace KIS.Reparti
             {
                 rb1.Visible = false;
                 ddlLimiteTask.Visible = false;
-                lbl1.Text = "Non hai il permesso di gestire le modalità di avvio task da parte degli operatori";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -67,7 +67,7 @@ namespace KIS.Reparti
                 rp.TasksAvviabiliContemporaneamenteDaOperatore = 0;
                 ddlLimiteTask.Visible = false;
                 ddlLimiteTask.SelectedValue = "0";
-                lbl1.Text = "Impostazione aggiornata.";
+                lbl1.Text = GetLocalResourceObject("lblModificaOk").ToString();
             }
             else
             {
@@ -94,11 +94,11 @@ namespace KIS.Reparti
                 if (numTasks > 0)
                 {
                     rp.TasksAvviabiliContemporaneamenteDaOperatore = numTasks;
-                    lbl1.Text = "Impostazione aggiornata correttamente.";
+                    lbl1.Text = GetLocalResourceObject("lblModificaOk").ToString();
                 }
                 else
                 {
-                    lbl1.Text = "Non puoi impostare un numero di tasks avviabili contemporaneamente uguale a zero.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorZeroInvalid").ToString();
                 }
 
             }

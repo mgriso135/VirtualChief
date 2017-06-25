@@ -40,61 +40,10 @@ namespace KIS.Analysis
                         taskDescription.Text = proc.processDescription;
                         taskRev.Text = "Rev: " + proc.revisione.ToString();
                     }
-                    //accordion1.Visible = true;
-                    /*proc.loadImplosioneProdotti();
-                    List<ProcessoVariante> prodotti = proc.ImplosioneProdotti;
-                    rptProdotti.DataSource = prodotti;
-                    rptProdotti.DataBind();
-
-                    taskName.Text = proc.processName;
-                    taskDescription.Text = proc.processDescription;
-                    taskRev.Text = "Rev: " + proc.revisione.ToString();
-
-                    ElencoTaskProduzione elTasks = new ElencoTaskProduzione(proc);
-
-                    // Grafico tempi di lavoro
-                    chartTempiLavoro.Visible = true;
-                    chartTempiLavoro.Series[0].IsValueShownAsLabel = true;
-                    chartTempiLavoro.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                    chartTempiLavoro.Series[0].ToolTip = "Task #VALX, #VAL ore di lavoro";
-                    chartTempiLavoro.Series[0].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
-                    chartTempiLavoro.Series[0].XValueMember = "lateStart";
-                    chartTempiLavoro.Series[0].YValueMembers = "TempoDiLavoroEffettivoDbl";
-                    chartTempiLavoro.DataSource = elTasks.Tasks;
-                    chartTempiLavoro.DataBind();
-                    lblMediaTempoDiLavoro.Text = "";
-                    if (elTasks.MediaTempoLavoro.Days > 0)
-                    {
-                        lblMediaTempoDiLavoro.Text = elTasks.MediaTempoLavoro.TotalDays.ToString() + " giorni, ";
-                    }
-                    lblMediaTempoDiLavoro.Text += elTasks.MediaTempoLavoro.Hours.ToString() + "HH:"
-                        + elTasks.MediaTempoLavoro.Minutes.ToString() + "mm:"
-                        + elTasks.MediaTempoLavoro.Seconds.ToString() + "ss";
-
-                    // Grafico tempi ciclo
-
-                    chartTempiCiclo.Visible = true;
-                    chartTempiCiclo.Series[0].IsValueShownAsLabel = true;
-                    chartTempiCiclo.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                    chartTempiCiclo.Series[0].ToolTip = "Task #VALX, #VAL ore di lavoro";
-                    chartTempiCiclo.Series[0].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
-                    chartTempiCiclo.Series[0].XValueMember = "lateStart";
-                    chartTempiCiclo.Series[0].YValueMembers = "TempoCicloEffettivoDbl";
-                    chartTempiCiclo.DataSource = elTasks.Tasks;
-                    chartTempiCiclo.DataBind();
-                    lblMediaTempiCiclo.Text = "";
-                    if (elTasks.MediaTempoCiclo.Days > 0)
-                    {
-                        lblMediaTempiCiclo.Text = elTasks.MediaTempoCiclo.TotalDays.ToString() + " giorni, ";
-                    }
-                    lblMediaTempiCiclo.Text += elTasks.MediaTempoCiclo.Hours.ToString() + "HH:"
-                        + elTasks.MediaTempoCiclo.Minutes.ToString() + "mm:"
-                        + elTasks.MediaTempoCiclo.Seconds.ToString() + "ss";*/
-
                 }
                 else
                 {
-                    lbl1.Text = "Impossibile trovare il task desiderato.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorTaskNotFound").ToString();
                     accordion1.Visible = false;
                 }
                 
@@ -150,10 +99,6 @@ namespace KIS.Analysis
                         rptProdotti.DataSource = prodotti;
                         rptProdotti.DataBind();
 
-                        /*taskName.Text = proc.processName;
-                        taskDescription.Text = proc.processDescription;
-                        taskRev.Text = "Rev: " + proc.revisione.ToString();*/
-
                         ElencoTaskProduzione elTasks_c = new ElencoTaskProduzione(proc, inPrd, finPrd);
                         var elTasks = elTasks_c.Tasks.OrderBy(x => x.DataInizioTask);
 
@@ -161,7 +106,7 @@ namespace KIS.Analysis
                         chartTempiLavoro.Visible = true;
                         chartTempiLavoro.Series[0].IsValueShownAsLabel = true;
                         chartTempiLavoro.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                        chartTempiLavoro.Series[0].ToolTip = "Task #VALX, #VAL ore di lavoro";
+                        chartTempiLavoro.Series[0].ToolTip = "Task #VALX, #VAL " + GetLocalResourceObject("lblChartOreDiLavoro").ToString();
                         chartTempiLavoro.Series[0].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                         chartTempiLavoro.Series[0].XValueMember = "DataInizioTask";
                         chartTempiLavoro.Series[0].YValueMembers = "TempoDiLavoroEffettivoDbl";
@@ -170,7 +115,7 @@ namespace KIS.Analysis
                         lblMediaTempoDiLavoro.Text = "";
                         if (elTasks_c.MediaTempoLavoro.Days > 0)
                         {
-                            lblMediaTempoDiLavoro.Text = elTasks_c.MediaTempoLavoro.TotalDays.ToString() + " giorni, ";
+                            lblMediaTempoDiLavoro.Text = elTasks_c.MediaTempoLavoro.TotalDays.ToString() + " " + GetLocalResourceObject("lblChartGiorni").ToString() + ", ";
                         }
                         lblMediaTempoDiLavoro.Text += elTasks_c.MediaTempoLavoro.Hours.ToString() + "HH:"
                             + elTasks_c.MediaTempoLavoro.Minutes.ToString() + "mm:"
@@ -183,7 +128,7 @@ namespace KIS.Analysis
                         chartTempiCiclo.Visible = true;
                         chartTempiCiclo.Series[0].IsValueShownAsLabel = true;
                         chartTempiCiclo.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                        chartTempiCiclo.Series[0].ToolTip = "Task #VALX, #VAL ore di lavoro";
+                        chartTempiCiclo.Series[0].ToolTip = "Task #VALX, #VAL "+ GetLocalResourceObject("lblChartOreDiLavoro").ToString();
                         chartTempiCiclo.Series[0].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                         chartTempiCiclo.Series[0].XValueMember = "DataInizioTask";
                         chartTempiCiclo.Series[0].YValueMembers = "TempoCicloEffettivoDbl";
@@ -192,7 +137,7 @@ namespace KIS.Analysis
                         lblMediaTempiCiclo.Text = "";
                         if (elTasks_c.MediaTempoCiclo.Days > 0)
                         {
-                            lblMediaTempiCiclo.Text = elTasks_c.MediaTempoCiclo.TotalDays.ToString() + " giorni, ";
+                            lblMediaTempiCiclo.Text = elTasks_c.MediaTempoCiclo.TotalDays.ToString() + " " + GetLocalResourceObject("lblChartGiorni").ToString() + ", ";
                         }
                         lblMediaTempiCiclo.Text += elTasks_c.MediaTempoCiclo.Hours.ToString() + "HH:"
                             + elTasks_c.MediaTempoCiclo.Minutes.ToString() + "mm:"
@@ -202,14 +147,14 @@ namespace KIS.Analysis
                     }
                     else
                     {
-                        lbl1.Text = "Errore: date selezionate non corrette.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
                         accordion1.Visible = false;
                     }
 
             }
             else
             {
-                lbl1.Text = "Impossibile trovare il task desiderato.";
+                lbl1.Text = GetLocalResourceObject("lblErrorTaskNotFound").ToString();
                 accordion1.Visible = false;
             }
         }

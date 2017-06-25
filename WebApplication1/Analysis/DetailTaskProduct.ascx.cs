@@ -39,18 +39,19 @@ namespace KIS.Analysis
                 {
                     if (!Page.IsPostBack)
                     {
-                        lblProdotto.InnerText = "Storico tempi del task " + task.processName + " per il prodotto " + prod.process.processName + " " + prod.variant.nomeVariante;
+                        lblProdotto.InnerText = GetLocalResourceObject("lblStoricoTempi1").ToString() + " " 
+                            + task.processName + " " + GetLocalResourceObject("lblStoricoTempi2").ToString()  
+                            + " " + prod.process.processName + " " + prod.variant.nomeVariante;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Task non trovato";
-                    
+                    lbl1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: non hai i permessi necessari.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -106,7 +107,7 @@ namespace KIS.Analysis
                         chartTempiLavoro.Visible = true;
                         chartTempiLavoro.Series[0].IsValueShownAsLabel = true;
                         chartTempiLavoro.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                        chartTempiLavoro.Series[0].ToolTip = "Task #VALX, #VAL ore di lavoro";
+                    chartTempiLavoro.Series[0].ToolTip = "Task #VALX, #VAL " + GetLocalResourceObject("lblChartOreLav").ToString();
                         chartTempiLavoro.Series[0].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                         chartTempiLavoro.Series[0].XValueMember = "DataInizioTask";
                         chartTempiLavoro.Series[0].YValueMembers = "TempoDiLavoroEffettivoUnitarioDbl";
@@ -115,7 +116,7 @@ namespace KIS.Analysis
                         lblMediaTempoDiLavoro.Text = "";
                         if (elTasks_c.MediaTempoLavoro.Days > 0)
                         {
-                            lblMediaTempoDiLavoro.Text = elTasks_c.MediaTempoLavoro.TotalDays.ToString() + " giorni, ";
+                            lblMediaTempoDiLavoro.Text = elTasks_c.MediaTempoLavoro.TotalDays.ToString() + " " + GetLocalResourceObject("lblGiorni").ToString() + ", ";
                         }
                         lblMediaTempoDiLavoro.Text += elTasks_c.MediaTempoLavoro.Hours.ToString() + "HH:"
                             + elTasks_c.MediaTempoLavoro.Minutes.ToString() + "mm:"
@@ -128,7 +129,7 @@ namespace KIS.Analysis
                         chartTempiCiclo.Visible = true;
                         chartTempiCiclo.Series[0].IsValueShownAsLabel = true;
                         chartTempiCiclo.Series[0].XAxisType = System.Web.UI.DataVisualization.Charting.AxisType.Primary;
-                        chartTempiCiclo.Series[0].ToolTip = "Task #VALX, #VAL ore di lavoro";
+                        chartTempiCiclo.Series[0].ToolTip = "Task #VALX, #VAL " + GetLocalResourceObject("lblChartOreLav").ToString();
                         chartTempiCiclo.Series[0].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                         chartTempiCiclo.Series[0].XValueMember = "DataInizioTask";
                         chartTempiCiclo.Series[0].YValueMembers = "TempoCicloEffettivoUnitarioDbl";
@@ -138,8 +139,8 @@ namespace KIS.Analysis
                         lblMediaTempiCiclo.Text = "";
                         if (elTasks_c.MediaTempoCiclo.Days > 0)
                         {
-                            lblMediaTempiCiclo.Text = elTasks_c.MediaTempoCiclo.TotalDays.ToString() + " giorni, ";
-                        }
+                            lblMediaTempiCiclo.Text = elTasks_c.MediaTempoCiclo.TotalDays.ToString() + " " + GetLocalResourceObject("lblGiorni").ToString() + ", ";
+                    }
                         lblMediaTempiCiclo.Text += elTasks_c.MediaTempoCiclo.Hours.ToString() + "HH:"
                             + elTasks_c.MediaTempoCiclo.Minutes.ToString() + "mm:"
                             + elTasks_c.MediaTempoCiclo.Seconds.ToString() + "ss";
@@ -149,13 +150,13 @@ namespace KIS.Analysis
                     }
                     else
                     {
-                        lbl1.Text = "Errore: date selezionate non corrette.";
+                        lbl1.Text = GetLocalResourceObject("lblErrorDateNonCorrette").ToString();
                         accordion1.Visible = false;
                     }
             }
             else
             {
-                lbl1.Text = "Task non trovato";
+                lbl1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                 accordion1.Visible = false;
             }
         }

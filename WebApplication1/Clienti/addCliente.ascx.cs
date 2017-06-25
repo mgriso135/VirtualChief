@@ -34,7 +34,7 @@ namespace KIS.Clienti
             else
             {
                 frmAddcliente.Visible = false;
-                lbl1.Text = "Non hai il permesso di aggiungere un utente.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -92,26 +92,27 @@ namespace KIS.Clienti
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore. Verifica i dati inseriti e riprova.";
+                        lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
                     }
                 }
                 else
                 {
                     if (checkCod == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con codice " + Server.HtmlEncode(txtCodiceCliente.Text) + "<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrorCustomerCodDuplicated").ToString()
+                        +" " + Server.HtmlEncode(txtCodiceCliente.Text) + "<br />";
                     }
                     if (checkRagSoc == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con ragione sociale " + Server.HtmlEncode(txtRagSoc.Text) + "<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrorCustomerRagSocDuplicated").ToString()+ " " + Server.HtmlEncode(txtRagSoc.Text) + "<br />";
                     }
                     if (checkPIva == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con partita iva " + Server.HtmlEncode(txtPartitaIVA.Text) + "<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrorPIVADuplicated").ToString() +" " + Server.HtmlEncode(txtPartitaIVA.Text) + "<br />";
                     }
                     if (checkCodFiscale == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con codice fiscale " + Server.HtmlEncode(txtCodFiscale.Text) + "<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErrorCodFiscaleDuplicated").ToString() + " " + Server.HtmlEncode(txtCodFiscale.Text) + "<br />";
                     }
                 }
             }

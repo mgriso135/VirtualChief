@@ -13,6 +13,15 @@ namespace KIS.Reparti {
     public partial class manageFestivita {
         
         /// <summary>
+        /// Controllo lblAddFestivita.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAddFestivita;
+        
+        /// <summary>
         /// Controllo addFest.
         /// </summary>
         /// <remarks>
@@ -20,6 +29,15 @@ namespace KIS.Reparti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::KIS.Reparti.addFestivita addFest;
+        
+        /// <summary>
+        /// Controllo lblElencoFestivita.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblElencoFestivita;
         
         /// <summary>
         /// Controllo listFest.

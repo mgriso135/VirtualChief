@@ -28,20 +28,20 @@ namespace KIS.Commesse
                 lblIDCommessa.Visible = true;
                 lblCliente.Visible = true;
                 lblNoteCommessa.Visible = true;
-                lblCliente.Text = "Cliente: " + cm.Cliente + "<br/>";
-                lblIDCommessa.Text = "Commessa: " + cm.ID.ToString() + "/" + cm.Year.ToString();
+                lblCliente.Text = GetLocalResourceObject("lblCliente").ToString() + ": " + cm.Cliente + "<br/>";
+                lblIDCommessa.Text = GetLocalResourceObject("lblCommessa").ToString() + ": " + cm.ID.ToString() + "/" + cm.Year.ToString();
                 lblNoteCommessa.Text = cm.Note + "<br/>";
             }
 
             if (idProc != -1 && revProc != -1 && idVariante != -1)
             {
                 lblQuantita.Visible = true;
-                lblQuantita.Text = "Quantità: " + quantita.ToString() + "<br />";
+                lblQuantita.Text = GetLocalResourceObject("lblQuantita").ToString() + ": " + quantita.ToString() + "<br />";
                 ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVariante));
                 if (prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.variant.idVariante != -1)
                 {
                     lblProcesso.Visible = true;
-                    lblProcesso.Text = "Prodotto: " + prcVar.variant.nomeVariante + " - " + prcVar.variant.descrizioneVariante + "<br />";
+                    lblProcesso.Text = GetLocalResourceObject("lblProdotto").ToString() + ": " + prcVar.variant.nomeVariante + " - " + prcVar.variant.descrizioneVariante + "<br />";
                 }
             }
 
@@ -51,7 +51,7 @@ namespace KIS.Commesse
                 if (rp.id != -1)
                 {
                     lblReparto.Visible = true;
-                    lblReparto.Text = "Reparto " + rp.name + "<br />";
+                    lblReparto.Text = GetLocalResourceObject("lblReparto").ToString() + ": " + rp.name + "<br />";
                 }
             }
 
@@ -63,16 +63,16 @@ namespace KIS.Commesse
                     if (art.DataPrevistaConsegna > DateTime.Now)
                     {
                         lblDataConsegna.Visible = true;
-                        lblDataConsegna.Text = "Data consegna richiesta: " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy") + "<br />";
+                        lblDataConsegna.Text = GetLocalResourceObject("lblDataConsegna").ToString() + ": " + art.DataPrevistaConsegna.ToString("dd/MM/yyyy") + "<br />";
                     }
 
                     if (art.DataPrevistaFineProduzione > DateTime.Now)
                     {
                         lblDataFineProduzione.Visible = true;
-                        lblDataFineProduzione.Text = "Data fine produzione: " + art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
+                        lblDataFineProduzione.Text = GetLocalResourceObject("lblDataFineProd").ToString() + ": " + art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
                     }
                     lblQuantita.Visible = true;
-                    lblQuantita.Text = "Quantità: " + art.Quantita.ToString() + "<br />";
+                    lblQuantita.Text = GetLocalResourceObject("lblQuantita").ToString()+": " + art.Quantita.ToString() + " <br />";
                 }
             }
         }

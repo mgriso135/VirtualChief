@@ -60,8 +60,8 @@ namespace KIS.Produzione
                                 lblDataPrevistaFP.Text = art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss");
                                 lblNomeProc.Text = prc.process.processName;
                                 lblNomeVariante.Text = prc.variant.nomeVariante;
-                                lblRevProc.Text = "Revisione: " + prc.process.revisione.ToString();
-                                lblQuantita.Text = "Quantità: " + art.Quantita.ToString();
+                                lblRevProc.Text = GetLocalResourceObject("lblRevisione").ToString() + ": " + prc.process.revisione.ToString();
+                                lblQuantita.Text = GetLocalResourceObject("lblQuantita").ToString() + ": " + art.Quantita.ToString();
                                 prc.loadReparto();
                                 for (int i = 0; i < prc.RepartiProduttivi.Count; i++)
                                 {
@@ -75,7 +75,7 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            lbl1.Text = "Errore tipo di processo<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblErroreTipoProd").ToString();
                         }
                     }
                     else
@@ -83,22 +83,22 @@ namespace KIS.Produzione
                         ddlRepartoProduttivo.Visible = false;
                         if (prc.RepartoProduttivo != null)
                         {
-                            lbl1.Text = "Errore generico<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblErroreGenerico").ToString();
                         }
                         else
                         {
-                            lbl1.Text = "<div class='alert alert-error'>Attenzione: è necessario associare il prodotto a uno o più reparti produttivi.</div>";
+                            lbl1.Text = "<div class='alert alert-error'>"+ GetLocalResourceObject("lblErroreReparto").ToString() + "</div>";
                         }
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErroreGenerico").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: non hai il permesso di lanciare un articolo in produzione.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptTasks.Visible = false;
                 ddlRepartoProduttivo.Visible = false;
             }
@@ -269,11 +269,11 @@ namespace KIS.Produzione
                     rptControllo.Visible = false;
                     if (rt == 2)
                     {
-                        lbl1.Text += "Attenzione: tempo a disposizione inferiore al Critical Path. Variare la data presunta di fine produzione. Verificare anche la data di consegna prevista.";
+                        lbl1.Text = GetLocalResourceObject("lblErroreTempoInsuff").ToString();
                     }
                     else if (rt == 3)
                     {
-                        lbl1.Text += "Attenzione: non sono riuscito a fissare delle date per tutti i task. Variare la data di fine produzione oppure variare l'impostazione relativa alla suddivisione dei task tra gli intervalli lavorativi.";
+                        lbl1.Text = GetLocalResourceObject("lblErrorBindingDates").ToString();
                     }
                 }
             }
@@ -307,7 +307,6 @@ namespace KIS.Produzione
 
         protected void rptControllo_ItemCommand(object sender, RepeaterCommandEventArgs e)
         {
-            lbl1.Text = "Inserisco questi task in produzione!<br/>";
             if (e.CommandName == "ProductionLaunch" && e.CommandArgument.ToString() == "OK")
             {
                 Articolo tobePlanned = new Articolo(artID, artYear);
@@ -349,21 +348,21 @@ namespace KIS.Produzione
                     int rt = prcCfg.LanciaInProduzione();
                     if (rt == 1)
                     {
-                        lbl1.Text = "Articolo inserito correttamente in produzione<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblPianificaOk").ToString();
                         btnLancia.Enabled = false;
                     }
                     else if(rt==3)
                     {
-                        lbl1.Text = "Articolo già lanciato in produzione<br />";
+                        lbl1.Text = GetLocalResourceObject("lblErroreGiaLanciato").ToString();
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore: " + prcCfg.log;
+                        lbl1.Text = GetLocalResourceObject("lblErroreGenerico").ToString() + ": " + prcCfg.log;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore in fase di simulazione<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErroreGenerico").ToString();
                 }
 
             }
@@ -419,7 +418,11 @@ namespace KIS.Produzione
                 }
                 else
                 {
-                    lbl1.Text = "<span style='color:red;'>Errore: il task " + tskVar.Task.processName.ToString() + " non ha nemmeno un tempo ciclo definito. Non posso inserirlo tra le scelte possibili.</span>";
+                    lbl1.Text = "<span style='color:red;'>"
+                                +GetLocalResourceObject("lblErrorNoTC1").ToString()
+                                +" " + tskVar.Task.processName.ToString() + " "
+                                + GetLocalResourceObject("lblErrorNoTC2").ToString()
+                                + "</span>";
                 }
             }
 
@@ -449,19 +452,19 @@ namespace KIS.Produzione
                  */
                 if (consistenza == 0)
                 {
-                    lbl1.Text = "Generico error<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblErroreGenerico").ToString();
                 }
                 else if (consistenza == 2)
                 {
-                    lbl1.Text = "C'è qualche task \"orfano\" di almeno un precedente o un successivo<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblErrorNoPrecSucc").ToString();
                 }
                 else if (consistenza == 3)
                 {
-                    lbl1.Text = "Il tipo di digramma non è un PERT. Impossibile lanciare in produzione un digramma di questo tipo<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrorVSM").ToString();
                 }
                 else if (consistenza == 6)
                 {
-                    lbl1.Text = "A qualche task non è stata assegnata una postazione di lavoro di default<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrorPostazione").ToString();
                 }
 
             }

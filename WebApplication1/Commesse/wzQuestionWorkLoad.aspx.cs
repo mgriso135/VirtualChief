@@ -22,6 +22,7 @@ namespace KIS.Commesse
             String sIDReparto = Request.QueryString["idReparto"];
             String sIDProdotto = Request.QueryString["idProdotto"];
             String sAnnoProdotto = Request.QueryString["annoProdotto"];
+            String matricola = Request.QueryString["matricola"];
             int idCommessa, annoCommessa, idProc, revProc, idVariante, idReparto, idProdotto, annoProdotto;
 
                 try
@@ -67,6 +68,7 @@ namespace KIS.Commesse
                         frmQuestionWorkLoad.idReparto = rp.id;
                         frmQuestionWorkLoad.idProdotto = art.ID;
                         frmQuestionWorkLoad.annoProdotto = art.Year;
+                        frmQuestionWorkLoad.matricola = matricola;
 
                         lnkAddPert.NavigateUrl = "wzAddPERT.aspx?idCommessa=" + idCommessa.ToString()
                             + "&annoCommessa=" + annoCommessa.ToString();
@@ -76,7 +78,8 @@ namespace KIS.Commesse
                         + "&revProc=" + revProc.ToString()
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
-                            + "&annoProdotto=" + annoProdotto.ToString();
+                            + "&annoProdotto=" + annoProdotto.ToString()
+                            +"&matricola="+matricola.ToString();
 
                         lnkAssociaReparto.NavigateUrl = "wzAssociaPERTReparto.aspx?idCommessa=" + idCommessa.ToString()
                         + "&annoCommessa=" + annoCommessa.ToString()
@@ -84,7 +87,8 @@ namespace KIS.Commesse
                         + "&revProc=" + revProc.ToString()
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
-                            + "&annoProdotto=" + annoProdotto.ToString();
+                            + "&annoProdotto=" + annoProdotto.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         lnkAssociaTasks.NavigateUrl = "wzAssociaTaskPostazioni.aspx?idCommessa=" + idCommessa.ToString()
                         + "&annoCommessa=" + annoCommessa.ToString()
@@ -93,7 +97,8 @@ namespace KIS.Commesse
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&idReparto=" + idReparto.ToString();
+                            + "&idReparto=" + idReparto.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         lnkDataConsegna.NavigateUrl = "wzInserisciDataConsegna.aspx?idCommessa=" + idCommessa.ToString()
                         + "&annoCommessa=" + annoCommessa.ToString()
@@ -102,7 +107,8 @@ namespace KIS.Commesse
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&idReparto=" + idReparto.ToString();
+                            + "&idReparto=" + idReparto.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         lnkLancio.NavigateUrl = "wzQuestionWorkLoad.aspx?idCommessa=" + idCommessa.ToString()
                         + "&annoCommessa=" + annoCommessa.ToString()
@@ -111,7 +117,8 @@ namespace KIS.Commesse
                         + "&idVariante=" + idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&idReparto=" + idReparto.ToString();
+                            + "&idReparto=" + idReparto.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         InfoPanel.Visible = true;
                         InfoPanel.idCommessa = cm.ID;
@@ -137,12 +144,13 @@ namespace KIS.Commesse
                             + prcVar.process.revisione.ToString() + " "
                             + art.Proc.variant.idVariante.ToString() + " "
                             + prcVar.variant.idVariante.ToString();
-                        lbl1.Text += "C'è un'incongruenza nei dati fornitimi. Non è possibile continuare.";
+
+                        lbl1.Text = GetLocalResourceObject("lblErrorIncongruenza").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Si è verificato un errore.";
+                    lbl1.Text = GetLocalResourceObject("lblError").ToString();
                 }
             }
         }

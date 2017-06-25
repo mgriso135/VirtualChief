@@ -4,10 +4,12 @@
 <asp:Repeater runat="server" ID="rptPostazioniTasks" OnItemDataBound="rptPostazioniTasks_ItemCreated">
     <HeaderTemplate>
         <table>
+            <thead>
             <tr>
-                <td style="font-size: 16px; font-weight:bold;">Tasks</td>
-                <td style="font-size: 16px; font-weight:bold;">Postazioni</td>
+                <th><asp:literal runat="server" id="lblTHTasks" Text="<%$Resources:lblTHTasks %>" /></th>
+                <th><asp:literal runat="server" id="lblTHPostazioni" Text="<%$Resources:lblTHPostazioni %>" /></td>
             </tr>
+                </thead>
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1">

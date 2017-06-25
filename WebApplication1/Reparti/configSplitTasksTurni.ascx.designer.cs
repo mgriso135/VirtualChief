@@ -7,8 +7,7 @@
 // </generato automaticamente>
 //------------------------------------------------------------------------------
 
-namespace KIS.Reparti
-{
+namespace KIS.Reparti {
     
     
     public partial class configSplitTasksTurni {
@@ -21,6 +20,15 @@ namespace KIS.Reparti
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lbl1;
+        
+        /// <summary>
+        /// Controllo lblOpzioniInserimento.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblOpzioniInserimento;
         
         /// <summary>
         /// Controllo splitTasks.

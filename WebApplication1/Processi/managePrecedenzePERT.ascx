@@ -6,9 +6,11 @@
 <table class="table table-striped table-hover" runat="server" id="tblPrecedenze">
     <thead>
 <tr style="font-size: 14px; font-weight: bold;">
-<td style="border-right: 1px dashed blue; text-align:center">Precedenti</td>
-<td style="text-align:center;">Attività corrente</td>
-<td style="border-left: 1px dashed blue; text-align:center">Successivi</td>
+<td style="border-right: 1px dashed blue; text-align:center">
+    <asp:Literal runat="server" ID="lblPrecedenti" Text="<%$Resources:lblPrecedenti %>" />
+    </td>
+<td style="text-align:center;"><asp:Literal runat="server" ID="lblTaskCorrente" Text="<%$Resources:lblTaskCorrente %>" /></td>
+<td style="border-left: 1px dashed blue; text-align:center"><asp:Literal runat="server" ID="lblSuccessivi" Text="<%$Resources:lblSuccessivi %>" /></td>
 </tr>
         </thead>
     

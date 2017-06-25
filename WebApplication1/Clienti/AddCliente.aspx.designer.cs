@@ -13,6 +13,24 @@ namespace KIS.Clienti {
     public partial class AddCliente {
         
         /// <summary>
+        /// Controllo lblNavAnagrafica.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAnagrafica;
+        
+        /// <summary>
+        /// Controllo lblNavNewCustomer.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavNewCustomer;
+        
+        /// <summary>
         /// Controllo frmAddCliente.
         /// </summary>
         /// <remarks>

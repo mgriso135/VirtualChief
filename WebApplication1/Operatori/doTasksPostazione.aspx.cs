@@ -51,7 +51,7 @@ namespace KIS.Operatori
                         }
                         else
                         {
-                            lbl1.Text = "Attenzione: non hai eseguito il check-in nella postazione.";
+                            lbl1.Text = GetLocalResourceObject("lblErrorCheckIn").ToString();
                             frmLstTaskAvviabili.idPostazione = -1;
                             frmLstTaskAvviati.idPostazione = -1;
                             frmLstTaskAvviati.Visible = false;
@@ -62,7 +62,7 @@ namespace KIS.Operatori
                         frmLstTaskAvviati.idPostazione = -1;
                         frmLstTaskAvviati.Visible = false;
                         frmLstTaskAvviabili.idPostazione = -1;
-                        lbl1.Text = "Postazione not found";
+                        lbl1.Text = GetLocalResourceObject("lblPostazioneNotFound").ToString();
                     }
                 }
                 else
@@ -73,14 +73,18 @@ namespace KIS.Operatori
                     frmLstTaskAvviabili.Visible = false;
                     lbl1.Text = "Querystring not found<br/>";
                 }
+            
             }
             else
             {
+                if (!Page.IsPostBack) { 
                 frmLstTaskAvviati.idPostazione = -1;
                 frmLstTaskAvviati.Visible = false;
                 frmLstTaskAvviabili.idPostazione = -1;
                 frmLstTaskAvviabili.Visible = false;
-                lbl1.Text = "You're not logged in. Please <a href=\"/Login/login.aspx\">log in</a>.";
+                lbl1.Text = GetLocalResourceObject("lblNotLoggedIn1").ToString()
+                    + " <a href=\"/Login/login.aspx\">"+ GetLocalResourceObject("lblNotLoggedIn2").ToString() + "</a>.";
+                }
             }
         }
     }

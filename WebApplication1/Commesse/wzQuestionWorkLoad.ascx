@@ -8,7 +8,8 @@
             <asp:Image runat="server" ID="Image1" ImageUrl="~/img/iconArrowLeft.png" Height="40" />
                 </asp:HyperLink>
         </td>
-        <td>Verifica il carico di lavoro del reparto</td>
+        <td><asp:Label runat="server" ID="lblVerificaCarico" Text="<%$Resources:lblVerificaCarico %>" />
+            </td>
         <td style="text-align:right;">
             <asp:HyperLink runat="server" ID="lnkFwdCheckWorkLoad" NavigateUrl="wzCheckWorkLoadReparto.aspx">
             <asp:Image runat="server" ID="imgGoFwd1" ImageUrl="~/img/iconArrowRight.png" Height="40" />
@@ -17,9 +18,7 @@
     </tr>
     <tr>
         <td style="text-align:right;">
-            
-Pianifica il prodotto in produzione direttamente
-                
+            <asp:Label runat="server" ID="lblPianificaDiretto" Text="<%$Resources:lblPianificaDiretto %>" />               
         </td>
         
         <td>

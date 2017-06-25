@@ -13,6 +13,15 @@ namespace KIS.Produzione {
     public partial class configProcessoPerProduzione {
         
         /// <summary>
+        /// Controllo lblTitleCfg.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfg;
+        
+        /// <summary>
         /// Controllo lblNomeProc.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.Label lblQuantita;
         
         /// <summary>
+        /// Controllo lblDataFine.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDataFine;
+        
+        /// <summary>
         /// Controllo lblDataPrevistaFP.
         /// </summary>
         /// <remarks>
@@ -58,6 +76,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.Label lblDataPrevistaFP;
         
         /// <summary>
+        /// Controllo lblDataConsegna.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDataConsegna;
+        
+        /// <summary>
         /// Controllo lblDataPrevistaConsegna.
         /// </summary>
         /// <remarks>
@@ -65,6 +92,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDataPrevistaConsegna;
+        
+        /// <summary>
+        /// Controllo lblReparto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblReparto;
         
         /// <summary>
         /// Controllo ddlRepartoProduttivo.

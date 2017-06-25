@@ -6,7 +6,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
         <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx"><asp:label runat="server" id="lblNavAnalisi" meta:resourcekey="lblNavAnalisi" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

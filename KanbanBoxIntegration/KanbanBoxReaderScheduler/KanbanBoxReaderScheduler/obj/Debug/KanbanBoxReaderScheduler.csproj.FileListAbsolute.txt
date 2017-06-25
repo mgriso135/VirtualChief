@@ -1,0 +1,6 @@
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\bin\Debug\KanbanBoxReaderScheduler.exe.config
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\bin\Debug\KanbanBoxReaderScheduler.exe
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\bin\Debug\KanbanBoxReaderScheduler.pdb
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.csprojResolveAssemblyReference.cache
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.exe
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.pdb

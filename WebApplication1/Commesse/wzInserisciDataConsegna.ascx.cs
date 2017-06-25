@@ -10,6 +10,7 @@ namespace KIS.Commesse
     public partial class wzInserisciDataConsegna1 : System.Web.UI.UserControl
     {
         public int idCommessa, annoCommessa, idProc, revProc, idVariante, idReparto, idProdotto, annoProdotto, quantita;
+        public String matricola;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
@@ -17,6 +18,7 @@ namespace KIS.Commesse
                 tbl.Visible = false;
                 lnkGoBack.Visible = false;
                 btnGoFwd.Visible = false;
+                matricola = (String.IsNullOrEmpty(matricola) || matricola.Length == 0) ? "" : matricola;
             }
 
             List<String[]> elencoPermessi = new List<String[]>();
@@ -43,12 +45,13 @@ namespace KIS.Commesse
                     lnkGoBack.NavigateUrl = "wzAssociaTaskPostazioni.aspx?idCommessa=" + cm.ID.ToString()
                     + "&annoCommessa=" + cm.Year.ToString()
                     + "&idProc=" + prcVar.process.processID.ToString()
-                    + "&revProc=" +prcVar.process.revisione.ToString()
+                    + "&revProc=" + prcVar.process.revisione.ToString()
                     + "&idVariante=" + prcVar.variant.idVariante.ToString()
                     + "&idReparto=" + rp.id.ToString()
                     + "&idProdotto=" + idProdotto.ToString()
                     + "&annoProdotto=" + annoProdotto.ToString()
-                    +"&quantita=" + quantita.ToString();
+                    + "&quantita=" + quantita.ToString()
+                    +"&matricola="+matricola.ToString();
 
                     if (!Page.IsPostBack)
                     {
@@ -87,6 +90,11 @@ namespace KIS.Commesse
                         {
                             Articolo art = new Articolo(newArt[0], newArt[1]);
                             art.Reparto = rp.id;
+                            if(!String.IsNullOrEmpty(matricola) && matricola.Length>0)
+                            { 
+                                art.Matricola = matricola;
+                            }
+
                             if (art.ID != -1 && art.Year != -1)
                             {
                                 Response.Redirect("wzQuestionWorkLoad.aspx?idCommessa="
@@ -98,12 +106,13 @@ namespace KIS.Commesse
                                 + "&idReparto=" + rp.id.ToString()
                                 + "&idProdotto=" + newArt[0].ToString()
                                 + "&annoProdotto=" + newArt[1].ToString()
-                                + "&quantita=" + quantita.ToString());
+                                + "&quantita=" + quantita.ToString()
+                                + "&matricola=" + matricola.ToString());
                             }
                         }
                         else
                         {
-                            lbl1.Text = "Attenzione: è avvenuto un errore.";
+                            lbl1.Text = GetLocalResourceObject("lblError").ToString();
                         }
                     }
                 }
@@ -128,7 +137,8 @@ namespace KIS.Commesse
                             + "&idReparto=" + rp.id.ToString()
                             + "&idProdotto=" + art.ID.ToString()
                             + "&annoProdotto=" + art.Year.ToString()
-                            + "&quantita=" + quantita.ToString());
+                            + "&quantita=" + quantita.ToString()
+                            + "&matricola=" + matricola.ToString());
                         }
                     }
                 }
@@ -143,7 +153,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lblCalendar.Text = "Attenzione: non puoi inserire una data di consegna precedente ad oggi.";
+                lbl1.Text = GetLocalResourceObject("lblErrorDate").ToString();
                 calDate.SelectedDates.Clear();
             }
         }

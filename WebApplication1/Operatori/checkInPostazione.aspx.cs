@@ -28,10 +28,14 @@ namespace KIS.Operatori
             }
             else
             {
+                if (!Page.IsPostBack) { 
                 frmPostazioniAttive.Visible = false;
                 frmLoginPostazione.Visible = false;
                 frmListTaskAvviatiUtenti.Visible = false;
-                lbl1.Text = "Non sei loggato oppure non hai i permessi necessari. Please <a href=\"/Login/login.aspx\">log in</a>.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKO1").ToString() +"<a href=\"/Login/login.aspx\">"
+                    + GetLocalResourceObject("lblPermessoKO2").ToString()
+                    + "</a>.";
+                }
             }
         }
     }

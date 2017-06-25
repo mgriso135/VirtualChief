@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="wzAssociaProdottoReparto.ascx.cs" Inherits="KIS.Commesse.wzAssociaProdottoReparto" %>
 
-<script language="javascript">
+<script lang="javascript">
 function SetUniqueRadioButton(nameregex, current) {
   var re = new RegExp(nameregex);
   for (var i = 0; i < document.forms[0].elements.length; i++) {

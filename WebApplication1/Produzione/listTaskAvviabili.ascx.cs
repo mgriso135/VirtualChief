@@ -61,7 +61,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai i permessi necessari per avviare i task, oppure devi eseguire il log-in.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptTasks.Visible = false;
                 lblData.Visible = false;
             }
@@ -69,30 +69,33 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            lblData.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            Postazione pst = new Postazione(idPostazione);
-                    pst.loadTaskProduzioneAvviabili();
-                    List<TaskProduzione> TaskAvviabili = new List<TaskProduzione>();
-                    for (int i = 0; i < pst.IdTaskProduzioneAvviabili.Count; i++)
+            if (Session["User"] != null)
+            {
+                lblData.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                Postazione pst = new Postazione(idPostazione);
+                pst.loadTaskProduzioneAvviabili();
+                List<TaskProduzione> TaskAvviabili = new List<TaskProduzione>();
+                for (int i = 0; i < pst.IdTaskProduzioneAvviabili.Count; i++)
+                {
+                    TaskProduzione tsk = new TaskProduzione(pst.IdTaskProduzioneAvviabili[i]);
+                    // Controllo che l'utente non l'abbia già avviato
+                    bool checkUser = false;
+                    tsk.loadUtentiAttivi();
+                    for (int k = 0; k < tsk.UtentiAttivi.Count; k++)
                     {
-                        TaskProduzione tsk = new TaskProduzione(pst.IdTaskProduzioneAvviabili[i]);
-                        // Controllo che l'utente non l'abbia già avviato
-                        bool checkUser = false;
-                        tsk.loadUtentiAttivi();
-                        for (int k = 0; k < tsk.UtentiAttivi.Count; k++)
+                        if (tsk.UtentiAttivi[k] == ((User)Session["user"]).username)
                         {
-                            if (tsk.UtentiAttivi[k] == ((User)Session["user"]).username)
-                            {
-                                checkUser = true;
-                            }
-                        }
-                        if (checkUser == false)
-                        {
-                            TaskAvviabili.Add(tsk);
+                            checkUser = true;
                         }
                     }
-                    rptTasks.DataSource = TaskAvviabili;
-                    rptTasks.DataBind();
+                    if (checkUser == false)
+                    {
+                        TaskAvviabili.Add(tsk);
+                    }
+                }
+                rptTasks.DataSource = TaskAvviabili;
+                rptTasks.DataBind();
+            }
         }
 
         protected void rptTasks_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -190,7 +193,6 @@ namespace KIS.Produzione
                         bool rt = tsk.Start((User)Session["user"]);
                         if (rt == true)
                         {
-                            lbl1.Text = "Task avviato correttamente.";
                             Response.Redirect(Request.RawUrl);
                         }
                         else
@@ -201,7 +203,7 @@ namespace KIS.Produzione
                             curr.loadTaskAvviati();
                             if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && curr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
                             {
-                                lbl1.Text = "Hai già avviato troppi tasks.";
+                                lbl1.Text = GetLocalResourceObject("lblTooMuchTasks").ToString();
                             }
                         }
                     }
@@ -209,9 +211,9 @@ namespace KIS.Produzione
             }
         }
 
-        protected void btnStart_Command(object sender, CommandEventArgs e)
+        /*protected void btnStart_Command(object sender, CommandEventArgs e)
         {
             lbl1.Text = "Fire2";
-        }
+        }*/
     }
 }

@@ -32,7 +32,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare l'elenco dei reparti.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptListReparti.Visible = false;
             }
         }

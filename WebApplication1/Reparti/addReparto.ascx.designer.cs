@@ -31,6 +31,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddReparto;
         
         /// <summary>
+        /// Controllo lblNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNome;
+        
+        /// <summary>
         /// Controllo nome.
         /// </summary>
         /// <remarks>
@@ -49,6 +58,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valNome;
         
         /// <summary>
+        /// Controllo lblDescrizione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDescrizione;
+        
+        /// <summary>
         /// Controllo descrizione.
         /// </summary>
         /// <remarks>
@@ -65,6 +83,15 @@ namespace KIS.Reparti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valDescrizione;
+        
+        /// <summary>
+        /// Controllo lblFuso.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblFuso;
         
         /// <summary>
         /// Controllo ddlTimezones.

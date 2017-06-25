@@ -36,7 +36,7 @@ namespace KIS.Users
                 frmAddGruppo.Visible = false;
                 btnShowAddGruppo.Visible = false;
                 btnShowAddGruppo.Enabled = false;
-                lbl1.Text = "Non hai il permesso di creare un nuovo gruppo.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 

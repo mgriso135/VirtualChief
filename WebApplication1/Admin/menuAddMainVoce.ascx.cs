@@ -33,7 +33,7 @@ namespace KIS.Admin
                 tblFormAdd.Visible = false;
                 imgShowFormAddMainMenu.Visible = false;
                 imgShowFormAddMainMenu.Enabled = false;
-                lbl1.Text = "Non hai il permesso di inserire una voce di menu.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -59,7 +59,7 @@ namespace KIS.Admin
             }
             else
             {
-                lbl1.Text = "Attenzione: si è verificato un errore nell'inserimento della voce di menu.<br />";
+                lbl1.Text = GetLocalResourceObject("lblAddError").ToString();
                 //lbl1.Text = mn.log;
             }
         }

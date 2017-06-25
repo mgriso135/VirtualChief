@@ -35,7 +35,7 @@ namespace KIS.Users
             {
                 tblAddEmail.Visible = false;
                 imgShowForm.Visible = false;
-                lbl1.Text = "Non hai il permesso di aggiungere indirizzi e-mail.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -59,8 +59,7 @@ namespace KIS.Users
                 bool rt = usr.addEmail(txtEmail.Text, Server.HtmlEncode(txtNote.Text), chkAlarm.Checked);
                 if (rt == false)
                 {
-                    lbl1.Text = "Errore: non è stato possibile inserire l'indirizzo e-mail descritto.<br/>Verificare che non sia già stato inserito e che sia un indirizzo e-mail valido."
-                        + usr.log;
+                    lbl1.Text = GetLocalResourceObject("lblErrorAdd").ToString();
                 }
                 else
                 {

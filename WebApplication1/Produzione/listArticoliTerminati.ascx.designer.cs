@@ -13,6 +13,33 @@ namespace KIS.Produzione {
     public partial class listArticoliTerminati {
         
         /// <summary>
+        /// Controllo lblTitleStorico.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleStorico;
+        
+        /// <summary>
+        /// Controllo lblInizio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblInizio;
+        
+        /// <summary>
+        /// Controllo lblFine.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblFine;
+        
+        /// <summary>
         /// Controllo calInizio.
         /// </summary>
         /// <remarks>

@@ -38,7 +38,7 @@ namespace KIS.Users
                 lbl1.Text = usr.log;
                 usr.cognome = Server.HtmlEncode(tbCognome.Text);
                 lbl1.Text += "<br />" + usr.log;
-                lblRes.Text = "<br />Modifiche eseguite";
+                lblRes.Text = "<br />"+GetLocalResourceObject("lblModOk").ToString();
             }
             else
             {

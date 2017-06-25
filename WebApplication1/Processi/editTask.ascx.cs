@@ -44,11 +44,11 @@ namespace KIS.Processi
                 {
                     task.Task.processName = Server.HtmlEncode(editTaskNome.Text);
                     task.Task.processDescription = Server.HtmlEncode(editTaskDesc.Text);
-                    lbl1.Text = "Modifiche apportate correttamente.";
+                lbl1.Text = GetLocalResourceObject("lblModificheOk").ToString();
                 }
                 else
                 {
-                    lbl1.Text = "Errore: non sono riuscito a trovare il task di cui mi stai parlando.";
+                lbl1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                 }
         }
 
@@ -62,8 +62,8 @@ namespace KIS.Processi
                 }
                 else
                 {
-                    lbl1.Text = "Errore: non sono riuscito a trovare il task di cui mi stai parlando.";
-                }
+                lbl1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
+            }
 
         }
     }

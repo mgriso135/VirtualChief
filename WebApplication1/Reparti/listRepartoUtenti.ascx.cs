@@ -57,7 +57,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Errore: non hai il permesso di gestire gli operatori del reparti.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 ddlUser.Visible = false;
                 rptRepUsers.Visible = false;
                 imgShowAddFrm.Visible = false;
@@ -111,7 +111,7 @@ namespace KIS.Reparti
                     }
                     else
                     {
-                        lbl1.Text = "Errore nella rimozione dell'operatore dal reparto<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblErrorDelete").ToString();
                     }
                 }
             }

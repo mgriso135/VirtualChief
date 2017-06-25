@@ -88,8 +88,8 @@ namespace KIS.Admin
                     }
                     else
                     {
-                        lbl1.Text += "E' avvenuto un errore durante l'aggiunta della voce di menu.<br />";
-                    }
+                        lbl1.Text = GetLocalResourceObject("lblAddVoiceError").ToString();
+                            }
                 }
             }
         }

@@ -4,9 +4,9 @@
     <HeaderTemplate>
         <table>
             <tr>
-                <td></td>
-                <td>Inizio festività</td>
-                <td>Fine festività</td>
+                <th></th>
+                <th><asp:Literal runat="server" ID="lblInizioFest" Text="<%$Resources:lblInizioFest %>" /></th>
+                <th><asp:Literal runat="server" ID="lblFineFest" Text="<%$Resources:lblFineFest %>" /></th>
             </tr>
     </HeaderTemplate>
     <ItemTemplate>

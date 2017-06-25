@@ -31,6 +31,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblAddTask;
         
         /// <summary>
+        /// Controllo lblAddNewTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAddNewTask;
+        
+        /// <summary>
         /// Controllo imgAddTaskPert.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgAddTaskPert;
+        
+        /// <summary>
+        /// Controllo lblLinkTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLinkTask;
         
         /// <summary>
         /// Controllo ddlTaskEsistenti.

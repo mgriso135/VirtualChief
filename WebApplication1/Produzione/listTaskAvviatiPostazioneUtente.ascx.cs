@@ -57,32 +57,35 @@ namespace KIS.Produzione
             {
                 rptTaskAvviati.Visible = false;
                 lblData.Visible = false;
-                lbl1.Text = "Non hai il permesso di visualizzare i task da te avviati.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo2").ToString();
             }
         }
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            lblData.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            Postazione pst = new Postazione(idPostazione);
-            List<TaskProduzione> lstTaskAvviati = new List<TaskProduzione>();
-            User curr = (User)Session["user"];
-            pst.loadTaskAvviati(curr);
-            for (int i = 0; i < pst.TaskAvviatiUtente.Count; i++)
+            if (Session["User"] != null)
             {
-                lstTaskAvviati.Add(new TaskProduzione(pst.TaskAvviatiUtente[i]));
-            }
-            if (lstTaskAvviati.Count > 0)
-            {
-                rptTaskAvviati.DataSource = lstTaskAvviati;
-                rptTaskAvviati.DataBind();
-            }
-            else
-            {
-                lbl1.Visible = false;
-                lblData.Visible = false;
-                lblTitle.Visible = false;
-                rptTaskAvviati.Visible = false;
+                lblData.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+                Postazione pst = new Postazione(idPostazione);
+                List<TaskProduzione> lstTaskAvviati = new List<TaskProduzione>();
+                User curr = (User)Session["user"];
+                pst.loadTaskAvviati(curr);
+                for (int i = 0; i < pst.TaskAvviatiUtente.Count; i++)
+                {
+                    lstTaskAvviati.Add(new TaskProduzione(pst.TaskAvviatiUtente[i]));
+                }
+                if (lstTaskAvviati.Count > 0)
+                {
+                    rptTaskAvviati.DataSource = lstTaskAvviati;
+                    rptTaskAvviati.DataBind();
+                }
+                else
+                {
+                    lbl1.Visible = false;
+                    lblData.Visible = false;
+                    lblTitle.Visible = false;
+                    rptTaskAvviati.Visible = false;
+                }
             }
         }
 
@@ -142,7 +145,7 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            lbl1.Text += "Entro qui" + tsk.log;
+                            lbl1.Text = tsk.log;
                         }
                     }
                 }
@@ -150,7 +153,6 @@ namespace KIS.Produzione
             }
             else if (e.CommandName == "warning")
             {
-                lbl1.Text = "Genero uno warning!";
                 int id = -1;
                 try
                 {

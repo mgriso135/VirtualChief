@@ -13,6 +13,42 @@ namespace KIS.Produzione {
     public partial class linkArticoliToCommessa {
         
         /// <summary>
+        /// Controllo lblNavCommesse.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavCommesse;
+        
+        /// <summary>
+        /// Controllo lblNavDettaglioCommesse.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavDettaglioCommesse;
+        
+        /// <summary>
+        /// Controllo lblTitleAddProdotto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleAddProdotto;
+        
+        /// <summary>
+        /// Controllo lblCommessa.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCommessa;
+        
+        /// <summary>
         /// Controllo lblIDCommessa.
         /// </summary>
         /// <remarks>
@@ -22,6 +58,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.Label lblIDCommessa;
         
         /// <summary>
+        /// Controllo lblDataInserimento.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDataInserimento;
+        
+        /// <summary>
         /// Controllo lblDataCommessa.
         /// </summary>
         /// <remarks>
@@ -29,6 +74,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblDataCommessa;
+        
+        /// <summary>
+        /// Controllo lblLNote.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLNote;
         
         /// <summary>
         /// Controllo lblNote.

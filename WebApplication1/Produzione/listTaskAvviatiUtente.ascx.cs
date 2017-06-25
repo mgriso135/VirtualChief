@@ -26,7 +26,7 @@ namespace KIS.Produzione
 
             if (checkUser == true)
             {
-                if (!Page.IsPostBack && !Page.IsCallback)
+                if (!Page.IsPostBack)
                 {
                     User curr = (User)Session["user"];
                     lblUser.Text = curr.username;
@@ -51,7 +51,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lblUser.Text = "Non hai il permesso.<br/>";
+                lblUser.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 

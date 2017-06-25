@@ -40,7 +40,7 @@ namespace KIS.Clienti
             else
             {
                 rpt1.Visible = false;
-                lbl1.Text = "Non hai il permesso di visualizzare l'anagrafica clienti.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -55,14 +55,15 @@ namespace KIS.Clienti
                     bool ret = customer.Delete();
                     if (ret == true)
                     {
-                        lbl1.Text = "Cancellazione avvenuta correttamente.";
+                        lbl1.Text = GetLocalResourceObject("lblDeleteOk").ToString();
                         PortafoglioClienti elencoCli = new PortafoglioClienti();
                         rpt1.DataSource = elencoCli.Elenco;
                         rpt1.DataBind();
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore durante la cancellazione del cliente " + customer.RagioneSociale+".";
+                        lbl1.Text =GetLocalResourceObject("lblDeleteKo").ToString()+ " " + customer.RagioneSociale+".";
+
                     }
                 }
             }

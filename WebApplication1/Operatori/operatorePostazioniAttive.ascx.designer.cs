@@ -13,6 +13,15 @@ namespace KIS.Operatori {
     public partial class operatorePostazioniAttive {
         
         /// <summary>
+        /// Controllo lblTitlePostazioniAttive.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitlePostazioniAttive;
+        
+        /// <summary>
         /// Controllo upd1.
         /// </summary>
         /// <remarks>

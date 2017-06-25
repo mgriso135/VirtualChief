@@ -5,11 +5,11 @@
 <table runat="server" id="tbEdit" class="table table-hover">
     <tbody>
     <tr>
-        <td>Nome:</td>
+        <td><asp:Literal runat="server" ID="lblNome" Text="<%$Resources:lblNome %>" />:</td>
         <td><asp:TextBox runat="server" ID="tbNome" /></td>
     </tr>
     <tr>
-        <td>Cognome:</td>
+        <td><asp:Literal runat="server" ID="lblCognome" Text="<%$Resources:lblCognome %>" />:</td>
         <td><asp:TextBox runat="server" ID="tbCognome" /></td>
     </tr>
         </tbody>

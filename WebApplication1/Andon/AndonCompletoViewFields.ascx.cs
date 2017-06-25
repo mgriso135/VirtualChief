@@ -47,7 +47,7 @@ namespace KIS.Andon
             else
             {
                 frmContainer.Visible = false;
-                lbl1.Text = "Non hai i permessi per modificare i campi da visualizzare nell'andon completo.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -93,7 +93,7 @@ namespace KIS.Andon
                     Boolean rt = andonCfg.deleteCampoVisualizzato(hKey);
                     if (rt)
                     {
-                        lblInfo.Text = hKey.ToString() + " deleted.<br />";
+                        lblInfo.Text = GetLocalResourceObject(hKey.ToString()).ToString() + " " + GetLocalResourceObject("lblDeleted").ToString();
                         andonCfg.loadCampiVisualizzati();
                         rptFields.DataSource = andonCfg.CampiVisualizzati;
                         rptFields.DataBind();
@@ -180,7 +180,7 @@ namespace KIS.Andon
                     Boolean rt = andonCfg.addCampoVisualizzato(hKey);
                     if (rt)
                     {
-                        lblInfo.Text = hKey.ToString() + " added.<br />";
+                        lblInfo.Text = GetLocalResourceObject(hKey.ToString()).ToString() + " " + GetLocalResourceObject("lblAdded").ToString();
                         andonCfg.loadCampiVisualizzati();
                         rptFields.DataSource = andonCfg.CampiVisualizzati;
                         rptFields.DataBind();
@@ -209,7 +209,7 @@ namespace KIS.Andon
                     Boolean rt = andonCfg.deleteCampoVisualizzatoTasks(hKey);
                     if (rt)
                     {
-                        lblInfo.Text = hKey.ToString() + " deleted.<br />";
+                        lblInfo.Text = GetLocalResourceObject(hKey.ToString()).ToString() + " " + GetLocalResourceObject("lblDeleted").ToString();
                         andonCfg.loadCampiVisualizzatiTasks();
                         rptFieldsTasks.DataSource = andonCfg.CampiVisualizzatiTasks;
                         rptFieldsTasks.DataBind();
@@ -324,7 +324,7 @@ namespace KIS.Andon
                     Boolean rt = andonCfg.addCampoVisualizzatoTasks(hKey);
                     if (rt)
                     {
-                        lblInfo.Text = hKey.ToString() + " added.<br />";
+                        lblInfo.Text = GetLocalResourceObject(hKey.ToString()).ToString() + " " + GetLocalResourceObject("lblAdded").ToString();
                         andonCfg.loadCampiVisualizzatiTasks();
                         rptFieldsTasks.DataSource = andonCfg.CampiVisualizzatiTasks;
                         rptFieldsTasks.DataBind();

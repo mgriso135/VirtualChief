@@ -5,21 +5,21 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
       <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx"><asp:label runat="server" id="lblNavAnalisi" meta:resourcekey="lblNavAnalisi" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="CustomerPortfolio.aspx">Portafoglio clienti</a>
+						<a href="CustomerPortfolio.aspx"><asp:label runat="server" id="lblNavPortafoglioClienti" meta:resourcekey="lblNavPortafoglioClienti" /></a>
 						<span class="divider">/</span>
 					</li>
           <li>
-						<a href="CustomerPareto.aspx">Pareto clienti</a>
+						<a href="CustomerPareto.aspx"><asp:label runat="server" id="lblNavPareto" meta:resourcekey="lblNavPareto" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
     <div class="row-fluid">
         <div class="span12">
-    <h1>Pareto clienti</h1>
+    <h1><asp:label runat="server" id="lblNavPareto2" meta:resourcekey="lblNavPareto" /></h1>
             </div>
         </div>
     

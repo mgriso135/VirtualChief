@@ -10,6 +10,8 @@ namespace KIS.Commesse
     public partial class wzQuestionWorkLoad1 : System.Web.UI.UserControl
     {
         public int idCommessa, annoCommessa, idProc, revProc, idVariante, idReparto, idProdotto, annoProdotto;
+        public string matricola;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             tblShowQuestion.Visible = false;
@@ -47,7 +49,8 @@ namespace KIS.Commesse
                             + "&idReparto=" + rp.id.ToString()
                             + "&idProdotto=" + art.ID.ToString()
                             + "&annoProdotto=" + art.Year.ToString()
-                            + "&quantita=" + art.Quantita.ToString();
+                            + "&quantita=" + art.Quantita.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                             lnkFwdCheckWorkLoad.NavigateUrl += "?idCommessa=" + cm.ID.ToString()
                             + "&annoCommessa=" + cm.Year.ToString()
@@ -57,7 +60,8 @@ namespace KIS.Commesse
                             + "&idReparto=" + rp.id.ToString()
                             + "&idProdotto=" + art.ID.ToString()
                             + "&annoProdotto=" + art.Year.ToString()
-                            + "&quantita=" + art.Quantita.ToString();
+                            + "&quantita=" + art.Quantita.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                             lnkFwdDeliveryDate.NavigateUrl += "?idCommessa=" + cm.ID.ToString()
                             + "&annoCommessa=" + cm.Year.ToString()
@@ -67,17 +71,18 @@ namespace KIS.Commesse
                             + "&idReparto=" + rp.id.ToString()
                             + "&idProdotto=" + art.ID.ToString()
                             + "&annoProdotto=" + art.Year.ToString() 
-                            + "&quantita=" + art.Quantita.ToString();
+                            + "&quantita=" + art.Quantita.ToString()
+                            + "&matricola=" + matricola.ToString();
                         }
                         else
                         {
-                            lbl1.Text = "C'è un'incongruenza nei dati fornitimi. Non è possibile continuare.";
+                            lbl1.Text = GetLocalResourceObject("lblErrorIncongruenza").ToString();
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Si è verificato un errore.";
-                    }
+                    lbl1.Text = GetLocalResourceObject("lblError").ToString();
+                }
 
             }
             else

@@ -7,11 +7,13 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="commesse.aspx">Commesse</a>
+						<a href="commesse.aspx">
+                            <asp:Label runat="server" ID="lblNavCommesse" meta:resourcekey="lblNavCommesse" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <h1>COMMESSE</h1>
+    <h1><asp:Label runat="server" ID="lblTitleCommesse" meta:resourcekey="lblTitleCommesse" /></h1>
     <commesse:Add runat="server" ID="frmAddCommessa" />
     <br />
     <commesse:list runat="server" ID="frmListCommesse" />

@@ -22,6 +22,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.Image imgTitle;
         
         /// <summary>
+        /// Controllo lblTitleCfgWarning.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarning;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblTitleCfgWarningGroup.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarningGroup;
+        
+        /// <summary>
         /// Controllo btnShowAddWarningGruppo.
         /// </summary>
         /// <remarks>
@@ -49,6 +67,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.ImageButton btnShowAddWarningGruppo;
         
         /// <summary>
+        /// Controllo lblTitleCfgWarningGroupAdd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarningGroupAdd;
+        
+        /// <summary>
         /// Controllo frmAddWarningGruppo.
         /// </summary>
         /// <remarks>
@@ -56,6 +83,15 @@ namespace KIS.Eventi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddWarningGruppo;
+        
+        /// <summary>
+        /// Controllo lblTitleCfgWarningGroupSel.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarningGroupSel;
         
         /// <summary>
         /// Controllo ddlAddWarningGruppo.
@@ -94,6 +130,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.Repeater rptListGruppi;
         
         /// <summary>
+        /// Controllo lblTitleCfgWarningUsers.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarningUsers;
+        
+        /// <summary>
         /// Controllo btnShowAddWarningUtente.
         /// </summary>
         /// <remarks>
@@ -103,6 +148,15 @@ namespace KIS.Eventi {
         protected global::System.Web.UI.WebControls.ImageButton btnShowAddWarningUtente;
         
         /// <summary>
+        /// Controllo lblTitleCfgWarningUserAdd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarningUserAdd;
+        
+        /// <summary>
         /// Controllo frmAddWarningUtente.
         /// </summary>
         /// <remarks>
@@ -110,6 +164,15 @@ namespace KIS.Eventi {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddWarningUtente;
+        
+        /// <summary>
+        /// Controllo lblTitleCfgWarningUserSel.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgWarningUserSel;
         
         /// <summary>
         /// Controllo ddlAddWarningUtente.

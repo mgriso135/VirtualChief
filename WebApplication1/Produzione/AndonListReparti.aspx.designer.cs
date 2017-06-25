@@ -13,6 +13,24 @@ namespace KIS.Produzione {
     public partial class AndonListReparti {
         
         /// <summary>
+        /// Controllo lblNavProduzione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavProduzione;
+        
+        /// <summary>
+        /// Controllo lblNavAndonRep.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavAndonRep;
+        
+        /// <summary>
         /// Controllo lstReparti.
         /// </summary>
         /// <remarks>

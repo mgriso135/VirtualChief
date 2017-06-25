@@ -30,13 +30,14 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-    Calendario</a></div>
+          <asp:Literal runat="server" ID="lblAccCalendario" Text="<%$Resources:lblAccCalendario %>" />
+    </a></div>
                 <div id="collapseOne" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:UpdatePanel runat="server" ID="upd1">
     <ContentTemplate>
-        Data iniziale periodo:&nbsp;<asp:TextBox runat="server" ID="txtProductDateStart" Width="80" /><br />
-        Data finale periodo:&nbsp;<asp:TextBox runat="server" ID="txtProductDateEnd" Width="80" /><br />
+        <asp:Literal runat="server" ID="lblDataIniziale" Text="<%$Resources:lblDataIniziale %>" />:&nbsp;<asp:TextBox runat="server" ID="txtProductDateStart" Width="80" /><br />
+        <asp:Literal runat="server" ID="lblDataFinale" Text="<%$Resources:lblDataFinale %>" />:&nbsp;<asp:TextBox runat="server" ID="txtProductDateEnd" Width="80" /><br />
         <asp:ImageButton runat="server" ID="btnUpdateDate" OnClick="btnUpdateDate_Click" ImageUrl="~/img/iconSave.jpg" Width="30" />
         </ContentTemplate>
 
@@ -47,15 +48,15 @@
              <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Postazioni di lavoro
+          <asp:Literal runat="server" ID="lblAccPostazione" Text="<%$Resources:lblAccPostazione %>" />
     </a></div>
                 <div id="collapseTwo" class="accordion-body collapse">
       <div class="accordion-inner">
           <asp:UpdatePanel runat="server">
               <ContentTemplate>
     <asp:RadioButtonList CssClass="radio" runat="server" id="rbPostazioni" AutoPostBack="true" OnSelectedIndexChanged="rbPostazioni_SelectedIndexChanged">
-    <asp:ListItem Selected="True" Value="0">Visualizza i tempi complessivi per il reparto</asp:ListItem>
-    <asp:ListItem Value="1">Suddividi i tempi per postazione</asp:ListItem>
+    <asp:ListItem Selected="True" Value="0" Text="<%$Resources:lblVisTempiTotali %>"></asp:ListItem>
+    <asp:ListItem Value="1" Text="<%$Resources:lblVisTempiPostazione %>"></asp:ListItem>
 </asp:RadioButtonList>
 <asp:CheckBoxList runat="server" CssClass="checkbox" AutoPostBack="true" ID="chkLstPostazioni" OnSelectedIndexChanged="chkLstPostazioni_SelectedIndexChanged" >
 
@@ -72,7 +73,7 @@
             <div class="accordion-group">
                 <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-          Prodotti da inserire
+          <asp:Literal runat="server" ID="lblAccProdottiNew" Text="<%$Resources:lblAccProdottiNew %>" />
     </a></div>
                 <div id="collapseThree" class="accordion-body collapse">
       <div class="accordion-inner">
@@ -100,9 +101,9 @@
                             <td>
                                 Fine produzione:&nbsp;<asp:textbox runat="server" id="txtProductDate" Width="100px"  />
                                 
-                                &nbsp;Ore:<asp:DropDownList runat="server" ID="calOre" CssClass="dropdown" Width="70px" />
-                                &nbsp;mm:<asp:DropDownList runat="server" ID="calMinuti" CssClass="dropdown"  Width="70px" />
-                                &nbsp;ss:<asp:DropDownList runat="server" ID="calSecondi" CssClass="dropdown" Width="70px" />
+                                &nbsp;<asp:literal runat="server" id="lblOre" Text="<%$Resources:lblOre %>" />:<asp:DropDownList runat="server" ID="calOre" CssClass="dropdown" Width="70px" />
+                                &nbsp;<asp:literal runat="server" id="lblMinuti" Text="<%$Resources:lblMinuti %>" />:<asp:DropDownList runat="server" ID="calMinuti" CssClass="dropdown"  Width="70px" />
+                                &nbsp;<asp:literal runat="server" id="lblSecondi" Text="<%$Resources:lblSecondi %>" />:<asp:DropDownList runat="server" ID="calSecondi" CssClass="dropdown" Width="70px" />
                                 <asp:ImageButton runat="server" ImageUrl="~/img/iconSave.jpg" Height="30" ID="btnSaveDataFineProd" CommandName="SaveData" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") +"/"+ DataBinder.Eval(Container.DataItem, "Year") %>' />
                             </td>
                         </tr>
@@ -142,7 +143,7 @@
         <div class="ui-widget" runat="server" id="dvErr">
 	<div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
 		<p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-		<strong>Attenzione:</strong>&nbsp;<asp:Label runat="server" ID="lblErr" /></p>
+		<strong><asp:literal runat="server" id="lblAttenzione" Text="<%$Resources:lblAttenzione %>" />:</strong>&nbsp;<asp:Label runat="server" ID="lblErr" /></p>
 	</div>
 </div>
 

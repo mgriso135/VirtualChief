@@ -65,7 +65,7 @@ namespace KIS.Processi
             }
             else
             {
-                lbl1.Text = "Errore!";
+                lbl1.Text = GetLocalResourceObject("lblError").ToString();
             }
         }
     }

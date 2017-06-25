@@ -47,13 +47,13 @@ namespace KIS.Admin
             else
             {
                 rptUsers.Visible = false;
-                lblLstUsers.Text = "No user defined yet.<br/>";
+                        lblLstUsers.Text = GetLocalResourceObject("lblNoUsers").ToString();
             }
             }
             }
             else
             {
-                lblLstUsers.Text = "Non hai il permesso di visualizzare l'elenco degli utenti.<br/>";
+                lblLstUsers.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -103,7 +103,7 @@ namespace KIS.Admin
             }
             catch (Exception ex)
             {
-                    lblLstUsers.Text = "Could not save image.<br/>" + savePath + "<br/>" + ex.Message;
+                    lblLstUsers.Text = GetLocalResourceObject("lblErrorSave").ToString()+ " " + savePath + "<br/>" + ex.Message;
             }
 
             // Ora creo il pdf!
@@ -120,7 +120,7 @@ namespace KIS.Admin
             cartPDF.Open();
             iTextSharp.text.Paragraph nome = new iTextSharp.text.Paragraph(usr.name + " " + usr.cognome);
             cartPDF.Add(nome);
-            iTextSharp.text.Paragraph matr = new iTextSharp.text.Paragraph("Matricola: " + matricola + "; User:" + usr.username);
+            iTextSharp.text.Paragraph matr = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblMatricola").ToString() + ": " + matricola + "; "+GetLocalResourceObject("lblUser")+":" + usr.username);
             cartPDF.Add(matr);
             iTextSharp.text.Image bCode = iTextSharp.text.Image.GetInstance(savePath + FileName);
             bCode.SetAbsolutePosition(0, 40);

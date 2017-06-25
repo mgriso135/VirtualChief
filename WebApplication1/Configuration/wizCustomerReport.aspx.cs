@@ -32,8 +32,9 @@ namespace KIS.Configuration
             else
             {
                 frmConfigCustomerReport.Visible = false;
-                lbl1.Text = "Please <a href=\"/Login/login.aspx"
-                    + "?red=/Configuration/wizCustomerReport\">click here</a> to login as Admin User.";
+                lbl1.Text = "<a href=\"/Login/login.aspx"
+                    + "?red=/Configuration/wizCustomerReport\">"+GetLocalResourceObject("lblLnkLogin").ToString()
+                    +".</a>";
             }
         }
     }

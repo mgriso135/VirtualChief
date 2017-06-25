@@ -5,15 +5,15 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
                     <li>
-						<a href="produzione.aspx">Produzione</a>
+						<a href="produzione.aspx"><asp:literal runat="server" ID="lblNavProduzione" Text="<%$Resources:lblNavProduzione %>" /></a>
 						<span class="divider">/</span>
 					</li>
                     <li>
-						<a href="workLoadListReparti.aspx">Capacità produttiva</a>
+						<a href="workLoadListReparti.aspx"><asp:literal runat="server" ID="lblNavCapProd" Text="<%$Resources:lblNavCapProd %>" /></a>
 						<span class="divider">/</span>
 					</li>
                     <li>
-						<a href="<%#Request.RawUrl %>">Capacità produttiva richiesta per reparto</a>
+						<a href="<%#Request.RawUrl %>"><asp:literal runat="server" ID="lblNavCapRichiesta" Text="<%$Resources:lblNavCapRichiesta %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

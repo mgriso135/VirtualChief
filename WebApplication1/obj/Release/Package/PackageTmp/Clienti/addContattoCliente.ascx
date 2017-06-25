@@ -1,21 +1,21 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="addContattoCliente.ascx.cs" Inherits="KIS.Clienti.addContattoCliente" %>
 <asp:Label runat="server" ID="lbl1" />
 
-<asp:ImageButton runat="server" ID="imgViewTableAdd" ImageUrl="~/img/iconAdd2.png" OnClick="addContattoCliente_Click" Height="40" />
+<asp:ImageButton runat="server" ID="imgViewTableAdd" ImageUrl="~/img/iconAdd2.png" OnClick="addContattoCliente_Click" Height="40" ToolTip="<%$Resources:lblTTBtnAdd %>" />
 
 <asp:Table runat="server" ID="tblAddContatto" Visible="false">
     <asp:TableRow>
         <asp:TableCell>
-            Nominativo
+            <asp:Label runat="server" ID="lblNominativo" meta:resourcekey="lblNominativo" />
         </asp:TableCell>
         <asp:TableCell>
             <asp:TextBox runat="server" ID="txtNominativo" ValidationGroup="contatto" />
-            <asp:RequiredFieldValidator runat="server" ID="valNominativo" ControlToValidate="txtNominativo" ForeColor="Red" ValidationGroup="contatto" ErrorMessage="* Campo obbligatorio" />
+            <asp:RequiredFieldValidator runat="server" ID="valNominativo" ControlToValidate="txtNominativo" ForeColor="Red" ValidationGroup="contatto" ErrorMessage="<%$Resources:lblValReqField %>" />
         </asp:TableCell>
     </asp:TableRow>
     <asp:TableRow>
         <asp:TableCell>
-            Ruolo
+            <asp:Label runat="server" ID="lblRuolo" meta:resourcekey="lblRuolo" />
         </asp:TableCell>
         <asp:TableCell>
             <asp:TextBox runat="server" ID="txtRuolo" ValidationGroup="contatto" />

@@ -6,12 +6,11 @@
             <thead>
             <tr>
                 <th></th>
-                <th>ID</th>
-                <th>Data inserimento</th>
-                <th>Cliente</th>
-                <th>Ragione sociale cliente</th>
-                <th>Note</th>
-                <th>Status</th>
+                <th><asp:Label runat="server" id="lblTHIDCommessa" meta:resourcekey="lblTHIDCommessa" /></th>
+                <th><asp:Label runat="server" id="lblTHDataInserimento" meta:resourcekey="lblTHDataInserimento" /></th>
+                <th><asp:Label runat="server" id="lblTHRagSoc" meta:resourcekey="lblTHRagSoc" /></th>
+                <th><asp:Label runat="server" id="lblTHNote" meta:resourcekey="lblTHNote" /></th>
+                <th><asp:Label runat="server" id="lblTHStatus" meta:resourcekey="lblTHStatus" /></th>
                 <th></th>
             </tr>
                 </thead>
@@ -21,16 +20,15 @@
         <tr runat="server" id="tr1">
             <td>
                 <asp:hyperlink runat="server" ID="lnkWizard" NavigateUrl='<%# "~/Commesse/wzAddPERT.aspx?idCommessa=" + DataBinder.Eval(Container.DataItem, "ID") + "&annoCommessa="+ DataBinder.Eval(Container.DataItem, "Year") %>'>
-                <asp:Image runat="server" ID="imgWizard" ImageUrl="/img/iconWizard.png" ToolTip="Prosegui l'inserimento di articoli tramite wizard" Height="40" />
+                <asp:Image runat="server" ID="imgWizard" ImageUrl="/img/iconWizard.png" ToolTip="<%$Resources:lblTTGoWizard %>" Height="40" />
                     </asp:hyperlink>
                 <asp:hyperlink runat="server" ID="lnkLinkArticoli" NavigateUrl='<%# "~/Commesse/linkArticoliToCommessa.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno="+ DataBinder.Eval(Container.DataItem, "Year") %>'>
                 
-                <asp:Image runat="server" ID="imgLnkArticoli" ImageUrl="/img/iconCart1.jpg" ToolTip="Assegna articoli all'ordine" Height="40" />
+                <asp:Image runat="server" ID="imgLnkArticoli" ImageUrl="/img/iconCart1.jpg" ToolTip="<%$Resources:lblTTAddProdotti %>" Height="40" />
                 </asp:hyperlink></td>
             
             <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
             <td><%#((DateTime)DataBinder.Eval(Container.DataItem, "DataInserimento")) %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "RagioneSocialeCliente") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Note") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Status") %></td>

@@ -13,6 +13,24 @@ namespace KIS.Clienti {
     public partial class EditContattoDetails1 {
         
         /// <summary>
+        /// Controllo jsFireConfirm.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal jsFireConfirm;
+        
+        /// <summary>
+        /// Controllo lblTitleDettagliContatto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleDettagliContatto;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>
@@ -31,6 +49,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblContatto;
         
         /// <summary>
+        /// Controllo lblNominativo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNominativo;
+        
+        /// <summary>
         /// Controllo txtNominativo.
         /// </summary>
         /// <remarks>
@@ -47,6 +74,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valNome;
+        
+        /// <summary>
+        /// Controllo lblRuolo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRuolo;
         
         /// <summary>
         /// Controllo txtRuolo.
@@ -76,6 +112,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.ImageButton btnUndo;
         
         /// <summary>
+        /// Controllo lblNumPhone.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNumPhone;
+        
+        /// <summary>
         /// Controllo btnShowAddPhone.
         /// </summary>
         /// <remarks>
@@ -94,6 +139,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddPhone;
         
         /// <summary>
+        /// Controllo lblNumPhone2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNumPhone2;
+        
+        /// <summary>
         /// Controllo txtNewPhone.
         /// </summary>
         /// <remarks>
@@ -110,6 +164,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valNewPhone;
+        
+        /// <summary>
+        /// Controllo lblNote.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNote;
         
         /// <summary>
         /// Controllo txtNoteNewPhone.
@@ -148,6 +211,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.WebControls.Repeater rptPhones;
         
         /// <summary>
+        /// Controllo lblTitleEmails.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleEmails;
+        
+        /// <summary>
         /// Controllo btnShowAddEmail.
         /// </summary>
         /// <remarks>
@@ -166,6 +238,15 @@ namespace KIS.Clienti {
         protected global::System.Web.UI.HtmlControls.HtmlTable frmAddEmail;
         
         /// <summary>
+        /// Controllo lblEmailAddr.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEmailAddr;
+        
+        /// <summary>
         /// Controllo txtNewMail.
         /// </summary>
         /// <remarks>
@@ -182,6 +263,15 @@ namespace KIS.Clienti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valMail;
+        
+        /// <summary>
+        /// Controllo lblNote3.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNote3;
         
         /// <summary>
         /// Controllo txtNoteNewMail.

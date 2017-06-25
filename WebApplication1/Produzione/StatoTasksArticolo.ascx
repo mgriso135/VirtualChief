@@ -8,10 +8,10 @@
             <HeaderTemplate>
                 <table style="border:1px dashed blue">
                     <tr style="font-family: Calibri; font-size: 18px; font-weight: bold;">
-                        <td>ID</td>
-                        <td>Nome</td>
-                        <td>Status</td>
-                        <td>Postazione</td>
+                        <td><asp:Literal runat="server" ID="lblTHID" Text="<%$Resources:lblTHID %>" /></td>
+                        <td><asp:Literal runat="server" ID="lblTHNome" Text="<%$Resources:lblTHNome %>" /></td>
+                        <td><asp:Literal runat="server" ID="lblTHStatus" Text="<%$Resources:lblTHStatus %>" /></td>
+                        <td><asp:Literal runat="server" ID="lblTHPostazione" Text="<%$Resources:lblTHPostazione %>" /></td>
                     </tr>
             </HeaderTemplate>
             <ItemTemplate>

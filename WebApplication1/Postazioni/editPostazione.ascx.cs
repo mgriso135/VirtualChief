@@ -56,7 +56,7 @@ namespace KIS.Postazioni
             }
             else
             {
-                err.Text = "Errore: non hai i permessi necessari per modificare la postazione.<br/>";
+                err.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 postDesc.Visible = false;
                 postName.Visible = false;
                 save.Visible = false;
@@ -77,12 +77,12 @@ namespace KIS.Postazioni
                 }
                 else
                 {
-                    err.Text = "Errore!<br/>";
+                    err.Text = "Error!<br/>";
                 }
             }
             else
             {
-                err.Text = "Errore!<br/>";
+                err.Text = "Error!<br/>";
             }
         }
 
@@ -98,12 +98,12 @@ namespace KIS.Postazioni
                 }
                 else
                 {
-                    err.Text = "Errore!<br/>";
+                    err.Text = "Error!<br/>";
                 }
             }
             else
             {
-                err.Text = "Errore!<br/>";
+                err.Text = "Error!<br/>";
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="operatorePostazioniAttive.ascx.cs" Inherits="KIS.Operatori.operatorePostazioniAttive" %>
 
-<h3>Postazioni di lavoro attive</h3>
+<h3><asp:Literal runat="server" ID="lblTitlePostazioniAttive" Text="<%$Resources:lblTitlePostazioniAttive %>" /></h3>
 
 
 <asp:UpdatePanel runat="server" ID="upd1" UpdateMode="Conditional">
@@ -11,20 +11,20 @@
         <table class="table table-striped table-hover table-condensed">
             <thead>
             <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>Altri utenti in postazione</td>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th><asp:Literal runat="server" ID="lblAltriUtenti" Text="<%$Resources:lblAltriUtenti %>" /></th>
             </tr>
                 </thead>
             <tbody>
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1" style="border: 1px dashed groove; font-size:16px; font-family: Calibri;">
-            <td><asp:ImageButton runat="server" ID="btnCheckOut" CommandName="checkOut" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>' ImageUrl="/img/iconCheckIn5.jpg" ToolTip="Esci dalla postazione di lavoro" Height="40" /></td>
+            <td><asp:ImageButton runat="server" ID="btnCheckOut" CommandName="checkOut" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>' ImageUrl="/img/iconCheckIn5.jpg" ToolTip="<%$Resources:lblEsciDaPost %>" Height="40" /></td>
             <td><asp:HyperLink runat="server" ID="lnkGOTOWORK" NavigateUrl='<%# "doTasksPostazione.aspx?id=" + DataBinder.Eval(Container.DataItem, "id") %>'>
-                <asp:Image runat="server" ID="btnWork" ImageUrl="/img/iconTask2.jpg"  Height="40" ToolTip="Esegui i task assegnati alla postazione" />
+                <asp:Image runat="server" ID="btnWork" ImageUrl="/img/iconTask2.jpg"  Height="40" ToolTip="<%$Resources:lblEseguiTasks %>" />
                 </asp:HyperLink>
             </td>
             <td><asp:HiddenField runat="server" ID="id" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />

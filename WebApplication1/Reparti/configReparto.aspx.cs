@@ -19,7 +19,6 @@ namespace KIS.configReparto
                 configCadenza.Visible = false;
                 configTurni.Visible = false;
                 configSplitTasksTurni.Visible = false;
-                configAnticipoMinimoTasks.Visible = false;
                 frmPersonale.Visible = false;
                 accordion1.Visible = false;
             }
@@ -55,7 +54,7 @@ namespace KIS.configReparto
                     //configProcessiVarianti.repID = rep.id;
                     configSplitTasksTurni.Visible = true;
                     configSplitTasksTurni.idReparto = rep.id;
-                    configAnticipoMinimoTasks.repID = rep.id;
+                    //configAnticipoMinimoTasks.repID = rep.id;
                     //configAnticipoMinimoTasks.Visible = true;
                     frmPersonale.Visible = true;
                     frmPersonale.idReparto = rep.id;
@@ -91,7 +90,7 @@ namespace KIS.configReparto
                 }
                 else
                 {
-                    lbl1.Text = "Non riesco a trovare il reparto che mi hai indicato.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrorRepNotFound").ToString();
                     lblTitle.Visible = false;
                     listReparti.Visible = false;
                     configCadenza.Visible = false;
@@ -103,8 +102,6 @@ namespace KIS.configReparto
                     //configProcessiVarianti.Visible = false;
                     configSplitTasksTurni.Visible = false;
                     configSplitTasksTurni.idReparto = -1;
-                    configAnticipoMinimoTasks.Visible = false;
-                    configAnticipoMinimoTasks.repID = -1;
                     frmPersonale.Visible = false;
                     frmPersonale.idReparto = -1;
                     frmEvWarning.Visible = false;
@@ -134,8 +131,6 @@ namespace KIS.configReparto
                 //configProcessiVarianti.repID = -1;
                 configSplitTasksTurni.Visible = false;
                 configSplitTasksTurni.idReparto = -1;
-                configAnticipoMinimoTasks.Visible = false;
-                configAnticipoMinimoTasks.repID = -1;
                 frmPersonale.Visible = false;
                 frmPersonale.idReparto = -1;
                 frmEvRitardo.Visible = false;

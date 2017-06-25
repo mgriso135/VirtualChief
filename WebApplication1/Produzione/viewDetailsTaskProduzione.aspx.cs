@@ -31,19 +31,19 @@ namespace KIS.Produzione
                     }
                     else
                     {
-                        lbl1.Text = "Task non trovato.";
+                        lbl1.Text = GetLocalResourceObject("lblTaskNotFound").ToString();
                         frmViewDetails.Visible = false;
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore nella conversione dell'id.";
+                    lbl1.Text = GetLocalResourceObject("lblErrorID").ToString();
                     frmViewDetails.Visible = false;
                 }
             }
             else
             {
-                lbl1.Text = "ID non trovato.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblErrorID").ToString(); 
                 frmViewDetails.Visible = false;
             }
         }

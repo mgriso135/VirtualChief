@@ -13,6 +13,24 @@ namespace KIS.Commesse {
     public partial class wzEditPERT {
         
         /// <summary>
+        /// Controllo lblTitleNewOrder.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleNewOrder;
+        
+        /// <summary>
+        /// Controllo lblNewOrder.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNewOrder;
+        
+        /// <summary>
         /// Controllo lnkAddPert.
         /// </summary>
         /// <remarks>
@@ -22,6 +40,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.HyperLink lnkAddPert;
         
         /// <summary>
+        /// Controllo lblDescProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescProd;
+        
+        /// <summary>
         /// Controllo lnkEditPert.
         /// </summary>
         /// <remarks>
@@ -29,6 +56,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkEditPert;
+        
+        /// <summary>
+        /// Controllo lblDescProcess.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescProcess;
         
         /// <summary>
         /// Controllo lbl1.

@@ -6,19 +6,27 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx">
+                            <asp:Label runat="server" ID="lblNavAnalisiDati" meta:resourcekey="lblNavAnalisiDati" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="ReportCustomerProdProgress_chooseCustomer.aspx">Report avanzamento prodotti per cliente</a>
+						<a href="ReportCustomerProdProgress_chooseCustomer.aspx">
+                            <asp:Label runat="server" ID="lblNavReportAvanProd" meta:resourcekey="lblNavReportAvanProd" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<asp:hyperlink NavigateUrl="ReportCustomerProdProgress_chooseINPProducts.aspx" runat="server" id="lnkProdReportINP">Seleziona i prodotti da inserire nel report</asp:hyperlink>
+						<asp:hyperlink NavigateUrl="ReportCustomerProdProgress_chooseINPProducts.aspx" runat="server" id="lnkProdReportINP">
+                            <asp:Label runat="server" ID="lblNavChooseProds" meta:resourcekey="lblNavChooseProds" />
+                            </asp:hyperlink>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<asp:hyperlink NavigateUrl="ReportCustomerProdProgress_chooseFProducts.aspx" runat="server" id="lnkProdReportF">Seleziona i prodotti finiti da inserire nel report</asp:hyperlink>
+						<asp:hyperlink NavigateUrl="ReportCustomerProdProgress_chooseFProducts.aspx" runat="server" id="lnkProdReportF">
+                            <asp:Label runat="server" ID="lblNavChooseProdsF" meta:resourcekey="lblNavChooseProdsF" />
+                            </asp:hyperlink>
 						<span class="divider">/</span>
 					</li>
 				</ul>

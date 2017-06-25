@@ -40,6 +40,33 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblNavProduzione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavProduzione;
+        
+        /// <summary>
+        /// Controllo lblNavAndonCompleto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAndonCompleto;
+        
+        /// <summary>
+        /// Controllo lblNavAndonCompleto1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNavAndonCompleto1;
+        
+        /// <summary>
         /// Controllo frmListWarningAperti.
         /// </summary>
         /// <remarks>
@@ -65,6 +92,15 @@ namespace KIS.Produzione {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel updStatoArticoli;
+        
+        /// <summary>
+        /// Controllo lblTitleArticoliDaAvviare.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleArticoliDaAvviare;
         
         /// <summary>
         /// Controllo lbl1.

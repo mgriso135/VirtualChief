@@ -216,7 +216,9 @@ namespace KIS.Analysis
                                              Anno = g.Key.Year,
                                          };
 
-                rptGiorniPresenza.DataSource = listGiorniPresenza;
+                var listGiorniPresenza2 = listGiorniPresenza.OrderBy(x => x.Anno).ThenBy(y => y.Mese).ThenBy(z => z.Giorno);
+
+                rptGiorniPresenza.DataSource = listGiorniPresenza2;
                 rptGiorniPresenza.DataBind();
 
                 var listProdotto = from lst in listaIntervalli

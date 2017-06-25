@@ -41,7 +41,7 @@ namespace KIS.Produzione
             else
             {
                 tblResolution.Visible = false;
-                lbl1.Text = "Non hai il permesso di registrare la risoluzione di un problema.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -53,9 +53,9 @@ namespace KIS.Produzione
 
         protected void imgSave_Click(object sender, ImageClickEventArgs e)
         {
-            lbl1.Text = "Salvo.";
+            lbl1.Text = GetLocalResourceObject("lblSave").ToString();
             Warning wrn = new Warning(idWarning);
-            wrn.DataRisoluzione = DateTime.Now;
+            wrn.DataRisoluzione = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario()).tzFusoOrario);
             wrn.MotivoChiamata = Server.HtmlEncode(txtCausa.Text);
             wrn.Risoluzione = Server.HtmlEncode(txtRisoluzione.Text);
             txtRisoluzione.Enabled = false;

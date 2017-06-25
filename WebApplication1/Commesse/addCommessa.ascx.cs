@@ -30,14 +30,14 @@ namespace KIS.Commesse
                     frmAddCommessa.Visible = false;
                     KIS.App_Code.PortafoglioClienti elencoClienti = new App_Code.PortafoglioClienti();
                     ddlCliente.DataSource = elencoClienti.Elenco;
-                    ddlCliente.DataTextField = "CodiceCliente";
+                    ddlCliente.DataTextField = "RagioneSociale";
                     ddlCliente.DataValueField = "CodiceCliente";
                     ddlCliente.DataBind();
                 }
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di aggiungere commesse.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddCommessa.Visible = false;
                 btnShowFrmAddCommessa.Visible = false;
             }

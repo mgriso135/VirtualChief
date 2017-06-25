@@ -34,8 +34,8 @@ namespace KIS.Postazioni
                 {
                     if (!Page.IsPostBack)
                     {
-                        Inizio = DateTime.Now;
-                        Fine = DateTime.Now.AddDays(7);
+                        Inizio = DateTime.UtcNow;
+                        Fine = DateTime.UtcNow.AddDays(7);
                         pst.loadCalendario(Inizio, Fine);
                         loadCal(Inizio, Fine, pst);
                     }
@@ -47,7 +47,7 @@ namespace KIS.Postazioni
             }
             else
             {
-                lbl1.Text = "Errore: non hai il permesso di visualizzare il calendario di postazione.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 wlPostazione.Visible = false;
                 frmCalInizioFine.Visible = false;
             }
@@ -98,7 +98,7 @@ namespace KIS.Postazioni
                     }
                     wlPostazione.Series["int" + i.ToString()].Points.AddXY(f2.ToOADate(), 50);
                     Reparto rp = new Reparto(p.Calendario.Intervalli[i].idReparto);
-                    wlPostazione.Series["int" + i.ToString()].ToolTip = "Reparto " + rp.name + " " + p.Calendario.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm") + " - " + p.Calendario.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm");
+                    wlPostazione.Series["int" + i.ToString()].ToolTip = GetLocalResourceObject("lblReparto").ToString() + " " + rp.name + " " + p.Calendario.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm") + " - " + p.Calendario.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm");
                 }
             }
 
@@ -126,7 +126,7 @@ namespace KIS.Postazioni
                 TaskProduzione tsk = new TaskProduzione(p.Calendario.IntervalliTaskProduzione[i].TaskProduzioneID);
                 Articolo art = new Articolo(tsk.ArticoloID, tsk.ArticoloAnno);
                 Commessa cm = new Commessa(art.Commessa, art.AnnoCommessa);
-                wlPostazione.Series["tsk" + i.ToString()].ToolTip = "Commessa " + cm.ID + " " + cm.Cliente + " Articolo: " + art.ID + " " + art.Matricola + " Task: " + tsk.Name + " " + p.Calendario.IntervalliTaskProduzione[i].Inizio.ToString("dd/MM/yyyy HH:mm") + " - " + p.Calendario.IntervalliTaskProduzione[i].Fine.ToString("dd/MM/yyyy HH:mm");
+                wlPostazione.Series["tsk" + i.ToString()].ToolTip = GetLocalResourceObject("lblOrdine").ToString()+" " + cm.ID + " " + cm.Cliente + " Articolo: " + art.ID + " " + art.Matricola + " Task: " + tsk.Name + " " + p.Calendario.IntervalliTaskProduzione[i].Inizio.ToString("dd/MM/yyyy HH:mm") + " - " + p.Calendario.IntervalliTaskProduzione[i].Fine.ToString("dd/MM/yyyy HH:mm");
             }
         }
 

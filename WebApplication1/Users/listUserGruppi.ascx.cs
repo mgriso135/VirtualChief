@@ -17,7 +17,7 @@ namespace KIS.Users
                 User usr = new User(userID);
                 if (usr.username.Length > 0)
                 {
-                    lblNome.Text = "Gruppi di " + usr.name + " " + usr.cognome;
+                    lblNome.Text = GetLocalResourceObject("lblTitle1").ToString() + " " + usr.name + " " + usr.cognome;
                     GroupList grpList = new GroupList();
                     rptGruppi.DataSource = grpList.Elenco;
                     rptGruppi.DataBind();
@@ -26,7 +26,7 @@ namespace KIS.Users
                 {
                     lblNome.Visible = false;
                     rptGruppi.Visible = false;
-                    lbl1.Text = "Errore<br />";
+                    lbl1.Text = GetLocalResourceObject("lblErrore").ToString();
                 }
             }
         }
@@ -45,7 +45,7 @@ namespace KIS.Users
                 catch
                 {
                     gruppo = -1;
-                    lbl1.Text = "Errore nel cast.<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrore").ToString();
                 }
 
                 if (gruppo != -1)
@@ -140,7 +140,7 @@ namespace KIS.Users
             }
             else
             {
-                lbl1.Text = "Errore.<br />";
+                lbl1.Text = GetLocalResourceObject("lblErrore").ToString();
             }
         }
     }

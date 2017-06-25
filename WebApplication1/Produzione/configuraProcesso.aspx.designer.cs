@@ -13,6 +13,33 @@ namespace KIS.Produzione {
     public partial class configuraProcesso {
         
         /// <summary>
+        /// Controllo lblNavProduzione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavProduzione;
+        
+        /// <summary>
+        /// Controllo lblNavNuoveCommesse.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavNuoveCommesse;
+        
+        /// <summary>
+        /// Controllo lblNavInserimentoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNavInserimentoProd;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>

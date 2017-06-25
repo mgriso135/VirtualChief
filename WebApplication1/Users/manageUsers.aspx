@@ -10,9 +10,9 @@
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx"><asp:Literal runat="server" ID="lblNavAdmin" Text="<%$Resources:lblNavAdmin %>" /></a>
 						<span class="divider">/</span>
-						<a href="manageUsers.aspx">Gestione utenti</a>
+						<a href="manageUsers.aspx"><asp:Literal runat="server" ID="lblGestUsers" Text="<%$Resources:lblGestUsers %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

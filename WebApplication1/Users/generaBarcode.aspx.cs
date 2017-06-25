@@ -61,7 +61,8 @@ namespace KIS.Users
                     }
                     catch(Exception ex)
                     {
-                        lbl1.Text = "Could not save image.<br/>" + savePath + "<br/>" + ex.Message;
+                        lbl1.Text = GetLocalResourceObject("lblErrorSaveImage").ToString()+ " " 
+                            + savePath + "<br/>" + ex.Message;
                     }
                     
                     // Ora creo il pdf!
@@ -78,7 +79,8 @@ namespace KIS.Users
                     cartPDF.Open();
                     iTextSharp.text.Paragraph nome = new iTextSharp.text.Paragraph(usr.name + " " + usr.cognome);
                     cartPDF.Add(nome);
-                    iTextSharp.text.Paragraph matr = new iTextSharp.text.Paragraph("Matricola: " + matricola + "; User:" + usr.username);
+                    iTextSharp.text.Paragraph matr = new iTextSharp.text.Paragraph(GetLocalResourceObject("lblMatricola").ToString() 
+                        + ": " + matricola + "; "+GetLocalResourceObject("lblUser")+":" + usr.username);
                     cartPDF.Add(matr);
                     iTextSharp.text.Image bCode = iTextSharp.text.Image.GetInstance(savePath + FileName);
                     bCode.SetAbsolutePosition(0, 40);
@@ -94,28 +96,17 @@ namespace KIS.Users
                     {
                     }
 
-                    lbl1.Text = "<a href=\"manageUsers.aspx\">Torna indietro</a>";
-
-                    /*String redUrl = "~/";
-                    if (!String.IsNullOrEmpty(Request.QueryString["red"]) && (Request.QueryString["red"]).Length > 0)
-                    {
-                        redUrl = Request.QueryString["red"] + ".aspx";
-                    }
-                    else
-                    {
-                        redUrl = "/Users/manageUsers.aspx";
-                    }
-                    Response.Redirect(redUrl);*/
+                    lbl1.Text = "<a href=\"manageUsers.aspx\">"+GetLocalResourceObject("lblGoBack").ToString()+"</a>";
 
                 }
                 else
                 {
-                    lbl1.Text = "Data not found.<br/>";
+                    lbl1.Text = GetLocalResourceObject("lblErrorNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Non dovresti nemmeno essere qui, non hai il permesso di generare il barcode.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
 
         }

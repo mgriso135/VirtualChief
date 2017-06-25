@@ -14,7 +14,7 @@
             <td><%#DataBinder.Eval(Container.DataItem, "Description") %></td>
             <td>
                 <asp:HyperLink runat="server" ID="lnkProcPostazione" NavigateUrl='<%# "/Reparti/managePostazioni.aspx?processID=" %>'>
-                <asp:Image runat="server" ID="imgLnkProcTaskPostazione" ToolTip="Associa i task del processo alla postazione di lavoro" ImageUrl="/img/iconToolbox.jpg" Height="40" />
+                <asp:Image runat="server" ID="imgLnkProcTaskPostazione" ToolTip="<%$Resources:lblTTAssociaTask %>" ImageUrl="/img/iconToolbox.jpg" Height="40" />
                     </asp:HyperLink>
             </td>
         </tr>

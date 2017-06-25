@@ -50,12 +50,12 @@ namespace KIS.Postazioni
                 }
                 else
                 {
-                    lbl1.Text = "Errore: postazione non trovata.";
+                    lbl1.Text = GetLocalResourceObject("lblPostazioneNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: non hai i permessi necessari per gestire le risorse della postazione.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -129,23 +129,23 @@ namespace KIS.Postazioni
                         RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(pst, trn);
                         resPost.NumRisorse = numRes;
                         ddlRisorse.SelectedValue = resPost.NumRisorse.ToString();
-                        lbl1.Text = "Aggiornamento risorse (" + resPost.NumRisorse.ToString()
-                            + ") per la postazione " + pst.name + ", turno " + trn.Nome
-                            + " effettuato con successo.";
+                        lbl1.Text = GetLocalResourceObject("lblAggRisorse").ToString() + " (" + resPost.NumRisorse.ToString()
+                            + ") "+ GetLocalResourceObject("lblAggRisorse2").ToString() +" " + pst.name + ", turno " + trn.Nome
+                            + " " + GetLocalResourceObject("lblAggRisorse3").ToString();
                     }
                     else
                     {
-                        lbl1.Text = "Errore: turno non trovato.";
+                        lbl1.Text = GetLocalResourceObject("lblTurnoNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: postazione non trovata.";
+                    lbl1.Text = GetLocalResourceObject("lblPostazioneNotFound").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore nei dati di input.";
+                lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
             }
 
                 

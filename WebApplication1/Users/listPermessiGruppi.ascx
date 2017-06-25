@@ -8,11 +8,11 @@
     <HeaderTemplate><table class="table table-hover table-striped">
         <thead>
         <tr>
-            <td></td>
-            <td></td>
-            <td>Read</td>
-            <td>Write</td>
-            <td>Execute</td>
+            <th></th>
+            <th></th>
+            <th><asp:Literal runat="server" ID="lblRead" Text="<%$Resources:lblRead %>" /></th>
+            <th><asp:Literal runat="server" ID="lblWrite" Text="<%$Resources:lblWrite %>" /></th>
+            <th><asp:Literal runat="server" ID="lblExecute" Text="<%$Resources:lblExecute %>" /></th>
         </tr>
             </thead><tbody>
             </HeaderTemplate>

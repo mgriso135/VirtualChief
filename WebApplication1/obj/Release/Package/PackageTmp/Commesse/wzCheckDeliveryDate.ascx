@@ -2,7 +2,7 @@
 
   <script type="text/javascript">
     function FireConfirm() {
-        if (confirm('Stai per lanciare il prodotto in produzione. Nessuna ulteriore modifica sarà possibile. Vuoi proseguire?'))
+        if (confirm('<asp:literal runat="server" text="<%$Resources:lblConfirmLaunch%>"/>'))
             return true;
         else
             return false;
@@ -19,12 +19,11 @@
                 </asp:HyperLink>
         </td>
     <td style="vertical-align: top; text-align:center;">
-
-    Data di fine produzione:&nbsp;<asp:calendar runat="server" id="calFineProd" Width="100px"  />
+        <asp:Label runat="server" ID="lblDataFineProd" Text="<%$Resources:lblDataFineProd %>" />:&nbsp;<asp:calendar runat="server" id="calFineProd" Width="100px"  />
           <br />
-          Ore:<asp:DropDownList runat="server" ID="calOre" CssClass="dropdown" Width="70px" />
-          &nbsp;mm:<asp:DropDownList runat="server" ID="calMinuti" CssClass="dropdown"  Width="70px" />
-          &nbsp;ss:<asp:DropDownList runat="server" ID="calSecondi" CssClass="dropdown" Width="70px" />
+          <asp:Label runat="server" ID="lblOre" Text="<%$Resources:lblOre %>" />:<asp:DropDownList runat="server" ID="calOre" CssClass="dropdown" Width="70px" />
+          &nbsp;<asp:Label runat="server" ID="lblMinuti" Text="<%$Resources:lblMinuti %>" />:<asp:DropDownList runat="server" ID="calMinuti" CssClass="dropdown"  Width="70px" />
+          &nbsp;<asp:Label runat="server" ID="lblSecondi" Text="<%$Resources:lblSecondi %>" />:<asp:DropDownList runat="server" ID="calSecondi" CssClass="dropdown" Width="70px" />
         <br />
         <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="40" OnClick="btnSave_Click" />
 </td>

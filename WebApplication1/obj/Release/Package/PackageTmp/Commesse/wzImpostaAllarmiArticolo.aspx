@@ -7,46 +7,47 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Wizard: nuovo prodotto su commessa</h1>
+    <h1><asp:Label runat="server" ID="lblTitleWizNewOrder" Text="<%$Resources:lblTitleWizNewOrder %>" /></h1>
     <ul class="breadcrumb hidden-phone">
 		 <li>
-		    <a href="wzAddCommessa.aspx">Nuova commessa</a>
+		    <a href="wzAddCommessa.aspx"><asp:Label runat="server" ID="lblNewOrder" Text="<%$Resources:lblNewOrder %>" /></a>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" id="lnkAddPert">Descrivi il prodotto</asp:hyperlink>
+		    <asp:hyperlink runat="server" id="lnkAddPert"><asp:Label runat="server" ID="lblDescProd" Text="<%$Resources:lblDescProd %>" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink ID="lnkEditPert" runat="server">Descrivi il processo produttivo</asp:hyperlink>
+		    <asp:hyperlink ID="lnkEditPert" runat="server" Text="<%$Resources:lblDescProcesso %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaReparto">Seleziona il reparto produttivo</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaReparto" Text="<%$Resources:lblSelReparto %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaTasks">Associa i tasks alle postazioni</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaTasks" Text="<%$Resources:lblLinkTasksPostazioni %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkDataConsegna">Data di consegna richiesta</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkDataConsegna" Text="<%$Resources:lblDataConsegna %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-            <asp:HyperLink runat="server" ID="lnkLancio">
-		    Lancio in produzione</asp:HyperLink>
+            <asp:HyperLink runat="server" ID="lnkLancio" Text="<%$Resources:lblLancioInProduzione %>"></asp:HyperLink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:HyperLink runat="server" ID="lnkImpostaAllarmi"><b style="font-size: 14px;">Imposta allarmi per l'articolo</b></asp:HyperLink>
+		    <asp:HyperLink runat="server" ID="lnkImpostaAllarmi"><b style="font-size: 14px;">
+                <asp:Label runat="server" ID="lblImpostaAllarmi" Text="<%$Resources:lblImpostaAllarmi %>" />
+                </b></asp:HyperLink>
 			<span class="divider">/</span>
 	    </li>
 	</ul>
     <div class="row-fluid">
         <div class="span9">
     <asp:Image runat="server" ID="imgTick" ImageUrl="~/img/iconComplete.png" Height="40" />
-        Il prodotto è stato lanciato correttamente in produzione.
+            <asp:Label runat="server" ID="Label1" Text="<%$Resources:lblLancioOk %>" />
             </div>
         <div class="span3">
             <Wizard:InfoPanel runat="server" ID="InfoPanel" />
@@ -57,7 +58,8 @@
             <Wizard:PrintBarcodes runat="server" id="frmPrintBarcodes" />
             </div>
         </div>
-    <asp:imagebutton OnClick="lnkShowTabAlarms_Click" runat="server" id="lnkShowTabAlarms" ImageUrl="~/img/iconAdd2.png" Height="40"/>Imposta gli allarmi per il prodotto
+    <asp:imagebutton OnClick="lnkShowTabAlarms_Click" runat="server" id="lnkShowTabAlarms" ImageUrl="~/img/iconAdd2.png" Height="40"/>
+    <asp:Label runat="server" ID="lblImpostaAllarmi2" Text="<%$Resources:lblImpostaAllarmi %>" />
      <table runat="server" id="tblAlarms">
         <tr>
             <td><articolo:allarmeRitardo runat="server" id="frmRitardo" /></td>
@@ -69,5 +71,6 @@
     <br />
     <asp:HyperLink runat="server" ID="lnkNewProd">
     <asp:Image runat="server" ID="imgNuovoArticolo" ImageUrl="~/img/iconProductionPlan.png" Height="40" />
-        Aggiungi un altro prodotto alla commessa</asp:HyperLink>
+        <asp:Label runat="server" ID="lblAddProdotto" Text="<%$Resources:lblAddProdotto %>" />
+        </asp:HyperLink>
 </asp:Content>

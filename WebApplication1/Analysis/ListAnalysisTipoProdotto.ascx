@@ -7,7 +7,7 @@
             <thead>
             <tr>
                 <th></th>
-                <th>Tipo di prodotto</th>
+                <th><asp:label runat="server" id="lblTHTipoProdotto" meta:resourcekey="lblTHTipoProdotto" /></th>
             </tr>
                 </thead>
             <tbody>

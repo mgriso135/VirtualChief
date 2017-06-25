@@ -36,39 +36,38 @@ namespace KIS.Login
                             mMessage.To.Add(new MailAddress(curr.Email[q].Email));
                         }
                         mMessage.Bcc.Add("tools@kaizenpeople.it");
-                        mMessage.Subject = "KIS - Recupero password";
+                        mMessage.Subject = GetLocalResourceObject("lblMailSubj").ToString();
                         mMessage.IsBodyHtml = true;
 
-                        mMessage.Body = "Tu, o qualcuno per conto tuo, ha richiesto l'invio della tua password.<br/>"
-                            + "Per motivi di sicurezza l'invio della vecchia password non è possibile e quindi è stata resettata."
-                            + " Inoltre questa viene inviata esclusivamente ai tuoi indirizzi e-mail.<br />"
-                            + "La tua nuova password è: " + newPass + "<br/><br/><br/>KIS Robot";
+                        mMessage.Body = GetLocalResourceObject("lblMailBody1").ToString()
+                            +GetLocalResourceObject("lblMailBody2").ToString() +": " + newPass + "<br/><br/><br/>KIS Robot";
                         SmtpClient smtpcli = new SmtpClient();
                         try
                         {
                             smtpcli.Send(mMessage);
-                            lbl1.Text = "Abbiamo inviato l'informazione richiesta al tuo indirizzo e-mail.<br />";
+                            lbl1.Text = GetLocalResourceObject("lblMailSent").ToString();
                         }
                         catch
                         {
-                            lbl1.Text = "E' avvenuto un errore imprevisto. Verificare lo username o gli indirizzi e-mail inseriti e riprovare.<br />";
+                            lbl1.Text = GetLocalResourceObject("lblMailKO").ToString();
                         }
 
 
                     }
                     else
                     {
-                        lbl1.Text = "Errore generico.<br/>";
+                        lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Attenzione: non hai impostato nessun indirizzo e-mail per questo utente, quindi non è possibile resettare la password. Contatta il tuo amministratore di sistema.<br />";
+                    lbl1.Text = GetLocalResourceObject("lblNoMailAddress").ToString();
                 }
             }
             else
             {
                 lbl1.Text = "Errore generico.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblGenericError").ToString();
             }
             txtUsername.Text = "";
         }

@@ -8,22 +8,26 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
         <li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx">
+                            <asp:Label runat="server" ID="lblNavAdmin" meta:resourcekey="lblNavAdmin" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 					<li>
-						<a href="configAndonCompleto.aspx">Configurazione Andon Completo</a>
+						<a href="configAndonCompleto.aspx">
+                            <asp:Label runat="server" ID="lblNavAndonCfg" meta:resourcekey="lblNavAndonCfg" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <h3>Configurazione Andon Completo</h3>
+    <h3><asp:Label runat="server" ID="lblNavAndonCfg2" meta:resourcekey="lblNavAndonCfg" /></h3>
     <asp:Label runat="server" ID="lbl1" />
 
     <div class="accordion" id="accordion1" runat="server">
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Modalità di visualizzazione degli utenti nelle postazioni
+          <asp:Label runat="server" ID="lblAccVisUtenti" meta:resourcekey="lblAccVisUtenti" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -35,7 +39,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Campi da visualizzare
+          <asp:Label runat="server" ID="lblAccVisCampiAndon" meta:resourcekey="lblAccVisCampiAndon" />
       </a>
     </div>
             <div id="collapseTwo" class="accordion-body collapse">

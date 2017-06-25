@@ -13,6 +13,15 @@ namespace KIS.Configuration {
     public partial class configurationStatus {
         
         /// <summary>
+        /// Controllo lblTitleCfgKIS.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleCfgKIS;
+        
+        /// <summary>
         /// Controllo Image5.
         /// </summary>
         /// <remarks>
@@ -20,6 +29,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image5;
+        
+        /// <summary>
+        /// Controllo lblAdmin.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAdmin;
         
         /// <summary>
         /// Controllo adminOK.
@@ -49,6 +67,15 @@ namespace KIS.Configuration {
         protected global::System.Web.UI.WebControls.Image Image1;
         
         /// <summary>
+        /// Controllo lblLogo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblLogo;
+        
+        /// <summary>
         /// Controllo logoOK.
         /// </summary>
         /// <remarks>
@@ -74,6 +101,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image6;
+        
+        /// <summary>
+        /// Controllo lblTimezone.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTimezone;
         
         /// <summary>
         /// Controllo timezoneOK.
@@ -103,6 +139,15 @@ namespace KIS.Configuration {
         protected global::System.Web.UI.WebControls.Image Image2;
         
         /// <summary>
+        /// Controllo lblReparti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblReparti;
+        
+        /// <summary>
         /// Controllo repartoOK.
         /// </summary>
         /// <remarks>
@@ -128,6 +173,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image3;
+        
+        /// <summary>
+        /// Controllo lblPostazioni.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblPostazioni;
         
         /// <summary>
         /// Controllo PostazioniOK.
@@ -157,6 +211,15 @@ namespace KIS.Configuration {
         protected global::System.Web.UI.WebControls.Image Image4;
         
         /// <summary>
+        /// Controllo lblUtenti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblUtenti;
+        
+        /// <summary>
         /// Controllo UtentiOK.
         /// </summary>
         /// <remarks>
@@ -184,6 +247,15 @@ namespace KIS.Configuration {
         protected global::System.Web.UI.WebControls.Image Image7;
         
         /// <summary>
+        /// Controllo lblAndon.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAndon;
+        
+        /// <summary>
         /// Controllo andonOK.
         /// </summary>
         /// <remarks>
@@ -209,6 +281,15 @@ namespace KIS.Configuration {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Image Image8;
+        
+        /// <summary>
+        /// Controllo lblReport.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblReport;
         
         /// <summary>
         /// Controllo reportOK.

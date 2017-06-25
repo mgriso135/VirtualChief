@@ -49,7 +49,7 @@ namespace KIS.Analysis
                 lnkGoFwd.Visible = true;
                 imgGoFwd.Visible = true;
                 lnkGoFwd.NavigateUrl = "ReportCustomerProdProgress_chooseINPProducts.aspx?customerID=" + customer.CodiceCliente;
-                lbl1.Text = "Cliente selezionato: " + customer.RagioneSociale;
+                lbl1.Text = GetLocalResourceObject("lblClienteSelezionato") + ": " + customer.RagioneSociale;
                 lnkGoFwd.Focus();
             }
             else

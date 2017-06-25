@@ -22,6 +22,15 @@ namespace KIS.Andon {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblTitleVisUtenti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleVisUtenti;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>

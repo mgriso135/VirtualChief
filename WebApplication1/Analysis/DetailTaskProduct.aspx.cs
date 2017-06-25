@@ -75,7 +75,7 @@ namespace KIS.Analysis
                     }
                     else
                     {
-                        lbl1.Text = "Errore nei dati.";
+                        lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
                     }
                 }
             }

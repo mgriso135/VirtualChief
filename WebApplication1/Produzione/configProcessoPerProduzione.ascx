@@ -1,14 +1,14 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="configProcessoPerProduzione.ascx.cs" Inherits="KIS.Produzione.configProcessoPerProduzione" %>
 
-<h3>Configura il processo per la produzione</h3>
+<h3><asp:Literal runat="server" ID="lblTitleCfg" Text="<%$Resources:lblTitleCfg %>" /></h3>
 <h5><asp:Label runat="server" ID="lblNomeProc" /></h5>
 <h5><asp:Label runat="server" ID="lblRevProc" /></h5>
 <h5><asp:Label runat="server" ID="lblNomeVariante" /></h5>
 <p>
 <asp:Label runat="server" ID="lblQuantita" /><br />
-Data prevista fine produzione: <asp:Label runat="server" ID="lblDataPrevistaFP" /><br />
-Data prevista consegna: <asp:Label runat="server" ID="lblDataPrevistaConsegna" /><br />
-Reparto produttivo:
+<asp:Literal runat="server" ID="lblDataFine" Text="<%$Resources:lblDataFine %>" />: <asp:Label runat="server" ID="lblDataPrevistaFP" /><br />
+<asp:Literal runat="server" ID="lblDataConsegna" Text="<%$Resources:lblDataConsegna %>" />: <asp:Label runat="server" ID="lblDataPrevistaConsegna" /><br />
+<asp:Literal runat="server" ID="lblReparto" Text="<%$Resources:lblReparto %>" />:
     <asp:DropDownList runat="server" ID="ddlRepartoProduttivo" AppendDataBoundItems="true" AutoPostBack="true" OnSelectedIndexChanged="ddlRepartoProduttivo_SelectedIndexChanged">
         <asp:ListItem Value="-1" Text="Seleziona un reparto produttivo" />
         </asp:DropDownList>
@@ -19,18 +19,18 @@ Reparto produttivo:
         <table class="table table-condensed table-striped table-hover">
             <thead>
             <tr>
-                <td>ID</td>
-                <td>Task</td>
-                <td>Numero operatori</td>
-                <td>Setup</td>
-                <td>Tempo ciclo</td>
-                <td>Postazione</td>
-                <td>Task precedenti</td>
-                <td>Task successivi</td>
-                <td>Early Start Time</td>
-                <td>Late Start Time</td>
-                <td>Early Finish Time</td>
-                <td>Late Finish Time</td>
+                <th><asp:Literal runat="server" ID="lblTaskID" Text="<%$Resources:lblTaskID %>" /></th>
+                <th><asp:Literal runat="server" ID="lblNomeTask" Text="<%$Resources:lblNomeTask %>" /></th>
+                <th><asp:Literal runat="server" ID="lblNumOp" Text="<%$Resources:lblNumOp %>" /></th>
+                <th><asp:Literal runat="server" ID="lblSetup" Text="<%$Resources:lblSetup %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTempoCiclo" Text="<%$Resources:lblTempoCiclo %>" /></th>
+                <th><asp:Literal runat="server" ID="lblPostazione" Text="<%$Resources:lblPostazione %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTaskPrecedenti" Text="<%$Resources:lblTaskPrecedenti %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTaskSuccessivi" Text="<%$Resources:lblTaskSuccessivi %>" /></th>
+                <th><asp:Literal runat="server" ID="lblEarlyStart" Text="<%$Resources:lblEarlyStart %>" /></th>
+                <th><asp:Literal runat="server" ID="lblLateStart" Text="<%$Resources:lblLateStart %>" /></th>
+                <th><asp:Literal runat="server" ID="lblEarlyFinish" Text="<%$Resources:lblEarlyFinish %>" /></th>
+                <th><asp:Literal runat="server" ID="lblLateFinish" Text="<%$Resources:lblLateFinish %>" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -58,7 +58,7 @@ Reparto produttivo:
         <tfoot>
         <tr>
             <td colspan="10" style="text-align: center;">
-                <asp:Button runat="server" ID="btnSumbit" CommandName="checkConfigurazione" CommandArgument="CLICK" Text="VERIFICA LA CONFIGURAZIONE" /></td>
+                <asp:Button runat="server" ID="btnSumbit" CommandName="checkConfigurazione" CommandArgument="CLICK" Text="<%$Resources:lblTTVerificaConfig %>" /></td>
         </tr>
             </tfoot>
         </table>
@@ -76,16 +76,16 @@ Reparto produttivo:
         <table class="table table-condensed table-striped table-hover">
             <thead>
             <tr>
-                <td>ID</td>
-                <td>Nome</td>
-                <td>Postazione</td>
-                <td>Numero operatori</td>
-                <td>Setup</td>
-                <td>Tempo ciclo</td>
-                <td>Early Start Date</td>
-                <td>Late Start Date</td>
-                <td>Early Finish Date</td>
-                <td>Late Finish Date</td>
+                <th><asp:Literal runat="server" ID="lblTaskID" Text="<%$Resources:lblTaskID %>" /></th>
+                <th><asp:Literal runat="server" ID="lblNomeTask" Text="<%$Resources:lblNomeTask %>" /></th>
+                <th><asp:Literal runat="server" ID="lblPostazione" Text="<%$Resources:lblPostazione %>" /></th>
+                <th><asp:Literal runat="server" ID="lblNumOp" Text="<%$Resources:lblNumOp %>" /> </th>
+                <th><asp:Literal runat="server" ID="lblSetup" Text="<%$Resources:lblSetup %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTempoCiclo" Text="<%$Resources:lblTempoCiclo %>" /></th>
+                <th><asp:Literal runat="server" ID="lblEarlyStart" Text="<%$Resources:lblEarlyStart %>" /></th>
+                <th><asp:Literal runat="server" ID="lblLateStart" Text="<%$Resources:lblLateStart %>" /></th>
+                <th><asp:Literal runat="server" ID="lblEarlyFinish" Text="<%$Resources:lblEarlyFinish %>" /></th>
+                <th><asp:Literal runat="server" ID="lblLateFinish" Text="<%$Resources:lblLateFinish %>" /></th>
             </tr>
                 </thead>
             <tbody>
@@ -111,7 +111,7 @@ Reparto produttivo:
         <tfoot>
         <tr>
             <td colspan="9" style="text-align:center;">
-                <asp:ImageButton runat="server" ID="btnLANCIA" CommandName="ProductionLaunch" CommandArgument="OK" ImageUrl="/img/iconComplete.png" Height="100px" ToolTip="Lancia l'articolo con processo così configurato in produzione!" />
+                <asp:ImageButton runat="server" ID="btnLANCIA" CommandName="ProductionLaunch" CommandArgument="OK" ImageUrl="/img/iconComplete.png" Height="100px" ToolTip="<%$Resources:lblBtnLanciaProd %>" />
             </td>
         </tr>
             </tfoot>

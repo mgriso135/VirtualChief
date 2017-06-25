@@ -13,8 +13,7 @@ namespace KIS.Operatori
         {
             if (Session["user"] != null)
             {
-                if (!Page.IsPostBack && !Page.IsCallback)
-                {
+                
                     User curr = (User)Session["user"];
                     // Verifico se l'utente appartiene al gruppo "Operatori"
                     curr.loadGruppi();
@@ -33,18 +32,20 @@ namespace KIS.Operatori
 
                     if (checkOperatori == true)
                     {
+                    if (!Page.IsPostBack)
+                    {
                         lblNome.Text = curr.name + " " + curr.cognome + " (" + curr.username + ")";
                         ElencoPostazioni elPostazioni = new ElencoPostazioni();
                         rptPostazioni.DataSource = elPostazioni.elenco;
                         rptPostazioni.DataBind();
                     }
+                    }
                     else
                     {
                         rptPostazioni.Visible = false;
-                        lblNome.Text = "Errore: non hai i permessi necessari per eseguire il check-in in una postazione di lavoro.<br />";
+                        lblNome.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                     }
                 }
-            }
 
             else
             {
@@ -171,33 +172,39 @@ namespace KIS.Operatori
 
         protected void timer_Tick(object sender, EventArgs e)
         {
-            User curr = (User)Session["user"];
-            // Verifico se l'utente appartiene al gruppo "Operatori"
-            curr.loadGruppi();
-            bool checkOperatori = false;
-            for (int i = 0; i < curr.Gruppi.Count; i++)
+            if (Session["user"] != null)
             {
-                for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
+                User curr = (User)Session["user"];
+                if(curr!=null && curr.username.Length>0)
+                { 
+                // Verifico se l'utente appartiene al gruppo "Operatori"
+                curr.loadGruppi();
+                bool checkOperatori = false;
+                for (int i = 0; i < curr.Gruppi.Count; i++)
                 {
-
-                    if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == "Postazione check-in" && curr.Gruppi[i].Permessi.Elenco[j].X == true)
+                    for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
                     {
-                        checkOperatori = true;
+
+                        if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == "Postazione check-in" && curr.Gruppi[i].Permessi.Elenco[j].X == true)
+                        {
+                            checkOperatori = true;
+                        }
                     }
                 }
-            }
 
-            if (checkOperatori == true)
-            {
-                lblNome.Text = curr.name + " " + curr.cognome + " (" + curr.username + ")";
-                ElencoPostazioni elPostazioni = new ElencoPostazioni();
-                rptPostazioni.DataSource = elPostazioni.elenco;
-                rptPostazioni.DataBind();
-            }
-            else
-            {
-                rptPostazioni.Visible = false;
-                lblNome.Text = "Errore: non hai i permessi necessari per eseguire il check-in in una postazione di lavoro.<br />";
+                if (checkOperatori == true)
+                {
+                    lblNome.Text = curr.name + " " + curr.cognome + " (" + curr.username + ")";
+                    ElencoPostazioni elPostazioni = new ElencoPostazioni();
+                    rptPostazioni.DataSource = elPostazioni.elenco;
+                    rptPostazioni.DataBind();
+                }
+                }
+                else
+                {
+                    rptPostazioni.Visible = false;
+                    lblNome.Text = GetLocalResourceObject("lblPermessoKo").ToString();
+                }
             }
         }
     }

@@ -22,6 +22,15 @@ namespace KIS.Configuration {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// Controllo lblSelTimezone.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSelTimezone;
+        
+        /// <summary>
         /// Controllo ddlTimezones.
         /// </summary>
         /// <remarks>

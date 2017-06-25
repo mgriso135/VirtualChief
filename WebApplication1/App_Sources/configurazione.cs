@@ -203,7 +203,7 @@ namespace KIS.App_Code
         {
             get
             {
-                String percorsoLogo = "/Styles/assets/img/Logo-Kaizen_people.png";
+                String percorsoLogo = "~/Data/Logo/LogoMG.png";
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();

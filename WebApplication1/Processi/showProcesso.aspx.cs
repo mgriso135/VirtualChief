@@ -65,7 +65,7 @@ namespace KIS.Processi
                         //newRevisionCopy.Enabled = false;
                         if (padre.isVSM == true)
                         {
-                            vsm.Text = "Value-Stream";
+                            vsm.Text = GetLocalResourceObject("lblValueStream").ToString();
                             inputVSM.SelectedValue = "1";
                             ddlCopiaPERT.Visible = false;
                             btnCopiaPERT.Visible = false;
@@ -73,7 +73,7 @@ namespace KIS.Processi
                         }
                         else
                         {
-                            vsm.Text = "PERT";
+                            vsm.Text = GetLocalResourceObject("lblPERT").ToString();
                             inputVSM.SelectedValue = "0";
                         }
                         inputProcName.Visible = false;
@@ -85,11 +85,15 @@ namespace KIS.Processi
                         if (padre.processoPadre != -1)
                         {
                             lblLinkFatherProc.Visible = true;
-                            lblLinkFatherProc.Text = "<a href=\"showProcesso.aspx?id=" + padre.processoPadre.ToString() + "\">Torna al processo padre</a><br/><br/>";
+                            lblLinkFatherProc.Text = "<a href=\"showProcesso.aspx?id=" + padre.processoPadre.ToString() + "\">"
+                                + GetLocalResourceObject("lblGoBackToFather").ToString()
+                                +"</a><br/><br/>";
                         }
                         else
                         {
-                            lblLinkFatherProc.Text = "<a href=\"MacroProcessi.aspx\">Torna all'elenco dei macroprocessi</a><br/><br/>";
+                            lblLinkFatherProc.Text = "<a href=\"MacroProcessi.aspx\">"
+                                + GetLocalResourceObject("lblGoToLineaProdotti").ToString()
+                                + "</a><br/><br/>";
                         }
 
                         // Carico il pannello delle varianti
@@ -133,7 +137,7 @@ namespace KIS.Processi
                             if (var.idVariante != -1)
                             {
                                 deleteVariante.Visible = true;
-                                lblTitoloVariante.Text = "Variante: " + var.nomeVariante;
+                                lblTitoloVariante.Text = GetLocalResourceObject("lblProdotto").ToString()+" " + var.nomeVariante;
                                 lblDescrizioneVariante.Text = var.descrizioneVariante;
                                 showEditVariante.Visible = true;
                                 editVariante.varianteID = var.idVariante;
@@ -216,7 +220,7 @@ namespace KIS.Processi
                             else
                             {
                                 // Querystring variante presente ma non esiste nessuna variante con quell'id
-                                lblErr.Text = "Querystring variante presente ma non esiste nessuna variante con quell'id";
+                                lblErr.Text = GetLocalResourceObject("lblErrorQueryString").ToString();
                                 ProcStream.Visible = false;
                                 containerVSM.Visible = false;
                                 pert.Visible = false;
@@ -227,7 +231,7 @@ namespace KIS.Processi
                         else
                         {
                             // Querystring variante presente ma non numerico
-                            lblErr.Text = "Querystring variante presente ma di tipo errato!";
+                            lblErr.Text = GetLocalResourceObject("lblErrorQueryString").ToString();
                             containerVSM.Visible = false;
                             editVariante.Visible = false;
                             ProcStream.Visible = false;
@@ -253,7 +257,7 @@ namespace KIS.Processi
                 }
                 else
                 {
-                    lblErr.Text = "No querystring found";
+                    lblErr.Text = GetLocalResourceObject("lblErrorQueryString").ToString();
                     inputVSM.Visible = false;
                     vsm.Visible = false;
                     inputProcName.Visible = false;
@@ -282,7 +286,7 @@ namespace KIS.Processi
             }
             else
             {
-                lblErr.Text = "Non hai il permesso di visualizzare e di gestire i processi.<br/>";
+                lblErr.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 inputVSM.Visible = false;
                 vsm.Visible = false;
                 inputProcName.Visible = false;
@@ -359,7 +363,7 @@ namespace KIS.Processi
             processo proc = new processo(int.Parse(lblProcID.Text));
             proc.processName = Server.HtmlEncode(inputProcName.Text);
             proc.processDescription = Server.HtmlEncode(inputProcDesc.Text);
-            lblErr.Text = "VSM: " + inputVSM.SelectedValue.ToString();
+            lblErr.Text = GetLocalResourceObject("lblVSM").ToString() + ": " + inputVSM.SelectedValue.ToString();
             if (inputVSM.SelectedValue == "1")
             {
                 proc.isVSM = true;
@@ -377,7 +381,7 @@ namespace KIS.Processi
             imgEdit.Visible = true;
             lblProcName.Visible = true;
             lblProcDesc.Visible = true;
-            lblErr.Text += "<span style='color:red;'>MODIFICA ESEGUITA CORRETTAMENTE</span><br/>";
+            lblErr.Text += "<span style='color:red;'>"+GetLocalResourceObject("lblModificaOK").ToString()+"</span><br/>";
             Response.Redirect(Request.RawUrl);
         }
 
@@ -526,24 +530,24 @@ namespace KIS.Processi
                     int rt = prc.delete();
                     if (rt == 0)
                     {
-                        lblErr.Text = "Si è verificato un errore imprevisto.<br />";
+                    lblErr.Text = GetLocalResourceObject("lblErrorUnknown").ToString();
                     }
                     else if(rt == 1)
                     {
-                        lblErr.Text = "Processo cancellato correttamente.<br />";
+                        lblErr.Text = GetLocalResourceObject("lblDeleteOK").ToString();
                     }
                     else if (rt == 2)
                     {
-                        lblErr.Text = "Attenzione: processo non cancellato. E' necessario cancellare tutte le sue varianti ed i suoi sotto-processi.<br />";
+                        lblErr.Text = GetLocalResourceObject("lblDeleteKO1").ToString();
                     }
                     else if (rt == 4)
                     {
-                        lblErr.Text = "Attenzione: processo non cancellato. E' necessario rimuovere l'associazione con tutti i reparti produttivi in cui esso è presente.<br />";
+                        lblErr.Text = GetLocalResourceObject("lblDeleteKO2").ToString();
                     }
                 }
                 else
                 {
-                    lblErr.Text = "Attenzione: devi cancellare tutte le varianti prima di procedere alla cancellazione del processo.<br />";
+                    lblErr.Text = GetLocalResourceObject("lblDeleteKO3").ToString();
                 }
 
         }
@@ -568,7 +572,7 @@ namespace KIS.Processi
                     {
                         
                         variante var = new variante();
-                        int varID = var.add("New Default Version", "New Default Version Notes");
+                        int varID = var.add(GetLocalResourceObject("lblNuovoProcDefault").ToString(), GetLocalResourceObject("lblNuovoProcDefault").ToString());
                         var = new variante(varID);
                         if (var.idVariante != -1)
                         {
@@ -580,12 +584,12 @@ namespace KIS.Processi
                             else
                             {
                                 var.delete();
-                                lblErr.Text = "Some error occured<br />";
+                                lblErr.Text = GetLocalResourceObject("Si è verificato un errore imprevisto.").ToString();
                             }
                         }
                         else
                         {
-                            lblErr.Text = "Some error occured<br />";
+                            lblErr.Text = GetLocalResourceObject("Si è verificato un errore imprevisto.").ToString();
                         }
                     }
                 }
@@ -715,7 +719,7 @@ namespace KIS.Processi
                     }
                     else
                     {
-                        lblLogVariante.Text = "Non posso cancellare la variante perché ci sono dei figli associati.<br/>";
+                        lblLogVariante.Text = GetLocalResourceObject("lblDeleteKO1").ToString();
                         controllo = false;
                     }
                 }
@@ -730,7 +734,7 @@ namespace KIS.Processi
                     }
                     else
                     {
-                        lblLogVariante.Text = "Non posso cancellare la variante perché associata a dei reparti produttivi.<br/>";
+                        lblLogVariante.Text = GetLocalResourceObject("lblDeleteKO2").ToString();
                         controllo = false;
                     }
                 }
@@ -807,13 +811,13 @@ namespace KIS.Processi
                         }
                         else
                         {
-                            lblCopiaPERTLog.Text = "Attenzione: si è verificato un errore. Il prodotto potrebbe essere stato copiato parzialmente. Ricaricare la pagina e verificare completamente il prodotto creato.<br />";
+                            lblCopiaPERTLog.Text = GetLocalResourceObject("lblErrorCopy").ToString();
                         }
                     }
                 }
                 else
                 {
-                    lblErr.Text = "Errore creando i ProcessoVariante<br/>";
+                    lblErr.Text = GetLocalResourceObject("lblErrorCreatingProcess").ToString();
                 }
             }
         }

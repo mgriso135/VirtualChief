@@ -7,13 +7,11 @@
             <thead>
             <tr>
                 <th></th>
-                <th>ID</th>
-                <th>Anno</th>
-                <th>Processo</th>
-                <th>Variante</th>
-                <th>Quantità</th>
-                <th>Status</th>
-                <th>Data consegna prevista</th>
+                <th><asp:label runat="server" id="lblIDCommessa" meta:resourcekey="lblIDCommessa" /></th>
+                <th colspan="2"><asp:label runat="server" id="lblProcesso" meta:resourcekey="lblProcesso" /></th>
+                <th><asp:label runat="server" id="lblQuantita" meta:resourcekey="lblQuantita" /></th>
+                <th><asp:label runat="server" id="lblStatus" meta:resourcekey="lblStatus" /></th>
+                <th><asp:label runat="server" id="lblDataConsegna" meta:resourcekey="lblDataConsegna" /></th>
                 <th></th>
             </tr>
                 </thead>
@@ -28,8 +26,7 @@
                     <asp:Image runat="server" id="imgView" ImageUrl="/img/iconView.png" Height="40" />
                 </asp:HyperLink>
             </td>
-            <td><%#DataBinder.Eval(Container.DataItem, "ID") %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "Year") %></td>
+            <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Proc.process.processName") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Proc.variant.nomeVariante") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Quantita") %></td>
@@ -42,7 +39,7 @@
                 <asp:ImageButton runat="server" ImageUrl="/img/iconUndo.png" Height="30" ID="imgResetPC" CommandName="undoPC" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + "/" + DataBinder.Eval(Container.DataItem, "Year") %>' Visible="false" />
             </td>
             <td>
-                <asp:ImageButton runat="server" ID="imgDepianificazione" ImageUrl="/img/iconUndo.png" Width="40" Height="40" CommandName="depianifica" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + "/" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="Riporta il prodotto allo stato NON PIANIFICATO" />
+                <asp:ImageButton runat="server" ID="imgDepianificazione" ImageUrl="/img/iconUndo.png" Width="40" Height="40" CommandName="depianifica" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + "/" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblDePianifica %>" />
                 <asp:ImageButton runat="server" ID="imgDelete" ImageUrl="/img/iconDelete.png" Height="40" ToolTip="Cancella il record" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + "/" + DataBinder.Eval(Container.DataItem, "Year") %>' />
             </td>
         </tr>

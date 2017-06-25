@@ -140,7 +140,7 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(idpostazioni) FROM postazioni";
             MySqlDataReader rdr = cmd.ExecuteReader();
-            int newID = 0;
+            int newID = 20;
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
                 newID = rdr.GetInt32(0) + 1;

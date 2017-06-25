@@ -46,14 +46,14 @@ namespace KIS.Processi
                     bool rt = tc.Delete();
                     if (rt == true)
                     {
-                        lbl1.Text = "Tempo ciclo cancellato correttamente.";
+                        lbl1.Text = GetLocalResourceObject("lblDeleteTCOK").ToString();
                         task.loadTempiCiclo();
                         rptTempi.DataSource = task.Tempi.Tempi;
                         rptTempi.DataBind();
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore.<br />" + tc.log;
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString() + "<br />" + tc.log;
                     }
                 }
             }

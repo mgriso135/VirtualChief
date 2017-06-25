@@ -7,8 +7,8 @@
             <table class="table table-condensed table-striped table-hover">
                 <thead>
                 <tr>
-                    <td></td>
-                    <td style="font-size:14px; font-weight:bold;">Reparti</td>
+                    <th></th>
+                    <th><asp:literal runat="server" id="lblReparti" Text="<%$Resources:lblReparti %>" /></th>
                 </tr>
                     </thead>
                 <tbody>

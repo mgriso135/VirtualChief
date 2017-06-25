@@ -10,22 +10,24 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
         <li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx">
+                            <asp:Label runat="server" ID="lblNavAdmin" meta:resourcekey="lblNavAdmin" /></a>
 						<span class="divider">/</span>
 					</li>
 					<li>
-						<a href="kisAdmin.aspx">Configurazione sistema</a>
+						<a href="kisAdmin.aspx">
+                            <asp:Label runat="server" ID="lblNavSysCfg" meta:resourcekey="lblNavSysCfg" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <h1>Configurazione sistema</h1>
+    <h1><asp:Label runat="server" ID="lblTitleSysCfg" meta:resourcekey="lblTitleSysCfg" /></h1>
     <asp:Label runat="server" ID="lbl1" />
 
     <div class="accordion" id="accordion1" runat="server">
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Logo
+          <asp:Label runat="server" ID="lblLogo" meta:resourcekey="lblLogo" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -38,7 +40,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Interfaccia PERT su Wizard
+          <asp:Label runat="server" ID="lblPERT" meta:resourcekey="lblPERT" />
       </a>
     </div>
             <div id="collapseTwo" class="accordion-body collapse">
@@ -51,7 +53,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-          Fuso orario
+          <asp:Label runat="server" ID="lblFusoOrario" meta:resourcekey="lblFusoOrario" />
       </a>
     </div>
             <div id="collapseThree" class="accordion-body collapse">

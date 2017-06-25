@@ -55,7 +55,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare il carico di lavoro del reparto";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 calDate.Visible = false;
                 chkLstPostazioni.Visible = false;
                 rbPostazioni.Visible = false;
@@ -224,8 +224,8 @@ namespace KIS.Produzione
                         if (rbPostazioni.SelectedValue == "1")
                         {
                             Chart1.Series["WorkLoad"].Points.AddXY(rp.Postazioni[i].name, carico.TotalHours);
-                            Chart1.Series["WorkLoad"].Points[cont].ToolTip = rp.Postazioni[i].name + " - Carico di lavoro: " + carico.TotalHours.ToString() + " ore";
-                            Chart1.Series["WorkLoad"].Points[cont].Label = carico.TotalHours + " ore";
+                            Chart1.Series["WorkLoad"].Points[cont].ToolTip = rp.Postazioni[i].name + " - "+GetLocalResourceObject("lblCaricoDiLavoro").ToString()+": " + carico.TotalHours.ToString() + " "+ GetLocalResourceObject("lblOre").ToString();
+                            Chart1.Series["WorkLoad"].Points[cont].Label = carico.TotalHours + " " + GetLocalResourceObject("lblOre").ToString();
                             cont++;
                         }
                     }
@@ -234,13 +234,13 @@ namespace KIS.Produzione
                 if (rbPostazioni.SelectedValue == "0")
                 {
                     Chart1.Series["WorkLoad"].Points.AddXY(rp.name, somma.TotalHours);
-                    Chart1.Series["WorkLoad"].Points[cont].ToolTip = rp.name + " - Carico di lavoro: " + somma.TotalHours.ToString() + " ore";
-                    Chart1.Series["WorkLoad"].Points[cont].Label = somma.TotalHours + " ore";
+                    Chart1.Series["WorkLoad"].Points[cont].ToolTip = rp.name + " - " + GetLocalResourceObject("lblCaricoDiLavoro").ToString() + ": " + somma.TotalHours.ToString() + " ore";
+                    Chart1.Series["WorkLoad"].Points[cont].Label = somma.TotalHours + " "+ GetLocalResourceObject("lblOre").ToString();
                 }
-                lbl1.Text = "Carico di lavoro complessivo del reparto "
+                lbl1.Text = GetLocalResourceObject("lblCaricoComplessivoReparto").ToString()+ " "
                     + rp.name 
-                    + " nel periodo " + inizio.ToString("dd/MM/yyyy") + " - " + fine.ToString("dd/MM/yyyy") + ": <b>" 
-                    + somma.TotalHours.ToString() + " ore</b><br />";
+                    + " "+GetLocalResourceObject("lblNelPeriodo")+" " + inizio.ToString("dd/MM/yyyy") + " - " + fine.ToString("dd/MM/yyyy") + ": <b>" 
+                    + somma.TotalHours.ToString() + " "+GetLocalResourceObject("lblOre").ToString()+"</b><br />";
             }
         }
     }

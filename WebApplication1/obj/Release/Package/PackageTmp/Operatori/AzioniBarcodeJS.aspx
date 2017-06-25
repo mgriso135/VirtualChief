@@ -7,9 +7,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link href="~/Styles/assets/css/bootstrap.css" rel="stylesheet" />
 		<link href="~/Styles/assets/css/bootstrap-responsive.css" rel="stylesheet" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" />
 
     <title>Kaizen Indicator System</title>
-    <script language="javascript">
+    <script lang="javascript">
         var azione1, azione2, id1, id2;
 
         var tbox = document.getElementById("box1");
@@ -31,7 +32,7 @@
             imgLoad.style.height = 2;
 
             if (azione == "I" || azione == "A" || azione == "W" || azione == "F" || azione == "P" || azione == 'B') {
-                log.innerHTML = "Ora leggi il barcode sul tuo ID personale / cartellino.";
+                log.innerHTML = '<asp:literal runat="server" text="<%$Resources:lblReadBarcodeID%>"/>'; // "Ora leggi il barcode sul tuo ID personale / cartellino.";
                 var task = tbox.value.substring(1, tbox.value.length);
                 if (otherBox.value.length > 0 && otherBox.value.substring(0, 1) == "U") {
                     imgLoad.style.visibility = "visible";
@@ -50,7 +51,7 @@
                     otherBox.focus();
                 }
                 else {
-                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'>Errore nei dati di input.</span>";
+                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'><asp:literal runat="server" text="<%$Resources:lblInputDataError%>"/></span>";
 
                     otherBox.value = "";
                     tbox.value = "";
@@ -58,7 +59,7 @@
             }
             else if (azione == "U") {
                 var usr = tbox.value.substring(1, tbox.value.length);
-                log.innerHTML = "Ora leggi il barcode relativo al task desiderato [INIZIO | PAUSA | FINE | PROBLEMA].";
+                log.innerHTML ='<asp:literal runat="server" text="<%$Resources:lblReadBarcodeTaskAction%>"/>';// "Ora leggi il barcode relativo al task desiderato [INIZIO | PAUSA | FINE | PROBLEMA].";
                 if (otherBox.value.length > 0 && (otherBox.value.substring(0, 1) == "I" || otherBox.value.substring(0, 1) == "A" || otherBox.value.substring(0, 1) == "W" || otherBox.value.substring(0, 1) == "F" || otherBox.value.substring(0, 1) == "P" || otherBox.value.substring(0, 1) == 'B')) {
                     imgLoad.style.visibility = "visible";
                     imgLoad.style.height = "200px";
@@ -77,7 +78,7 @@
                     otherBox.focus();
                 }
                 else {
-                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'>Errore nei dati di input.</span>";
+                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'><asp:literal runat="server" text="<%$Resources:lblInputDataError%>"/></span>";
                     otherBox.value = "";
                     tbox.value = "";
                     
@@ -90,7 +91,7 @@
                 azione2 = "";
                 tbox.value = "";
                 otherBox.value = "";
-                log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'>Errore nei dati di input.</span>";
+                log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'><asp:literal runat="server" text="<%$Resources:lblInputDataError%>"/></span>";
             }
         }
 
@@ -110,7 +111,7 @@
 
             //log.innerHTML = azione;
             if (azione == "I" || azione == "A" || azione == "W" || azione == "F" || azione == "P" || azione == "B") {
-                log.innerHTML = "Ora leggi il barcode sul tuo ID personale / cartellino.";
+                log.innerHTML = '<asp:literal runat="server" text="<%$Resources:lblReadBarcodeID%>"/>';//"Ora leggi il barcode sul tuo ID personale / cartellino.";
                 var task = tbox.value.substring(1, tbox.value.length);
                 if (otherBox.value.length > 0 && otherBox.value.substring(0, 1) == "U") {
                     imgLoad.style.visibility = "visible";
@@ -129,7 +130,7 @@
                     otherBox.focus();
                 }
                 else {
-                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'>Errore nei dati di input.</span>";
+                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'><asp:literal runat="server" text="<%$Resources:lblInputDataError%>"/></span>";
                     otherBox.value = "";
                     tbox.value = "";
                     otherBox.focus();
@@ -137,7 +138,7 @@
             }
             else if (azione == "U") {
                 var usr = tbox.value.substring(1, tbox.value.length);
-                log.innerHTML = "Ora leggi il barcode relativo al task desiderato [INIZIO | PAUSA | FINE | PROBLEMA].";
+                log.innerHTML = '<asp:literal runat="server" text="<%$Resources:lblReadBarcodeTaskAction%>"/>';//"Ora leggi il barcode relativo al task desiderato [INIZIO | PAUSA | FINE | PROBLEMA].";
                 if (otherBox.value.length > 0 && (otherBox.value.substring(0, 1) == "I" || otherBox.value.substring(0, 1) == "A" || otherBox.value.substring(0, 1) == "W" || otherBox.value.substring(0, 1) == "F" || otherBox.value.substring(0, 1) == "P" || otherBox.value.substring(0, 1) == "B")) {
                     imgLoad.style.visibility = "visible";
                     imgLoad.style.height = "200px";
@@ -155,7 +156,7 @@
                     otherBox.focus();
                 }
                 else {
-                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'>Errore nei dati di input.</span>";
+                    log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'><asp:literal runat="server" text="<%$Resources:lblInputDataError%>"/></span>";
                     otherBox.value = "";
                     tbox.value = "";
                     otherBox.focus();
@@ -168,7 +169,7 @@
                 azione2 = "";
                 tbox.value = "";
                 otherBox.value = "";
-                log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'>Errore nei dati di input.</span>";
+                log.innerHTML = "<span style='color: red; font-size: 20px; font-weight:bold;'><asp:literal runat="server" text="<%$Resources:lblInputDataError%>"/></span>";
             }
         }
 
@@ -181,12 +182,12 @@
         // Gestione cambio quantità prodotta
         function FirePrompt() {
             if (gettingData != true) {
-                var retVal = prompt("Quantità realmente prodotta: ", "")
+                var retVal = prompt('<asp:literal runat="server" text="<%$Resources:lblQtaProdotta%>"/>', "")
                 if (retVal) {
                     document.getElementById('<%=action.ClientID%>').value = "ChangeQuantity";
                     var retInt = parseInt(retVal);
                     if (isNaN(retInt)) {
-                        alert("Errore nel formato del numero. Ripetere l'operazione.");
+                        alert('<asp:literal runat="server" text="<%$Resources:lblErroreFormatoQta%>"/>');
                         var tbox = document.getElementById("box1");
                         tbox.focus();
                         return false;
@@ -238,14 +239,14 @@
             <HeaderTemplate>
                 <table>
                     <tr>
-                        <td>Commessa</td>
-                        <td>Cliente</td>
-                        <td>Prodotto</td>
-                        <td>Processo</td>
-                        <td>Matricola</td>
-                        <td>ID</td>
-                        <td>Name</td>
-                        <td>Postazione</td>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHCommessa%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHCliente%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHProdotto%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHProcesso%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHMatricola%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHID%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHName%>"/></th>
+                        <th><asp:literal runat="server" text="<%$Resources:lblTHPostazione%>"/></th>
                     </tr>
             </HeaderTemplate>
             <ItemTemplate>
@@ -273,7 +274,7 @@
             <tr>
                 <td></td>
                 <td></td>
-                <td>Utenti in postazione</td>
+                <td><asp:Label runat="server" ID="lblUtentiInPostazione" Text="<%$Resources:lblUtentiInPostazione %>" /></td>
             </tr>
     </HeaderTemplate>
     <ItemTemplate>
@@ -297,14 +298,14 @@
                 <table class="table table-condensed">
                     <thead>
                     <tr>
-                        <th>Task ID</th>
-                        <th>Nome</th>
-                        <th>Postazione</th>
-                        <th>Stato</th>
-                        <th style="text-align:center;">Lavoro previsto (ore)</th>
-                        <th style="text-align:center;">Lavoro svolto (ore)</th>
-                        <th style="text-align:center;">Ritardo (ore)</th>
-                        <th>Operatori</th>
+                        <th><asp:Label runat="server" Text="<%$Resources:lblTHTaskID %>" /></th>
+                        <th><asp:Label runat="server" Text="<%$Resources:lblTHNome %>" /></th>
+                        <th><asp:Label runat="server" Text="<%$Resources:lblTHPostazione %>" /></th>
+                        <th><asp:Label runat="server" Text="<%$Resources:lblTHStato %>" /></th>
+                        <th style="text-align:center;"><asp:Label runat="server" Text="<%$Resources:lblTHLavoroPrevisto %>" /></th>
+                        <th style="text-align:center;"><asp:Label runat="server" Text="<%$Resources:lblTHLavoroSvolto %>" /></th>
+                        <th style="text-align:center;"><asp:Label runat="server" Text="<%$Resources:lblTHRitardo %>" /></th>
+                        <th><asp:Label runat="server" Text="<%$Resources:lblTHOperatori %>" /></th>
                     </tr>
                         </thead>
             </HeaderTemplate>

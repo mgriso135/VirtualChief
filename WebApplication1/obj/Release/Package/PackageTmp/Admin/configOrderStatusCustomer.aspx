@@ -6,13 +6,17 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx">
+                            <asp:Label runat="server" ID="lblMenuAdmin" meta:resourcekey="lblMenuAdmin" /></a>
 						<span class="divider">/</span>
-						<a href="manageReports.aspx">Configurazione reports</a>
+						<a href="manageReports.aspx">
+                            <asp:Label runat="server" ID="lblMenuConfigReports" meta:resourcekey="lblMenuConfigReports" /></a>
 						<span class="divider">/</span>
-                        <a href="configOrderStatusBase.aspx">Report stato avanzamento prodotti per cliente</a>
+                        <a href="configOrderStatusBase.aspx">
+                            <asp:Label runat="server" ID="lblMenuReportStatoProdotti" meta:resourcekey="lblMenuReportStatoProdotti" /></a>
 						<span class="divider">/</span>
-                        <asp:hyperlink NavigateUrl="configOrderStatusCustomer.aspx" runat="server" id="lnkCurrentPage">Report stato avanzamento prodotti per cliente</asp:hyperlink>
+                        <asp:hyperlink NavigateUrl="configOrderStatusCustomer.aspx" runat="server" id="lnkCurrentPage">
+                            <asp:Label runat="server" ID="lblMenuReportStatoProdotti2" meta:resourcekey="lblMenuReportStatoProdotti" /></asp:hyperlink>
 						<span class="divider">/</span>
 					</li>
 				</ul>

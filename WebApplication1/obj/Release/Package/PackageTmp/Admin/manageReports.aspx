@@ -5,9 +5,9 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="/Admin/admin.aspx"><asp:label runat="server" id="lblNavAdmin" meta:resourcekey="lblNavAdmin"/></a>
 						<span class="divider">/</span>
-						<a href="manageReports.aspx">Configurazione reports</a>
+						<a href="manageReports.aspx"><asp:label runat="server" id="lblNavReportCfg" meta:resourcekey="lblNavReportCfg"/></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

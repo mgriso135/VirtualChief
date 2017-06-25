@@ -2,11 +2,11 @@
 <asp:Label runat="server" ID="lbl1" />
 <asp:Repeater runat="server" ID="rptStraord" OnItemDataBound="rptStraord_ItemDataBound" OnItemCommand="rptStraord_ItemCommand">
     <HeaderTemplate>
-        <table>
+        <table class="table striped condensed">
             <tr>
-                <td></td>
-                <td>Inizio straordinario</td>
-                <td>Fine straordinario</td>
+                <th></th>
+                <th><asp:Literal runat="server" ID="lblStartStaord" Text="<%$Resources:lblStartStraord %>" /></th>
+                <th><asp:Literal runat="server" ID="lblEndStraord" Text="<%$Resources:lblEndStraord %>" /></th>
             </tr>
     </HeaderTemplate>
     <ItemTemplate>

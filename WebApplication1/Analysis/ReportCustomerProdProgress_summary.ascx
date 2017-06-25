@@ -1,16 +1,8 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ReportCustomerProdProgress_summary.ascx.cs" Inherits="KIS.Analysis.ReportCustomerProdProgress_summary1" %>
-<script type="text/javascript">
-    function FireConfirm() {
-        /*if (confirm('Stai per lanciare il prodotto in produzione. Nessuna ulteriore modifica sarà possibile. Vuoi proseguire?'))
-            return true;
-        else
-            return false;**/
-        alert('Attendere prego: in pochi secondi sarà disponibile il download del report');
-        return true;
-    }
-</script>
 <div class="row-fluid">
-            <div class="span12"><h3>Seleziona prodotti finiti da inserire nel report</h3>
+            <div class="span12"><h3>
+                <asp:Label runat="server" ID="lblSelProdF" meta:resourcekey="lblSelProdF" />
+                </h3>
                 </div>
             </div>
     <asp:label runat="server" id="lbl1" />
@@ -21,18 +13,18 @@
         </asp:HyperLink>
             </div>
             <div class="span8">
-Formato report:&nbsp;<asp:DropDownList runat="server" ID="ddlFormato">
+<asp:Label runat="server" ID="lblFormato" meta:resourcekey="lblFormato" />:&nbsp;<asp:DropDownList runat="server" ID="ddlFormato">
     <asp:ListItem Value="pdf">PDF</asp:ListItem>
     <asp:ListItem Value="xml" Enabled="false">XML</asp:ListItem>
                      </asp:DropDownList>
 <asp:Repeater runat="server" ID="rpt1">
     <HeaderTemplate><table class="table table-striped table-condensed table-hover">
         <thead>
-            <th>ID prodotto</th>
-            <th>Nome</th>
-            <th>Matricola</th>
-            <th>Quantità</th>
-            <th>Status</th>
+            <th><asp:Label runat="server" ID="lblTHIDProd" meta:resourcekey="lblTHIDProd" /></th>
+            <th><asp:Label runat="server" ID="lblTHNome" meta:resourcekey="lblTHNome" /></th>
+            <th><asp:Label runat="server" ID="lblTHMatricola" meta:resourcekey="lblTHMatricola" /></th>
+            <th><asp:Label runat="server" ID="lblTHQuantita" meta:resourcekey="lblTHQuantita" /></th>
+            <th><asp:Label runat="server" ID="lblTHStatus" meta:resourcekey="lblTHStatus" /></th>
         </thead></HeaderTemplate>
     <ItemTemplate>
         <tbody><tr><td>
@@ -51,5 +43,5 @@ Formato report:&nbsp;<asp:DropDownList runat="server" ID="ddlFormato">
     </asp:Repeater>
     </div>
             <div class="span2">
-            <asp:ImageButton runat="server" ID="imgGoFwd" ImageUrl="~/img/iconArrowRight.png" Height="40" OnClientClick="return FireConfirm();" OnClick="imgGoFwd_Click" /></div>
+            <asp:ImageButton runat="server" ID="imgGoFwd" ImageUrl="~/img/iconArrowRight.png" Height="40" OnClick="imgGoFwd_Click" /></div>
               </div>

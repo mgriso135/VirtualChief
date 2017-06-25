@@ -7,15 +7,15 @@
                 <thead>
                 <tr>
                     <td></td>
-                    <td style="font-size:14px; font-weight:bold;">Reparti</td>
-                    <td style="font-size:14px; font-weight:bold;">Descrizione</td>
+                    <td style="font-size:14px; font-weight:bold;"><asp:literal runat="server" ID="lblTHReparti" Text="<%$Resources:lblTHReparti %>"/></td>
+                    <td style="font-size:14px; font-weight:bold;"><asp:literal runat="server" ID="lblTHDescrizione" Text="<%$Resources:lblTHDescrizione %>"/></td>
                 </tr>
                     </thead><tbody>
         </HeaderTemplate>
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><a href="WorkLoadSimReparti.aspx?id=<%# DataBinder.Eval(Container.DataItem, "id") %>">
-                    <asp:image ImageUrl="/img/iconLabor.png" height="30px" runat="server" ID="imgPlan" ToolTip="Visualizza il carico di lavoro simulando l'introduzione di nuovi prodotti" />
+                    <asp:image ImageUrl="/img/iconLabor.png" height="30px" runat="server" ID="imgPlan" ToolTip="<%$Resources:lblVisualizzaSim %>" />
                     </a></td>
                 <td><%# DataBinder.Eval(Container.DataItem, "name") %></td>
                 <td><%# DataBinder.Eval(Container.DataItem, "description") %></td>

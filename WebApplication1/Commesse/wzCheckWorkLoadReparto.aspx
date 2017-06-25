@@ -3,39 +3,40 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Wizard: nuovo prodotto su commessa</h1>
+    <h1><asp:Label runat="server" ID="lblTitleWizNewOrder" Text="<%$Resources:lblTitleWizNewOrder %>" /></h1>
     <ul class="breadcrumb hidden-phone">
          <li>
-		    <a href="wzAddCommessa.aspx">Nuova commessa</a>
+		    <a href="wzAddCommessa.aspx"><asp:Label runat="server" ID="lblNavNuovaCommessa" Text="<%$Resources:lblNavNuovaCommessa %>" /></a>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" id="lnkAddPert">Descrivi il prodotto</asp:hyperlink>
+		    <asp:hyperlink runat="server" id="lnkAddPert"><asp:Label runat="server" ID="lblNavDescProd" Text="<%$Resources:lblNavDescProd %>" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
        <li>
-		    <asp:hyperlink ID="lnkEditPert" runat="server">Descrivi il processo produttivo</asp:hyperlink>
+		    <asp:hyperlink ID="lnkEditPert" runat="server"><asp:Label runat="server" ID="lblNavDescProcesso" Text="<%$Resources:lblNavDescProcesso %>" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaReparto">Seleziona il reparto produttivo</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaReparto"><asp:Label runat="server" ID="lblNavSelReparto" Text="<%$Resources:lblNavSelReparto %>" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaTasks">Associa i tasks alle postazioni</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaTasks" Text="<%$Resources:lblNavAssociaTasksPostazioni %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkDataConsegna">Data di consegna richiesta</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkDataConsegna" Text="<%$Resources:lblNavDataConsegna %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-            <asp:HyperLink runat="server" ID="lnkLancio">
-		    Lancio in produzione</asp:HyperLink>
+            <asp:HyperLink runat="server" ID="lnkLancio" Text="<%$Resources:lblLancioProduzione %>"></asp:HyperLink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:HyperLink runat="server" ID="lnkWorkLoad"><b style="font-size: 14px;">Controlla il carico di lavoro</b></asp:HyperLink>
+		    <asp:HyperLink runat="server" ID="lnkWorkLoad"><b style="font-size: 14px;">
+                <asp:Label runat="server" ID="lblControllaCaricoLav" Text="<%$Resources:lblControllaCaricoLav %>" />
+                </b></asp:HyperLink>
 			<span class="divider">/</span>
 	    </li>
 	</ul>

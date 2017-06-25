@@ -13,6 +13,15 @@ namespace KIS.Configuration {
     public partial class wizConfigUsers_Main {
         
         /// <summary>
+        /// Controllo lblTitleGestUtenti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleGestUtenti;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>

@@ -3,8 +3,8 @@
     <ContentTemplate>
         <asp:Label runat="server" ID="lbl1" />
         <asp:RadioButtonList runat="server" ID="rb1" AutoPostBack="true" OnSelectedIndexChanged="rb1_SelectedIndexChanged" CssClass="radio">
-            <asp:ListItem Value="0">Kanban NON abilitato</asp:ListItem>
-            <asp:ListItem Value="1">Kanban abilitato</asp:ListItem>
+            <asp:ListItem Value="0" Text="<%$Resources:lblKBNonEnabled %>"></asp:ListItem>
+            <asp:ListItem Value="1" Text="<%$Resources:lblKBEnabled %>"></asp:ListItem>
         </asp:RadioButtonList>
     </ContentTemplate>
 </asp:UpdatePanel>

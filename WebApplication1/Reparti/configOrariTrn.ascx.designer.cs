@@ -22,6 +22,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.WebControls.Label lbl1;
         
         /// <summary>
+        /// Controllo lblCfgOrari.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblCfgOrari;
+        
+        /// <summary>
         /// Controllo frmTurno.
         /// </summary>
         /// <remarks>
@@ -121,6 +130,15 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.HtmlControls.HtmlTable formAddOrario;
         
         /// <summary>
+        /// Controllo lblInizio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblInizio;
+        
+        /// <summary>
         /// Controllo ddlDInizio.
         /// </summary>
         /// <remarks>
@@ -146,6 +164,15 @@ namespace KIS.Reparti {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlMInizio;
+        
+        /// <summary>
+        /// Controllo lblFine.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblFine;
         
         /// <summary>
         /// Controllo ddlDFine.

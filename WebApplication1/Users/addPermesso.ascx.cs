@@ -32,7 +32,7 @@ namespace KIS.Users
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di aggiungere permessi.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 tblFormAddPermesso.Visible = false;
                 showAddPermesso.Visible = false;
             }

@@ -13,6 +13,15 @@ namespace KIS.Login {
     public partial class forgot {
         
         /// <summary>
+        /// Controllo lblTitleRipristinoDati.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleRipristinoDati;
+        
+        /// <summary>
         /// Controllo lbl1.
         /// </summary>
         /// <remarks>

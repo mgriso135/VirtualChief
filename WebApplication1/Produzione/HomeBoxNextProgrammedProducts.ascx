@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="HomeBoxNextProgrammedProducts.ascx.cs" Inherits="KIS.Produzione.HomeBoxLastProgrammedProducts" %>
 <asp:Repeater runat="server" ID="rptNextProgrammedProducts">
     <HeaderTemplate>
-        <h3>Piano produzione</h3>
+        <h3><asp:literal runat="server" id="lblPianoProduzione" Text="<%$Resources:lblPianoProduzione %>" /></h3>
         <ul class="list-group">
             </HeaderTemplate>
     <ItemTemplate>

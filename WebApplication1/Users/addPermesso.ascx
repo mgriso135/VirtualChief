@@ -5,15 +5,15 @@
 
 <table id="tblFormAddPermesso" runat="server">
     <tr>
-        <td>Nome:</td>
+        <td><asp:Literal runat="server" ID="lblNome" Text="<%$Resources:lblNome %>" />:</td>
         <td><asp:TextBox runat="server" ID="nomeP" />
-            <asp:RequiredFieldValidator runat="server" ID="valNome" ControlToValidate="nomeP" ErrorMessage="* Campo richiesto" ForeColor="Red" ValidationGroup="Add" />
+            <asp:RequiredFieldValidator runat="server" ID="valNome" ControlToValidate="nomeP" ErrorMessage="<%$Resources:lblReqField %>" ForeColor="Red" ValidationGroup="Add" />
         </td>
     </tr>
     <tr>
-        <td>Descrizione:</td>
+        <td><asp:Literal runat="server" ID="lblDescrizione" Text="<%$Resources:lblDescrizione %>" />:</td>
         <td><asp:TextBox runat="server" ID="descP" TextMode="MultiLine" />
-            <asp:RequiredFieldValidator runat="server" ID="valDesc" ControlToValidate="descP" ErrorMessage="* Campo richiesto" ForeColor="Red" ValidationGroup="Add" />
+            <asp:RequiredFieldValidator runat="server" ID="valDesc" ControlToValidate="descP" ErrorMessage="<%$Resources:lblReqField %>" ForeColor="Red" ValidationGroup="Add" />
         </td>
     </tr>
     <tr>

@@ -31,6 +31,24 @@ namespace KIS.Reparti {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblAddFest;
         
         /// <summary>
+        /// Controllo lblInizioFest.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblInizioFest;
+        
+        /// <summary>
+        /// Controllo lblFineFest.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblFineFest;
+        
+        /// <summary>
         /// Controllo inizioFest.
         /// </summary>
         /// <remarks>

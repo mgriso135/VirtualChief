@@ -5,16 +5,17 @@
 
 <table runat="server" id="frmAddGruppo">
     <tr>
-        <td>Nome:</td><td><asp:TextBox runat="server" ID="nomeG" />
-            <asp:RequiredFieldValidator runat="server" ID="valNome" ControlToValidate="nomeG" ErrorMessage="* Campo obbligatorio" ForeColor="Red" ValidationGroup="add" />
+        <td><asp:Literal runat="server" ID="lblNome" Text="<%$Resources:lblNome %>" />:</td>
+        <td><asp:TextBox runat="server" ID="nomeG" />
+            <asp:RequiredFieldValidator runat="server" ID="valNome" ControlToValidate="nomeG" ErrorMessage="<%$Resources:lblReqField %>" ForeColor="Red" ValidationGroup="add" />
 
                       </td>
     </tr>
     <tr>
-        <td>Descrizione:</td>
+        <td><asp:Literal runat="server" ID="lblDescrizione" Text="<%$Resources:lblDescrizione %>" />:</td>
         <td>
             <asp:TextBox runat="server" ID="descG" TextMode="MultiLine" />
-            <asp:RequiredFieldValidator runat="server" ID="valDesc" ControlToValidate="descG" ErrorMessage="* Campo obbligatorio" ForeColor="Red" ValidationGroup="add" />
+            <asp:RequiredFieldValidator runat="server" ID="valDesc" ControlToValidate="descG" ErrorMessage="<%$Resources:lblReqField %>" ForeColor="Red" ValidationGroup="add" />
         </td>
     </tr>
     <tr><td colspan="2">

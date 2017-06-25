@@ -35,7 +35,7 @@ namespace KIS.Users
             {
                 tblAddPhoneNumber.Visible = false;
                 imgShowForm.Visible = false;
-                lbl1.Text = "Non hai il permesso di aggiungere numeri telefonici.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -59,8 +59,7 @@ namespace KIS.Users
                 bool rt = usr.addPhoneNumber(txtPhoneNumber.Text, Server.HtmlEncode(txtNote.Text), chkAlarm.Checked);
                 if (rt == false)
                 {
-                    lbl1.Text = "Errore: non è stato possibile inserire il numero telefonico.<br/>Verificare che non sia già stato inserito e che sia un numero telefonico valido."
-                        + usr.log;
+                    lbl1.Text = GetLocalResourceObject("lblErroreAdd").ToString();
                 }
                 else
                 {

@@ -37,7 +37,7 @@ namespace KIS.Users
             else
             {
                 rptUserPhoneNumbers.Visible = false;
-                lbl1.Text = "Non hai il permesso di visualizzare i numeri telefonici degli utenti.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -88,7 +88,7 @@ namespace KIS.Users
                     }
                     else
                     {
-                        lbl1.Text = "Errore." + usrPhone.log;
+                        lbl1.Text = "Error. " + usrPhone.log;
                     }
                 }
                 else if (e.CommandName == "edit")

@@ -12,16 +12,17 @@
     <div class="span12">
         <table class="table-condensed" runat="server" id="tblSelectDate">
             <tr>
-                <td>Inizio periodo di riferimento:</td>
+                <td><asp:label runat="server" id="lblDataInizio" meta:resourcekey="lblDataInizio" /></td>
                 <td><asp:textbox runat="server" id="txtDateStart" Width="100px"  /></td>
             </tr>
              <tr>
-                <td>Fine periodo di riferimento:</td>
+                <td><asp:label runat="server" id="lblDataFine" meta:resourcekey="lblDataFine" /></td>
                 <td><asp:textbox runat="server" id="txtDateEnd" Width="100px"  /></td>
             </tr>
             <tr>
              <td colspan="2">
-            <asp:ImageButton ID="imgSearch" runat="server" Height="40" ImageUrl="~/img/iconView.png" OnClick="imgSearch_Click" />RICERCA!
+            <asp:ImageButton ID="imgSearch" runat="server" Height="40" ImageUrl="~/img/iconView.png" OnClick="imgSearch_Click" />
+                 <asp:label runat="server" id="lblRicerca" meta:resourcekey="lblRicerca" />
         </td></tr>
         </table>
     </div>
@@ -36,8 +37,8 @@
             <thead>
             <tr>
             <th></th>
-                <th>Cliente</th>
-                <th>Tempo lavorato (hh:mm:ss)</th>
+                <th><asp:label runat="server" id="lblTHCliente" meta:resourcekey="lblTHCliente" /></th>
+                <th><asp:label runat="server" id="lblTHTempoLav" meta:resourcekey="lblTHTempoLav" /></th>
                 <th>%</th>
                 </tr>
                 </thead>
@@ -59,7 +60,7 @@
         <tr>
             <td></td>
             <td>TOTALE:</td>
-            <td><%=Math.Round(portClienti.TempoDiLavoroTotale.TotalHours, 2) %> ore</td>
+            <td><%=Math.Round(portClienti.TempoDiLavoroTotale.TotalHours, 2) %>h</td>
             <td></td>
         </tr>
         </tbody>

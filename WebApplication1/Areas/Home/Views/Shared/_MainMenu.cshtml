@@ -1,0 +1,85 @@
+﻿@{
+    var myMenu = @Model;
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+    @if (Session["user"] != null)
+    {
+        List<KIS.App_Code.VoceMenu> mainMenu = new List<KIS.App_Code.VoceMenu>();
+        KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+        curr.loadGruppi();
+        for (int i = 0; i < curr.Gruppi.Count; i++)
+        {
+            curr.Gruppi[i].loadMenu();
+            for (int j = 0; j < curr.Gruppi[i].VociDiMenu.Count; j++)
+            {
+                bool controllo = false;
+                for (int k = 0; k < mainMenu.Count; k++)
+                {
+                    if (mainMenu[k].ID == curr.Gruppi[i].VociDiMenu[j].ID)
+                    {
+                        controllo = true;
+                    }
+                }
+                if (controllo == false)
+                {
+                    mainMenu.Add(curr.Gruppi[i].VociDiMenu[j]);
+                }
+            }
+        }
+
+        foreach (var menuLevel1 in mainMenu)
+        {
+            <li class="dropdown">
+                @{menuLevel1.loadFigli();
+                    if (menuLevel1.VociFiglie.Count > 0)
+                    {
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">@menuLevel1.Titolo<b class="caret"></b></a>
+                        var navbarsubmenu = menuLevel1.VociFiglie;
+                        if (navbarsubmenu.Count > 0)
+                        {
+                            <ul class="dropdown-menu">
+                                @foreach (var menuLevel2 in navbarsubmenu)
+                                {
+                                    <li>
+                                        @if (!string.IsNullOrEmpty(menuLevel2.URL))
+                                        {
+                                            <a href="@Url.Content(menuLevel2.URL)">
+                                                @menuLevel2.Titolo
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a href="~/ADDS/Default.aspx">
+                                                @menuLevel2.Titolo
+                                            </a>
+                                        }
+
+                                    </li>
+                                }
+                            </ul>
+                        }
+
+                    }
+                    else
+                    {
+                        <a href="@menuLevel1.URL" class="dropdown-toggle">@menuLevel1.Titolo</a>
+                    }
+                }
+            </li>
+
+                        }
+                    }
+                    else
+                    {
+                        <li>
+                            <a href="/Login/login.aspx" class="dropdown-toggle">Login</a>
+                        </li>
+                    }
+    </ul>
+                    </div>
+                </div>
+                    </nav>
+
+                    }

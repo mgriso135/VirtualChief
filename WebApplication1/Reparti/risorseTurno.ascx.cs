@@ -73,30 +73,31 @@ namespace KIS.Reparti
                         {
                             RisorsePostazioneTurno res = new RisorsePostazioneTurno(pst, turno);
                             res.NumRisorse = numRes;
-                            lbl1.Text = "Numero di risorse (" + res.NumRisorse.ToString()
-                                + ") per postazione " + pst.name.ToString()
-                                + " e turno " + turno.Nome.ToString()
-                                + " impostato correttamente.";
+                            lbl1.Text =GetLocalResourceObject("lblSetOk1").ToString()
+                                +  " (" + res.NumRisorse.ToString()
+                                + ") "+ GetLocalResourceObject("lblSetOk2").ToString() + " " + pst.name.ToString()
+                                + " "+ GetLocalResourceObject("lblSetOk3").ToString() + " " + turno.Nome.ToString()
+                                + " "+ GetLocalResourceObject("lblSetOk4").ToString() +".";
                             txtNumber.SelectedValue = res.NumRisorse.ToString();
                         }
                         else
                         {
-                            lbl1.Text = "Errore: turno non trovato.";
+                            lbl1.Text = GetLocalResourceObject("lblErrTurnoNotFound").ToString();
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Errore: postazione non trovata.";
+                        lbl1.Text = GetLocalResourceObject("lblErrPostazioneNotFound").ToString();
                     }
                 }
                 else
                 {
-                    lbl1.Text = "Errore: id postazione non valido.";
+                    lbl1.Text = GetLocalResourceObject("lblErrPostazioneNotValid").ToString();
                 }
             }
             else
             {
-                lbl1.Text = "Errore: formato numero risorse non valido.";
+                lbl1.Text = GetLocalResourceObject("lblErrResNotValid").ToString();
             }
         }
 

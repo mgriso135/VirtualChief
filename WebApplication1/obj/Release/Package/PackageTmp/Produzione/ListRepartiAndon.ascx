@@ -6,9 +6,9 @@
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <td></td>
-                    <td>Reparti</td>
-                    <td>Descrizione</td>
+                    <th></th>
+                    <th><asp:literal runat="server" id="lblReparti" Text="<%$Resources:lblReparti %>" /></th>
+                    <th><asp:literal runat="server" id="lblDescrizione" Text="<%$Resources:lblDescrizione %>" /></th>
                 </tr>
                     </thead>
                 <tbody>
@@ -16,7 +16,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><a href="AndonReparto.aspx?id=<%# DataBinder.Eval(Container.DataItem, "id") %>">
-                    <asp:image runat="server" ID="imgview" ImageUrl="/img/iconView.png" height="30px" ToolTip="Andon con barra avanzamento per prodotto" />
+                    <asp:image runat="server" ID="imgview" ImageUrl="/img/iconView.png" height="30px" ToolTip="<%$Resources:lblTTAndon %>" />
                     </a></td>
                
                 <td><%# DataBinder.Eval(Container.DataItem, "name") %></td>

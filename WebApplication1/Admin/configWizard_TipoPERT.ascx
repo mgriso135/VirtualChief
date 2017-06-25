@@ -4,8 +4,8 @@
     <ContentTemplate>
         <asp:Label runat="server" ID="lbl1" />
         <asp:RadioButtonList runat="server" ID="rb1" AutoPostBack="true" OnSelectedIndexChanged="rb1_SelectedIndexChanged" CssClass="radio">
-            <asp:ListItem Value="Graph">PERT in formato grafico</asp:ListItem>
-            <asp:ListItem Value="Table">PERT in formato tabella</asp:ListItem>
+            <asp:ListItem Value="Graph" Text="<%$ resources:ddlPertGraph %>"></asp:ListItem>
+            <asp:ListItem Value="Table" Text="<%$ resources:ddlTableGraph %>"></asp:ListItem>
         </asp:RadioButtonList>
     </ContentTemplate>
 </asp:UpdatePanel>

@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="configMaxViewDaysAndonReparto.ascx.cs" Inherits="KIS.Andon.configMaxViewDaysAndonReparto" %>
-<h3>Configurazione numero di giorni da visualizzare</h3>
+<h3><asp:label runat="server" id="lblTitleCfgGiorni" meta:resourcekey="lblTitleCfgGiorni" /></h3>
 <asp:UpdatePanel runat="server" id="upd1">
     <ContentTemplate>
         <asp:Label runat="server" ID="lbl1" />

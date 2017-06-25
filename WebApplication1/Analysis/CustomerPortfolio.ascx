@@ -8,60 +8,60 @@
             <thead>
             <tr>
             <th></th>
-            <th>Ragione sociale
+            <th><asp:label runat="server" id="lblTHRagSociale" meta:resourcekey="lblTHRagSociale" />
                 <asp:LinkButton ID="lnkRagSocUp" runat="server" onclick="lnkRagSocUp_Click">
-      <asp:Image ID="Image1" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image1" ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkRagSocDown" runat="server" onclick="lnkRagSocDown_Click">
-      <asp:Image ID="Image2" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image2" ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
             </th>
-                <th>Partita IVA
+                <th><asp:label runat="server" id="lblTHPartitaIVA" meta:resourcekey="lblTHPartitaIVA" />
                     <asp:LinkButton ID="lnkPartitaIVAUp" runat="server" onclick="lnkPartitaIVAUp_Click">
-      <asp:Image ID="Image5" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image5" ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkPartitaIVADown" runat="server" onclick="lnkPartitaIVADown_Click">
-      <asp:Image ID="Image6" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image6" ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                 </th>
-                <th>Codice Fiscale
+                <th><asp:label runat="server" id="lblTHCodFiscale" meta:resourcekey="lblTHCodFiscale" />
                      <asp:LinkButton ID="lnkCodFiscaleUp" runat="server" onclick="lnkCodFiscaleUp_Click">
-      <asp:Image ID="Image7" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image7" ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkCodFiscaleDown" runat="server" onclick="lnkCodFiscaleDown_Click">
-      <asp:Image ID="Image8" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image8" ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                 </th>
-                <th>Citta
+                <th><asp:label runat="server" id="lblTHCitta" meta:resourcekey="lblTHCitta" />
                      <asp:LinkButton ID="lnkCittaUp" runat="server" onclick="lnkCittaUp_Click">
-      <asp:Image ID="Image9" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image9" ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkCittaDown" runat="server" onclick="lnkCittaDown_Click">
-      <asp:Image ID="Image10" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image10" ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                 </th>
-                <th>CAP
+                <th><asp:label runat="server" id="lblTHCAP" meta:resourcekey="lblTHCAP" />
                     <asp:LinkButton ID="lnkCAPUp" runat="server" onclick="lnkCAPUp_Click">
-      <asp:Image ID="Image11" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image11" ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkCAPDown" runat="server" onclick="lnkCAPDown_Click">
-      <asp:Image ID="Image12" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image12" ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                 </th>
-                <th>Provincia
+                <th><asp:label runat="server" id="lblTHProvincia" meta:resourcekey="lblTHProvincia" />
                     <asp:LinkButton ID="lnkProvinciaUp" runat="server" onclick="lnkProvinciaUp_Click">
-      <asp:Image ID="Image3" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image3" ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkProvinciaDown" runat="server" onclick="lnkProvinciaDown_Click">
-      <asp:Image ID="Image4" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ID="Image4" ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                 </th>
-                <th>Stato
+                <th><asp:label runat="server" id="lblTHStato" meta:resourcekey="lblTHStato" />
                     <asp:LinkButton ID="lnkStatoUp" runat="server" onclick="lnkStatoUp_Click">
-      <asp:Image ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+      <asp:Image ImageUrl="~/img/iconArrowUp.png" ToolTip="<%$resources:TTascending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     <asp:LinkButton ID="lnkStatoDown" runat="server" onclick="lnkStatoDown_Click">
-      <asp:Image ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+      <asp:Image ImageUrl="~/img/iconArrowDown.png" ToolTip="<%$resources:TTdescending %>" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                 </th>
                 </tr>

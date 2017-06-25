@@ -399,7 +399,7 @@ namespace KIS.App_Code
             cmd.Transaction = trans;
 
             cmd.CommandText = "INSERT INTO reparti(idReparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone) VALUES(" 
-                + repID.ToString() + ", '" + nome + "', '" + descrizione + "', 0, 0, 0, false, '" + timeZone + "')";
+                + repID.ToString() + ", '" + nome + "', '" + descrizione + "', 0, 1, 0, false, '" + timeZone + "')";
             try
             {
                 cmd.ExecuteNonQuery();
@@ -1929,8 +1929,8 @@ namespace KIS.App_Code
                 if (i < f)
                 {
                     Reparto rp = new Reparto(this.idReparto);
-                    i = TimeZoneInfo.ConvertTimeToUtc(i, rp.tzFusoOrario);
-                    f = TimeZoneInfo.ConvertTimeToUtc(f, rp.tzFusoOrario);
+                    //i = TimeZoneInfo.ConvertTimeToUtc(i, rp.tzFusoOrario);
+                    //f = TimeZoneInfo.ConvertTimeToUtc(f, rp.tzFusoOrario);
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1990,6 +1990,8 @@ namespace KIS.App_Code
                         rdr.Close();
                         MySqlTransaction trn = conn.BeginTransaction();
                         cmd.Transaction = trn;
+                        i = TimeZoneInfo.ConvertTimeToUtc(i, rp.tzFusoOrario);
+                        f = TimeZoneInfo.ConvertTimeToUtc(f, rp.tzFusoOrario);
                         cmd.CommandText = "INSERT INTO straordinarifestivita(id, azione, datainizio, datafine, turno) VALUES("
                             + maxId.ToString() + ", 'S', '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + f.ToString("yyyy-MM-dd HH:mm:ss")
                             + "', " + idTurno.ToString() + ")";
@@ -2170,6 +2172,10 @@ namespace KIS.App_Code
                     {
                         controlli = true;
                         this._idTurno = str.idTurno;
+                        F = str.Fine;
+                        //Turno trn = new Turno(idTurno);
+                        //reparto = new Reparto(trn.idReparto);
+                        //F = TimeZoneInfo.ConvertTimeToUtc(str.Fine, reparto.tzFusoOrario);
                     }
                 }
                 else if (stat == 'F')

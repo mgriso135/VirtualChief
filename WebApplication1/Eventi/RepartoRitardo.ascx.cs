@@ -67,13 +67,15 @@ namespace KIS.Eventi
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire gli allarmi di ritardo del reparto.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddRitardoGruppo.Visible = false;
                 btnShowAddRitardoGruppo.Visible = false;
                 btnShowAddRitardoUtente.Visible = false;
                 ddlOre.Visible = false;
                 ddlMinuti.Visible = false;
                 ddlSecondi.Visible = false;
+                btnSaveRitMin.Visible = false;
+                btnUndoRitMin.Visible = false;
             }
         }
 
@@ -122,7 +124,7 @@ namespace KIS.Eventi
                     }
                     else
                     {
-                        lbl1.Text += "Errore." + cfgRp.log;
+                        lbl1.Text += "Error." + cfgRp.log;
                     }
                 }
             }
@@ -159,14 +161,13 @@ namespace KIS.Eventi
             }
             else
             {
-                lbl1.Text = "E' avvenuto un errore.";
+                lbl1.Text = "Error.";
             }
             btnSaveRitMin.Focus();
         }
 
         protected void btnUndoRitMin_Click(object sender, ImageClickEventArgs e)
         {
-            lbl1.Text = "Async call.";
             ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
             if (cfgRp.RitardoMinimoDaSegnalare != null)
             {
@@ -231,12 +232,11 @@ namespace KIS.Eventi
                     bool rt = cfgRp.deleteGruppo(new Group(groupID));
                     if (rt == true)
                     {
-                        lbl1.Text = "OK!";
                         Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore.";
+                        lbl1.Text = "Error.";
                     }
                 }
             }
@@ -249,7 +249,7 @@ namespace KIS.Eventi
                 frmAddRitardoUtente.Visible = true;
                 UserList elencoUtenti = new UserList();
                 ddlAddRitardoUtente.Items.Clear();
-                ddlAddRitardoUtente.Items.Add(new ListItem("Seleziona un utente", ""));
+                ddlAddRitardoUtente.Items.Add(new ListItem(GetLocalResourceObject("lblUserRitSelDDl").ToString(), ""));
                 ddlAddRitardoUtente.DataSource = elencoUtenti.elencoUtenti;
                 ddlAddRitardoUtente.DataTextField = "FullName";
                 ddlAddRitardoUtente.DataValueField = "username";
@@ -278,7 +278,7 @@ namespace KIS.Eventi
                     }
                     else
                     {
-                        lbl1.Text += "Errore." + cfgRp.log;
+                        lbl1.Text += "Error. " + cfgRp.log;
                     }
                 }
             }
@@ -327,12 +327,11 @@ namespace KIS.Eventi
                     bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));
                     if (rt == true)
                     {
-                        lbl1.Text = "OK!";
                         Response.Redirect(Request.RawUrl);
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore.";
+                        lbl1.Text = "Error. ";
                     }
             }
         }

@@ -22,6 +22,15 @@ namespace KIS.Users {
         protected global::System.Web.UI.WebControls.ImageButton imgShowForm;
         
         /// <summary>
+        /// Controllo lblTitleAddEmail.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleAddEmail;
+        
+        /// <summary>
         /// Controllo tblAddEmail.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace KIS.Users {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlTable tblAddEmail;
+        
+        /// <summary>
+        /// Controllo lblEmail.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblEmail;
         
         /// <summary>
         /// Controllo txtEmail.
@@ -47,6 +65,15 @@ namespace KIS.Users {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valAddr;
+        
+        /// <summary>
+        /// Controllo lblAmbito.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAmbito;
         
         /// <summary>
         /// Controllo txtNote.
@@ -74,6 +101,15 @@ namespace KIS.Users {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox chkAlarm;
+        
+        /// <summary>
+        /// Controllo lblSendAlarm.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSendAlarm;
         
         /// <summary>
         /// Controllo btnSave.

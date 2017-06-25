@@ -22,6 +22,15 @@ namespace KIS.Analysis {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblSelectDate;
         
         /// <summary>
+        /// Controllo lblDataInizio.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDataInizio;
+        
+        /// <summary>
         /// Controllo txtDateStart.
         /// </summary>
         /// <remarks>
@@ -29,6 +38,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtDateStart;
+        
+        /// <summary>
+        /// Controllo lblDataFine.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDataFine;
         
         /// <summary>
         /// Controllo txtDateEnd.
@@ -47,6 +65,15 @@ namespace KIS.Analysis {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgSearch;
+        
+        /// <summary>
+        /// Controllo lblRicerca.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRicerca;
         
         /// <summary>
         /// Controllo lbl1.

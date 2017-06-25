@@ -31,6 +31,33 @@ namespace KIS.Processi {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblPrecedenze;
         
         /// <summary>
+        /// Controllo lblPrecedenti.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblPrecedenti;
+        
+        /// <summary>
+        /// Controllo lblTask.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTask;
+        
+        /// <summary>
+        /// Controllo lblSuccessivi.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblSuccessivi;
+        
+        /// <summary>
         /// Controllo rptPrec.
         /// </summary>
         /// <remarks>

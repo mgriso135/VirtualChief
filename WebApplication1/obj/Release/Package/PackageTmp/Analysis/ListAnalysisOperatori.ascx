@@ -8,8 +8,8 @@
             <thead>
             <tr>
             <th></th>
-            <th>Nome</th>
-            <th>Username</th>
+            <th><asp:label runat="server" id="lblTHNome" meta:resourcekey="lblTHNome" /></th>
+            <th><asp:label runat="server" id="lblTHUsername" meta:resourcekey="lblTHUsername" /></th>
                 </tr>
                 </thead>
             <tbody>

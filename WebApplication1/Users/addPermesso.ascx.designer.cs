@@ -40,6 +40,15 @@ namespace KIS.Users {
         protected global::System.Web.UI.HtmlControls.HtmlTable tblFormAddPermesso;
         
         /// <summary>
+        /// Controllo lblNome.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblNome;
+        
+        /// <summary>
         /// Controllo nomeP.
         /// </summary>
         /// <remarks>
@@ -56,6 +65,15 @@ namespace KIS.Users {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.RequiredFieldValidator valNome;
+        
+        /// <summary>
+        /// Controllo lblDescrizione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblDescrizione;
         
         /// <summary>
         /// Controllo descP.

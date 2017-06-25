@@ -1,14 +1,14 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="viewDetailsTask.ascx.cs" Inherits="KIS.Produzione.viewDetailsTask" %>
 <h3 runat="server" id="lblNomeTask"></h3>
 <asp:Label runat="server" ID="lbl1" />
-Legenda tipo evento: I = iniziato; P = in pausa; F = finito; W = segnalato problema
+<asp:Literal runat="server" ID="lblLegenda" Text="<%$Resources:lblLegenda %>" />
 <asp:Repeater runat="server" ID="rptDettagli" OnItemDataBound="rptDettagli_ItemDataBound">
     <HeaderTemplate>
         <table class="table table-condensed table-hover table-striped">
             <tr>
-                <td>Data</td>
-                <td>Tipo Evento</td>
-                <td>Utente</td>
+                <td><asp:Literal runat="server" ID="lblData" Text="<%$Resources:lblData %>" /></td>
+                <td><asp:Literal runat="server" ID="lblTipoEvento" Text="<%$Resources:lblTipoEvento %>" /></td>
+                <td><asp:Literal runat="server" ID="lblUtente" Text="<%$Resources:lblUtente %>" /></td>
             </tr>
     </HeaderTemplate>
     <ItemTemplate>

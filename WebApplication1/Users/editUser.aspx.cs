@@ -48,7 +48,7 @@ namespace KIS.Users
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di modificare un utente.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddEmail.Visible = false;
                 frmEditUserEmails.Visible = false;
                 frmEditUserInfo.Visible = false;

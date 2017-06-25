@@ -20,6 +20,7 @@ namespace KIS.Commesse
                 String sIDProdotto = Request.QueryString["idProdotto"];
                 String sAnnoProdotto = Request.QueryString["annoProdotto"];
                 String sQuantita = Request.QueryString["quantita"];
+            String matricola = Request.QueryString["matricola"];
 
                 if (!String.IsNullOrEmpty(sIDCommessa) && !String.IsNullOrEmpty(sAnnoCommessa) && !String.IsNullOrEmpty(sIDProc) && !String.IsNullOrEmpty(sRevProc) && !String.IsNullOrEmpty(sIDVariante) && !String.IsNullOrEmpty(sIDProdotto) && !String.IsNullOrEmpty(sAnnoProdotto) && !String.IsNullOrEmpty(sQuantita))
                 {
@@ -71,7 +72,8 @@ namespace KIS.Commesse
                             + "&idVariante=" + var.idVariante.ToString()
                             + "&idProdotto=" + idProdotto.ToString()
                                 + "&annoProdotto=" + annoProdotto.ToString()
-                                + "&quantita=" + quantita.ToString();
+                                + "&quantita=" + quantita.ToString()
+                                +"&matricola="+matricola.ToString();
 
                             lnkSwitchToGrid.NavigateUrl = "wzEditPERT.aspx?idCommessa=" + cm.ID.ToString()
                             + "&annoCommessa=" + cm.Year.ToString()
@@ -80,7 +82,8 @@ namespace KIS.Commesse
                             + "&idVariante=" + var.idVariante.ToString()
                             + "&idProdotto=" + idProdotto.ToString()
                                 + "&annoProdotto=" + annoProdotto.ToString()
-                                + "&quantita=" + quantita.ToString();
+                                + "&quantita=" + quantita.ToString()
+                                + "&matricola=" + matricola.ToString();
 
                             bool checkIntegrity = true;
                             if (idProdotto != -1 && annoProdotto != -1)
@@ -126,7 +129,8 @@ namespace KIS.Commesse
                                     + "&idVariante=" + prcVar.variant.idVariante.ToString()
                                     + "&idProdotto=" + idProdotto.ToString()
                                     + "&annoProdotto=" + annoProdotto.ToString()
-                                    + "&quantita=" + quantita.ToString();
+                                    + "&quantita=" + quantita.ToString()
+                                    + "&matricola=" + matricola.ToString();
                                 }
                                 else
                                 {
@@ -141,13 +145,13 @@ namespace KIS.Commesse
                                 lnkGoBack.Visible = false;
                                 lnkGoFwd.Visible = false;
                                 LinkBCK.Visible = false;
-                                lbl1.Text = "Errore.";
+                                lbl1.Text = "Error.";
 
                             }
                         }
                         else
                         {
-                            lbl1.Text = "Errore.";
+                            lbl1.Text = "Error.";
                         }
                     }
                     else
@@ -157,7 +161,7 @@ namespace KIS.Commesse
                         lnkGoBack.Visible = false;
                         lnkGoFwd.Visible = false;
                         LinkBCK.Visible = false;
-                        lbl1.Text = "Errore.";
+                        lbl1.Text = "Error.";
 
                         lnkSwitchToGrid.Enabled = false;
                         lnkSwitchToGrid.Visible = false;
@@ -166,7 +170,7 @@ namespace KIS.Commesse
                 }
                 else
                 {
-                    lbl1.Text = "Errore: querystring richieste non presenti.";
+                lbl1.Text = GetLocalResourceObject("lblErrorQueryString").ToString();
                     frmEditPERT.Visible = false;
                     frmEditDatiVariante.Visible = false;
                     lnkGoBack.Visible = false;
@@ -178,78 +182,6 @@ namespace KIS.Commesse
                 }
         }
 
-  /*      protected void timeFwd_Tick(object sender, EventArgs e)
-        {
-            //lblFwd.Text = DateTime.Now.ToString("HH:mm:ss");
-            
-            String sIDCommessa = Request.QueryString["idCommessa"];
-                String sAnnoCommessa = Request.QueryString["annoCommessa"];
-                String sIDProc = Request.QueryString["idProc"];
-                String sRevProc = Request.QueryString["revProc"];
-                String sIDVariante = Request.QueryString["idVariante"];
-                String sIDProdotto = Request.QueryString["idProdotto"];
-                String sAnnoProdotto = Request.QueryString["annoProdotto"];
-                String sQuantita = Request.QueryString["quantita"];
-
-                if (!String.IsNullOrEmpty(sIDCommessa) && !String.IsNullOrEmpty(sAnnoCommessa) && !String.IsNullOrEmpty(sIDProc) && !String.IsNullOrEmpty(sRevProc) && !String.IsNullOrEmpty(sIDVariante) && !String.IsNullOrEmpty(sIDProdotto) && !String.IsNullOrEmpty(sAnnoProdotto) && !String.IsNullOrEmpty(sQuantita))
-                {
-                    int idCommessa = -1;
-                    int annoCommessa = -1;
-                    int idProc = -1;
-                    int revProc = -1;
-                    int idVariante = -1;
-                    int idProdotto = -1;
-                    int annoProdotto = -1;
-                    int quantita = -1;
-                    try
-                    {
-                        idCommessa = Int32.Parse(sIDCommessa);
-                        annoCommessa = Int32.Parse(sAnnoCommessa);
-                        idProc = Int32.Parse(sIDProc);
-                        revProc = Int32.Parse(sRevProc);
-                        idVariante = Int32.Parse(sIDVariante);
-                        idProdotto = Int32.Parse(sIDProdotto);
-                        annoProdotto = Int32.Parse(sAnnoProdotto);
-                        quantita = Int32.Parse(sQuantita);
-                    }
-                    catch
-                    {
-                        idCommessa = -1;
-                        annoCommessa = -1;
-                        idProc = -1;
-                        revProc = -1;
-                        idVariante = -1;
-                        idProdotto = -1;
-                        annoProdotto = -1;
-                        quantita = -1;
-                    }
-
-                    if (idCommessa != -1 && annoCommessa != -1 && idProc != -1 && revProc != -1 && idVariante != -1)
-                    {
-                        ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVariante));
-                        Articolo art = new Articolo(idProdotto, annoProdotto);
-                        Commessa cm = new Commessa(idCommessa, annoCommessa);
-                        int consist2 = prcVar.process.checkConsistencyPERT(new variante(idVariante));
-                        //lblFwd.Text = consist2.ToString();
-                        if (consist2 == 1 || consist2 == 6)
-                        {
-                            LinkFWD.Visible = true;
-                            LinkFWD.NavigateUrl = "wzAssociaPERTReparto.aspx?idCommessa="
-                                + cm.ID.ToString()
-                            + "&annoCommessa=" + cm.Year.ToString()
-                            + "&idProc=" + prcVar.process.processID.ToString()
-                            + "&revProc=" + prcVar.process.revisione.ToString()
-                            + "&idVariante=" + prcVar.variant.idVariante.ToString()
-                            + "&idProdotto=" + art.ID.ToString()
-                            + "&annoProdotto=" + art.Year.ToString()
-                            + "&quantita=" + art.Quantita.ToString();
-                        }
-                        else
-                        {
-                            LinkFWD.Visible = false;
-                        }
-                    }
-            }
-        }*/
+  
     }
 }

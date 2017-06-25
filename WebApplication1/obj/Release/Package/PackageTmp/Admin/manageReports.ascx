@@ -4,8 +4,8 @@
     <ul class="thumbnails unstyled">
         <li class="span2" runat="server" id="boxOrderStatusReport">
             <a href="~/Admin/configOrderStatusBase.aspx" runat="server" id="lnkConfigOrderStatus">
-<asp:Image runat="server" ImageUrl="~/img/iconReportProductionProgress.jpg" id="imgConfigOrderStatus" ToolTip="Configurazione report stato avanzamento prodotti per cliente" height="100" CssClass="btn btn-primary"/>
-<p>Configurazione report stato avanzamento prodotti per cliente</p>
+<asp:Image runat="server" ImageUrl="~/img/iconReportProductionProgress.jpg" id="imgConfigOrderStatus" ToolTip="<%$resources:lblCfgReportAvanzamentoProdotti.Text %>" height="100" CssClass="btn btn-primary"/>
+<p><asp:label runat="server" ID="lblCfgReportAvanzamentoProdotti" meta:resourcekey="lblCfgReportAvanzamentoProdotti" /></p>
             </a>
             </li>
         </ul>

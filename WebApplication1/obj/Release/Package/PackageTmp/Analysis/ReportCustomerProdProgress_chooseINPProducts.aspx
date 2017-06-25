@@ -6,15 +6,20 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="analysis.aspx">Analisi dati</a>
+						<a href="analysis.aspx">
+                            <asp:label runat="server" ID="lblNavAnalisiDati" meta:resourcekey="lblNavAnalisiDati" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="ReportCustomerProdProgress_chooseCustomer.aspx">Report avanzamento prodotti per cliente</a>
+						<a href="ReportCustomerProdProgress_chooseCustomer.aspx">
+                            <asp:label runat="server" ID="lblNavProdClienti" meta:resourcekey="lblNavProdClienti" /></a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="ReportCustomerProdProgress_chooseINPProducts.aspx">Seleziona i prodotti da inserire nel report</a>
+						<a href="ReportCustomerProdProgress_chooseINPProducts.aspx">
+                            <asp:label runat="server" ID="lblNavSelProdReport" meta:resourcekey="lblNavSelProdReport" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

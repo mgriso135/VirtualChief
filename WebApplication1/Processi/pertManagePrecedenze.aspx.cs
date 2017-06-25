@@ -44,13 +44,13 @@ namespace KIS.Processi
                 {
                     precedenze.Visible = false;
                     lblTitle.Visible = false;
-                    lblErr.Text = "Querystring non valide<br/>";
+                    lblErr.Text = GetLocalResourceObject("lblQueryStringKo").ToString();
                 }
             }
             else
             {
                 precedenze.Visible = false;
-                lblErr.Text = "Querystring non valide<br/>";
+                lblErr.Text = GetLocalResourceObject("lblQueryStringKo").ToString();
                 lblTitle.Visible = false;
             }
         }

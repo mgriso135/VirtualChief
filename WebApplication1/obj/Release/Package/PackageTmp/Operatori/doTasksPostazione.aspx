@@ -8,15 +8,16 @@
     <asp:ScriptManager runat="server" ID="scriptMan" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="#">WorkPlace</a>
+						<a href="#"><asp:Literal runat="server" ID="lblWorkplace" Text="<%$Resources:lblNavWorkplace %>" />
+                            </a>
 						<span class="divider">/</span>
 					</li>
         <li>
-						<a href="checkInPostazione.aspx">Web Gemba</a>
+						<a href="checkInPostazione.aspx"><asp:Literal runat="server" ID="lblNavWebGemba" Text="<%$Resources:lblNavWebGemba %>" /></a>
 						<span class="divider">/</span>
 					</li>
          <li>
-						<a href="<%#Request.RawUrl %>">Postazione di lavoro</a>
+						<a href="<%#Request.RawUrl %>"><asp:Literal runat="server" ID="lblNavPostazione" Text="<%$Resources:lblNavPostazione %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>

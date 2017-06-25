@@ -44,7 +44,7 @@ namespace KIS.Produzione
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di visualizzare lo stato di avanzamento dell'articolo.<br />";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 rptTasks.Visible = false;
             }
         }

@@ -1,30 +1,36 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="addTempoCiclo.ascx.cs" Inherits="KIS.Processi.addTempoCiclo" %>
-Aggiungi tempo ciclo<asp:ImageButton runat="server" ID="imgShowFrmAddTempo" OnClick="imgShowFrmAddTempo_Click" ImageUrl="/img/iconAdd.jpg" Height="30" ToolTip="Aggiungi un tempo ciclo al processo" />
+
+<asp:Literal runat="server" ID="lblAddTC" Text="<%$Resources:lblAddTC %>" />
+<asp:ImageButton runat="server" ID="imgShowFrmAddTempo" OnClick="imgShowFrmAddTempo_Click" ImageUrl="/img/iconAdd.jpg" Height="30" ToolTip="<%$Resources:lblTTAddTC %>" />
 <asp:HiddenField runat="server" ID="taskID" />
 <asp:HiddenField runat="server" ID="varID" />
 <asp:UpdatePanel runat="server" ID="updAddTempo">
     <ContentTemplate>
 <table runat="server" id="frmAddTempo" style="border: 1px dotted green">
     <tr>
-        <td>Numero operatori</td>
+        <td><asp:Literal runat="server" ID="lblNumOp" Text="<%$Resources:lblNumOp %>" /></td>
         <td>
             <asp:DropDownList runat="server" ID="ddlNumOp" Width="80"/>
         </td>
     </tr>
     <tr>
-        <td>Setup</td>
+        <td><asp:Literal runat="server" ID="lblSetup" Text="<%$Resources:lblSetup %>" /></td>
         <td>
-            ore:<asp:DropdownList runat="server" Width="80" ID="oreSetup"/>mm:<asp:DropdownList runat="server" ID="minSetup" Width="60" />ss:<asp:DropdownList runat="server" ID="secSetup" Width="60"/>
+            <asp:Literal runat="server" ID="lblOre" Text="<%$Resources:lblOre %>" />:<asp:DropdownList runat="server" Width="80" ID="oreSetup"/>
+            <asp:Literal runat="server" ID="lblMinuti" Text="<%$Resources:lblMinuti %>" />:<asp:DropdownList runat="server" ID="minSetup" Width="60" />
+            <asp:Literal runat="server" ID="lblSecondi" Text="<%$Resources:lblSecondi %>" />:<asp:DropdownList runat="server" ID="secSetup" Width="60"/>
             </td>
     </tr>
     <tr>
-        <td>Tempo ciclo</td>
+        <td><asp:Literal runat="server" ID="lblTempoCiclo" Text="<%$Resources:lblTempoCiclo %>" /></td>
         <td>
-            ore:<asp:DropdownList runat="server" Width="80" ID="ore"/>mm:<asp:DropdownList runat="server" ID="minuti" Width="60" />ss:<asp:DropdownList runat="server" ID="secondi" Width="60"/>
+            <asp:Literal runat="server" ID="Literal1" Text="<%$Resources:lblOre %>" />:<asp:DropdownList runat="server" Width="80" ID="ore"/>
+            <asp:Literal runat="server" ID="Literal2" Text="<%$Resources:lblMinuti %>" />:<asp:DropdownList runat="server" ID="minuti" Width="60" />
+            <asp:Literal runat="server" ID="Literal3" Text="<%$Resources:lblSecondi %>" />:<asp:DropdownList runat="server" ID="secondi" Width="60"/>
             </td>
     </tr>
     <tr>
-        <td colspan="2"><asp:CheckBox runat="server" ID="chkDefault" Checked="true" ToolTip="Se selezionato, nel calcolo del percorso critico viene considerato questo tempo ciclo, e nel calcolo delle risorse impegnate vengono considerati questi operatori" />Default</td>
+        <td colspan="2"><asp:CheckBox runat="server" ID="chkDefault" Checked="true" ToolTip="<%$Resources:lblTTDefaultTime %>" /><asp:Literal runat="server" ID="lblDefault" Text="<%$Resources:lblDefault %>" /></td>
     </tr>
     <tr>
         <td colspan="2" style="text-align: center">

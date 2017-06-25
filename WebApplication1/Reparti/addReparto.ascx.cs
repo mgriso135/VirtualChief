@@ -39,7 +39,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di aggiungere un reparto. <br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmAddReparto.Visible = false;
             }
         }

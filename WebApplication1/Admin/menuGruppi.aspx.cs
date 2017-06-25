@@ -73,7 +73,7 @@ namespace KIS.Admin
             }
             else
             {
-                lbl1.Text = "Non hai il permesso di gestire l'associazione gruppi - voci di menu.<br/>";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 frmListVoci.idGruppo = -1;
                 frmAddVoce.Visible = false;
                 frmAddVoce.idGruppo = -1;

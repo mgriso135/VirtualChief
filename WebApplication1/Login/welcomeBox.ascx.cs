@@ -15,8 +15,12 @@ namespace KIS.Login
             {
                 if (((User)Session["user"]) != null && ((User)Session["user"]).authenticated == true)
                 {
-                    lblInfoLogin.Text = "<small>Benvenuto&nbsp;" + ((User)Session["user"]).name + " " + ((User)Session["user"]).cognome + "<br/>"
-                    + "Last login at: " + ((User)Session["user"]).lastLogin.ToString() + "</small>";
+                    lblInfoLogin.Text = "<small>"
+                        + GetLocalResourceObject("lblWelcome1").ToString()
+                        +"&nbsp;" 
+                        + ((User)Session["user"]).name + " " + ((User)Session["user"]).cognome + "<br/>"
+                        + GetLocalResourceObject("lblWelcome2").ToString()
+                    +": " + ((User)Session["user"]).lastLogin.ToString() + "</small>";
                 }
             }
         }

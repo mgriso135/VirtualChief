@@ -13,25 +13,26 @@ namespace KIS.Operatori
         {
             if (Session["user"] != null)
             {
-                if (!Page.IsPostBack && !Page.IsCallback)
-                {
-                    User curr = (User)Session["user"];
-                    // Verifico se l'utente appartiene al gruppo "Operatori"
-                    curr.loadGruppi();
-                    bool checkOperatori = false;
-                    for (int i = 0; i < curr.Gruppi.Count; i++)
-                    {
-                        for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
-                        {
 
-                            if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == "Postazione check-in" && curr.Gruppi[i].Permessi.Elenco[j].X == true)
-                            {
-                                checkOperatori = true;
-                            }
+                User curr = (User)Session["user"];
+                // Verifico se l'utente appartiene al gruppo "Operatori"
+                curr.loadGruppi();
+                bool checkOperatori = false;
+                for (int i = 0; i < curr.Gruppi.Count; i++)
+                {
+                    for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
+                    {
+
+                        if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == "Postazione check-in" && curr.Gruppi[i].Permessi.Elenco[j].X == true)
+                        {
+                            checkOperatori = true;
                         }
                     }
+                }
 
-                    if (checkOperatori == true)
+                if (checkOperatori == true)
+                {
+                    if (!Page.IsPostBack)
                     {
                         curr.loadPostazioniAttive();
                         if (curr.PostazioniAttive.Count > 0)
@@ -42,10 +43,11 @@ namespace KIS.Operatori
                         else
                         {
                             rptPostazioniAttive.Visible = false;
-                            lbl1.Text = "Non hai effettuato il check-in in nessuna postazione.";
+                            lbl1.Text = GetLocalResourceObject("lblNoCheckIn").ToString();
                         }
                     }
                 }
+            
             }
             else
             {
@@ -108,9 +110,9 @@ namespace KIS.Operatori
                 System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                 if (tRow != null)
                 {
-                   /* tRow.BgColor = "#C0C0C0";
-                    tRow.Attributes.Add("onMouseOver", "this.style.backgroundColor='#FFFF00'");
-                    tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#C0C0C0'");*/
+                    /* tRow.BgColor = "#C0C0C0";
+                     tRow.Attributes.Add("onMouseOver", "this.style.backgroundColor='#FFFF00'");
+                     tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#C0C0C0'");*/
                 }
             }
         }
@@ -142,7 +144,7 @@ namespace KIS.Operatori
                         }
                         else
                         {
-                            lbl1.Text = "Suggerimento: verificare di non avere lasciato dei task aperti nella postazione.<br/>";
+                            lbl1.Text = GetLocalResourceObject("lblCheckOpenTasks").ToString();
                         }
                     }
                 }
@@ -151,34 +153,37 @@ namespace KIS.Operatori
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            User curr = (User)Session["user"];
-            // Verifico se l'utente appartiene al gruppo "Operatori"
-            curr.loadGruppi();
-            bool checkOperatori = false;
-            for (int i = 0; i < curr.Gruppi.Count; i++)
+            if (Session["user"] != null)
             {
-                for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
+                User curr = (User)Session["user"];
+                // Verifico se l'utente appartiene al gruppo "Operatori"
+                curr.loadGruppi();
+                bool checkOperatori = false;
+                for (int i = 0; i < curr.Gruppi.Count; i++)
                 {
-
-                    if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == "Postazione check-in" && curr.Gruppi[i].Permessi.Elenco[j].X == true)
+                    for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
                     {
-                        checkOperatori = true;
+
+                        if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == "Postazione check-in" && curr.Gruppi[i].Permessi.Elenco[j].X == true)
+                        {
+                            checkOperatori = true;
+                        }
                     }
                 }
-            }
 
-            if (checkOperatori == true)
-            {
-                curr.loadPostazioniAttive();
-                if (curr.PostazioniAttive.Count > 0)
+                if (checkOperatori == true)
                 {
-                    rptPostazioniAttive.DataSource = curr.PostazioniAttive;
-                    rptPostazioniAttive.DataBind();
-                }
-                else
-                {
-                    rptPostazioniAttive.Visible = false;
-                    lbl1.Text = "Non hai effettuato il check-in in nessuna postazione.";
+                    curr.loadPostazioniAttive();
+                    if (curr.PostazioniAttive.Count > 0)
+                    {
+                        rptPostazioniAttive.DataSource = curr.PostazioniAttive;
+                        rptPostazioniAttive.DataBind();
+                    }
+                    else
+                    {
+                        rptPostazioniAttive.Visible = false;
+                        lbl1.Text = GetLocalResourceObject("lblNoCheckIn").ToString();
+                    }
                 }
             }
         }

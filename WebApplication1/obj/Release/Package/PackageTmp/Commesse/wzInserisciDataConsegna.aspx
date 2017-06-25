@@ -6,30 +6,31 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <h1>Wizard: nuovo prodotto su commessa</h1>
+    <h1><asp:Label runat="server" ID="lblWizNewOrder" Text="<%$Resources:lblWizNewOrder %>" /></h1>
     <ul class="breadcrumb hidden-phone">
         <li>
-		    <a href="wzAddCommessa.aspx">Nuova commessa</a>
+		    <a href="wzAddCommessa.aspx"><asp:Label runat="server" ID="lblNewOrder" Text="<%$Resources:lblNewOrder %>" /></a>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" id="lnkAddPert">Descrivi il prodotto</asp:hyperlink>
+		    <asp:hyperlink runat="server" id="lnkAddPert"><asp:Label runat="server" ID="lblDescProd" Text="<%$Resources:lblDescProd %>" /></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink ID="lnkEditPert" runat="server">Descrivi il processo produttivo</asp:hyperlink>
+		    <asp:hyperlink ID="lnkEditPert" runat="server" Text="<%$Resources:lblDescProcesso %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaReparto">Seleziona il reparto produttivo</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaReparto" Text="<%$Resources:lblSelReparto %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkAssociaTasks">Associa i tasks alle postazioni</asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkAssociaTasks" Text="<%$Resources:lblAssociaTaskPostazioni %>"></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
         <li>
-		    <asp:hyperlink runat="server" ID="lnkDataConsegna"><b style="font-size: 14px;">Data di consegna richiesta</b></asp:hyperlink>
+		    <asp:hyperlink runat="server" ID="lnkDataConsegna"><b style="font-size: 14px;">
+                <asp:Label runat="server" ID="lblDataConsegna" Text="<%$Resources:lblDataConsegna %>" /></b></asp:hyperlink>
 			<span class="divider">/</span>
 	    </li>
 	</ul>

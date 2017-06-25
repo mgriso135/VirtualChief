@@ -32,7 +32,7 @@ namespace KIS.Postazioni
                     box1.Text = "";
                     box2.Text = "";
                     box1.Focus();
-                    log.Text = "ERRORE!";
+                    log.Text = "ERROR!";
                 }
             }
             else
@@ -57,7 +57,7 @@ namespace KIS.Postazioni
                     box1.Text = "";
                     box2.Text = "";
                     box1.Focus();
-                    log.Text = "ERRORE!";
+                    log.Text = "ERROR!";
                 }
             }
             else
@@ -122,13 +122,13 @@ namespace KIS.Postazioni
                         log.Text = check.ToString();
                         if (check == false)
                         {
-                            log.Text = "Eseguo il check-in";
+                            log.Text = GetLocalResourceObject("lblDoCheckIn").ToString();
                             // Entro nella postazione
                             rt = usr.DoCheckIn(p);
                         }
                         else
                         {
-                            log.Text = "Eseguo il check-out";
+                            log.Text = GetLocalResourceObject("lblDoCheckOut").ToString();
                             // Esco dalla postazione
                             rt = usr.DoCheckOut(p);
                         }

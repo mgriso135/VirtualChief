@@ -45,13 +45,12 @@ namespace KIS.Reparti
             else
             {
                 ddlTimezones.Visible = false;
-                lbl1.Text = "Non hai il permesso di gestire il fuso orario.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
         protected void ddlTimezones_SelectedIndexChanged(object sender, EventArgs e)
         {
-            lblInfo.Text = "Fire!";
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
             Reparto rp = new Reparto(idReparto);
             if (rp.id != -1)
@@ -62,7 +61,7 @@ namespace KIS.Reparti
             }
             else
             {
-                lblInfo.Text = "E' avvenuto un errore.<br />";
+                lbl1.Text = GetLocalResourceObject("lblError").ToString();
             }
         }
     }

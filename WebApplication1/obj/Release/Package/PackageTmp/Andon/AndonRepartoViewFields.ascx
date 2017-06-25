@@ -16,14 +16,15 @@
         <asp:Label runat="server" ID="lbl1" />
 <div class="row-fluid" runat="server" id="frmContainer">
     <div class="span12">
-        <h3>Campi da visualizzare</h3>
+        <h3><asp:Label runat="server" ID="lblTitleCampiVis" meta:resourcekey="lblTitleCampiVis" /></h3>
         <asp:Label runat="server" ID="lblInfo" CssClass="text-info" />
         <asp:Repeater runat="server" ID="rptFields" OnItemCommand="rptFields_ItemCommand" OnItemDataBound="rptFields_ItemDataBound">
             <HeaderTemplate>
-                Prodotto
                 <table>
                     <thead>
-                    <th></th>
+                        <tr><th colspan="3">
+                            <asp:Label runat="server" ID="lblTHProdotto" meta:resourcekey="lblTHProdotto" />
+                            </th></tr>
                         </thead>
                     <tbody>
             </HeaderTemplate>
@@ -34,7 +35,7 @@
         </td><td>
         <asp:ImageButton runat="server" ID="imgDown" CommandName="Down" CommandArgument='<%#Eval("key") %>' ImageUrl="~/img/IconArrowDown.png" Width="10" />
     </td>
-    <td><%#Eval("Key") %>
+    <td><%# (string)GetLocalResourceObject(Eval("Key").ToString()) %>
     </td>
     <td>
         <asp:ImageButton runat="server" ID="imgDelete" CommandName="Delete" CommandArgument='<%#Eval("key") %>' ImageUrl="~/img/iconDelete.png" Width="20" />
@@ -52,7 +53,7 @@
         <asp:ImageButton runat="server" ID="imgAdd" CommandName="Add" CommandArgument='<%#Eval("key") %>' ImageUrl="~/img/iconAdd2.png" Width="20" />
     </td>
                     <td></td>
-    <td><%#Eval("Key") %>
+    <td><%# (string)GetLocalResourceObject(Eval("Key").ToString()) %>
     </td>
     <td>
     </td>
@@ -67,10 +68,11 @@
         <!-- Sezione Tasks -->
         <asp:Repeater runat="server" ID="rptFieldsTasks" OnItemCommand="rptFieldsTasks_ItemCommand" OnItemDataBound="rptFieldsTasks_ItemDataBound">
             <HeaderTemplate>
-                Tasks
                 <table>
                     <thead>
-                    <th></th>
+                        <tr><th>
+                            <asp:Label runat="server" ID="lblTHTasks" meta:resourcekey="lblTHTasks" />
+                            </th></tr>
                         </thead>
                     <tbody>
             </HeaderTemplate>
@@ -81,7 +83,7 @@
         </td><td>
         <asp:ImageButton runat="server" ID="imgTaskDown" CommandName="Down" CommandArgument='<%#Eval("key") %>' ImageUrl="~/img/IconArrowDown.png" Width="10" />
     </td>
-    <td><%#Eval("Key") %>
+    <td><%# (string)GetLocalResourceObject(Eval("Key").ToString()) %>
     </td>
     <td>
         <asp:ImageButton runat="server" ID="imgTaskDelete" CommandName="Delete" CommandArgument='<%#Eval("key") %>' ImageUrl="~/img/iconDelete.png" Width="20" />
@@ -99,7 +101,7 @@
         <asp:ImageButton runat="server" ID="imgTaskAdd" CommandName="Add" CommandArgument='<%#Eval("key") %>' ImageUrl="~/img/iconAdd2.png" Width="20" />
     </td>
                     <td></td>
-    <td><%#Eval("Key") %>
+    <td><%# (string)GetLocalResourceObject(Eval("Key").ToString()) %>
     </td>
     <td>
     </td>

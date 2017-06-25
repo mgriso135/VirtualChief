@@ -11,7 +11,7 @@
             $("[id*=txtDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
         });
     </script>
-    <h2>Calendario di reparto</h2>
+    <h2><asp:Literal runat="server" ID="lblTitleCalendarRep" Text="<%$Resources:lblTitleCalendarRep %>" /></h2>
     <asp:Label runat="server" ID="lblNomeRep" />
     <br />
     <table>

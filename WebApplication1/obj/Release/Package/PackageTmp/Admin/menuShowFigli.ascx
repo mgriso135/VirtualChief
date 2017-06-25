@@ -30,8 +30,8 @@
                 <asp:TextBox runat="server" ID="txtURL" Text='<%#DataBinder.Eval(Container.DataItem, "URL") %>' Visible="false" />
             </td>
             <td>
-                <asp:ImageButton runat="server" ID="imgSave" ImageUrl="/img/iconSave.jpg" ToolTip="Salve la voce di menu" Height="40" CommandName="save" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" />
-                <asp:ImageButton runat="server" ID="imgUndo" ImageUrl="/img/iconUndo.png" ToolTip="Reset la voce di menu" Height="40" CommandName="undo" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" />
+                <asp:ImageButton runat="server" ID="imgSave" ImageUrl="/img/iconSave.jpg" ToolTip="<%$resources:lblTTSalvaVoce %>" Height="40" CommandName="save" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" />
+                <asp:ImageButton runat="server" ID="imgUndo" ImageUrl="/img/iconUndo.png" ToolTip="<%$resources:lblTTReset %>" Height="40" CommandName="undo" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" />
             </td>
         </tr>
     </ItemTemplate>

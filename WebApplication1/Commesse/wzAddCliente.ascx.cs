@@ -31,7 +31,7 @@ namespace KIS.Commesse
             else
             {
                 frmAddcliente.Visible = false;
-                lbl1.Text = "Non hai il permesso di aggiungere un utente.";
+                lbl1.Text = GetLocalResourceObject("lblPermessoKo").ToString();
             }
         }
 
@@ -90,26 +90,26 @@ namespace KIS.Commesse
                     }
                     else
                     {
-                        lbl1.Text = "E' avvenuto un errore. Verifica i dati inseriti e riprova.";
+                        lbl1.Text = GetLocalResourceObject("lblErrorInput").ToString();
                     }
                 }
                 else
                 {
                     if (checkCod == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con codice " + Server.HtmlEncode(txtCodiceCliente.Text) + "<br />";
+                        lbl1.Text += lbl1.Text = GetLocalResourceObject("lblErrorCodCliente").ToString()+" " + Server.HtmlEncode(txtCodiceCliente.Text) + "<br />";
                     }
                     if (checkRagSoc == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con ragione sociale " + Server.HtmlEncode(txtRagSoc.Text) + "<br />";
+                        lbl1.Text += GetLocalResourceObject("lblErrorRagSociale").ToString() + " " + Server.HtmlEncode(txtRagSoc.Text) + "<br />";
                     }
                     if (checkPIva == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con partita iva " + Server.HtmlEncode(txtPartitaIVA.Text) + "<br />";
+                        lbl1.Text += GetLocalResourceObject("lblErrorPIVA").ToString() + " " + Server.HtmlEncode(txtPartitaIVA.Text) + "<br />";
                     }
                     if (checkCodFiscale == true)
                     {
-                        lbl1.Text += "Attenzione: esiste già un cliente con codice fiscale " + Server.HtmlEncode(txtCodFiscale.Text) + "<br />";
+                        lbl1.Text += GetLocalResourceObject("lblErrorCodFiscale").ToString() + " " + Server.HtmlEncode(txtCodFiscale.Text) + "<br />";
                     }
                 }
             }

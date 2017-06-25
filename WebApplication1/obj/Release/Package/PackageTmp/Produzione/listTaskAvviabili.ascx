@@ -11,23 +11,23 @@
                 <table class="table table-condensed">
                     <thead>
                     <tr id="tr1">
-                        <td></td>
-                        <td>Commessa</td>
-                        <td>Cliente</td>
-                        <td>Prodotto</td>
-                        <td>Processo</td>
-                        <td>Quantità</td>
-                        <td>Matricola</td>
-                        <td>ID</td>
-                        <td>Name</td>
-                        <td>Early Start</td>
-                        <td>Late Start</td>
-                        <td>Early Finish</td>
-                        <td>Late Finish</td>
-                        <td>N° operatori richiesti</td>
-                        <td>N° operatori attivi</td>
-                        <td>Status</td>
-                        <td>Operatori attivi</td>
+                        <th></th>
+                        <th><asp:literal runat="server" id="lblOrdine" Text="<%$Resources:lblOrdine %>" /></th>
+                        <th><asp:literal runat="server" id="lblCliente" Text="<%$Resources:lblCliente %>" /></th>
+                        <th><asp:literal runat="server" id="lblProdotto" Text="<%$Resources:lblProdotto %>" /></th>
+                        <th><asp:literal runat="server" id="lblTipoProdotto" Text="<%$Resources:lblTipoProdotto %>" /></th>
+                        <th><asp:literal runat="server" id="lblQuantita" Text="<%$Resources:lblQuantita %>" /></th>
+                        <th><asp:literal runat="server" id="lblMatricola" Text="<%$Resources:lblMatricola %>" /></th>
+                        <th><asp:literal runat="server" id="lblID" Text="<%$Resources:lblID %>" /></th>
+                        <th><asp:literal runat="server" id="lblName" Text="<%$Resources:lblName %>" /></th>
+                        <th><asp:literal runat="server" id="lblEarlyStart" Text="<%$Resources:lblEarlyStart %>" /></th>
+                        <th runat="server" visible="false"><asp:literal runat="server" id="lblLateStart" Text="<%$Resources:lblLateStart %>" /></th>
+                        <th runat="server" visible="false"><asp:literal runat="server" id="lblEarlyFinish" Text="<%$Resources:lblEarlyFinish %>" /></th>
+                        <th><asp:literal runat="server" id="lblLateFinish" Text="<%$Resources:lblLateFinish %>" /></th>
+                        <th><asp:literal runat="server" id="lblNOpRichiesti" Text="<%$Resources:lblNOpRichiesti %>" /></th>
+                        <th><asp:literal runat="server" id="lblNOpAttivi" Text="<%$Resources:lblNOpAttivi %>" /></th>
+                        <th><asp:literal runat="server" id="lblStatus" Text="<%$Resources:lblStatus %>" /></th>
+                        <th><asp:literal runat="server" id="lblOpAttivi" Text="<%$Resources:lblOpAttivi %>" /></th>
                     </tr>
                         </thead>
                     <tbody>
@@ -45,8 +45,8 @@
                         <%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "Name") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "EarlyStart") %></td>
-                    <td><%#DataBinder.Eval(Container.DataItem, "LateStart") %></td>
-                    <td><%#DataBinder.Eval(Container.DataItem, "EarlyFinish") %></td>
+                    <td runat="server" visible="false"><%#DataBinder.Eval(Container.DataItem, "LateStart") %></td>
+                    <td runat="server" visible="false"><%#DataBinder.Eval(Container.DataItem, "EarlyFinish") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "LateFinish") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "NumOperatori") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "UtentiAttivi.Count") %></td>

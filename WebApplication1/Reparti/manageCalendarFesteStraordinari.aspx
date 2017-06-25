@@ -7,14 +7,14 @@
 
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     
-    <h2>Calendario di reparto</h2>
+    <h2><asp:Literal runat="server" ID="lblCalendarioRep" Text="<%$Resources:lblCalendarioRep %>" /></h2>
     <asp:Label runat="server" ID="lblNomeRep" />
     <br />
     <asp:HyperLink runat="server" ID="lnkFestivita" NavigateUrl="manageFestivita.aspx?id=" Target="_blank">
-    <asp:Image runat="server" ID="imgShowAddFest" ImageUrl="/img/iconHoliday.png" Height="60px" ToolTip="Gestisci le festività" />
+    <asp:Image runat="server" ID="imgShowAddFest" ImageUrl="/img/iconHoliday.png" Height="60px" ToolTip="<%$Resources:lblTTFestivita %>" />
     </asp:HyperLink>
     <asp:HyperLink runat="server" ID="lnkStraordinario" NavigateUrl="manageStraordinario.aspx?id=" Target="_blank">
-        <asp:Image runat="server" ID="imgShowAddStraordinario" ImageUrl="/img/iconOvertime.jpg" Height="60px" ToolTip="Gestisci gli straordinari" />
+        <asp:Image runat="server" ID="imgShowAddStraordinario" ImageUrl="/img/iconOvertime.jpg" Height="60px" ToolTip="<%$Resources:lblTTStraordinari %>" />
     </asp:HyperLink>
     <br />
 

@@ -22,6 +22,24 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.ScriptManager scriptMan1;
         
         /// <summary>
+        /// Controllo lblTitleWizNuovoProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTitleWizNuovoProd;
+        
+        /// <summary>
+        /// Controllo lblNuovoOrdine.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblNuovoOrdine;
+        
+        /// <summary>
         /// Controllo lnkAddPert.
         /// </summary>
         /// <remarks>
@@ -29,6 +47,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkAddPert;
+        
+        /// <summary>
+        /// Controllo lblDescProd.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescProd;
         
         /// <summary>
         /// Controllo lnkEditPert.
@@ -40,6 +67,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.HyperLink lnkEditPert;
         
         /// <summary>
+        /// Controllo lblDescProcesso.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblDescProcesso;
+        
+        /// <summary>
         /// Controllo lnkAssociaReparto.
         /// </summary>
         /// <remarks>
@@ -49,6 +85,15 @@ namespace KIS.Commesse {
         protected global::System.Web.UI.WebControls.HyperLink lnkAssociaReparto;
         
         /// <summary>
+        /// Controllo lblSelReparto.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSelReparto;
+        
+        /// <summary>
         /// Controllo lnkAssociaTasks.
         /// </summary>
         /// <remarks>
@@ -56,6 +101,15 @@ namespace KIS.Commesse {
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.HyperLink lnkAssociaTasks;
+        
+        /// <summary>
+        /// Controllo lblAssociaTaskPostazione.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAssociaTaskPostazione;
         
         /// <summary>
         /// Controllo lnkGoBack.

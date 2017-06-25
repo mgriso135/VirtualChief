@@ -20,6 +20,7 @@ namespace KIS.Commesse
             String sIDProdotto = Request.QueryString["idProdotto"];
             String sAnnoProdotto = Request.QueryString["annoProdotto"];
             String sQuantita = Request.QueryString["quantita"];
+            String matricola = Request.QueryString["matricola"];
 
             if (!String.IsNullOrEmpty(sIDCommessa) && !String.IsNullOrEmpty(sAnnoCommessa) && !String.IsNullOrEmpty(sIDProc) && !String.IsNullOrEmpty(sRevProc) && !String.IsNullOrEmpty(sIDVariante) && !String.IsNullOrEmpty(sIDProdotto) && !String.IsNullOrEmpty(sAnnoProdotto) && !String.IsNullOrEmpty(sQuantita))
             {
@@ -41,6 +42,7 @@ namespace KIS.Commesse
                     idProdotto = Int32.Parse(sIDProdotto);
                     annoProdotto = Int32.Parse(sAnnoProdotto);
                     quantita = Int32.Parse(sQuantita);
+
                 }
                 catch
                 {
@@ -71,7 +73,8 @@ namespace KIS.Commesse
                         + "&idVariante=" + var.idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&quantita=" + quantita.ToString();
+                            + "&quantita=" + quantita.ToString()
+                            +"&matricola="+matricola.ToString();
 
                         lnkSwitchToGrid.NavigateUrl = "wzEditPERT_updtable.aspx?idCommessa=" + cm.ID.ToString()
                         + "&annoCommessa=" + cm.Year.ToString()
@@ -80,7 +83,8 @@ namespace KIS.Commesse
                         + "&idVariante=" + var.idVariante.ToString()
                         + "&idProdotto=" + idProdotto.ToString()
                             + "&annoProdotto=" + annoProdotto.ToString()
-                            + "&quantita=" + quantita.ToString();
+                            + "&quantita=" + quantita.ToString()
+                            + "&matricola=" + matricola.ToString();
 
                         bool checkIntegrity = true;
                 if (idProdotto != -1 && annoProdotto != -1)
@@ -125,7 +129,8 @@ namespace KIS.Commesse
                                 + "&idVariante=" + prcVar.variant.idVariante.ToString()
                                 + "&idProdotto=" + idProdotto.ToString()
                                 + "&annoProdotto=" + annoProdotto.ToString()
-                                + "&quantita=" + quantita.ToString();
+                                + "&quantita=" + quantita.ToString()
+                                + "&matricola=" + matricola.ToString();
                             }
                             else
                             {
@@ -140,13 +145,13 @@ namespace KIS.Commesse
                             lnkGoBack.Visible = false;
                             lnkGoFwd.Visible = false;
                             LinkBCK.Visible = false;
-                            lbl1.Text = "Errore.";
+                            lbl1.Text = GetLocalResourceObject("lblError").ToString();
 
                         }
                     }
                     else
                     {
-                        lbl1.Text = "Errore.";
+                        lbl1.Text = GetLocalResourceObject("lblError").ToString();
                     }
                 }
                 else
@@ -156,7 +161,7 @@ namespace KIS.Commesse
                     lnkGoBack.Visible = false;
                     lnkGoFwd.Visible = false;
                     LinkBCK.Visible = false;
-                    lbl1.Text = "Errore.";
+                    lbl1.Text = GetLocalResourceObject("lblError").ToString();
 
                     lnkSwitchToGrid.Enabled = false;
                     lnkSwitchToGrid.Visible = false;
@@ -165,7 +170,7 @@ namespace KIS.Commesse
             }
             else
             {
-                lbl1.Text = "Errore: querystring richieste non presenti.";
+                lbl1.Text = GetLocalResourceObject("lblErrorQueryString").ToString();
                 frmEditPERT.Visible = false;
                 frmEditDatiVariante.Visible = false;
                 lnkGoBack.Visible = false;

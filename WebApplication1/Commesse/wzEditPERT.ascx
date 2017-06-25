@@ -6,12 +6,13 @@
 <table class="table table-hover table-condensed table-striped" runat="server" id="tblAddTask">
     <tr>
         <td>
-<b>Aggiungi un nuovo task al prodotto</b>&nbsp;<img ID="imgAddTaskPert" src="/img/iconAdd.jpg" OnClick="addDefaultTask()" style="height:40px; cursor: pointer" Height="40" />
+<b><asp:Label runat="server" ID="lblAddNewTask" Text="<%$Resources:lblAddNewTask %>" /></b>&nbsp;
+            <img ID="imgAddTaskPert" src="/img/iconAdd.jpg" OnClick="addDefaultTask()" style="height:40px; cursor: pointer" Height="40" />
             </td>
             </tr>
     <tr>
         <td>
-<b>Collega un task esistente alla variante</b>&nbsp;
+<b><asp:Label runat="server" ID="lblLinkTask" Text="<%$Resources:lblLinkTask %>" /></b>&nbsp;
 <asp:DropDownList runat="server" ID="ddlTasks" />
 <img src="/img/iconSave.jpg" style="height:40px; cursor: pointer" onclick="linkExistingTask()" />
             </td>
@@ -34,7 +35,7 @@
   <asp:label runat="server" ID="svg1">
 
   
-   <script language="javascript">
+   <script lang="javascript">
        var start_drag = null;
        var drag_taskID = null;
        var offsetx = null;
@@ -409,7 +410,7 @@
                    loadAddTaskData();
                },
                error: function (response) {
-                   alert("Non sono riuscito ad aggiungere il task");
+                   alert("I couldn't add the task");
                },
                complete: function () {
                }
@@ -481,7 +482,7 @@
                       loadAddTaskData();
                   },
                   error: function (response) {
-                      alert("Non sono riuscito ad aggiungere il task");
+                      alert("I couldn't add the task");
                   },
                   complete: function () {
                   }
@@ -513,11 +514,11 @@
                    }
                    else {
                        var lblErr = document.getElementById('<%=lblEdit1.ClientID%>');
-                          lblErr.innerHTML = "<span style='color: red'>Prima di procedere devi cancellare i tempi ciclo associati al task</span><br/>";
+                          lblErr.innerHTML = '<span style="color: red"><asp:literal runat="server" text="<%$Resources:lblDeleteTempiCiclo%>"/></span><br/>';
                       }
                   },
                   error: function (response) {
-                      alert("Non sono riuscito a rimuovere il task ");
+                      alert("I couln't remove the task");
                   },
                   complete: function () {
                   }
@@ -538,13 +539,13 @@
             <img src="/img/iconClose.png" style="height: 20px" onclick="closeEdit();" />
             </td></tr>
         <tr>
-            <td>Nome:</td>
+            <td><asp:label runat="server" id="lblNome" Text="<%$Resources:lblNome %>"/>:</td>
             <td>
     <asp:TextBox runat="server" ID="editTaskNome" />
                 </td>
             </tr>
         <tr>
-            <td>Descrizione:</td>
+            <td><asp:label runat="server" id="lblDescrizione" Text="<%$Resources:lblDescrizione %>"/>:</td>
             <td>
     <asp:TextBox runat="server" TextMode="MultiLine" ID="editTaskDesc" />
         </td>
@@ -564,10 +565,10 @@
             <thead>
             <tr>
                 <th></th>
-                <th>Numero operatori</th>
-                <th>Setup [ore]</th>
-                <th>Tempo ciclo [ore]</th>
-                <th>Default</th>
+                <th><asp:label runat="server" id="lblNumOps" Text="<%$Resources:lblNumOps %>"/></th>
+                <th><asp:label runat="server" id="lblSetup" Text="<%$Resources:lblSetup %>"/></th>
+                <th><asp:label runat="server" id="lblTempoCiclo" Text="<%$Resources:lblTempoCiclo %>"/></th>
+                <th><asp:label runat="server" id="lblDefault" Text="<%$Resources:lblDefault %>"/></th>
             </tr>
                 </thead>
     </HeaderTemplate>
@@ -600,7 +601,7 @@
             <td colspan="2">
                 <asp:UpdatePanel runat="server" ID="updDeleteTask">
                     <ContentTemplate>
-                        <img src="/img/iconDelete.png" style="height: 30px; cursor:pointer;" onclick="deleteSubProcess()" />CANCELLA IL PROCESSO
+                        <img src="/img/iconDelete.png" style="height: 30px; cursor:pointer;" onclick="deleteSubProcess()" /><asp:label runat="server" id="lblDeleteProcess" Text="<%$Resources:lblDeleteProcess %>"/>
                         </ContentTemplate>
                     </asp:UpdatePanel>
                     </td>

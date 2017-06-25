@@ -4,5 +4,5 @@
         <asp:FileUpload ID="FileUpload1" runat="server" />
 <asp:Button ID="btnUpload" runat="server" Text="Upload" OnClick="Upload" />
 <br />
-<asp:Image runat="server" ID="imgCurrentLogo" Visible="false" ToolTip="<%$resources:lblCurrentLogo %>" />
+<asp:Image runat="server" ID="imgCurrentLogo" Height="200" Visible="false" ToolTip="<%$resources:lblCurrentLogo %>" />
 <asp:Label runat="server" ID="lbl1" />
