@@ -46,7 +46,7 @@ namespace KIS.Processi
                 ProcName.Enabled = false;
                 ProcDesc.Enabled = false;
                 vsm.Enabled = false;
-                Response.Redirect("/Processi/MacroProcessi.aspx");
+                Response.Redirect("~/Processi/MacroProcessi.aspx");
             }
             else
             {

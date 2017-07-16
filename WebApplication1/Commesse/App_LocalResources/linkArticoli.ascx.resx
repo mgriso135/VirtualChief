@@ -141,6 +141,15 @@
   <data name="lblQuantita.Text" xml:space="preserve">
     <value>Quantità</value>
   </data>
+  <data name="lblTTFormReset" xml:space="preserve">
+    <value>Form reset</value>
+  </data>
+  <data name="lblTTSalva" xml:space="preserve">
+    <value>Salva il prodotto</value>
+  </data>
+  <data name="valDDEligir" xml:space="preserve">
+    <value>Scegli un prodotto</value>
+  </data>
   <data name="valReqField" xml:space="preserve">
     <value>* Campo obbligatorio</value>
   </data>

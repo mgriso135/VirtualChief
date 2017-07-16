@@ -40,6 +40,15 @@ namespace KIS {
         protected global::KIS.menuBar menuBar;
         
         /// <summary>
+        /// Controllo lblLicenseExpired.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLicenseExpired;
+        
+        /// <summary>
         /// Controllo MainContent.
         /// </summary>
         /// <remarks>

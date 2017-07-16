@@ -157,7 +157,7 @@ namespace KIS.Commesse
 
                 output.Close();
                 output.Dispose();
-                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
+                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('../Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
         }
 
         protected void imgPrintOrdiniSingolo_Click(object sender, ImageClickEventArgs e)
@@ -347,13 +347,13 @@ namespace KIS.Commesse
                 tabNote2.WidthPercentage = 100;
 
                 PdfPCell cellNote2 = new PdfPCell();
-                iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph("Codice FOM:" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph(Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                 parCellNote2.Alignment = Element.ALIGN_LEFT;
                 cellNote2.AddElement(parCellNote2);
                 tabNote2.AddCell(cellNote2);
 
 
-                parCellNote2 = new iTextSharp.text.Paragraph("Info lastre:" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                parCellNote2 = new iTextSharp.text.Paragraph(Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                 parCellNote2.Alignment = Element.ALIGN_LEFT;
                 cellNote2 = new PdfPCell();
                 cellNote2.AddElement(parCellNote2);
@@ -366,7 +366,7 @@ namespace KIS.Commesse
                 cartPDF.Add(noteField);
 
                 cartPDF.Close();
-                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
+                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('../Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
             }
         }
 
@@ -560,13 +560,13 @@ namespace KIS.Commesse
                 tabNote2.WidthPercentage = 100;
 
                 PdfPCell cellNote2 = new PdfPCell();
-                iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph("Codice FOM:" + Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                iTextSharp.text.Paragraph parCellNote2 = new iTextSharp.text.Paragraph(Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                 parCellNote2.Alignment = Element.ALIGN_LEFT;
                 cellNote2.AddElement(parCellNote2);
                 tabNote2.AddCell(cellNote2);
 
 
-                parCellNote2 = new iTextSharp.text.Paragraph("Info lastre:"+ Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
+                parCellNote2 = new iTextSharp.text.Paragraph(Environment.NewLine + Environment.NewLine, new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL));
                 parCellNote2.Alignment = Element.ALIGN_LEFT;
                 cellNote2 = new PdfPCell();
                 cellNote2.AddElement(parCellNote2);
@@ -578,7 +578,7 @@ namespace KIS.Commesse
                 cartPDF.Add(noteField);
 
                 cartPDF.Close();
-                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
+                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('../Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
             }
         }
 

@@ -273,4 +273,7 @@
   <data name="lblTitle" xml:space="preserve">
     <value>Products en producción</value>
   </data>
+  <data name="lblTTStatoav" xml:space="preserve">
+    <value>Ver el progreso de producción de el producto</value>
+  </data>
 </root>

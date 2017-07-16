@@ -216,6 +216,13 @@
     <Compile Include="Admin\configWizard_TipoPERT.ascx.designer.cs">
       <DependentUpon>configWizard_TipoPERT.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\kisBilling.ascx.cs">
+      <DependentUpon>kisBilling.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\kisBilling.ascx.designer.cs">
+      <DependentUpon>kisBilling.ascx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\manageReports.ascx.cs">
       <DependentUpon>manageReports.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -619,6 +626,17 @@
     <Compile Include="Controllers\products.cs" />
     <Compile Include="Controllers\TestClass.cs" />
     <Compile Include="Controllers\UtentiController.cs" />
+    <Compile Include="Eventi\Licensing.asmx.cs">
+      <DependentUpon>Licensing.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="HomePage\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="HomePage\Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="HomePage\UserHomeBoxes.ascx.cs">
       <DependentUpon>UserHomeBoxes.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -633,6 +651,13 @@
     <Compile Include="KanbanBox\KanbanBoxReader.asmx.cs">
       <DependentUpon>KanbanBoxReader.asmx</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LicenseExpired.aspx.cs">
+      <DependentUpon>LicenseExpired.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="LicenseExpired.aspx.designer.cs">
+      <DependentUpon>LicenseExpired.aspx</DependentUpon>
     </Compile>
     <Compile Include="Personal\HomeBoxUser.ascx.cs">
       <DependentUpon>HomeBoxUser.ascx</DependentUpon>
@@ -864,6 +889,7 @@
     <Content Include="Admin\configTimezone.ascx" />
     <Content Include="Admin\configWizard_TipoPERT.ascx" />
     <Content Include="Admin\kisAdmin.aspx" />
+    <Content Include="Admin\kisBilling.ascx" />
     <Content Include="Admin\manageReports.ascx" />
     <Content Include="Admin\manageReports.aspx" />
     <Content Include="Analysis\analysis.aspx" />
@@ -1990,14 +2016,17 @@
     <Content Include="Eventi\ArticoloWarning.ascx" />
     <Content Include="Eventi\CommessaRitardo.ascx" />
     <Content Include="Eventi\CommessaWarning.ascx" />
+    <Content Include="Eventi\Licensing.asmx" />
     <Content Include="Eventi\RepartoRitardo.ascx" />
     <Content Include="Eventi\RepartoWarning.ascx" />
     <Content Include="Eventi\Ritardi.asmx" />
     <Content Include="Eventi\Warning.asmx" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="HomePage\Default.aspx" />
     <Content Include="HomePage\UserHomeBoxes.ascx" />
     <Content Include="img\andon_icon.jpg" />
     <Content Include="img\edit.png" />
+    <Content Include="img\favicon.ico" />
     <Content Include="img\iconA3.gif" />
     <Content Include="img\iconActionPlan.jpg" />
     <Content Include="img\iconAdd.jpg" />
@@ -2110,6 +2139,7 @@
     <Content Include="img\problemIcon.jpg" />
     <Content Include="KanbanBox\KanbanBoxCheckHealth.asmx" />
     <Content Include="KanbanBox\KanbanBoxReader.asmx" />
+    <Content Include="LicenseExpired.aspx" />
     <Content Include="Login\forgot.aspx" />
     <Content Include="Login\forgotPassword.ascx" />
     <Content Include="Login\forgotUsername.ascx" />
@@ -4262,6 +4292,21 @@
     <Content Include="Configuration\App_LocalResources\wizConfigAdminUser.aspx.it.resx" />
     <Content Include="Configuration\App_LocalResources\wizConfigAdminUser.aspx.es.resx" />
     <Content Include="Configuration\App_LocalResources\wizConfigAdminUser.aspx.en.resx" />
+    <Content Include="HomePage\App_LocalResources\Default.aspx.es.resx" />
+    <Content Include="HomePage\App_LocalResources\Default.aspx.it.resx" />
+    <Content Include="HomePage\App_LocalResources\Default.aspx.resx" />
+    <Content Include="Admin\App_LocalResources\kisBilling.ascx.resx" />
+    <Content Include="Admin\App_LocalResources\kisBilling.ascx.it.resx" />
+    <Content Include="Admin\App_LocalResources\kisBilling.ascx.es.resx" />
+    <Content Include="Admin\App_LocalResources\kisBilling.ascx.en.resx" />
+    <Content Include="App_LocalResources\Site.Master.resx" />
+    <Content Include="App_LocalResources\Site.Master.it.resx" />
+    <Content Include="App_LocalResources\Site.Master.es.resx" />
+    <Content Include="App_LocalResources\Site.Master.en.resx" />
+    <Content Include="App_LocalResources\LicenseExpired.aspx.resx" />
+    <Content Include="App_LocalResources\LicenseExpired.aspx.it.resx" />
+    <Content Include="App_LocalResources\LicenseExpired.aspx.es.resx" />
+    <Content Include="App_LocalResources\LicenseExpired.aspx.en.resx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

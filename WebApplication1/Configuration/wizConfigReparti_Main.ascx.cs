@@ -37,24 +37,14 @@ namespace KIS.Configuration
 
                 }
 
-                    String repartiNC = "";
-                    
-                    for (int i = 0; i < elRep.elenco.Count; i++)
-                    {
+                rptReparti.Visible = false;
+                    if(elRep.elenco.Count > 0)
+                {
+                    rptReparti.Visible = true;
+                    rptReparti.DataSource = elRep.elenco;
+                    rptReparti.DataBind();
 
-                        if (!elRep.elenco[i].FullyConfigured)
-                        {
-                            repartiNC += "<a href =\"/Configuration/wizConfigReparti_Detail.aspx"
-                                + "?id=" + elRep.elenco[i].id.ToString() + "\" target=\"_blank\">"
-                                + elRep.elenco[i].name + "</a><br />";
-                        }
-                    }
-
-                    if (repartiNC.Length > 0)
-                    {
-                        lbl1.Text += "<br /><br />"+GetLocalResourceObject("lblDeptConfigured2") +":<br />" + repartiNC
-                            + " <br /><br /><br />";
-                    }
+                }
 
                 frmAddReparto.Visible = true;
                     if (!Page.IsPostBack)
@@ -70,7 +60,7 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "<a href=\"/Login/login.aspx"
+                lbl1.Text = "<a href=\"../Login/login.aspx"
                     + "?red=/Configuration/wizConfigReparti_Main\">"
                     + GetLocalResourceObject("lblLnkLogin").ToString()
                     + "</a>";
@@ -84,7 +74,7 @@ namespace KIS.Configuration
             int rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
             if (rt != -1)
             {
-                Response.Redirect("~/Configuration/wizConfigReparti_Detail.aspx?id=" + rt.ToString());
+                Response.Redirect("~/Configuration/wizConfigReparti_Main.aspx");
             }
             else
             {
@@ -96,6 +86,46 @@ namespace KIS.Configuration
         {
             nome.Text = "";
             descrizione.Text = "";
+        }
+
+        protected void rptReparti_ItemDataBound(object sender, RepeaterItemEventArgs e)
+        {
+            RepeaterItem item = e.Item;
+            if (item.ItemType == ListItemType.AlternatingItem || item.ItemType == ListItemType.Item)
+            {
+                String sRepID = ((HiddenField)e.Item.FindControl("hdRepID")).Value;
+                Image imgOk = (Image)e.Item.FindControl("imgOk");
+                Image imgKo = (Image)e.Item.FindControl("imgKo");
+                Image imgCfg = (Image)e.Item.FindControl("imgCfg");
+                HyperLink hCfg = (HyperLink)e.Item.FindControl("lnkCfg");
+
+                int repID = -1;
+                try
+                {
+                    repID = Int32.Parse(sRepID);
+                }
+                catch(Exception ex)
+                {
+                    repID = -1;
+                }
+
+                Reparto rp = new Reparto(repID);
+
+                hCfg.NavigateUrl = "~/Configuration/wizConfigReparti_Detail.aspx?id=" + rp.id.ToString();
+
+                if (rp.FullyConfigured)
+                {
+                    imgOk.Visible = true;
+                    imgKo.Visible = false;
+                    imgCfg.Visible = false;
+                }
+                else
+                {
+                    imgOk.Visible = false;
+                    imgKo.Visible = true;
+                    imgCfg.Visible = true;
+                }
+            }
         }
     }
 }

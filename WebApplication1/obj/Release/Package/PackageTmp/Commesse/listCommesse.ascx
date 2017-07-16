@@ -20,11 +20,11 @@
         <tr runat="server" id="tr1">
             <td>
                 <asp:hyperlink runat="server" ID="lnkWizard" NavigateUrl='<%# "~/Commesse/wzAddPERT.aspx?idCommessa=" + DataBinder.Eval(Container.DataItem, "ID") + "&annoCommessa="+ DataBinder.Eval(Container.DataItem, "Year") %>'>
-                <asp:Image runat="server" ID="imgWizard" ImageUrl="/img/iconWizard.png" ToolTip="<%$Resources:lblTTGoWizard %>" Height="40" />
+                <asp:Image runat="server" ID="imgWizard" ImageUrl="~/img/iconWizard.png" ToolTip="<%$Resources:lblTTGoWizard %>" Height="40" />
                     </asp:hyperlink>
                 <asp:hyperlink runat="server" ID="lnkLinkArticoli" NavigateUrl='<%# "~/Commesse/linkArticoliToCommessa.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno="+ DataBinder.Eval(Container.DataItem, "Year") %>'>
                 
-                <asp:Image runat="server" ID="imgLnkArticoli" ImageUrl="/img/iconCart1.jpg" ToolTip="<%$Resources:lblTTAddProdotti %>" Height="40" />
+                <asp:Image runat="server" ID="imgLnkArticoli" ImageUrl="~/img/iconCart1.jpg" ToolTip="<%$Resources:lblTTAddProdotti %>" Height="40" />
                 </asp:hyperlink></td>
             
             <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
@@ -33,7 +33,7 @@
             <td><%#DataBinder.Eval(Container.DataItem, "Note") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Status") %></td>
             <td>
-                <asp:ImageButton runat="server" ID="imgDelete" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + "/" + DataBinder.Eval(Container.DataItem, "Year") %>' Height="40" ImageUrl="/img/iconDelete.png" />
+                <asp:ImageButton runat="server" ID="imgDelete" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + "/" + DataBinder.Eval(Container.DataItem, "Year") %>' Height="40" ImageUrl="~/img/iconDelete.png" />
                 <asp:HiddenField runat="server" ID="hID" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
                 <asp:HiddenField runat="server" ID="hYear" Value='<%#DataBinder.Eval(Container.DataItem, "Year") %>' />
             </td>

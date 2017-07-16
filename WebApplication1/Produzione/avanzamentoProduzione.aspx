@@ -12,10 +12,10 @@
 	<meta name="description" content="Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
     <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" />
-    <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
-    <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
-	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
-	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+    <link href="../Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="../Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+	<script src="../Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
+	<script src="../Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
     	<script>
     	    $(function () {
 
@@ -184,7 +184,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><asp:HyperLink runat="server" ID="lnkStatoArticolo" NavigateUrl='<%# "statoAvanzamentoArticolo.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno=" + DataBinder.Eval(Container.DataItem, "Year") %>' Target="_blank">
-                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" Width="40" ToolTip="<%$resources:lblTTStatoAvanzamento %>" />
+                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="~/img/iconView.png" Width="40" Height="40" ToolTip="<%$resources:lblTTStatoAvanzamento %>" />
                         </asp:HyperLink><asp:HiddenField runat="server" ID="lblIDArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
                     <asp:HiddenField runat="server" ID="lblAnnoArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "Year") %>' /></td>
                 

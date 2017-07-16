@@ -11,10 +11,10 @@
 	<meta name="description" content="Kaizen People &middot; Kaizen Indicator System" />
     <meta name="author" content="Matteo Griso" />
     <!-- FINE STUDIO GIORDANO -->
-    <link href="/Styles/Site.css" rel="stylesheet" type="text/css" />
-    <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
-	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
-	<script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+	<script src="~/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
+	<script src="~/Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
     	<script>
     	    $(function () {
 

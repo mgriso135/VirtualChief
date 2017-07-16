@@ -32,7 +32,7 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "<a href=\"/Login/login.aspx"
+                lbl1.Text = "<a href=\"~/Login/login.aspx"
                     + "?red=/Configuration/wizConfigPostazioni_Main\">"
                     + GetLocalResourceObject("lblLnkLoginAdmin").ToString()
                     +"</a>";

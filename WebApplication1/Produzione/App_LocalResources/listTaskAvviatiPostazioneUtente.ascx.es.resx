@@ -192,4 +192,7 @@
   <data name="lblPermessoKo2" xml:space="preserve">
     <value>Vos no tiene permiso para ver las tareas que empezaste.</value>
   </data>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Tareas que está trabajando</value>
+  </data>
 </root>

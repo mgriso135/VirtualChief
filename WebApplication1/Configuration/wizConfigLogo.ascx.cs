@@ -61,7 +61,7 @@ namespace KIS.Configuration
             }
             else
             {
-                lbl1.Text = "<a href=\"/Login/login.aspx"
+                lbl1.Text = "<a href=\"../Login/login.aspx"
                     + "?red=/Configuration/wizConfigLogo\">" 
                     +GetLocalResourceObject("lblLnkLogin").ToString()
                     +".</a>";
@@ -114,7 +114,7 @@ namespace KIS.Configuration
                             {
                                 lbl1.Text = GetLocalResourceObject("lblUploadOk").ToString();
                             }
-                            Response.Redirect("~/Configuration/MainWizConfig.aspx");
+                            Response.Redirect("../Configuration/MainWizConfig.aspx");
                         }
                         catch (Exception ex)
                         {

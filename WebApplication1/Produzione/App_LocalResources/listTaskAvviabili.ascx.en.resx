@@ -180,4 +180,7 @@
   <data name="lblTTCambiaQta" xml:space="preserve">
     <value>Change quantity manufactured</value>
   </data>
+  <data name="lblTasksDispo" xml:space="preserve">
+    <value>Tasks To Perform</value>
+  </data>
 </root>

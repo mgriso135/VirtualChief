@@ -130,13 +130,13 @@
     <value>Notas de orden</value>
   </data>
   <data name="CommessaRagioneSocialeCliente" xml:space="preserve">
-    <value>Commessa Ragione Sociale Cliente</value>
+    <value>Cliente</value>
   </data>
   <data name="DataPrevistaConsegna" xml:space="preserve">
-    <value>Data Prevista Consegna</value>
+    <value>Fecha de entrega</value>
   </data>
   <data name="DataPrevistaFineProduzione" xml:space="preserve">
-    <value>Data Prevista Fine Produzione</value>
+    <value>Fecha de fin de producción</value>
   </data>
   <data name="EarlyFinish" xml:space="preserve">
     <value>EarlyFinish</value>
@@ -151,58 +151,58 @@
     <value>LateStart</value>
   </data>
   <data name="lblAdded" xml:space="preserve">
-    <value>aggiunto.&lt;br /&gt;</value>
+    <value>sumado con exíto.&lt;br /&gt;</value>
   </data>
   <data name="lblDeleted" xml:space="preserve">
-    <value>cancellato.&lt;br /&gt;</value>
+    <value>borrado.&lt;br /&gt;</value>
   </data>
   <data name="lblPermessoKo" xml:space="preserve">
-    <value>Non hai i permessi per modificare i campi da visualizzare nell'andon completo.&lt;br /&gt;</value>
+    <value>No tiene el pormiso por ver el Andon.&lt;br /&gt;</value>
   </data>
   <data name="lblTHProdotto.Text" xml:space="preserve">
-    <value>Prodotto</value>
+    <value>Producto</value>
   </data>
   <data name="lblTHTasks.Text" xml:space="preserve">
-    <value>Tasks</value>
+    <value>Tareas</value>
   </data>
   <data name="ProdottoID" xml:space="preserve">
-    <value>Prodotto ID</value>
+    <value>ID Producto</value>
   </data>
   <data name="ProdottoIndicatoreCompletamentoTasks" xml:space="preserve">
-    <value>Prodotto Indicatore Completamento Tasks</value>
+    <value>Indicador de progreso de tareas</value>
   </data>
   <data name="ProdottoIndicatoreCompletamentoTempoPrevisto" xml:space="preserve">
-    <value>Prodotto Indicatore Completamento Tempo Previsto</value>
+    <value>Indicador de progreso de tareas (tiempo)</value>
   </data>
   <data name="ProdottoLineaProdotto" xml:space="preserve">
-    <value>Prodotto LineaProdotto</value>
+    <value>Tipo de Producto</value>
   </data>
   <data name="ProdottoMatricola" xml:space="preserve">
-    <value>Prodotto Matricola</value>
+    <value>Matricúla</value>
   </data>
   <data name="ProdottoNomeProdotto" xml:space="preserve">
-    <value>Prodotto NomeProdotto</value>
+    <value>Nombre de producto</value>
   </data>
   <data name="ProdottoQuantita" xml:space="preserve">
-    <value>Prodotto Quantità</value>
+    <value>Cantidad</value>
   </data>
   <data name="ProdottoQuantitaRealizzata" xml:space="preserve">
-    <value>Prodotto Quantità Realizzata</value>
+    <value>Cantidad producida</value>
   </data>
   <data name="ProdottoRitardo" xml:space="preserve">
-    <value>Prodotto Ritardo</value>
+    <value>Demora</value>
   </data>
   <data name="ProdottoStatus" xml:space="preserve">
-    <value>Prodotto Status</value>
+    <value>Estado</value>
   </data>
   <data name="ProdottoTempodiLavoroTotale" xml:space="preserve">
-    <value>Prodotto Tempo di Lavoro Totale</value>
+    <value>Tiempo de trabajo total</value>
   </data>
   <data name="Reparto" xml:space="preserve">
-    <value>Reparto</value>
+    <value>Departamento</value>
   </data>
   <data name="TaskDescrizione" xml:space="preserve">
-    <value>Task Descrizione</value>
+    <value>Descripción</value>
   </data>
   <data name="TaskEarlyFinish" xml:space="preserve">
     <value>Task EarlyFinish</value>
@@ -211,13 +211,13 @@
     <value>Task EarlyStart</value>
   </data>
   <data name="TaskFineEffettiva" xml:space="preserve">
-    <value>Task FineEffettiva</value>
+    <value>Fin real</value>
   </data>
   <data name="TaskID" xml:space="preserve">
-    <value>Task ID</value>
+    <value>ID de Tarea</value>
   </data>
   <data name="TaskInizioEffettivo" xml:space="preserve">
-    <value>Task InizioEffettivo</value>
+    <value>Inicio real</value>
   </data>
   <data name="TaskLateFinish" xml:space="preserve">
     <value>Task LateFinish</value>
@@ -226,33 +226,33 @@
     <value>Task LateStart</value>
   </data>
   <data name="TaskNome" xml:space="preserve">
-    <value>Task Nome</value>
+    <value>Tarea Nombre</value>
   </data>
   <data name="TaskNumeroOperatori" xml:space="preserve">
-    <value>Task NumeroOperatori</value>
+    <value>Número de operadores</value>
   </data>
   <data name="TaskPostazione" xml:space="preserve">
-    <value>Task Postazione</value>
+    <value>Estación de trabajo</value>
   </data>
   <data name="TaskQuantitaPrevista" xml:space="preserve">
-    <value>Task QuantitaPrevista</value>
+    <value>Tarea Cantidad pedida</value>
   </data>
   <data name="TaskQuantitaProdotta" xml:space="preserve">
-    <value>Task QuantitaProdotta</value>
+    <value>Tarea Cantidad producida</value>
   </data>
   <data name="TaskRitardo" xml:space="preserve">
-    <value>Task Ritardo</value>
+    <value>Demora</value>
   </data>
   <data name="TaskStatus" xml:space="preserve">
-    <value>Task Status</value>
+    <value>Estado</value>
   </data>
   <data name="TaskTempoCiclo" xml:space="preserve">
-    <value>Task TempoCiclo</value>
+    <value>Tiempo de ciclo</value>
   </data>
   <data name="TaskTempoDiLavoroEffettivo" xml:space="preserve">
-    <value>Task TempoDiLavoroEffettivo</value>
+    <value>Tiempo de trabajo real</value>
   </data>
   <data name="TaskTempoDiLavoroPrevisto" xml:space="preserve">
-    <value>Task TempoDiLavoroPrevisto</value>
+    <value>Tiempo de trabajo planeado</value>
   </data>
 </root>

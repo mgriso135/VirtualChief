@@ -258,4 +258,7 @@
   <data name="lblTitleCampiVis.Text" xml:space="preserve">
     <value>Campi da visualizzare</value>
   </data>
+  <data name="lblTitleCampiVis.Text1" xml:space="preserve">
+    <value>Campi da visualizzare</value>
+  </data>
 </root>

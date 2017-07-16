@@ -21,8 +21,37 @@
     </tr>
     <tr>
         <td colspan="2">
-            <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="/img/iconSave.jpg" Height="50px" ToolTip="<%$Resources:lblTTSalva %>" ValidationGroup="addReparto" />
-            <asp:ImageButton runat="server" ID="reset" OnClick="reset_Click" ImageUrl="/img/iconUndo.png" Height="50px" ToolTip="<%$Resources:lblTTUndo %>" ValidationGroup="addReparto" />
+            <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="../img/iconSave.jpg" Height="50px" ToolTip="<%$Resources:lblTTSalva %>" ValidationGroup="addReparto" />
+            <asp:ImageButton runat="server" ID="reset" OnClick="reset_Click" ImageUrl="../img/iconUndo.png" Height="50px" ToolTip="<%$Resources:lblTTUndo %>" ValidationGroup="addReparto" />
         </td>
     </tr>
 </table>
+
+<asp:Repeater runat="server" ID="rptReparti" OnItemDataBound="rptReparti_ItemDataBound">
+    <HeaderTemplate>
+        <table>
+            <thead>
+                <th><asp:Literal runat="server" ID="lblReparto" Text="<%$Resources:lblReparto %>" /></th>
+                <th><asp:Literal runat="server" ID="lblConfigurato" Text="<%$Resources:lblConfigurato %>" /></th>
+                <th><asp:Literal runat="server" ID="lblConfigura" Text="<%$Resources:lblConfigura %>" /></th>
+            </thead>
+    </HeaderTemplate>
+    <ItemTemplate>
+        <tr>
+            <td>
+                <asp:HiddenField runat="server" ID="hdRepID" Value='<%#DataBinder.Eval(Container.DataItem, "id") %>' />
+                <%#DataBinder.Eval(Container.DataItem, "name") %>
+            </td>
+            <td>
+                <asp:Image runat="server" ID="imgOk" ImageUrl="~/img/iconComplete.png" Height="20" />
+                <asp:Image runat="server" ID="imgKo" ImageUrl="~/img/iconCancel.jpg" Height="20" />
+            </td>
+            <td><asp:HyperLink runat="server" ID="lnkCfg" NavigateUrl="~/Configuration/wizConfigReparti_Detail.aspx" Target="_blank">
+                <asp:Image runat="server" ID="imgCfg" ImageUrl="~/img/iconConfiguration.png" Height="20" />
+                </asp:HyperLink></td>
+        </tr>
+    </ItemTemplate>
+    <FooterTemplate>
+        </table>
+    </FooterTemplate>
+</asp:Repeater>

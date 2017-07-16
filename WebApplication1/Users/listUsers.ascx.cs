@@ -126,7 +126,7 @@ namespace KIS.Admin
             bCode.SetAbsolutePosition(0, 40);
             cartPDF.Add(bCode);
             cartPDF.Close();
-            Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Users/" + FileNamePDF + "', '_newtab')", true);
+            Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('../Data/Users/" + FileNamePDF + "', '_newtab')", true);
 
             try
             {

@@ -192,4 +192,7 @@
   <data name="lblPermessoKo2" xml:space="preserve">
     <value>You don't have permission to see the tasks in execution.</value>
   </data>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Tasks you're working on</value>
+  </data>
 </root>

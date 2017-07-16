@@ -108,17 +108,17 @@
             <ItemTemplate>
                 <tr runat="server" id="tr1" style="font-size:14px; font-family:Calibri">
                     <td><asp:HyperLink Width="40" runat="server" ID="lnkStatoArticolo" NavigateUrl='<%# "statoAvanzamentoArticolo.aspx?id=" + DataBinder.Eval(Container.DataItem, "ID") + "&anno=" + DataBinder.Eval(Container.DataItem, "Year") %>' Target="_blank">
-                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="/img/iconView.png" ToolTip="<%$Resources:lblTTStatoAvanzamento %>" />
+                            <asp:Image runat="server" ID="imgStatoArticolo" ImageUrl="~/img/iconView.png" ToolTip="<%$Resources:lblTTStatoAvanzamento %>" />
                         </asp:HyperLink></td>
                     <td>
-                        <asp:ImageButton runat="server" ID="imgPrintOrdini" ImageUrl="/img/iconBarcode.png" Width="20" Height="20" CommandName="printOrdini" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeMultipli %>" /><br />
-                        <asp:ImageButton runat="server" ID="imgPrintOrdini2" ImageUrl="/img/iconBarcode.png" Height="20" CommandName="printOrdini" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeMultipli %>" />
+                        <asp:ImageButton runat="server" ID="imgPrintOrdini" ImageUrl="~/img/iconBarcode.png" Width="20" Height="20" CommandName="printOrdini" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeMultipli %>" /><br />
+                        <asp:ImageButton runat="server" ID="imgPrintOrdini2" ImageUrl="~/img/iconBarcode.png" Height="20" CommandName="printOrdini" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeMultipli %>" />
                     </td>
                     <td>
-                        <asp:ImageButton runat="server" ID="imgPrintOrdiniSingolo" ImageUrl="/img/iconBarcode.png" Width="40" Height="40" CommandName="printOrdiniSingolo" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeSingolo %>" />
+                        <asp:ImageButton runat="server" ID="imgPrintOrdiniSingolo" ImageUrl="~/img/iconBarcode.png" Width="40" Height="40" CommandName="printOrdiniSingolo" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeSingolo %>" />
                     </td>
                     <td>
-                        <asp:ImageButton runat="server" ID="imgPrintOrdiniSingoloA3" ImageUrl="/img/iconA3.gif" Width="40" Height="40" CommandName="printOrdiniSingoloA3" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeSingoloA3 %>" />
+                        <asp:ImageButton runat="server" ID="imgPrintOrdiniSingoloA3" ImageUrl="~/img/iconA3.gif" Width="40" Height="40" CommandName="printOrdiniSingoloA3" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") + ";" + DataBinder.Eval(Container.DataItem, "Year") %>' ToolTip="<%$Resources:lblTTStampaBarcodeSingoloA3 %>" />
                     </td>
                     <td><asp:hyperlink runat="server" ID="lnkPrintKanbanCard" NavigateUrl='<%# "https://app.kanbanbox.com/printer/print_ekanban/"+DataBinder.Eval(Container.DataItem, "KanbanCardID") %>' ToolTip="<%$Resources:lblTTStampaKanban %>" Target="_blank">
                         <asp:Image runat="server" ID="imgPrintKanbanCard" ImageUrl="~/img/kanban.gif" Height="40" />
@@ -138,7 +138,7 @@
                     <td><%#DataBinder.Eval(Container.DataItem, "RepartoNome") %></td>
                     
                     <td>
-                        <asp:HyperLink Width="40" runat="server" ID="lnkRipianifica" NavigateUrl="/Commesse/wzAssociaPERTReparto.aspx" Target="_blank">
+                        <asp:HyperLink Width="40" runat="server" ID="lnkRipianifica" NavigateUrl="~/Commesse/wzAssociaPERTReparto.aspx" Target="_blank">
                             <asp:Image runat="server" ID="imgRipianifica" ImageUrl="~/img/iconChangePlan.png" Height="40" ToolTip="<%$Resources:lblRipianifica %>" Visible="false" />
                         </asp:HyperLink>
                     </td>

@@ -192,4 +192,7 @@
   <data name="lblPermessoKo2" xml:space="preserve">
     <value>Non hai il permesso di visualizzare i task da te avviati.</value>
   </data>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Tasks avviati da te</value>
+  </data>
 </root>

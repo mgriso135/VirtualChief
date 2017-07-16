@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="manageCalendarFesteStraordinari.aspx.cs" Title="Kaizen Indicator System"
- MasterPageFile="/Site.master" Inherits="KIS.Reparti.manageCalendarFesteStraordinari" %>
+ MasterPageFile="~/Site.master" Inherits="KIS.Reparti.manageCalendarFesteStraordinari" %>
 <%@ Register TagPrefix="calendario" TagName="addStraordinario" Src="~/Reparti/addStraordinario.ascx" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
@@ -11,10 +11,10 @@
     <asp:Label runat="server" ID="lblNomeRep" />
     <br />
     <asp:HyperLink runat="server" ID="lnkFestivita" NavigateUrl="manageFestivita.aspx?id=" Target="_blank">
-    <asp:Image runat="server" ID="imgShowAddFest" ImageUrl="/img/iconHoliday.png" Height="60px" ToolTip="<%$Resources:lblTTFestivita %>" />
+    <asp:Image runat="server" ID="imgShowAddFest" ImageUrl="~/img/iconHoliday.png" Height="60px" ToolTip="<%$Resources:lblTTFestivita %>" />
     </asp:HyperLink>
     <asp:HyperLink runat="server" ID="lnkStraordinario" NavigateUrl="manageStraordinario.aspx?id=" Target="_blank">
-        <asp:Image runat="server" ID="imgShowAddStraordinario" ImageUrl="/img/iconOvertime.jpg" Height="60px" ToolTip="<%$Resources:lblTTStraordinari %>" />
+        <asp:Image runat="server" ID="imgShowAddStraordinario" ImageUrl="~/img/iconOvertime.jpg" Height="60px" ToolTip="<%$Resources:lblTTStraordinari %>" />
     </asp:HyperLink>
     <br />
 
@@ -32,7 +32,7 @@
     <ChartAreas>
     <asp:ChartArea Name="turni"></asp:ChartArea>
   </ChartAreas>    
-        </asp:chart>
+        </asp:Chart>
     <br />
     <asp:Label runat="server" ID="log" />
     </asp:Content>

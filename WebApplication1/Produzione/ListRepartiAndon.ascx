@@ -16,7 +16,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><a href="AndonReparto.aspx?id=<%# DataBinder.Eval(Container.DataItem, "id") %>">
-                    <asp:image runat="server" ID="imgview" ImageUrl="/img/iconView.png" height="30px" ToolTip="<%$Resources:lblTTAndon %>" />
+                    <asp:image runat="server" ID="imgview" ImageUrl="~/img/iconView.png" height="30px" ToolTip="<%$Resources:lblTTAndon %>" />
                     </a></td>
                
                 <td><%# DataBinder.Eval(Container.DataItem, "name") %></td>

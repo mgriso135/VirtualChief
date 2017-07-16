@@ -68,8 +68,6 @@ namespace KIS.Configuration
                         frmConfigAndonReparto.Visible = true;
                         frmAvvioTask.idReparto = rep.id;
                         frmAvvioTask.Visible = true;
-                        frmAndonMaxDays.idReparto = rep.id;
-                        frmAndonMaxDays.Visible = true;
                         frmAndonViewFields.Visible = true;
                         frmAndonViewFields.idReparto = rep.id;
 
@@ -103,8 +101,6 @@ namespace KIS.Configuration
                         frmConfigAndonReparto.Visible = false;
                         frmAvvioTask.idReparto = -1;
                         frmAvvioTask.Visible = false;
-                        frmAndonMaxDays.idReparto = -1;
-                        frmAndonMaxDays.Visible = false;
                         frmAndonViewFields.Visible = false;
                     }
                 }
@@ -125,13 +121,11 @@ namespace KIS.Configuration
                     frmConfigAndonReparto.Visible = false;
                     frmAvvioTask.idReparto = -1;
                     frmAvvioTask.Visible = false;
-                    frmAndonMaxDays.idReparto = -1;
-                    frmAndonMaxDays.Visible = false;
                 }
             }
             else
             {
-                lbl1.Text = "<a href=\"/Login/login.aspx"
+                lbl1.Text = "<a href=\"../Login/login.aspx"
                     + "?red=/Configuration/wizConfigReparti_Main\">"
                     + GetLocalResourceObject("lblLnkLogin").ToString()
                     +".</a>";
@@ -149,8 +143,6 @@ namespace KIS.Configuration
                 frmConfigAndonReparto.Visible = false;
                 frmAvvioTask.idReparto = -1;
                 frmAvvioTask.Visible = false;
-                frmAndonMaxDays.idReparto = -1;
-                frmAndonMaxDays.Visible = false;
             }
         }
     }

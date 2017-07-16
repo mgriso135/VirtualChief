@@ -40,29 +40,14 @@ namespace KIS.App_Code
             get
             {
                 ElencoReparti elRep = new ElencoReparti();
-                Boolean ret = false;
+                Boolean ret = true;
                 for(int i = 0; i < elRep.elenco.Count; i++)
                 {
-                    if(elRep.elenco[i].FullyConfigured)
+                    if(!elRep.elenco[i].FullyConfigured)
                     {
-                        ret = true;
+                        ret = false;
                     }
                 }
-                /*MySqlConnection conn = (new Dati.Dati()).mycon();
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Reparto' AND parametro LIKE 'Configured'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    ret = true;
-                }
-                else
-                {
-                    ret = false;
-                }
-                conn.Close();*/
-
                 return ret;
             }
         }
@@ -193,6 +178,80 @@ namespace KIS.App_Code
 
                 return ret;
             }
+        }
+
+        public DateTime ExpiryDate
+        {
+            get
+            {
+                DateTime exp = new DateTime(1970, 1, 1);
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'ExpiryDate'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    try
+                    {
+                        String[] aExp = rdr.GetString(3).Split('/');
+                        int anno = Int32.Parse(aExp[2]);
+                        int mese = Int32.Parse(aExp[1]);
+                        int giorno = Int32.Parse(aExp[0]);
+                        FusoOrario fuso = new FusoOrario();
+                        exp = new DateTime(anno, mese, giorno);
+                        exp = TimeZoneInfo.ConvertTimeFromUtc(exp, fuso.tzFusoOrario);
+                    }
+                    catch
+                    {
+                        exp = new DateTime(1970, 1, 1);
+                    }
+                    rdr.Close();
+                    conn.Close();
+                }
+                return exp;
+            }
+            set
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand();
+                String expDate = value.Day.ToString() + "/"
+                    + value.Month.ToString() + "/"
+                    + value.Year.ToString();
+
+                // Controllo se esiste già il parametro
+                cmd.CommandText = "SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'ExpiryDate'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                bool exists = false;
+
+                exists = rdr.IsDBNull(0);
+                    rdr.Close();
+                if(exists)
+                {
+                    cmd.CommandText = "UPDATE configurazione SET parametro = '"+expDate+"' WHERE "
+                        + "Sezione = 'Main' AND parametro = 'ExpiryDate'";
+                }
+                else
+                {
+                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                        + "'Main', -1, 'ExpiryDate', '"+ expDate + "')";
+                }
+                MySqlTransaction tr = conn.BeginTransaction();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch
+                {
+                    tr.Rollback();
+                }
+                conn.Close();
+             }
         }
     }
 

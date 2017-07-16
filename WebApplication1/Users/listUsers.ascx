@@ -20,7 +20,7 @@
         <tr runat="server" id="tr1">
             <td>
                 <asp:HyperLink runat="server" ID="lnkEditUsers" NavigateUrl='<%# "editUser.aspx?id=" + DataBinder.Eval(Container.DataItem, "username") %>'>
-                <asp:Image runat="server" ImageUrl="/img/edit.png" Height="30px" CssClass="img-rounded" />
+                <asp:Image runat="server" ImageUrl="~/img/edit.png" Height="30px" CssClass="img-rounded" />
         </asp:HyperLink>
                 </td>
             <td style="text-align:center;">
@@ -29,7 +29,7 @@
                     <asp:image CssClass="img-rounded" runat="server" ID="imgGeneraBarcode" ImageUrl="/img/iconBarcode.png" Height="40" ToolTip="Genera il cartellino" />
                 </asp:HyperLink>
                 -->
-                <asp:imagebutton CssClass="img-rounded" runat="server" ID="imgGeneraBarcode2" ImageUrl="/img/iconBarcode.png" Height="40" ToolTip="<%$Resources:lblPrintCard %>" CommandName="printBarcode" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "username") %>' />
+                <asp:imagebutton CssClass="img-rounded" runat="server" ID="imgGeneraBarcode2" ImageUrl="~/img/iconBarcode.png" Height="40" ToolTip="<%$Resources:lblPrintCard %>" CommandName="printBarcode" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "username") %>' />
             </td>
             <td style="font-size: 12px; font-family: Calibri;"><%# DataBinder.Eval(Container.DataItem, "username") %>
             </td>

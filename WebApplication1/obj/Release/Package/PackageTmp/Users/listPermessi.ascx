@@ -4,13 +4,18 @@
     <HeaderTemplate>
         <table class="table table-striped table-hover">
             <thead>
-            <tr><td></td><td>Nome permesso</td><td>Descrizione</td><td></td></tr>
+            <tr><th></th>
+                <th>
+                    <asp:Literal runat="server" ID="lblNomePerm" Text="<%$Resources:lblNomePerm %>" /></th>
+                <th><asp:Literal runat="server" ID="lblTHDescrizione" Text="<%$Resources:lblTHDescrizione %>" /></th>
+                <th></th>
+            </tr>
                 </thead><tbody>
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1">
-            <td><asp:ImageButton runat="server" ID="btnEdit" ImageUrl="/img/edit.png" Height="30px" CommandName="edit" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") %>' ToolTip="Modifica il permesso" />
-                <asp:ImageButton runat="server" ID="btnSave" ImageUrl="/img/iconSave.jpg" Height="30px" CommandName="save" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" ToolTip="Salva le modifiche" />
+            <td><asp:ImageButton runat="server" ID="btnEdit" ImageUrl="~/img/edit.png" Height="30px" CommandName="edit" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") %>' ToolTip="<%$Resources:lblModificaPerm %>" />
+                <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="30px" CommandName="save" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" ToolTip="<%$Resources:lblSalvaMod %>" />
             </td>
             <td><asp:label runat="server" id="lblNomeP" text='<%# DataBinder.Eval(Container.DataItem, "nome") %>' />
                 <asp:TextBox runat="server" ID="txtNomeP" Text='<%# DataBinder.Eval(Container.DataItem, "nome") %>' Visible="false" />
@@ -20,7 +25,7 @@
                 <asp:TextBox runat="server" ID="txtDescP" Text='<%# DataBinder.Eval(Container.DataItem, "descrizione") %>' Visible="false" />
             </td>
             <td>
-                <asp:ImageButton runat="server" ID="btnDel" ImageUrl="/img/iconDelete.png" Height="30" CommandName="delete" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") %>' Visible ="false" ToolTip="Cancella il permesso" />
+                <asp:ImageButton runat="server" ID="btnDel" ImageUrl="~/img/iconDelete.png" Height="30" CommandName="delete" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "ID") %>' Visible ="false" ToolTip="<%$Resources:lblCancellaPerm %>" />
             </td>
         </tr>
     </ItemTemplate>

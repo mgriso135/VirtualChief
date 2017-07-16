@@ -45,7 +45,6 @@
                 <th><asp:Label runat="server" ID="lblTHArticolo" meta:resourcekey="lblTHArticolo" /></th>
                 <th><asp:Label runat="server" ID="lblTHMatricola" meta:resourcekey="lblTHMatricola" /></th>
                 <th><asp:Label runat="server" ID="lblTHProcesso" meta:resourcekey="lblTHProcesso" /></th>
-                <th><asp:Label runat="server" ID="lblTHVariante" meta:resourcekey="lblTHVariante" /></th>
                 <th><asp:Label runat="server" ID="lblTHQuantita" meta:resourcekey="lblTHQuantita" /></th>
                 <th><asp:Label runat="server" ID="lblTHReparto" meta:resourcekey="lblTHReparto" /></th>
                 <th><asp:Label runat="server" ID="lblTHDataFine" meta:resourcekey="lblTHDataFine" /></th>
@@ -58,14 +57,13 @@
     <ItemTemplate>
         <tr runat="server" id="tr1" style="font-family:Calibri; font-size:14px;">
             <td><asp:HyperLink runat="server" ID="lnkShowHistoryArticolo" NavigateUrl='<%# "~/Produzione/statoAvanzamentoArticolo.aspx?id=" +DataBinder.Eval(Container.DataItem, "ID")+"&anno=" +DataBinder.Eval(Container.DataItem, "Year") %>'>
-                <asp:Image runat="server" ID="imgView" ImageUrl="/img/iconView.png" ToolTip="<%$resources:lblTTStoriaArticolo %>" Height="40" />
+                <asp:Image runat="server" ID="imgView" ImageUrl="~/img/iconView.png" ToolTip="<%$resources:lblTTStoriaArticolo %>" Height="40" />
                 </asp:HyperLink></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Commessa") %>/<%#DataBinder.Eval(Container.DataItem, "AnnoCommessa") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Matricola") %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "Proc.Process.ProcessName") %></td>
-            <td><%#DataBinder.Eval(Container.DataItem, "Proc.Variant.nomeVariante") %></td>
+            <td><%#DataBinder.Eval(Container.DataItem, "Proc.Process.ProcessName") %>&nbsp;-&nbsp;<%#DataBinder.Eval(Container.DataItem, "Proc.Variant.nomeVariante") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Quantita") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "RepartoNome") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "DataFineAttivita") %></td>

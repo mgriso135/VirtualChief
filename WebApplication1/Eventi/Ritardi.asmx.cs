@@ -180,8 +180,8 @@ namespace KIS.Eventi
                     // Invio l'e-mail
                     System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
 
-                    mMessage.From = new MailAddress("m.griso@hotmail.it", "Scheduler@KaizenIndicatorSystem");
-                    mMessage.To.Add(new MailAddress("m.griso@hotmail.it", "Scheduler@KaizenIndicatorSystem"));
+                    mMessage.From = new MailAddress("kaizenindicatorsystem@kaizenkey.it", "Scheduler@KaizenIndicatorSystem");
+                    mMessage.To.Add(new MailAddress("kaizenindicatorsystem@kaizenkey.it", "Scheduler@KaizenIndicatorSystem"));
                     for (int q = 0; q < MailList.Count; q++)
                     {
                         mMessage.CC.Add(MailList[q]);

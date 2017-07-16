@@ -2,6 +2,7 @@
 <%@ Register TagPrefix="config" TagName="logo" Src="~/Admin/configLogo.ascx" %>
 <%@ Register TagPrefix="config" TagName="tipoPERT" Src="~/Admin/configWizard_TipoPERT.ascx" %>
 <%@ Register TagPrefix="config" TagName="TimeZone" Src="~/Admin/configTimezone.ascx" %>
+<%@ Register TagPrefix="config" TagName="Billing" Src="~/Admin/kisBilling.ascx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
@@ -10,7 +11,7 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
         <li>
-						<a href="/Admin/admin.aspx">
+						<a href="../Admin/admin.aspx">
                             <asp:Label runat="server" ID="lblNavAdmin" meta:resourcekey="lblNavAdmin" /></a>
 						<span class="divider">/</span>
 					</li>
@@ -24,6 +25,20 @@
     <asp:Label runat="server" ID="lbl1" />
 
     <div class="accordion" id="accordion1" runat="server">
+
+        <div class="accordion-group">
+            <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseExpiry">
+          <asp:Label runat="server" ID="lblBilling" meta:resourcekey="lblBilling" />
+      </a>
+    </div>
+            <div id="collapseExpiry" class="accordion-body collapse">
+      <div class="accordion-inner">
+        <config:Billing runat="server" id="frmBilling" />
+      </div>
+    </div>
+            </div>
+
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">

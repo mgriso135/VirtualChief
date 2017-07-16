@@ -7,21 +7,21 @@
     <tr>
         <td>
 <b><asp:Label runat="server" ID="lblAddNewTask" Text="<%$Resources:lblAddNewTask %>" /></b>&nbsp;
-            <img ID="imgAddTaskPert" src="/img/iconAdd.jpg" OnClick="addDefaultTask()" style="height:40px; cursor: pointer" Height="40" />
+            <img ID="imgAddTaskPert" src="../img/iconAdd.jpg" OnClick="addDefaultTask()" style="height:40px; cursor: pointer" Height="40" />
             </td>
             </tr>
     <tr>
         <td>
 <b><asp:Label runat="server" ID="lblLinkTask" Text="<%$Resources:lblLinkTask %>" /></b>&nbsp;
 <asp:DropDownList runat="server" ID="ddlTasks" />
-<img src="/img/iconSave.jpg" style="height:40px; cursor: pointer" onclick="linkExistingTask()" />
+<img src="../img/iconSave.jpg" style="height:40px; cursor: pointer" onclick="linkExistingTask()" />
             </td>
         </tr>
 </table>
 
-<script src="/Scripts/jquery-1.7.2.min.js" type="text/javascript" ></script>
-<script src="/Scripts/jquery.svg.js" type="text/javascript" ></script>
-<script src="/Scripts/jquery-ui-1.8.23.custom.min.js" type="text/javascript" ></script>
+<script src="../Scripts/jquery-1.7.2.min.js" type="text/javascript" ></script>
+<script src="../Scripts/jquery.svg.js" type="text/javascript" ></script>
+<script src="../Scripts/jquery-ui-1.8.23.custom.min.js" type="text/javascript" ></script>
 
 <asp:UpdatePanel runat="server" ID="upd1">
     <ContentTemplate>
@@ -73,7 +73,7 @@
 
        function stop_dragging(evt, taskID) {
            start_drag = 0;
-           var popup = window.open("/Processi/updatePERT.aspx?id=" + taskID + "&act=updatepos&posx=" + $('#' + taskID).attr('cx') + "&posy=" + $('#' + taskID).attr('cy') + "&variante=" + varID, null, "height=5,width=5");
+           var popup = window.open("../Processi/updatePERT.aspx?id=" + taskID + "&act=updatepos&posx=" + $('#' + taskID).attr('cx') + "&posy=" + $('#' + taskID).attr('cy') + "&variante=" + varID, null, "height=5,width=5");
            popup.blur();
            window.focus();
            drawLines();
@@ -88,7 +88,7 @@
 
            $.ajax({
                type: "POST",
-               url: "/Processi/getProcessData.asmx/loadTempiCiclo",
+               url: "../Processi/getProcessData.asmx/loadTempiCiclo",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -195,7 +195,7 @@
                toolBoxImg.setAttributeNS(null, "y", (arrTasks[i][3] - 81));
                toolBoxImg.setAttributeNS(null, "width", 40);
                toolBoxImg.setAttributeNS(null, "height", 40);
-               toolBoxImg.setAttributeNS("http://www.w3.org/1999/xlink", "href", "/img/iconToolbox.jpg");
+               toolBoxImg.setAttributeNS("http://www.w3.org/1999/xlink", "href", "../img/iconToolbox.jpg");
                toolBoxImg.setAttributeNS(null, "style", "cursor:pointer");
                toolBoxImg.setAttributeNS(null, "id", "tx" + arrTasks[i][0]);
                toolBoxImg.setAttributeNS(null, "onclick", "openToolbar(evt, \"" + arrTasks[i][0] + "\")");
@@ -221,7 +221,7 @@
        function loadAddTaskData() {
            $.ajax({
                type: "POST",
-               url: "/Processi/getProcessData.asmx/loadTempiCiclo",
+               url: "../Processi/getProcessData.asmx/loadTempiCiclo",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -291,7 +291,7 @@
                linkImg.setAttributeNS(null, "y", (arrTasks[i][3] - 81));
                linkImg.setAttributeNS(null, "width", 40);
                linkImg.setAttributeNS(null, "height", 40);
-               linkImg.setAttributeNS("http://www.w3.org/1999/xlink", "href", "/img/iconAddLink.png");
+               linkImg.setAttributeNS("http://www.w3.org/1999/xlink", "href", "../img/iconAddLink.png");
                linkImg.setAttributeNS(null, "style", "cursor:pointer");
                linkImg.setAttributeNS(null, "id", "lx" + arrTasks[i][0]);
                linkImg.setAttributeNS(null, "onclick", "openLinkPage(evt, \"" + arrTasks[i][0] + "\", 0)");
@@ -305,11 +305,11 @@
        }
 
        function openLinkPage(evt, taskID, revTask) {
-           window.open("/Processi/pertManagePrecedenze2.aspx?id=" + taskID + "&revTaskID=" + revTask + "&variante=" + varID, "_blank", "location=no,menubar=no,location=no,height=600,width=800,menubar=no,status=no");
+           window.open("../Processi/pertManagePrecedenze2.aspx?id=" + taskID + "&revTaskID=" + revTask + "&variante=" + varID, "_blank", "location=no,menubar=no,location=no,height=600,width=800,menubar=no,status=no");
        }
 
        function openPausePage(evt, prec, revPrec, succ, revSucc) {
-           window.open("/Commesse/wzEditPauseTasks.aspx?prec=" + prec +"&revPrec="+revPrec+"&succ=" + succ + "&revSucc="+revSucc+"&variante=" + varID, "_blank", "location=no,menubar=no,location=no,height=600,width=800,menubar=no,status=no");
+           window.open("../Commesse/wzEditPauseTasks.aspx?prec=" + prec +"&revPrec="+revPrec+"&succ=" + succ + "&revSucc="+revSucc+"&variante=" + varID, "_blank", "location=no,menubar=no,location=no,height=600,width=800,menubar=no,status=no");
        }
 
        function closeEdit() {
@@ -328,7 +328,7 @@
            var rev = getQueryStringValue("revProc");
            $.ajax({
                type: "POST",
-               url: "/Processi/getProcessData.asmx/loadTempiCiclo",
+               url: "../Processi/getProcessData.asmx/loadTempiCiclo",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -361,7 +361,7 @@
            var rev = getQueryStringValue("revProc");
            $.ajax({
                type: "POST",
-               url: "/Processi/getProcessData.asmx/loadPrecedenze",
+               url: "../Processi/getProcessData.asmx/loadPrecedenze",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -398,7 +398,7 @@
            var rev = getQueryStringValue("revProc");
            $.ajax({
                type: "POST",
-               url: "/Processi/getProcessData.asmx/addDefaultSubProcess",
+               url: "../Processi/getProcessData.asmx/addDefaultSubProcess",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -470,7 +470,7 @@
               var taskID = ddlTask.options[ddlTask.selectedIndex].value;
               $.ajax({
                   type: "POST",
-                  url: "/Processi/getProcessData.asmx/linkExistingSubProcess",
+                  url: "../Processi/getProcessData.asmx/linkExistingSubProcess",
                   contentType: "application/json; charset=utf-8",
                   data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + ", 'taskID':" + taskID + ", 'taskRev':0 }",
                   dataType: "json",
@@ -498,7 +498,7 @@
            var taskRev = 0;
            $.ajax({
                type: "POST",
-               url: "/Processi/getProcessData.asmx/deleteSubProcess",
+               url: "../Processi/getProcessData.asmx/deleteSubProcess",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + ", 'taskID':" + taskID + ", 'taskRev':0 }",
                dataType: "json",
@@ -536,7 +536,7 @@
     <asp:HiddenField runat="server" ID="editTaskVarianteID" />
     <table style="position: relative; top: 0px; left: 20%; background-color: white; border: 1px dashed black;">
         <tr><td colspan="2" style="text-align: right">
-            <img src="/img/iconClose.png" style="height: 20px" onclick="closeEdit();" />
+            <img src="../img/iconClose.png" style="height: 20px" onclick="closeEdit();" />
             </td></tr>
         <tr>
             <td><asp:label runat="server" id="lblNome" Text="<%$Resources:lblNome %>"/>:</td>
@@ -551,8 +551,8 @@
         </td>
         </tr>
         <td colspan="2">
-    <asp:ImageButton runat="server" ID="editTaskSave" ImageUrl="/img/iconSave.jpg" Height="40" OnClick="editTaskSave_Click" />
-    <asp:ImageButton runat="server" ID="editTaskUndo" ImageUrl="/img/iconUndo.png" Height="40" OnClick="editTaskUndo_Click" />
+    <asp:ImageButton runat="server" ID="editTaskSave" ImageUrl="~/img/iconSave.jpg" Height="40" OnClick="editTaskSave_Click" />
+    <asp:ImageButton runat="server" ID="editTaskUndo" ImageUrl="~/img/iconUndo.png" Height="40" OnClick="editTaskUndo_Click" />
             </td>
         <tr>
             <td colspan="2" style="border:1px dashed blue;">
@@ -576,7 +576,7 @@
         <tr>
             <td>
                 <asp:HiddenField runat="server" ID="hNumOp" Value='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' />
-                <asp:ImageButton runat="server" ID="btnDelete" ImageUrl="/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' ToolTip="Cancella il tempo ciclo" /></td>
+                <asp:ImageButton runat="server" ID="btnDelete" ImageUrl="~/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' ToolTip="Cancella il tempo ciclo" /></td>
             <td><%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %></td>
             <td><%#Math.Truncate(((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoSetup")).TotalHours) + ":"
                 + ((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoSetup")).Minutes + ":"
@@ -601,7 +601,7 @@
             <td colspan="2">
                 <asp:UpdatePanel runat="server" ID="updDeleteTask">
                     <ContentTemplate>
-                        <img src="/img/iconDelete.png" style="height: 30px; cursor:pointer;" onclick="deleteSubProcess()" /><asp:label runat="server" id="lblDeleteProcess" Text="<%$Resources:lblDeleteProcess %>"/>
+                        <img src="../img/iconDelete.png" style="height: 30px; cursor:pointer;" onclick="deleteSubProcess()" /><asp:label runat="server" id="lblDeleteProcess" Text="<%$Resources:lblDeleteProcess %>"/>
                         </ContentTemplate>
                     </asp:UpdatePanel>
                     </td>

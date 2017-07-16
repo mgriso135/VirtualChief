@@ -178,7 +178,7 @@ namespace KIS.Postazioni
                        bCode.Alignment = Element.ALIGN_CENTER;
                        cartPDF.Add(bCode);
                        cartPDF.Close();
-                       Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Postazioni/" + FileNamePDF + "', '_newtab')", true);
+                       Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('../Data/Postazioni/" + FileNamePDF + "', '_newtab')", true);
 
                        //try
                        {

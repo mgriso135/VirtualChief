@@ -17,7 +17,7 @@
         <asp:DropDownList runat="server" ID="OraF" Width="60" />:<asp:DropDownList runat="server" ID="MinutoF" Width="60" /></td>
     </tr>
     <tr><td colspan="2" style="text-align:center;">
-        <asp:ImageButton runat="server" id="saveStraord" ImageUrl="/img/iconSave.jpg" Height="40px" OnClick="saveStraord_Click" />
+        <asp:ImageButton runat="server" id="saveStraord" ImageUrl="~/img/iconSave.jpg" Height="40px" OnClick="saveStraord_Click" />
         </td></tr>
         </tbody>
 </table>

@@ -1111,6 +1111,15 @@ namespace KIS.App_Code
             }
         }
         
+        public DateTime DataInserimento
+        {
+            get
+            {
+                Commessa cm = new Commessa(this.Commessa, this.AnnoCommessa);
+                return cm.DataInserimento;
+            }
+        }
+
         public Articolo(int idArticolo, int AnnoArticolo)
         {
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
@@ -2150,6 +2159,27 @@ namespace KIS.App_Code
             while (rdr.Read())
             {
                 this._ListArticoli.Add(new Articolo(rdr.GetInt32(1), rdr.GetInt32(2)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public ElencoArticoli(DateTime start, DateTime finish)
+        {
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "Select productionplan.id, productionplan.anno from productionplan "
+                + "inner join commesse on "
+                + "(productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa = commesse.anno)"
+                + " WHERE commesse.dataInserimento >= '" + start.ToString("yyyy-MM-dd") + "'"
+                +" AND commesse.dataInserimento <= '" + finish.ToString("yyyy-MM-dd") + "'"
+                + " ORDER BY commesse.dataInserimento";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            this._ListArticoli = new List<Articolo>();
+            while (rdr.Read())
+            {
+                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();

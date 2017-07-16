@@ -8,7 +8,7 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx"><asp:label runat="server" id="lblMenuAdmin" meta:resourcekey="lblMenuAdmin" /></a>
+						<a href="../Admin/admin.aspx"><asp:label runat="server" id="lblMenuAdmin" meta:resourcekey="lblMenuAdmin" /></a>
 						<span class="divider">/</span>
 						<a href="manageReports.aspx"><asp:label runat="server" id="lblMenuConfigReports" meta:resourcekey="lblMenuConfigReports" /></a>
 						<span class="divider">/</span>

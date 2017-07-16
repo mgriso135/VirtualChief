@@ -127,7 +127,7 @@
     <value>Fecha de entrega</value>
   </data>
   <data name="lblFine" xml:space="preserve">
-    <value>Final</value>
+    <value>Fin</value>
   </data>
   <data name="lblInizio" xml:space="preserve">
     <value>Inicio</value>
@@ -145,7 +145,7 @@
     <value>Vos no tiene el permiso de exhumar productos terminados</value>
   </data>
   <data name="lblProdottiTerm1" xml:space="preserve">
-    <value>Poducts terminando entre</value>
+    <value>Products terminando entre</value>
   </data>
   <data name="lblProdottiTerm2" xml:space="preserve">
     <value>y</value>
@@ -176,5 +176,14 @@
   </data>
   <data name="lblTipoProdotto" xml:space="preserve">
     <value>Tipo de producto</value>
+  </data>
+  <data name="lblTitleStorico" xml:space="preserve">
+    <value>Historia de producción</value>
+  </data>
+  <data name="lblTTRiesuma" xml:space="preserve">
+    <value>Exhumar el producto</value>
+  </data>
+  <data name="lblTTVisualizzaStoria" xml:space="preserve">
+    <value>Ver la historia de producción de el producto</value>
   </data>
 </root>

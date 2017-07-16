@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Kaizen Indicator System" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="wzAssociaTaskPostazioni.aspx.cs" Inherits="KIS.Commesse.wzAssociaTaskPostazioni" %>
 <%@ Register TagPrefix="task" TagName="associapostazioni" Src="~/Commesse/wzAssociaTaskPostazioni.ascx" %>
-<%@ Register TagPrefix="postazione" TagName="add" Src="/Postazioni/addPostazione.ascx" %>
-<%@ Register TagPrefix="postazione" TagName="workload" Src="/Reparti/processoWorkLoad.ascx" %>
+<%@ Register TagPrefix="postazione" TagName="add" Src="~/Postazioni/addPostazione.ascx" %>
+<%@ Register TagPrefix="postazione" TagName="workload" Src="~/Reparti/processoWorkLoad.ascx" %>
 <%@ Register TagPrefix="Wizard" TagName="InfoPanel" Src="~/Commesse/wzInfoPanel.ascx" %>
 
 
@@ -41,9 +41,9 @@
             </asp:HyperLink>
         </div>
         <div class="span7">
-    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblAddPostazione %>" />
-    <a href="/Postazioni/managePostazioniLavoro.aspx">
-    <asp:Image ID="imgManagePostazioni" ImageUrl="/img/iconManage.png" Height="60px" ToolTip="<%$Resources:lblManagePostazioni %>" runat="server" /></a>
+    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="~/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblAddPostazione %>" />
+    <a href="../Postazioni/managePostazioniLavoro.aspx">
+    <asp:Image ID="imgManagePostazioni" ImageUrl="~/img/iconManage.png" Height="60px" ToolTip="<%$Resources:lblManagePostazioni %>" runat="server" /></a>
     <br />
     <postazione:add runat="server" ID="frmAddPostazione" />
     <task:associapostazioni runat="server" ID="frmAssociaTasksPostazioni" />

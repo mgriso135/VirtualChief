@@ -180,4 +180,10 @@
   <data name="lblTitleStorico" xml:space="preserve">
     <value>Historia de producción</value>
   </data>
+  <data name="lblTTRiesuma" xml:space="preserve">
+    <value>Exhumar el producto</value>
+  </data>
+  <data name="lblTTVisualizzaStoria" xml:space="preserve">
+    <value>Ver la historia de producción de el producto</value>
+  </data>
 </root>

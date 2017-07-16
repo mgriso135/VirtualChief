@@ -1,11 +1,11 @@
 ﻿<%@ Page Title="Kaizen Indicator System" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"  
 CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateRequest="false" %>
-<%@Register TagPrefix="pert" TagName="showPert" src="/Processi/showPert.ascx" %>
+<%@Register TagPrefix="pert" TagName="showPert" src="~/Processi/showPert.ascx" %>
 
-<%@Register TagPrefix="variante" TagName="edit" src="/Processi/editVariante.ascx" %>
+<%@Register TagPrefix="variante" TagName="edit" src="~/Processi/editVariante.ascx" %>
 <%@ Register TagPrefix="processovariante" TagName="addSubProcess" Src="~/Processi/linkSubProcessVariante.ascx" %>
 
-<%@Reference Control="/Processi/boxProcesso.ascx" %>
+<%@Reference Control="~/Processi/boxProcesso.ascx" %>
 
 
 
@@ -33,9 +33,9 @@ CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateR
     <asp:RequiredFieldValidator runat="server" ControlToValidate="inputProcName" ForeColor="Red" ErrorMessage="<%$Resources:lblReqField %>" />
     </td>
     <td rowspan="5">
-        <asp:ImageButton runat="server" Enabled="false" ID="newRevision" ImageUrl="/img/iconNewRevision.png" Height="100px" OnClick="newRevision_Click" ToolTip="<%$Resources:lblTTNuovoProcesso %>" Visible="false" />
+        <asp:ImageButton runat="server" Enabled="false" ID="newRevision" ImageUrl="~/img/iconNewRevision.png" Height="100px" OnClick="newRevision_Click" ToolTip="<%$Resources:lblTTNuovoProcesso %>" Visible="false" />
         <br />
-        <asp:ImageButton runat="server" Visible="false" Enabled="false" ID="newRevisionCopy" ImageUrl="/img/iconCopyFolder.png" Height="100px" OnClick="newRevisionCopy_Click" ToolTip="Crea una nuova revisione del processo, copiando quella corrente" />
+        <asp:ImageButton runat="server" Visible="false" Enabled="false" ID="newRevisionCopy" ImageUrl="~/img/iconCopyFolder.png" Height="100px" OnClick="newRevisionCopy_Click" ToolTip="Crea una nuova revisione del processo, copiando quella corrente" />
     </td>
 </tr>
 <tr>
@@ -67,10 +67,10 @@ CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateR
         </tr>
     <tr>
         <td colspan="2">
-<asp:imagebutton runat="server" id="imgEdit" ImageUrl="/img/edit.png" Width="50px" onClick="imgEdit_Click" ToolTip="<%$Resources:lblTTModifica %>"/>
-<asp:imagebutton runat="server" id="imgDeleteProcess" ImageUrl="/img/iconDelete.png" Width="50px" onClick="imgDeleteProcess_Click" ToolTip="<%$Resources:lblDeleteProcess %>"/>
-<asp:imagebutton runat="server" id="imgSave" ImageUrl="/img/iconSave.jpg" Width="50px" OnClick="imgSave_Click" AlternateText="Salva le modifiche" ToolTip="<%$Resources:lblTTSalvaModifiche %>" />
-<asp:imagebutton runat="server" id="imgCancel" ImageUrl="/img/iconCancel.jpg" Width="50px" OnClick="imgCancel_Click" AlternateText="Non salvare le modifiche" ToolTip="<%$Resources:lblTTNONSalvaModifiche %>" />
+<asp:imagebutton runat="server" id="imgEdit" ImageUrl="~/img/edit.png" Width="50px" onClick="imgEdit_Click" ToolTip="<%$Resources:lblTTModifica %>"/>
+<asp:imagebutton runat="server" id="imgDeleteProcess" ImageUrl="~/img/iconDelete.png" Width="50px" onClick="imgDeleteProcess_Click" ToolTip="<%$Resources:lblDeleteProcess %>"/>
+<asp:imagebutton runat="server" id="imgSave" ImageUrl="~/img/iconSave.jpg" Width="50px" OnClick="imgSave_Click" AlternateText="Salva le modifiche" ToolTip="<%$Resources:lblTTSalvaModifiche %>" />
+<asp:imagebutton runat="server" id="imgCancel" ImageUrl="~/img/iconCancel.jpg" Width="50px" OnClick="imgCancel_Click" AlternateText="Non salvare le modifiche" ToolTip="<%$Resources:lblTTNONSalvaModifiche %>" />
   </td></tr>
 </table>
 <br />
@@ -89,7 +89,7 @@ CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateR
             <table class="table table-bordered table-condensed">
                     <tr>
                         <td>
-    <asp:ImageButton runat="server" ID="addVariante" OnClick="addVariante_Click" ImageUrl="/img/iconAdd.jpg" ToolTip="<%$Resources:lblTTAddProdottoBlank %>" Height="40px" /><asp:literal runat="server" ID="lblAddProdottoBlank" Text="<%$Resources:lblAddProdottoBlank %>" />
+    <asp:ImageButton runat="server" ID="addVariante" OnClick="addVariante_Click" ImageUrl="~/img/iconAdd.jpg" ToolTip="<%$Resources:lblTTAddProdottoBlank %>" Height="40px" /><asp:literal runat="server" ID="lblAddProdottoBlank" Text="<%$Resources:lblAddProdottoBlank %>" />
                             </td>
     </tr>
                 <tr runat="server" id="trCopiaPERT">
@@ -113,8 +113,8 @@ CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateR
     <br />
     <br />
     <asp:Label runat="server" ID="lblTitoloVariante" Font-Size="16" Font-Bold="true" />
-    <asp:ImageButton runat="server" ID="showEditVariante" ImageUrl="/img/edit.png" OnClick="showEditVariante_Click" Height="40px" ToolTip="<%$Resources:lblTTModificaProcessoProd %>" />
-    <asp:ImageButton runat="server" ID="deleteVariante" ImageUrl="/img/iconDelete.png" OnClick="deleteVariante_Click" Height="40" ToolTip="<%$Resources:lblTTCancellaProcessoProd %>" />
+    <asp:ImageButton runat="server" ID="showEditVariante" ImageUrl="~/img/edit.png" OnClick="showEditVariante_Click" Height="40px" ToolTip="<%$Resources:lblTTModificaProcessoProd %>" />
+    <asp:ImageButton runat="server" ID="deleteVariante" ImageUrl="~/img/iconDelete.png" OnClick="deleteVariante_Click" Height="40" ToolTip="<%$Resources:lblTTCancellaProcessoProd %>" />
     <br />
     <asp:Label runat="server" ID="lblDescrizioneVariante" />
     <br />

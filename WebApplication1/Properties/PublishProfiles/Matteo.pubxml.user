@@ -6,14 +6,14 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>F:\Server ABS</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\Build-1.0</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="About.aspx">
       <publishTime>01/20/2013 20:13:08</publishTime>
     </File>
     <File Include="Admin/admin.aspx">
-      <publishTime>01/31/2017 22:23:17</publishTime>
+      <publishTime>06/30/2017 22:23:56</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/admin.aspx.en.resx">
       <publishTime>01/31/2017 22:28:28</publishTime>
@@ -124,16 +124,28 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>02/11/2017 22:10:14</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/kisAdmin.aspx.en.resx">
-      <publishTime>04/11/2017 22:40:06</publishTime>
+      <publishTime>07/16/2017 13:33:14</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/kisAdmin.aspx.es.resx">
-      <publishTime>04/11/2017 22:39:29</publishTime>
+      <publishTime>07/16/2017 13:33:50</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/kisAdmin.aspx.it.resx">
-      <publishTime>04/11/2017 22:36:38</publishTime>
+      <publishTime>07/16/2017 13:33:04</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/kisAdmin.aspx.resx">
-      <publishTime>02/11/2017 22:15:57</publishTime>
+      <publishTime>07/16/2017 13:33:03</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/kisBilling.ascx.en.resx">
+      <publishTime>07/16/2017 16:14:10</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/kisBilling.ascx.es.resx">
+      <publishTime>07/16/2017 16:13:14</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/kisBilling.ascx.it.resx">
+      <publishTime>07/16/2017 16:10:06</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/kisBilling.ascx.resx">
+      <publishTime>07/16/2017 16:07:58</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/manageMenu.aspx.en.resx">
       <publishTime>04/11/2017 22:41:31</publishTime>
@@ -171,26 +183,98 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Admin/App_LocalResources/manageReports.aspx.resx">
       <publishTime>02/12/2017 11:59:35</publishTime>
     </File>
+    <File Include="Admin/App_LocalResources/menuAddMainVoce.ascx.en.resx">
+      <publishTime>06/21/2017 23:17:38</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuAddMainVoce.ascx.es.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuAddMainVoce.ascx.it.resx">
+      <publishTime>06/21/2017 23:15:48</publishTime>
+    </File>
     <File Include="Admin/App_LocalResources/menuAddMainVoce.ascx.resx">
       <publishTime>02/12/2017 12:10:17</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuAddVoceFiglia.ascx.en.resx">
+      <publishTime>06/21/2017 23:18:52</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuAddVoceFiglia.ascx.es.resx">
+      <publishTime>06/21/2017 23:20:08</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuAddVoceFiglia.ascx.it.resx">
+      <publishTime>06/21/2017 23:18:12</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/menuAddVoceFiglia.ascx.resx">
       <publishTime>02/12/2017 14:04:36</publishTime>
     </File>
+    <File Include="Admin/App_LocalResources/menuGruppi.aspx.en.resx">
+      <publishTime>06/21/2017 23:21:37</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuGruppi.aspx.es.resx">
+      <publishTime>06/21/2017 23:21:14</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuGruppi.aspx.it.resx">
+      <publishTime>06/21/2017 23:20:18</publishTime>
+    </File>
     <File Include="Admin/App_LocalResources/menuGruppi.aspx.resx">
       <publishTime>02/12/2017 14:11:39</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/MenuGruppiAddVoce.ascx.en.resx">
+      <publishTime>06/21/2017 23:22:23</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/MenuGruppiAddVoce.ascx.es.resx">
+      <publishTime>06/21/2017 23:22:23</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/MenuGruppiAddVoce.ascx.it.resx">
+      <publishTime>06/21/2017 23:21:42</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/MenuGruppiAddVoce.ascx.resx">
       <publishTime>02/12/2017 14:15:51</publishTime>
     </File>
+    <File Include="Admin/App_LocalResources/MenuGruppiList.ascx.en.resx">
+      <publishTime>06/21/2017 23:23:15</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/MenuGruppiList.ascx.es.resx">
+      <publishTime>06/21/2017 23:23:01</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/MenuGruppiList.ascx.it.resx">
+      <publishTime>06/21/2017 23:22:31</publishTime>
+    </File>
     <File Include="Admin/App_LocalResources/MenuGruppiList.ascx.resx">
       <publishTime>02/12/2017 14:19:20</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuMainVociList.ascx.en.resx">
+      <publishTime>06/21/2017 23:24:32</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuMainVociList.ascx.es.resx">
+      <publishTime>06/21/2017 23:24:03</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuMainVociList.ascx.it.resx">
+      <publishTime>06/21/2017 23:23:22</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/menuMainVociList.ascx.resx">
       <publishTime>02/12/2017 14:26:53</publishTime>
     </File>
+    <File Include="Admin/App_LocalResources/menuShowFigli.ascx.en.resx">
+      <publishTime>06/30/2017 22:49:59</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuShowFigli.ascx.es.resx">
+      <publishTime>06/30/2017 22:49:53</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuShowFigli.ascx.it.resx">
+      <publishTime>06/30/2017 22:49:38</publishTime>
+    </File>
     <File Include="Admin/App_LocalResources/menuShowFigli.ascx.resx">
-      <publishTime>02/12/2017 14:31:03</publishTime>
+      <publishTime>06/30/2017 22:50:09</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuShowVoce.aspx.en.resx">
+      <publishTime>06/21/2017 23:27:34</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuShowVoce.aspx.es.resx">
+      <publishTime>06/21/2017 23:26:58</publishTime>
+    </File>
+    <File Include="Admin/App_LocalResources/menuShowVoce.aspx.it.resx">
+      <publishTime>06/21/2017 23:26:17</publishTime>
     </File>
     <File Include="Admin/App_LocalResources/menuShowVoce.aspx.resx">
       <publishTime>02/12/2017 14:36:58</publishTime>
@@ -202,13 +286,13 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>02/05/2017 15:39:27</publishTime>
     </File>
     <File Include="Admin/configOrderStatusBase.aspx">
-      <publishTime>02/05/2017 16:14:32</publishTime>
+      <publishTime>06/30/2017 22:25:28</publishTime>
     </File>
     <File Include="Admin/configOrderStatusCustomer.ascx">
       <publishTime>02/06/2017 21:59:18</publishTime>
     </File>
     <File Include="Admin/configOrderStatusCustomer.aspx">
-      <publishTime>02/09/2017 22:47:26</publishTime>
+      <publishTime>06/30/2017 22:25:24</publishTime>
     </File>
     <File Include="Admin/configOrderStatusCustomer_customerList.ascx">
       <publishTime>02/11/2017 22:03:31</publishTime>
@@ -220,22 +304,25 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>02/11/2017 22:09:19</publishTime>
     </File>
     <File Include="Admin/kisAdmin.aspx">
-      <publishTime>02/11/2017 22:15:57</publishTime>
+      <publishTime>07/16/2017 14:31:55</publishTime>
+    </File>
+    <File Include="Admin/kisBilling.ascx">
+      <publishTime>07/16/2017 15:51:06</publishTime>
     </File>
     <File Include="Admin/manageMenu.aspx">
-      <publishTime>02/11/2017 22:18:20</publishTime>
+      <publishTime>06/30/2017 22:25:03</publishTime>
     </File>
     <File Include="Admin/manageReports.ascx">
       <publishTime>02/12/2017 11:56:12</publishTime>
     </File>
     <File Include="Admin/manageReports.aspx">
-      <publishTime>02/12/2017 11:59:35</publishTime>
+      <publishTime>06/30/2017 22:24:58</publishTime>
     </File>
     <File Include="Admin/menuAddMainVoce.ascx">
-      <publishTime>02/12/2017 12:08:45</publishTime>
+      <publishTime>06/30/2017 22:42:04</publishTime>
     </File>
     <File Include="Admin/menuAddVoceFiglia.ascx">
-      <publishTime>02/12/2017 14:03:05</publishTime>
+      <publishTime>06/30/2017 22:46:45</publishTime>
     </File>
     <File Include="Admin/menuGruppi.aspx">
       <publishTime>05/10/2013 22:05:56</publishTime>
@@ -247,13 +334,13 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/10/2013 21:42:40</publishTime>
     </File>
     <File Include="Admin/menuMainVociList.ascx">
-      <publishTime>02/12/2017 14:24:50</publishTime>
+      <publishTime>06/30/2017 22:41:39</publishTime>
     </File>
     <File Include="Admin/menuShowFigli.ascx">
-      <publishTime>02/12/2017 14:28:56</publishTime>
+      <publishTime>06/30/2017 22:49:53</publishTime>
     </File>
     <File Include="Admin/menuShowVoce.aspx">
-      <publishTime>02/12/2017 14:36:58</publishTime>
+      <publishTime>06/30/2017 22:24:28</publishTime>
     </File>
     <File Include="Analysis/analysis.aspx">
       <publishTime>02/14/2017 21:35:07</publishTime>
@@ -273,26 +360,50 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Analysis/App_LocalResources/analysis.aspx.resx">
       <publishTime>02/14/2017 21:35:07</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/AnalysisHome.ascx.en.resx">
+      <publishTime>06/23/2017 21:09:05</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/AnalysisHome.ascx.es.resx">
+      <publishTime>06/23/2017 21:25:24</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/AnalysisHome.ascx.it.resx">
       <publishTime>02/16/2017 21:40:30</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/AnalysisHome.ascx.resx">
       <publishTime>02/14/2017 21:43:14</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.ascx.en.resx">
+      <publishTime>06/23/2017 21:21:29</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.ascx.es.resx">
+      <publishTime>06/23/2017 21:17:32</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.ascx.it.resx">
-      <publishTime>02/16/2017 21:40:37</publishTime>
+      <publishTime>06/23/2017 21:18:28</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.ascx.resx">
-      <publishTime>02/14/2017 22:49:36</publishTime>
+      <publishTime>06/23/2017 21:18:16</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.aspx.en.resx">
       <publishTime>02/16/2017 21:41:34</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.aspx.es.resx">
+      <publishTime>06/23/2017 21:25:37</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.aspx.it.resx">
       <publishTime>02/16/2017 21:40:45</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/CostificazioneProdottiTerminatiRicerca.aspx.resx">
       <publishTime>02/16/2017 21:37:43</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CustomerPareto.ascx.en.resx">
+      <publishTime>06/23/2017 21:27:47</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CustomerPareto.ascx.es.resx">
+      <publishTime>06/23/2017 21:27:10</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CustomerPareto.ascx.it.resx">
+      <publishTime>06/23/2017 21:26:10</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/CustomerPareto.ascx.resx">
       <publishTime>02/16/2017 21:52:12</publishTime>
@@ -303,44 +414,170 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Analysis/App_LocalResources/CustomerPortfolio.ascx.resx">
       <publishTime>02/16/2017 22:06:29</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/CustomerPortfolio.aspx.en.resx">
+      <publishTime>06/23/2017 21:40:11</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CustomerPortfolio.aspx.es.resx">
+      <publishTime>06/23/2017 21:31:15</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/CustomerPortfolio.aspx.it.resx">
+      <publishTime>06/23/2017 21:29:04</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/CustomerPortfolio.aspx.resx">
       <publishTime>02/16/2017 22:11:12</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.ascx.en.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.ascx.es.resx">
+      <publishTime>06/23/2017 21:43:02</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.ascx.it.resx">
+      <publishTime>06/23/2017 21:40:15</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.ascx.resx">
       <publishTime>02/16/2017 22:23:35</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.aspx.en.resx">
+      <publishTime>06/23/2017 21:46:29</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.aspx.es.resx">
+      <publishTime>06/23/2017 21:44:35</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.aspx.it.resx">
+      <publishTime>06/23/2017 21:44:07</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/DetailAnalysisCustomer.aspx.resx">
       <publishTime>02/16/2017 22:35:31</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisOperatore.aspx.en.resx">
+      <publishTime>06/23/2017 21:46:42</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisOperatore.aspx.es.resx">
+      <publishTime>06/23/2017 21:46:01</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisOperatore.aspx.it.resx">
+      <publishTime>06/23/2017 21:44:59</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/DetailAnalysisOperatore.aspx.resx">
       <publishTime>02/16/2017 22:38:03</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTask.ascx.en.resx">
+      <publishTime>06/23/2017 21:53:13</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTask.ascx.es.resx">
+      <publishTime>06/23/2017 21:50:28</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTask.ascx.it.resx">
+      <publishTime>06/23/2017 21:51:12</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/DetailAnalysisTask.ascx.resx">
       <publishTime>02/19/2017 12:57:15</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTask.aspx.en.resx">
+      <publishTime>06/23/2017 21:55:46</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTask.aspx.es.resx">
+      <publishTime>06/23/2017 21:55:11</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTask.aspx.it.resx">
+      <publishTime>06/23/2017 21:54:31</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/DetailAnalysisTask.aspx.resx">
       <publishTime>02/19/2017 17:01:30</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTipoProdotto.ascx.en.resx">
+      <publishTime>06/23/2017 22:03:51</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTipoProdotto.ascx.es.resx">
+      <publishTime>06/23/2017 22:00:54</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailAnalysisTipoProdotto.ascx.it.resx">
+      <publishTime>06/23/2017 21:55:58</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/DetailAnalysisTipoProdotto.ascx.resx">
       <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailCostCommessa.ascx.en.resx">
+      <publishTime>06/23/2017 22:10:18</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailCostCommessa.ascx.es.resx">
+      <publishTime>06/23/2017 22:09:35</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailCostCommessa.ascx.it.resx">
+      <publishTime>06/23/2017 22:08:29</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/DetailCostCommessa.ascx.resx">
       <publishTime>02/19/2017 21:41:39</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/DetailCostCommessa.aspx.en.resx">
+      <publishTime>06/23/2017 22:11:47</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailCostCommessa.aspx.es.resx">
+      <publishTime>06/23/2017 22:11:19</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailCostCommessa.aspx.it.resx">
+      <publishTime>06/23/2017 22:10:28</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/DetailCostCommessa.aspx.resx">
       <publishTime>02/21/2017 20:24:59</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailTaskProduct.ascx.en.resx">
+      <publishTime>06/23/2017 22:17:11</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailTaskProduct.ascx.es.resx">
+      <publishTime>06/23/2017 22:14:50</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailTaskProduct.ascx.it.resx">
+      <publishTime>06/23/2017 22:12:23</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/DetailTaskProduct.ascx.resx">
       <publishTime>02/21/2017 20:51:55</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/DetailTaskProduct.aspx.en.resx">
+      <publishTime>06/23/2017 22:18:33</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailTaskProduct.aspx.es.resx">
+      <publishTime>06/23/2017 22:19:41</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/DetailTaskProduct.aspx.it.resx">
+      <publishTime>06/23/2017 22:17:54</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/DetailTaskProduct.aspx.resx">
       <publishTime>02/21/2017 21:12:21</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.ascx.en.resx">
+      <publishTime>06/23/2017 22:22:14</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.ascx.es.resx">
+      <publishTime>06/23/2017 22:21:55</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.ascx.it.resx">
+      <publishTime>06/23/2017 22:21:21</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.ascx.resx">
       <publishTime>02/21/2017 21:34:14</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.aspx.en.resx">
+      <publishTime>06/23/2017 22:23:48</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.aspx.es.resx">
+      <publishTime>06/23/2017 22:23:31</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.aspx.it.resx">
+      <publishTime>06/23/2017 22:23:06</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/ListAnalysisOperatori.aspx.resx">
       <publishTime>02/21/2017 21:40:04</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisTasks.ascx.en.resx">
+      <publishTime>06/23/2017 22:25:21</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisTasks.ascx.es.resx">
+      <publishTime>06/23/2017 22:25:07</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisTasks.ascx.it.resx">
+      <publishTime>06/23/2017 22:24:45</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ListAnalysisTasks.ascx.resx">
       <publishTime>02/23/2017 22:00:18</publishTime>
@@ -357,8 +594,26 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Analysis/App_LocalResources/ListAnalysisTipoProdotto.ascx.resx">
       <publishTime>02/26/2017 12:13:07</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisTipoProdotto.aspx.en.resx">
+      <publishTime>02/07/2017 21:32:30</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisTipoProdotto.aspx.es.resx">
+      <publishTime>02/07/2017 21:32:30</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListAnalysisTipoProdotto.aspx.it.resx">
+      <publishTime>02/07/2017 21:32:30</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/ListAnalysisTipoProdotto.aspx.resx">
-      <publishTime>02/26/2017 12:25:50</publishTime>
+      <publishTime>02/07/2017 21:32:30</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListCommesseChiuse.ascx.en.resx">
+      <publishTime>06/23/2017 22:26:51</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListCommesseChiuse.ascx.es.resx">
+      <publishTime>06/23/2017 22:26:44</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ListCommesseChiuse.ascx.it.resx">
+      <publishTime>06/23/2017 22:26:38</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ListCommesseChiuse.ascx.resx">
       <publishTime>02/26/2017 12:26:25</publishTime>
@@ -366,29 +621,110 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Analysis/App_LocalResources/ListCommesseChiuse.aspx.resx">
       <publishTime>02/26/2017 12:47:43</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/OperatoreTempoTasks.ascx.en.resx">
+      <publishTime>06/23/2017 22:32:35</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/OperatoreTempoTasks.ascx.es.resx">
+      <publishTime>06/23/2017 22:30:59</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/OperatoreTempoTasks.ascx.it.resx">
+      <publishTime>06/23/2017 22:28:11</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/OperatoreTempoTasks.ascx.resx">
       <publishTime>02/26/2017 13:08:44</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.ascx.en.resx">
+      <publishTime>06/23/2017 22:33:22</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.ascx.es.resx">
+      <publishTime>06/23/2017 22:34:23</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.ascx.it.resx">
+      <publishTime>06/23/2017 22:32:58</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.ascx.resx">
       <publishTime>02/27/2017 20:30:28</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.aspx.en.resx">
+      <publishTime>06/23/2017 22:35:21</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.aspx.es.resx">
+      <publishTime>06/23/2017 22:34:54</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.aspx.it.resx">
+      <publishTime>06/23/2017 22:34:28</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseCustomer.aspx.resx">
       <publishTime>02/27/2017 20:32:59</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.ascx.en.resx">
+      <publishTime>06/23/2017 22:38:27</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.ascx.es.resx">
+      <publishTime>06/23/2017 22:37:10</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.ascx.it.resx">
+      <publishTime>06/23/2017 22:35:37</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.ascx.resx">
       <publishTime>02/27/2017 20:48:37</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.aspx.en.resx">
+      <publishTime>06/23/2017 22:42:42</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.aspx.es.resx">
+      <publishTime>06/23/2017 22:41:58</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.aspx.it.resx">
+      <publishTime>06/23/2017 22:41:07</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseFProducts.aspx.resx">
       <publishTime>02/27/2017 21:02:35</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.ascx.en.resx">
+      <publishTime>06/23/2017 22:47:28</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.ascx.es.resx">
+      <publishTime>06/23/2017 22:44:38</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.ascx.it.resx">
+      <publishTime>06/23/2017 22:42:53</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.ascx.resx">
       <publishTime>02/27/2017 21:22:51</publishTime>
     </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.aspx.en.resx">
+      <publishTime>02/07/2017 21:40:20</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.aspx.es.resx">
+      <publishTime>02/07/2017 21:40:14</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.aspx.it.resx">
+      <publishTime>02/07/2017 21:40:14</publishTime>
+    </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_chooseINPProducts.aspx.resx">
-      <publishTime>02/27/2017 21:32:07</publishTime>
+      <publishTime>02/07/2017 21:40:14</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.ascx.en.resx">
+      <publishTime>06/23/2017 23:02:19</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.ascx.es.resx">
+      <publishTime>06/23/2017 22:56:53</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.ascx.it.resx">
+      <publishTime>06/23/2017 22:48:38</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.ascx.resx">
       <publishTime>02/03/2017 22:41:23</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.aspx.en.resx">
+      <publishTime>06/23/2017 23:03:03</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.aspx.es.resx">
+      <publishTime>06/23/2017 23:03:49</publishTime>
+    </File>
+    <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.aspx.it.resx">
+      <publishTime>06/23/2017 23:03:08</publishTime>
     </File>
     <File Include="Analysis/App_LocalResources/ReportCustomerProdProgress_summary.aspx.resx">
       <publishTime>03/04/2017 23:27:49</publishTime>
@@ -397,7 +733,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/08/2016 22:29:06</publishTime>
     </File>
     <File Include="Analysis/CostificazioneProdottiTerminatiRicerca.ascx">
-      <publishTime>02/14/2017 22:47:18</publishTime>
+      <publishTime>02/07/2017 21:30:45</publishTime>
     </File>
     <File Include="Analysis/CostificazioneProdottiTerminatiRicerca.aspx">
       <publishTime>02/16/2017 21:37:43</publishTime>
@@ -504,8 +840,11 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Andon/AndonRepartoViewFields.ascx">
       <publishTime>03/06/2017 19:40:16</publishTime>
     </File>
+    <File Include="Andon/App_LocalResources/AndonCompletoViewFields.ascx.en.resx">
+      <publishTime>06/24/2017 10:17:38</publishTime>
+    </File>
     <File Include="Andon/App_LocalResources/AndonCompletoViewFields.ascx.es.resx">
-      <publishTime>03/05/2017 21:09:49</publishTime>
+      <publishTime>06/30/2017 21:27:34</publishTime>
     </File>
     <File Include="Andon/App_LocalResources/AndonCompletoViewFields.ascx.it.resx">
       <publishTime>03/05/2017 18:09:10</publishTime>
@@ -513,11 +852,38 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Andon/App_LocalResources/AndonCompletoViewFields.ascx.resx">
       <publishTime>03/05/2017 15:58:01</publishTime>
     </File>
+    <File Include="Andon/App_LocalResources/AndonRepartoViewFields.ascx.en.resx">
+      <publishTime>06/24/2017 10:22:04</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/AndonRepartoViewFields.ascx.es.resx">
+      <publishTime>06/30/2017 21:27:34</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/AndonRepartoViewFields.ascx.it.resx">
+      <publishTime>06/24/2017 10:20:09</publishTime>
+    </File>
     <File Include="Andon/App_LocalResources/AndonRepartoViewFields.ascx.resx">
-      <publishTime>03/06/2017 19:40:16</publishTime>
+      <publishTime>06/24/2017 10:22:30</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configAndonCompleto.aspx.en.resx">
+      <publishTime>06/24/2017 10:26:53</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configAndonCompleto.aspx.es.resx">
+      <publishTime>06/24/2017 10:25:42</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configAndonCompleto.aspx.it.resx">
+      <publishTime>06/24/2017 10:24:43</publishTime>
     </File>
     <File Include="Andon/App_LocalResources/configAndonCompleto.aspx.resx">
       <publishTime>03/06/2017 22:12:24</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configFormatoUsername.ascx.en.resx">
+      <publishTime>06/24/2017 10:33:18</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configFormatoUsername.ascx.es.resx">
+      <publishTime>06/24/2017 10:30:55</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configFormatoUsername.ascx.it.resx">
+      <publishTime>06/24/2017 10:28:58</publishTime>
     </File>
     <File Include="Andon/App_LocalResources/configFormatoUsername.ascx.resx">
       <publishTime>03/06/2017 22:17:32</publishTime>
@@ -525,14 +891,29 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Andon/App_LocalResources/configMaxViewDaysAndonReparto.ascx.resx">
       <publishTime>03/06/2017 22:23:30</publishTime>
     </File>
+    <File Include="Andon/App_LocalResources/configMaxViewDaysAndonReparto_OLD.ascx.en.resx">
+      <publishTime>06/24/2017 10:35:33</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configMaxViewDaysAndonReparto_OLD.ascx.es.resx">
+      <publishTime>06/24/2017 10:34:45</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configMaxViewDaysAndonReparto_OLD.ascx.it.resx">
+      <publishTime>06/24/2017 10:33:23</publishTime>
+    </File>
+    <File Include="Andon/App_LocalResources/configMaxViewDaysAndonReparto_OLD.ascx.resx">
+      <publishTime>03/06/2017 22:23:30</publishTime>
+    </File>
     <File Include="Andon/configAndonCompleto.aspx">
-      <publishTime>03/06/2017 22:12:24</publishTime>
+      <publishTime>06/30/2017 22:40:09</publishTime>
     </File>
     <File Include="Andon/configFormatoUsername.ascx">
       <publishTime>03/06/2017 22:16:06</publishTime>
     </File>
     <File Include="Andon/configMaxViewDaysAndonReparto.ascx">
       <publishTime>03/06/2017 22:21:22</publishTime>
+    </File>
+    <File Include="Andon/configMaxViewDaysAndonReparto_OLD.ascx">
+      <publishTime>06/24/2017 10:38:07</publishTime>
     </File>
     <File Include="App_LocalResources/Default.aspx.es.resx">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -542,6 +923,30 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     </File>
     <File Include="App_LocalResources/Default.aspx.resx">
       <publishTime>01/29/2017 20:32:09</publishTime>
+    </File>
+    <File Include="App_LocalResources/LicenseExpired.aspx.en.resx">
+      <publishTime>07/16/2017 18:49:01</publishTime>
+    </File>
+    <File Include="App_LocalResources/LicenseExpired.aspx.es.resx">
+      <publishTime>07/16/2017 18:47:56</publishTime>
+    </File>
+    <File Include="App_LocalResources/LicenseExpired.aspx.it.resx">
+      <publishTime>07/16/2017 18:45:05</publishTime>
+    </File>
+    <File Include="App_LocalResources/LicenseExpired.aspx.resx">
+      <publishTime>07/16/2017 18:42:29</publishTime>
+    </File>
+    <File Include="App_LocalResources/Site.Master.en.resx">
+      <publishTime>07/16/2017 18:12:32</publishTime>
+    </File>
+    <File Include="App_LocalResources/Site.Master.es.resx">
+      <publishTime>07/16/2017 18:14:07</publishTime>
+    </File>
+    <File Include="App_LocalResources/Site.Master.it.resx">
+      <publishTime>07/16/2017 18:07:19</publishTime>
+    </File>
+    <File Include="App_LocalResources/Site.Master.resx">
+      <publishTime>07/16/2017 17:56:30</publishTime>
     </File>
     <File Include="App_LocalResources/whatsnew.ascx.en.resx">
       <publishTime>01/30/2017 22:34:12</publishTime>
@@ -703,7 +1108,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/Kaizen Indicator System.dll">
-      <publishTime>06/19/2017 23:35:51</publishTime>
+      <publishTime>07/16/2017 21:52:29</publishTime>
     </File>
     <File Include="bin/ko/AjaxControlToolkit.resources.dll">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -792,20 +1197,74 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Clienti/addContattoCliente.ascx">
       <publishTime>03/07/2017 20:20:43</publishTime>
     </File>
+    <File Include="Clienti/App_LocalResources/addCliente.ascx.en.resx">
+      <publishTime>06/24/2017 12:21:02</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/addCliente.ascx.es.resx">
+      <publishTime>06/24/2017 12:18:29</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/addCliente.ascx.it.resx">
+      <publishTime>06/24/2017 10:48:37</publishTime>
+    </File>
     <File Include="Clienti/App_LocalResources/addCliente.ascx.resx">
       <publishTime>03/06/2017 22:40:09</publishTime>
     </File>
+    <File Include="Clienti/App_LocalResources/AddCliente.aspx.en.resx">
+      <publishTime>06/24/2017 11:18:25</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/AddCliente.aspx.es.resx">
+      <publishTime>06/24/2017 11:18:46</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/AddCliente.aspx.it.resx">
+      <publishTime>06/24/2017 11:19:01</publishTime>
+    </File>
     <File Include="Clienti/App_LocalResources/AddCliente.aspx.resx">
-      <publishTime>03/07/2017 20:14:43</publishTime>
+      <publishTime>06/24/2017 11:19:01</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/addContattoCliente.ascx.en.resx">
+      <publishTime>06/24/2017 11:22:23</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/addContattoCliente.ascx.es.resx">
+      <publishTime>06/24/2017 11:21:32</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/addContattoCliente.ascx.it.resx">
+      <publishTime>06/24/2017 11:19:45</publishTime>
     </File>
     <File Include="Clienti/App_LocalResources/addContattoCliente.ascx.resx">
       <publishTime>03/07/2017 20:20:43</publishTime>
     </File>
+    <File Include="Clienti/App_LocalResources/Clienti.aspx.en.resx">
+      <publishTime>06/24/2017 11:24:37</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/Clienti.aspx.es.resx">
+      <publishTime>06/24/2017 11:24:19</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/Clienti.aspx.it.resx">
+      <publishTime>06/24/2017 11:23:26</publishTime>
+    </File>
     <File Include="Clienti/App_LocalResources/Clienti.aspx.resx">
       <publishTime>03/07/2017 20:45:27</publishTime>
     </File>
+    <File Include="Clienti/App_LocalResources/ContattiClienti.ascx.en.resx">
+      <publishTime>06/24/2017 11:25:11</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/ContattiClienti.ascx.es.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/ContattiClienti.ascx.it.resx">
+      <publishTime>06/24/2017 11:24:41</publishTime>
+    </File>
     <File Include="Clienti/App_LocalResources/ContattiClienti.ascx.resx">
       <publishTime>03/07/2017 20:49:45</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditCliente.ascx.en.resx">
+      <publishTime>06/24/2017 11:45:13</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditCliente.ascx.es.resx">
+      <publishTime>06/24/2017 11:28:28</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditCliente.ascx.it.resx">
+      <publishTime>06/24/2017 11:25:15</publishTime>
     </File>
     <File Include="Clienti/App_LocalResources/EditCliente.ascx.resx">
       <publishTime>03/07/2017 21:03:44</publishTime>
@@ -813,11 +1272,38 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Clienti/App_LocalResources/EditCliente.aspx.resx">
       <publishTime>03/07/2017 21:15:44</publishTime>
     </File>
+    <File Include="Clienti/App_LocalResources/EditContattoDetails.ascx.en.resx">
+      <publishTime>06/24/2017 11:36:28</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditContattoDetails.ascx.es.resx">
+      <publishTime>06/24/2017 11:33:56</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditContattoDetails.ascx.it.resx">
+      <publishTime>06/24/2017 11:32:19</publishTime>
+    </File>
     <File Include="Clienti/App_LocalResources/EditContattoDetails.ascx.resx">
       <publishTime>03/07/2017 21:51:23</publishTime>
     </File>
+    <File Include="Clienti/App_LocalResources/EditContattoDetails.aspx.en.resx">
+      <publishTime>06/24/2017 11:39:28</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditContattoDetails.aspx.es.resx">
+      <publishTime>06/24/2017 11:37:20</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/EditContattoDetails.aspx.it.resx">
+      <publishTime>06/24/2017 11:36:44</publishTime>
+    </File>
     <File Include="Clienti/App_LocalResources/EditContattoDetails.aspx.resx">
       <publishTime>03/07/2017 22:30:31</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/listClienti.ascx.en.resx">
+      <publishTime>06/24/2017 11:44:21</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/listClienti.ascx.es.resx">
+      <publishTime>06/24/2017 11:42:53</publishTime>
+    </File>
+    <File Include="Clienti/App_LocalResources/listClienti.ascx.it.resx">
+      <publishTime>06/24/2017 11:40:36</publishTime>
     </File>
     <File Include="Clienti/App_LocalResources/listClienti.ascx.resx">
       <publishTime>03/07/2017 22:39:25</publishTime>
@@ -844,109 +1330,424 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>03/07/2017 22:42:10</publishTime>
     </File>
     <File Include="Commesse/addCommessa.ascx">
-      <publishTime>03/09/2017 22:53:37</publishTime>
+      <publishTime>01/07/2017 12:27:03</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/addCommessa.ascx.en.resx">
+      <publishTime>06/24/2017 11:51:05</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/addCommessa.ascx.es.resx">
+      <publishTime>06/24/2017 11:50:28</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/addCommessa.ascx.it.resx">
+      <publishTime>06/24/2017 11:49:32</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/addCommessa.ascx.resx">
       <publishTime>03/09/2017 22:54:14</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/commesse.aspx.en.resx">
+      <publishTime>06/24/2017 11:53:19</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/commesse.aspx.es.resx">
+      <publishTime>06/24/2017 11:52:29</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/commesse.aspx.it.resx">
+      <publishTime>06/24/2017 11:51:45</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/commesse.aspx.resx">
-      <publishTime>03/10/2017 19:42:06</publishTime>
+      <publishTime>06/24/2017 11:51:54</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/linkArticoli.ascx.en.resx">
+      <publishTime>01/07/2017 12:40:41</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/linkArticoli.ascx.es.resx">
+      <publishTime>01/07/2017 12:40:41</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/linkArticoli.ascx.it.resx">
+      <publishTime>01/07/2017 12:40:41</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/linkArticoli.ascx.resx">
-      <publishTime>03/10/2017 19:51:00</publishTime>
+      <publishTime>01/07/2017 12:40:41</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/linkArticoliToCommessa.aspx.en.resx">
+      <publishTime>06/24/2017 12:02:15</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/linkArticoliToCommessa.aspx.es.resx">
+      <publishTime>06/24/2017 12:01:46</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/linkArticoliToCommessa.aspx.it.resx">
+      <publishTime>06/24/2017 12:00:30</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/linkArticoliToCommessa.aspx.resx">
       <publishTime>03/10/2017 21:48:49</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/listArticoliCommessa.ascx.en.resx">
+      <publishTime>06/24/2017 12:10:15</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/listArticoliCommessa.ascx.es.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/listArticoliCommessa.ascx.it.resx">
+      <publishTime>06/24/2017 12:03:52</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/listArticoliCommessa.ascx.resx">
       <publishTime>03/10/2017 22:05:44</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/listCommesse.ascx.en.resx">
+      <publishTime>06/24/2017 12:14:33</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/listCommesse.ascx.es.resx">
+      <publishTime>06/24/2017 12:12:32</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/listCommesse.ascx.it.resx">
+      <publishTime>06/24/2017 12:10:45</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/listCommesse.ascx.resx">
       <publishTime>03/10/2017 22:19:23</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzAddCliente.ascx.en.resx">
+      <publishTime>06/24/2017 12:21:02</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCliente.ascx.es.resx">
+      <publishTime>06/24/2017 12:18:29</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCliente.ascx.it.resx">
+      <publishTime>06/24/2017 12:15:29</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzAddCliente.ascx.resx">
       <publishTime>03/12/2017 21:56:43</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCliente.aspx.en.resx">
+      <publishTime>06/24/2017 12:22:25</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCliente.aspx.es.resx">
+      <publishTime>06/24/2017 12:22:58</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCliente.aspx.it.resx">
+      <publishTime>06/24/2017 12:22:02</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzAddCliente.aspx.resx">
       <publishTime>03/14/2017 21:18:14</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzAddCommessa.ascx.en.resx">
+      <publishTime>06/24/2017 12:24:06</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCommessa.ascx.es.resx">
+      <publishTime>06/24/2017 12:23:39</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCommessa.ascx.it.resx">
+      <publishTime>06/25/2017 11:53:10</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzAddCommessa.ascx.resx">
-      <publishTime>03/14/2017 21:24:08</publishTime>
+      <publishTime>06/25/2017 11:53:10</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCommessa.aspx.en.resx">
+      <publishTime>06/24/2017 12:25:38</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCommessa.aspx.es.resx">
+      <publishTime>06/24/2017 12:25:21</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddCommessa.aspx.it.resx">
+      <publishTime>06/24/2017 12:24:59</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzAddCommessa.aspx.resx">
       <publishTime>03/14/2017 21:41:20</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzAddPERT.ascx.en.resx">
+      <publishTime>06/24/2017 12:36:31</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddPERT.ascx.es.resx">
+      <publishTime>06/28/2017 19:13:32</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddPERT.ascx.it.resx">
+      <publishTime>06/24/2017 12:26:53</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzAddPERT.ascx.resx">
       <publishTime>05/06/2017 21:23:53</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddPERT.aspx.en.resx">
+      <publishTime>06/25/2017 11:52:29</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddPERT.aspx.es.resx">
+      <publishTime>06/25/2017 11:52:01</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAddPERT.aspx.it.resx">
+      <publishTime>06/25/2017 11:50:11</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzAddPERT.aspx.resx">
       <publishTime>03/19/2017 14:36:01</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaPERTReparto.aspx.en.resx">
+      <publishTime>06/24/2017 12:41:22</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaPERTReparto.aspx.es.resx">
+      <publishTime>06/28/2017 19:16:29</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaPERTReparto.aspx.it.resx">
+      <publishTime>06/24/2017 12:39:54</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzAssociaPERTReparto.aspx.resx">
       <publishTime>03/19/2017 14:39:17</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaProdottoReparto.ascx.en.resx">
+      <publishTime>06/24/2017 12:45:27</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaProdottoReparto.ascx.es.resx">
+      <publishTime>06/24/2017 12:44:48</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaProdottoReparto.ascx.it.resx">
+      <publishTime>06/24/2017 12:42:31</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzAssociaProdottoReparto.ascx.resx">
       <publishTime>03/19/2017 14:42:07</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.ascx.en.resx">
+      <publishTime>06/25/2017 09:52:09</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.ascx.es.resx">
+      <publishTime>06/25/2017 09:51:09</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.ascx.it.resx">
+      <publishTime>06/25/2017 09:51:15</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.ascx.resx">
-      <publishTime>03/19/2017 14:51:20</publishTime>
+      <publishTime>06/25/2017 09:51:09</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.aspx.en.resx">
+      <publishTime>06/25/2017 10:19:51</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.aspx.es.resx">
+      <publishTime>06/25/2017 09:54:25</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.aspx.it.resx">
+      <publishTime>06/25/2017 09:52:56</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzAssociaTaskPostazioni.aspx.resx">
       <publishTime>03/19/2017 14:55:54</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.ascx.en.resx">
+      <publishTime>06/25/2017 10:02:34</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.ascx.es.resx">
+      <publishTime>06/25/2017 10:00:03</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.ascx.it.resx">
+      <publishTime>06/25/2017 09:55:53</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.ascx.resx">
       <publishTime>03/19/2017 15:18:10</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.aspx.en.resx">
+      <publishTime>06/25/2017 10:19:51</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.aspx.es.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.aspx.it.resx">
+      <publishTime>06/25/2017 10:16:05</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzCheckDeliveryDate.aspx.resx">
       <publishTime>03/19/2017 15:23:38</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.ascx.en.resx">
+      <publishTime>06/25/2017 10:35:22</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.ascx.es.resx">
+      <publishTime>06/25/2017 10:30:30</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.ascx.it.resx">
+      <publishTime>06/25/2017 10:21:16</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.ascx.resx">
       <publishTime>03/19/2017 15:54:36</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.aspx.en.resx">
+      <publishTime>06/25/2017 10:59:44</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.aspx.es.resx">
+      <publishTime>06/25/2017 10:58:51</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.aspx.it.resx">
+      <publishTime>06/25/2017 10:57:46</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzCheckWorkLoadReparto.aspx.resx">
       <publishTime>03/19/2017 16:16:57</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzEditPauseTasks.ascx.en.resx">
+      <publishTime>06/25/2017 10:40:47</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPauseTasks.ascx.es.resx">
+      <publishTime>06/25/2017 10:39:03</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPauseTasks.ascx.it.resx">
+      <publishTime>06/25/2017 10:37:15</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzEditPauseTasks.ascx.resx">
       <publishTime>03/19/2017 16:25:40</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPauseTasks.aspx.en.resx">
+      <publishTime>06/25/2017 10:42:51</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPauseTasks.aspx.es.resx">
+      <publishTime>06/25/2017 10:42:44</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPauseTasks.aspx.it.resx">
+      <publishTime>06/25/2017 10:42:40</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzEditPauseTasks.aspx.resx">
       <publishTime>03/19/2017 16:28:37</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT.ascx.en.resx">
+      <publishTime>06/25/2017 11:05:49</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT.ascx.es.resx">
+      <publishTime>06/25/2017 10:47:51</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT.ascx.it.resx">
+      <publishTime>06/25/2017 10:42:58</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzEditPERT.ascx.resx">
       <publishTime>03/19/2017 16:47:41</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT.aspx.en.resx">
+      <publishTime>06/25/2017 10:57:33</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT.aspx.es.resx">
+      <publishTime>06/25/2017 10:56:33</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT.aspx.it.resx">
+      <publishTime>06/25/2017 10:54:46</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzEditPERT.aspx.resx">
       <publishTime>03/19/2017 16:56:56</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.ascx.en.resx">
+      <publishTime>06/25/2017 11:05:49</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.ascx.es.resx">
+      <publishTime>06/25/2017 11:03:44</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.ascx.it.resx">
+      <publishTime>06/25/2017 11:01:02</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.ascx.resx">
       <publishTime>03/19/2017 17:07:09</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.aspx.en.resx">
+      <publishTime>06/25/2017 11:07:22</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.aspx.es.resx">
+      <publishTime>06/25/2017 11:08:12</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.aspx.it.resx">
+      <publishTime>06/25/2017 11:06:37</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzEditPERT_updtable.aspx.resx">
       <publishTime>03/19/2017 17:14:37</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzImpostaAllarmiArticolo.aspx.en.resx">
+      <publishTime>06/25/2017 11:12:10</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzImpostaAllarmiArticolo.aspx.es.resx">
+      <publishTime>06/25/2017 11:11:01</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzImpostaAllarmiArticolo.aspx.it.resx">
+      <publishTime>06/25/2017 11:09:17</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzImpostaAllarmiArticolo.aspx.resx">
       <publishTime>03/19/2017 17:23:43</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInfoPanel.ascx.en.resx">
+      <publishTime>06/25/2017 11:14:06</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInfoPanel.ascx.es.resx">
+      <publishTime>06/25/2017 11:12:47</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInfoPanel.ascx.it.resx">
+      <publishTime>06/25/2017 11:12:22</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzInfoPanel.ascx.resx">
       <publishTime>03/19/2017 17:28:31</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.ascx.en.resx">
+      <publishTime>06/25/2017 11:15:28</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.ascx.es.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.ascx.it.resx">
+      <publishTime>06/25/2017 11:14:10</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.ascx.resx">
       <publishTime>03/19/2017 17:30:38</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.aspx.en.resx">
+      <publishTime>06/25/2017 11:18:11</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.aspx.es.resx">
+      <publishTime>06/25/2017 11:17:09</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.aspx.it.resx">
+      <publishTime>06/25/2017 11:16:05</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzInserisciDataConsegna.aspx.resx">
       <publishTime>03/19/2017 17:33:53</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzListArticoliNCommessa.ascx.en.resx">
+      <publishTime>06/25/2017 11:18:46</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzListArticoliNCommessa.ascx.es.resx">
+      <publishTime>06/25/2017 11:18:38</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzListArticoliNCommessa.ascx.it.resx">
+      <publishTime>06/25/2017 11:18:33</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzListArticoliNCommessa.ascx.resx">
       <publishTime>03/19/2017 17:35:18</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzPrintBarcordes.ascx.en.resx">
+      <publishTime>06/25/2017 12:11:55</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzPrintBarcordes.ascx.es.resx">
+      <publishTime>06/25/2017 12:12:31</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzPrintBarcordes.ascx.it.resx">
+      <publishTime>06/25/2017 12:12:51</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzPrintBarcordes.ascx.resx">
-      <publishTime>03/19/2017 17:49:01</publishTime>
+      <publishTime>06/25/2017 12:12:51</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.ascx.en.resx">
+      <publishTime>06/25/2017 12:02:19</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.ascx.es.resx">
+      <publishTime>06/25/2017 11:23:24</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.ascx.it.resx">
+      <publishTime>06/25/2017 11:22:40</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.ascx.resx">
       <publishTime>03/19/2017 17:53:18</publishTime>
     </File>
+    <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.aspx.en.resx">
+      <publishTime>06/25/2017 12:05:17</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.aspx.es.resx">
+      <publishTime>06/25/2017 12:04:17</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.aspx.it.resx">
+      <publishTime>06/25/2017 12:02:26</publishTime>
+    </File>
     <File Include="Commesse/App_LocalResources/wzQuestionWorkLoad.aspx.resx">
       <publishTime>03/19/2017 17:58:10</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzVarianteDettagli.ascx.en.resx">
+      <publishTime>06/25/2017 11:24:35</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzVarianteDettagli.ascx.es.resx">
+      <publishTime>06/25/2017 11:24:13</publishTime>
+    </File>
+    <File Include="Commesse/App_LocalResources/wzVarianteDettagli.ascx.it.resx">
+      <publishTime>06/25/2017 11:23:44</publishTime>
     </File>
     <File Include="Commesse/App_LocalResources/wzVarianteDettagli.ascx.resx">
       <publishTime>03/19/2017 18:00:07</publishTime>
@@ -955,16 +1756,16 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>03/10/2017 19:42:06</publishTime>
     </File>
     <File Include="Commesse/linkArticoli.ascx">
-      <publishTime>03/10/2017 19:49:06</publishTime>
+      <publishTime>01/07/2017 12:40:41</publishTime>
     </File>
     <File Include="Commesse/linkArticoliToCommessa.aspx">
       <publishTime>03/10/2017 21:48:49</publishTime>
     </File>
     <File Include="Commesse/listArticoliCommessa.ascx">
-      <publishTime>03/10/2017 22:05:44</publishTime>
+      <publishTime>01/07/2017 12:30:45</publishTime>
     </File>
     <File Include="Commesse/listCommesse.ascx">
-      <publishTime>03/10/2017 22:12:43</publishTime>
+      <publishTime>01/07/2017 12:26:14</publishTime>
     </File>
     <File Include="Commesse/wzAddCliente.ascx">
       <publishTime>03/12/2017 21:53:18</publishTime>
@@ -994,7 +1795,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>03/19/2017 14:49:22</publishTime>
     </File>
     <File Include="Commesse/wzAssociaTaskPostazioni.aspx">
-      <publishTime>03/19/2017 14:55:54</publishTime>
+      <publishTime>01/07/2017 12:49:49</publishTime>
     </File>
     <File Include="Commesse/wzCheckDeliveryDate.ascx">
       <publishTime>03/19/2017 15:12:32</publishTime>
@@ -1015,13 +1816,13 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>09/09/2016 22:16:09</publishTime>
     </File>
     <File Include="Commesse/wzEditPERT.ascx">
-      <publishTime>03/19/2017 16:40:42</publishTime>
+      <publishTime>01/07/2017 15:02:56</publishTime>
     </File>
     <File Include="Commesse/wzEditPERT.aspx">
       <publishTime>03/19/2017 16:55:56</publishTime>
     </File>
     <File Include="Commesse/wzEditPERT_updtable.ascx">
-      <publishTime>03/19/2017 17:01:05</publishTime>
+      <publishTime>01/07/2017 13:21:44</publishTime>
     </File>
     <File Include="Commesse/wzEditPERT_updtable.aspx">
       <publishTime>03/19/2017 17:13:34</publishTime>
@@ -1039,10 +1840,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>03/19/2017 17:33:53</publishTime>
     </File>
     <File Include="Commesse/wzListArticoliNCommessa.ascx">
-      <publishTime>03/14/2015 23:05:16</publishTime>
+      <publishTime>01/07/2017 13:46:25</publishTime>
     </File>
     <File Include="Commesse/wzPrintBarcordes.ascx">
-      <publishTime>03/19/2017 17:38:13</publishTime>
+      <publishTime>01/07/2017 13:15:38</publishTime>
     </File>
     <File Include="Commesse/wzQuestionWorkLoad.ascx">
       <publishTime>03/19/2017 17:52:49</publishTime>
@@ -1053,17 +1854,62 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Commesse/wzVarianteDettagli.ascx">
       <publishTime>03/19/2017 17:59:33</publishTime>
     </File>
+    <File Include="Configuration/App_LocalResources/configurationStatus.ascx.en.resx">
+      <publishTime>06/25/2017 15:19:02</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/configurationStatus.ascx.es.resx">
+      <publishTime>06/25/2017 15:17:02</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/configurationStatus.ascx.it.resx">
+      <publishTime>06/25/2017 15:14:03</publishTime>
+    </File>
     <File Include="Configuration/App_LocalResources/configurationStatus.ascx.resx">
       <publishTime>03/21/2017 21:50:46</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/MainWizConfig.aspx.en.resx">
+      <publishTime>06/25/2017 15:19:47</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/MainWizConfig.aspx.es.resx">
+      <publishTime>06/25/2017 15:19:37</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/MainWizConfig.aspx.it.resx">
+      <publishTime>06/25/2017 15:19:30</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/MainWizConfig.aspx.resx">
       <publishTime>03/21/2017 21:44:51</publishTime>
     </File>
+    <File Include="Configuration/App_LocalResources/WizConfig.Master.en.resx">
+      <publishTime>06/25/2017 15:42:21</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/WizConfig.Master.es.resx">
+      <publishTime>06/25/2017 15:20:53</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/WizConfig.Master.it.resx">
+      <publishTime>06/25/2017 15:43:26</publishTime>
+    </File>
     <File Include="Configuration/App_LocalResources/WizConfig.Master.resx">
-      <publishTime>03/21/2017 20:39:13</publishTime>
+      <publishTime>06/25/2017 15:43:14</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/wizConfigAdminUser.ascx.en.resx">
+      <publishTime>06/25/2017 15:48:54</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/wizConfigAdminUser.ascx.es.resx">
+      <publishTime>06/25/2017 15:47:31</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/wizConfigAdminUser.ascx.it.resx">
+      <publishTime>06/25/2017 15:44:19</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigAdminUser.ascx.resx">
       <publishTime>06/17/2017 15:35:40</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/wizConfigAdminUser.aspx.en.resx">
+      <publishTime>06/25/2017 15:49:11</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/wizConfigAdminUser.aspx.es.resx">
+      <publishTime>06/25/2017 15:49:05</publishTime>
+    </File>
+    <File Include="Configuration/App_LocalResources/wizConfigAdminUser.aspx.it.resx">
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigAdminUser.aspx.resx">
       <publishTime>03/21/2017 21:35:45</publishTime>
@@ -1111,19 +1957,19 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/18/2017 18:35:40</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigReparti_Main.ascx.en.resx">
-      <publishTime>06/17/2017 16:01:36</publishTime>
+      <publishTime>07/16/2017 10:22:52</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigReparti_Main.ascx.es.resx">
-      <publishTime>06/17/2017 15:59:40</publishTime>
+      <publishTime>07/16/2017 10:23:20</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigReparti_Main.ascx.it.resx">
-      <publishTime>06/17/2017 16:02:10</publishTime>
+      <publishTime>07/16/2017 10:22:23</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigReparti_Main.ascx.resx">
-      <publishTime>06/17/2017 16:02:22</publishTime>
+      <publishTime>07/16/2017 10:22:37</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/wizConfigReparti_Main.aspx.resx">
-      <publishTime>03/21/2017 20:58:32</publishTime>
+      <publishTime>07/16/2017 10:21:32</publishTime>
     </File>
     <File Include="Configuration/App_LocalResources/WizConfigTimezone.ascx.en.resx">
       <publishTime>06/19/2017 22:29:11</publishTime>
@@ -1153,10 +1999,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>10/11/2016 21:38:51</publishTime>
     </File>
     <File Include="Configuration/WizConfig.Master">
-      <publishTime>03/21/2017 20:39:13</publishTime>
+      <publishTime>06/29/2017 22:45:32</publishTime>
     </File>
     <File Include="Configuration/wizConfigAdminUser.ascx">
-      <publishTime>06/17/2017 15:41:26</publishTime>
+      <publishTime>06/29/2017 18:53:22</publishTime>
     </File>
     <File Include="Configuration/wizConfigAdminUser.aspx">
       <publishTime>10/11/2016 21:41:10</publishTime>
@@ -1174,10 +2020,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>11/15/2016 21:45:49</publishTime>
     </File>
     <File Include="Configuration/wizConfigReparti_Detail.aspx">
-      <publishTime>03/21/2017 21:10:59</publishTime>
+      <publishTime>06/29/2017 21:18:50</publishTime>
     </File>
     <File Include="Configuration/wizConfigReparti_Main.ascx">
-      <publishTime>03/21/2017 21:01:53</publishTime>
+      <publishTime>07/16/2017 10:53:38</publishTime>
     </File>
     <File Include="Configuration/wizConfigReparti_Main.aspx">
       <publishTime>10/11/2016 21:42:04</publishTime>
@@ -1528,7 +2374,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Default.aspx">
-      <publishTime>01/29/2017 17:53:53</publishTime>
+      <publishTime>06/30/2017 00:09:44</publishTime>
     </File>
     <File Include="Eventi/App_LocalResources/ArticoloRitardo.ascx.en.resx">
       <publishTime>03/30/2017 22:33:53</publishTime>
@@ -1614,6 +2460,9 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Eventi/CommessaWarning.ascx">
       <publishTime>03/29/2017 21:20:10</publishTime>
     </File>
+    <File Include="Eventi/Licensing.asmx">
+      <publishTime>07/16/2017 17:22:06</publishTime>
+    </File>
     <File Include="Eventi/RepartoRitardo.ascx">
       <publishTime>03/23/2017 22:42:39</publishTime>
     </File>
@@ -1644,8 +2493,20 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Global.asax">
       <publishTime>01/20/2013 20:13:08</publishTime>
     </File>
+    <File Include="HomePage/App_LocalResources/Default.aspx.es.resx">
+      <publishTime>06/30/2017 00:06:31</publishTime>
+    </File>
+    <File Include="HomePage/App_LocalResources/Default.aspx.it.resx">
+      <publishTime>06/30/2017 00:06:31</publishTime>
+    </File>
+    <File Include="HomePage/App_LocalResources/Default.aspx.resx">
+      <publishTime>06/30/2017 00:06:31</publishTime>
+    </File>
     <File Include="HomePage/App_LocalResources/UserHomeBoxes.ascx.resx">
       <publishTime>03/31/2017 21:02:58</publishTime>
+    </File>
+    <File Include="HomePage/Default.aspx">
+      <publishTime>06/30/2017 00:10:30</publishTime>
     </File>
     <File Include="HomePage/UserHomeBoxes.ascx">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -1664,6 +2525,9 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     </File>
     <File Include="img/external_shipment.gif">
       <publishTime>07/16/2012 11:10:18</publishTime>
+    </File>
+    <File Include="img/favicon.ico">
+      <publishTime>03/30/2017 21:01:35</publishTime>
     </File>
     <File Include="img/fifo_lane.gif">
       <publishTime>01/01/0001 00:00:00</publishTime>
@@ -2049,6 +2913,9 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="kpi/viewKPI.aspx">
       <publishTime>01/20/2013 21:45:56</publishTime>
     </File>
+    <File Include="LicenseExpired.aspx">
+      <publishTime>07/16/2017 18:43:18</publishTime>
+    </File>
     <File Include="Login/App_LocalResources/forgot.aspx.en.resx">
       <publishTime>03/04/2017 21:46:39</publishTime>
     </File>
@@ -2143,7 +3010,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>03/04/2017 20:48:21</publishTime>
     </File>
     <File Include="Login/login.aspx">
-      <publishTime>11/05/2013 10:25:50</publishTime>
+      <publishTime>06/29/2017 23:32:59</publishTime>
     </File>
     <File Include="Login/loginbox.ascx">
       <publishTime>03/31/2017 21:20:23</publishTime>
@@ -2251,7 +3118,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>02/06/2013 22:04:32</publishTime>
     </File>
     <File Include="Operatori/AzioniBarcodeJS.aspx">
-      <publishTime>04/06/2017 22:21:42</publishTime>
+      <publishTime>03/07/2017 22:02:18</publishTime>
     </File>
     <File Include="Operatori/checkInPostazione.aspx">
       <publishTime>04/06/2017 22:56:37</publishTime>
@@ -2260,10 +3127,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>04/06/2017 22:59:54</publishTime>
     </File>
     <File Include="Operatori/operatorePostazioniAttive.ascx">
-      <publishTime>04/10/2017 21:45:19</publishTime>
+      <publishTime>03/07/2017 21:39:06</publishTime>
     </File>
     <File Include="Operatori/userLoginPostazione.ascx">
-      <publishTime>04/10/2017 22:06:05</publishTime>
+      <publishTime>03/07/2017 21:38:27</publishTime>
     </File>
     <File Include="packages.config">
       <publishTime>01/24/2017 21:40:46</publishTime>
@@ -2341,7 +3208,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>02/05/2017 11:55:21</publishTime>
     </File>
     <File Include="Postazioni/addPostazione.ascx">
-      <publishTime>04/11/2017 22:15:10</publishTime>
+      <publishTime>06/29/2017 23:22:32</publishTime>
     </File>
     <File Include="Postazioni/App_LocalResources/addPostazione.ascx.resx">
       <publishTime>04/11/2017 22:16:11</publishTime>
@@ -2380,7 +3247,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>04/11/2017 22:08:23</publishTime>
     </File>
     <File Include="Postazioni/editPostazione.ascx">
-      <publishTime>04/11/2017 22:07:08</publishTime>
+      <publishTime>06/30/2017 21:33:31</publishTime>
     </File>
     <File Include="Postazioni/editPostazione.aspx">
       <publishTime>04/11/2017 22:05:02</publishTime>
@@ -2392,7 +3259,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>08/13/2013 15:59:36</publishTime>
     </File>
     <File Include="Postazioni/managePostazioniLavoro.aspx">
-      <publishTime>04/11/2017 22:00:26</publishTime>
+      <publishTime>06/30/2017 22:30:39</publishTime>
     </File>
     <File Include="Postazioni/risorsePostazione.ascx">
       <publishTime>04/11/2017 21:52:34</publishTime>
@@ -2401,7 +3268,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>04/11/2017 21:46:30</publishTime>
     </File>
     <File Include="Postazioni/viewElencoPostazioni.ascx">
-      <publishTime>04/11/2017 21:38:07</publishTime>
+      <publishTime>06/30/2017 22:52:14</publishTime>
     </File>
     <File Include="Postazioni/viewPostazione.aspx">
       <publishTime>04/11/2017 21:28:00</publishTime>
@@ -2410,10 +3277,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/09/2017 22:19:51</publishTime>
     </File>
     <File Include="Processi/addTempoCiclo.ascx">
-      <publishTime>05/10/2017 11:01:35</publishTime>
+      <publishTime>06/30/2017 23:34:35</publishTime>
     </File>
     <File Include="Processi/addTempoCiclo.aspx">
-      <publishTime>05/10/2017 11:16:32</publishTime>
+      <publishTime>06/30/2017 23:03:45</publishTime>
     </File>
     <File Include="Processi/App_LocalResources/addMacroProcesso.aspx.en.resx">
       <publishTime>05/11/2017 21:06:17</publishTime>
@@ -2647,19 +3514,19 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/22/2017 22:10:34</publishTime>
     </File>
     <File Include="Processi/boxProcesso.ascx">
-      <publishTime>05/10/2017 11:19:06</publishTime>
+      <publishTime>06/30/2017 23:31:39</publishTime>
     </File>
     <File Include="Processi/CreateSubProcess.ascx">
-      <publishTime>05/10/2017 11:26:05</publishTime>
+      <publishTime>06/30/2017 23:37:51</publishTime>
     </File>
     <File Include="Processi/editTask.ascx">
-      <publishTime>05/10/2017 11:28:05</publishTime>
+      <publishTime>01/07/2017 13:49:00</publishTime>
     </File>
     <File Include="Processi/editTask.aspx">
-      <publishTime>05/11/2017 20:45:17</publishTime>
+      <publishTime>06/30/2017 23:02:25</publishTime>
     </File>
     <File Include="Processi/editVariante.ascx">
-      <publishTime>05/11/2017 20:50:41</publishTime>
+      <publishTime>06/30/2017 23:13:10</publishTime>
     </File>
     <File Include="Processi/getProcessData.asmx">
       <publishTime>01/11/2015 12:04:23</publishTime>
@@ -2668,22 +3535,22 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>09/16/2012 21:17:14</publishTime>
     </File>
     <File Include="Processi/linkSubProcessVariante.ascx">
-      <publishTime>05/11/2017 20:54:01</publishTime>
+      <publishTime>06/30/2017 23:12:28</publishTime>
     </File>
     <File Include="Processi/listTempiCiclo.ascx">
-      <publishTime>05/11/2017 20:57:33</publishTime>
+      <publishTime>06/30/2017 23:34:54</publishTime>
     </File>
     <File Include="Processi/listTempiCiclo_OLD.ascx">
       <publishTime>06/07/2013 16:58:36</publishTime>
     </File>
     <File Include="Processi/lnkProcessoVarianteReparto.aspx">
-      <publishTime>05/11/2017 21:55:11</publishTime>
+      <publishTime>06/30/2017 23:02:10</publishTime>
     </File>
     <File Include="Processi/lnkProcRepartoLista.ascx">
-      <publishTime>05/11/2017 22:12:24</publishTime>
+      <publishTime>06/30/2017 23:43:14</publishTime>
     </File>
     <File Include="Processi/MacroProcessi.aspx">
-      <publishTime>05/11/2017 22:40:58</publishTime>
+      <publishTime>06/30/2017 22:58:22</publishTime>
     </File>
     <File Include="Processi/managePrecedenzePERT.ascx">
       <publishTime>05/11/2017 22:46:33</publishTime>
@@ -2695,16 +3562,16 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/20/2013 20:13:08</publishTime>
     </File>
     <File Include="Processi/pertManagePrecedenze2.aspx">
-      <publishTime>10/27/2015 23:13:42</publishTime>
+      <publishTime>06/30/2017 23:29:04</publishTime>
     </File>
     <File Include="Processi/showPert.ascx">
-      <publishTime>05/11/2017 23:12:54</publishTime>
+      <publishTime>06/30/2017 23:39:17</publishTime>
     </File>
     <File Include="Processi/showProcesso.aspx">
-      <publishTime>05/22/2017 22:19:39</publishTime>
+      <publishTime>06/30/2017 23:00:10</publishTime>
     </File>
     <File Include="Processi/updatePERT.aspx">
-      <publishTime>06/30/2013 12:41:14</publishTime>
+      <publishTime>06/30/2017 23:01:05</publishTime>
     </File>
     <File Include="Produzione/addNewItemToProductionPlan.ascx">
       <publishTime>01/20/2013 20:13:08</publishTime>
@@ -2716,7 +3583,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/16/2017 22:54:46</publishTime>
     </File>
     <File Include="Produzione/AndonReparto.aspx">
-      <publishTime>06/15/2017 21:52:32</publishTime>
+      <publishTime>02/07/2017 21:18:27</publishTime>
     </File>
     <File Include="Produzione/AndonRepartoGANTT.ascx">
       <publishTime>11/04/2013 19:39:00</publishTime>
@@ -2764,28 +3631,28 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/15/2017 21:50:00</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoI.ascx.en.resx">
-      <publishTime>06/15/2017 21:43:20</publishTime>
+      <publishTime>02/07/2017 20:12:38</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoI.ascx.es.resx">
-      <publishTime>06/15/2017 21:43:12</publishTime>
+      <publishTime>02/07/2017 20:12:28</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoI.ascx.it.resx">
-      <publishTime>06/15/2017 21:39:33</publishTime>
+      <publishTime>02/07/2017 20:12:02</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoI.ascx.resx">
-      <publishTime>05/09/2017 22:36:46</publishTime>
+      <publishTime>02/07/2017 20:12:14</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoIAndonReparto.ascx.en.resx">
-      <publishTime>06/14/2017 23:44:33</publishTime>
+      <publishTime>02/07/2017 21:20:14</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoIAndonReparto.ascx.es.resx">
-      <publishTime>06/14/2017 23:36:32</publishTime>
+      <publishTime>02/07/2017 21:20:04</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoIAndonReparto.ascx.it.resx">
-      <publishTime>06/14/2017 23:29:10</publishTime>
+      <publishTime>02/07/2017 21:19:51</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/articoliStatoIAndonReparto.ascx.resx">
-      <publishTime>05/09/2017 23:01:40</publishTime>
+      <publishTime>02/07/2017 21:19:36</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/avanzamentoProduzione.aspx.en.resx">
       <publishTime>06/14/2017 23:44:33</publishTime>
@@ -2794,10 +3661,10 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/14/2017 21:44:40</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/avanzamentoProduzione.aspx.it.resx">
-      <publishTime>06/14/2017 21:35:52</publishTime>
+      <publishTime>06/24/2017 10:28:36</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/avanzamentoProduzione.aspx.resx">
-      <publishTime>03/05/2017 17:37:57</publishTime>
+      <publishTime>06/24/2017 10:28:45</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/commesseDaProdurre.aspx.en.resx">
       <publishTime>06/14/2017 21:34:14</publishTime>
@@ -2872,28 +3739,28 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/17/2017 17:23:04</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listArticoliTerminati.ascx.en.resx">
-      <publishTime>06/11/2017 22:02:22</publishTime>
+      <publishTime>01/07/2017 15:27:58</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listArticoliTerminati.ascx.es.resx">
-      <publishTime>06/11/2017 21:59:13</publishTime>
+      <publishTime>01/07/2017 15:27:58</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listArticoliTerminati.ascx.it.resx">
-      <publishTime>06/11/2017 21:53:05</publishTime>
+      <publishTime>01/07/2017 15:27:57</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listArticoliTerminati.ascx.resx">
-      <publishTime>06/11/2017 21:48:35</publishTime>
+      <publishTime>01/07/2017 15:27:57</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listCommesseStatoN.ascx.en.resx">
-      <publishTime>06/08/2017 20:56:25</publishTime>
+      <publishTime>01/07/2017 15:18:31</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listCommesseStatoN.ascx.es.resx">
-      <publishTime>06/08/2017 19:56:59</publishTime>
+      <publishTime>01/07/2017 15:18:24</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listCommesseStatoN.ascx.it.resx">
-      <publishTime>06/08/2017 19:49:53</publishTime>
+      <publishTime>01/07/2017 15:18:17</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listCommesseStatoN.ascx.resx">
-      <publishTime>06/08/2017 19:49:20</publishTime>
+      <publishTime>01/07/2017 15:18:10</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listProcessi.ascx.en.resx">
       <publishTime>06/08/2017 19:40:55</publishTime>
@@ -2932,28 +3799,28 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/06/2017 22:00:25</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviabili.ascx.en.resx">
-      <publishTime>06/06/2017 21:58:07</publishTime>
+      <publishTime>03/07/2017 21:45:42</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviabili.ascx.es.resx">
-      <publishTime>06/06/2017 21:56:17</publishTime>
+      <publishTime>03/07/2017 21:45:24</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviabili.ascx.it.resx">
-      <publishTime>06/06/2017 21:53:31</publishTime>
+      <publishTime>03/07/2017 21:44:50</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviabili.ascx.resx">
-      <publishTime>06/06/2017 21:43:12</publishTime>
+      <publishTime>03/07/2017 21:45:01</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviatiPostazioneUtente.ascx.en.resx">
-      <publishTime>06/06/2017 20:47:17</publishTime>
+      <publishTime>03/07/2017 21:44:15</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviatiPostazioneUtente.ascx.es.resx">
-      <publishTime>06/06/2017 20:30:03</publishTime>
+      <publishTime>03/07/2017 21:43:59</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviatiPostazioneUtente.ascx.it.resx">
-      <publishTime>06/06/2017 21:36:14</publishTime>
+      <publishTime>03/07/2017 21:42:40</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviatiPostazioneUtente.ascx.resx">
-      <publishTime>06/06/2017 21:36:07</publishTime>
+      <publishTime>03/07/2017 21:42:31</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listTaskAvviatiUtente.ascx.en.resx">
       <publishTime>06/06/2017 20:47:17</publishTime>
@@ -2968,28 +3835,28 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/06/2017 20:58:40</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningAperti.ascx.en.resx">
-      <publishTime>05/06/2017 20:46:04</publishTime>
+      <publishTime>02/07/2017 20:10:56</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningAperti.ascx.es.resx">
-      <publishTime>05/06/2017 20:46:04</publishTime>
+      <publishTime>02/07/2017 20:10:45</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningAperti.ascx.it.resx">
-      <publishTime>05/06/2017 20:46:04</publishTime>
+      <publishTime>02/07/2017 20:10:45</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningAperti.ascx.resx">
-      <publishTime>05/06/2017 20:45:42</publishTime>
+      <publishTime>02/07/2017 20:10:36</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningApertiReparto.ascx.en.resx">
-      <publishTime>05/06/2017 20:42:01</publishTime>
+      <publishTime>03/07/2017 21:55:35</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningApertiReparto.ascx.es.resx">
-      <publishTime>05/06/2017 20:41:48</publishTime>
+      <publishTime>03/07/2017 21:55:27</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningApertiReparto.ascx.it.resx">
-      <publishTime>05/06/2017 20:40:19</publishTime>
+      <publishTime>03/07/2017 21:55:18</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/listWarningApertiReparto.ascx.resx">
-      <publishTime>05/06/2017 20:40:01</publishTime>
+      <publishTime>03/07/2017 21:55:09</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/PianoProduzioneCompleto.aspx.en.resx">
       <publishTime>05/06/2017 20:35:39</publishTime>
@@ -3019,7 +3886,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/06/2017 20:26:36</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/produzione.aspx.es.resx">
-      <publishTime>05/06/2017 20:21:56</publishTime>
+      <publishTime>01/07/2017 15:21:03</publishTime>
     </File>
     <File Include="Produzione/App_LocalResources/produzione.aspx.it.resx">
       <publishTime>05/06/2017 20:14:36</publishTime>
@@ -3208,37 +4075,37 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>05/23/2017 21:00:55</publishTime>
     </File>
     <File Include="Produzione/articoliStatoI.ascx">
-      <publishTime>05/09/2017 22:37:25</publishTime>
+      <publishTime>02/07/2017 21:15:27</publishTime>
     </File>
     <File Include="Produzione/articoliStatoIAndonReparto.ascx">
-      <publishTime>10/24/2016 22:32:38</publishTime>
+      <publishTime>03/07/2017 21:25:44</publishTime>
     </File>
     <File Include="Produzione/avanzamentoProduzione.aspx">
-      <publishTime>05/09/2017 22:24:38</publishTime>
+      <publishTime>03/07/2017 21:33:36</publishTime>
     </File>
     <File Include="Produzione/commesseDaProdurre.aspx">
       <publishTime>06/14/2017 21:32:45</publishTime>
     </File>
     <File Include="Produzione/configProcessoPerProduzione.ascx">
-      <publishTime>06/13/2017 23:32:42</publishTime>
+      <publishTime>01/07/2017 15:22:31</publishTime>
     </File>
     <File Include="Produzione/configuraProcesso.aspx">
       <publishTime>06/11/2017 23:26:57</publishTime>
     </File>
     <File Include="Produzione/frmSolveProblem.ascx">
-      <publishTime>06/11/2017 23:11:21</publishTime>
+      <publishTime>03/07/2017 22:00:01</publishTime>
     </File>
     <File Include="Produzione/HomeBoxNextProgrammedProducts.ascx">
       <publishTime>06/11/2017 23:03:35</publishTime>
     </File>
     <File Include="Produzione/listArticoliINP.ascx">
-      <publishTime>06/17/2017 17:13:04</publishTime>
+      <publishTime>02/07/2017 20:02:04</publishTime>
     </File>
     <File Include="Produzione/listArticoliTerminati.ascx">
-      <publishTime>06/11/2017 21:59:12</publishTime>
+      <publishTime>01/07/2017 15:28:59</publishTime>
     </File>
     <File Include="Produzione/listCommesseStatoN.ascx">
-      <publishTime>06/08/2017 20:59:00</publishTime>
+      <publishTime>01/07/2017 15:18:47</publishTime>
     </File>
     <File Include="Produzione/listProcessi.ascx">
       <publishTime>04/13/2013 12:12:32</publishTime>
@@ -3247,25 +4114,25 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/08/2017 19:41:18</publishTime>
     </File>
     <File Include="Produzione/ListRepartiAndon.ascx">
-      <publishTime>06/16/2017 22:56:32</publishTime>
+      <publishTime>06/30/2017 22:54:06</publishTime>
     </File>
     <File Include="Produzione/listStatusUtentiReparto.ascx">
       <publishTime>08/10/2015 16:44:50</publishTime>
     </File>
     <File Include="Produzione/listTaskAvviabili.ascx">
-      <publishTime>06/06/2017 21:40:55</publishTime>
+      <publishTime>03/07/2017 21:48:36</publishTime>
     </File>
     <File Include="Produzione/listTaskAvviatiPostazioneUtente.ascx">
-      <publishTime>06/06/2017 19:36:03</publishTime>
+      <publishTime>03/07/2017 21:48:36</publishTime>
     </File>
     <File Include="Produzione/listTaskAvviatiUtente.ascx">
       <publishTime>05/06/2017 20:57:32</publishTime>
     </File>
     <File Include="Produzione/listWarningAperti.ascx">
-      <publishTime>05/06/2017 20:45:42</publishTime>
+      <publishTime>02/07/2017 20:11:02</publishTime>
     </File>
     <File Include="Produzione/listWarningApertiReparto.ascx">
-      <publishTime>05/06/2017 20:39:13</publishTime>
+      <publishTime>03/07/2017 21:55:56</publishTime>
     </File>
     <File Include="Produzione/PianoProduzioneCompleto.aspx">
       <publishTime>05/06/2017 20:34:23</publishTime>
@@ -3274,7 +4141,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/20/2013 20:13:08</publishTime>
     </File>
     <File Include="Produzione/produzione.aspx">
-      <publishTime>05/06/2017 20:14:09</publishTime>
+      <publishTime>01/07/2017 15:13:53</publishTime>
     </File>
     <File Include="Produzione/showProductionPlan.ascx">
       <publishTime>05/06/2017 19:33:27</publishTime>
@@ -3307,7 +4174,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>04/06/2017 18:00:49</publishTime>
     </File>
     <File Include="Produzione/wlListReparti.ascx">
-      <publishTime>05/23/2017 22:14:03</publishTime>
+      <publishTime>02/07/2017 19:54:54</publishTime>
     </File>
     <File Include="Produzione/wlReparto.ascx">
       <publishTime>05/23/2017 22:01:18</publishTime>
@@ -3331,13 +4198,157 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/19/2016 22:23:58</publishTime>
     </File>
     <File Include="Reparti/addFestivita.ascx">
-      <publishTime>02/04/2017 11:08:48</publishTime>
+      <publishTime>06/30/2017 22:34:47</publishTime>
     </File>
     <File Include="Reparti/addReparto.ascx">
-      <publishTime>04/11/2016 22:08:35</publishTime>
+      <publishTime>06/30/2017 22:33:50</publishTime>
     </File>
     <File Include="Reparti/addStraordinario.ascx">
-      <publishTime>03/10/2013 22:29:14</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addFestivita.ascx.en.resx">
+      <publishTime>06/20/2017 23:51:28</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addFestivita.ascx.es.resx">
+      <publishTime>06/20/2017 23:51:25</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addFestivita.ascx.it.resx">
+      <publishTime>06/20/2017 23:51:21</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addFestivita.ascx.resx">
+      <publishTime>06/20/2017 23:51:06</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addReparto.ascx.en.resx">
+      <publishTime>06/20/2017 23:35:24</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addReparto.ascx.es.resx">
+      <publishTime>06/20/2017 23:34:40</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addReparto.ascx.it.resx">
+      <publishTime>06/20/2017 23:33:42</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addReparto.ascx.resx">
+      <publishTime>06/20/2017 23:33:38</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addStraordinario.ascx.en.resx">
+      <publishTime>06/20/2017 23:29:35</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addStraordinario.ascx.es.resx">
+      <publishTime>06/20/2017 23:28:01</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addStraordinario.ascx.it.resx">
+      <publishTime>06/20/2017 23:25:28</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/addStraordinario.ascx.resx">
+      <publishTime>06/20/2017 23:24:53</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAndonReparto.ascx.en.resx">
+      <publishTime>06/20/2017 23:13:16</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAndonReparto.ascx.es.resx">
+      <publishTime>06/20/2017 23:11:43</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAndonReparto.ascx.it.resx">
+      <publishTime>06/20/2017 23:09:20</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAndonReparto.ascx.resx">
+      <publishTime>06/20/2017 23:08:09</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAvvioTasks.ascx.en.resx">
+      <publishTime>06/20/2017 22:45:54</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAvvioTasks.ascx.es.resx">
+      <publishTime>06/20/2017 22:45:13</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAvvioTasks.ascx.it.resx">
+      <publishTime>06/20/2017 22:42:03</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configAvvioTasks.ascx.resx">
+      <publishTime>06/20/2017 22:41:57</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configCadenza.ascx.en.resx">
+      <publishTime>06/20/2017 22:39:04</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configCadenza.ascx.es.resx">
+      <publishTime>06/20/2017 22:38:23</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configCadenza.ascx.it.resx">
+      <publishTime>06/20/2017 22:36:18</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configCadenza.ascx.resx">
+      <publishTime>06/20/2017 22:35:52</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configKanban.ascx.en.resx">
+      <publishTime>06/20/2017 22:22:07</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configKanban.ascx.es.resx">
+      <publishTime>06/20/2017 22:21:26</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configKanban.ascx.it.resx">
+      <publishTime>06/20/2017 22:20:10</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configKanban.ascx.resx">
+      <publishTime>06/20/2017 22:20:04</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configModoCalcoloTC.ascx.en.resx">
+      <publishTime>06/20/2017 22:17:08</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configModoCalcoloTC.ascx.es.resx">
+      <publishTime>06/20/2017 22:12:33</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configModoCalcoloTC.ascx.it.resx">
+      <publishTime>06/20/2017 22:09:51</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configModoCalcoloTC.ascx.resx">
+      <publishTime>06/20/2017 22:09:41</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTrn.ascx.en.resx">
+      <publishTime>06/20/2017 21:51:22</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTrn.ascx.es.resx">
+      <publishTime>06/20/2017 21:48:37</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTrn.ascx.it.resx">
+      <publishTime>06/20/2017 21:44:50</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTrn.ascx.resx">
+      <publishTime>06/20/2017 21:36:11</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTurno.aspx.en.resx">
+      <publishTime>06/20/2017 21:26:18</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTurno.aspx.es.resx">
+      <publishTime>06/20/2017 21:26:19</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTurno.aspx.it.resx">
+      <publishTime>06/20/2017 21:26:17</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configOrariTurno.aspx.resx">
+      <publishTime>06/20/2017 21:25:43</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configProcessiVarianti_OLD.ascx.en.resx">
+      <publishTime>06/20/2017 21:25:15</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configProcessiVarianti_OLD.ascx.es.resx">
+      <publishTime>06/20/2017 21:22:57</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configProcessiVarianti_OLD.ascx.it.resx">
+      <publishTime>06/20/2017 21:21:15</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configProcessiVarianti_OLD.ascx.resx">
+      <publishTime>06/20/2017 21:21:11</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configReparto.aspx.en.resx">
+      <publishTime>06/20/2017 22:22:46</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configReparto.aspx.es.resx">
+      <publishTime>06/20/2017 22:22:46</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configReparto.aspx.it.resx">
+      <publishTime>06/20/2017 22:22:46</publishTime>
+    </File>
+    <File Include="Reparti/App_LocalResources/configReparto.aspx.resx">
+      <publishTime>06/20/2017 22:22:35</publishTime>
     </File>
     <File Include="Reparti/App_LocalResources/configRepartoTimezone.ascx.en.resx">
       <publishTime>06/18/2017 22:47:33</publishTime>
@@ -3556,25 +4567,28 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/16/2017 23:09:16</publishTime>
     </File>
     <File Include="Reparti/configAndonReparto.ascx">
-      <publishTime>10/17/2013 22:58:28</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Reparti/configAnticipoMinimo.ascx">
       <publishTime>01/20/2013 20:13:08</publishTime>
     </File>
+    <File Include="Reparti/configAnticipoMinimo_OLD.ascx">
+      <publishTime>06/20/2017 22:47:08</publishTime>
+    </File>
     <File Include="Reparti/configAvvioTasks.ascx">
-      <publishTime>10/27/2013 11:53:52</publishTime>
+      <publishTime>06/20/2017 22:40:36</publishTime>
     </File>
     <File Include="Reparti/configCadenza.ascx">
-      <publishTime>03/10/2013 22:25:58</publishTime>
+      <publishTime>06/30/2017 22:32:50</publishTime>
     </File>
     <File Include="Reparti/configKanban.ascx">
-      <publishTime>03/23/2015 21:27:21</publishTime>
+      <publishTime>06/20/2017 22:19:08</publishTime>
     </File>
     <File Include="Reparti/configModoCalcoloTC.ascx">
-      <publishTime>09/24/2013 22:06:54</publishTime>
+      <publishTime>06/20/2017 22:07:35</publishTime>
     </File>
     <File Include="Reparti/configOrariTrn.ascx">
-      <publishTime>10/11/2016 22:18:49</publishTime>
+      <publishTime>07/16/2017 10:59:43</publishTime>
     </File>
     <File Include="Reparti/configOrariTurno.aspx">
       <publishTime>10/04/2013 19:01:46</publishTime>
@@ -3582,8 +4596,11 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
     <File Include="Reparti/configProcessiVarianti.ascx">
       <publishTime>01/20/2013 20:13:08</publishTime>
     </File>
+    <File Include="Reparti/configProcessiVarianti_OLD.ascx">
+      <publishTime>06/20/2017 21:14:39</publishTime>
+    </File>
     <File Include="Reparti/configReparto.aspx">
-      <publishTime>03/07/2016 16:44:27</publishTime>
+      <publishTime>06/30/2017 22:31:08</publishTime>
     </File>
     <File Include="Reparti/configRepartoTimezone.ascx">
       <publishTime>03/07/2016 17:09:01</publishTime>
@@ -3592,7 +4609,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/18/2017 22:21:22</publishTime>
     </File>
     <File Include="Reparti/configTurni.ascx">
-      <publishTime>06/18/2017 22:02:17</publishTime>
+      <publishTime>07/16/2017 10:46:30</publishTime>
     </File>
     <File Include="Reparti/controlUserTasks.ascx">
       <publishTime>01/20/2013 20:13:08</publishTime>
@@ -3607,19 +4624,19 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/18/2017 21:25:31</publishTime>
     </File>
     <File Include="Reparti/listReparti.ascx">
-      <publishTime>06/18/2017 21:09:39</publishTime>
+      <publishTime>06/30/2017 22:33:32</publishTime>
     </File>
     <File Include="Reparti/listRepartoUtenti.ascx">
       <publishTime>06/18/2017 20:40:08</publishTime>
     </File>
     <File Include="Reparti/manageCalendarFesteStraordinari.aspx">
-      <publishTime>06/18/2017 18:54:17</publishTime>
+      <publishTime>06/30/2017 22:36:35</publishTime>
     </File>
     <File Include="Reparti/manageFestivita.aspx">
-      <publishTime>06/18/2017 18:47:52</publishTime>
+      <publishTime>06/20/2017 23:53:41</publishTime>
     </File>
     <File Include="Reparti/managePostazioni.aspx">
-      <publishTime>06/17/2017 21:52:56</publishTime>
+      <publishTime>06/30/2017 23:46:21</publishTime>
     </File>
     <File Include="Reparti/manageStraordinario.aspx">
       <publishTime>06/17/2017 08:22:32</publishTime>
@@ -3634,7 +4651,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>06/16/2017 23:32:25</publishTime>
     </File>
     <File Include="Reparti/risorseTurno.aspx">
-      <publishTime>06/16/2017 23:28:09</publishTime>
+      <publishTime>06/30/2017 22:37:42</publishTime>
     </File>
     <File Include="Reparti/showCalendarFesteStraordinari.aspx">
       <publishTime>06/16/2017 23:16:01</publishTime>
@@ -3784,7 +4801,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/24/2017 20:32:55</publishTime>
     </File>
     <File Include="Site.Master">
-      <publishTime>04/06/2017 22:09:40</publishTime>
+      <publishTime>07/16/2017 18:22:13</publishTime>
     </File>
     <File Include="Styles/assets/css/bootstrap-responsive.css">
       <publishTime>05/13/2014 22:12:24</publishTime>
@@ -5830,58 +6847,277 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>11/03/2015 21:30:06</publishTime>
     </File>
     <File Include="Users/addGruppo.ascx">
-      <publishTime>03/20/2013 21:49:38</publishTime>
+      <publishTime>06/30/2017 22:03:20</publishTime>
     </File>
     <File Include="Users/addPermesso.ascx">
-      <publishTime>06/21/2013 23:16:52</publishTime>
+      <publishTime>06/30/2017 22:06:17</publishTime>
     </File>
     <File Include="Users/addUser.ascx">
-      <publishTime>12/08/2013 14:20:00</publishTime>
+      <publishTime>06/30/2017 21:36:08</publishTime>
     </File>
     <File Include="Users/addUserEmail.ascx">
-      <publishTime>12/08/2013 22:57:06</publishTime>
+      <publishTime>06/21/2017 22:42:34</publishTime>
     </File>
     <File Include="Users/addUserPhoneNumber.ascx">
-      <publishTime>07/13/2013 16:47:32</publishTime>
+      <publishTime>06/21/2017 22:34:57</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addGruppo.ascx.en.resx">
+      <publishTime>06/21/2017 23:09:40</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addGruppo.ascx.es.resx">
+      <publishTime>06/21/2017 23:09:19</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addGruppo.ascx.it.resx">
+      <publishTime>06/21/2017 23:08:48</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addGruppo.ascx.resx">
+      <publishTime>06/21/2017 23:08:45</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addPermesso.ascx.en.resx">
+      <publishTime>06/21/2017 23:06:05</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addPermesso.ascx.es.resx">
+      <publishTime>06/21/2017 23:05:39</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addPermesso.ascx.it.resx">
+      <publishTime>06/21/2017 23:04:54</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addPermesso.ascx.resx">
+      <publishTime>06/21/2017 23:04:41</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUser.ascx.en.resx">
+      <publishTime>06/21/2017 23:01:34</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUser.ascx.es.resx">
+      <publishTime>06/21/2017 23:00:20</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUser.ascx.it.resx">
+      <publishTime>06/21/2017 22:59:24</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUser.ascx.resx">
+      <publishTime>06/21/2017 22:59:24</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserEmail.ascx.en.resx">
+      <publishTime>06/21/2017 22:50:14</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserEmail.ascx.es.resx">
+      <publishTime>06/21/2017 22:45:30</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserEmail.ascx.it.resx">
+      <publishTime>06/21/2017 22:43:35</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserEmail.ascx.resx">
+      <publishTime>06/21/2017 22:43:28</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserPhoneNumber.ascx.en.resx">
+      <publishTime>06/21/2017 22:39:13</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserPhoneNumber.ascx.es.resx">
+      <publishTime>06/21/2017 22:37:59</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserPhoneNumber.ascx.it.resx">
+      <publishTime>06/21/2017 22:38:04</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/addUserPhoneNumber.ascx.resx">
+      <publishTime>06/21/2017 22:36:05</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUser.aspx.en.resx">
+      <publishTime>06/21/2017 22:31:35</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUser.aspx.es.resx">
+      <publishTime>06/21/2017 22:30:55</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUser.aspx.it.resx">
+      <publishTime>06/21/2017 22:29:16</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUser.aspx.resx">
+      <publishTime>06/21/2017 22:28:18</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUserInfo.ascx.en.resx">
+      <publishTime>06/21/2017 22:25:20</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUserInfo.ascx.es.resx">
+      <publishTime>06/21/2017 22:24:56</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUserInfo.ascx.it.resx">
+      <publishTime>06/21/2017 22:24:26</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/editUserInfo.ascx.resx">
+      <publishTime>06/21/2017 22:24:22</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/generaBarcode.aspx.en.resx">
+      <publishTime>06/21/2017 22:21:13</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/generaBarcode.aspx.es.resx">
+      <publishTime>06/21/2017 22:20:32</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/generaBarcode.aspx.it.resx">
+      <publishTime>06/21/2017 22:19:03</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/generaBarcode.aspx.resx">
+      <publishTime>06/21/2017 22:18:55</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listGruppi.ascx.resx">
+      <publishTime>06/21/2017 22:13:29</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessi.ascx.en.resx">
+      <publishTime>06/21/2017 21:53:32</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessi.ascx.es.resx">
+      <publishTime>06/21/2017 21:52:32</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessi.ascx.it.resx">
+      <publishTime>06/21/2017 21:50:36</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessi.ascx.resx">
+      <publishTime>06/21/2017 21:50:31</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessiGruppi.ascx.en.resx">
+      <publishTime>06/21/2017 21:45:49</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessiGruppi.ascx.es.resx">
+      <publishTime>06/21/2017 21:44:42</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessiGruppi.ascx.it.resx">
+      <publishTime>06/21/2017 21:44:05</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listPermessiGruppi.ascx.resx">
+      <publishTime>06/21/2017 21:43:58</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserEmails.ascx.en.resx">
+      <publishTime>06/21/2017 21:38:48</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserEmails.ascx.es.resx">
+      <publishTime>06/21/2017 21:38:19</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserEmails.ascx.it.resx">
+      <publishTime>06/21/2017 21:36:36</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserEmails.ascx.resx">
+      <publishTime>06/21/2017 21:36:32</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserGruppi.ascx.en.resx">
+      <publishTime>06/21/2017 21:33:34</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserGruppi.ascx.es.resx">
+      <publishTime>06/21/2017 21:33:41</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserGruppi.ascx.it.resx">
+      <publishTime>06/21/2017 21:32:57</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserGruppi.ascx.resx">
+      <publishTime>06/21/2017 21:31:47</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserPhoneNumber.ascx.en.resx">
+      <publishTime>06/21/2017 21:13:31</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserPhoneNumber.ascx.es.resx">
+      <publishTime>06/21/2017 21:12:58</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserPhoneNumber.ascx.it.resx">
+      <publishTime>06/21/2017 21:11:54</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUserPhoneNumber.ascx.resx">
+      <publishTime>06/21/2017 21:11:50</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUsers.ascx.en.resx">
+      <publishTime>06/21/2017 20:59:37</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUsers.ascx.es.resx">
+      <publishTime>06/21/2017 20:58:47</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUsers.ascx.it.resx">
+      <publishTime>06/21/2017 20:57:55</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/listUsers.ascx.resx">
+      <publishTime>06/21/2017 20:57:51</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageGruppi.aspx.en.resx">
+      <publishTime>06/21/2017 20:52:56</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageGruppi.aspx.es.resx">
+      <publishTime>06/21/2017 20:52:37</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageGruppi.aspx.it.resx">
+      <publishTime>06/21/2017 20:52:56</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageGruppi.aspx.resx">
+      <publishTime>06/21/2017 20:52:56</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/managePermessi.aspx.en.resx">
+      <publishTime>06/21/2017 20:47:30</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/managePermessi.aspx.es.resx">
+      <publishTime>06/21/2017 20:47:04</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/managePermessi.aspx.it.resx">
+      <publishTime>06/21/2017 20:45:06</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/managePermessi.aspx.resx">
+      <publishTime>06/21/2017 20:44:53</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageUsers.aspx.en.resx">
+      <publishTime>06/21/2017 20:42:16</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageUsers.aspx.es.resx">
+      <publishTime>06/21/2017 20:41:26</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageUsers.aspx.it.resx">
+      <publishTime>06/21/2017 20:41:02</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/manageUsers.aspx.resx">
+      <publishTime>06/21/2017 20:40:52</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/PermessiGruppi.aspx.en.resx">
+      <publishTime>06/21/2017 20:38:26</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/PermessiGruppi.aspx.es.resx">
+      <publishTime>06/21/2017 20:38:35</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/PermessiGruppi.aspx.it.resx">
+      <publishTime>06/21/2017 20:38:10</publishTime>
+    </File>
+    <File Include="Users/App_LocalResources/PermessiGruppi.aspx.resx">
+      <publishTime>06/21/2017 20:38:06</publishTime>
     </File>
     <File Include="Users/editUser.aspx">
-      <publishTime>12/08/2013 22:51:16</publishTime>
+      <publishTime>06/30/2017 22:26:16</publishTime>
     </File>
     <File Include="Users/editUserInfo.ascx">
-      <publishTime>12/08/2013 22:52:58</publishTime>
+      <publishTime>06/30/2017 21:37:24</publishTime>
     </File>
     <File Include="Users/generaBarcode.aspx">
-      <publishTime>09/06/2013 16:06:56</publishTime>
+      <publishTime>06/21/2017 22:16:18</publishTime>
     </File>
     <File Include="Users/listGruppi.ascx">
-      <publishTime>12/08/2013 23:10:24</publishTime>
+      <publishTime>06/30/2017 22:02:55</publishTime>
     </File>
     <File Include="Users/listPermessi.ascx">
-      <publishTime>08/13/2013 10:15:14</publishTime>
+      <publishTime>06/30/2017 22:06:44</publishTime>
     </File>
     <File Include="Users/listPermessiGruppi.ascx">
-      <publishTime>08/13/2013 10:12:12</publishTime>
+      <publishTime>06/21/2017 21:43:09</publishTime>
     </File>
     <File Include="Users/listUserEmails.ascx">
-      <publishTime>12/08/2013 23:03:34</publishTime>
+      <publishTime>06/30/2017 21:52:08</publishTime>
     </File>
     <File Include="Users/listUserGruppi.ascx">
       <publishTime>12/08/2013 22:55:36</publishTime>
     </File>
     <File Include="Users/listUserPhoneNumber.ascx">
-      <publishTime>12/08/2013 23:04:56</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Users/listUsers.ascx">
-      <publishTime>11/15/2016 22:17:59</publishTime>
+      <publishTime>06/30/2017 21:35:28</publishTime>
     </File>
     <File Include="Users/manageGruppi.aspx">
-      <publishTime>12/08/2013 23:16:06</publishTime>
+      <publishTime>06/30/2017 22:26:09</publishTime>
     </File>
     <File Include="Users/managePermessi.aspx">
-      <publishTime>08/13/2013 10:24:36</publishTime>
+      <publishTime>06/30/2017 22:26:04</publishTime>
     </File>
     <File Include="Users/manageUsers.aspx">
-      <publishTime>12/08/2013 22:48:46</publishTime>
+      <publishTime>06/30/2017 22:25:58</publishTime>
     </File>
     <File Include="Users/PermessiGruppi.aspx">
       <publishTime>03/21/2013 21:55:04</publishTime>
@@ -5896,7 +7132,7 @@ modificando il file MSBuild. Per ulteriori informazioni su questo argomento, vis
       <publishTime>01/23/2017 22:00:48</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/19/2017 21:53:26</publishTime>
+      <publishTime>07/16/2017 21:32:34</publishTime>
     </File>
     <File Include="whatsnew.ascx">
       <publishTime>01/29/2017 18:07:45</publishTime>

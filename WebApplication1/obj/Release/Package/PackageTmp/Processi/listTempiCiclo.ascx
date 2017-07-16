@@ -10,14 +10,14 @@
                 <th><asp:Literal runat="server" ID="lblNumOperatori" Text="<%$Resources:lblNumOperatori %>" /></th>
                 <th><asp:Literal runat="server" ID="lblSetup" Text="<%$Resources:lblSetup %>" /></th>
                 <th><asp:Literal runat="server" ID="lblTempoCiclo" Text="<%$Resources:lblTempoCiclo %>" /></th>
-                <th><asp:Literal runat="server" ID="lblDefault" Text="<%$Resources:lblTempoCiclo %>" /></th>
+                <th><asp:Literal runat="server" ID="lblDefault" Text="<%$Resources:lblDefault %>" /></th>
             </tr>
                 </thead>
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1">
             <td><asp:HiddenField runat="server" ID="hNumOp" Value='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' />
-                <asp:ImageButton runat="server" ID="btnDelete" ImageUrl="/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' ToolTip="<%$Resources:lblDeleteTC %>" /></td>
+                <asp:ImageButton runat="server" ID="btnDelete" ImageUrl="~/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %>' ToolTip="<%$Resources:lblDeleteTC %>" /></td>
             <td><%#DataBinder.Eval(Container.DataItem, "NumeroOperatori") %></td>
             <td><%#Math.Truncate(((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoSetup")).TotalHours) + ":"
                 + ((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoSetup")).Minutes + ":"

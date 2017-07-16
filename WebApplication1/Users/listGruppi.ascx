@@ -20,13 +20,13 @@
     <ItemTemplate>
         <tr runat="server" id="tr1">
             <td>
-                <asp:ImageButton runat="server" ID="btnManagePermessi" ImageUrl="/img/iconPermissions.png" Height="30" CommandName="mngPermessi" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
+                <asp:ImageButton runat="server" ID="btnManagePermessi" ImageUrl="~/img/iconPermissions.png" Height="30" CommandName="mngPermessi" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
             </td>
             <td>
-                <asp:ImageButton runat="server" ID="btnManageMenu" ImageUrl="/img/iconMenuItem.jpg" Height="30" CommandName="mngMenu" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' ToolTip="<%$Resources:lblTTManageMenu %>" />
+                <asp:ImageButton runat="server" ID="btnManageMenu" ImageUrl="~/img/iconMenuItem.jpg" Height="30" CommandName="mngMenu" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' ToolTip="<%$Resources:lblTTManageMenu %>" />
             </td>
-            <td><asp:ImageButton runat="server" ID="btnEdit" ImageUrl="/img/edit.png" Height="30" CommandName="edit" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' ToolTip="<%$Resources:lblTTModGruppo %>" />
-                <asp:ImageButton runat="server" ID="btnSave" ImageUrl="/img/iconSave.jpg" Height="30" CommandName="save" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" ToolTip="<%$Resources:lblTTSalvaMod %>" />
+            <td><asp:ImageButton runat="server" ID="btnEdit" ImageUrl="~/img/edit.png" Height="30" CommandName="edit" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' ToolTip="<%$Resources:lblTTModGruppo %>" />
+                <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="30" CommandName="save" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" ToolTip="<%$Resources:lblTTSalvaMod %>" />
             </td>
             <td><asp:label runat="server" ID="lbNome" Text='<%# DataBinder.Eval(Container.DataItem, "Nome") %>' />
                 <asp:TextBox runat="server" ID="tbNome" Text='<%# DataBinder.Eval(Container.DataItem, "Nome") %>' Visible="false" />
@@ -35,7 +35,7 @@
                 <asp:TextBox runat="server" ID="tbDesc" Text='<%# DataBinder.Eval(Container.DataItem, "Descrizione") %>' Visible="false" />
             </td>
             <td>
-                <asp:ImageButton runat="server" ID="btnDel" ImageUrl="/img/iconDelete.png" Height="30" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" ToolTip="<%$Resources:lblTTEliminaGruppo %>" />
+                <asp:ImageButton runat="server" ID="btnDel" ImageUrl="~/img/iconDelete.png" Height="30" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "ID") %>' Visible="false" ToolTip="<%$Resources:lblTTEliminaGruppo %>" />
             </td>
         </tr>
     </ItemTemplate>

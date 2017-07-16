@@ -207,7 +207,7 @@ namespace KIS.Users
                     Group grp = new Group(idGrp);
                     if (grp.ID != -1)
                     {
-                        string url = "/Admin/MenuGruppi.aspx?ID=" + grp.ID.ToString();
+                        string url = "../Admin/MenuGruppi.aspx?ID=" + grp.ID.ToString();
                         string fullURL = "window.open('" + url + "', '_blank', 'height=500,width=800,status=yes,toolbar=no,menubar=no,location=no,scrollbars=yes,resizable=no,titlebar=no' );";
                         ScriptManager.RegisterStartupScript(this, typeof(string), "OPEN_WINDOW", fullURL, true);
                     }

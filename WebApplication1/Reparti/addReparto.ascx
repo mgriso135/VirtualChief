@@ -20,8 +20,8 @@
     </tr>
     <tr>
         <td colspan="2">
-            <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="/img/iconSave.jpg" Height="50px" ToolTip="<%$Resources:lblSalva %>" ValidationGroup="addReparto" />
-            <asp:ImageButton runat="server" ID="reset" OnClick="reset_Click" ImageUrl="/img/iconUndo.png" Height="50px" ToolTip="<%$Resources:lblAnnulla %>" ValidationGroup="addReparto" />
+            <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="~/img/iconSave.jpg" Height="50px" ToolTip="<%$Resources:lblSalva %>" ValidationGroup="addReparto" />
+            <asp:ImageButton runat="server" ID="reset" OnClick="reset_Click" ImageUrl="~/img/iconUndo.png" Height="50px" ToolTip="<%$Resources:lblAnnulla %>" ValidationGroup="addReparto" />
         </td>
     </tr>
 </table>

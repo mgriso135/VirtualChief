@@ -37,8 +37,8 @@
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1" style="font-family:Calibri; font-size:14px;">
-            <td><asp:HyperLink runat="server" ID="lnkShowHistoryArticolo" NavigateUrl='<%# "statoAvanzamentoArticolo.aspx?id=" +DataBinder.Eval(Container.DataItem, "ID")+"&anno=" +DataBinder.Eval(Container.DataItem, "Year") %>'>
-                <asp:Image runat="server" ID="imgView" ImageUrl="/img/iconView.png" ToolTip="Visualizza la storia dell'articolo" Height="40" />
+            <td><asp:HyperLink runat="server" ID="lnkShowHistoryArticolo" NavigateUrl='<%# "~/Produzione/statoAvanzamentoArticolo.aspx?id=" +DataBinder.Eval(Container.DataItem, "ID")+"&anno=" +DataBinder.Eval(Container.DataItem, "Year") %>'>
+                <asp:Image runat="server" ID="imgView" ImageUrl="~/img/iconView.png" ToolTip="<%$Resources:lblTTVisualizzaStoria %>" Height="40" />
                 </asp:HyperLink></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Commessa") %>/<%#DataBinder.Eval(Container.DataItem, "AnnoCommessa") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>
@@ -51,7 +51,7 @@
             <td><%# ((DateTime)DataBinder.Eval(Container.DataItem, "DataPrevistaConsegna")).ToString("dd/MM/yyyy") %></td>
             <td><%# ((TimeSpan)DataBinder.Eval(Container.DataItem, "TempoDiLavoroTotale")).TotalHours.ToString("F2") %></td>
             <td><%# ((TimeSpan)DataBinder.Eval(Container.DataItem, "Ritardo")).TotalHours.ToString("F2") %></td>
-            <td><asp:ImageButton runat="server" ID="btnRiesuma" ImageUrl="~/img/iconExhume.png" Height="30" ToolTip="Riesuma il prodotto" CommandName="riesuma" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "IDCombinato") %>' /></td>
+            <td><asp:ImageButton runat="server" ID="btnRiesuma" ImageUrl="~/img/iconExhume.png" Height="30" ToolTip="<%$Resources:lblTTRiesuma %>" CommandName="riesuma" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "IDCombinato") %>' /></td>
         </tr>
     </ItemTemplate>
     <FooterTemplate></tbody>

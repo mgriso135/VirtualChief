@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="addUser.ascx.cs" Inherits="KIS.Admin.addUser" %>
 <asp:Label runat="server" ID="lbl1" />
-<asp:ImageButton runat="server" ID="btnUserAdd" ImageUrl="/img/iconUserAdd.jpg" OnClick="btnUserAdd_Click" CssClass="img-rounded" Height="100" />
+<asp:ImageButton runat="server" ID="btnUserAdd" ImageUrl="~/img/iconUserAdd.jpg" OnClick="btnUserAdd_Click" CssClass="img-rounded" Height="100" />
 <br />
 <table class="table table-condensed table-hover" runat="server" id="tblInputNewUser">
     <thead>
@@ -75,8 +75,8 @@
     <tfoot>
 <tr>
 <td colspan="2">
-<asp:ImageButton runat="server" ID="btnSaveUser" ImageUrl="/img/iconSave.jpg" Height="40" OnClick="btnSaveUser_Click" CausesValidation="true" />&nbsp;
-<asp:ImageButton runat="server" ID="btnUndo" ImageUrl="/img/iconCancel.jpg" Height="40" OnClick="btnUndo_Click" CausesValidation="false" />
+<asp:ImageButton runat="server" ID="btnSaveUser" ImageUrl="~/img/iconSave.jpg" Height="40" OnClick="btnSaveUser_Click" CausesValidation="true" />&nbsp;
+<asp:ImageButton runat="server" ID="btnUndo" ImageUrl="~/img/iconCancel.jpg" Height="40" OnClick="btnUndo_Click" CausesValidation="false" />
 </td>
 </tr>
 <tr><td colspan="2"><asp:Label runat="server" id="lblEsito" /></td></tr>

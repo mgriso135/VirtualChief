@@ -15,7 +15,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><a href="WorkLoadSimReparti.aspx?id=<%# DataBinder.Eval(Container.DataItem, "id") %>">
-                    <asp:image ImageUrl="/img/iconLabor.png" height="30px" runat="server" ID="imgPlan" ToolTip="<%$Resources:lblVisualizzaSim %>" />
+                    <asp:image ImageUrl="~/img/iconLabor.png" height="30px" runat="server" ID="imgPlan" ToolTip="<%$Resources:lblVisualizzaSim %>" />
                     </a></td>
                 <td><%# DataBinder.Eval(Container.DataItem, "name") %></td>
                 <td><%# DataBinder.Eval(Container.DataItem, "description") %></td>

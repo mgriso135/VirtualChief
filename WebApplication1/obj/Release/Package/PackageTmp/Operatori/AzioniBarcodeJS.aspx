@@ -216,13 +216,13 @@
     <asp:TextBox runat="server" ID="box1" onchange="controllo1()" />
         <asp:TextBox runat="server" ID="box2" onchange="controllo2()" />
         <br/>
-        <asp:Image runat="server" ID="imgLoading" ImageUrl="/img/iconLoading.gif" />
+        <asp:Image runat="server" ID="imgLoading" ImageUrl="~/img/iconLoading.gif" />
         <br />
         <table>
             <tr>
             <td>
-                <asp:Image runat="server" ID="imgOK" Visible="false" ImageUrl="/img/iconComplete.png" Height="200" />
-        <asp:Image runat="server" ID="imgKO" Visible="false" ImageUrl="/img/iconWarning.png" Height="200" />
+                <asp:Image runat="server" ID="imgOK" Visible="false" ImageUrl="~/img/iconComplete.png" Height="200" />
+        <asp:Image runat="server" ID="imgKO" Visible="false" ImageUrl="~/img/iconWarning.png" Height="200" />
             </td>
                 <td><p class="lead"><asp:label runat="server" ID="log" /></p></td>
                 <td>

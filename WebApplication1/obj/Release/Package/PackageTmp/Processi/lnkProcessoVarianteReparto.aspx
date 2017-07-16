@@ -42,8 +42,8 @@
     </td></tr>
     </table>
 
-    <asp:HyperLink runat="server" ID="lnkGestisciReparti" NavigateUrl="/Reparti/configReparto.aspx" Target="_blank">
-        <asp:Image CssClass="btn btn-primary" runat="server" ID="imgReparti" ToolTip="<%$Resources:lblTTGestioneRep %>" ImageUrl="/img/iconFactory.png" Height="80" />
+    <asp:HyperLink runat="server" ID="lnkGestisciReparti" NavigateUrl="~/Reparti/configReparto.aspx" Target="_blank">
+        <asp:Image CssClass="btn btn-primary" runat="server" ID="imgReparti" ToolTip="<%$Resources:lblTTGestioneRep %>" ImageUrl="~/img/iconFactory.png" Height="80" />
     </asp:HyperLink>
 
     <reparti:list runat="server" id="frmListReparti" />

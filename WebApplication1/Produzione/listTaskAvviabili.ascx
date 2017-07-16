@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="listTaskAvviabili.ascx.cs" Inherits="KIS.Produzione.listTaskAvviabili" %>
 
-<h3>Task disponibili</h3>
+<h3><asp:literal runat="server" Text="<%$Resources:lblTasksDispo %>" /></h3>
 
 <asp:UpdatePanel UpdateMode="Conditional" runat="server" >
     <ContentTemplate>
@@ -34,7 +34,7 @@
             </HeaderTemplate>
             <ItemTemplate>
                 <tr runat="server" id="tr1">
-                    <td><asp:ImageButton ID="btnStart" runat="server" Height="40" ImageUrl="/img/iconPlay.png" CommandName="start" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' /></td>
+                    <td><asp:ImageButton ID="btnStart" runat="server" Height="40" ImageUrl="~/img/iconPlay.png" CommandName="start" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' /></td>
                     <td><asp:Label runat="server" ID="lblCommessa" />/<asp:Label runat="server" ID="lblAnnoCommessa" /></td>
                     <td><asp:Label runat="server" ID="lblCliente" /></td>
                     <td><asp:Label runat="server" ID="lblProdotto" /></td>

@@ -311,7 +311,7 @@ namespace KIS.Produzione
                     output.Close();
                     output.Dispose();
                     //Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
-                    ScriptManager.RegisterStartupScript(updProduction, updProduction.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
+                    ScriptManager.RegisterStartupScript(updProduction, updProduction.GetType(), null, "window.open('../Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
                 }
                 else if (e.CommandName == "printOrdiniSingolo")
                 {
@@ -520,7 +520,7 @@ namespace KIS.Produzione
                         cartPDF.Add(noteField);
 
                         cartPDF.Close();
-                        ScriptManager.RegisterStartupScript(updProduction, updProduction.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
+                        ScriptManager.RegisterStartupScript(updProduction, updProduction.GetType(), null, "window.open('../Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
                         //Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
                     }
                 }
@@ -740,7 +740,7 @@ namespace KIS.Produzione
                         cartPDF.Add(noteField);
 
                         cartPDF.Close();
-                        ScriptManager.RegisterStartupScript(updProduction, updProduction.GetType(), null, "window.open('/Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
+                        ScriptManager.RegisterStartupScript(updProduction, updProduction.GetType(), null, "window.open('../Data/Produzione/" + FileNamePDF + "', '_newtab')", true);
                     }
                 }
                 /*else if (e.CommandName == "depianifica")

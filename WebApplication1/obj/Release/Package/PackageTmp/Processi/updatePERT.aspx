@@ -10,5 +10,5 @@ Inherits="KIS.Processi.updatePERT" %>
         window.blur();
     </script>
 
-<asp:label runat=server ID="lbl" />
+<asp:label runat="server" ID="lbl" />
 </asp:Content>

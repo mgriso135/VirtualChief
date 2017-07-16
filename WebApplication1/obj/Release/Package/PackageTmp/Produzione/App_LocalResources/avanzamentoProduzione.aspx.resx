@@ -256,7 +256,7 @@
     <value>Task TempoDiLavoroPrevisto</value>
   </data>
   <data name="lblNavAndonCompleto.Text" xml:space="preserve">
-    <value>Andon completo</value>
+    <value>Andon generale</value>
   </data>
   <data name="lblNavProduzione.Text" xml:space="preserve">
     <value>Produzione</value>

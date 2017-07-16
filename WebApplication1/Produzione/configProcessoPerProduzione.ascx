@@ -111,7 +111,7 @@
         <tfoot>
         <tr>
             <td colspan="9" style="text-align:center;">
-                <asp:ImageButton runat="server" ID="btnLANCIA" CommandName="ProductionLaunch" CommandArgument="OK" ImageUrl="/img/iconComplete.png" Height="100px" ToolTip="<%$Resources:lblBtnLanciaProd %>" />
+                <asp:ImageButton runat="server" ID="btnLANCIA" CommandName="ProductionLaunch" CommandArgument="OK" ImageUrl="~/img/iconComplete.png" Height="100px" ToolTip="<%$Resources:lblBtnLanciaProd %>" />
             </td>
         </tr>
             </tfoot>

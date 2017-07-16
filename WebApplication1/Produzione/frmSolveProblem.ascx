@@ -8,8 +8,8 @@
         <asp:RequiredFieldValidator runat="server" ID="valRisoluzione" ForeColor="Red" ControlToValidate="txtRisoluzione" ErrorMessage="<%$Resources:lblReqField %>"  ValidationGroup="val1" />
 </td></tr>
     <tr><td colspan="2">
-        <asp:ImageButton runat="server" ID="imgSave" ImageUrl="/img/iconSave.jpg" Height="80" ValidationGroup="val1" OnClick="imgSave_Click" />
-        <asp:ImageButton runat="server" ID="imgUndo" ImageUrl="/img/iconUndo.png" Height="80" OnClick="imgUndo_Click" />
+        <asp:ImageButton runat="server" ID="imgSave" ImageUrl="~/img/iconSave.jpg" Height="80" ValidationGroup="val1" OnClick="imgSave_Click" />
+        <asp:ImageButton runat="server" ID="imgUndo" ImageUrl="~/img/iconUndo.png" Height="80" OnClick="imgUndo_Click" />
         </td></tr>
 </table>
 <asp:Label runat="server" ID="lbl1" />

@@ -16,7 +16,7 @@
         <ItemTemplate>
             <tr runat="server" id="tr1">
                 <td><a href="configReparto.aspx?id=<%# DataBinder.Eval(Container.DataItem, "id") %>">
-                    <asp:image runat="server" ImageUrl="/img/iconView.png" height="30px" />
+                    <asp:image runat="server" ImageUrl="~/img/iconView.png" height="30px" />
                     </a></td>
                 <td><%# DataBinder.Eval(Container.DataItem, "name") %></td>
             </tr>

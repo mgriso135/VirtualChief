@@ -67,6 +67,24 @@ namespace KIS.Admin {
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl accordion1;
         
         /// <summary>
+        /// Controllo lblBilling.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblBilling;
+        
+        /// <summary>
+        /// Controllo frmBilling.
+        /// </summary>
+        /// <remarks>
+        /// Campo generato automaticamente.
+        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
+        /// </remarks>
+        protected global::KIS.Admin.kisBilling frmBilling;
+        
+        /// <summary>
         /// Controllo lblLogo.
         /// </summary>
         /// <remarks>

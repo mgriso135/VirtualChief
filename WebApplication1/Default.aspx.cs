@@ -20,9 +20,13 @@ namespace KIS
 
             if (!FullyConfigured)
             {
-                Response.Redirect("/Configuration/MainWizConfig.aspx");
+                Response.Redirect("~/Configuration/MainWizConfig.aspx");
             }
-
+            else
+            {
+                Response.Redirect("~/HomePage/Default.aspx");
+            }
+            /*
             lblBenvenuto.Visible = false;
 
             if (Session["user"] != null)
@@ -34,10 +38,10 @@ namespace KIS
             else
             {
                 lblBenvenuto.Visible = false;
-                lbl1.Text = "You're not logged in. Please <a href=\"/Login/login.aspx\">log in</a>.";
+                lbl1.Text = "You're not logged in. Please <a href=\"~/Login/login.aspx\">log in</a>.";
                 lbl1.Text = GetLocalResourceObject("lbl1_NotLoggedIn.Text").ToString();
                 //lbl1.Text = GetLocalResourceObject("lbl1.Text").ToString();
-            }
+            }*/
         }
     }
 

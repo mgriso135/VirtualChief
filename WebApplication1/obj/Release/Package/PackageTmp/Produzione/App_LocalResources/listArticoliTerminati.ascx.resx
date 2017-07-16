@@ -177,6 +177,15 @@
   <data name="lblTipoProdotto" xml:space="preserve">
     <value>Tipo di prodotto</value>
   </data>
+  <data name="lblTitleStorico" xml:space="preserve">
+    <value>Storico produzione</value>
+  </data>
+  <data name="lblTTRiesuma" xml:space="preserve">
+    <value>Riesuma il prodotto</value>
+  </data>
+  <data name="lblTTVisualizzaStoria" xml:space="preserve">
+    <value>Visualizza la storia del prodotto</value>
+  </data>
   <data name="lblVariante" xml:space="preserve">
     <value>Variante</value>
   </data>

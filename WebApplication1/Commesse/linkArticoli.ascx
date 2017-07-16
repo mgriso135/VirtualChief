@@ -4,7 +4,7 @@
     <tr>
         <td><asp:Label runat="server" ID="lblProdotto" meta:resourcekey="lblProdotto" />:</td>
         <td><asp:DropDownList runat="server" ID="ddlArticoli" AppendDataBoundItems="true">
-            <asp:ListItem Text="Scegli un processo" Value="-1" />
+            <asp:ListItem Text="<%$resources:valDDEligir %>" Value="-1" />
             </asp:DropDownList></td>
     </tr>
     <tr>
@@ -18,8 +18,8 @@
         <td><asp:Calendar runat="server" ID="consegnaprevista" /></td>
     </tr>
     <tr><td colspan="2" style="text-align:center;">
-        <asp:ImageButton runat="server" ID="btnSave" ImageUrl="/img/iconSave.jpg" Height="40" ToolTip="Salva l'articolo" OnClick="btnSave_Click" ValidationGroup="articolo" />
-        <asp:ImageButton runat="server" ID="btnUndo" ImageUrl="/img/iconUndo.png" Height="40" ToolTip="Form reset" OnClick="btnUndo_Click" />
+        <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="40" ToolTip="<%$resources:lblTTSalva %>" OnClick="btnSave_Click" ValidationGroup="articolo" />
+        <asp:ImageButton runat="server" ID="btnUndo" ImageUrl="~/img/iconUndo.png" Height="40" ToolTip="<%$resources:lblTTFormReset %>" OnClick="btnUndo_Click" />
         </td></tr>
 </table>
 <asp:Label runat="server" ID="lbl1" />

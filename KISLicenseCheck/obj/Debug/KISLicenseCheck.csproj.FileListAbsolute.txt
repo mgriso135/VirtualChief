@@ -1,0 +1,5 @@
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.exe.config
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.exe
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.pdb
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.exe
+C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.pdb

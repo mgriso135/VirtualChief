@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="addPermesso.ascx.cs" Inherits="KIS.Users.addPermesso" %>
 
 <asp:Label runat="server" ID="lbl1" />
-<asp:ImageButton runat="server" ID="showAddPermesso" OnClick="showAddPermesso_Click" ImageUrl="/img/iconAdd2.png" Height="50" />
+<asp:ImageButton runat="server" ID="showAddPermesso" OnClick="showAddPermesso_Click" ImageUrl="~/img/iconAdd2.png" Height="50" />
 
 <table id="tblFormAddPermesso" runat="server">
     <tr>
@@ -18,8 +18,8 @@
     </tr>
     <tr>
         <td colspan="2" style="text-align:center;">
-            <asp:ImageButton runat="server" ID="imgAddPermesso" ImageUrl="/img/iconSave.jpg" Height="40" OnClick="imgAddPermesso_Click" ValidationGroup="Add" />
-            <asp:ImageButton runat="server" ID="imgReset" ImageUrl="/img/iconUndo.png" Height="40" OnClick="imgReset_Click" />
+            <asp:ImageButton runat="server" ID="imgAddPermesso" ImageUrl="~/img/iconSave.jpg" Height="40" OnClick="imgAddPermesso_Click" ValidationGroup="Add" />
+            <asp:ImageButton runat="server" ID="imgReset" ImageUrl="~/img/iconUndo.png" Height="40" OnClick="imgReset_Click" />
         </td>
     </tr>
 </table>

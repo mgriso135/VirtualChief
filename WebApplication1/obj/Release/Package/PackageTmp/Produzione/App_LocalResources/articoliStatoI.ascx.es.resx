@@ -154,7 +154,7 @@
     <value>sumado con exíto.&lt;br /&gt;</value>
   </data>
   <data name="lblDeleted" xml:space="preserve">
-    <value>eliminado.&lt;br /&gt;</value>
+    <value>borrado.&lt;br /&gt;</value>
   </data>
   <data name="lblPermessoKo" xml:space="preserve">
     <value>No tiene el pormiso por ver el Andon generál.&lt;br /&gt;</value>
@@ -272,5 +272,8 @@
   </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Products en producción</value>
+  </data>
+  <data name="lblTTVisualizzaProd" xml:space="preserve">
+    <value>Ver el estado del producto</value>
   </data>
 </root>

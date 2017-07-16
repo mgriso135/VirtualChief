@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="listTaskAvviatiPostazioneUtente.ascx.cs" Inherits="KIS.Produzione.listTaskAvviatiPostazioneUtente" %>
 
-<h1 runat="server" id="lblTitle">Task avviati da te</h1>
+<h1 runat="server" id="lblTitle"><asp:literal runat="server" Text="<%$Resources:lblTitle %>" /></h1>
 <asp:UpdatePanel runat="server" UpdateMode="Conditional">
 
     <ContentTemplate>
@@ -36,9 +36,9 @@
             </HeaderTemplate>
             <ItemTemplate>
                 <tr runat="server" id="tr1" style="font-size: 14px; font-family:Calibri;text-align:center">
-                    <td><asp:ImageButton ID="btnPause" runat="server" Width="60" ImageUrl="/img/iconPause.png" CommandName="pause" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' ToolTip="<%$Resources:lblTTPausaTask %>" /></td>
-                    <td><asp:ImageButton ID="btnWarning" runat="server" Width="60" ImageUrl="/img/iconWarning.png" CommandName="warning" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' ToolTip="<%$Resources:lblTTSegnalaWarning %>" />
-                        <asp:Image runat="server" ID="imgWarningCalled" ImageUrl="/img/problemIcon.jpg" Visible="false" Height="80" ToolTip="<%$Resources:lblWarningActive %>" />
+                    <td><asp:ImageButton ID="btnPause" runat="server" Width="60" ImageUrl="~/img/iconPause.png" CommandName="pause" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' ToolTip="<%$Resources:lblTTPausaTask %>" /></td>
+                    <td><asp:ImageButton ID="btnWarning" runat="server" Width="60" ImageUrl="~/img/iconWarning.png" CommandName="warning" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' ToolTip="<%$Resources:lblTTSegnalaWarning %>" />
+                        <asp:Image runat="server" ID="imgWarningCalled" ImageUrl="~/img/problemIcon.jpg" Visible="false" Height="80" ToolTip="<%$Resources:lblWarningActive %>" />
                     </td>
                     <td><asp:Label runat="server" ID="lblCommessa" />/<asp:Label runat="server" ID="lblAnnoCommessa" /></td>
                     <td><asp:Label runat="server" ID="lblCliente" /></td>
@@ -62,7 +62,7 @@
                     <td><%#DataBinder.Eval(Container.DataItem, "UtentiAttivi.Count") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "Status") %></td>
                     <td><asp:Label runat="server" ID="lblUtentiAttivi" /></td>
-                    <td><asp:ImageButton ID="btnEnd" runat="server" Height="60" ImageUrl="/img/iconComplete.png" CommandName="end" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' ToolTip="<%$Resources:lblTTCompletaAttivita %>" /></td>
+                    <td><asp:ImageButton ID="btnEnd" runat="server" Height="60" ImageUrl="~/img/iconComplete.png" CommandName="end" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "TaskProduzioneID") %>' ToolTip="<%$Resources:lblTTCompletaAttivita %>" /></td>
                 </tr>
             </ItemTemplate>
             <FooterTemplate>

@@ -172,7 +172,7 @@
     <value>Matricola</value>
   </data>
   <data name="lblTHProcesso.Text" xml:space="preserve">
-    <value>Processo</value>
+    <value>Tipo di prodotto</value>
   </data>
   <data name="lblTHQuantita.Text" xml:space="preserve">
     <value>Quantità</value>

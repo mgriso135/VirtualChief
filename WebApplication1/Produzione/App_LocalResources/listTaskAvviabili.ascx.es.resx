@@ -180,4 +180,7 @@
   <data name="lblTTCambiaQta" xml:space="preserve">
     <value>Cambiar la cantidad realmente producida</value>
   </data>
+  <data name="lblTasksDispo" xml:space="preserve">
+    <value>Tareas a realizar</value>
+  </data>
 </root>

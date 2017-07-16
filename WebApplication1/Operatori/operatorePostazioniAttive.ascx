@@ -22,9 +22,9 @@
     </HeaderTemplate>
     <ItemTemplate>
         <tr runat="server" id="tr1" style="border: 1px dashed groove; font-size:16px; font-family: Calibri;">
-            <td><asp:ImageButton runat="server" ID="btnCheckOut" CommandName="checkOut" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>' ImageUrl="/img/iconCheckIn5.jpg" ToolTip="<%$Resources:lblEsciDaPost %>" Height="40" /></td>
-            <td><asp:HyperLink runat="server" ID="lnkGOTOWORK" NavigateUrl='<%# "doTasksPostazione.aspx?id=" + DataBinder.Eval(Container.DataItem, "id") %>'>
-                <asp:Image runat="server" ID="btnWork" ImageUrl="/img/iconTask2.jpg"  Height="40" ToolTip="<%$Resources:lblEseguiTasks %>" />
+            <td><asp:ImageButton runat="server" ID="btnCheckOut" CommandName="checkOut" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "id") %>' ImageUrl="~/img/iconCheckIn5.jpg" ToolTip="<%$Resources:lblEsciDaPost %>" Height="40" /></td>
+            <td><asp:HyperLink runat="server" ID="lnkGOTOWORK" NavigateUrl='<%# "~/Operatori/doTasksPostazione.aspx?id=" + DataBinder.Eval(Container.DataItem, "id") %>'>
+                <asp:Image runat="server" ID="btnWork" ImageUrl="~/img/iconTask2.jpg"  Height="40" ToolTip="<%$Resources:lblEseguiTasks %>" />
                 </asp:HyperLink>
             </td>
             <td><asp:HiddenField runat="server" ID="id" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />

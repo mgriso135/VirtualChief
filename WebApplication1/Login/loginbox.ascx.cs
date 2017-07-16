@@ -51,7 +51,7 @@ namespace KIS.Login
                 String redUrl = "~/";
                 if (!String.IsNullOrEmpty(Request.QueryString["red"]) && (Request.QueryString["red"]).Length>0)
                 {
-                    redUrl = Request.QueryString["red"] + ".aspx";
+                    redUrl += Request.QueryString["red"] + ".aspx";
                 }
                 Response.Redirect(redUrl);
             }

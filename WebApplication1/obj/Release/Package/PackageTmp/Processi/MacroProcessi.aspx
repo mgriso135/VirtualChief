@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Kaizen Indicator System" Language="C#" MasterPageFile="/Site.master" AutoEventWireup="true" 
+﻿<%@ Page Title="Kaizen Indicator System" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true" 
 CodeBehind="MacroProcessi.aspx.cs" Inherits="KIS.MacroProcessi"%>
 
 
@@ -31,7 +31,7 @@ CodeBehind="MacroProcessi.aspx.cs" Inherits="KIS.MacroProcessi"%>
         </headertemplate>
         <ItemTemplate>
         <tr runat="server" id="tr1">
-        <td><a href="showProcesso.aspx?id=<%# DataBinder.Eval(Container.DataItem, "processID") %>"><asp:Image runat="server" id="imgView" ImageUrl="/img/iconView.png" Width="30px" /></a></td>
+        <td><a href="showProcesso.aspx?id=<%# DataBinder.Eval(Container.DataItem, "processID") %>"><asp:Image runat="server" id="imgView" ImageUrl="~/img/iconView.png" Width="30px" /></a></td>
         <td style="font-size: 12px; font-family: Calibri;"><%# DataBinder.Eval(Container.DataItem, "processName") %></td>
         <td style="font-size: 12px; font-family: Calibri;"><%# DataBinder.Eval(Container.DataItem, "processDescription") %></td>
         </tr>

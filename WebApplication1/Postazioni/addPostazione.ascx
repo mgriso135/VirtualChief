@@ -15,7 +15,7 @@
                             </td>
     </tr>
     <tr><td colspan="2" style="text-align: center;">
-        <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="/img/iconSave.jpg" Height="50" ToolTip="<%$Resources:lblTTAddPostazione %>" ValidationGroup="addPostazione"/>
-        <asp:ImageButton runat="server" ID="undo" OnClick="undo_Click" ImageUrl="/img/iconUndo.png" Height="50" ToolTip="<%$Resources:lblTTResetForm %>" />
+        <asp:ImageButton runat="server" ID="save" OnClick="save_Click" ImageUrl="../img/iconSave.jpg" Height="50" ToolTip="<%$Resources:lblTTAddPostazione %>" ValidationGroup="addPostazione"/>
+        <asp:ImageButton runat="server" ID="undo" OnClick="undo_Click" ImageUrl="../img/iconUndo.png" Height="50" ToolTip="<%$Resources:lblTTResetForm %>" />
         </td></tr>
 </table>

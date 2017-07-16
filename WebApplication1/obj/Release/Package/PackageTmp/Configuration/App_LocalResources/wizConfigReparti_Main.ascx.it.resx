@@ -147,4 +147,13 @@
   <data name="lblValReqField" xml:space="preserve">
     <value>* Campo obbligatorio</value>
   </data>
+  <data name="lblConfigura" xml:space="preserve">
+    <value>Configura</value>
+  </data>
+  <data name="lblConfigurato" xml:space="preserve">
+    <value>Configurato</value>
+  </data>
+  <data name="lblReparto" xml:space="preserve">
+    <value>Reparto</value>
+  </data>
 </root>

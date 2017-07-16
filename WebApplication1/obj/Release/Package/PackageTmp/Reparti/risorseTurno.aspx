@@ -7,9 +7,9 @@
     <asp:Label runat="server" ID="lblTitoloRisorsa" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="/Admin/admin.aspx"><asp:literal runat="server" ID="lblNavAdmin" Text="<%$Resources:lblNavAdmin %>" /></a>
+						<a href="../Admin/admin.aspx"><asp:literal runat="server" ID="lblNavAdmin" Text="<%$Resources:lblNavAdmin %>" /></a>
 						<span class="divider">/</span>
-						<a href="/Reparti/configReparto.aspx"><asp:literal runat="server" ID="lblNavReparti" Text="<%$Resources:lblNavReparti %>" /></a>
+						<a href="../Reparti/configReparto.aspx"><asp:literal runat="server" ID="lblNavReparti" Text="<%$Resources:lblNavReparti %>" /></a>
 						<span class="divider">/</span>
                         <asp:hyperlink navigateurl="~/Reparti/configReparto.aspx?id=" runat="server" id="lnkReparto"><asp:literal runat="server" ID="lblNavConfigReparti" Text="<%$Resources:lblNavConfigReparti %>" /></asp:hyperlink>
 						<span class="divider">/</span>

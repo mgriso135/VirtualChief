@@ -123,6 +123,12 @@
   <data name="lblPermessoKo" xml:space="preserve">
     <value>Errore: non hai il permesso di visualizzare le voci di menu.&lt;br/&gt;</value>
   </data>
+  <data name="lblTTCancellaVoce" xml:space="preserve">
+    <value>Cancella la voce di menu</value>
+  </data>
+  <data name="lblTTModificaVoce" xml:space="preserve">
+    <value>Modifica la voce di menu</value>
+  </data>
   <data name="lblTTReset" xml:space="preserve">
     <value>Reset form</value>
   </data>

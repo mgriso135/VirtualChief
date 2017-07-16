@@ -5,7 +5,6 @@
 <%@ Register TagPrefix="reparti" TagName="ModoCalcoloTC" Src="~/Reparti/configModoCalcoloTC.ascx" %>
 <%@ Register TagPrefix="config" TagName="AndonReparto" Src="~/Reparti/configAndonReparto.ascx" %>
 <%@ Register TagPrefix="config" TagName="AvvioTasks" Src="~/Reparti/configAvvioTasks.ascx" %>
-<%@ Register TagPrefix="Andon" TagName="MaxViewDays" Src="~/Andon/configMaxViewDaysAndonReparto.ascx" %>
 <%@ Register TagPrefix="Andon" TagName="configViewFields" Src="~/Andon/AndonRepartoViewFields.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="eventoRitardo" Src="~/Eventi/RepartoRitardo.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="eventoWarning" Src="~/Eventi/RepartoWarning.ascx" %>
@@ -101,7 +100,6 @@
       <div class="accordion-inner">
         
           <config:AndonReparto runat="server" ID="frmConfigAndonReparto" />
-          <Andon:MaxViewDays runat="server" ID="frmAndonMaxDays" />
           <andon:configViewFields runat="server" id="frmAndonViewFields" />
 
       </div>

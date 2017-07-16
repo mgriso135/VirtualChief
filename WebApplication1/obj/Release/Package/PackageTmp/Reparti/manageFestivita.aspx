@@ -7,8 +7,8 @@
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
 
-<asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
-    <asp:Literal runat="server" ID="lblAddFestivita" Text="<%$Resources:lblAddFestivita %>" />
+<asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent"><h4>
+    <asp:Literal runat="server" ID="lblAddFestivita" Text="<%$Resources:lblAddFestivita %>" /></h4>
     <festivita:add runat="server" ID="addFest" /><br />
     <br />
     <asp:Literal runat="server" ID="lblElencoFestivita" Text="<%$Resources:lblElencoFestivita %>" />

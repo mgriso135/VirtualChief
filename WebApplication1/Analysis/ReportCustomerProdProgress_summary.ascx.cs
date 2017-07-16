@@ -2918,7 +2918,7 @@ namespace KIS.Analysis
                 output.Close();
                 output.Dispose();
 
-                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('/Data/Reports/" + FileNamePDF + "', '_newtab')", true);
+                Page.ClientScript.RegisterStartupScript(Page.GetType(), null, "window.open('../Data/Reports/" + FileNamePDF + "', '_newtab')", true);
             }
             else
             {

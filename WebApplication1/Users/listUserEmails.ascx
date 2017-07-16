@@ -10,7 +10,7 @@
             <td></td>
             <td><asp:Literal runat="server" ID="lblEmailAddr" Text="<%$Resources:lblEmailAddr %>" /></td>
             <td><asp:Literal runat="server" ID="lblAmbito" Text="<%$Resources:lblAmbito %>" /></td>
-            <td><asp:Literal runat="server" ID="lblForAlarm" Text="<%$Resources:lblAmbito %>" /></td>
+            <td><asp:Literal runat="server" ID="lblForAlarm" Text="<%$Resources:lblForAlarm %>" /></td>
             <td></td>
         </tr>
                 </thead>

@@ -13,8 +13,8 @@
             <td><%#DataBinder.Eval(Container.DataItem, "Name") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Description") %></td>
             <td>
-                <asp:HyperLink runat="server" ID="lnkProcPostazione" NavigateUrl='<%# "/Reparti/managePostazioni.aspx?processID=" %>'>
-                <asp:Image runat="server" ID="imgLnkProcTaskPostazione" ToolTip="<%$Resources:lblTTAssociaTask %>" ImageUrl="/img/iconToolbox.jpg" Height="40" />
+                <asp:HyperLink runat="server" ID="lnkProcPostazione" NavigateUrl='<%# "~/Reparti/managePostazioni.aspx?processID=" %>'>
+                <asp:Image runat="server" ID="imgLnkProcTaskPostazione" ToolTip="<%$Resources:lblTTAssociaTask %>" ImageUrl="~/img/iconToolbox.jpg" Height="40" />
                     </asp:HyperLink>
             </td>
         </tr>

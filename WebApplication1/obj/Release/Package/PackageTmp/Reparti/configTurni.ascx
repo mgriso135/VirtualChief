@@ -5,7 +5,7 @@
     <ContentTemplate>
         <asp:Label runat="server" ID="lbl1" />
         <asp:HyperLink Target="_blank" runat="server" ID="lnkCalendarioTotale" NavigateUrl='<%#"~/Reparti/showCalendarFesteStraordinari.aspx?id="%>'>
-        <asp:Image ID="imgCalendarioTotale" Width="60px" ImageUrl="/img/iconCalendar.png" runat="server" CssClass="img-rounded" />
+        <asp:Image ID="imgCalendarioTotale" Width="60px" ImageUrl="../img/iconCalendar.png" runat="server" CssClass="img-rounded" />
             </asp:HyperLink>
 <asp:Repeater runat="server" ID="rptTurni" OnItemCommand="rptTurni_ItemCommand" OnItemDataBound="rptTurni_ItemDataBound">
     <HeaderTemplate><table class="table table-striped table-hover table-condensed">
@@ -21,18 +21,18 @@
     <ItemTemplate>
         <tr>
             <td>
-                <asp:ImageButton CssClass="img-circle" runat="server" ImageUrl="/img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "id") %>' />
+                <asp:ImageButton CssClass="img-circle" runat="server" ImageUrl="../img/iconDelete.png" Height="30px" CommandName="delete" CommandArgument='<%#DataBinder.Eval(Container.DataItem, "id") %>' />
             </td>
             <td><%#DataBinder.Eval(Container.DataItem, "nome") %></td>
             <td>
-                <a href="/Reparti/configOrariTurno.aspx?id=<%#DataBinder.Eval(Container.DataItem, "id") %>">
-                <asp:Image  CssClass="img-circle" runat="server" ImageUrl="/img/iconClock.png" Height="30px" ToolTip="<%$Resources:lblTTManageOrari %>" />
+                <a href="../Reparti/configOrariTurno.aspx?id=<%#DataBinder.Eval(Container.DataItem, "id") %>" target="_blank">
+                <asp:Image  CssClass="img-circle" runat="server" ImageUrl="../img/iconClock.png" Height="30px" ToolTip="<%$Resources:lblTTManageOrari %>" />
                 </a>
 
             </td>
             <td>
                 <asp:HyperLink Width="30px" Target="_blank" NavigateUrl='<%#"~/Reparti/manageCalendarFesteStraordinari.aspx?id=" + DataBinder.Eval(Container.DataItem, "id") %>' runat="server" ID="lnkCalendar" ToolTip="<%$Resources:lblTTManageCalFestStaord %>">
-        <asp:Image ID="Image1" Width="30px" ImageUrl="/img/iconCalendar.png" runat="server" CssClass="img-rounded" />
+        <asp:Image ID="Image1" Width="30px" ImageUrl="../img/iconCalendar.png" runat="server" CssClass="img-rounded" />
         </asp:HyperLink>
             </td>
             <td>
@@ -48,7 +48,7 @@
         </table></FooterTemplate>
 </asp:Repeater>
 
-<asp:ImageButton CssClass="img-circle" runat="server" ID="showAddTurno" ImageUrl="/img/iconAdd.jpg" OnClick="showAddTurno_Click" Height="40px" ToolTip="<%$Resources:lblTTAddTurno %>" />
+<asp:ImageButton CssClass="img-circle" runat="server" ID="showAddTurno" ImageUrl="../img/iconAdd.jpg" OnClick="showAddTurno_Click" Height="40px" ToolTip="<%$Resources:lblTTAddTurno %>" />
         <asp:Literal runat="server" ID="lblTTAddTurno" Text="<%$Resources:lblTTAddTurno %>" />
 <table runat="server" id="addTurno" class="table table-bordered">
     <tr>
@@ -64,8 +64,8 @@
     </tr>
     <tr>
          <td>
-            <asp:ImageButton runat="server" id="save" ImageUrl="/img/iconSave.jpg" Height="40px" OnClick="save_Click" ValidationGroup="turno" />
-            <asp:ImageButton runat="server" ID="reset" ImageUrl="/img/iconUndo.png" Height="40px" OnClick="reset_Click" />
+            <asp:ImageButton runat="server" id="save" ImageUrl="../img/iconSave.jpg" Height="40px" OnClick="save_Click" ValidationGroup="turno" />
+            <asp:ImageButton runat="server" ID="reset" ImageUrl="../img/iconUndo.png" Height="40px" OnClick="reset_Click" />
         </td>
     </tr>
 </table>

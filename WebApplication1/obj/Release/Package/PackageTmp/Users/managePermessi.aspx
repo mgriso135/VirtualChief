@@ -10,16 +10,17 @@
 <asp:Content ID="BodyContent" runat="server" ContentPlaceHolderID="MainContent">
     <ul class="breadcrumb hidden-phone">
     <li>
-						<a href="/Admin/admin.aspx">Admin</a>
+						<a href="../Admin/admin.aspx"><asp:Literal runat="server" ID="lblNavAdmin" Text="<%$Resources:lblNavAdmin %>"/></a>
 						<span class="divider">/</span>
-						<a href="managePermessi.aspx">Gestione permessi</a>
+						<a href="managePermessi.aspx"><asp:Literal runat="server" ID="lblGestPermessi" Text="<%$Resources:lblGestPermessi %>"/></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
 <asp:Label runat="server" ID="lbl1" />
-<a href="~/Login/login.aspx" runat="server" id="lnkLogin">You need to login first</a>
+<a href="~/Login/login.aspx" runat="server" id="lnkLogin"><asp:Literal runat="server" ID="lblLogin" Text="<%$Resources:lblLogin %>"/></a>
 <br />
-<asp:Label runat="server" ID="lblTitolo" style="font-size:24px; font-weight:bold;">Gestore permessi</asp:Label><br /><br />
+<asp:Label runat="server" ID="lblTitolo" style="font-size:24px; font-weight:bold;" Text="<%$Resources:lblGestPermessi %>">
+    </asp:Label><br /><br />
 
     <permessi:add runat="server" id="addPermessi" />
     <permessi:list runat="server" ID="listPermessi" />

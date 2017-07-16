@@ -6,7 +6,7 @@
 
     </HeaderTemplate>
     <ItemTemplate>
-        <a href="wzEditPERT.aspx?idCommessa=<%= idCommessa.ToString() %>&annoCommessa=<%= annoCommessa.ToString() %>&idProc=<%#DataBinder.Eval(Container.DataItem, "Proc.process.processID") %>&revProc=<%#DataBinder.Eval(Container.DataItem, "Proc.process.revisione") %>&idVariante=<%#DataBinder.Eval(Container.DataItem, "Proc.variant.idVariante") %>&idProdotto=<%#DataBinder.Eval(Container.DataItem, "ID") %>&annoProdotto=<%#DataBinder.Eval(Container.DataItem, "Year") %>&quantita=<%#DataBinder.Eval(Container.DataItem, "Quantita") %>">
+        <a href="wzEditPERT.aspx?idCommessa=<%= idCommessa.ToString() %>&annoCommessa=<%= annoCommessa.ToString() %>&idProc=<%#DataBinder.Eval(Container.DataItem, "Proc.process.processID") %>&revProc=<%#DataBinder.Eval(Container.DataItem, "Proc.process.revisione") %>&idVariante=<%#DataBinder.Eval(Container.DataItem, "Proc.variant.idVariante") %>&idProdotto=<%#DataBinder.Eval(Container.DataItem, "ID") %>&annoProdotto=<%#DataBinder.Eval(Container.DataItem, "Year") %>&quantita=<%#DataBinder.Eval(Container.DataItem, "Quantita") %>&matricola=<%#DataBinder.Eval(Container.DataItem, "matricola") %>">
         <%#DataBinder.Eval(Container.DataItem, "Proc.variant.nomeVariante") %>
             </a>
         <br />

@@ -244,7 +244,7 @@ namespace KIS.Commesse
                     {
                         lblTCDef.Text = "<br />" + GetLocalResourceObject("lblDefault").ToString() + ": "
                             + Math.Truncate(tDef.TotalHours) + ":" + tDef.Minutes + ":" + tDef.Seconds
-                            + " (" + n_ops.ToString() + " " + GetLocalResourceObject("lblOperatori").ToString();
+                            + " (" + n_ops.ToString() + " " + GetLocalResourceObject("lblOperatori").ToString()+")";
                     }
                     else
                     {
@@ -283,7 +283,7 @@ namespace KIS.Commesse
                                 + "&revSucc=" + task.Task.revisione
                                 + "&variante=" + task.variant.idVariante
                                 + "\" target=\"_blank\">"*/
-                                + "<img src=\"/img/iconWait.png\" width=\"20\" style=\"border: 1; cursor: pointer; cursor: hand;\" onclick=\"return pausaTasks(" 
+                                + "<img src=\"../img/iconWait.png\" width=\"20\" style=\"border: 1; cursor: pointer; cursor: hand;\" onclick=\"return pausaTasks(" 
                                 + task.Task.processiPrec[i] + ", " 
                                 + task.Task.revisionePrec[i] + ", " 
                                 + task.Task.processID + ", "

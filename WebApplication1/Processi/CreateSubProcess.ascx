@@ -8,7 +8,7 @@
 
 		<td style="vertical-align:middle; margin:0px; padding: 0px; text-align:center;">
 
-<asp:ImageButton runat="server" ImageUrl="/img/iconAdd.jpg" id="addSubProc" onClick="addSubProc_Click" Height="100px" OnClientClick="this.style.display='hidden';" ToolTip="<%$Resources:lblTTAddBox %>" />
+<asp:ImageButton runat="server" ImageUrl="~/img/iconAdd.jpg" id="addSubProc" onClick="addSubProc_Click" Height="100px" OnClientClick="this.style.display='hidden';" ToolTip="<%$Resources:lblTTAddBox %>" />
 <asp:Label runat="server" ID="lbl1" />
 </td>
 

@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="managePostazioniLavoro.aspx.cs"
     MasterPageFile="~/Site.master" Title="Kaizen Indicator System" Inherits="KIS.Postazioni.managePostazioni" %>
 <%@ Register TagPrefix="postazioni" TagName="viewElenco" Src="viewElencoPostazioni.ascx" %>
-<%@ Register TagPrefix="postazione" TagName="add" Src="/Postazioni/addPostazione.ascx" %>
+<%@ Register TagPrefix="postazione" TagName="add" Src="~/Postazioni/addPostazione.ascx" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>
@@ -15,7 +15,7 @@
 						<span class="divider">/</span>
 					</li>
 				</ul>
-    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblTTAddPostazione %>" />
+    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="~/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblTTAddPostazione %>" />
     <br />
     <postazione:add runat="server" ID="addPostazioni" />
 

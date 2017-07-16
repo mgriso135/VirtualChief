@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="managePostazioni.aspx.cs" Title="Kaizen Indicator System"
- MasterPageFile="/Site.master" Inherits="KIS.Reparti.managePostazioni" %>
-<%@ Register TagPrefix="postazione" TagName="add" Src="/Postazioni/addPostazione.ascx" %>
+ MasterPageFile="~/Site.master" Inherits="KIS.Reparti.managePostazioni" %>
+<%@ Register TagPrefix="postazione" TagName="add" Src="~/Postazioni/addPostazione.ascx" %>
 <%@ Register TagPrefix="postazione" TagName="workload" Src="processoWorkLoad.ascx" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
@@ -11,11 +11,11 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone" runat="server" id="tblPertNavBar">
 					<li>
-                        <asp:HyperLink runat="server" ID="lnkManageProcesso" NavigateUrl="/Processi/showProcesso.aspx">
+                        <asp:HyperLink runat="server" ID="lnkManageProcesso" NavigateUrl="~/Processi/showProcesso.aspx">
                             <asp:Literal runat="server" ID="lblCreaProcProd" Text="<%$Resources:lblCreaProcProd %>" />
 						</asp:HyperLink>
 						<span class="divider">/</span>
-                        <asp:hyperlink runat="server" ID="lnkProcReparto" NavigateUrl="/Processi/lnkProcessoVarianteReparto.aspx?id=">
+                        <asp:hyperlink runat="server" ID="lnkProcReparto" NavigateUrl="~/Processi/lnkProcessoVarianteReparto.aspx?id=">
                             <asp:Literal runat="server" ID="lblAssociaProdRep" Text="<%$Resources:lblAssociaProdRep %>" />
                             </asp:hyperlink>
 						<span class="divider">/</span>
@@ -27,9 +27,9 @@
 				</ul>
     <asp:Label runat="server" ID="lbl1" />
 
-    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblTTAddWorkstation %>" />
-    <a href="/Postazioni/managePostazioniLavoro.aspx">
-    <asp:Image ID="Image1" ImageUrl="/img/iconManage.png" Height="60px" ToolTip="<%$Resources:lblTTManageWorkstation %>" runat="server" /></a>
+    <asp:ImageButton runat="server" ID="imgShowAddPostazioni" OnClick="imgShowAddPostazioni_Click" ImageUrl="~/img/iconAdd2.png" Height="60px" ToolTip="<%$Resources:lblTTAddWorkstation %>" />
+    <a href="../Postazioni/managePostazioniLavoro.aspx">
+    <asp:Image ID="Image1" ImageUrl="~/img/iconManage.png" Height="60px" ToolTip="<%$Resources:lblTTManageWorkstation %>" runat="server" /></a>
     <br />
     <postazione:add runat="server" ID="addPostazioni" />
     <br />

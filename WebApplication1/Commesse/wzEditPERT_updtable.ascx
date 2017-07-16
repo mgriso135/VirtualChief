@@ -2,17 +2,17 @@
 
 <script type="text/javascript">
     tempiCiclo = function (taskID, revTask, variante) {
-        void (window.open("/Processi/addTempoCiclo.aspx?taskID=" + taskID + "&revTaskID=" + revTask + "&varianteID=" + variante, "new_window", "height=800,width=800"));
+        void (window.open("../Processi/addTempoCiclo.aspx?taskID=" + taskID + "&revTaskID=" + revTask + "&varianteID=" + variante, "new_window", "height=800,width=800"));
         return false;
     }
 
     precedenze = function (taskID, revTask, variante) {
-        void (window.open("/Processi/pertManagePrecedenze2.aspx?id=" + taskID + "&revTaskID=" + revTask + "&variante=" + variante, "new_window", "height=800,width=800"));
+        void (window.open("../Processi/pertManagePrecedenze2.aspx?id=" + taskID + "&revTaskID=" + revTask + "&variante=" + variante, "new_window", "height=800,width=800"));
         return false;
     }
 
     pausaTasks = function (prec, revPrec, succ, revSucc, variante) {
-        void (window.open("/Commesse/wzEditPauseTasks.aspx?prec="+prec+"&revPrec="+revPrec+"&succ="+succ+"&revSucc="+revSucc+"&variante=" + variante, "new_window", "height=800,width=800"));
+        void (window.open("../Commesse/wzEditPauseTasks.aspx?prec="+prec+"&revPrec="+revPrec+"&succ="+succ+"&revSucc="+revSucc+"&variante=" + variante, "new_window", "height=800,width=800"));
         return false;
     }
 </script>
@@ -22,14 +22,14 @@
         <table class="table table-hover table-condensed table-striped" runat="server" id="tblAddTask">
     <tr>
         <td>
-<b><asp:Label runat="server" ID="lblAddNewTask" Text="<%$Resources:lblAddNewTask %>" /></b>&nbsp;<asp:ImageButton runat="server" ID="imgAddTaskPert" ImageUrl="/img/iconAdd.jpg" OnClick="addTaskPert" Height="40" />
+<b><asp:Label runat="server" ID="lblAddNewTask" Text="<%$Resources:lblAddNewTask %>" /></b>&nbsp;<asp:ImageButton runat="server" ID="imgAddTaskPert" ImageUrl="~/img/iconAdd.jpg" OnClick="addTaskPert" Height="40" />
             </td>
             </tr>
     <tr>
         <td>
 <b><asp:Label runat="server" ID="lblLinkTask" Text="<%$Resources:lblLinkTask %>" /></b>&nbsp;
 <asp:DropDownList runat="server" ID="ddlTaskEsistenti" />
-<asp:ImageButton runat="server" ID="btnLnkTask" ImageUrl="/img/iconSave.jpg" Height="40px" OnClick="btnLnkTask_Click" />
+<asp:ImageButton runat="server" ID="btnLnkTask" ImageUrl="~/img/iconSave.jpg" Height="40px" OnClick="btnLnkTask_Click" />
             </td>
         </tr>
 </table>

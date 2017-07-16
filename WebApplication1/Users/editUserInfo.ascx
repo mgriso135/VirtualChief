@@ -16,8 +16,8 @@
     <tfoot>
     <tr>
         <td colspan="2" style="text-align:center;">
-        <asp:ImageButton runat="server" ID="btnSave" ImageUrl="/img/iconSave.jpg" Height="50px" OnClick="btnSave_Click" />
-        <asp:ImageButton runat="server" ID="btnUndo" ImageUrl="/img/iconUndo.png" Height="50px" OnClick="btnUndo_Click" />
+        <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="50px" OnClick="btnSave_Click" />
+        <asp:ImageButton runat="server" ID="btnUndo" ImageUrl="~/img/iconUndo.png" Height="50px" OnClick="btnUndo_Click" />
             <asp:Label runat="server" ID="lblRes" ForeColor="Red" />
         </td>
     </tr>

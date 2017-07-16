@@ -184,15 +184,6 @@ namespace KIS.Configuration {
         protected global::KIS.Reparti.configAndonReparto frmConfigAndonReparto;
         
         /// <summary>
-        /// Controllo frmAndonMaxDays.
-        /// </summary>
-        /// <remarks>
-        /// Campo generato automaticamente.
-        /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
-        /// </remarks>
-        protected global::KIS.Andon.configMaxViewDaysAndonReparto frmAndonMaxDays;
-        
-        /// <summary>
         /// Controllo frmAndonViewFields.
         /// </summary>
         /// <remarks>

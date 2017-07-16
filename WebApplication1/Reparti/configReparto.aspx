@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="configReparto.aspx.cs" Title="Kaizen Indicator System"
- MasterPageFile="/Site.master" Inherits="KIS.configReparto.configReparto" %>
+ MasterPageFile="~/Site.master" Inherits="KIS.configReparto.configReparto" %>
 
 <%@ Register TagPrefix="reparti" TagName="list" Src="listReparti.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="add" Src="addReparto.ascx" %>
@@ -31,7 +31,7 @@
     <asp:Label runat="server" ID="lbl1" />
     <h3 runat="server" id="lnkShowAddReparti">
         <asp:Literal runat="server" ID="lblAddReparti" Text="<%$Resources:lblAddReparti %>" />
-    <asp:ImageButton CssClass="img-rounded" runat="server" ID="showAddReparti" ImageUrl="/img/iconAdd.jpg" Height="50px" OnClick="showAddReparti_Click" ToolTip="<%$Resources:lblAddReparti %>"/></h3>
+    <asp:ImageButton CssClass="img-rounded" runat="server" ID="showAddReparti" ImageUrl="~/img/iconAdd.jpg" Height="50px" OnClick="showAddReparti_Click" ToolTip="<%$Resources:lblAddReparti %>"/></h3>
     <br />
     <reparti:add runat="server" id="addReparti" />
     <br />

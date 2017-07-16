@@ -7,7 +7,7 @@
             <asp:HiddenField runat="server" ID="lblVarID" />
         </td>
         <td rowspan="2">
-            <asp:ImageButton runat="server" ID="save" ImageUrl="/img/iconSave.jpg" Height="50" ToolTip="<%$Resources:lblTTSalva %>" OnClick="save_Click" />
+            <asp:ImageButton runat="server" ID="save" ImageUrl="~/img/iconSave.jpg" Height="50" ToolTip="<%$Resources:lblTTSalva %>" OnClick="save_Click" />
         </td>
     </tr>
     <tr>

@@ -57,7 +57,7 @@
     <ItemTemplate>
         <tr runat="server" id="tr1" style="font-family:Calibri; font-size:14px;">
             <td><asp:HyperLink runat="server" ID="lnkShowHistoryArticolo" NavigateUrl='<%# "~/Produzione/statoAvanzamentoArticolo.aspx?id=" +DataBinder.Eval(Container.DataItem, "ID")+"&anno=" +DataBinder.Eval(Container.DataItem, "Year") %>'>
-                <asp:Image runat="server" ID="imgView" ImageUrl="/img/iconView.png" ToolTip="<%$resources:lblTTStoriaArticolo %>" Height="40" />
+                <asp:Image runat="server" ID="imgView" ImageUrl="~/img/iconView.png" ToolTip="<%$resources:lblTTStoriaArticolo %>" Height="40" />
                 </asp:HyperLink></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Commessa") %>/<%#DataBinder.Eval(Container.DataItem, "AnnoCommessa") %></td>
             <td><%#DataBinder.Eval(Container.DataItem, "Cliente") %></td>

@@ -273,4 +273,7 @@
   <data name="lblTitle" xml:space="preserve">
     <value>Production in execution</value>
   </data>
+  <data name="lblTTVisualizzaProd" xml:space="preserve">
+    <value>View production progress</value>
+  </data>
 </root>

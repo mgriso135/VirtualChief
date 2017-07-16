@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
-//using KIS.Commesse;
 using KIS.App_Code;
 
 namespace KIS.App_Code

@@ -14,8 +14,8 @@
     </tr>
     <tr>
         <td colspan="2" style="text-align:center;">
-            <asp:ImageButton CssClass="img-rounded" runat="server" ID="save" OnClick="save_Click" ImageUrl="/img/iconSave.jpg" Height="60px" />
-            <asp:ImageButton CssClass="img-rounded" runat="server" ID="reset" OnClick="reset_Click" ImageUrl="/img/iconUndo.png" Height="60px" />
+            <asp:ImageButton CssClass="img-rounded" runat="server" ID="save" OnClick="save_Click" ImageUrl="~/img/iconSave.jpg" Height="60px" />
+            <asp:ImageButton CssClass="img-rounded" runat="server" ID="reset" OnClick="reset_Click" ImageUrl="~/img/iconUndo.png" Height="60px" />
         </td>
     </tr>
 </table>

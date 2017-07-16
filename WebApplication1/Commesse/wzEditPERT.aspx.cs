@@ -64,9 +64,9 @@ namespace KIS.Commesse
                     variante var = new variante(idVariante);
                     if (cm != null && cm.ID != -1 && prc != null && prc.processID != -1 && var != null && var.idVariante != -1)
                     {
-                        lnkAddPert.NavigateUrl = "wzAddPERT.aspx?idCommessa=" + cm.ID.ToString()
+                        lnkAddPert.NavigateUrl = "~/Commesse/wzAddPERT.aspx?idCommessa=" + cm.ID.ToString()
                             + "&annoCommessa=" + cm.Year.ToString();
-                        lnkEditPert.NavigateUrl = "wzEditPERT.aspx?idCommessa=" + cm.ID.ToString()
+                        lnkEditPert.NavigateUrl = "~/Commesse/wzEditPERT.aspx?idCommessa=" + cm.ID.ToString()
                         + "&annoCommessa=" + cm.Year.ToString()
                         + "&idProc="+ prc.processID.ToString()
                         + "&revProc=" + prc.revisione.ToString()
@@ -76,7 +76,7 @@ namespace KIS.Commesse
                             + "&quantita=" + quantita.ToString()
                             +"&matricola="+matricola.ToString();
 
-                        lnkSwitchToGrid.NavigateUrl = "wzEditPERT_updtable.aspx?idCommessa=" + cm.ID.ToString()
+                        lnkSwitchToGrid.NavigateUrl = "~/Commesse/wzEditPERT_updtable.aspx?idCommessa=" + cm.ID.ToString()
                         + "&annoCommessa=" + cm.Year.ToString()
                         + "&idProc=" + prc.processID.ToString()
                         + "&revProc=" + prc.revisione.ToString()
@@ -114,14 +114,14 @@ namespace KIS.Commesse
 
                             prcVar.process.loadFigli(prcVar.variant);
 
-                            LinkBCK.NavigateUrl = "/Commesse/wzAddPERT.aspx?idCommessa="
+                            LinkBCK.NavigateUrl = "~/Commesse/wzAddPERT.aspx?idCommessa="
                              + cm.ID.ToString()
                              + "&annoCommessa=" + cm.Year.ToString();
 
                             if (prcVar.process.subProcessi.Count > 0)
                             {
                                 LinkFWD.Visible = true;
-                                LinkFWD.NavigateUrl = "wzAssociaPERTReparto.aspx?idCommessa="
+                                LinkFWD.NavigateUrl = "~/Commesse/wzAssociaPERTReparto.aspx?idCommessa="
                                     + cm.ID.ToString()
                                 + "&annoCommessa=" + cm.Year.ToString()
                                 + "&idProc=" + prcVar.process.processID.ToString()

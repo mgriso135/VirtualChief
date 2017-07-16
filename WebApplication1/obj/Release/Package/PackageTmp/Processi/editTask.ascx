@@ -15,8 +15,8 @@
         </tr>
     <tr>
         <td colspan="2">
-    <asp:ImageButton runat="server" ID="editTaskSave" ImageUrl="/img/iconSave.jpg" Height="40" OnClick="editTaskSave_Click" />
-    <asp:ImageButton runat="server" ID="editTaskUndo" ImageUrl="/img/iconUndo.png" Height="40" OnClick="editTaskUndo_Click" />
+    <asp:ImageButton runat="server" ID="editTaskSave" ImageUrl="~/img/iconSave.jpg" Height="40" OnClick="editTaskSave_Click" />
+    <asp:ImageButton runat="server" ID="editTaskUndo" ImageUrl="~/img/iconUndo.png" Height="40" OnClick="editTaskUndo_Click" />
             </td>
     </tr>
 <tr>

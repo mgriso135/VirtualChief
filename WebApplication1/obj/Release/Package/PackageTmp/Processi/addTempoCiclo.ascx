@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="addTempoCiclo.ascx.cs" Inherits="KIS.Processi.addTempoCiclo" %>
 
 <asp:Literal runat="server" ID="lblAddTC" Text="<%$Resources:lblAddTC %>" />
-<asp:ImageButton runat="server" ID="imgShowFrmAddTempo" OnClick="imgShowFrmAddTempo_Click" ImageUrl="/img/iconAdd.jpg" Height="30" ToolTip="<%$Resources:lblTTAddTC %>" />
+<asp:ImageButton runat="server" ID="imgShowFrmAddTempo" OnClick="imgShowFrmAddTempo_Click" ImageUrl="~/img/iconAdd.jpg" Height="30" ToolTip="<%$Resources:lblTTAddTC %>" />
 <asp:HiddenField runat="server" ID="taskID" />
 <asp:HiddenField runat="server" ID="varID" />
 <asp:UpdatePanel runat="server" ID="updAddTempo">
@@ -34,8 +34,8 @@
     </tr>
     <tr>
         <td colspan="2" style="text-align: center">
-            <asp:ImageButton runat="server" ID="btnSave" ImageUrl="/img/iconSave.jpg" Height="30" OnClick="btnSave_Click" />
-            <asp:ImageButton runat="server" ID="btnUndo" ImageUrl="/img/iconUndo.png" Height="30" OnClick="btnUndo_Click" />
+            <asp:ImageButton runat="server" ID="btnSave" ImageUrl="~/img/iconSave.jpg" Height="30" OnClick="btnSave_Click" />
+            <asp:ImageButton runat="server" ID="btnUndo" ImageUrl="~/img/iconUndo.png" Height="30" OnClick="btnUndo_Click" />
         </td>
     </tr>
 </table>

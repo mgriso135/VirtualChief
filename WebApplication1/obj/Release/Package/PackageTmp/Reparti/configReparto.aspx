@@ -1,20 +1,18 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="configReparto.aspx.cs" Title="Kaizen Indicator System"
- MasterPageFile="/Site.master" Inherits="KIS.configReparto.configReparto" %>
+ MasterPageFile="~/Site.master" Inherits="KIS.configReparto.configReparto" %>
 
 <%@ Register TagPrefix="reparti" TagName="list" Src="listReparti.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="add" Src="addReparto.ascx" %>
-<%@ Register TagPrefix="reparti" TagName="processiVarianti" Src="configProcessiVarianti.ascx" %>
 <%@ Register TagPrefix="config" TagName="cadenza" Src="configCadenza.ascx" %>
 <%@ Register TagPrefix="config" TagName="turni" Src="configTurni.ascx" %>
 <%@ Register TagPrefix="config" TagName="splitTasksTurni" Src="configSplitTasksTurni.ascx" %>
-<%@ Register TagPrefix="config" TagName="anticipoTasks" Src="configAnticipoMinimo.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="Personale" Src="~/Reparti/listRepartoUtenti.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="eventoRitardo" Src="~/Eventi/RepartoRitardo.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="eventoWarning" Src="~/Eventi/RepartoWarning.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="ModoCalcoloTC" Src="~/Reparti/configModoCalcoloTC.ascx" %>
 <%@ Register TagPrefix="config" TagName="AndonReparto" Src="~/Reparti/configAndonReparto.ascx" %>
 <%@ Register TagPrefix="config" TagName="AvvioTasks" Src="~/Reparti/configAvvioTasks.ascx" %>
-<%@ Register TagPrefix="Andon" TagName="MaxViewDays" Src="~/Andon/configMaxViewDaysAndonReparto.ascx" %>
+<%@ Register TagPrefix="Andon" TagName="MaxViewDays" Src="~/Andon/configMaxViewDaysAndonReparto_OLD.ascx" %>
 <%@ Register TagPrefix="config" TagName="Kanban" Src="~/Reparti/configKanban.ascx" %>
 <%@ Register TagPrefix="Andon" TagName="configViewFields" Src="~/Andon/AndonRepartoViewFields.ascx" %>
 <%@ Register TagPrefix="Timezone" TagName="config" Src="~/Reparti/configRepartoTimezone.ascx" %>
@@ -26,28 +24,27 @@
     <asp:ScriptManager runat="server" ID="scriptMan1" />
     <ul class="breadcrumb hidden-phone">
 					<li>
-						<a href="configReparto.aspx">Gestione reparti</a>
+						<a href="configReparto.aspx"><asp:Literal runat="server" ID="lblNavManageReparti" Text="<%$Resources:lblNavManageReparti %>" /></a>
 						<span class="divider">/</span>
 					</li>
 				</ul>
     <asp:Label runat="server" ID="lbl1" />
-    <h3 runat="server" id="lnkShowAddReparti">Aggiungi un reparto<asp:ImageButton CssClass="img-rounded" runat="server" ID="showAddReparti" ImageUrl="/img/iconAdd.jpg" Height="50px" OnClick="showAddReparti_Click" ToolTip="Aggiungi un reparto"/></h3>
+    <h3 runat="server" id="lnkShowAddReparti">
+        <asp:Literal runat="server" ID="lblAddReparti" Text="<%$Resources:lblAddReparti %>" />
+    <asp:ImageButton CssClass="img-rounded" runat="server" ID="showAddReparti" ImageUrl="~/img/iconAdd.jpg" Height="50px" OnClick="showAddReparti_Click" ToolTip="<%$Resources:lblAddReparti %>"/></h3>
     <br />
     <reparti:add runat="server" id="addReparti" />
     <br />
     <reparti:list runat="server" id="listReparti" />
-    <br />
     <h1><asp:Label runat="server" ID="lblTitle" /></h1>
     <asp:Label runat="server" ID="lblDesc" />
-    <br />
-    <br />
 
-    <h2 runat="server" id="titleConfig">Configurazione del reparto</h2>
+    <h3 runat="server" id="titleConfig"><asp:Literal runat="server" ID="lblCfgReparto" Text="<%$Resources:lblCfgReparto %>" /></h3>
     <div class="accordion" id="accordion1" runat="server">
-        <div class="accordion-group">
+        <div class="accordion-group" runat="server" Visible="false">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
-          Cadenza
+          <asp:Literal runat="server" ID="lblAccTaktTime" Text="<%$Resources:lblAccTaktTime %>" />
       </a>
     </div>
             <div id="collapseOne" class="accordion-body collapse">
@@ -60,7 +57,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
-          Inserimento tasks in produzione
+          <asp:Literal runat="server" ID="lblPlanTasks" Text="<%$Resources:lblPlanTasks %>" />
       </a>
     </div>
             <div id="collapseTwo" class="accordion-body collapse">
@@ -73,7 +70,7 @@
                 <div class="accordion-group" runat="server" visible="false">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
-          Operatori di reparto
+          <asp:Literal runat="server" ID="lblAccOpReparto" Text="<%$Resources:lblAccOpReparto %>" />
       </a>
     </div>
             <div id="collapseThree" class="accordion-body collapse">
@@ -82,23 +79,10 @@
       </div>
     </div>
             </div>
-
-        <div class="accordion-group" runat="server" visible="false">
-            <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFour">
-          Anticipo minimo
-      </a>
-    </div>
-            <div id="collapseFour" class="accordion-body collapse">
-      <div class="accordion-inner">
-        <config:anticipoTasks runat="server" id="configAnticipoMinimoTasks" />
-      </div>
-    </div>
-            </div>
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
-          Turni di lavoro
+          <asp:Literal runat="server" ID="lblAccTurniLavoro" Text="<%$Resources:lblAccTurniLavoro %>" />
       </a>
     </div>
             <div id="collapseFive" class="accordion-body collapse">
@@ -110,7 +94,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSix">
-          Allarme ritardi
+          <asp:Literal runat="server" ID="lblAccAlarmaDemora" Text="<%$Resources:lblAccAlarmaDemora %>" />
       </a>
     </div>
             <div id="collapseSix" class="accordion-body collapse">
@@ -123,7 +107,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSeven">
-          Allarme warning
+          <asp:Literal runat="server" ID="lblAccAlarmaProblema" Text="<%$Resources:lblAccAlarmaProblema %>" />
       </a>
     </div>
             <div id="collapseSeven" class="accordion-body collapse">
@@ -136,7 +120,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEight">
-          Modalità calcolo tempo ciclo
+          <asp:Literal runat="server" ID="lblAccCalcoloTC" Text="<%$Resources:lblAccCalcoloTC %>" />
       </a>
     </div>
             <div id="collapseEight" class="accordion-body collapse">
@@ -149,14 +133,14 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseNine">
-          Andon
+          <asp:Literal runat="server" ID="lblAccAndonRep" Text="<%$Resources:lblAccAndonRep %>" />
       </a>
     </div>
             <div id="collapseNine" class="accordion-body collapse">
       <div class="accordion-inner">
         
           <config:AndonReparto runat="server" ID="frmConfigAndonReparto" />
-          <Andon:MaxViewDays runat="server" ID="frmAndonMaxDays" />
+          <Andon:MaxViewDays runat="server" ID="frmAndonMaxDays" Visible="false" />
           <andon:configViewFields runat="server" id="frmAndonViewFields" />
 
       </div>
@@ -166,7 +150,7 @@
     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTen">
-          Avvio task
+          <asp:Literal runat="server" ID="lblAccAvvioTasks" Text="<%$Resources:lblAccAvvioTasks %>" />
       </a>
     </div>
             <div id="collapseTen" class="accordion-body collapse">
@@ -181,7 +165,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEleven">
-          Gestione kanban
+          <asp:Literal runat="server" ID="lblAccKBBox" Text="<%$Resources:lblAccKBBox %>" />
       </a>
     </div>
             <div id="collapseEleven" class="accordion-body collapse">
@@ -195,7 +179,7 @@
         <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwelve">
-          Fuso orario
+          <asp:Literal runat="server" ID="lblAccFusoOrario" Text="<%$Resources:lblAccFusoOrario %>" />
       </a>
     </div>
             <div id="collapseTwelve" class="accordion-body collapse">
