@@ -35,12 +35,58 @@ namespace KIS.App_Sources
             public String Name
             {
                 get { return this._Name; }
+                set
+                {
+                    if (this.ID != -1 && this.Version != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE manuals SET Name='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._Name = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
+                }
             }
 
             private String _Description;
             public String Description
             {
                 get { return this._Description; }
+                set
+                {
+                    if (this.ID != -1 && this.Version != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE manuals SET Description='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._Description = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
+                }
             }
             private String _Path;
             public String Path { get { return this._Path; }
@@ -58,6 +104,7 @@ namespace KIS.App_Sources
                         {
                             cmd.ExecuteNonQuery();
                             tr.Commit();
+                            this._Path = value;
                         }
                         catch
                         {
@@ -81,6 +128,29 @@ namespace KIS.App_Sources
                 {
                     return this._ExpiryDate;
                 }
+                set
+                {
+                    if (this.ID != -1 && this.Version != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE manuals SET expirydate='" + value.ToString("yyyy-MM-dd") + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._ExpiryDate = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
+                }
             }
 
             private Boolean _IsActive;
@@ -89,6 +159,29 @@ namespace KIS.App_Sources
                 get
                 {
                     return this._IsActive;
+                }
+                set
+                {
+                    if (this.ID != -1 && this.Version != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE manuals SET isActive=" + value + " WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._IsActive = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
                 }
             }
 

@@ -141,4 +141,22 @@
   <data name="lblWINotFound" xml:space="preserve">
     <value>Manuale non trovato</value>
   </data>
+  <data name="lblDisableAreYouSure" xml:space="preserve">
+    <value>Stai per disattivare questa istruzione di lavoro. Sei sicuro?</value>
+  </data>
+  <data name="lblDisabled" xml:space="preserve">
+    <value>Inattivo</value>
+  </data>
+  <data name="lblEdit" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="lblEditNotDone" xml:space="preserve">
+    <value>Modifiche non salvate</value>
+  </data>
+  <data name="lblEnabled" xml:space="preserve">
+    <value>Attivo</value>
+  </data>
+  <data name="lblWorkInstructions" xml:space="preserve">
+    <value>Istruzioni di lavoro</value>
+  </data>
 </root>

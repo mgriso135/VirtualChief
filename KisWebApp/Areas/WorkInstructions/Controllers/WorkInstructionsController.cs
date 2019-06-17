@@ -182,6 +182,51 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             return View(currWI);
         }
+
+        /*Returns:
+         * 0 if generic error
+         * 1 if all is ok
+         * 2 if user not authorized
+         * 3 if WorkInstruction not found
+         */
+        public int EditWorkInstruction(int ID, int Version, String Name, String Description, DateTime ExpiryDate, Boolean IsActive)
+        {
+            int ret = 0;
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "WorkInstructions Manage";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+                if(currWI.ID!=-1)
+                {
+                    currWI.Name = Name;
+                    currWI.Description = Description;
+                    currWI.ExpiryDate = ExpiryDate;
+                    currWI.IsActive = IsActive;
+                    ret = 1;
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+                return ret;
+        }
     }
         
     //Comment

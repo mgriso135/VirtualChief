@@ -10,21 +10,114 @@
 
 <h3>@ResWorkInstructions.WiEdit.lblTitle</h3>
 
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/WorkInstructions/WorkInstructions/Index">@ResWorkInstructions.WiEdit.lblWorkInstructions</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResWorkInstructions.WiEdit.lblEdit</a><span class="divider"></span>
+    </li>
+</ul>
+
 @if (ViewBag.authW)
 {
     if (Model != null)
     {
+        <script>
+            $(document).ready(function () {
+                $(function () {
+                    $("[id*=txtExpiryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+                $("#imgSave").on("click", function () {
+                    $("#imgSave").fadeOut();
+                    $("#imgUndo").fadeOut();
+                    var mName = $('<div/>').text($('#lblName').val()).html();
+                    var mDescription = $('<div/>').text($('#lblDescription').val()).html();
+                    var mExpiryDate = $('<div/>').text($('#txtExpiryDate').val()).html();
+                    var mIsActive = $('<div/>').text($('#lblActive').val()).html();
+
+                    var isActive = true;
+                    if (mIsActive == "false") {
+                        isActive = false;
+                    }
+
+                    var aExpiryDate = mExpiryDate.split('/');
+                    var expiryDate = new Date(aExpiryDate[2], aExpiryDate[1], aExpiryDate[0]);
+
+                    var check = true;
+
+                    if (!isActive) {
+                        check = confirm("@ResWorkInstructions.WiEdit.lblDisableAreYouSure");
+                    }
+
+                    if (check) {
+                        $.ajax({
+                            url: "@Url.Action("EditWorkInstruction", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                Name: mName,
+                                Description: mDescription,
+                                ExpiryDate: expiryDate.getFullYear() + "-" + expiryDate.getMonth() + "-" + expiryDate.getDate(),
+                                IsActive: isActive
+                            },
+                            success: function (result) {
+                                alert("Ok");
+                                $("#imgSave").fadeIn();
+                                $("#imgUndo").fadeIn();
+                            },
+                            error: function (result) {
+                                $("#imgSave").fadeIn();
+                                $("#imgUndo").fadeIn();
+                            },
+                            warning: function (result) {
+                                $("#imgSave").fadeIn();
+                                $("#imgUndo").fadeIn();
+                            }
+                        });
+                    }
+                    else {
+                        alert("@ResWorkInstructions.WiEdit.lblEditNotDone");
+                        $("#imgSave").fadeIn();
+                        $("#imgUndo").fadeIn();
+                    }
+                });
+            });              
+        </script>
         <!-- Current manual -->
         <div class="row-fluid">
             <div class="span12">
-                <table class="tblEditManual">
+                <table id="tblEditManual" class="table">
                     <tr>
                         <td>@ResWorkInstructions.WiEdit.lblName</td>
-                        <td><input type="text" class="input-group-text" id="lblName" value="@Model.Name" /></td>
                         <td>@ResWorkInstructions.WiEdit.lblDescription</td>
-                        <td><input type="text" class="input-group-text" id="lblName" value="@Model.Description" /></td>
                         <td>@ResWorkInstructions.WiEdit.lblUploadDate</td>
+                        <td>@ResWorkInstructions.WiEdit.lblExpiryDate</td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="input-group-text" id="lblName" value="@Model.Name" /></td>
+                        <td><textarea class="input-group-text" id="lblDescription" value="@Model.Description"></textarea></td>
                         <td>@Model.UploadDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td><input type="text" id="txtExpiryDate" value="@Model.ExpiryDate.ToString("dd/MM/yyyy")" style="max-width:80px" /></td>
+                        <td><select id="lblActive" style="max-width:80px">
+    @if (Model.IsActive)
+    {
+        <option value="true" selected>@ResWorkInstructions.WiEdit.lblEnabled</option>
+        <option value="false">@ResWorkInstructions.WiEdit.lblDisabled</option>
+    }
+    else
+    {
+        <option value="true">@ResWorkInstructions.WiEdit.lblEnabled</option>
+        <option value="false" selected>@ResWorkInstructions.WiEdit.lblDisabled</option>
+    }
+</select></td>
+                        <td>
+                            <input type="image" src="~/img/iconSave.jpg" style="min-height:20px; max-height:30px;" id="imgSave" />
+                            <input type="image" src="~/img/iconUndo.png" style="min-height:20px; max-height:30px;" id="imgUndo" />
+                        </td>
                     </tr>
                 </table>
             </div>

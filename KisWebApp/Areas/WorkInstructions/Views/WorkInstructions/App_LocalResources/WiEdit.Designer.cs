@@ -79,6 +79,51 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stai per disattivare questa istruzione di lavoro. Sei sicuro?.
+        /// </summary>
+        public static string lblDisableAreYouSure {
+            get {
+                return ResourceManager.GetString("lblDisableAreYouSure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inattivo.
+        /// </summary>
+        public static string lblDisabled {
+            get {
+                return ResourceManager.GetString("lblDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modifica.
+        /// </summary>
+        public static string lblEdit {
+            get {
+                return ResourceManager.GetString("lblEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Modifiche non salvate.
+        /// </summary>
+        public static string lblEditNotDone {
+            get {
+                return ResourceManager.GetString("lblEditNotDone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attivo.
+        /// </summary>
+        public static string lblEnabled {
+            get {
+                return ResourceManager.GetString("lblEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fine validità.
         /// </summary>
         public static string lblExpiryDate {
@@ -129,6 +174,15 @@ namespace ResWorkInstructions {
         public static string lblWINotFound {
             get {
                 return ResourceManager.GetString("lblWINotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Istruzioni di lavoro.
+        /// </summary>
+        public static string lblWorkInstructions {
+            get {
+                return ResourceManager.GetString("lblWorkInstructions", resourceCulture);
             }
         }
     }
