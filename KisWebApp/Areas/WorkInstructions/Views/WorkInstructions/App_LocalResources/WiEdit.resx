@@ -159,4 +159,7 @@
   <data name="lblWorkInstructions" xml:space="preserve">
     <value>Istruzioni di lavoro</value>
   </data>
+  <data name="lblLabels" xml:space="preserve">
+    <value>Etichette</value>
+  </data>
 </root>

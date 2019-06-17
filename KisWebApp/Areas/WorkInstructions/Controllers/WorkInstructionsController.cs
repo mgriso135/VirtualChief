@@ -178,6 +178,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (ViewBag.authW)
             {
                 currWI = new App_Sources.WorkInstructions.WorkInstruction(manualID);
+                currWI.loadLabels();
             }
 
             return View(currWI);
@@ -227,9 +228,108 @@ namespace KIS.Areas.WorkInstructions.Controllers
             }
                 return ret;
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if all is ok
+         */
+        public int AddLabelById(int ID, int Version, int LabelID)
+        {
+            int ret = 0;
+            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+            if(currWI.ID!=-1 && currWI.Version!=-1)
+            {
+                bool bret = currWI.addLabel(LabelID);
+                if (bret) { ret = 1; }
+            }
+            return ret;
+        }
+
+        /* Returns:
+ * 0 if generic error
+ * -2 if label not added correctly
+ * -3 if label not correctly linked to WorkInstruction
+ * -4 if WorkInstruction not found
+ * LabelID if all is ok
+ */
+        public int AddLabelByName(int ID, int Version, String LabelName)
+        {
+            int ret = 0;
+            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+            if (currWI.ID != -1 && currWI.Version != -1)
+            {
+                KIS.App_Sources.WorkInstructions.WILabelList lblList = new App_Sources.WorkInstructions.WILabelList();
+                lblList.loadLabelsList();
+                int LabelID = -1;
+                try
+                { 
+                    var found = lblList.List.First(x => x.WILabelName == LabelName);
+                    LabelID = found.WILabelID;
+                }
+                catch
+                {
+                    LabelID = -1;
+                }
+
+                if(LabelID==-1)
+                {
+                    LabelID = lblList.addLabel(LabelName);
+                }
+
+                if(LabelID!=-1)
+                { 
+                bool bret = currWI.addLabel(LabelID);
+                    ret = bret ? LabelID : -3;
+                }
+                else
+                {
+                    ret = -2;
+                }
+            }
+            else
+            {
+                ret = -4;
+            }
+            return ret;
+        }
+
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if all is ok
+         * 2 if user not authorized
+         * 3 if error while deleting
+         */
+        public int DeleteLabel(int ID, int Version, int LabelID)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "WorkInstructions Manage";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+                bool bret = currWI.deleteLabel(LabelID);
+                ret = bret ? 1 : 3;
+            }
+            else
+            {
+                ret = 2;
+            }
+                return ret;
+        }
     }
         
-    //Comment
+
     public class FileUploadController : Controller
     {
         FilesHelper filesHelper;

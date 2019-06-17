@@ -25,8 +25,25 @@
     {
         <script>
             $(document).ready(function () {
+                var oName = $('<div/>').text($('#lblName').val()).html();
+                var oDescription = $('<div/>').text($('#lblDescription').val()).html();
+                var oExpiryDate = $('<div/>').text($('#txtExpiryDate').val()).html();
+                var oIsActive = $('<div/>').text($('#lblActive').val()).html();
+
                 $(function () {
                     $("[id*=txtExpiryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+
+                $("#imgUndo").on("click", function () {
+                    $("#imgSave").fadeOut();
+                    $("#imgUndo").fadeOut();
+                    $('#lblName').val(oName);
+                    $('#lblDescription').val(oDescription);
+                    $('#txtExpiryDate').val(oExpiryDate);
+                    $('#lblActive').val(oIsActive);
+                    $("#imgSave").fadeIn();
+                    $("#imgUndo").fadeIn();
                 });
 
                 $("#imgSave").on("click", function () {
@@ -85,7 +102,118 @@
                         $("#imgUndo").fadeIn();
                     }
                 });
-            });              
+
+                $("#imgViewPdf").on("click", function () {
+                    $("#viewPdf").fadeIn();
+                });
+
+                $("#imgClosePdf").on("click", function () {
+                    $("#viewPdf").fadeOut();
+                });
+
+
+                $("#imgAddLabel").on("click", function () {
+                    $("#imgAddLabel").fadeOut();
+
+                    var g = $('#ddLalbels').val();
+                    var id = $("#ddlLabelsList option[value='" + g + "']").attr('data-id');
+                    
+                    if (typeof id === 'undefined')
+                    {
+                        $.ajax({
+                            url: "@Url.Action("AddLabelByName", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                LabelName: g
+                            },
+                            success: function (result) {
+                                var iResult = parseInt(result);
+                                if (iResult >= 0) {
+                                    var strNew = "<span class='badge badge-primary' id='spanLbl_" + iResult + "'>" + $('#ddLalbels').val()
+                                        + "<input type='image' value='" + iResult + "' class='delLbl' id='delLbl' src='../../img/iconClose.png' style='min-height:10px; max-height:15px;' /></span>";
+                                    $("#pLabels").append(strNew);
+                                }
+                                else {
+                                }
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            error: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            warning: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            }
+                        });
+                    }
+                    else
+                    {
+                        $.ajax({
+                            url: "@Url.Action("AddLabelById", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                LabelID: id
+                            },
+                            success: function (result) {
+                                var iResult = parseInt(result);
+                                if (iResult >= 0) {
+                                    var strNew = "<span class='badge badge-primary' id='spanLbl_" + id + "'>" + $('#ddLalbels').val()
+                                        + "<input type='image' value='" + id + "' class='delLbl' id='delLbl' src='../../img/iconClose.png' style='min-height:10px; max-height:15px;' /></span>";
+                                    $("#pLabels").append(strNew);
+                                }
+                                else {
+                                    alert("Ko");
+                                }
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            error: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            warning: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            }
+                        });
+                    }
+                });
+
+                $("#pLabels").on("click", ".delLbl", function () {
+                    var lblID = $(this).val();
+                    $.ajax({
+                            url: "@Url.Action("DeleteLabel", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                LabelID: lblID
+                            },
+                        success: function (result) {
+                                if (result == "1") {
+                                    $("#spanLbl_" + lblID).remove();
+                                }
+                                else {
+                                }
+                            },
+                            error: function (result) {
+                            },
+                            warning: function (result) {
+
+                            }
+                        });
+                });
+
+            });
         </script>
         <!-- Current manual -->
         <div class="row-fluid">
@@ -102,36 +230,69 @@
                         <td><textarea class="input-group-text" id="lblDescription" value="@Model.Description"></textarea></td>
                         <td>@Model.UploadDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
                         <td><input type="text" id="txtExpiryDate" value="@Model.ExpiryDate.ToString("dd/MM/yyyy")" style="max-width:80px" /></td>
-                        <td><select id="lblActive" style="max-width:80px">
-    @if (Model.IsActive)
-    {
-        <option value="true" selected>@ResWorkInstructions.WiEdit.lblEnabled</option>
-        <option value="false">@ResWorkInstructions.WiEdit.lblDisabled</option>
-    }
-    else
-    {
-        <option value="true">@ResWorkInstructions.WiEdit.lblEnabled</option>
-        <option value="false" selected>@ResWorkInstructions.WiEdit.lblDisabled</option>
-    }
-</select></td>
+                        <td>
+                            <select id="lblActive" style="max-width:80px">
+                                @if (Model.IsActive)
+                                {
+                                    <option value="true" selected>@ResWorkInstructions.WiEdit.lblEnabled</option>
+                                    <option value="false">@ResWorkInstructions.WiEdit.lblDisabled</option>
+                                }
+                                else
+                                {
+                                    <option value="true">@ResWorkInstructions.WiEdit.lblEnabled</option>
+                                    <option value="false" selected>@ResWorkInstructions.WiEdit.lblDisabled</option>
+                                }
+                            </select>
+                        </td>
                         <td>
                             <input type="image" src="~/img/iconSave.jpg" style="min-height:20px; max-height:30px;" id="imgSave" />
                             <input type="image" src="~/img/iconUndo.png" style="min-height:20px; max-height:30px;" id="imgUndo" />
                         </td>
+                        <td><input type="image" src="~/img/iconPdf.png" style="min-height: 20px; max-height:40px;" id="imgViewPdf"</td>
                     </tr>
                 </table>
             </div>
         </div>
+
+        <div style="left: 10px; border: 0px none; height: 100%; position: fixed; width: 100%; overflow: hidden; top:10px;display:none" id="viewPdf">
+            <input type="image" src="~/img/iconClose.png" id="imgClosePdf" style="max-width:30px; min-width:30px; position:relative;top:40px" />
+            <div style="overflow: hidden;">
+
+            </div>
+            <iframe id="fred" style="border:1px solid #666CCC; height:95%; width:95%; position:absolute;top:70px;" title="" src="~/Data/WorkInstructions/@Model.Path" frameborder="1" scrolling="auto"></iframe>
+        </div>
+
         <!--Labels-->
         <div class="row-fluid">
             <div class="span12">
-
+                <h5>@ResWorkInstructions.WiEdit.lblLabels</h5>
+                <p>
+                    <input list="ddlLabelsList" id="ddLalbels">
+                    <datalist id="ddlLabelsList">
+                        @{KIS.App_Sources.WorkInstructions.WILabelList el = new KIS.App_Sources.WorkInstructions.WILabelList();
+                            el.loadLabelsList();
+                            foreach (var lbl in el.List)
+                            {
+                                <option data-id="@lbl.WILabelID" value="@lbl.WILabelName"></option>
+                            }
+                        }
+                    </datalist>
+                    <input type="image" src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px;" id="imgAddLabel" />
+                </p>
+                <p id="pLabels">
+                    @foreach (var wiLbl in Model.Labels)
+                    {
+                        <span class="badge badge-primary" id="spanLbl_@wiLbl.WILabelID">
+                            @wiLbl.WILabelName <input type="image" value="@wiLbl.WILabelID" class="delLbl" id="delLbl" src="~/img/iconClose.png" style="min-height:10px; max-height:15px;" />
+                    </span>
+                    }
+                </p>
             </div>
         </div>
         <!-- Older versions (read only) -->
         <div class="row-fluid">
             <div class="span12">
-                
+
             </div>
         </div>
     }

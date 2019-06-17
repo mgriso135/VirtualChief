@@ -278,6 +278,20 @@ namespace KIS.App_Sources
             public Boolean addLabel(int labelID)
             {
                 Boolean ret = false;
+                this.loadLabels();
+                bool bfound = false;
+                try
+                { 
+                var found = this.Labels.First(x => x.WILabelID == labelID);
+                    bfound = true;
+                }
+                catch
+                {
+                    bfound = false;
+                }
+
+                if(!bfound)
+                { 
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -300,6 +314,7 @@ namespace KIS.App_Sources
                     ret = false;
                 }
                 conn.Close();
+                }
                 return ret;
             }
 
@@ -312,6 +327,38 @@ namespace KIS.App_Sources
                 {
                     ret = this.addLabel(lblID);
                 }
+                return ret;
+            }
+
+            public Boolean deleteLabel(int labelID)
+            {
+                Boolean ret = false;
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                cmd.CommandText = "DELETE FROM manualswilabels WHERE ManualID=@ManualID AND ManualVersion=@ManualVersion AND LabelID=@LabelID";
+                cmd.Parameters.AddWithValue("@ManualID", this.ID.ToString());
+                cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
+                cmd.Parameters.AddWithValue("@LabelID", labelID);
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = true;
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    ret = false;
+                }
+
+                WILabel lblCurr = new WILabel(labelID);
+                lblCurr.Delete();
+
+                conn.Close();
                 return ret;
             }
         }
@@ -420,8 +467,11 @@ namespace KIS.App_Sources
                 get { return this._WILabelName; }
             }
 
+            public List<WorkInstruction> workInstructions;
+
             public WILabel(int LabelID)
             {
+                this.workInstructions = new List<WorkInstruction>();
                 this._WILabelID = -1;
                 this._WILabelName = "";
 
@@ -437,6 +487,84 @@ namespace KIS.App_Sources
                 }
                 rdr.Close();
                 conn.Close();
+            }
+
+            public void loadWorkInstructions()
+            {
+                this.workInstructions = new List<WorkInstruction>();
+                if(this.WILabelID!=-1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
+                        + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
+                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=" + this.WILabelID.ToString();
+
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while(rdr.Read())
+                    {
+                        this.workInstructions.Add(new WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    }
+                    rdr.Close();
+                    conn.Close();
+                }
+            }
+
+            /*Returns:
+             * 0 if generic error
+             * 1 if all is ok
+             * 2 if could not delete because other work instructions uses the same label
+             * 3 if error while deleting
+             */
+            public int Delete()
+            {
+                int ret = 0;
+                if(this.WILabelID!=-1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
+                        + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
+                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=" + this.WILabelID.ToString();
+
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    Boolean delete = false;
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        delete = false;
+                    }
+                    else
+                    {
+                        delete = true;
+                    }
+                    rdr.Close();
+
+                    if (delete)
+                    {
+                        cmd.CommandText = "DELETE FROM workinstructionslabel WHERE wilabelID = " + this.WILabelID.ToString();
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            ret = 1;
+                        }
+                        catch
+                        {
+                            ret = 3;
+                        }
+                    }
+                    else
+                    {
+                        ret = 2;
+                    }
+
+                    conn.Close();
+                }
+                return ret;
             }
         }
 

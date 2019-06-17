@@ -133,6 +133,15 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Etichette.
+        /// </summary>
+        public static string lblLabels {
+            get {
+                return ResourceManager.GetString("lblLabels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nome.
         /// </summary>
         public static string lblName {

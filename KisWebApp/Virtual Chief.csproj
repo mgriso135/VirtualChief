@@ -4978,9 +4978,11 @@
     <Content Include="img\iconImprovementActions.png" />
     <Content Include="img\iconLoading2.gif" />
     <Content Include="img\iconLoading3.gif" />
+    <Content Include="img\iconMeasurementUnits.png" />
     <Content Include="img\iconNonConformity.png" />
     <Content Include="HomePage\UploadTooLarge.aspx" />
     <Content Include="img\iconParameters.png" />
+    <Content Include="img\iconPdf.png" />
     <Content Include="img\iconReload.png" />
     <Content Include="Areas\Quality\Views\NonCompliancesAnalysis\CategoriesCostGraph.cshtml" />
     <Content Include="Areas\Quality\Views\NonCompliancesAnalysis\CategoriesCostList.cshtml" />
