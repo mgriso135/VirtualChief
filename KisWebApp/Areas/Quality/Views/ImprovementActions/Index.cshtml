@@ -1,0 +1,209 @@
+﻿@model IEnumerable<KIS.App_Sources.ImprovementAction>
+
+@{
+    ViewBag.Title = ResImprovementActions.Index.lblManageImprovementActions;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResImprovementActions.Index.lblManageImprovementActions</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/ImprovementActions/Index?stat=O&sortOrder=init">@Resources.Shared.lblNavImprovementActions</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (ViewBag.authR || ViewBag.authW)
+{
+    if(ViewBag.authW)
+    { 
+    <a href="~/Quality/ImprovementActions/Create">
+        <img src="~/img/iconAdd2.png" style="height: 40px;" />@ResImprovementActions.Index.lblAdd
+    </a>
+    }
+
+    using (Html.BeginForm("Index", "ImprovementActions/Index", FormMethod.Get))
+    {
+        <div>
+            Status:&nbsp;@Html.DropDownList("stat",
+                        new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text=ResImprovementActions.Index.lblAll, Value = "A" },
+                    new SelectListItem{ Text=ResImprovementActions.Index.lblOpen, Value = "O" },
+                    new SelectListItem{ Text=ResImprovementActions.Index.lblClosed, Value = "C" }
+                 },
+                        new { @class = "btn btn-default dropdown-toggle", @style = "width:100px;" }
+
+    )
+            <input type="submit" value="@ResImprovementActions.Index.lblSubmit" />
+        </div>
+    }
+
+    if (Model != null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortID">@ResImprovementActions.Index.lblID</a>
+                            </th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortCurrentSituation">@ResImprovementActions.Index.lblCurrentSituation</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortExpectedResults">@ResImprovementActions.Index.lblExpectedResults</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortRootCauses">@ResImprovementActions.Index.lblRootCauses</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortEndDateExpected">@ResImprovementActions.Index.lblEndDateExpected</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortStatus">@ResImprovementActions.Index.lblStatus</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortClosureNotes">@ResImprovementActions.Index.lblClosureNotes</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortEndDateReal">@ResImprovementActions.Index.lblEndDateReal</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortCreatedBy">@ResImprovementActions.Index.lblCreatedBy</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortOpeningDate">@ResImprovementActions.Index.lblOpeningDate</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortModifiedBy">@ResImprovementActions.Index.lblModifiedBy</a></th>
+                            <th><a href="~/Quality/ImprovementActions/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortModifiedDate">@ResImprovementActions.Index.lblModifiedDate</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            <tr id="row_@m.ID-@m.Year">
+                                <td><a href="~/Quality/ImprovementActions/Update?ID=@m.ID&Year=@m.Year"><img src="~/img/edit.png" style="min-width:30px;max-width:30px;" title="@ResImprovementActions.Index.lblUpdate" /></a></td>
+                                <td>
+                                @if(ViewBag.authW)
+                                { 
+                                <input type="image" class="btnDelete" src="~/img/iconDelete.png" style="min-width:30px;max-width:30px;" id="btnDelete" value="@m.ID.@m.Year" />
+                                }</td>
+                                <td>@m.ID/@m.Year</td>
+                                @if (m.CurrentSituation.Length <= 100)
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.CurrentSituation))</td>}
+                                else
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.CurrentSituation.Substring(0, 100)))...</td>
+                                }
+                                @if(m.ExpectedResults.Length <= 100)
+                                { 
+                                <td>@Server.HtmlDecode(Server.HtmlDecode(m.ExpectedResults))</td>
+                                }
+                                else
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.ExpectedResults.Substring(0, 100)))...</td>
+                                }
+                                @if(m.RootCauses.Length <= 100)
+                                { 
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.RootCauses))</td>
+                                }
+                                else
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.RootCauses.Substring(0, 100)))...</td>
+                                }
+                                @if(m.EndDateExpected.Year > 2000)
+                                { 
+                                <td>@m.EndDateExpected.ToString("dd/MM/yyyy")</td>
+                                }
+                                else
+                                { <td></td>}
+                                @if (m.Status == 'C')
+                                {
+                                    <td>@ResImprovementActions.Index.lblStatusClosed</td>
+                                }
+                                else
+                                {
+                                    <td>@ResImprovementActions.Index.lblStatusOpen</td>
+                                }
+
+                                @if(m.ClosureNotes.Length <= 100)
+                                { 
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.ClosureNotes))</td>
+                                }
+                                else
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.ClosureNotes.Substring(0, 100)))...</td>
+                                }
+                                @if(m.EndDateReal.Year > 2000)
+                                { 
+                                <td>@m.EndDateReal.ToString("dd/MM/yyyy")</td>
+                                }
+                                else
+                                { <td></td>}
+                                <td>@m.CreatedBy</td>
+                                <td>@m.OpeningDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@m.ModifiedBy</td>
+                                @if(m.ModifiedDate!=null && m.ModifiedDate > new DateTime(1970, 1, 1))
+                                { 
+                                    <td>@m.ModifiedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <script>
+                $('.btnDelete').click(function () {
+                    var nonC = $(this).val().split('.');
+                    if (window.confirm("@Server.HtmlDecode(ResImprovementActions.Index.lblDelWarn1)" +
+                        " " +
+                        nonC[0] + "/" + nonC[1] + ". " + "@Server.HtmlDecode(ResImprovementActions.Index.lblDelWarn2)")) {
+
+                        var rowToDelete = "#row_" + nonC[0] + "-" + nonC[1];
+
+                        $.ajax({
+                            //url: '../../Quality/NonCompliances/Delete',
+                            url: "@Url.Action("Delete", "ImprovementActions")",
+                            type: 'POST',
+                            data: {
+                                ID: nonC[0],
+                                Year: nonC[1],
+                            },
+                            success: function (data) {
+                                if (data == "False")
+                                { alert("@Server.HtmlDecode(ResImprovementActions.Index.lblDelError)"); }
+                                else {
+                                    $(rowToDelete).remove();
+                                }
+                            },
+                            statusCode: {
+                                404: function (content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show(); },
+                                500: function (content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show(); }
+                            },
+                            error: function (req, status, errorObj) {
+                                alert("error");
+                                $(this).show();
+                            }
+                        });
+                    }
+                    else {
+                    }
+                });
+
+        </script>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResImprovementActions.Index.lbliActNotFound
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResImprovementActions.Index.lblNotLoggedIn
+        </div>
+    </div>
+}
+

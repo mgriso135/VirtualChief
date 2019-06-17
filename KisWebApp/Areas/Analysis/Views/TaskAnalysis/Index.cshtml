@@ -1,0 +1,656 @@
+﻿
+@{
+    ViewBag.Title = ResTaskAnalysis.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResTaskAnalysis.Index.lblTitle</h3>
+
+
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Analysis/analysis.aspx">@ResTaskAnalysis.Index.lblAnalysis</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResTaskAnalysis.Index.lblTitle</a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+@if (ViewBag.authR)
+{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var CustomersArr = [];
+            var CustomersNameArr = [];
+            var DepartmentsArr = [];
+            var DepartmentsNameArr = [];
+            var TypeOfProductsArr = [];
+            var TypeOfProductsNameArr = [];
+            var WorkstationsArr = [];
+            var WorkstationsNameArr = [];
+            var TasksArr = [];
+            var TasksNameArr = [];
+            var groupByPeriod = 1;
+            var graphType = 0;
+
+            $(function () {
+                $("[id*=txtEndDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $(function () {
+                $("[id*=txtEndDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+
+            var enddate = new Date();
+            var enddateStr = enddate.getDate() + "/"
+                + (enddate.getMonth() + 1) + "/"
+                + enddate.getFullYear();
+            $("#txtEndDateEnd").val(enddateStr);
+
+            var startdate = new Date();
+            startdate.setMonth(startdate.getMonth() - 1);
+            var startdateStr = startdate.getDate() + "/"
+                + (startdate.getMonth() + 1) + "/"
+                + startdate.getFullYear();
+
+            $("#txtEndDateStart").val(startdateStr);
+
+            $("#txtEndDateStart").bind("propertychange change keyup paste input", function () {
+                // load the page
+                var endPDateS = $('#txtEndDateStart').val();
+                var endPDateA = endPDateS.split('/');
+                startdate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                if (startdate) {
+                    loadPanel();
+                }
+                else {
+                    alert("Invalid date");
+                }
+            });
+
+            $("#txtEndDateEnd").bind("propertychange change keyup paste input", function () {
+                // load the page
+                var endPDateS = $('#txtEndDateEnd').val();
+                var endPDateA = endPDateS.split('/');
+                enddate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                if (enddate) {
+                    loadPanel();
+                }
+                else {
+                    alert("Invalid date");
+                }
+            });
+
+            // load badges of tasks
+            // badgeTasks
+
+                       @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                           var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
+
+                           foreach (var m in sortedProducts)
+                           {
+                               @Html.Raw("$('#badgeProducts').append('<span class=\"badge badge-info\" id=\"product_"
+                              +m.IDCombinato2+"\">" + Server.HtmlEncode(m.process.processName + " - " + m.variant.nomeVariante)
+                              + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + m.IDCombinato2 + "\" /></span>');");
+                               @Html.Raw("TypeOfProductsArr.push('" + m.IDCombinato2+"');");
+                               @Html.Raw("TypeOfProductsNameArr.push('" + Server.HtmlEncode(Server.HtmlEncode(m.process.processName + " - " + m.variant.nomeVariante)) + "');");
+                           }
+                       }
+
+
+            $("#modalTypeOfProducts").on('click', '.delproduct', function () {
+
+                var index = $.inArray($(this).val(), TypeOfProductsArr);
+                if (index >= 0) TypeOfProductsArr.splice(index, 1);
+                if (index >= 0) TypeOfProductsNameArr.splice(index, 1);
+
+                $("#badgeProducts").html("");
+                loadPanel();
+                for (var i = 0; i < TypeOfProductsArr.length; i++) {
+                    $('#badgeProducts').append("<span class=\"badge badge-info\" id=\"product_" + TypeOfProductsArr[i] + "\">"
+                        + TypeOfProductsNameArr[i] + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + TypeOfProductsArr[i] + "\" /></span>");
+                }
+            });
+
+            $("#btnAddProduct").click(function () {
+                var g = $('#ddlProducts').val();
+                var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
+                var index = $.inArray(id, TypeOfProductsArr);
+
+                if (index == -1 && g.length > 0) {
+                    TypeOfProductsArr.push(id);
+                    TypeOfProductsNameArr.push(g);
+
+                    $('#badgeProducts').append("<span class=\"badge badge-info\" id=\"product_" + id + "\">"
+                        + g + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + id + "\" /></span>");
+                }
+                $('#ddlProducts').val("");
+                loadPanel();
+            });
+
+                   @{List<KIS.App_Code.Cliente> cstList = ViewBag.Customers;
+                       foreach (var cst in cstList)
+                       {
+                               @Html.Raw("$('#badgeCustomers').append('<span class=\"badge badge-info\" id=\"customer_"
+                              +cst.CodiceCliente+"\">" + Server.HtmlEncode(cst.RagioneSociale)
+                              + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delcustomer\" value=\"" + cst.CodiceCliente + "\" /></span>');");
+                               @Html.Raw("CustomersArr.push('" + Server.HtmlEncode(cst.CodiceCliente) + "');");
+                               @Html.Raw("CustomersNameArr.push('" + Server.HtmlEncode(cst.RagioneSociale) + "');");
+                           }
+                       }
+
+
+            $("#modalCustomers").on('click', '.delcustomer', function () {
+
+                var index = $.inArray($(this).val(), CustomersArr);
+                if (index >= 0) CustomersArr.splice(index, 1);
+                if (index >= 0) CustomersNameArr.splice(index, 1);
+
+                $("#badgeCustomers").html("");
+                loadPanel();
+                for (var i = 0; i < CustomersArr.length; i++) {
+                    $('#badgeCustomers').append("<span class=\"badge badge-info\" id=\"customer_" + CustomersArr[i] + "\">"
+                        + CustomersNameArr[i] + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delcustomer\" value=\"" + CustomersArr[i] + "\" /></span>");
+                }
+            });
+
+            $("#btnAddCustomer").click(function () {
+                var g = $('#ddlCustomers').val();
+                var id = $("#ddlCustomersList option[value='" + g + "']").attr('data-id');
+                var index = $.inArray(id, CustomersArr);
+
+                if (index == -1 && g.length > 0) {
+                    CustomersArr.push(id);
+                    CustomersNameArr.push(g);
+
+                    $('#badgeCustomers').append("<span class=\"badge badge-info\" id=\"product_" + id + "\">"
+                        + g + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + id + "\" /></span>");
+                }
+                $('#ddlCustomers').val("");
+                loadPanel();
+            });
+
+
+            @{/*List<KIS.App_Code.processo> tskList2 = ViewBag.Tasks;
+                        var sortedTasks2 = tskList2.OrderBy(x => x.processName);
+                        foreach (var tsk in sortedTasks2)
+                        {
+                                       @Html.Raw("$('#badgeTasks').append('<span class=\"badge badge-info\" id=\"task_"
+                                      + tsk.processID+"\">" + Server.HtmlEncode(tsk.processName.ToString())
+                                      + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deltask\" value=\"" + tsk.processID + "\" /></span>');");
+                                       @Html.Raw("TasksArr.push('" + tsk.processID + "');");
+                                       @Html.Raw("TasksNameArr.push('" + Server.HtmlEncode(tsk.processName) + "');");
+                                   }*/
+                       }
+
+            $("#modalTasks").on('click', '.deltask', function () {
+
+                var index = $.inArray($(this).val(), TasksArr);
+                if (index >= 0) TasksArr.splice(index, 1);
+                if (index >= 0) TasksNameArr.splice(index, 1);
+
+                $("#badgeTasks").html("");
+                loadPanel();
+                for (var i = 0; i < TasksArr.length; i++) {
+                    $('#badgeTasks').append("<span class=\"badge badge-info\" id=\"task_" + TasksArr[i] + "\">"
+                        + TasksNameArr[i] + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deltask\" value=\"" + TasksArr[i] + "\" /></span>");
+                }
+            });
+
+            $("#btnAddTask").click(function () {
+                var g = $('#ddlTasks').val();
+                var id = $("#ddlTasksList option[value='" + g + "']").attr('data-id');
+                var index = $.inArray(id, TasksArr);
+
+                if (index == -1 && g.length > 0) {
+                    TasksArr.push(id);
+                    TasksNameArr.push(g);
+
+                    $('#badgeTasks').append("<span class=\"badge badge-info\" id=\"task_" + id + "\">"
+                        + g + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deltask\" value=\"" + id + "\" /></span>");
+                }
+                $('#ddlTasks').val("");
+                loadPanel();
+            });
+
+             @{List<KIS.App_Code.Reparto> deptList = ViewBag.Departments;
+                       foreach (var dept in deptList)
+                       {
+                               @Html.Raw("$('#badgeDepartments').append('<span class=\"badge badge-info\" id=\"department_"
+                              +dept.id+"\">" + Server.HtmlEncode(dept.name)
+                              + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deldepartment\" value=\"" + dept.id + "\" /></span>');");
+                               @Html.Raw("DepartmentsArr.push('" + dept.id + "');");
+                               @Html.Raw("DepartmentsNameArr.push('" + Server.HtmlEncode(dept.name) + "');");
+                           }
+                       }
+
+
+            $("#modalDepartments").on('click', '.deldepartment', function () {
+                var index = $.inArray($(this).val(), DepartmentsArr);
+                if (index >= 0) DepartmentsArr.splice(index, 1);
+                if (index >= 0) DepartmentsNameArr.splice(index, 1);
+
+                $("#badgeDepartments").html("");
+                loadPanel();
+                for (var i = 0; i < DepartmentsArr.length; i++) {
+                    $('#badgeDepartments').append("<span class=\"badge badge-info\" id=\"department_" + DepartmentsArr[i] + "\">"
+                        + DepartmentsNameArr[i] + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deldepartment\" value=\"" + DepartmentsArr[i] + "\" /></span>");
+                }
+            });
+
+            $("#btnAddDepartment").click(function () {
+                var g = $('#ddlDepartments').val();
+                var id = $("#ddlDepartmentsList option[value='" + g + "']").attr('data-id');
+                var index = $.inArray(id, DepartmentsArr);
+
+                if (index == -1 && g.length > 0) {
+                    DepartmentsArr.push(id);
+                    DepartmentsNameArr.push(g);
+
+                    $('#badgeDepartments').append("<span class=\"badge badge-info\" id=\"department_" + id + "\">"
+                        + g + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deldepartment\" value=\"" + id + "\" /></span>");
+                }
+                $('#ddlDepartments').val("");
+                loadPanel();
+            });
+
+
+            @{List<KIS.App_Code.Postazione> wkstList = ViewBag.Workstations;
+                       foreach (var wkst in wkstList)
+                       {
+                               @Html.Raw("$('#badgeWorkstations').append('<span class=\"badge badge-info\" id=\"workstation_"
+                              + wkst.id+"\">" + Server.HtmlEncode(wkst.name)
+                              + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delworkstation\" value=\"" + wkst.id + "\" /></span>');");
+                               @Html.Raw("WorkstationsArr.push('" + wkst.id + "');");
+                               @Html.Raw("WorkstationsNameArr.push('" + Server.HtmlEncode(wkst.name) + "');");
+                           }
+                       }
+
+
+            $("#modalWorkstations").on('click', '.delworkstation', function () {
+                var index = $.inArray($(this).val(), WorkstationsArr);
+                if (index >= 0) WorkstationsArr.splice(index, 1);
+                if (index >= 0) WorkstationsNameArr.splice(index, 1);
+
+                $("#badgeWorkstations").html("");
+                loadPanel();
+                for (var i = 0; i < WorkstationsArr.length; i++) {
+                    $('#badgeWorkstations').append("<span class=\"badge badge-info\" id=\"workstation_" + WorkstationsArr[i] + "\">"
+                        + WorkstationsNameArr[i] + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delworkstation\" value=\"" + WorkstationsArr[i] + "\" /></span>");
+                }
+            });
+
+            $("#btnAddWorkstation").click(function () {
+                var g = $('#ddlWorkstations').val();
+                var id = $("#ddlWorkstationsList option[value='" + g + "']").attr('data-id');
+                var index = $.inArray(id, WorkstationsArr);
+                if (index == -1 && g.length > 0) {
+                    WorkstationsArr.push(id);
+                    WorkstationsNameArr.push(g);
+
+                    $('#badgeWorkstations').append("<span class=\"badge badge-info\" id=\"workstation_" + id + "\">"
+                        + g + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"delworkstation\" value=\"" + id + "\" /></span>");
+                }
+                $('#ddlWorkstations').val("");
+                loadPanel();
+            });
+
+            function loadPanel() {
+                $("#HistoricPanel").fadeTo(0, 0.5);
+                $("#txtEndDateStart").prop("disabled", true);
+                $("#txtEndDateEnd").prop("disabled", true);
+
+                var startPeriod = startdate.getFullYear() + "-" +
+                    (startdate.getMonth() + 1) + "-" + startdate.getDate();
+                var endPeriod = enddate.getFullYear() + "-" +
+                    (enddate.getMonth() + 1) + "-" + enddate.getDate();
+
+                var jsonData = {
+                    "StartPeriod": startPeriod, "EndPeriod": endPeriod, "Customer": {}
+                };
+
+                var customersStr = "";
+                for (i = 0; i < CustomersArr.length; i++) {
+                    customersStr += ";" + CustomersArr[i];
+                }
+
+                var departmentsStr = "";
+                for (i = 0; i < DepartmentsArr.length; i++) {
+                    departmentsStr += DepartmentsArr[i] + ";";
+                }
+
+                var workstationsStr = "";
+                for (i = 0; i < WorkstationsArr.length; i++) {
+                    workstationsStr += WorkstationsArr[i] + ";";
+                }
+
+                var tasksStr = "";
+                for (i = 0; i < TasksArr.length; i++) {
+                    tasksStr += TasksArr[i] + ";";
+                }
+
+                var TypeOfProductsStr = "";
+                for (i = 0; i < TypeOfProductsArr.length; i++) {
+                    TypeOfProductsStr += TypeOfProductsArr[i] + ";";
+                }
+
+
+                $.ajax({
+                    url: "@Url.Action("TaskDataPanel", "TaskAnalysis")",
+                    type: 'POST',
+                    dataType: "html",
+                    data: {
+                        startPeriod: startPeriod,
+                        endPeriod: endPeriod,
+                        customers: customersStr,
+                        departments: departmentsStr,
+                        TypeOfProducts: TypeOfProductsStr,
+                        periodType: groupByPeriod,
+                        graphType: graphType,
+                        workstations: workstationsStr,
+                        tasks: tasksStr
+                    },
+                    success: function (result) {
+                        //alert("Risultato: " + result);
+                        $("#HistoricPanel").html(result);
+                        $("#HistoricPanel").fadeTo(0, 1);
+                        $("#txtEndDateStart").prop("disabled", false);
+                        $("#txtEndDateEnd").prop("disabled", false);
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $("#HistoricPanel").fadeTo(0, 1);
+                        $("#txtEndDateStart").prop("disabled", false);
+                        $("#txtEndDateEnd").prop("disabled", false);
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $("#HistoricPanel").fadeTo(0, 1);
+                        $("#txtEndDateStart").prop("disabled", false);
+                        $("#txtEndDateEnd").prop("disabled", false);
+                    }
+                });
+            }
+
+
+
+            $("#frmGraphType :radio").change(function () {
+                if ($(this).val() == "0") {
+                    graphType = 0;
+                }
+                else if ($(this).val() == "1") {
+                    graphType = 1;
+                }
+                else if ($(this).val() == "2") {
+                    graphType = 2;
+                }
+                else if ($(this).val() == "3") {
+                    graphType = 3;
+                }
+                else if ($(this).val() == "4") {
+                    graphType = 4;
+                }
+                else {
+                    graphType = 0;
+                }
+                loadPanel();
+            });
+
+            $("#modalGroupBy :radio").change(function () {
+                if ($(this).val() == "0") {
+                    groupByPeriod = 0;
+                }
+                else if ($(this).val() == "1") {
+                    groupByPeriod = 1;
+                }
+                else {
+                    groupByPeriod = 2;
+                }
+                loadPanel();
+            });
+
+
+            loadPanel();
+            $("#modalTypeOfProducts").modal('show');
+            $("#modalTypeOfProducts").modal('hide');
+
+            $("#modalDates").modal('show');
+            $("#modalDates").modal('hide');
+            
+
+               });
+    </script>
+
+
+    <div class="row-fluid">
+        <div class="span3">
+            <div class="well sidebar-nav sidebar-nav-fixed">
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalDates" id="btnModalDates">
+                    @ResTaskAnalysis.Index.lblEndProductionDate
+                </button>
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalGroupBy" id="btnModalGroupBy">
+                    @ResTaskAnalysis.Index.lblGroupBy
+                </button>
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalTasks" id="btnModalTasks">
+                    @ResTaskAnalysis.Index.lblTasks
+                </button>
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalCustomers" id="btnModalCustomers">
+                    @ResTaskAnalysis.Index.lblCustomers
+                </button>
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalDepartments" id="btnModalDepartments">
+                    @ResTaskAnalysis.Index.lblDepartments
+                </button>
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalWorkstations" id="btnModalWorkstations">
+                    @ResTaskAnalysis.Index.lblWorkstations
+                </button>
+                <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalTypeOfProducts" id="btnModalTypeOfProducts">
+                    @ResTaskAnalysis.Index.lblTypesOfProducts
+                </button>
+            </div>
+            </div>
+            <div class="span9">
+                <div id="frmGraphType" class="form-inline">
+                    <input type="radio" name="GraphType" value="0" checked />@ResTaskAnalysis.Index.lblQuantity
+                    <input type="radio" name="GraphType" value="1" />@ResTaskAnalysis.Index.lblWorkingTime
+                    <input type="radio" name="GraphType" value="2" />@ResTaskAnalysis.Index.lblUnitaryWorkingTime
+                    <input type="radio" name="GraphType" value="3" />@ResTaskAnalysis.Index.lblMeanLeadTime
+                    <input type="radio" name="GraphType" value="4" />@ResTaskAnalysis.Index.lblDelays
+                </div>
+                <div id="HistoricPanel" />
+            </div>
+        </div>
+
+
+
+    <div class="modal fade" id="modalDates" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h5 class="modal-title">@ResTaskAnalysis.Index.lblEndProductionDate</h5>
+                </div>
+                <div class="modal-body" id="frmDates">
+                    <span>
+                    @ResTaskAnalysis.Index.lblStartDate
+                    <input type="text" id="txtEndDateStart" name="txtEndDateStart" /><br />
+                    @ResTaskAnalysis.Index.lblEndDate
+                    <input type="text" id="txtEndDateEnd" name="txtEndDateStart" />
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="modalGroupBy" tabindex="-1" role="dialog" aria-labelledby="modalGroupByPeriod" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="examplemodalGroupBy">@ResTaskAnalysis.Index.lblGroupBy</h5>
+                </div>
+                <div class="modal-body" id="frmGroupBy">
+                    <span>
+                        <input type="radio" id="rdNone" name="rdGroupByPeriod" value="0" />@ResTaskAnalysis.Index.lblNone<br />
+                        <input type="radio" id="rdNone" name="rdGroupByPeriod" value="1" checked />@ResTaskAnalysis.Index.lblWeek<br />
+                        <input type="radio" id="rdNone" name="rdGroupByPeriod" value="2" />@ResTaskAnalysis.Index.lblMonth
+                    </span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalTasks" tabindex="-1" role="dialog" aria-labelledby="modalTasks" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="examplemodalTasks">@ResTaskAnalysis.Index.lblTasks</h5>
+                </div>
+                <div class="modal-body" id="frmTasks">
+                        @ResTaskAnalysis.Index.lblChooseTasks:&nbsp;<input list="ddlTasksList" id="ddlTasks" />
+                        <datalist id="ddlTasksList">
+                            @{List<KIS.App_Code.processo> tskList = ViewBag.Tasks;
+                                var sortedTasks = tskList.OrderBy(x => x.processName);
+                                foreach (var tsk in sortedTasks)
+                                {
+                                    <option data-id="@tsk.processID" value="@Server.HtmlEncode(tsk.processName)"></option>
+                                }
+                            }
+                        </datalist>
+                        <input type="image" id="btnAddTask" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" /><br />
+                        <span id="badgeTasks"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCustomers" tabindex="-1" role="dialog" aria-labelledby="modalCustomers" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="examplemodalCustomers">@ResTaskAnalysis.Index.lblCustomers</h5>
+                </div>
+                <div class="modal-body" id="frmCustomers">
+                    @ResTaskAnalysis.Index.lblChooseCustomers:&nbsp;<input list="ddlCustomersList" id="ddlCustomers" />
+                    <datalist id="ddlCustomersList">
+                        @{List<KIS.App_Code.Cliente> cstList2 = ViewBag.Customers;
+                            foreach (var cst in cstList2)
+                            {
+                                <option data-id="@Server.HtmlEncode(cst.CodiceCliente)" value="@Server.HtmlEncode(cst.RagioneSociale)"></option>
+                            }
+                        }
+                    </datalist>
+                    <input type="image" id="btnAddCustomer" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" /><br />
+                    <span id="badgeCustomers"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="modalWorkstations" tabindex="-1" role="dialog" aria-labelledby="modalWorkstations" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="examplemodalWorkstations">@ResTaskAnalysis.Index.lblWorkstations</h5>
+                </div>
+                <div class="modal-body" id="frmWorkstations">
+                    @ResTaskAnalysis.Index.lblChooseWorkstations:&nbsp;<input list="ddlWorkstationsList" id="ddlWorkstations" />
+                    <datalist id="ddlWorkstationsList">
+                        @{
+                            List<KIS.App_Code.Postazione> wsList = ViewBag.Workstations;
+                            foreach (var m in wsList)
+                            {
+                                <option data-id="@m.id" value="@Server.HtmlEncode(m.name)"></option>
+                            }
+                        }
+                    </datalist>
+                    <input type="image" id="btnAddWorkstation" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" /><br />
+                    <span id="badgeWorkstations" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalDepartments" tabindex="-1" role="dialog" aria-labelledby="modalDepartments" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="examplemodalDepartments">@ResTaskAnalysis.Index.lblDepartments</h5>
+                </div>
+                <div class="modal-body" id="frmDepartments">
+                    @ResTaskAnalysis.Index.lblChooseDepartments:&nbsp;<input list="ddlDepartmentsList" id="ddlDepartments" />
+                    <datalist id="ddlDepartmentsList">
+                        @{
+                            List<KIS.App_Code.Reparto> DepartmentList = ViewBag.Departments;
+                            foreach (var dept in DepartmentList)
+                            {
+                                <option data-id="department_@dept.id" value="@Server.HtmlEncode(dept.name)"></option>
+                            }
+                        }
+                    </datalist>
+                    <input type="image" id="btnAddDepartment" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" /><br />
+                    <span id="badgeDepartments" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalTypeOfProducts" tabindex="-1" role="dialog" aria-labelledby="modalTypeOfProducts" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="examplemodalProducts">@ResTaskAnalysis.Index.lblTypesOfProducts</h5>
+                </div>
+                <div class="modal-body" id="frmTypeOfProducts">
+                    @ResTaskAnalysis.Index.lblChooseProducts:&nbsp;<input list="ddlProductsList" id="ddlProducts" />
+                    <datalist id="ddlProductsList">
+                        @{
+                            foreach (var prd in sortedProducts)
+                            {
+                                <option data-id="@prd.IDCombinato2" value="@Server.HtmlEncode(Server.HtmlEncode(prd.process.processName +" - " + prd.variant.nomeVariante))"></option>
+                            }
+                        }
+                    </datalist>
+                    <input type="image" id="btnAddProduct" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" /><br />
+                    <span id="badgeProducts" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <div>
+        @ResTaskAnalysis.Index.lblUserNotAuthorized<br />
+        <a href="/login/login.aspx?red=/Analysis/TaskAnalysis/Index">@ResTaskAnalysis.Index.lblClickHere</a>
+    </div>
+}

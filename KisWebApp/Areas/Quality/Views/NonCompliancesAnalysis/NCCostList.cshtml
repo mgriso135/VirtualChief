@@ -1,0 +1,145 @@
+﻿@model IEnumerable<KIS.App_Sources.NonCompliance>
+@{
+    ViewBag.Title = ResAnalysis.NCCostList.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAnalysis.NCCostList.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavNonCompliancesAnalysis</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResAnalysis.NCCostList.lblTitle</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (ViewBag.authenticated)
+{
+    String strStartY = ((DateTime)ViewBag.startD).Year.ToString();
+    String strStartD = ((DateTime)ViewBag.startD).Day < 10 ? "0" + ((DateTime)ViewBag.startD).Day.ToString() : ((DateTime)ViewBag.startD).Day.ToString();
+    String strStartM = ((DateTime)ViewBag.startD).Month < 10 ? "0" + ((DateTime)ViewBag.startD).Month.ToString() : ((DateTime)ViewBag.startD).Month.ToString();
+    String strEndY = ((DateTime)ViewBag.endD).Year.ToString();
+    String strEndD = ((DateTime)ViewBag.endD).Day < 10 ? "0" + ((DateTime)ViewBag.endD).Day.ToString() : ((DateTime)ViewBag.endD).Day.ToString();
+    String strEndM = ((DateTime)ViewBag.endD).Month < 10 ? "0" + ((DateTime)ViewBag.endD).Month.ToString() : ((DateTime)ViewBag.endD).Month.ToString();
+    String strStartR = strStartD + "/" + strStartM + "/" + strStartY;
+    String strEndR = strEndD + "/" + strEndM + "/" + strEndY;
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("[id*=txtDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $(function () {
+                $("[id*=txtDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $('#txtDateStart').attr("value", "@strStartR");
+            $('#txtDateEnd').attr("value", "@strEndR");
+            $("#ddlGraphFormat").val("@ViewBag.format");
+
+            $('.btnSearch').click(function () {
+                var start = $("#txtDateStart").val();
+                var end = $("#txtDateEnd").val();
+                var format = $("#ddlGraphFormat").val();
+
+                var startS = start.split('/');
+                var endS = end.split('/');
+
+                var startD = new Date(startS[2], startS[1] - 1, startS[0]);
+                var endD = new Date(endS[2], endS[1] - 1, endS[0]);
+
+                var startY = startD.getFullYear();
+                var startM = (startD.getMonth() + 1);
+                if (startM < 10) { startM = "0" + startM; }
+                var startG = startD.getDate();
+                if (startG < 10) { startG = "0" + startG; }
+
+                var endY = endD.getFullYear();
+                var endM = (endD.getMonth() + 1);
+                if (endM < 10) { endM = "0" + endM; }
+                var endG = endD.getDate();
+                if (endG < 10) { endG = "0" + endG; }
+
+                if (startD < endD) {
+                    window.location.href = "@Url.Action("NCCostList", "NonCompliancesAnalysis")?start="
+                        + startY + "-" + startM + "-" + startG + "&end="
+                        + endY + "-" + endM + "-" + endG + "&format=" + format;
+                }
+                else {
+                    alert("@ResAnalysis.NCCostList.lblInputDateError");
+                }
+            });
+        });
+    </script>
+
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAnalysis.NCCostList.lblDateStart
+            <input type="text" id="txtDateStart" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            @ResAnalysis.NCCostList.lblDateEnd
+            <input type="text" id="txtDateEnd" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            @ResAnalysis.NCCostList.lblGraphFormat
+            <select id="ddlGraphFormat" style="min-width:150px; max-width:150px;">
+                <option value="W">@ResAnalysis.NCCostList.lblGraphFormatWeekly</option>
+                <option value="M">@ResAnalysis.NCCostList.lblGraphFormatMonthly</option>
+            </select>
+            <input type="image" src="~/img/iconView.png" style="min-width: 40px; max-width: 40px;" id="btnSearch" class="btnSearch" />
+        </div>
+    </div>
+    if (Model != null && Model.Count() > 0)
+    {
+        var lista2 = Model.GroupBy(m => m.OpeningDate.Month)
+                    .Select(group => new { XAxys = group.Key, YAxys = group.Sum(g => g.Cost) })
+                    .OrderBy(x => x.XAxys)
+                    .ToList();
+        if (ViewBag.format == 'W')
+        {
+            lista2 = Model.GroupBy(m => Int32.Parse(Math.Truncate((double)(m.OpeningDate.DayOfYear / 7) + 1).ToString()))
+            .Select(group => new { XAxys = group.Key, YAxys = group.Sum(g => g.Cost) })
+            .OrderBy(x => x.XAxys)
+            .ToList();
+        }
+        
+        String strStart = strStartY + "-" + strStartM + "-" + strStartD;
+        String strEnd = strEndY + "-" + strEndM + "-" + strEndD;
+        <img id="imgCategoriesGraph" src="@Url.Action("NCCostGraph", "NonCompliancesAnalysis")?start=@strStart&end=@strEnd&format=@ViewBag.format" />
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-bordered table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            @if (ViewBag.format == 'W')
+                            {
+                                <th>@ResAnalysis.NCCostList.lblTHWeek</th> }
+                            else
+                            {
+                                <th>@ResAnalysis.NCCostList.lblTHMonth</th>}
+
+                            <th>@ResAnalysis.NCCostList.lblTHCost</th>
+                        </tr>
+                    </thead>
+                    @foreach (var m in lista2)
+                    {
+                        <tr>
+                            <td>@m.XAxys</td>
+                            <td>@Math.Round(m.YAxys, 2) @ResAnalysis.NCCostList.lblCurrency</td>
+                        </tr>
+                    }
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>@ResAnalysis.NCCostList.lblNoCauses</div>
+    }
+}
+else
+{
+    <div>@ResAnalysis.NCCostList.lblErrNoAuth</div>
+}

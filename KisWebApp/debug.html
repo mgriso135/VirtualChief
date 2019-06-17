@@ -1,0 +1,996 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisi tasks - Virtual Chief</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/img/favicon.ico" />
+    <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+    <script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
+    <script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+    <script src="/Scripts/modernizr-2.8.3.js"></script>
+
+    <script>
+        $(function () {
+
+            $("#accordion").accordion();
+
+
+
+            var availableTags = [
+                "ActionScript",
+                "AppleScript",
+                "Asp",
+                "BASIC",
+                "C",
+                "C++",
+                "Clojure",
+                "COBOL",
+                "ColdFusion",
+                "Erlang",
+                "Fortran",
+                "Groovy",
+                "Haskell",
+                "Java",
+                "JavaScript",
+                "Lisp",
+                "Perl",
+                "PHP",
+                "Python",
+                "Ruby",
+                "Scala",
+                "Scheme"
+            ];
+            /*$("#autocomplete").autocomplete({
+                source: availableTags
+            });
+
+
+
+            $("#button").button();
+            $("#radioset").buttonset();
+
+
+
+            $("#tabs").tabs();
+
+
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                width: 400,
+                buttons: [
+                    {
+                        text: "Ok",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+
+            // Link to open the dialog
+            $("#dialog-link").click(function (event) {
+                $("#dialog").dialog("open");
+                event.preventDefault();
+            });
+
+            */
+
+            $("#datepicker").datepicker({
+                inline: true
+            });
+
+            /*
+
+                            $("#slider").slider({
+                                range: true,
+                                values: [17, 67]
+                            });
+
+
+
+                            $("#progressbar").progressbar({
+                                value: 20
+                            });
+
+
+                            // Hover states on the static widgets
+                            $("#dialog-link, #icons li").hover(
+                                function () {
+                                    $(this).addClass("ui-state-hover");
+                                },
+                                function () {
+                                    $(this).removeClass("ui-state-hover");
+                                }
+                            );*/
+        });
+    </script>
+
+    <!-- CSS GIORDANO -->
+    <link href="/Styles/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="/Styles/assets/css/bootstrap-responsive.css" rel="stylesheet" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+          <script src="~/Styles/assets/js/html5shiv.js"></script>
+        <![endif]-->
+    <!-- Fav and touch icons -->
+    <!-- FINE CSS GIORDANO -->
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+    <script type="text/javascript">
+        window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website.<br/>Navigando sul nostro sito accetti la privacy policy. Il sito utilizza i cookie di terze parti per profilare gli utenti.", "dismiss": "Chiudi e accetta", "learnMore": "More info", "link": null, "theme": "light-bottom" };
+    </script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    <!-- End Cookie Consent plugin -->
+    <!-- Never expiring session -->
+    <script type="text/javascript">
+        window.setInterval("renewSession();", 60000);
+        function renewSession() {
+            document.getElementById("renewSession").src = "../../renewSes.aspx?par=" + Math.random();
+        }
+    </script>
+    <!-- End Never expiring sessione -->
+
+</head>
+<body>
+    <div id="wrap">
+        <!--<header>-->
+        <!-- Fixed navbar -->
+        <div class="masthead">
+            <div class="container header">
+                <img src="/Data/Logo/Logo.png" alt="Company's logo" style="height:50px;" />
+
+                <a class="brand">Virtual Chief</a>
+                <div class="pull-right text-right">
+
+
+                    <section><span id="1_lblInfoLogin"><small>Bienvenido&nbsp;Matteo Griso<br />Último acceso: 29/11/2018 15:21:10</small></span></section>
+                </div>
+            </div>
+            <form method="post" action="Index" id="ctl00">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+                </div>
+
+
+                <script src="/WebResource.axd?d=fqV81KWLWhVg-lLAb4IT6zup3eXEMTYCo4fdi6VIblyUI62W7g0ctLDknAPE1HNfZTyF5wuuCim-8ywOnYZinX-ttqJncch_u7S6K0-Beyk1&amp;t=636668582816624236" type="text/javascript"></script>
+                <script type="text/javascript">
+                    $(function () {
+                        //to fix collapse mode width issue
+                        $(".nav li,.nav li a,.nav li ul").removeAttr('style');
+
+                        //for dropdown menu
+                        $(".dropdown-menu").parent().removeClass().addClass('dropdown');
+                        $(".dropdown>a").removeClass().addClass('dropdown-toggle').append('<b class="caret"></b>').attr('data-toggle', 'dropdown');
+
+                        //remove default click redirect effect
+                        $('.dropdown-toggle').attr('onclick', '').off('click');
+
+                    });
+                </script>
+
+                <div class="container">
+                    <div class="navbar navbar-default">
+                        <div class="navbar-header">
+                            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <!-- Everything you want hidden at 940px or less, place within here -->
+                            <div class="nav-collapse">
+
+                                <a href="#1_frmMenu_SkipLink"><img alt="Omitir vínculos de navegación" src="/WebResource.axd?d=rKN1opQVoh180LaGjXZZkDPU8uO0whkaHEkqAnt32W8UWrUUK8gZr6up8xLbthGtyUwGz0E5ffznINZpFZ8FUw2&amp;t=636668582816624236" width="0" height="0" style="border-width:0px;" /></a><div id="1_frmMenu">
+                                    <ul class="level1 nav">
+                                        <li><a class="level1" href="../../Login/login.aspx">Login</a></li>
+                                        <li>
+                                            <a class="popout level1" href="../../admin/admin.aspx">Admin</a><ul class="level2 dropdown-menu">
+                                                <li><a class="level2" href="../../Admin/kisAdmin.aspx">Configurazione principale</a></li>
+                                                <li><a class="level2" href="../../Users/manageUsers.aspx">Gestione utenti</a></li>
+                                                <li><a class="level2" href="../../Users/manageGruppi.aspx">Gestione gruppi</a></li>
+                                                <li><a class="level2" href="../../Users/managePermessi.aspx">Gestione permessi</a></li>
+                                                <li><a class="level2" href="../../Admin/manageMenu.aspx">Gestione menu</a></li>
+                                                <li><a class="level2" href="../../Andon/configAndonCompleto.aspx">Configurazione Andon</a></li>
+                                                <li><a class="level2" href="../../Admin/manageReports.aspx">Configurazione reports</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="level1" href="../../Personal/my.aspx">myArea</a></li>
+                                        <li>
+                                            <a class="popout level1" href="../../Reparti/configReparto.aspx">Plant</a><ul class="level2 dropdown-menu">
+                                                <li><a class="level2" href="../../Postazioni/managePostazioniLavoro.aspx">Postazioni di lavoro</a></li>
+                                                <li><a class="level2" href="../../Reparti/listReparti.aspx">Reparti</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="level1" href="../../Processi/MacroProcessi.aspx">Process Manager</a></li>
+                                        <li>
+                                            <a class="popout level1" href="../../Commesse/commesse.aspx">Vendite</a><ul class="level2 dropdown-menu">
+                                                <li><a class="level2" href="../../Clienti/Clienti.aspx">Anagrafica clienti</a></li>
+                                                <li><a class="level2" href="../../Commesse/commesse.aspx">Commesse</a></li>
+                                                <li><a class="level2" href="../../Commesse/wzAddCommessa.aspx">Wizard nuova commessa</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="popout level1" href="../../Produzione/produzione.aspx">Production plan</a><ul class="level2 dropdown-menu">
+                                                <li><a class="level2" href="/Produzione/commesseDaProdurre.aspx">Nuove commesse</a></li>
+                                                <li><a class="level2" href="../../Produzione/workLoadListReparti.aspx">Carico di lavoro</a></li>
+                                                <li><a class="level2" href="/Produzione/PianoProduzioneCompleto.aspx">Piano Produzione</a></li>
+                                                <li><a class="level2" href="../ProductionHistory/Index">Storico produzione</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="popout level1" href="../../Operatori/checkInPostazione.aspx">WorkPlace</a><ul class="level2 dropdown-menu">
+                                                <li><a class="level2" href="../../Workplace/WebGemba/Index">Web Gemba</a></li>
+                                                <li><a class="level2" href="/Operatori/AzioniBarcode.aspx">Barcode Gemba Server Side</a></li>
+                                                <li><a class="level2" href="/Operatori/AzioniBarcodeJS.aspx">Barcode Gemba</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="popout level1" href="../../Produzione/AndonListReparti.aspx">Andon</a><ul class="level2 dropdown-menu">
+                                                <li><a class="level2" href="../../Produzione/AndonListReparti.aspx">Andon Reparto</a></li>
+                                                <li><a class="level2" href="../../Produzione/avanzamentoProduzione.aspx">Andon completo</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="level1" href="../analysis.aspx">Reports</a></li>
+                                        <li><a class="level1" href="../../Personal/my.aspx">myKIS</a></li>
+                                    </ul>
+                                </div><a id="1_frmMenu_SkipLink"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="aspNetHidden">
+
+                    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="FA2018BD" />
+                </div>
+                <script type='text/javascript'>new Sys.WebForms.Menu({ element: '1_frmMenu', disappearAfter: 500, orientation: 'horizontal', tabIndex: 0, disabled: false });</script>
+            </form>
+        </div>
+        <div class="container">
+
+            <br />
+            <div class="container body-content">
+
+
+
+                <h3>Analisi tasks</h3>
+
+
+
+                <ul class="breadcrumb hidden-phone">
+                    <li>
+                        <a href="/Analysis/analysis.aspx">Analisi</a>
+                        <span class="divider">/</span>
+                    </li>
+                    <li>
+                        <a href="/Analysis/TaskAnalysis/Index">Analisi tasks</a>
+                        <span class="divider">/</span>
+                    </li>
+                </ul>
+                <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        var CustomersArr = [];
+                        var CustomersNameArr = [];
+                        var DepartmentsArr = [];
+                        var TypeOfProductsArr = [];
+                        var TypeOfProductsNameArr = [];
+                        var WorkstationsArr = [];
+                        var TasksArr = [];
+                        var TasksNameArr = [];
+                        var groupByPeriod = 1;
+                        var graphType = 0;
+
+                        $(function () {
+                            $("[id*=txtEndDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+                        });
+
+                        $(function () {
+                            $("[id*=txtEndDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+                        });
+
+
+                        var enddate = new Date();
+                        var enddateStr = enddate.getDate() + "/"
+                            + (enddate.getMonth() + 1) + "/"
+                            + enddate.getFullYear();
+                        $("#txtEndDateEnd").val(enddateStr);
+
+                        var startdate = new Date();
+                        startdate.setMonth(startdate.getMonth() - 1);
+                        var startdateStr = startdate.getDate() + "/"
+                            + (startdate.getMonth() + 1) + "/"
+                            + startdate.getFullYear();
+
+                        $("#txtEndDateStart").val(startdateStr);
+
+                        $("#txtEndDateStart").bind("propertychange change keyup paste input", function () {
+                            // load the page
+                            var endPDateS = $('#txtEndDateStart').val();
+                            var endPDateA = endPDateS.split('/');
+                            startdate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                            if (startdate) {
+                                loadPanel();
+                            }
+                            else {
+                                alert("Invalid date");
+                            }
+                        });
+
+                        $("#txtEndDateEnd").bind("propertychange change keyup paste input", function () {
+                            // load the page
+                            var endPDateS = $('#txtEndDateEnd').val();
+                            var endPDateA = endPDateS.split('/');
+                            enddate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                            if (enddate) {
+                                loadPanel();
+                            }
+                            else {
+                                alert("Invalid date");
+                            }
+                        });
+
+                        // load badges of tasks
+                        // badgeTasks
+
+                        $('#badgeProducts').append('<span class="badge badge-info" id="product_64/0/33">1 - Variante copiata da wizard&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="64/0/33" /></span>'); TypeOfProductsArr.push('64/0/33'); TypeOfProductsNameArr.push('1 - Variante copiata da wizard'); $('#badgeProducts').append('<span class="badge badge-info" id="product_86/0/62">Alfa - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="86/0/62" /></span>'); TypeOfProductsArr.push('86/0/62'); TypeOfProductsNameArr.push('Alfa - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_1/0/18">Assemblaggio piattaforme - LL1472 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="1/0/18" /></span>'); TypeOfProductsArr.push('1/0/18'); TypeOfProductsNameArr.push('Assemblaggio piattaforme - LL1472 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_1/0/14">Assemblaggio piattaforme - LL1775 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="1/0/14" /></span>'); TypeOfProductsArr.push('1/0/14'); TypeOfProductsNameArr.push('Assemblaggio piattaforme - LL1775 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_1/0/12">Assemblaggio piattaforme - LL1965 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="1/0/12" /></span>'); TypeOfProductsArr.push('1/0/12'); TypeOfProductsNameArr.push('Assemblaggio piattaforme - LL1965 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_1/0/19">Assemblaggio piattaforme - LL2010 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="1/0/19" /></span>'); TypeOfProductsArr.push('1/0/19'); TypeOfProductsNameArr.push('Assemblaggio piattaforme - LL2010 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_1/0/1">Assemblaggio piattaforme - LL2312 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="1/0/1" /></span>'); TypeOfProductsArr.push('1/0/1'); TypeOfProductsNameArr.push('Assemblaggio piattaforme - LL2312 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_66/0/36">Cliente di test - Penna biro&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="66/0/36" /></span>'); TypeOfProductsArr.push('66/0/36'); TypeOfProductsNameArr.push('Cliente di test - Penna biro'); $('#badgeProducts').append('<span class="badge badge-info" id="product_26/0/7">Collettore - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="26/0/7" /></span>'); TypeOfProductsArr.push('26/0/7'); TypeOfProductsNameArr.push('Collettore - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_70/0/37">Commessa per SITECAL 3 - Copia prodotto PENNA&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="70/0/37" /></span>'); TypeOfProductsArr.push('70/0/37'); TypeOfProductsNameArr.push('Commessa per SITECAL 3 - Copia prodotto PENNA'); $('#badgeProducts').append('<span class="badge badge-info" id="product_70/0/38">Commessa per SITECAL 3 - Prova 2&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="70/0/38" /></span>'); TypeOfProductsArr.push('70/0/38'); TypeOfProductsNameArr.push('Commessa per SITECAL 3 - Prova 2'); $('#badgeProducts').append('<span class="badge badge-info" id="product_70/0/46">Commessa per SITECAL 3 - SCAFFALE&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="70/0/46" /></span>'); TypeOfProductsArr.push('70/0/46'); TypeOfProductsNameArr.push('Commessa per SITECAL 3 - SCAFFALE'); $('#badgeProducts').append('<span class="badge badge-info" id="product_87/0/64">Epoca - Hidden3&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="87/0/64" /></span>'); TypeOfProductsArr.push('87/0/64'); TypeOfProductsNameArr.push('Epoca - Hidden3'); $('#badgeProducts').append('<span class="badge badge-info" id="product_87/0/69">Epoca - Nuovo prodotto&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="87/0/69" /></span>'); TypeOfProductsArr.push('87/0/69'); TypeOfProductsNameArr.push('Epoca - Nuovo prodotto'); $('#badgeProducts').append('<span class="badge badge-info" id="product_87/0/70">Epoca - Task singolo&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="87/0/70" /></span>'); TypeOfProductsArr.push('87/0/70'); TypeOfProductsNameArr.push('Epoca - Task singolo'); $('#badgeProducts').append('<span class="badge badge-info" id="product_87/0/71">Epoca - Test fast wizard&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="87/0/71" /></span>'); TypeOfProductsArr.push('87/0/71'); TypeOfProductsNameArr.push('Epoca - Test fast wizard'); $('#badgeProducts').append('<span class="badge badge-info" id="product_84/0/60">Hidden1 - Default&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="84/0/60" /></span>'); TypeOfProductsArr.push('84/0/60'); TypeOfProductsNameArr.push('Hidden1 - Default'); $('#badgeProducts').append('<span class="badge badge-info" id="product_85/0/61">Hidden2 - New version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="85/0/61" /></span>'); TypeOfProductsArr.push('85/0/61'); TypeOfProductsNameArr.push('Hidden2 - New version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_61/0/24">Iphone - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="61/0/24" /></span>'); TypeOfProductsArr.push('61/0/24'); TypeOfProductsNameArr.push('Iphone - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_61/0/31">Iphone - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="61/0/31" /></span>'); TypeOfProductsArr.push('61/0/31'); TypeOfProductsNameArr.push('Iphone - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_61/0/26">Iphone - New Default Version (2)&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="61/0/26" /></span>'); TypeOfProductsArr.push('61/0/26'); TypeOfProductsNameArr.push('Iphone - New Default Version (2)'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/72">Officine Cartigliano - Fast test ff&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/72" /></span>'); TypeOfProductsArr.push('65/0/72'); TypeOfProductsNameArr.push('Officine Cartigliano - Fast test ff'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/56">Officine Cartigliano - jjjjjjjjjjjjjj&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/56" /></span>'); TypeOfProductsArr.push('65/0/56'); TypeOfProductsNameArr.push('Officine Cartigliano - jjjjjjjjjjjjjj'); $('#badgeProducts').append('<span class="badge badge-info" id="product_62/0/30">Officine cartigliano - New version - copia da Assemblaggio piattaforme - LL1965 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="62/0/30" /></span>'); TypeOfProductsArr.push('62/0/30'); TypeOfProductsNameArr.push('Officine cartigliano - New version - copia da Assemblaggio piattaforme - LL1965 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_62/0/27">Officine cartigliano - New version - copia da Assemblaggio piattaforme - LL2010 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="62/0/27" /></span>'); TypeOfProductsArr.push('62/0/27'); TypeOfProductsNameArr.push('Officine cartigliano - New version - copia da Assemblaggio piattaforme - LL2010 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_62/0/29">Officine cartigliano - New version - copia da Assemblaggio piattaforme - LL2010 benzina&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="62/0/29" /></span>'); TypeOfProductsArr.push('62/0/29'); TypeOfProductsNameArr.push('Officine cartigliano - New version - copia da Assemblaggio piattaforme - LL2010 benzina'); $('#badgeProducts').append('<span class="badge badge-info" id="product_62/0/28">Officine cartigliano - New version - copia da Iphone - New Default Version (2)&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="62/0/28" /></span>'); TypeOfProductsArr.push('62/0/28'); TypeOfProductsNameArr.push('Officine cartigliano - New version - copia da Iphone - New Default Version (2)'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/55">Officine Cartigliano - Nuove quantit&amp;#224;&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/55" /></span>'); TypeOfProductsArr.push('65/0/55'); TypeOfProductsNameArr.push('Officine Cartigliano - Nuove quantit&amp;#224;'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/49">Officine Cartigliano - Nuovo prodotto&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/49" /></span>'); TypeOfProductsArr.push('65/0/49'); TypeOfProductsNameArr.push('Officine Cartigliano - Nuovo prodotto'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/39">Officine Cartigliano - Nuovo prodotto 16/12&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/39" /></span>'); TypeOfProductsArr.push('65/0/39'); TypeOfProductsNameArr.push('Officine Cartigliano - Nuovo prodotto 16/12'); $('#badgeProducts').append('<span class="badge badge-info" id="product_62/0/25">Officine cartigliano - Protezione 10&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="62/0/25" /></span>'); TypeOfProductsArr.push('62/0/25'); TypeOfProductsNameArr.push('Officine cartigliano - Protezione 10'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/34">Officine Cartigliano - PROVA2&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/34" /></span>'); TypeOfProductsArr.push('65/0/34'); TypeOfProductsNameArr.push('Officine Cartigliano - PROVA2'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/35">Officine Cartigliano - PROVA2&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/35" /></span>'); TypeOfProductsArr.push('65/0/35'); TypeOfProductsNameArr.push('Officine Cartigliano - PROVA2'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/47">Officine Cartigliano - tyjdtygjdtyj&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/47" /></span>'); TypeOfProductsArr.push('65/0/47'); TypeOfProductsNameArr.push('Officine Cartigliano - tyjdtygjdtyj'); $('#badgeProducts').append('<span class="badge badge-info" id="product_65/0/48">Officine Cartigliano - x&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="65/0/48" /></span>'); TypeOfProductsArr.push('65/0/48'); TypeOfProductsNameArr.push('Officine Cartigliano - x'); $('#badgeProducts').append('<span class="badge badge-info" id="product_41/0/17">Oggetti personalizzati SITECAL - Cassone in ferro&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="41/0/17" /></span>'); TypeOfProductsArr.push('41/0/17'); TypeOfProductsNameArr.push('Oggetti personalizzati SITECAL - Cassone in ferro'); $('#badgeProducts').append('<span class="badge badge-info" id="product_41/0/16">Oggetti personalizzati SITECAL - Scaffalatura standard&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="41/0/16" /></span>'); TypeOfProductsArr.push('41/0/16'); TypeOfProductsNameArr.push('Oggetti personalizzati SITECAL - Scaffalatura standard'); $('#badgeProducts').append('<span class="badge badge-info" id="product_73/0/43">OPS - fghjkl&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="73/0/43" /></span>'); TypeOfProductsArr.push('73/0/43'); TypeOfProductsNameArr.push('OPS - fghjkl'); $('#badgeProducts').append('<span class="badge badge-info" id="product_73/0/42">OPS - PROVA2&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="73/0/42" /></span>'); TypeOfProductsArr.push('73/0/42'); TypeOfProductsNameArr.push('OPS - PROVA2'); $('#badgeProducts').append('<span class="badge badge-info" id="product_74/0/44">Primo cliente - NOME_PRODOTTO&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="74/0/44" /></span>'); TypeOfProductsArr.push('74/0/44'); TypeOfProductsNameArr.push('Primo cliente - NOME_PRODOTTO'); $('#badgeProducts').append('<span class="badge badge-info" id="product_75/0/45">Prodotti snelli - LL2010 diesel&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="75/0/45" /></span>'); TypeOfProductsArr.push('75/0/45'); TypeOfProductsNameArr.push('Prodotti snelli - LL2010 diesel'); $('#badgeProducts').append('<span class="badge badge-info" id="product_83/0/59">Shadow part number - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="83/0/59" /></span>'); TypeOfProductsArr.push('83/0/59'); TypeOfProductsNameArr.push('Shadow part number - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_72/0/40">SUPER - aaa&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="72/0/40" /></span>'); TypeOfProductsArr.push('72/0/40'); TypeOfProductsNameArr.push('SUPER - aaa'); $('#badgeProducts').append('<span class="badge badge-info" id="product_72/0/41">SUPER - trewq&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="72/0/41" /></span>'); TypeOfProductsArr.push('72/0/41'); TypeOfProductsNameArr.push('SUPER - trewq'); $('#badgeProducts').append('<span class="badge badge-info" id="product_99/0/88">Test family prod with constraint type - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="99/0/88" /></span>'); TypeOfProductsArr.push('99/0/88'); TypeOfProductsNameArr.push('Test family prod with constraint type - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_82/0/58">Test1 - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="82/0/58" /></span>'); TypeOfProductsArr.push('82/0/58'); TypeOfProductsNameArr.push('Test1 - New Default Version'); $('#badgeProducts').append('<span class="badge badge-info" id="product_90/0/77">Test2 - UT&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="90/0/77" /></span>'); TypeOfProductsArr.push('90/0/77'); TypeOfProductsNameArr.push('Test2 - UT'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/63">TestCustomer - Copia prodotto di test&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/63" /></span>'); TypeOfProductsArr.push('80/0/63'); TypeOfProductsNameArr.push('TestCustomer - Copia prodotto di test'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/68">TestCustomer - CopiaTEST&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/68" /></span>'); TypeOfProductsArr.push('80/0/68'); TypeOfProductsNameArr.push('TestCustomer - CopiaTEST'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/80">TestCustomer - Default&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/80" /></span>'); TypeOfProductsArr.push('80/0/80'); TypeOfProductsNameArr.push('TestCustomer - Default'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/82">TestCustomer - Default&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/82" /></span>'); TypeOfProductsArr.push('80/0/82'); TypeOfProductsNameArr.push('TestCustomer - Default'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/81">TestCustomer - Default1&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/81" /></span>'); TypeOfProductsArr.push('80/0/81'); TypeOfProductsNameArr.push('TestCustomer - Default1'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/83">TestCustomer - Default12&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/83" /></span>'); TypeOfProductsArr.push('80/0/83'); TypeOfProductsNameArr.push('TestCustomer - Default12'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/78">TestCustomer - Lastra 1120x1600&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/78" /></span>'); TypeOfProductsArr.push('80/0/78'); TypeOfProductsNameArr.push('TestCustomer - Lastra 1120x1600'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/50">TestCustomer - LL2010 Lithium&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/50" /></span>'); TypeOfProductsArr.push('80/0/50'); TypeOfProductsNameArr.push('TestCustomer - LL2010 Lithium'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/85">TestCustomer - New test product&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/85" /></span>'); TypeOfProductsArr.push('80/0/85'); TypeOfProductsNameArr.push('TestCustomer - New test product'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/66">TestCustomer - NewProduct&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/66" /></span>'); TypeOfProductsArr.push('80/0/66'); TypeOfProductsNameArr.push('TestCustomer - NewProduct'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/51">TestCustomer - Nuovo&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/51" /></span>'); TypeOfProductsArr.push('80/0/51'); TypeOfProductsNameArr.push('TestCustomer - Nuovo'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/65">TestCustomer - Nuovo con tabella1&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/65" /></span>'); TypeOfProductsArr.push('80/0/65'); TypeOfProductsNameArr.push('TestCustomer - Nuovo con tabella1'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/73">TestCustomer - Prod1&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/73" /></span>'); TypeOfProductsArr.push('80/0/73'); TypeOfProductsNameArr.push('TestCustomer - Prod1'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/74">TestCustomer - Prod2&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/74" /></span>'); TypeOfProductsArr.push('80/0/74'); TypeOfProductsNameArr.push('TestCustomer - Prod2'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/67">TestCustomer - Prodotto PERT tabellare&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/67" /></span>'); TypeOfProductsArr.push('80/0/67'); TypeOfProductsNameArr.push('TestCustomer - Prodotto PERT tabellare'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/52">TestCustomer - Prodotto vuoto&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/52" /></span>'); TypeOfProductsArr.push('80/0/52'); TypeOfProductsNameArr.push('TestCustomer - Prodotto vuoto'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/57">TestCustomer - PROVA QUANTITA&amp;#39;&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/57" /></span>'); TypeOfProductsArr.push('80/0/57'); TypeOfProductsNameArr.push('TestCustomer - PROVA QUANTITA&amp;#39;'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/76">TestCustomer - Test multiple tasks&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/76" /></span>'); TypeOfProductsArr.push('80/0/76'); TypeOfProductsNameArr.push('TestCustomer - Test multiple tasks'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/75">TestCustomer - Test new copy upd&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/75" /></span>'); TypeOfProductsArr.push('80/0/75'); TypeOfProductsNameArr.push('TestCustomer - Test new copy upd'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/84">TestCustomer - Test pause&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/84" /></span>'); TypeOfProductsArr.push('80/0/84'); TypeOfProductsNameArr.push('TestCustomer - Test pause'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/87">TestCustomer - Test prev type&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/87" /></span>'); TypeOfProductsArr.push('80/0/87'); TypeOfProductsNameArr.push('TestCustomer - Test prev type'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/54">TestCustomer - Test quantit&amp;#224; copia&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/54" /></span>'); TypeOfProductsArr.push('80/0/54'); TypeOfProductsNameArr.push('TestCustomer - Test quantit&amp;#224; copia'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/86">TestCustomer - Test123&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/86" /></span>'); TypeOfProductsArr.push('80/0/86'); TypeOfProductsNameArr.push('TestCustomer - Test123'); $('#badgeProducts').append('<span class="badge badge-info" id="product_80/0/89">TestCustomer - Test321&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="80/0/89" /></span>'); TypeOfProductsArr.push('80/0/89'); TypeOfProductsNameArr.push('TestCustomer - Test321'); $('#badgeProducts').append('<span class="badge badge-info" id="product_97/0/79">TestFuso - ProdottoFuso&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="97/0/79" /></span>'); TypeOfProductsArr.push('97/0/79'); TypeOfProductsNameArr.push('TestFuso - ProdottoFuso'); $('#badgeProducts').append('<span class="badge badge-info" id="product_20/0/5">Y - New Default Version&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delproduct" value="20/0/5" /></span>'); TypeOfProductsArr.push('20/0/5'); TypeOfProductsNameArr.push('Y - New Default Version');
+
+
+                        $("#modalTypeOfProducts").on('click', '.delproduct', function () {
+
+                            var index = $.inArray($(this).val(), TypeOfProductsArr);
+                            if (index >= 0) TypeOfProductsArr.splice(index, 1);
+                            if (index >= 0) TypeOfProductsNameArr.splice(index, 1);
+
+                            $("#badgeProducts").html("");
+                            loadPanel();
+                            for (var i = 0; i < TypeOfProductsArr.length; i++) {
+                                $('#badgeProducts').append("<span class=\"badge badge-info\" id=\"product_" + TypeOfProductsArr[i] + "\">"
+                                    + TypeOfProductsNameArr[i] + "&nbsp;<input type=\"image\" src=\"/img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + TypeOfProductsArr[i] + "\" /></span>");
+                            }
+                        });
+
+                        $("#btnAddProduct").click(function () {
+                            var g = $('#ddlProducts').val();
+                            var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
+                            var index = $.inArray(id, TypeOfProductsArr);
+
+                            if (index == -1 && g.length > 0) {
+                                TypeOfProductsArr.push(id);
+                                TypeOfProductsNameArr.push(g);
+
+                                $('#badgeProducts').append("<span class=\"badge badge-info\" id=\"product_" + id + "\">"
+                                    + g + "&nbsp;<input type=\"image\" src=\"/img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + id + "\" /></span>");
+                            }
+                            $('#ddlProducts').val("");
+                            loadPanel();
+                        });
+
+                        $('#badgeCustomers').append('<span class="badge badge-info" id="customer_TestCustomer">Cliente di test&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delcustomer" value="TestCustomer" /></span>'); CustomersArr.push('TestCustomer'); CustomersNameArr.push('Cliente di test'); $('#badgeCustomers').append('<span class="badge badge-info" id="customer_Epoca">Epoca SPA1&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delcustomer" value="Epoca" /></span>'); CustomersArr.push('Epoca'); CustomersNameArr.push('Epoca SPA1'); $('#badgeCustomers').append('<span class="badge badge-info" id="customer_Kaizen Customer">Kaizen Customer spa&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delcustomer" value="Kaizen Customer" /></span>'); CustomersArr.push('Kaizen Customer'); CustomersNameArr.push('Kaizen Customer spa'); $('#badgeCustomers').append('<span class="badge badge-info" id="customer_Officine Cartigliano">Officine Cartigliano&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delcustomer" value="Officine Cartigliano" /></span>'); CustomersArr.push('Officine Cartigliano'); CustomersNameArr.push('Officine Cartigliano'); $('#badgeCustomers').append('<span class="badge badge-info" id="customer_TestFuso">TestFuso SPA&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delcustomer" value="TestFuso" /></span>'); CustomersArr.push('TestFuso'); CustomersNameArr.push('TestFuso SPA'); $('#badgeCustomers').append('<span class="badge badge-info" id="customer_Test2">TestREST s.p.a. 4&nbsp;<input type="image" src="/img/iconClose.png" style="height: 15px;" class="delcustomer" value="Test2" /></span>'); CustomersArr.push('Test2'); CustomersNameArr.push('TestREST s.p.a. 4');
+
+
+                        $("#modalCustomers").on('click', '.delcustomer', function () {
+
+                            var index = $.inArray($(this).val(), CustomersArr);
+                            if (index >= 0) CustomersArr.splice(index, 1);
+                            if (index >= 0) CustomersNameArr.splice(index, 1);
+
+                            $("#badgeCustomers").html("");
+                            loadPanel();
+                            for (var i = 0; i < CustomersArr.length; i++) {
+                                $('#badgeCustomers').append("<span class=\"badge badge-info\" id=\"customer_" + CustomersArr[i] + "\">"
+                                    + CustomersNameArr[i] + "&nbsp;<input type=\"image\" src=\"/img/iconClose.png\" style=\"height: 15px;\" class=\"delcustomer\" value=\"" + CustomersArr[i] + "\" /></span>");
+                            }
+                        });
+
+                        $("#btnAddCustomer").click(function () {
+                            var g = $('#ddlCustomers').val();
+                            var id = $("#ddlCustomersList option[value='" + g + "']").attr('data-id');
+                            var index = $.inArray(id, CustomersArr);
+
+                            if (index == -1 && g.length > 0) {
+                                CustomersArr.push(id);
+                                CustomersNameArr.push(g);
+
+                                $('#badgeCustomers').append("<span class=\"badge badge-info\" id=\"product_" + id + "\">"
+                                    + g + "&nbsp;<input type=\"image\" src=\"/img/iconClose.png\" style=\"height: 15px;\" class=\"delproduct\" value=\"" + id + "\" /></span>");
+                            }
+                            $('#ddlCustomers').val("");
+                            loadPanel();
+                        });
+
+                        $("#modalTasks").on('click', '.deltask', function () {
+
+                            var index = $.inArray($(this).val(), TasksArr);
+                            if (index >= 0) TasksArr.splice(index, 1);
+                            if (index >= 0) TasksNameArr.splice(index, 1);
+
+                            $("#badgeTasks").html("");
+                            loadPanel();
+                            for (var i = 0; i < TasksArr.length; i++) {
+                                $('#badgeTasks').append("<span class=\"badge badge-info\" id=\"task_" + TasksArr[i] + "\">"
+                                    + TasksNameArr[i] + "&nbsp;<input type=\"image\" src=\"/img/iconClose.png\" style=\"height: 15px;\" class=\"deltask\" value=\"" + TasksArr[i] + "\" /></span>");
+                            }
+                        });
+
+                        $("#btnAddTask").click(function () {
+                            var g = $('#ddlTasks').val();
+                            var id = $("#ddlTasksList option[value='" + g + "']").attr('data-id');
+                            var index = $.inArray(id, TasksArr);
+
+                            if (index == -1 && g.length > 0) {
+                                TasksArr.push(id);
+                                TasksNameArr.push(g);
+
+                                $('#badgeTasks').append("<span class=\"badge badge-info\" id=\"task_" + id + "\">"
+                                    + g + "&nbsp;<input type=\"image\" src=\"/img/iconClose.png\" style=\"height: 15px;\" class=\"deltask\" value=\"" + id + "\" /></span>");
+                            }
+                            $('#ddlTasks').val("");
+                            loadPanel();
+                        });
+
+
+                        function loadPanel() {
+                            $("#HistoricPanel").fadeTo(0, 0.5);
+                            $("#txtEndDateStart").prop("disabled", true);
+                            $("#txtEndDateEnd").prop("disabled", true);
+
+                            var startPeriod = startdate.getFullYear() + "-" +
+                                (startdate.getMonth() + 1) + "-" + startdate.getDate();
+                            var endPeriod = enddate.getFullYear() + "-" +
+                                (enddate.getMonth() + 1) + "-" + enddate.getDate();
+
+                            var jsonData = {
+                                "StartPeriod": startPeriod, "EndPeriod": endPeriod, "Customer": {}
+                            };
+
+                            var customersStr = "";
+                            for (i = 0; i < CustomersArr.length; i++) {
+                                customersStr += ";" + CustomersArr[i];
+                            }
+
+                            var departmentsStr = "";
+                            for (i = 0; i < DepartmentsArr.length; i++) {
+                                departmentsStr += DepartmentsArr[i] + ";";
+                            }
+
+                            var workstationsStr = "";
+                            for (i = 0; i < WorkstationsArr.length; i++) {
+                                workstationsStr += WorkstationsArr[i] + ";";
+                            }
+
+                            var tasksStr = "";
+                            for (i = 0; i < TasksArr.length; i++) {
+                                tasksStr += TasksArr[i] + ";";
+                            }
+
+                            var TypeOfProductsStr = "";
+                            for (i = 0; i < TypeOfProductsArr.length; i++) {
+                                TypeOfProductsStr += TypeOfProductsArr[i] + ";";
+                            }
+
+
+                            $.ajax({
+                                url: "/Analysis/TaskAnalysis/TaskDataPanel",
+                                type: 'GET',
+                                dataType: "html",
+                                data: {
+                                    startPeriod: startPeriod,
+                                    endPeriod: endPeriod,
+                                    customers: customersStr,
+                                    departments: departmentsStr,
+                                    TypeOfProducts: TypeOfProductsStr,
+                                    periodType: groupByPeriod,
+                                    graphType: graphType,
+                                    workstations: workstationsStr,
+                                    tasks: tasksStr
+                                },
+                                success: function (result) {
+                                    //alert("Risultato: " + result);
+                                    //$("#HistoricPanel").html(result);
+                                    $("#HistoricPanel").fadeTo(0, 1);
+                                    $("#txtEndDateStart").prop("disabled", false);
+                                    $("#txtEndDateEnd").prop("disabled", false);
+                                },
+                                error: function (result) {
+                                    alert("Error");
+                                    $("#HistoricPanel").fadeTo(0, 1);
+                                    $("#txtEndDateStart").prop("disabled", false);
+                                    $("#txtEndDateEnd").prop("disabled", false);
+                                },
+                                warning: function (result) {
+                                    alert("Warning");
+                                    $("#HistoricPanel").fadeTo(0, 1);
+                                    $("#txtEndDateStart").prop("disabled", false);
+                                    $("#txtEndDateEnd").prop("disabled", false);
+                                }
+                            });
+                        }
+
+                        $("#collapseCustomers :checkbox").each(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var cst = badgeOrig[1];
+                            CustomersArr.push(cst);
+                        });
+
+                        $("#collapseCustomers :checkbox").change(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var id = badgeOrig[1];
+                            var name = $("#customerName_" + id).text();
+                            if ($(this).is(":checked")) {
+                                CustomersArr.push(id);
+                                loadPanel();
+                            }
+                            else {
+                                var index = $.inArray(id, CustomersArr);
+                                if (index >= 0) CustomersArr.splice(index, 1);
+
+                                loadPanel();
+                            }
+                        });
+
+                        $("#collapseTypeOfProducts :checkbox").each(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var badgeOrig2 = badgeOrig[1].split(';');
+                            var cst = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                        });
+
+                        $("#collapseTypeOfProducts :checkbox").change(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var badgeOrig2 = badgeOrig[1].split(';');
+                            var id = badgeOrig[1];
+                            var ids = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                            //var name = $("#productName_" + id).text();
+                            if ($(this).is(":checked")) {
+                                TypeOfProductsArr.push(ids);
+                            }
+                            else {
+                                var index = -1;
+                                for (var i = 0; i < TypeOfProductsArr.length; i++) {
+                                    if (TypeOfProductsArr[i][0] == badgeOrig2[0] && TypeOfProductsArr[i][1] == badgeOrig2[1] && TypeOfProductsArr[i][2] == badgeOrig2[2]) {
+
+                                        index = i;
+                                        break;
+                                    }
+                                }
+                                if (index >= 0) TypeOfProductsArr.splice(index, 1);
+                            }
+                            loadPanel();
+                        });
+
+                        $("#frmDepartments :checkbox").each(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var cst = badgeOrig[1];
+                            DepartmentsArr.push(cst);
+                        });
+                        $("#frmDepartments :checkbox").change(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var id = badgeOrig[1];
+                            var name = $("#departmentName_" + id).text();
+                            if ($(this).is(":checked")) {
+                                DepartmentsArr.push(id);
+                            }
+                            else {
+                                var index = $.inArray(id, DepartmentsArr);
+                                if (index >= 0) DepartmentsArr.splice(index, 1);
+                            }
+                            loadPanel();
+                        });
+
+                        $("#frmWorkstations :checkbox").each(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var cst = badgeOrig[1];
+                            WorkstationsArr.push(cst);
+                        });
+                        $("#frmWorkstations :checkbox").change(function () {
+                            var badgeOrig = $(this).attr('id').split('_');
+                            var id = badgeOrig[1];
+                            var name = $("#workstationName_" + id).text();
+                            if ($(this).is(":checked")) {
+                                WorkstationsArr.push(id);
+                            }
+                            else {
+                                var index = $.inArray(id, WorkstationsArr);
+                                if (index >= 0) WorkstationsArr.splice(index, 1);
+                            }
+                            loadPanel();
+                        });
+
+                        $("#frmGraphType :radio").change(function () {
+                            if ($(this).val() == "0") {
+                                graphType = 0;
+                            }
+                            else if ($(this).val() == "1") {
+                                graphType = 1;
+                            }
+                            else if ($(this).val() == "2") {
+                                graphType = 2;
+                            }
+                            else if ($(this).val() == "3") {
+                                graphType = 3;
+                            }
+                            else if ($(this).val() == "4") {
+                                graphType = 4;
+                            }
+                            else {
+                                graphType = 0;
+                            }
+                            loadPanel();
+                        });
+
+                        $("#collapsePeriods :radio").change(function () {
+                            if ($(this).val() == "0") {
+                                groupByPeriod = 0;
+                            }
+                            else if ($(this).val() == "1") {
+                                groupByPeriod = 1;
+                            }
+                            else {
+                                groupByPeriod = 2;
+                            }
+                            loadPanel();
+                        });
+
+                        loadPanel();
+
+                    });
+                </script>
+                <div class="row-fluid">
+                    <div class="span3">
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalDates">
+                            Data di termine produzione
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalGroupBy">
+                            Raggruppamento
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalTasks">
+                            Tasks
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalCustomers">
+                            Clienti
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalDepartments">
+                            Reparti
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalWorkstations">
+                            Postazioni di lavoro
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalTypeOfProducts">
+                            Tipi di prodotto
+                        </button>
+                    </div>
+                    <div class="span9">
+                        <div id="frmGraphType" class="form-inline">
+                            <input type="radio" name="GraphType" value="0" checked />Quantit&#224; di prodotti realizzati
+                            <input type="radio" name="GraphType" value="1" />Ore di manodopera
+                            <input type="radio" name="GraphType" value="2" />Media ore di manodopera per unit&#224; di prodotto
+                            <input type="radio" name="GraphType" value="3" />Lead Time medio
+                            <input type="radio" name="GraphType" value="4" />Ore di ritardo (somma)
+                        </div>
+                        <div id="HistoricPanel" />
+                    </div>
+                </div>
+                <div class="modal fade" id="modalDates" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h5 class="modal-title">Data di termine produzione</h5>
+                            </div>
+                            <div class="modal-body" id="frmDates">
+                                <p>
+                                    Inizio periodo
+                                    <input type="text" id="txtEndDateStart" name="txtEndDateStart" /><br />
+                                    Fine periodo
+                                    <input type="text" id="txtEndDateEnd" name="txtEndDateStart" />
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalGroupBy" tabindex="-1" role="dialog" aria-labelledby="modalGroupByPeriod" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="examplemodalGroupBy">Raggruppamento</h5>
+                            </div>
+                            <div class="modal-body" id="frmGroupBy">
+                                <p>
+                                    <input type="radio" id="rdNone" name="rdGroupByPeriod" value="0" />Giornaliero<br />
+                                    <input type="radio" id="rdNone" name="rdGroupByPeriod" value="1" checked />Settimana<br />
+                                    <input type="radio" id="rdNone" name="rdGroupByPeriod" value="2" />Mese
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalTasks" tabindex="-1" role="dialog" aria-labelledby="modalTasks" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="examplemodalTasks">Tasks</h5>
+                            </div>
+                            <div class="modal-body" id="frmTasks">
+                                <p>
+                                    <input list="ddlTasksList" id="ddlTasks" />
+                                    <datalist id="ddlTasksList">
+                                        <option data-id="64" value="1"></option>
+                                        <option data-id="35" value="14 - 17 Postazione 7"></option>
+                                        <option data-id="71" value="16/12-A"></option>
+                                        <option data-id="7" value="19-23 Postazione 1"></option>
+                                        <option data-id="6" value="19-23 Postazione 2"></option>
+                                        <option data-id="5" value="19-23 Postazione 3"></option>
+                                        <option data-id="4" value="19-23 Postazione 4"></option>
+                                        <option data-id="22" value="A"></option>
+                                        <option data-id="31" value="Accettazione ordine"></option>
+                                        <option data-id="86" value="Alfa"></option>
+                                        <option data-id="1" value="Assemblaggio piattaforme"></option>
+                                        <option data-id="69" value="Assemblaggio tappo"></option>
+                                        <option data-id="68" value="Assemblaggio tappo superiore"></option>
+                                        <option data-id="34" value="Attivita commerciale"></option>
+                                        <option data-id="23" value="B"></option>
+                                        <option data-id="24" value="C"></option>
+                                        <option data-id="60" value="Carrello bracci"></option>
+                                        <option data-id="14" value="Carrello bracci LL2312"></option>
+                                        <option data-id="11" value="Carrello stabilizzatori, cesto, jib, rinvio jib"></option>
+                                        <option data-id="52" value="Cesto"></option>
+                                        <option data-id="92" value="Cianografica di controllo"></option>
+                                        <option data-id="66" value="Cliente di test"></option>
+                                        <option data-id="26" value="Collettore"></option>
+                                        <option data-id="27" value="Collettore-1"></option>
+                                        <option data-id="70" value="Commessa per SITECAL 3"></option>
+                                        <option data-id="93" value="Confezione ciano"></option>
+                                        <option data-id="25" value="D"></option>
+                                        <option data-id="98" value="D"></option>
+                                        <option data-id="78" value="due"></option>
+                                        <option data-id="29" value="E"></option>
+                                        <option data-id="91" value="Elaborazione documento"></option>
+                                        <option data-id="87" value="Epoca"></option>
+                                        <option data-id="89" value="F"></option>
+                                        <option data-id="3" value="Finitura"></option>
+                                        <option data-id="30" value="FOM-Nest-Officina"></option>
+                                        <option data-id="44" value="Foratura"></option>
+                                        <option data-id="88" value="H"></option>
+                                        <option data-id="84" value="Hidden1"></option>
+                                        <option data-id="85" value="Hidden2"></option>
+                                        <option data-id="47" value="Imballaggio"></option>
+                                        <option data-id="61" value="Iphone"></option>
+                                        <option data-id="56" value="JIB + supporto cesto"></option>
+                                        <option data-id="95" value="Lastre"></option>
+                                        <option data-id="46" value="Montaggio"></option>
+                                        <option data-id="15" value="Motore elettrico"></option>
+                                        <option data-id="53" value="Motore GX270"></option>
+                                        <option data-id="9" value="Motore iGX440"></option>
+                                        <option data-id="76" value="Motore Perkins"></option>
+                                        <option data-id="63" value="New Default Process"></option>
+                                        <option data-id="81" value="New Default Process"></option>
+                                        <option data-id="62" value="Officine cartigliano"></option>
+                                        <option data-id="65" value="Officine Cartigliano"></option>
+                                        <option data-id="41" value="Oggetti personalizzati SITECAL"></option>
+                                        <option data-id="73" value="OPS"></option>
+                                        <option data-id="16" value="Pallet rinvii"></option>
+                                        <option data-id="54" value="Piattina bracci e rinvii"></option>
+                                        <option data-id="49" value="Piega"></option>
+                                        <option data-id="45" value="Prelievo accessori"></option>
+                                        <option data-id="74" value="Primo cliente"></option>
+                                        <option data-id="18" value="Processo di test"></option>
+                                        <option data-id="75" value="Prodotti snelli"></option>
+                                        <option data-id="0" value="Produzione piattaforme"></option>
+                                        <option data-id="33" value="Progettazione senza ordine"></option>
+                                        <option data-id="67" value="Puntatura"></option>
+                                        <option data-id="37" value="Riunioni/corsi/programmazione"></option>
+                                        <option data-id="36" value="Saldatura"></option>
+                                        <option data-id="38" value="Scatola componenti elettrici LL1775"></option>
+                                        <option data-id="58" value="Scatola componenti elettrici LL2010"></option>
+                                        <option data-id="12" value="Scatole componenti idraulici"></option>
+                                        <option data-id="59" value="Serbatoio olio LL2010"></option>
+                                        <option data-id="55" value="Sfilo"></option>
+                                        <option data-id="39" value="Sfilo LL1775"></option>
+                                        <option data-id="28" value="Sfilo LL1965"></option>
+                                        <option data-id="8" value="Sfilo LL2312"></option>
+                                        <option data-id="83" value="Shadow part number"></option>
+                                        <option data-id="50" value="Sottocarro LL1472"></option>
+                                        <option data-id="32" value="Sottocarro LL1775"></option>
+                                        <option data-id="57" value="Sottocarro LL2010"></option>
+                                        <option data-id="17" value="Sottocarro LL2312"></option>
+                                        <option data-id="96" value="Spedizione"></option>
+                                        <option data-id="51" value="Stabilizzatori"></option>
+                                        <option data-id="72" value="SUPER"></option>
+                                        <option data-id="13" value="Supporto bracci"></option>
+                                        <option data-id="42" value="Taglio"></option>
+                                        <option data-id="43" value="Taglio lastre"></option>
+                                        <option data-id="48" value="Taglio reti"></option>
+                                        <option data-id="99" value="Test family prod with constraint type"></option>
+                                        <option data-id="40" value="Test KIS"></option>
+                                        <option data-id="82" value="Test1"></option>
+                                        <option data-id="90" value="Test2"></option>
+                                        <option data-id="80" value="TestCustomer"></option>
+                                        <option data-id="97" value="TestFuso"></option>
+                                        <option data-id="79" value="tre"></option>
+                                        <option data-id="77" value="uno"></option>
+                                        <option data-id="19" value="X"></option>
+                                        <option data-id="20" value="Y"></option>
+                                        <option data-id="21" value="Z"></option>
+
+                                    </datalist>
+                                    <input type="image" id="btnAddTask" src="/img/iconSave.jpg" style="min-width:20px; max-width:30px;" />
+                                    <div id="badgeTasks"></div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalCustomers" tabindex="-1" role="dialog" aria-labelledby="modalCustomers" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="examplemodalCustomers">Clienti</h5>
+                            </div>
+                            <div class="modal-body" id="frmCustomers">
+                                <p>
+                                    <input list="ddlCustomersList" id="ddlCustomers" />
+                                    <datalist id="ddlCustomersList">
+                                        <option data-id="TestCustomer" value="Cliente di test"></option>
+                                        <option data-id="Epoca" value="Epoca SPA1"></option>
+                                        <option data-id="Kaizen Customer" value="Kaizen Customer spa"></option>
+                                        <option data-id="Officine Cartigliano" value="Officine Cartigliano"></option>
+                                        <option data-id="TestFuso" value="TestFuso SPA"></option>
+                                        <option data-id="Test2" value="TestREST s.p.a. 4"></option>
+
+                                    </datalist>
+                                    <input type="image" id="btnAddCustomer" src="/img/iconSave.jpg" style="min-width:20px; max-width:30px;" />
+                                    <div id="badgeCustomers"></div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalWorkstations" tabindex="-1" role="dialog" aria-labelledby="modalWorkstations" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="examplemodalWorkstations">Postazioni di lavoro</h5>
+                            </div>
+                            <div class="modal-body" id="frmWorkstations">
+                                
+                                    <input list="ddlWorkstationsList" id="ddlWorkstations" />
+                                    <datalist id="ddlWorkstationsList">
+                                        <option data-id="workstation_23" value="000Foratura"></option>
+                                        <option data-id="workstation_22" value="000Piega"></option>
+                                        <option data-id="workstation_20" value="000Saldatura"></option>
+                                        <option data-id="workstation_21" value="000Taglio"></option>
+                                        <option data-id="workstation_10" value="14 - 17 Postazione 1"></option>
+                                        <option data-id="workstation_11" value="14 - 17 Postazione 2"></option>
+                                        <option data-id="workstation_12" value="14 - 17 Postazione 3"></option>
+                                        <option data-id="workstation_13" value="14 - 17 Postazione 4"></option>
+                                        <option data-id="workstation_14" value="14 - 17 Postazione 5"></option>
+                                        <option data-id="workstation_15" value="14 - 17 Postazione 6"></option>
+                                        <option data-id="workstation_16" value="14 - 17 Postazione 7"></option>
+                                        <option data-id="workstation_6" value="19 - 23 Postazione 1"></option>
+                                        <option data-id="workstation_7" value="19 - 23 Postazione 2"></option>
+                                        <option data-id="workstation_8" value="19 - 23 Postazione 3"></option>
+                                        <option data-id="workstation_9" value="19 - 23 Postazione 4"></option>
+                                        <option data-id="workstation_24" value="Nuova postazione da wizard"></option>
+                                        <option data-id="workstation_0" value="Premontaggio POSTAZIONE A"></option>
+                                        <option data-id="workstation_1" value="Premontaggio POSTAZIONE B"></option>
+                                        <option data-id="workstation_2" value="Premontaggio POSTAZIONE C"></option>
+                                        <option data-id="workstation_3" value="Premontaggio POSTAZIONE D"></option>
+                                        <option data-id="workstation_5" value="Premontaggio sfilo 14 - 17"></option>
+                                        <option data-id="workstation_4" value="Premontaggio sfilo 19 - 23"></option>
+                                        <option data-id="workstation_17" value="TEST A"></option>
+                                        <option data-id="workstation_18" value="TEST B"></option>
+                                        <option data-id="workstation_19" value="TEST C"></option>
+
+                                    </datalist>
+                                    <input type="image" id="btnAddWorkstation" src="/img/iconSave.jpg" style="min-width:20px; max-width:30px;" />
+                                    <div id="badgeWorkstations" />
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalDepartments" tabindex="-1" role="dialog" aria-labelledby="modalDepartments" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="examplemodalDepartments">Reparti</h5>
+                            </div>
+                            <div class="modal-body" id="frmDepartments">
+                                <p>
+                                    <input list="ddlDepartmentsList" id="ddlDepartments" />
+                                    <datalist id="ddlDepartmentsList">
+                                        <option data-id="department_2" value="Assemblaggio 14 - 17"></option>
+                                        <option data-id="department_1" value="Assemblaggio 19-23"></option>
+                                        <option data-id="department_4" value="fshnh"></option>
+                                        <option data-id="department_0" value="Reparto assemblaggio"></option>
+                                        <option data-id="department_3" value="Reparto per test"></option>
+                                        <option data-id="department_5" value="Ufficio tecnico"></option>
+
+                                    </datalist>
+                                    <input type="image" id="btnAddDepartment" src="/img/iconSave.jpg" style="min-width:20px; max-width:30px;" />
+                                    <div id="badgeDepartments" />
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!--</section>-->
+        <div id="push"></div><!-- non rimuovere -->
+    </div>
+
+    <footer>
+
+        <div id="footer">
+            <div class="container">
+                <div class="static-link">
+                    <a href="http://www.virtualchief.net" target="_blank" title="Chi siamo">
+                        <i class="icon-user"></i>&nbsp;Sobre nosotros
+                    </a>
+                    <a href="mailto:info@virtualchief.net" title="Contatti">
+                        <i class="icon-info-sign"></i>&nbsp;Cont&#225;cto
+                    </a>
+                </div>
+                <p class="muted credit">
+                    <small>
+                        &copy; 2018
+                        <a href="https://www.linkedin.com/in/matteo-griso/" target="_blank">Matteo Griso</a>&nbsp;-&nbsp;
+                        Todos los derechos reservados
+                        &nbsp;|&nbsp;
+                        Informaci&#243;n:
+                        <a href="mailto:info@virtualchief.net">info@virtualchief.net</a>; Skype: m.griso
+
+                    </small>
+                </p>
+            </div>
+        </div>
+        <img id="renewSession" />
+    </footer>
+
+    <!-- Le javascript
+            ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../Styles/assets/js/bootstrap-transition.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-alert.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-modal.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-dropdown.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-tab.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-tooltip.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-popover.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-button.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-collapse.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-carousel.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-typeahead.js"></script>
+
+</body>
+</html>

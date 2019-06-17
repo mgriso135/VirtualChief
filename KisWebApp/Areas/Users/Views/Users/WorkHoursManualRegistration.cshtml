@@ -1,0 +1,529 @@
+﻿
+@{
+    ViewBag.Title = ResUsers.WorkHoursManualRegistration.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResUsers.WorkHoursManualRegistration.lblTitle</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Users/manageUsers.aspx">
+            @ResUsers.WorkHoursManualRegistration.lblNavManageUsers
+        </a><span class="divider"></span>
+        <a href="@Request.RawUrl">
+            @ResUsers.WorkHoursManualRegistration.lblTitle
+        </a>
+    </li>
+</ul>
+
+@if (ViewBag.authW)
+{
+    if (ViewBag.usr != null)
+    {
+        KIS.App_Code.User currUsr = (KIS.App_Code.User)ViewBag.usr;
+        if (currUsr != null && currUsr.username.Length > 0)
+        {
+            KIS.App_Code.User usr = (KIS.App_Code.User)ViewBag.usr;
+            <script>
+                $(document).ready(function () {
+                    $("#imgLoadTimespans").fadeOut();
+                    $("#imgLoadOpenOrders").fadeOut();
+                    $("#imgLoadOpenProducts").fadeOut();
+                    $("#imgLoadOpenTasks").fadeOut();
+
+                    $(function () {
+                        $("[id*=txtDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                    });
+
+                    $(function () {
+                        $("[id*=txtStartDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                    });
+
+                    $(function () {
+                        $("[id*=txtEndDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                    });
+
+
+                    $("#imgLoadTimeSpans").click(function () {
+
+                        var arrDateStr = $("#txtDate").val().split('/');
+
+                        if (arrDateStr[0] != null && arrDateStr[1] != null && arrDateStr[2] != null) {
+                            var year = parseInt(arrDateStr[2]);
+                            var month = parseInt(arrDateStr[1]) -1;
+                            var day = parseInt(arrDateStr[0]);
+                            if (year > 2015 && month >= 0 && month <= 12 && day > 0 && day <= 31) {
+                                var currDate = new Date(year, month, day);
+                                if (currDate) {
+                                    if (currDate <= new Date()) {
+                                        loadUserTimespans("@usr.username", currDate);
+                                    }
+                                    else {
+                                        alert("@ResUsers.WorkHoursManualRegistration.lblErrorFutureDate");
+                                    }
+                                }
+                            }
+                            else {
+                                alert("@ResUsers.WorkHoursManualRegistration.lblInvalidDate");
+                            }
+                        }
+                    });
+
+                    function loadUserTimespans(usr, data) {
+
+                        $("#imgLoadTimespans").fadeIn();
+             $.ajax({
+                        url: "@Url.Action("ListUserWorkTimespans", "Users")",
+                        type: 'POST',
+                        data: {
+                            usr: usr,
+                            date: data.getFullYear() + "-" + (data.getMonth()+1) + "-" + data.getDate()
+                        },
+                 success: function (data) {
+                     $("#frmTimeSpans").html(data);
+                     $("#imgLoadTimespans").fadeOut();
+                        },
+                        statusCode: {
+                            404: function (content) { alert('cannot find resource'); $("#imgProductListPanelLoad").fadeOut(); },
+                            500: function (content) { alert('internal server error'); $("#imgProductListPanelLoad").fadeOut(); }
+                        },
+                        error: function (data) {
+                            $("#imgLoadTimespans").fadeOut();
+                        }
+
+                    });
+
+                    }
+
+                    $("#ddlCustomers").on("change", function () {
+                        $("#ddlOpenOrders").fadeOut();
+                        $("#ddlOpenProducts").fadeOut();
+                        $("#ddlOpenTasks").fadeOut();
+                        $("#imgLoadOpenOrders").fadeIn();
+                        $("#imgLoadOpenProducts").fadeIn();
+                        $("#imgLoadOpenTasks").fadeIn();
+                        $('#ddlOpenOrders').val('');
+                        $('#ddlOpenProducts').val('');
+                        $('#ddlOpenTasks').val('');
+
+                        var g = $('#ddlCustomers').val();
+                        var customer = $("#ddlCustomersList option[value='" + g + "']").attr('data-id');
+                        loadOpenOrders(customer);
+                        loadOpenProducts(customer, -1, -1);
+                        loadOpenTasks(customer, -1, -1, -1, -1);                        
+
+                        $("#imgLoadOpenOrders").fadeOut();
+                        $("#imgLoadOpenProducts").fadeOut();
+                        $("#imgLoadOpenTasks").fadeOut();
+                        $("#ddlOpenOrders").fadeIn();
+                        $("#ddlOpenProducts").fadeIn();
+                        $("#ddlOpenTasks").fadeIn();
+                    });
+
+
+                    $("#ddlOpenOrders").on("change", function () {
+                        $("#ddlOpenProducts").fadeOut();
+                        $("#ddlOpenTasks").fadeOut();
+                        $("#imgLoadOpenOrders").fadeIn();
+                        $("#imgLoadOpenProducts").fadeIn();
+                        $("#imgLoadOpenTasks").fadeIn();
+                        $('#ddlOpenProducts').val('');
+                        $('#ddlOpenTasks').val('');
+
+                        var g = $('#ddlCustomers').val();
+                        var customer = "";
+                        if (g != null) {
+                            customer = $("#ddlCustomersList option[value='" + g + "']").attr('data-id');
+                        }
+                        var h = $('#ddlOpenOrders').val();
+                        var ordID = -1; 
+                        var ordYear = -1;
+                        if (h != null) {
+                            var order = $("#ddlOpenOrdersList option[value='" + h + "']").attr('data-id');
+                            if (order != null) {
+                            var ordArr = order.split('/');
+                            ordID = ordArr[0];
+                                ordYear = ordArr[1];
+                            }
+                        }
+                        else {
+                            ordID = -1;
+                            ordYear = -1;
+                        }
+
+                        loadOpenOrders(customer);
+                        loadOpenProducts(customer, ordID, ordYear);
+                        loadOpenTasks(customer, ordID, ordYear, -1, -1);
+
+                        $("#imgLoadOpenOrders").fadeOut();
+                        $("#imgLoadOpenProducts").fadeOut();
+                        $("#imgLoadOpenTasks").fadeOut();
+                        $("#ddlOpenProducts").fadeIn();
+                        $("#ddlOpenTasks").fadeIn();
+                    });
+
+                    $("#ddlOpenProducts").on("change", function () {
+                        $("#ddlOpenTasks").fadeOut();
+                        $("#imgLoadOpenOrders").fadeIn();
+                        $("#imgLoadOpenProducts").fadeIn();
+                        $("#imgLoadOpenTasks").fadeIn();
+                        $('#ddlOpenTasks').val('');
+
+                        var g = $('#ddlCustomers').val();
+                        var customer = "";
+                        if (g != null) {
+                            customer = $("#ddlCustomersList option[value='" + g + "']").attr('data-id');
+                        }
+
+                        var h = $('#ddlOpenOrders').val();
+                        var ordID = -1;
+                        var ordYear = -1;
+                        if (h != null) {
+                            var order = $("#ddlOpenOrdersList option[value='" + h + "']").attr('data-id');
+                            if (order != null) {
+                            var ordArr = order.split('/');
+                            ordID = ordArr[0];
+                                ordYear = ordArr[1];
+                            }
+                        }
+                        else {
+                            ordID = -1;
+                            ordYear = -1;
+                        }
+
+                        var prodID = -1;
+                        var prodYear = -1;
+                        var i = $('#ddlOpenProducts').val();
+                        var product = $("#ddlOpenProductsList option[value='" + i + "']").attr('data-id');
+                        if (product != null) {
+                            var prodArr = product.split('/');
+                            prodID = prodArr[0];
+                            prodYear = prodArr[1];
+                        }
+                        loadOpenOrders(customer);
+                        loadOpenProducts(customer, ordID, ordYear);
+                        loadOpenTasks(customer, ordID, ordYear, prodID, prodYear);
+
+                        $("#imgLoadOpenOrders").fadeOut();
+                        $("#imgLoadOpenProducts").fadeOut();
+                        $("#imgLoadOpenTasks").fadeOut();
+                        $("#ddlOpenProducts").fadeIn();
+                        $("#ddlOpenTasks").fadeIn();
+                    });
+
+
+                    function loadOpenOrders(cust)
+                    {
+                        if (cust == null || cust.length == 0) {
+                            cust = "";
+                        }
+        $.ajax({
+            url: "@Url.Action("OpenOrders", "Users")",
+            type: 'GET',
+        data:{
+            customer: cust
+        },
+        dataType: 'html' ,
+            success: function (data) {
+                $('#ddlOpenOrdersList').remove();
+            var s = $('<datalist id="ddlOpenOrdersList" />');
+            var jsonobj = $.parseJSON(data);
+
+            for(var i = 0; i < jsonobj.length; i++)
+            {
+                var ordid = jsonobj[i][0];
+                var ordyear = jsonobj[i][1];
+                var extid = jsonobj[i][2];
+                var notes = jsonobj[i][3];
+
+                var valStr = ordid + '/' + ordyear;
+                if (extid == null || extid.length == 0) {
+                    extid = "";
+                } else { valStr += " - " + extid;}
+                if (notes == null || notes.length == 0) {
+                    notes = "";
+                } else { valStr += " - " + notes;}
+                
+                $('<option data-id="' + ordid + '/' + ordyear + '" value="' + valStr +'"></option>').appendTo(s);
+            }
+
+            s.appendTo('#ddlOpenOrders'); // or wherever it should be
+        },
+        error: function(result){ alert("Error loadOpenOrders" + result);},
+        warning: function (result) { alert("Warning loadOpenOrders" + result); },
+        });
+
+                    }
+
+
+                    function loadOpenProducts(cust, ordID, ordYear)
+                    {
+                        if (cust == null || cust.length == 0) {
+                            cust = "";
+                        }
+        $.ajax({
+            url: "@Url.Action("OpenProducts", "Users")",
+            type: 'GET',
+        data:{
+            customer: cust,
+            OrderID: ordID,
+            OrderYear: ordYear
+        },
+        dataType: 'html' ,
+            success: function (data) {
+                $('#ddlOpenProductsList').remove();
+            var s = $('<datalist id="ddlOpenProductsList" />');
+            var jsonobj = $.parseJSON(data);
+
+            for(var i = 0; i < jsonobj.length; i++)
+            {
+                var prdid = jsonobj[i][0];
+                var prdyear = jsonobj[i][1];
+                var prodname = jsonobj[i][2];
+                
+                $('<option data-id="' + prdid + '/' + prdyear + '" value="' + prdid + '/' + prdyear + ' ' + prodname +'"></option>').appendTo(s);
+            }
+
+            s.appendTo('#ddlOpenProducts'); // or wherever it should be
+        },
+        error: function(result){ alert("Error loadOpenProducts" + result);},
+            warning: function (result) { alert("Warning loadOpenProducts" + result); },
+        });
+                    }
+
+                    function loadOpenTasks(cust, ordID, ordYear, prodID, prodYear)
+                    {
+                        if (cust == null || cust.length == 0) {
+                            cust = "";
+                        }
+        $.ajax({
+            url: "@Url.Action("OpenTasks", "Users")",
+            type: 'GET',
+        data:{
+            customer: cust,
+            OrderID: ordID,
+            OrderYear: ordYear,
+            ProductID: prodID,
+            ProductYear: prodYear
+        },
+        dataType: 'html' ,
+            success: function (data) {
+                $('#ddlOpenTasksList').remove();
+                var s = $('<datalist id="ddlOpenTasksList" />');
+            var jsonobj = $.parseJSON(data);
+
+            for(var i = 0; i < jsonobj.length; i++)
+            {
+                var taskid = jsonobj[i][0];
+                var taskname = jsonobj[i][1];
+                
+                $('<option data-id="' + taskid+'" value="' + taskid + ' ' + taskname +'"></option>').appendTo(s);
+            }
+
+            s.appendTo('#ddlOpenTasks'); // or wherever it should be
+        },
+        error: function(result){ alert("Error loadOpenTasks" + result);},
+            warning: function (result) { alert("Warning loadOpenTasks" + result); },
+        });
+                    }
+
+
+                    $("#btnResetAddTimespan").click(function () {
+                        $('#ddlCustomers').val('');
+                        $('#ddlOpenOrders').val('');
+                        $('#ddlOpenProducts').val('');
+                        $('#ddlOpenTasks').val('');
+                        loadOpenOrders('');
+                        loadOpenProducts('', -1, -1);
+                        loadOpenTasks('', -1, -1, -1, -1);
+                    });
+
+
+                    $("#btnAddTimespan").click(function () {
+                        $("#btnAddTimespan").fadeOut();
+                        var tskID = $("#ddlOpenTasks").val();
+                        var taskID = $("#ddlOpenTasksList option[value='" + tskID + "']").attr('data-id');
+                        var startDateStr = $("#txtStartDate").val();
+                        var startHour = $("#txtStartHour").val();
+                        var startMinute = $("#txtStartMinute").val();
+                        var startSecond = $("#txtStartSecond").val();
+                        var endDateStr = $("#txtEndDate").val();
+                        var endHour = $("#txtEndHour").val();
+                        var endMinute = $("#txtEndMinute").val();
+                        var endSecond = $("#txtEndSecond").val();
+                        var completed = $("#TaskCompleted").is(":checked");
+
+                        var startDateArr = startDateStr.split('/');
+                        var startDate = new Date(startDateArr[2], startDateArr[1] - 1, startDateArr[0], startHour, startMinute, startSecond);
+
+                        var endDateArr = endDateStr.split('/');
+                        var endDate = new Date(endDateArr[2], endDateArr[1] - 1, endDateArr[0], endHour, endMinute, endSecond);
+
+                        if (startDate != null && endDate != null) {
+                            if (endDate < new Date()) {
+                                if (startDate < endDate) {
+                                    $.ajax({
+                                        url: "@Url.Action("AddUserWorkTimespan", "Users")",
+                                        type: 'POST',
+                                        data: {
+                                            TaskID: taskID,
+                                            usrID: "@usr.username",
+                                            completed: completed, 
+                                            producedQuantity: 1,
+                                            start: startDate.getFullYear() + "-" + (startDate.getMonth() + 1) + "-" + startDate.getDate() + " " + startDate.getHours() + ":" + startDate.getMinutes() + ":" + startDate.getSeconds(),
+                                            end: endDate.getFullYear() + "-" + (endDate.getMonth() + 1) + "-" + endDate.getDate() + " " + endDate.getHours() + ":" + endDate.getMinutes() + ":" + endDate.getSeconds(),
+                                        },
+                                        success: function (data) {
+                                            loadUserTimespans("@usr.username", startDate);
+                                            switch (data) {
+                                                case "1": break;
+                                                case "101": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrUserNotAuthorized"); break;
+                                                case "102": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrTaskNotFound"); break;
+                                                case "0": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrGeneric"); break;
+                                                case "2": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrStartPreviousThanEnd"); break;
+                                                case "3": alert(""); break;
+                                                case "4": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrFuture"); break;
+                                                case "5": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrSuperposition"); break;
+                                                case "6": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrUserCurrentlyWorking"); break;
+                                                case "7": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrTaskNotFound"); break;
+                                                case "8": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrPreviousTasks"); break;
+                                                case "9": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrTaskAlreadyClosed"); break;
+                                                case "10": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrInsertInto"); break;
+                                                case "11": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrUserMaxTasks"); break;
+                                                case "12": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrUserCurrentlyWorking"); break;
+                                                case "13": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrUserNotLoggedInWorkstation"); break;
+                                                case "14": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrTaskAlreadyClosed"); break;
+                                                case "15": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrCloseErrUserNotCurrentlyWorking"); break;
+                                                case "16": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrPreviousTasks"); break;
+                                                case "17": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrParameters"); break;
+                                                case "18": alert("@ResUsers.WorkHoursManualRegistration.lblAddErrInsertInto"); break;
+                                                default: break;
+                                            }
+                                            $("#btnAddTimespan").fadeIn();
+                                        },
+                                        statusCode: {
+                                            404: function (content) { alert('cannot find resource'); $(this).fadeIn(); $("#btnAddTimespan").fadeIn();},
+                                            500: function (content) { alert('internal server error'); $(this).fadeIn(); $("#btnAddTimespan").fadeIn();}
+                                        },
+                                        error: function (data) {
+                                            alert("Error"); $("#btnAddTimespan").fadeIn();
+                                        }
+
+                                    });
+                                }
+                                else {
+                                    alert("@ResUsers.WorkHoursManualRegistration.lblAddErrStartPreviousThanEnd");
+                                }
+                            }
+                            else {
+                                alert("@ResUsers.WorkHoursManualRegistration.lblAddErrFuture");
+                            }
+                        }
+                        else {
+                            alert("@ResUsers.WorkHoursManualRegistration.lblAddErrGeneric");
+                        }
+
+                    });
+
+
+                });
+            </script>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    @{
+                        <h4>@usr.name @usr.cognome</h4>
+                    }
+                    <h4>@ResUsers.WorkHoursManualRegistration.lblAddTimespan</h4>
+                    <b>
+                        @ResUsers.WorkHoursManualRegistration.lblSelectTask
+                    </b>&nbsp;<input list="ddlOpenTasksList" id="ddlOpenTasks" />
+                    <datalist id="ddlOpenTasksList">
+                        @{var OpenTasks = (List<KIS.App_Code.TaskProduzione>)ViewBag.OpenTasks;
+                            foreach (var oords in OpenTasks)
+                            {
+                                <option data-id="@oords.TaskProduzioneID" value="@Server.HtmlEncode(oords.TaskProduzioneID
+                                                                                                   + " " + oords.Name)"></option>
+                            }
+                        }
+                    </datalist>&nbsp;
+                    <img src="~/img/iconLoading.gif" style="min-width:15px; max-width:20px;" id="imgLoadOpenTasks" />
+
+
+                    @ResUsers.WorkHoursManualRegistration.lblChooseCustomers:&nbsp;<input list="ddlCustomersList" id="ddlCustomers" style="max-width:100px;" />
+                    <datalist id="ddlCustomersList">
+                        @{var cstList2 = ViewBag.Customers;
+                            foreach (var cst in cstList2)
+                            {
+                                <option data-id="@Server.HtmlEncode(cst.CodiceCliente)" value="@Server.HtmlEncode(cst.RagioneSociale)"></option>
+                            }
+                        }
+                    </datalist>
+                    &nbsp;
+                    @ResUsers.WorkHoursManualRegistration.lblChooseOrder:&nbsp;<input list="ddlOpenOrdersList" id="ddlOpenOrders" style="max-width:100px;" />
+                    <datalist id="ddlOpenOrdersList">
+                        @{var OpenOrders = (List<KIS.App_Code.Commessa>)ViewBag.OpenOrders;
+                            foreach (var oords in OpenOrders)
+                            {
+                                <option data-id="@Server.HtmlEncode(oords.ID + "/" + oords.Year)" value="@Server.HtmlEncode(oords.ID + "/" + oords.Year + " " + oords.ExternalID + " " + oords.Note)"></option>
+                            }
+                        }
+                    </datalist>&nbsp;
+                    <img src="~/img/iconLoading.gif" style="min-width:15px; max-width:20px;" id="imgLoadOpenOrders" />
+
+                    @ResUsers.WorkHoursManualRegistration.lblChooseProduct:&nbsp;<input list="ddlOpenProductsList" id="ddlOpenProducts" style="max-width:100px;" />
+                    <datalist id="ddlOpenProductsList">
+                        @{var OpenProducts = (List<KIS.App_Code.Articolo>)ViewBag.OpenProducts;
+                            foreach (var oords in OpenProducts)
+                            {
+                                <option data-id="@Server.HtmlEncode(oords.ID + "/" + oords.Year)" value="@Server.HtmlEncode(oords.ID + "/" + oords.Year + " " + oords.Proc.process.processName
+                                     + " - " + oords.Proc.variant.nomeVariante)"></option>
+                            }
+                        }
+                    </datalist>&nbsp;
+                    <img src="~/img/iconLoading.gif" style="min-width:15px; max-width:20px;" id="imgLoadOpenProducts" />
+                    <br />
+                    <b>@ResUsers.WorkHoursManualRegistration.lblStartDateTime&nbsp;</b><input type="text" id="txtStartDate" />&nbsp;<input type="number" min="0" max="23" id="txtStartHour" style="max-width:50px;min-width:50px;" />:<input type="number" min="0" max="59" id="txtStartMinute" style="max-width:50px;min-width:50px;" /><input type="number" min="0" max="59" id="txtStartSecond" style="max-width:50px;min-width:50px;" /><br />
+                    <b>@ResUsers.WorkHoursManualRegistration.lblEndDateTime&nbsp;</b><input type="text" id="txtEndDate" />&nbsp;<input type="number" min="0" max="23" id="txtEndHour" style="max-width:50px;min-width:50px;" />:<input type="number" min="0" max="59" id="txtEndMinute" style="max-width:50px;min-width:50px;" /><input type="number" min="0" max="59" id="txtEndSecond" style="max-width:50px;min-width:50px;" /><br />
+                    <b>@ResUsers.WorkHoursManualRegistration.lblTaskCompleted&nbsp;</b><input type="checkbox" id="TaskCompleted" />
+                    <br />
+                    <input type="image" src="~/img/iconSave.jpg" id="btnAddTimespan" style="min-width:20px; max-width:30px;" />
+                    <input type="image" src="~/img/iconUndo.png" id="btnResetAddTimespan" style="min-width:20px; max-width:30px;" />
+                </div>
+            </div>
+            <hr />
+            <div class="row-fluid">
+                <div class="span12">
+                    <h4>@ResUsers.WorkHoursManualRegistration.lblListTimespan</h4>
+                    @ResUsers.WorkHoursManualRegistration.lblChooseDate&nbsp;<input type="text" id="txtDate" />
+                    <input type="image" id="imgLoadTimeSpans" src="~/img/iconSave.jpg" style="min-width: 20px; max-width:30px;" />
+                </div>
+            </div>
+            <div class="row-fluid">
+                <div class="span12">
+                    <img src="~/img/iconLoading2.gif" style="min-width:20px; max-width:50px;" id="imgLoadTimespans" />
+                    <div id="frmTimeSpans" />
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row-fluid">
+                <div class="span12">@ResUsers.WorkHoursManualRegistration.lblUserNotFound</div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">@ResUsers.WorkHoursManualRegistration.lblUserNotFound</div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResUsers.WorkHoursManualRegistration.lblNoAuth</div>
+    </div>
+}

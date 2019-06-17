@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewBag.Title = ResNCCauses.Delete.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">
+            @Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">
+            @Resources.Shared.lblNavNonCompliances</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceTypes/Index">
+            @Resources.Shared.lblNavNCTypes</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceTypes/Delete">@Resources.Shared.lblNavNCTypesDel</a><span class="divider"></span>
+    </li>
+</ul>
+
+<h3>@ResNCCauses.Delete.lblTitle</h3>
+@if (!ViewBag.Deleted)
+{
+    <div>
+        @ResNCCauses.Delete.lblErrDelete
+    </div>
+}
+

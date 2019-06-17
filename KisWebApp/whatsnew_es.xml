@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Stories>
+  <Story id="2019/01">
+    <Date>02/01/2019</Date>
+    <Title>Indicadores de desempeño de las estaciones de trabajo</Title>
+    <Description>
+      <![CDATA[En el WebGemba se muestran los indicadores de desempeño más importantes:
+      <ul>
+      <li>Cantidad producida</li>
+      <li>Retrasos</li>
+      <li>Plazo de producción</li>
+      </ul>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/17">
+    <Date>31/12/2018</Date>
+    <Title>Grabación manual de horarios de trabajo.</Title>
+    <Description>
+      <![CDATA[Es posible grabar / modificar manualmente los intervalos de trabajo registrados por los operadores.<br />
+       Para acceder a la nueva interfaz, vaya a Admin --> Administración de usuarios<br />
+       Luego haga clic en el ícono del reloj al lado del usuario deseado.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/12">
+    <Date>26/11/2018</Date>
+    <Title>URL de destino después de iniciar sesión</Title>
+    <Description>
+      <![CDATA[Se implementó la función de establecer una URL de inicio de sesión automático después de iniciar sesión.<br />
+Para configurar su página de inicio de sesión personalizada, inicie sesión en su área personal (MyArea) y configure la URL de destino.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/15">
+    <Date>17/11/2018</Date>
+    <Title>Scrollable Andon</Title>
+    <Description>
+      <![CDATA[Ahora es posible configurar el Scroll continuo de Andon para mostrar todas las órdenes en curso e incluso las que aún no se han iniciado.
+       Además, la velocidad de desplazamiento se puede configurar.<br />
+       Para Andon de Departmento, acceder a la configuración del departamento (Admin -> Gestión de departamentos) y acceder a la sección "Scrolling". <br />
+       Para configurar el Andon General, acceder desde Admin -> Gestión de Andon General
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/10">
+    <Date>06/10/2018</Date>
+    <Title>Código de orden externo</Title>
+    <Description>
+      <![CDATA[Con el código de pedido externo puede mantener el enlace entre los datos de su ERP y Virtual Chief
+      ]]>
+    </Description>
+  </Story>
+  <Story id="110">
+    <Date>09/11/2017</Date>
+    <Title>Modulo de Gestión de Calidad</Title>
+    <Description>
+      <![CDATA[El módulo de gestión de calidad ya está disponible, lo que incluye:
+      <ul>
+      <li>Gestión de las non conformidades - <a href="https://www.youtube.com/watch?v=niknol6ikUQ&t=336s" target="_blank">Ver el video</a></li>
+      <li>Análisis de non conformidades y gestión de riesgos - <a href="https://www.youtube.com/watch?v=ARWdOV0fTyE&t=49s" target="_blank">Ver el video</a></li>
+      <li>Gestión de acciones de mejora con formato de formulario 8D y asignación de acciones correctivas a los miembros del equipo</li>
+      </ul>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="113">
+    <Date>31/07/2017</Date>
+    <Title>Check-in y check-out automático de las estaciones de trabajo</Title>
+    <Description>
+      <![CDATA[Utilizando la interfaz de trabajo BARCODE GEMBA, la tareas de CHECK-IN y CHECK-OUT en una estación de trabajo pueden resultar en un aumento de las actividades.
+Ahora se puede configurar las estaciones de trabajo para que el CHECK-IN y el CHECK-OUT se ejecuten automáticamente cuando utiliza el Barcode Gemba.]]>
+    </Description>
+  </Story>
+  <Story id="109">
+    <Date>16/07/2017</Date>
+    <Title>BugFix: seleccione idioma de usuario</Title>
+    <Description>
+      <![CDATA[En la configuración inicial, ahora puede seleccionar el idioma de un usuario en el momento de la creación.]]>
+    </Description>
+  </Story>
+  <Story id="107">
+    <Date>16/07/2017</Date>
+    <Title>Aviso de vencimiento de la licencia de uso</Title>
+    <Description>
+      <![CDATA[Ahora, el Sistema de Indicadores Kaizen le informa con 1 mes de antelación cuando vence su licencia. <br /> En caso de no renovación, el servicio se detendrá automáticamente después de 15 días a partir de la fecha de vencimiento.]]>
+    </Description>
+  </Story>
+  <Story id="0103">
+    <Date>01/07/2017</Date>
+    <Title>KIS multilingüe</Title>
+    <Description>
+      <![CDATA[Ahora <i>Kaizen Indicator System</i> habla tres idiomas:
+      <ul>
+      <li>Español</li>
+      <li>Inglés</li>
+      <li>Italiano</li>
+      </ul>
+      El sistema también puede ser usado por los actores internacionales, ya que cada usuario puede elegir 
+      el idioma en el que quiere usar Kaizen Indicator System.
+      ]]>
+    </Description>
+  </Story>
+</Stories>

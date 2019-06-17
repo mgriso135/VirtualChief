@@ -1,0 +1,445 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NonCompliances Types - Kaizen Indicator System</title>
+
+    <link href="/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+    <link href="/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
+    <script src="/Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+
+    <script>
+    	    $(function () {
+
+    	        $("#accordion").accordion();
+
+
+
+    	        var availableTags = [
+                    "ActionScript",
+                    "AppleScript",
+                    "Asp",
+                    "BASIC",
+                    "C",
+                    "C++",
+                    "Clojure",
+                    "COBOL",
+                    "ColdFusion",
+                    "Erlang",
+                    "Fortran",
+                    "Groovy",
+                    "Haskell",
+                    "Java",
+                    "JavaScript",
+                    "Lisp",
+                    "Perl",
+                    "PHP",
+                    "Python",
+                    "Ruby",
+                    "Scala",
+                    "Scheme"
+    	        ];
+    	        /*$("#autocomplete").autocomplete({
+    	            source: availableTags
+    	        });
+
+
+
+    	        $("#button").button();
+    	        $("#radioset").buttonset();
+
+
+
+    	        $("#tabs").tabs();
+
+
+
+    	        $("#dialog").dialog({
+    	            autoOpen: false,
+    	            width: 400,
+    	            buttons: [
+                        {
+                            text: "Ok",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+    	            ]
+    	        });
+
+    	        // Link to open the dialog
+    	        $("#dialog-link").click(function (event) {
+    	            $("#dialog").dialog("open");
+    	            event.preventDefault();
+    	        });
+
+                */
+
+    	        $("#datepicker").datepicker({
+    	            inline: true
+    	        });
+
+/*
+
+    	        $("#slider").slider({
+    	            range: true,
+    	            values: [17, 67]
+    	        });
+
+
+
+    	        $("#progressbar").progressbar({
+    	            value: 20
+    	        });
+
+
+    	        // Hover states on the static widgets
+    	        $("#dialog-link, #icons li").hover(
+                    function () {
+                        $(this).addClass("ui-state-hover");
+                    },
+                    function () {
+                        $(this).removeClass("ui-state-hover");
+                    }
+                );*/
+    	    });
+    </script>
+
+    <!-- CSS GIORDANO -->
+    <link href="/Styles/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="/Styles/assets/css/bootstrap-responsive.css" rel="stylesheet" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+          <script src="~/Styles/assets/js/html5shiv.js"></script>
+        <![endif]-->
+    <!-- Fav and touch icons -->
+    <!-- FINE CSS GIORDANO -->
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+    <script type="text/javascript">
+    window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website.<br/>Navigando sul nostro sito accetti la privacy policy. Il sito utilizza i cookie di terze parti per profilare gli utenti.", "dismiss": "Chiudi e accetta", "learnMore": "More info", "link": null, "theme": "light-bottom" };
+    </script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    <!-- End Cookie Consent plugin -->
+    <!-- Never expiring session -->
+    <script type="text/javascript">
+        window.setInterval("renewSession();", 60000);
+        function renewSession()
+        {
+            //document.getElementById("renewSession").src = "../renewSes.aspx?par=" + Math.random();
+        }   
+    </script>
+    <!-- End Never expiring sessione -->
+
+</head>
+<body>
+    <div id="wrap">
+        <!--<header>-->
+        <!-- Fixed navbar -->
+        <div class="masthead">
+            <div class="container header">
+                <img alt="Place logo here" />
+                <a class="brand">Kaizen Indicator System</a>
+                <div class="pull-right text-right">
+                    Place here login information box
+                </div>
+            </div>
+            Place menu here
+            <form method="post" action="NonComplianceTypes" id="ctl00">
+                <div class="aspNetHidden">
+                    <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+                </div>
+
+
+                <script src="/WebResource.axd?d=fqV81KWLWhVg-lLAb4IT67rxpw8jfnbXYlBBrQ9X_TbOO2GGam5jCWU5JjTcXwA7b2cpRt7oWvi4yJLvlof9lB12PHjTwddi7hSVoQnnvDE1&amp;t=636371895574713980" type="text/javascript"></script>
+                MENU!!!
+                <script type="text/javascript">
+    $(function () {
+        //to fix collapse mode width issue
+        $(".nav li,.nav li a,.nav li ul").removeAttr('style');
+
+        //for dropdown menu
+        $(".dropdown-menu").parent().removeClass().addClass('dropdown');
+        $(".dropdown>a").removeClass().addClass('dropdown-toggle').append('<b class="caret"></b>').attr('data-toggle', 'dropdown');
+
+        //remove default click redirect effect
+        $('.dropdown-toggle').attr('onclick', '').off('click');
+
+    });
+                </script>
+
+
+                <div class="navbar navbar-fixed-top">
+                    <div class="navbar-inner pull-center">
+                        <div class="container">
+                            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                            <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <!-- Everything you want hidden at 940px or less, place within here -->
+                            <div class="nav-collapse collapse">
+
+                                <a href="#1_frmMenu_SkipLink"><img alt="Ignora collegamenti di navigazione" src="/WebResource.axd?d=rKN1opQVoh180LaGjXZZkJcgycFJD3JjqLxo5y6OMkLER3fLUXaZOyfasJt4DWJpjR4ceRMW5vVV6Ao8yeldkA2&amp;t=636371895574713980" width="0" height="0" style="border-width:0px;" /></a><div class="navbar pull-right" id="1_frmMenu">
+                                    <ul class="level1 nav pull-right">
+                                        <li><a class="level1" href="/Login/login.aspx">Login</a></li>
+                                        <li><a class="level1" href="/Personal/my.aspx">myKIS</a></li>
+                                        <li>
+                                            <a class="popout level1" href="/admin/admin.aspx">Admin</a><ul class="level2 dropdown-menu pull-right">
+                                                <li><a class="level2" href="/Admin/kisAdmin.aspx">Configurazione principale</a></li>
+                                                <li><a class="level2" href="/Users/manageUsers.aspx">Gestione utenti</a></li>
+                                                <li><a class="level2" href="/Users/manageGruppi.aspx">Gestione gruppi</a></li>
+                                                <li><a class="level2" href="/Users/managePermessi.aspx">Gestione permessi</a></li>
+                                                <li><a class="level2" href="/Admin/manageMenu.aspx">Gestione menu</a></li>
+                                                <li><a class="level2" href="/Andon/configAndonCompleto.aspx">Gestione Andon Completo</a></li>
+                                                <li><a class="level2" href="/Admin/manageReports.aspx">Configurazione reports</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="level1" href="/Users/manageUsers.aspx">Utenti</a></li>
+                                        <li>
+                                            <a class="popout level1" href="/Stabilimento/configReparto.aspx">Stabilimento</a><ul class="level2 dropdown-menu pull-right">
+                                                <li><a class="level2" href="/Reparti/configReparto.aspx">Reparti</a></li>
+                                                <li><a class="level2" href="/Postazioni/managePostazioniLavoro.aspx">Postazioni di lavoro</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="level1" href="/Processi/MacroProcessi.aspx">Process Manager</a></li>
+                                        <li>
+                                            <a class="popout level1" href="/Commesse/commesse.aspx">Commesse</a><ul class="level2 dropdown-menu pull-right">
+                                                <li><a class="level2" href="/Clienti/clienti.aspx">Anagrafica clienti</a></li>
+                                                <li><a class="level2" href="/Commesse/commesse.aspx">Commesse</a></li>
+                                                <li><a class="level2" href="/Commesse/wzAddCommessa.aspx">Wizard prodotto su commessa	</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="popout level1" href="/Produzione/produzione.aspx">Production plan</a><ul class="level2 dropdown-menu pull-right">
+                                                <li><a class="level2" href="/Produzione/commesseDaProdurre.aspx">Nuove commesse</a></li>
+                                                <li><a class="level2" href="/Produzione/storicoProduzione.aspx">Storico produzione</a></li>
+                                                <li><a class="level2" href="/Produzione/workLoadListReparti.aspx">Carico di lavoro</a></li>
+                                                <li><a class="level2" href="/Produzione/PianoProduzioneCompleto.aspx">Piano Produzione</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="popout level1" href="/Produzione/AndonListReparti.aspx">Andon</a><ul class="level2 dropdown-menu pull-right">
+                                                <li><a class="level2" href="/Produzione/AndonListReparti.aspx">Andon Reparto</a></li>
+                                                <li><a class="level2" href="/Produzione/avanzamentoProduzione.aspx">Andon completo</a></li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            <a class="popout level1" href="/Operatori/checkInPostazione.aspx">WorkPlace</a><ul class="level2 dropdown-menu pull-right">
+                                                <li><a class="level2" href="/Operatori/AzioniBarcodeJS.aspx">Barcode Gemba</a></li>
+                                                <li><a class="level2" href="/Operatori/checkInPostazione.aspx">Web Gemba</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="level1" href="../Analysis/Analysis.aspx">Analisi dati</a></li>
+                                    </ul>
+                                </div><a id="1_frmMenu_SkipLink"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="aspNetHidden">
+
+                    <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="FA2018BD" />
+                </div>
+                <script type='text/javascript'>new Sys.WebForms.Menu({ element: '1_frmMenu', disappearAfter: 500, orientation: 'horizontal', tabIndex: 0, disabled: false });</script>
+            </form>
+        </div>
+        <div class="container">
+            License information
+
+            <br />
+            <div class="container body-content">
+                <form method="post" action="NonComplianceTypes" id="ctl00">
+                    <div class="aspNetHidden">
+                        <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="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" />
+                    </div>
+
+
+                    <script src="/WebResource.axd?d=fqV81KWLWhVg-lLAb4IT67rxpw8jfnbXYlBBrQ9X_TbOO2GGam5jCWU5JjTcXwA7b2cpRt7oWvi4yJLvlof9lB12PHjTwddi7hSVoQnnvDE1&amp;t=636371895574713980" type="text/javascript"></script>
+                    MENU!!!
+                    <script type="text/javascript">
+    $(function () {
+        //to fix collapse mode width issue
+        $(".nav li,.nav li a,.nav li ul").removeAttr('style');
+
+        //for dropdown menu
+        $(".dropdown-menu").parent().removeClass().addClass('dropdown');
+        $(".dropdown>a").removeClass().addClass('dropdown-toggle').append('<b class="caret"></b>').attr('data-toggle', 'dropdown');
+
+        //remove default click redirect effect
+        $('.dropdown-toggle').attr('onclick', '').off('click');
+
+    });
+                    </script>
+
+
+                    <div class="navbar navbar-fixed-top">
+                        <div class="navbar-inner pull-center">
+                            <div class="container">
+                                <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+                                <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <!-- Everything you want hidden at 940px or less, place within here -->
+                                <div class="nav-collapse collapse">
+
+                                    <a href="#1_frmMenu_SkipLink"><img alt="Ignora collegamenti di navigazione" src="/WebResource.axd?d=rKN1opQVoh180LaGjXZZkJcgycFJD3JjqLxo5y6OMkLER3fLUXaZOyfasJt4DWJpjR4ceRMW5vVV6Ao8yeldkA2&amp;t=636371895574713980" width="0" height="0" style="border-width:0px;" /></a><div class="navbar pull-right" id="1_frmMenu">
+                                        <ul class="level1 nav pull-right">
+                                            <li><a class="level1" href="/Login/login.aspx">Login</a></li>
+                                            <li><a class="level1" href="/Personal/my.aspx">myKIS</a></li>
+                                            <li>
+                                                <a class="popout level1" href="/admin/admin.aspx">Admin</a><ul class="level2 dropdown-menu pull-right">
+                                                    <li><a class="level2" href="/Admin/kisAdmin.aspx">Configurazione principale</a></li>
+                                                    <li><a class="level2" href="/Users/manageUsers.aspx">Gestione utenti</a></li>
+                                                    <li><a class="level2" href="/Users/manageGruppi.aspx">Gestione gruppi</a></li>
+                                                    <li><a class="level2" href="/Users/managePermessi.aspx">Gestione permessi</a></li>
+                                                    <li><a class="level2" href="/Admin/manageMenu.aspx">Gestione menu</a></li>
+                                                    <li><a class="level2" href="/Andon/configAndonCompleto.aspx">Gestione Andon Completo</a></li>
+                                                    <li><a class="level2" href="/Admin/manageReports.aspx">Configurazione reports</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="level1" href="/Users/manageUsers.aspx">Utenti</a></li>
+                                            <li>
+                                                <a class="popout level1" href="/Stabilimento/configReparto.aspx">Stabilimento</a><ul class="level2 dropdown-menu pull-right">
+                                                    <li><a class="level2" href="/Reparti/configReparto.aspx">Reparti</a></li>
+                                                    <li><a class="level2" href="/Postazioni/managePostazioniLavoro.aspx">Postazioni di lavoro</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="level1" href="/Processi/MacroProcessi.aspx">Process Manager</a></li>
+                                            <li>
+                                                <a class="popout level1" href="/Commesse/commesse.aspx">Commesse</a><ul class="level2 dropdown-menu pull-right">
+                                                    <li><a class="level2" href="/Clienti/clienti.aspx">Anagrafica clienti</a></li>
+                                                    <li><a class="level2" href="/Commesse/commesse.aspx">Commesse</a></li>
+                                                    <li><a class="level2" href="/Commesse/wzAddCommessa.aspx">Wizard prodotto su commessa	</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a class="popout level1" href="/Produzione/produzione.aspx">Production plan</a><ul class="level2 dropdown-menu pull-right">
+                                                    <li><a class="level2" href="/Produzione/commesseDaProdurre.aspx">Nuove commesse</a></li>
+                                                    <li><a class="level2" href="/Produzione/storicoProduzione.aspx">Storico produzione</a></li>
+                                                    <li><a class="level2" href="/Produzione/workLoadListReparti.aspx">Carico di lavoro</a></li>
+                                                    <li><a class="level2" href="/Produzione/PianoProduzioneCompleto.aspx">Piano Produzione</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a class="popout level1" href="/Produzione/AndonListReparti.aspx">Andon</a><ul class="level2 dropdown-menu pull-right">
+                                                    <li><a class="level2" href="/Produzione/AndonListReparti.aspx">Andon Reparto</a></li>
+                                                    <li><a class="level2" href="/Produzione/avanzamentoProduzione.aspx">Andon completo</a></li>
+                                                </ul>
+                                            </li>
+                                            <li>
+                                                <a class="popout level1" href="/Operatori/checkInPostazione.aspx">WorkPlace</a><ul class="level2 dropdown-menu pull-right">
+                                                    <li><a class="level2" href="/Operatori/AzioniBarcodeJS.aspx">Barcode Gemba</a></li>
+                                                    <li><a class="level2" href="/Operatori/checkInPostazione.aspx">Web Gemba</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a class="level1" href="../Analysis/Analysis.aspx">Analisi dati</a></li>
+                                        </ul>
+                                    </div><a id="1_frmMenu_SkipLink"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="aspNetHidden">
+
+                        <input type="hidden" name="__VIEWSTATEGENERATOR" id="__VIEWSTATEGENERATOR" value="FA2018BD" />
+                    </div>
+                    <script type='text/javascript'>new Sys.WebForms.Menu({ element: '1_frmMenu', disappearAfter: 500, orientation: 'horizontal', tabIndex: 0, disabled: false });</script>
+                </form>
+
+
+                <h2>Index</h2>
+
+
+
+                <table class="clients-table">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>Documentale</td>
+                        <td>Non conformit&#224; sulla documentazione del sistema</td>
+                        <td>
+                            <a href="/Client/Update/1">Update</a>
+                            <a href="/Client/Delete/1">Delete</a>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+
+        </div>
+        <!--</section>-->
+        <div id="push"></div><!-- non rimuovere -->
+    </div>
+
+    <footer>
+
+        <div id="footer">
+            <div class="container">
+                <div class="static-link">
+                    <a href="https://plus.google.com/b/115967301889976366537/115967301889976366537" target="_blank" title="Chi siamo">
+                        <i class="icon-user"></i>&nbsp;
+                        <asp:Literal runat="server" ID="lblAboutUs" Text="<%$Resources:lblAboutUs %>" />
+                    </a>
+                    <a href="#" title="Contatti">
+                        <i class="icon-info-sign"></i>&nbsp;
+                        <asp:Literal runat="server" ID="lblContactUs" Text="<%$Resources:lblContactUs %>" />
+                    </a>
+                    <a href="#" title="Help">
+                        <i class="icon-question-sign"></i>&nbsp;
+                        <asp:Literal runat="server" ID="lblHelp" Text="<%$Resources:lblHelp %>" />
+                    </a>
+                </div>
+                <p class="muted credit">
+                    <small>
+                        &copy; 2013
+                        <a href="https://plus.google.com/+MatteoGriso135" target="_blank">Matteo Griso</a>&nbsp;-&nbsp;
+                        <asp:Literal runat="server" ID="lblRightsReserved" Text="<%$Resources:lblRightsReserved %>" />
+                        &nbsp;|&nbsp;
+                        <asp:Literal runat="server" ID="lblInfo" Text="<%$Resources:lblInfo %>" />
+                        <a href="mailto:mgrisoster@gmail.com">mgrisoster@gmail.com</a>; Skype: m.griso
+
+                    </small>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Le javascript
+            ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../../Styles/assets/js/bootstrap-transition.js"></script>
+    <script src="../../../Styles/assets/js/bootstrap-alert.js"></script>
+    <script src="../../../Styles/assets/js/bootstrap-modal.js"></script>
+    <script src="../../../Styles/assets/js/bootstrap-dropdown.js"></script>
+    <script src="../../../Styles/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../../../Styles/assets/js/bootstrap-tab.js"></script>
+    <script src="Styles/assets/js/bootstrap-tooltip.js"></script>
+    <script src="Styles/assets/js/bootstrap-popover.js"></script>
+    <script src="Styles/assets/js/bootstrap-button.js"></script>
+    <script src="Styles/assets/js/bootstrap-collapse.js"></script>
+    <script src="Styles/assets/js/bootstrap-carousel.js"></script>
+    <script src="Styles/assets/js/bootstrap-typeahead.js"></script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+﻿@model KIS.App_Sources.NonCompliance
+
+@if (ViewBag.authenticated)
+{
+    foreach (var cause in Model.Causes)
+    {
+        <span class="badge badge-info" id="badgeCause_@cause.ID">@Server.HtmlDecode(cause.Name)&nbsp;<input type="image" src="~/img/iconClose.png" style="height:15px;" class="del-cause" value="@cause.ID" /></span>
+    }
+    <script>
+    // Delete category
+    $('.del-cause').click(function () {
+        $(this).hide();
+        var badgeID = "#badgeCause_" + $(this).val();
+        $.ajax({
+            //url: '/Quality/NonCompliances/NCCauseDel',
+            url: "@Url.Action("NCCauseDel", "NonCompliances")",
+            type: 'POST',
+            data:{
+                ID: @Model.ID,
+                Year: @Model.Year,
+                causeID: $(this).val()
+            },
+            success: function(data) { $(badgeID).remove(); },
+            statusCode : {
+                404: function(content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show();},
+                500: function(content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show();}
+            },
+            error: function(req, status, errorObj) {
+                $(this).show();
+            }
+        });
+    });
+    </script>
+}

@@ -1,0 +1,72 @@
+﻿@if (ViewBag.authX)
+{
+<div class="row-fluid" style="text-align:center;">
+    <div class="span4">
+        @if (ViewBag.Delay >= 0)
+        {
+            <p>
+                @ResWebGemba.WorkstationKPI.lblCurrentDelay: <b>@Math.Round((double)ViewBag.Delay, 2) @ResWebGemba.WorkstationKPI.lblHours</b>
+            </p>
+
+        }
+        @if (ViewBag.PastDelay >= 0)
+        {
+            <p>@ResWebGemba.WorkstationKPI.lblLastDelay: <b>@Math.Round((double)ViewBag.PastDelay, 2) @ResWebGemba.WorkstationKPI.lblHours</b></p>
+        }
+        @if (ViewBag.PastDelay > 0 && ViewBag.Delay >= 0)
+        {
+            String color = "red";
+            if (ViewBag.PastDelay > ViewBag.Delay)
+            {
+                color = "green";
+            }
+            <p>@ResWebGemba.WorkstationKPI.lblVariation: <b style="color: @color;">@Math.Round((double)(100 * (ViewBag.Delay - ViewBag.PastDelay) / ViewBag.PastDelay), 2) %</b></p>
+        }
+    </div>
+    <div class="span4">
+        @if (ViewBag.LeadTime >= 0)
+        {
+            <p>
+                @ResWebGemba.WorkstationKPI.lblCurrentLeadTime: <b>@Math.Round((double)ViewBag.LeadTime, 2) @ResWebGemba.WorkstationKPI.lblHours</b>
+            </p>
+
+        }
+        @if (ViewBag.PastLeadTime >= 0)
+        {
+            <p>@ResWebGemba.WorkstationKPI.lblLastLeadTime: <b>@Math.Round((double)ViewBag.PastLeadTime, 2) @ResWebGemba.WorkstationKPI.lblHours</b></p>
+        }
+        @if (ViewBag.PastLeadTime > 0 && ViewBag.LeadTime >= 0)
+        {
+            String color = "red";
+            if (ViewBag.PastLeadTime > ViewBag.LeadTime)
+            {
+                color = "green";
+            }
+            <p>@ResWebGemba.WorkstationKPI.lblVariation: <b style="color: @color;">@Math.Round((double)(100 * (ViewBag.LeadTime - ViewBag.PastLeadTime) / ViewBag.PastLeadTime), 2) %</b></p>
+        }
+    </div>
+    <div class="span4">
+        @if (ViewBag.CurrentUnitaryWorkingTime >= 0)
+        {
+            <p>
+                @ResWebGemba.WorkstationKPI.lblUnitaryWorkingTimeCurrent: <b>@Math.Round((double)ViewBag.CurrentUnitaryWorkingTime, 2) @ResWebGemba.WorkstationKPI.lblHours</b>
+            </p>
+
+        }
+        @if (ViewBag.PastUnitaryWorkingTime >= 0)
+        {
+            <p>@ResWebGemba.WorkstationKPI.lblUnitaryWorkingTimePast: <b>@Math.Round((double)ViewBag.PastUnitaryWorkingTime, 2) @ResWebGemba.WorkstationKPI.lblHours</b></p>
+        }
+        @if (ViewBag.PastUnitaryWorkingTime > 0 && ViewBag.CurrentUnitaryWorkingTime >= 0)
+        {
+            String color = "red";
+            if (ViewBag.CurrentUnitaryWorkingTime < ViewBag.PastUnitaryWorkingTime)
+            {
+                color = "green";
+            }
+            <p>@ResWebGemba.WorkstationKPI.lblVariation: <b style="color: @color;">@Math.Round((double)(100 * (ViewBag.CurrentUnitaryWorkingTime - ViewBag.PastUnitaryWorkingTime) / ViewBag.PastUnitaryWorkingTime), 2) %</b></p>
+        }
+    </div>
+</div>
+
+}

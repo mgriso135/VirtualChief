@@ -1,0 +1,40 @@
+﻿@model IEnumerable<KIS.Areas.Quality.Controllers.NonCompliancesAnalysisController.CategoryCost>
+
+@if (ViewBag.authenticated)
+{
+    <h5>@ResAnalysis.CategoriesRiskList.lblTitle</h5>
+    @ResAnalysis.CategoriesRiskList.lblRiskDesc<br />
+    if (Model != null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <img id="imgCategoriesGraph" src="@Url.Action("CategoriesRiskGraph", "NonCompliancesAnalysis")?start=@ViewBag.start&end=@ViewBag.end" />
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>@ResAnalysis.CategoriesRiskList.lblTHCatName</th>
+                            <th>@ResAnalysis.CategoriesRiskList.lblFrequency</th>
+                            <th>@ResAnalysis.CategoriesRiskList.lblCost</th>
+                            <th>@ResAnalysis.CategoriesRiskList.lblRisk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+                                <td>@m.CategoryName</td>
+                                <td>@m.frequency</td>
+                                <td>@Math.Round(m.cost, 2)</td>
+                                <td>@Math.Round(m.risk, 2)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div></div>
+}

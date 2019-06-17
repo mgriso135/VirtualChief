@@ -1,0 +1,113 @@
+﻿@model IEnumerable<KIS.App_Sources.NonCompliance>
+
+@if(ViewBag.authenticated)
+{
+    if(Model!=null && Model.Count() > 0)
+    {
+        var lista2 = Model.GroupBy(m => m.OpeningDate.Month)
+                            .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                            .OrderBy(x => x.XAxys)
+                            .ToList();
+        var ChartTitle = ResAnalysis.NCPerPeriod.lblGraphMonthly;
+        if (ViewBag.format == 'W')
+        {
+            ChartTitle = ResAnalysis.NCPerPeriod.lblGraphWeekly;
+            lista2 = Model.GroupBy(m => Int32.Parse(Math.Truncate((double)(m.OpeningDate.DayOfYear / 7) + 1).ToString()))
+                .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                .OrderBy(x => x.XAxys)
+                .ToList();
+        }
+
+        var minInd = lista2[0].XAxys;
+        var maxInd = lista2[0].XAxys;
+
+        var iterazioni = "";
+        for (int i = 0; i < lista2.Count; i++)
+        {
+            iterazioni += lista2[i].XAxys + " " + minInd + i + "\n";
+            if (lista2[i].XAxys != minInd + i)
+            {
+                iterazioni += "Add: " + minInd + i + " 0\n";
+                lista2.Add(new { XAxys = minInd + i, YAxys = 0 });
+                //i = 0;
+                lista2 = lista2.OrderBy(x => x.XAxys).ToList();
+            }
+        }
+            <table class="table table-striped table-condensed table-responsive table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>@ResAnalysis.NCPerPeriodList.lblPeriodo</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblNonCompliance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var m in lista2)
+                    {
+                        <tr>
+                    <td>@m.XAxys</td>
+                        <td>@m.YAxys</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <table class="table table-striped table-condensed table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHNCID</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHNCOpenDate</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHDescription</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHImmAction</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHCost</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHStatus</th>
+                        <th>@ResAnalysis.NCPerPeriodList.lblTHClosureDate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>@m.ID/@m.Year</td>
+                            <td>@m.OpeningDate</td>
+                            @if (m.Description.Length <= 100)
+                            {
+                                <td>@Server.HtmlDecode(m.Description)</td> 
+                            }
+                            else
+                            {
+                                <td>@Server.HtmlDecode(m.Description.Substring(0, 100))...</td>
+                            }
+                            
+                            @if (m.ImmediateAction.Length <= 100)
+                            {
+                                <td>@Server.HtmlDecode(m.ImmediateAction)</td> 
+                            }
+                            else
+                            {
+                                <td>@Server.HtmlDecode(m.ImmediateAction.Substring(0, 100))...</td>
+                            }
+                            <td>@m.Cost</td>
+                            <td>@m.Status</td>
+                            @if (m.Status == 'C')
+                            {
+                                <td>@m.ClosureDate</td>
+                            }
+                            else
+                            {
+                                 <td></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+    }
+    else
+    {
+        <div class="row-fluid">@ResAnalysis.NCPerPeriodList.lblZeroNCs</div>
+    }
+}
+else
+{
+    <div class="row-fluid">@ResAnalysis.NCPerPeriodList.lblErrNoAuth</div>
+}

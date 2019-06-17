@@ -1,0 +1,60 @@
+﻿@model KIS.App_Code.User
+
+@if(ViewBag.authW && Model !=null && Model.username.Length > 0)
+{
+    KIS.App_Code.MainMenu itms = new KIS.App_Code.MainMenu();
+    itms.loadAllMenuItems();
+ <script>
+     $(document).ready(function () {
+         $("#imgLoading").fadeOut();
+
+         $("#ddlMenuItems").change(function () {
+             $("imgLoading").hide();
+             $("#txtDestinationURL").val($(this).val());
+         });
+
+         $("#imgSave").click(function () {
+             $("#imgLoading").fadeIn();
+             $("#imgSave").fadeOut();
+             $.ajax({
+                url: "@Url.Action("SaveDestinationURL", "PersonalArea")",
+                type: 'POST',
+                //dataType: "json",
+                data: {
+                    destUrl: $("#txtDestinationURL").val()
+            },
+                 success: function (data) {
+                     if (data == "1") {
+                     $("#imgLoading").fadeOut();
+                         $("#imgSave").fadeIn();
+                     }
+            },
+            statusCode : {
+                404: function(content) { alert('cannot find resource'); },
+                500: function(content) { alert('internal server error'); }
+            },
+            error: function(req, status, errorObj) {
+                alert("Error");
+            }
+
+        });
+         });
+     });
+ </script>
+ @ResPersonalArea.EditDestinationURL.lblCopyFromMenu
+    <select id="ddlMenuItems">
+        <option value=""></option>
+        @foreach(var m in itms.Elenco)
+        {
+            <option value="@m.URL">@m.Titolo</option>
+        }
+    </select>
+    <br />
+    @ResPersonalArea.EditDestinationURL.lblDestinationURL
+<input type="text" maxlength="255" id="txtDestinationURL" value="@Model.DestinationURL" /><input type="image" id="imgSave" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" />
+    <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:20px;" id="imgLoading"/>
+}
+ else
+{
+<div class="row-fluid"><div class="span12">@ResPersonalArea.EditDestinationURL.lblNOAuth</div></div>
+}

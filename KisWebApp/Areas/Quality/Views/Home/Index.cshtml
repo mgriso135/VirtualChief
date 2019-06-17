@@ -1,0 +1,128 @@
+﻿
+@{
+    ViewBag.Title = Resources.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@Resources.Index.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">
+            @Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    </ul>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <h4>@Resources.Index.lblTitleNC</h4>
+            <ul class="thumbnails unstyled">
+                @if (ViewBag.authNC)
+            {
+                    <li class="span2">
+                        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">
+                            <img src="~/img/iconNonConformity.png" style="height:100px" class="btn btn-primary" />
+                            <p>@Resources.Index.lblNonCompliances</p>
+                        </a>
+                    </li>
+                }
+
+                @if (ViewBag.authNCType)
+            {
+                    <li class="span2">
+                        <a href="~/Quality/NonComplianceTypes/Index">
+                            <img src="~/img/iconCategory.png" style="height:100px" class="btn btn-primary" />
+                            <p>@Resources.Index.lblType</p>
+                        </a>
+                    </li>
+                }
+
+                @if (ViewBag.authNCCause)
+            {
+                    <li class="span2">
+                        <a href="~/Quality/NonComplianceCauses/Index">
+                            <img src="~/img/iconCause.png" style="height:100px" class="btn btn-primary" />
+                            <p>@Resources.Index.lblCause</p>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h4>@Resources.Index.lblAnalysisNCTitle</h4>
+        <ul class="thumbnails unstyled">
+            @if (ViewBag.authNCAnalysisNum)
+            {
+                <li class="span2">
+                    <a href="~/Quality/NonCompliancesAnalysis/Number">
+                        <img src="~/img/kpi.jpg" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblAnalisiNumeroNC</p>
+                    </a>
+                </li>
+            }
+            @if (ViewBag.authNCAnalysisProduct)
+            {
+                <li class="span2">
+                    <a href="~/Quality/NonCompliancesAnalysis/ProductsNumberList?start=@DateTime.UtcNow.AddMonths(-1).ToString("yyyy-MM-dd")&end=@DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd")">
+                        <img src="~/img/iconProduct.png" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblAnalysisProduct</p>
+                    </a>
+                </li>
+            }
+            @if (ViewBag.authNCAnalysisCost)
+            {
+                <li class="span2">
+                    <a href="~/Quality/NonCompliancesAnalysis/NCCostList?start=@DateTime.UtcNow.AddMonths(-1).ToString("yyyy-MM-dd")&end=@DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd")&format=M">
+                        <img src="~/img/iconCostCommessa.jpg" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblAnalysisCost</p>
+                    </a>
+                </li>
+            }
+
+            @if (ViewBag.authNCAnalysisCost)
+            {
+                <li class="span2">
+                    <a href="~/Quality/NonCompliancesAnalysis/CategoriesCostList?start=@DateTime.UtcNow.AddMonths(-1).ToString("yyyy-MM-dd")&end=@DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd")">
+                        <img src="~/img/iconCostCommessa.jpg" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblAnalysisCostCategories</p>
+                    </a>
+                </li>
+            }
+
+            @if (ViewBag.authNCAnalysisCost)
+            {
+                <li class="span2">
+                    <a href="~/Quality/NonCompliancesAnalysis/CausesCostList?start=@DateTime.UtcNow.AddMonths(-1).ToString("yyyy-MM-dd")&end=@DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd")">
+                        <img src="~/img/iconCostCommessa.jpg" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblAnalysisCostCauses</p>
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h4>@Resources.Index.lblManageImprovementActions</h4>
+        <ul class="thumbnails unstyled">
+                <li class="span2">
+                    <a href="~/Quality/ImprovementActions/Index?stat=O&sortOrder=init">
+                        <img src="~/img/iconImprovementActions.png" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblImprovementActions</p>
+                    </a>
+                </li>
+        </ul>
+        <ul class="thumbnails unstyled">
+                <li class="span2">
+                    <a href="~/Quality/ImprovementActions/ImprovementActionsProgress">
+                        <img src="~/img/iconView.png" style="height:100px" class="btn btn-primary" />
+                        <p>@Resources.Index.lblImprovementActionsProgressView</p>
+                    </a>
+                </li>
+        </ul>
+    </div>
+</div>
+

@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = ResProducts.Create.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<h3>@ResProducts.Create.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Processi/MacroProcessi.aspx">@ResProducts.Create.lblNavProducts</a><span class="divider"></span></li>
+    <li>
+        <a href="~/Products/ProductParametersCategories/Index">
+            @ResProducts.Create.lblNavParameters</a><span class="divider"></span></li>
+    <li>
+        <a href="~/Products/ProductParametersCategories/Index">
+            @ResProducts.Create.lblNavParametersCategories</a><span class="divider"></span></li>
+    <li>
+        <a href="@Request.RawUrl">
+            @ResProducts.Create.lblNavParametersCategoriesAdd</a><span class="divider"></span></li>
+</ul>
+@if(ViewBag.authW)
+{ 
+<script>
+            $(document).ready(function () {
+                $('#btnSave').click(function () {
+                    $('#btnSave').fadeOut();
+                    $('#btnReset').fadeOut();
+                    $('#imgLoad').fadeIn();
+                    
+                    var cAct = $(this).val();
+ 
+                        $.ajax({
+                            //url: '/Quality/NonCompliances/NCProductDel',
+                            url: "@Url.Action("Add", "ProductParametersCategories")",
+                            type: 'POST',
+                            data: {
+                                CategoryName: $('<div/>').text($('#txtName').val()).html(),
+                                CategoryDescription: $('<div/>').text($('#txtDescription').val()).html(),
+                            },
+                            success: function (data) {
+                                if (data == "False") {
+                                    alert("@(ResProducts.Create.lblErrorAdding)");
+                                    $('#btnSave').fadeIn();
+                                    $('#btnReset').fadeIn();
+                                    $('#imgLoad').fadeOut();
+                                }
+                                else {
+                                    window.location.replace("../../Products/ProductParametersCategories/Index");
+                                }
+                            },
+                            statusCode: {
+                                //404: function (content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show(); },
+                                //500: function (content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show(); }
+                            },
+                            error: function (req, status, errorObj) {
+                                alert("Error");
+                                $('#btnSave').fadeIn();
+                                $('#btnReset').fadeIn();
+                                $('#imgLoad').fadeOut();
+                            }
+
+                        });
+                });
+
+                $('#btnReset').click(function () {
+                    $('#btnSave').fadeOut();
+                    $('#btnReset').fadeOut();
+                    $('#imgLoad').fadeIn();
+                    $('#txtName').val('');
+                    $('#txtDescription').val('');
+                    $('#btnReset').fadeIn();
+                    $('#imgLoad').fadeOut();
+                    $('#btnSave').fadeIn();
+                });
+
+                $('#imgLoad').fadeOut();
+
+            });
+</script>
+<div class="row-fluid">
+    <div class="span12">
+        <table>
+            <tr>
+                <td>@ResProducts.Create.lblName</td>
+                <td><input type="text" id="txtName"/></td>
+            </tr>
+            <tr>
+                <td>@ResProducts.Create.lblDescription</td>
+                <td>
+                    <textarea id="txtDescription"></textarea>
+                </td>
+            </tr>
+            <tr><td colspan="2">
+                <input type="image" id="btnSave" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;"/>
+                <img src="~/img/iconLoading.gif" id="imgLoad" style="min-width:20px; max-width:30px;" />
+                    <input type="image" id="btnReset" src="~/img/iconUndo.png" style="min-width:20px; max-width:30px;" />
+                </td></tr>
+        </table>
+    </div>
+</div>
+}
+else
+{
+<div class="row-fluid">
+    <div class="span12">
+        @ResProducts.Create.lblNoAuth
+    </div>
+</div>
+}

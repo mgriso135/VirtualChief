@@ -1,0 +1,101 @@
+﻿ 
+@if(ViewBag.authenticated)
+{ 
+    <span>@ResNC.ProductSearch.lblCustomerName</span>
+    <select id="ddlCliente">
+        <option value="*">@Server.HtmlDecode(ResNC.ProductSearch.lblAllCustomer)</option>
+        @foreach (var c in ViewBag.listClienti)
+        {
+            <option value="@c.CodiceCliente">@c.RagioneSociale</option>
+        }
+    </select>
+    <span>@Server.HtmlDecode(ResNC.ProductSearch.lblProductName)</span>
+    
+    <span id="txtProducts"></span><img src="~/img/iconLoading.gif" id="imgLoadTxtProducts" style="width:40px; height:40px;" />
+    <button type="submit" id="imgSearch" style="border:0px;background:transparent;"><img src="~/img/iconView.png" style="width:40px; height:40px;" /></button>
+    <br />
+    <img src="~/img/iconLoading.gif" id="imgLoadSearchResults" style="width:40px; height:40px;" />
+    <div id="tblSearchResult"/>
+
+<script>
+    $('#ddlCliente').on('change', function (e) {
+        var optionSelected = $("option:selected", this);
+        var valueSelected = this.value;
+        loadProducts(valueSelected);
+    });
+
+    function loadProducts(cust)
+    {
+        $('#imgSearch').fadeOut();
+        $('#txtProducts').fadeOut();
+        $('#imgLoadTxtProducts').fadeIn();
+        $.ajax({
+            url: "@Url.Action("PortafoglioProdotti", "NonCompliances")",
+            type: 'GET',
+        data:{
+            customer: cust
+        },
+        dataType: 'html' ,
+        success: function (data) {
+
+            $('#ddlProducts').remove();
+            var s = $('<select id="ddlProducts" />');
+
+            var jsonobj = $.parseJSON(data);
+
+            $('<option />', { value: "-1/-1/-1", text: "@Server.HtmlDecode(ResNC.ProductSearch.lblSelProduct)" }).appendTo(s);
+
+            for(var i = 0; i < jsonobj.length; i++)
+            {
+                $('<option />', { value: jsonobj[i][0], text: jsonobj[i][1] }).appendTo(s);
+                //$('<option value=' + jsonobj[i][0] + '>' + jsonobj[i][1] + '</option>').appendTo(s);
+            }
+
+            s.appendTo('#txtProducts'); // or wherever it should be
+            $('#imgSearch').fadeIn();
+            $('#txtProducts').fadeIn();
+            $('#imgLoadTxtProducts').fadeOut();
+        },
+        error: function(result){ alert("Error Product Search " + result);},
+        warning: function (result) { alert("Warning Product Search" + result); },
+        });
+
+    }
+
+    $('#imgSearch').click(function () {
+        var cust = $('#ddlCliente').val();
+        var prodAggregated = $('#ddlProducts').val();
+        if (cust == "*") { cust = "";}
+        var prod = prodAggregated.split('/');
+
+        $('#imgLoadSearchResults').fadeIn();
+        $('#tblSearchResult').fadeOut();
+        $.ajax({
+            url: "@Url.Action("ProductsList", "NonCompliances")",
+            type: 'POST',
+        data:{
+            ncID: @ViewBag.ncID,
+            ncYear: @ViewBag.ncYear,
+            customer: cust,
+            procID: prod[0],
+            rev: prod[1],
+            varID: prod[2]
+        },
+        dataType: 'html' ,
+        success: function (result) {
+            $('#imgLoadSearchResults').fadeOut();
+            $('#tblSearchResult').fadeIn();
+            $('#tblSearchResult').html(result);
+        },
+        error: function(result){ alert("Error ImageSearch click " + result);},
+        warning: function (result) { alert("Warning ImageSearch click " + result); },
+        });
+    });
+
+
+    $(document).ready(function () {
+        loadProducts("*");
+        $('#imgLoadSearchResults').fadeOut();
+    });
+</script>
+}

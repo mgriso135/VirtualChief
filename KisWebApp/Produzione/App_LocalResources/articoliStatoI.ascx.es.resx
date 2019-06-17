@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CommessaCodiceCliente" xml:space="preserve">
+    <value>Codígo de cliente</value>
+  </data>
+  <data name="CommessaDataInserimento" xml:space="preserve">
+    <value>Fecha de entrada de orden</value>
+  </data>
+  <data name="CommessaID" xml:space="preserve">
+    <value>Orden ID</value>
+  </data>
+  <data name="CommessaNote" xml:space="preserve">
+    <value>Orden notas</value>
+  </data>
+  <data name="CommessaRagioneSocialeCliente" xml:space="preserve">
+    <value>Cliente</value>
+  </data>
+  <data name="DataPrevistaConsegna" xml:space="preserve">
+    <value>Fecha de entrega</value>
+  </data>
+  <data name="DataPrevistaFineProduzione" xml:space="preserve">
+    <value>Fecha de fin de producción</value>
+  </data>
+  <data name="EarlyFinish" xml:space="preserve">
+    <value>EarlyFinish</value>
+  </data>
+  <data name="EarlyStart" xml:space="preserve">
+    <value>EarlyStart</value>
+  </data>
+  <data name="LateFinish" xml:space="preserve">
+    <value>LateFinish</value>
+  </data>
+  <data name="LateStart" xml:space="preserve">
+    <value>LateStart</value>
+  </data>
+  <data name="lblAdded" xml:space="preserve">
+    <value>sumado con exíto.&lt;br /&gt;</value>
+  </data>
+  <data name="lblDeleted" xml:space="preserve">
+    <value>borrado.&lt;br /&gt;</value>
+  </data>
+  <data name="lblPermessoKo" xml:space="preserve">
+    <value>No tiene el pormiso por ver el Andon generál.&lt;br /&gt;</value>
+  </data>
+  <data name="lblTHProdotto.Text" xml:space="preserve">
+    <value>Producto</value>
+  </data>
+  <data name="lblTHTasks.Text" xml:space="preserve">
+    <value>Tareas</value>
+  </data>
+  <data name="ProdottoID" xml:space="preserve">
+    <value>ID Producto</value>
+  </data>
+  <data name="ProdottoIndicatoreCompletamentoTasks" xml:space="preserve">
+    <value>Indicador de progreso de tareas</value>
+  </data>
+  <data name="ProdottoIndicatoreCompletamentoTempoPrevisto" xml:space="preserve">
+    <value>Indicador de progreso de tareas (tiempo)</value>
+  </data>
+  <data name="ProdottoLineaProdotto" xml:space="preserve">
+    <value>Tipo de Producto</value>
+  </data>
+  <data name="ProdottoMatricola" xml:space="preserve">
+    <value>Matricúla</value>
+  </data>
+  <data name="ProdottoNomeProdotto" xml:space="preserve">
+    <value>Nombre de producto</value>
+  </data>
+  <data name="ProdottoQuantita" xml:space="preserve">
+    <value>Cantidad</value>
+  </data>
+  <data name="ProdottoQuantitaRealizzata" xml:space="preserve">
+    <value>Cantidad producida</value>
+  </data>
+  <data name="ProdottoRitardo" xml:space="preserve">
+    <value>Demora</value>
+  </data>
+  <data name="ProdottoStatus" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="ProdottoTempodiLavoroTotale" xml:space="preserve">
+    <value>Tiempo de trabajo total</value>
+  </data>
+  <data name="Reparto" xml:space="preserve">
+    <value>Departamento</value>
+  </data>
+  <data name="TaskDescrizione" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="TaskEarlyFinish" xml:space="preserve">
+    <value>Task EarlyFinish</value>
+  </data>
+  <data name="TaskEarlyStart" xml:space="preserve">
+    <value>Task EarlyStart</value>
+  </data>
+  <data name="TaskFineEffettiva" xml:space="preserve">
+    <value>Fin real</value>
+  </data>
+  <data name="TaskID" xml:space="preserve">
+    <value>ID de Tarea</value>
+  </data>
+  <data name="TaskInizioEffettivo" xml:space="preserve">
+    <value>Inicio real</value>
+  </data>
+  <data name="TaskLateFinish" xml:space="preserve">
+    <value>Tarea LateFinish</value>
+  </data>
+  <data name="TaskLateStart" xml:space="preserve">
+    <value>Tarea LateStart</value>
+  </data>
+  <data name="TaskNome" xml:space="preserve">
+    <value>Tarea Nombre</value>
+  </data>
+  <data name="TaskNumeroOperatori" xml:space="preserve">
+    <value>Número de operadores</value>
+  </data>
+  <data name="TaskPostazione" xml:space="preserve">
+    <value>Estación de trabajo</value>
+  </data>
+  <data name="TaskQuantitaPrevista" xml:space="preserve">
+    <value>Tarea Cantidad pedida</value>
+  </data>
+  <data name="TaskQuantitaProdotta" xml:space="preserve">
+    <value>Tarea Cantidad producida</value>
+  </data>
+  <data name="TaskRitardo" xml:space="preserve">
+    <value>Demora</value>
+  </data>
+  <data name="TaskStatus" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="TaskTempoCiclo" xml:space="preserve">
+    <value>Tiempo de ciclo</value>
+  </data>
+  <data name="TaskTempoDiLavoroEffettivo" xml:space="preserve">
+    <value>Tiempo de trabajo real</value>
+  </data>
+  <data name="TaskTempoDiLavoroPrevisto" xml:space="preserve">
+    <value>Tiempo de trabajo planeado</value>
+  </data>
+  <data name="lblNavAndonCompleto.Text" xml:space="preserve">
+    <value>Andon generál</value>
+  </data>
+  <data name="lblNavProduzione.Text" xml:space="preserve">
+    <value>Producción</value>
+  </data>
+  <data name="lblTitleArticoliDaAvviare.Text" xml:space="preserve">
+    <value>Productos en cola</value>
+  </data>
+  <data name="lblTTStatoAvanzamento" xml:space="preserve">
+    <value>Ver el progreso del producto</value>
+  </data>
+  <data name="lblNoMoreProducts" xml:space="preserve">
+    <value>No hay productos planificados.&lt;br /&gt;</value>
+  </data>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Products en producción</value>
+  </data>
+  <data name="lblTTVisualizzaProd" xml:space="preserve">
+    <value>Ver el estado del producto</value>
+  </data>
+  <data name="OrderExternalID" xml:space="preserve">
+    <value>Orden ID externo</value>
+  </data>
+  <data name="ProdottoMeasurementUnit" xml:space="preserve">
+    <value>UdM</value>
+  </data>
+  <data name="ProdottoProductExternalID" xml:space="preserve">
+    <value>Código producto</value>
+  </data>
+</root>

@@ -1,0 +1,87 @@
+﻿@model IEnumerable<KIS.App_Sources.CorrectiveActionTask>
+
+
+@if (ViewBag.authR || ViewBag.authW)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <script>
+            // Remove task
+            $(document).ready(function () {
+                $('.delTask').click(function () {
+                    if(window.confirm("@ResImprovementActions.CorrectiveActionTasksList.lblDeleteConfirm"))
+                    {
+                        $(this).fadeOut();
+                        var rowID = "#row_" + $(this).val();
+                        $.ajax({
+                            //url: '/Quality/NonCompliances/NCCategoriesDel',
+                            url: "@Url.Action("CorrectiveActionTaskRemove", "ImprovementActions")",
+                            type: 'POST',
+                            data:{
+                                ImprovementActionID: @ViewBag.iActID,
+                                ImprovementActionYear: @ViewBag.iActYear,
+                                CorrectiveActionID: @ViewBag.cActID,
+                                TaskID: $(this).val()
+                            },
+                            success: function(data) {
+                                if(data == "True")
+                                {
+                                    $(rowID).fadeOut();
+                                }
+                                else
+                                {
+                                    alert("@ResImprovementActions.CorrectiveActionTasksList.lblErrorDelete");
+                                }
+                            },
+                            statusCode : {
+                                404: function(content) { $(this).show(); alert('Error'); },
+                                500: function(content) { $(this).show(); alert('Error'); }
+                            },
+                            error: function(req, status, errorObj) {
+                                $(this).show();
+                            }
+
+                        });
+                    }
+            });
+            });
+        </script>
+
+    <table class="table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>@ResImprovementActions.CorrectiveActionTasksList.lblTHDate</th>
+                <th>@ResImprovementActions.CorrectiveActionTasksList.lblTHUser</th>
+                <th>@ResImprovementActions.CorrectiveActionTasksList.lblTHDescription</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var m in Model)
+            {
+                <tr id="row_@m.TaskID">
+                    @if(ViewBag.currUser == m.User)
+                    {
+                        <td>
+                    <input type="image" class="delTask" src="~/img/iconDelete.png" style="min-width:20px; max-width:20px;" value="@m.TaskID" />
+</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                    <td>@m.Date</td>
+                    <td>@m.User</td>
+                    <td><pre>@Server.HtmlDecode(Server.HtmlDecode(m.Description))</pre></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+}
+else
+{
+<div>
+    @ResImprovementActions.CorrectiveActionTasksList.lblErrNoAuth
+</div>
+}

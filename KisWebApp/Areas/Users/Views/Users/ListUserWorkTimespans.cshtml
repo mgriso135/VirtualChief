@@ -1,0 +1,149 @@
+﻿@model IEnumerable<KIS.App_Code.IntervalliDiLavoroEffettivi>
+
+@if (ViewBag.authW)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <script>
+            $(document).ready(function () {
+                
+
+                $(".deleteInterval").click(function () {
+
+                    var spli = $(this).val().split('_');
+                    var splitArr = spli[1].split(';');
+
+                    $(this).fadeOut();
+
+                          $.ajax({
+            url: "@Url.Action("DeleteUserWorkTimespan", "Users")",
+            type: 'POST',
+            data:{
+                usr: "@ViewBag.username",
+                StartEventID: splitArr[0],
+                EndEventID: splitArr[1]
+            },
+                              success: function (data) {
+                                  if (data == "1") {
+                                      $("#row_" + splitArr[0] + splitArr[1]).fadeOut();
+                                  }
+                                  else {
+                                      alert("Error");
+                                  }
+                                },
+            statusCode : {
+                404: function (content) { alert('cannot find resource'); $(this).fadeOut(); },
+                500: function (content) { alert('internal server error'); $(this).fadeOut(); }
+            },
+            error: function(req, status, errorObj) {
+
+                        }
+                    });
+
+                });
+
+
+                $(".riexhumateTask").click(function () {
+
+                    var spli = $(this).val().split('_');
+                    var spl = spli[1].split(';');
+
+                    $(this).fadeOut();
+
+                    if (confirm('@Server.HtmlDecode(ResUsers.ListUserWorkTimespans.lblConfirmExhumate)')) {
+                        $.ajax({
+                            url: "@Url.Action("ExhumateTask", "../Analysis/ProductionHistory")",
+                            type: 'POST',
+                            data: {
+                                TaskID: spl[0]
+                            },
+                            success: function (data) {
+                                //$(this).fadeOut();
+                                $("#delete_" + spl[1]  + spl[2]).fadeIn();
+                            },
+                            statusCode: {
+                                404: function (content) { alert('cannot find resource'); $(this).fadeIn(); },
+                                500: function (content) { alert('internal server error'); $(this).fadeIn(); }
+                            },
+                            error: function (req, status, errorObj) {
+                                $(this).fadeIn();
+                            }
+                        });
+                    }
+                    else {
+                        $(this).fadeIn();
+                    }
+                });
+
+
+
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHStartDate</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHEndDate</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHDuration</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHStatus</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHCustomerName</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHProductID</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHProductName</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHTaskID</th>
+                            <th>@ResUsers.ListUserWorkTimespans.lblTHTaskName</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                        <tr id="row_@m.StartEventID@m.EndEventID">
+                            @if (m.TaskStatus != 'F')
+                            {
+                                <td><input type="image" class="deleteInterval" id="delete_@m.StartEventID@m.EndEventID" value="delete_@m.StartEventID;@m.EndEventID" src="~/img/iconDelete.png" style="min-width:15px; max-width:20px;" /></td>
+                            }
+                            else
+                            {
+                                <td><input type="image" class="deleteInterval" id="delete_@m.StartEventID@m.EndEventID" value="delete_@m.StartEventID;@m.EndEventID" src="~/img/iconDelete.png" style="min-width:15px; max-width:20px;display:none;" /></td>
+                            }
+                            <td>@m.DataInizio</td>
+                            <td>@m.DataFine</td>
+                            <td>@Math.Round(m.Intervallo.TotalHours, 2)</td>
+                            <td>@m.EndEventStatus</td>
+                            <td>@m.RagioneSocialeCliente</td>
+                            <td>@m.IDProdotto/@m.AnnoProdotto</td>
+                            <td>@m.NomeProdotto</td>
+                            <td>@m.TaskProduzioneID</td>
+                            <td>@m.NomeTask</td>
+                            @if (m.TaskStatus == 'F')
+                            {
+                                <td><input type="image" class="riexhumateTask" value="exhumate_@m.TaskProduzioneID;@m.StartEventID;@m.EndEventID" src="~/img/iconExhume.png" style="min-width:15px; max-width:20px;" /></td>
+                            }
+                            else
+                            {
+                                <td><input type="image" class="riexhumateTask" value="exhumate_@m.TaskProduzioneID;@m.StartEventID;@m.EndEventID" src="~/img/iconExhume.png" style="min-width:15px; max-width:20px; display:none;" /></td>
+                            }
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+                    
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">@ResUsers.ListUserWorkTimespans.lblNoRegistration</div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResUsers.ListUserWorkTimespans.lblNoAuth</div>
+    </div>
+}

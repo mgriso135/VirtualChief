@@ -1,0 +1,74 @@
+﻿@model IEnumerable<KIS.App_Sources.NonCompliance>
+
+@using System.Web.UI.DataVisualization
+
+@if (Model != null && ViewBag.authenticated)
+{
+    if(Model.Count() >0)
+    {
+        var lista2 = Model.GroupBy(m => m.OpeningDate.Month)
+                            .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                            .OrderBy(x => x.XAxys)
+                            .ToList();
+        var ChartTitle = ResAnalysis.NCPerPeriod.lblGraphMonthly;
+        if (ViewBag.format == 'W')
+        {
+            ChartTitle = ResAnalysis.NCPerPeriod.lblGraphWeekly;
+            lista2 = Model.GroupBy(m => Int32.Parse(Math.Truncate((double)(m.OpeningDate.DayOfYear / 7) + 1).ToString()))
+                .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                .OrderBy(x => x.XAxys)
+                .ToList();
+        }
+
+        var minInd = lista2[0].XAxys;
+        var maxInd = lista2[0].XAxys;
+
+        var iterazioni = "";
+        for(int i = 0; i < lista2.Count; i++)
+        {
+            iterazioni += lista2[i].XAxys + " " + minInd + i + "\n";
+            if (lista2[i].XAxys != minInd + i)
+            {
+                iterazioni += "Add: " + minInd + i + " 0\n";
+                lista2.Add(new { XAxys = minInd + i, YAxys = 0 });
+                //i = 0;
+                lista2 = lista2.OrderBy(x => x.XAxys).ToList();
+            }
+        }
+
+        var vWidth = lista2.Count < 10 ? 600 : 100 + 50 * lista2.Count;
+        var CustomTheme = "<Chart> "
+  + "<ChartAreas>"
+  + "  <ChartArea Name=\"Default\" _Template_=\"All\">"
+  + "     <AxisY>"
+  + "       <LabelStyle Font=\"Verdana, 12px\" />"
+  + "   </AxisY>"
+  + "   <AxisX LineColor = \"64, 64, 64, 64\" Interval = \"1\">"
+  + "       <LabelStyle Font = \"Verdana, 12px\" />"
+  + "   </AxisX>"
+   + "   </ChartArea>"
+ + " </ChartAreas>"
+   + "<Series>"
+    + "<Series IsValueShownAsLabel=\"true\" Name = \"Default\" BorderWidth=\"3\" >"
+    + " </Series>"
+  + " </Series>"
+   + "<Legends>"
+   + "  <Legend />"
+ + "  </Legends>"
++ " </Chart>";
+
+        var myChart = new Chart(width: vWidth, height: 400, theme: CustomTheme)
+        .AddTitle(ChartTitle);
+
+        myChart.AddSeries("Default", chartType: "column",
+    xValue: lista2, xField: "XAxys",
+    yValues: lista2, yFields: "YAxys", markerStep: 1
+    );
+        myChart.Write();
+
+    }
+    else
+    {
+        <div>Nessuna non conformita trovata nel periodo selezionato</div>
+    }
+}

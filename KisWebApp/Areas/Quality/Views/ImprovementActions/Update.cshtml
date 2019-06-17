@@ -1,0 +1,428 @@
+﻿@model KIS.App_Sources.ImprovementAction
+@{
+    ViewBag.Title = ResImprovementActions.Update.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResImprovementActions.Update.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/ImprovementActions/Index?stat=O&sortOrder=init">@Resources.Shared.lblNavImprovementActions</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@Resources.Shared.lblNavUpdate</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (ViewBag.authR || ViewBag.authW)
+{
+    if (Model != null && Model.ID != -1 && Model.Year > 1970)
+    {
+        <script>
+            $(document).ready(function () {
+                $(function () {
+                    $("[id*=txtClosureDatePlanned]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+                $('#lnkTabTeam').click(function () {
+                    if ($('#tabTeamAdd').is(':visible')) {
+                        $('#tabTeamAdd').fadeOut();
+                        $('#tabTeamList').fadeOut();
+                    }
+                    else {
+                        $('#tabTeamAdd').fadeIn();
+                        $('#tabTeamList').fadeIn();
+                    }
+                });
+
+                function loadTeamMembers() {
+                    $('#imgLoadTeamList').fadeIn();
+                    $.ajax({
+                        url: "@Url.Action("ImprovementActionTeamMembers", "ImprovementActions")",
+                        type: 'POST',
+                    data:{
+                        ID: @Model.ID,
+                        Year: @Model.Year,
+                        },
+                    dataType: 'html' ,
+                    success: function(result) {
+                        $('#tabTeamList').html(result);
+                        $('#imgLoadTeamList').fadeOut();
+                    },
+                    error: function(result){ alert("Error loadTeamMembers" + result);},
+                    warning: function(result){alert("Warning loadTeamMembers" + result);},
+                    });
+                }
+
+                // Add a cause controller call addCauseBtn
+                $('#addTeamMemberBtn').click(function () {
+                    $.ajax({
+                        // url: '/Quality/NonCompliances/NCCausesAdd',
+                        url: "@Url.Action("TeamMemberAdd", "ImprovementActions")",
+                        type: 'POST',
+                    data:{
+                        ID: @Model.ID,
+                        Year: @Model.Year,
+                        user: $('#lstTeamMember').val(),
+                        role: $('#lstRoleMember').val()
+                    },
+                        success: function(data) { loadTeamMembers(); },
+                    statusCode : {
+                        404: function(content) { alert('cannot find resource'); },
+                        500: function(content) { alert('internal server error'); }
+                    },
+                    error: function(req, status, errorObj) {
+
+                    }
+
+                });
+                $('#lstTeamMember').val('');
+                loadTeamMembers();
+                });
+
+                // Update improvement action's details
+                $('#btnUpdateiAct').click(function () {
+                    var closurePDate = null;
+                    var closurePDateS = $('#txtClosureDatePlanned').val();
+                    var closurePDateA = closurePDateS.split('/');
+                    
+                    if($('#txtClosureDatePlanned').val().length > 0)
+                        {
+                        closurePDate = new Date(closurePDateA[2], closurePDateA[1] - 1, closurePDateA[0]);
+                    }
+                    else
+                    {
+                        closurePDate = new Date(1970, 1, 1);
+                    }
+                    
+                    $('#btnUpdateiAct').fadeOut();
+                    $('#lblInfoUpdate').text('');
+                    $.ajax({
+                        url: "@Url.Action("UpdateImprovementAction", "ImprovementActions")",
+                        type: 'POST',
+                    data:{
+                        ID: @Model.ID,
+                        Year: @Model.Year,
+                        CurrentSituation: $('<div/>').text($('#txtCurrentSituation').val()).html(),
+                        ExpectedResults: $('<div/>').text($('#txtExpectedResult').val()).html(),
+                        RootCauses: $('<div/>').text($('#txtRootCauses').val()).html(),
+                        ClosurePlannedDate: closurePDate.getFullYear() + "-" + (closurePDate.getMonth() + 1) + "-" + closurePDate.getDate(),
+                        ClosureNotes: $('<div/>').text($('#txtClosureNotes').val()).html(),
+                        Status: $('#stat').val()
+                    },
+                        success: function(data) {
+                            if(data == 2)
+                            {
+                                alert("@ResImprovementActions.Update.lblErrorClosure");
+                                $('#stat').val('O');
+                            }
+                        $('#imgLoadUpdateiAct').fadeOut();
+                        $('#btnUpdateiAct').fadeIn();
+                        if(data == 1)
+                            {
+                            $('#lblInfoUpdate').html("@Server.HtmlDecode(ResImprovementActions.Update.lblUpdateOk)");
+                        }
+                    },
+                    statusCode : {
+                        404: function(content) { alert('cannot find resource'); },
+                        500: function(content) { alert('internal server error'); }
+                    },
+                    error: function(req, status, errorObj) {
+                        alert("Error btnUpdateNC" + req + " " + status + " " + errorObj);
+                    }
+
+                });
+
+                });
+
+                function loadCorrectiveActions() {
+                    $('#imgLoadCorrectiveActions').fadeIn();
+                    $.ajax({
+                        url: "@Url.Action("CorrectiveActionsList", "ImprovementActions")",
+                        type: 'POST',
+                    data:{
+                        ImprovementActionID: @Model.ID,
+                        ImprovementActionYear: @Model.Year,
+                        },
+                    dataType: 'html' ,
+                    success: function(result) {
+                        $('#tabCorrectiveActions').html(result);
+                        $('#imgLoadCorrectiveActions').fadeOut();
+                    },
+                    error: function(result){ alert("Error loadCorrectiveActions" + result);},
+                    warning: function(result){alert("Warning loadCorrectiveActions" + result);},
+                    });
+            }
+
+                // Add corrective action spanAddCorrectiveAction
+                $('#spanAddCorrectiveAction').click(function () {
+                    
+                    $.ajax({
+                        // url: '/Quality/NonCompliances/NCCausesAdd',
+                        url: "@Url.Action("CorrectiveActionAdd", "ImprovementActions")",
+                        type: 'POST',
+                    data:{
+                        ImprovementActionID: @Model.ID,
+                        ImprovementActionYear: @Model.Year,
+                    },
+                        success: function(data) { $('#stat').val('O'); loadCorrectiveActions();  },
+                    statusCode : {
+                        404: function(content) { alert('404 spanAddCorrectiveAction'); },
+                        500: function(content) { alert('internal server error spanAddCorrectiveAction'); }
+                    },
+                    error: function(req, status, errorObj) {
+
+                    }
+
+                });
+                loadCorrectiveActions();
+            });
+
+                function loadUploadedFilesListView() {
+                    $.ajax({
+                        url: "@Url.Action("IAFileList", "ImprovementActions")",
+                        type: 'GET',
+                        dataType: 'html',
+                        data:{
+                            ImprovementActionID: @Model.ID,
+                            ImprovementActionYear: @Model.Year,
+                        },
+                    success: function(result) {
+                        $('#fileList').html(result);
+                    }
+                });
+                }
+
+                // Upload file
+                $('#upload').submit(function(e) {
+
+                    $('#imgLoadUpload').fadeIn();
+                    $('#btnUpload').fadeOut();
+                    e.preventDefault(); // stop the standard form submission
+
+                    var formData = new FormData();
+                    var totalFiles = document.getElementById("fileUpload").files.length;
+
+                    for (var i = 0; i < totalFiles; i++) {
+                        var file = document.getElementById("fileUpload").files[i];
+
+                        formData.append("FileUpload", file);
+                        formData.append("ImprovementActionID", @Model.ID);
+                        formData.append("ImprovementActionYear", @Model.Year);
+                    }
+
+                    $.ajax({
+                        // url: '/Quality/NonCompliances/FileUpload',
+                        url: "@Url.Action("IAFileUpload", "ImprovementActions")",
+                        type: this.method,
+                    data: formData,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        switch(data)
+                        {
+                            case "0": alert("@ResNC.Update.lblErrFileNCNotFound"); break;
+                            case "1": break;
+                            case "2": alert("@ResNC.Update.lblErrFilename"); break;
+                            case "3": alert("@ResNC.Update.lblErrorGenerico"); break;
+                            case "4": alert("@ResNC.Update.lblErrFileSize"); break;
+                            case "5": alert("@ResNC.Update.lblErrFileTypeNotAllowed" + " .doc, .docx, .log, .msg, .odt, .pages,"
+                                + ".rtf, .tex, .txt, .csv, .dat, .key, .ppt, .pptx, .pps, .xml, .3gp, .avi, .mp4, .mpg, .mov,"
+                                + " .wmv, .bmp, .gif, .jpg, .jpeg, .png, .tif, .tiff, .xls, .xlsx, .dbf, .mdb, .sql, "
+                                + ".dwg, .dxf, .htm, .html");
+                            default: break;
+
+                        }
+                        loadUploadedFilesListView();
+                    },
+                    error: function(xhr, error, status) {
+                        alert(error, status);
+                    }
+                });
+                loadUploadedFilesListView();
+                $('#imgLoadUpload').fadeOut();
+                $('#btnUpload').fadeIn();
+            });
+
+
+                // Main function!
+                $('#tabTeamAdd').fadeOut();
+                $('#tabTeamList').fadeOut();
+                $('#imgLoadUpdateiAct').fadeOut();
+                $('#imgLoadCorrectiveActions').fadeOut();
+                $('#imgLoadUpload').fadeOut();
+                loadTeamMembers();
+                loadCorrectiveActions();
+                loadUploadedFilesListView();
+
+                if(@Model.EndDateExpected.Year > 2000)
+                    {
+                var dd = @Model.EndDateExpected.Day;
+                var mm =  @Model.EndDateExpected.Month;
+                var yyyy = @Model.EndDateExpected.Year;
+                if (dd < 10) { dd = '0' + dd }
+                if (mm < 10) { mm = '0' + mm }
+                today = dd + '/' + mm + '/' + yyyy;
+                $('#txtClosureDatePlanned').attr("value", today);
+                }
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span8">
+                <h4>@Model.ID/@Model.Year</h4>
+                <ul class="pagination">
+                    <li><a id="lnkTabTeam" style="cursor: pointer">@ResImprovementActions.Update.lblTeam</a></li>
+                </ul>
+                <div id="tabTeamAdd">
+                    @if (ViewBag.authW)
+                    {
+                        <select id="lstTeamMember">
+                            <option value="">@ResImprovementActions.Update.ddlUserSelect</option>
+                            @{
+                                KIS.App_Code.UserList usrList = new KIS.App_Code.UserList();
+
+                                foreach (var usr in usrList.listUsers)
+                                {
+                                    <option value="@Server.HtmlDecode(usr.username)">@usr.name @usr.cognome</option>
+                                }
+                            }
+                        </select>
+                        <select id="lstRoleMember">
+                            <option value="T">@ResImprovementActions.Update.lblTeamMember</option>
+                            <option value="M">@ResImprovementActions.Update.lblTeamManager</option>
+                        </select>
+                        <input type="image" id="addTeamMemberBtn" src="~/img/iconSave.jpg" style="width:30px;height:30px;" />
+                    }
+                </div>
+                <div><img src="~/img/iconLoading.gif" id="imgLoadTeamList" style="width:40px;height: 40px;" /></div>
+                <div id="tabTeamList"></div>
+
+                @ResImprovementActions.Update.lblCurrentSituation<br />
+                @Html.TextArea("txtCurrentSituation", Server.HtmlDecode(Server.HtmlDecode(Model.CurrentSituation)), new { rows = 5, cols = 50, @class = "form-control", @style="width:100%;" })
+                <br />
+                <pre id="preCurrentSituation">@Server.HtmlDecode(Server.HtmlDecode(Model.CurrentSituation))</pre>
+                @ResImprovementActions.Update.lblExpectedResult<br />
+                @Html.TextArea("txtExpectedResult", Server.HtmlDecode(Server.HtmlDecode(Model.ExpectedResults)), new { rows = 5, cols = 50, @class = "form-control", @style = "width:100%;" })
+                <br />
+                <pre id="preExpectedResult">@Server.HtmlDecode(Server.HtmlDecode(Model.ExpectedResults))</pre>
+                @ResImprovementActions.Update.lblRootCauses<br />
+                @Html.TextArea("txtRootCauses", Server.HtmlDecode(Server.HtmlDecode(Model.RootCauses)), new { rows = 5, cols = 50, @class = "form-control", @style = "width:100%;" })
+                                                           <br /><pre id="preRootCauses">@Server.HtmlDecode(Server.HtmlDecode(Model.RootCauses))</pre>
+                @ResImprovementActions.Update.lblCorrectiveActions<br />
+                @if (ViewBag.authW)
+                {
+                    <span id="spanAddCorrectiveAction" class="btn-link">
+                        <img src="~/img/iconAdd2.png" style="min-width: 40px; max-width:40px;" />@ResImprovementActions.Update.lblAddCorrectiveAction
+                    </span>
+                }
+                <div><img src="~/img/iconLoading.gif" id="imgLoadCorrectiveActions" style="width:40px;height: 40px;" /></div>
+                <div id="tabCorrectiveActions"></div>
+                @ResImprovementActions.Update.lblClosureDatePlanned <input type="text" id="txtClosureDatePlanned" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" /><br />
+                @ResImprovementActions.Update.lblClosureNotes<br />
+                @Html.TextArea("txtClosureNotes", Server.HtmlDecode(Server.HtmlDecode(Model.ClosureNotes)), new { rows = 5, cols = 50, @class = "form-control", @style = "width:100%;" })
+                <pre id="preClosureNotes">@Server.HtmlDecode(Server.HtmlDecode(Model.ClosureNotes))</pre>
+                @if (Model.Status == 'C')
+                {
+                    @ResImprovementActions.Update.lblClosureDateReal<span>&nbsp;</span>@Model.EndDateReal.ToString("dd/MM/yyyy HH:mm:ss")<br />
+                }
+                                                                                                                                         <br />@ResImprovementActions.Update.lblStatus<br />
+                @Html.DropDownList("stat",
+                        new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text=ResImprovementActions.Update.lblOpen, Value = "O", Selected = (Model.Status == 'O') },
+                    new SelectListItem{ Text=ResImprovementActions.Update.lblClosed, Value = "C", Selected = (Model.Status == 'C') },
+                 },
+                        new { @class = "btn btn-default dropdown-toggle", @style = "width:100px;" }
+    )
+                <br />
+                @if (ViewBag.authW)
+                {
+                    <button type="submit" id="btnUpdateiAct" value="submit" style="border:0px;background:transparent;"><img src="~/img/iconSave.jpg" style="width:40px; height:40px;" /></button>
+                    <img src="~/img/iconLoading.gif" id="imgLoadUpdateiAct" style="width:40px;height: 40px;" />
+                    <button type="reset" style="border:0px;background:transparent;"><img src="~/img/iconUndo.png" style="width:40px; height:40px;" /></button>
+                    <br />
+                    <div class="text-info" id="lblInfoUpdate"></div>
+                }
+            </div>
+            <div class="span4">
+                <h4>@ResImprovementActions.Update.lblDocuments</h4>
+                @if(ViewBag.authW)
+                { 
+    <form id="upload" enctype="multipart/form-data" method="POST">
+        <input type="hidden" name="ImprovementActionID" value="@Model.ID" />
+        <input type="hidden" name="ImprovementActionYear" value="@Model.Year" />
+        <input type="file" name="fileUpload" id="fileUpload" size="23" />
+        <button id="btnUpload" name="btnUpload">@ResImprovementActions.Update.lblUpload</button>
+        <img src="~/img/iconLoading.gif" name="imgLoadUpload" id="imgLoadUpload" style="width:40px;height: 40px; background-color: transparent;" />
+    </form><br />
+                }
+                <div id="fileList"></div>
+                            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">@ResImprovementActions.Update.lblCreatedBy @Model.CreatedBy
+            @if(Model.ModifiedBy.Length > 0  && Model.ModifiedDate > new DateTime(1970, 1, 1))
+            {
+                <span>; @ResImprovementActions.Update.lblModifedBy @Model.ModifiedBy; @ResImprovementActions.Update.lblModifiedDate @Model.ModifiedDate.ToString("dd/MM/yyyy")</span>
+            }
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResImprovementActions.Update.lblErrIActNotFound
+            </div>
+        </div>
+                                }
+                                if (!ViewBag.authW)
+                                {
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#txtCurrentSituation').prop('disabled', true);
+                                            $('#txtClosureDatePlanned').prop('disabled', true);
+                                            $('#txtExpectedResult').prop('disabled', true);
+                                            $('#txtRootCauses').prop('disabled', true);
+                                            $('#txtClosureNotes').prop('disabled', true);
+                                            $('#stat').prop('disabled', true);
+
+                                            $('#txtCurrentSituation').hide();
+                                            $('#txtExpectedResult').hide();
+                                            $('#txtRootCauses').hide();
+                                            $('#txtClosureNotes').hide();
+                                            $('#preCurrentSituation').show();
+                                            $('#preExpectedResult').show();
+                                            $('#preRootCauses').show();
+                                            $('#preClosureNotes').show();
+                                        });
+                                    </script>
+                                }
+                                else
+                                {
+                                    <script>
+                                        $(document).ready(function () {
+                                            $('#txtCurrentSituation').show();
+                                            $('#txtExpectedResult').show();
+                                            $('#txtRootCauses').show();
+                                            $('#txtClosureNotes').show();
+                                            $('#preCurrentSituation').hide();
+                                            $('#preExpectedResult').hide();
+                                            $('#preRootCauses').hide();
+                                            $('#preClosureNotes').hide();
+                                        });
+                                    </script>
+                                    }
+                                }
+                                else
+                                {
+<div class="row-fluid">
+    <div class="span12">
+        @ResImprovementActions.Update.lblErrNotLoggedIn
+    </div>
+</div>
+                                }

@@ -1,0 +1,535 @@
+﻿@model KIS.App_Sources.CorrectiveAction
+
+@{
+    ViewBag.Title = ResImprovementActions.CorrectiveActionEdit.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResImprovementActions.CorrectiveActionEdit.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/ImprovementActions/Index?stat=O&sortOrder=init">@Resources.Shared.lblNavImprovementActions</a><span class="divider"></span>
+    </li>
+    @if (Model != null)
+    {
+        <li>
+            <a href="~/Quality/ImprovementActions/Update?ID=@Model.ImprovementActionID&Year=@Model.ImprovementActionYear">@Resources.Shared.lblNavImprovementAction</a><span class="divider"></span>
+        </li>
+        <li>
+            <a href="@Request.RawUrl">@Resources.Shared.lblNavCorrectiveAction</a><span class="divider"></span>
+        </li>
+    }
+</ul>
+
+
+
+
+@if (ViewBag.authR || ViewBag.authW)
+{
+            <script>
+                $(document).ready(function () {
+                    $(function () {
+                        $("[id*=txtEndDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                    });
+
+                    // Update improvement action's details
+                    $('#btnUpdateiAct').click(function () {
+                        var endPDate = null;
+                        var endPDateS = $('#txtEndDate').val();
+                        var endPDateA = endPDateS.split('/');
+
+                        if($('#txtEndDate').val().length > 0)
+                        {
+                            endPDate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                        }
+                        else
+                        {
+                            endPDate = new Date(1970, 1, 1);
+                        }
+
+                        var leadTime = $('#txtLeadTimeExpected').val();
+
+                        var check = true;
+
+                        if(endPDate < new Date(2000, 1, 1))
+                        {
+                            alert("@ResImprovementActions.CorrectiveActionEdit.lblIncorrectDate");
+                            check = false;
+                        }
+                        if(!$.isNumeric(leadTime) || leadTime < 0)
+                        {
+                            alert("@ResImprovementActions.CorrectiveActionEdit.lblIncorrectLeadTime");
+                            check = false;
+                        }
+
+
+                        if(check)
+                        {
+                            $('#imgLoadUpdateCAct').fadeIn();
+                            $('#btnUpdateiAct').fadeOut();
+                            $('#lblInfoUpdate').text('');
+                            $.ajax({
+                                url: "@Url.Action("CorrectiveActionEditUpdate", "ImprovementActions")",
+                                type: 'POST',
+                                data:{
+                                    ImprovementActionID: @Model.ImprovementActionID,
+                                    ImprovementActionYear: @Model.ImprovementActionYear,
+                                    CorrectiveActionID: @Model.CorrectiveActionID,
+                                    Description: $('<div/>').text($('#txtDescription').val()).html(),
+                                    LeadTimeExpected: leadTime,
+                                    EndDateRequired: endPDate.getFullYear() + "-" + (endPDate.getMonth() + 1) + "-" + endPDate.getDate(),
+                                    Status: $('#stat').val()
+                                },
+                                success: function(data) {
+                                    $('#imgLoadUpdateCAct').fadeOut();
+                                    $('#lblInfoUpdate').html("@Server.HtmlDecode(ResImprovementActions.CorrectiveActionEdit.lblUpdateOk)");
+                                    $('#btnUpdateiAct').fadeIn();
+                                },
+                                statusCode : {
+                                    404: function(content) { alert('cannot find resource - Update'); },
+                                    500: function(content) { alert('internal server error - Update'); }
+                                },
+                                error: function(req, status, errorObj) {
+                                    alert("Error Update" + req + " " + status + " " + errorObj);
+                                }
+
+                            });
+                        }
+
+                    });
+
+                    // Team functions
+                    function loadTeamMembers() {
+                        $('#imgLoadTeamList').fadeIn();
+                        $.ajax({
+                            url: "@Url.Action("CorrectiveActionTeamMembers", "ImprovementActions")",
+                            type: 'POST',
+                            data:{
+                                ImprovementActionID: @Model.ImprovementActionID,
+                                ImprovementActionYear: @Model.ImprovementActionYear,
+                                CorrectiveActionID: @Model.CorrectiveActionID,
+                            },
+                            dataType: 'html' ,
+                            success: function(result) {
+                                $('#tabTeamList').html(result);
+                                $('#imgLoadTeamList').fadeOut();
+                            },
+                            error: function(result){ alert("Error loadTeamMembers" + result);},
+                            warning: function(result){alert("Warning loadTeamMembers" + result);},
+                        });
+                    }
+
+                    // Add a cause controller call addCauseBtn
+                    $('#addTeamMemberBtn').click(function () {
+                        $.ajax({
+                            // url: '/Quality/NonCompliances/NCCausesAdd',
+                            url: "@Url.Action("CorrectiveActionTeamMemberAdd", "ImprovementActions")",
+                            type: 'POST',
+                            data:{
+                                ImprovementActionID: @Model.ImprovementActionID,
+                                ImprovementActionYear: @Model.ImprovementActionYear,
+                                CorrectiveActionID: @Model.CorrectiveActionID,
+                                user: $('#lstTeamMember').val(),
+                                role: $('#lstRoleMember').val()
+                            },
+                            success: function(data) { loadTeamMembers(); },
+                            statusCode : {
+                                404: function(content) { alert('cannot find resource'); },
+                                500: function(content) { alert('internal server error'); }
+                            },
+                            error: function(req, status, errorObj) {
+
+                            }
+
+                        });
+                        $('#lstTeamMember').val('');
+                        loadTeamMembers();
+                    });
+
+                    // Load tasks list
+                    function loadTasksList() {
+                        $('#imgLoadTasksList').fadeIn();
+                        $.ajax({
+                            url: "@Url.Action("CorrectiveActionTasksList", "ImprovementActions")",
+                            type: 'GET',
+                            data:{
+                                ImprovementActionID: @Model.ImprovementActionID,
+                                ImprovementActionYear: @Model.ImprovementActionYear,
+                                CorrectiveActionID: @Model.CorrectiveActionID,
+                            },
+                            dataType: 'html' ,
+                            success: function(result) {
+                                $('#divTasksList').html(result);
+                                $('#imgLoadTasksList').fadeOut();
+                            },
+                            error: function(result){ alert("Error loadTasksList" + result);},
+                            warning: function(result){alert("Warning loadTasksList" + result);},
+                        });
+                    }
+
+                    $('#btnViewTaskAdd').click(function () {
+                        if ($('#divTasksList').is(':visible')) {
+                            $('#divTasksList').fadeOut();
+                            $('#divTasksAdd').fadeIn();
+                        }
+                        else {
+                            $('#divTasksAdd').fadeOut();
+                            $('#divTasksList').fadeIn();
+                            $('#txtTaskDescription').val('');
+                        }
+                    });
+
+                    // Add a new task
+                    $('#btnAddTask').click(function () {
+                        $('#imgLoadAddTask').fadeIn();
+                        $('#btnAddTask').fadeOut();
+                        $('#lblInfoTaskUpdate').text('');
+
+                        $.ajax({
+                            url: "@Url.Action("CorrectiveActionTaskAdd", "ImprovementActions")",
+                            type: 'POST',
+                            data:{
+                                ImprovementActionID: @Model.ImprovementActionID,
+                                ImprovementActionYear: @Model.ImprovementActionYear,
+                                CorrectiveActionID: @Model.CorrectiveActionID,
+                                Description: $('<div/>').text($('#txtTaskDescription').val()).html(),
+                                cActStatus: $('#ddlcActStat').val()
+                            },
+                            success: function(data) {
+                                $('#imgLoadAddTask').fadeOut();
+                                $('#lblInfoTaskUpdate').html("@Server.HtmlDecode(ResImprovementActions.CorrectiveActionEdit.lblAddTaskOk)");
+                                $('#btnAddTask').fadeIn();
+                                $('#divTasksAdd').fadeOut();
+                                $('#txtTaskDescription').val('');
+                                loadTasksList();
+                                $('#divTasksList').fadeIn();
+                            },
+                            statusCode : {
+                                404: function(content) { alert('cannot find resource - Update'); },
+                                500: function(content) { alert('internal server error - Update'); }
+                            },
+                            error: function(req, status, errorObj) {
+                                alert("Error Update" + req + " " + status + " " + errorObj);
+                            }
+
+                        });
+                    });
+
+                    function loadUploadedFilesListView() {
+                        $.ajax({
+                            url: "@Url.Action("CAFileList", "ImprovementActions")",
+                            type: 'GET',
+                            dataType: 'html',
+                            data:{
+                                ImprovementActionID: @Model.ImprovementActionID,
+                                ImprovementActionYear: @Model.ImprovementActionYear,
+                                CorrectiveActionID: @Model.CorrectiveActionID,
+                            },
+                            success: function(result) {
+                                $('#fileList').html(result);
+                            }
+                        });
+                    }
+
+                    // Upload file
+                    $('#upload').submit(function(e) {
+
+                        $('#imgLoadUpload').fadeIn();
+                        $('#btnUpload').fadeOut();
+                        e.preventDefault(); // stop the standard form submission
+
+                        var formData = new FormData();
+                        var totalFiles = document.getElementById("fileUpload").files.length;
+
+                        for (var i = 0; i < totalFiles; i++) {
+                            var file = document.getElementById("fileUpload").files[i];
+
+                            formData.append("FileUpload", file);
+                            formData.append("ImprovementActionID", @Model.ImprovementActionID);
+                            formData.append("ImprovementActionYear", @Model.ImprovementActionYear);
+                            formData.append("CorrectiveActionID", @Model.CorrectiveActionID);
+                        }
+
+                        $.ajax({
+                            // url: '/Quality/NonCompliances/FileUpload',
+                            url: "@Url.Action("CAFileUpload", "ImprovementActions")",
+                            type: this.method,
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                switch(data)
+                                {
+                                    case "0": alert("@ResNC.Update.lblErrFileNCNotFound"); break;
+                                    case "1": break;
+                                    case "2": alert("@ResNC.Update.lblErrFilename"); break;
+                                    case "3": alert("@ResNC.Update.lblErrorGenerico"); break;
+                                    case "4": alert("@ResNC.Update.lblErrFileSize"); break;
+                                    case "5": alert("@ResNC.Update.lblErrFileTypeNotAllowed" + " .doc, .docx, .log, .msg, .odt, .pages,"
+                                        + ".rtf, .tex, .txt, .csv, .dat, .key, .ppt, .pptx, .pps, .xml, .3gp, .avi, .mp4, .mpg, .mov,"
+                                        + " .wmv, .bmp, .gif, .jpg, .jpeg, .png, .tif, .tiff, .xls, .xlsx, .dbf, .mdb, .sql, "
+                                        + ".dwg, .dxf, .htm, .html");
+                                    default: break;
+
+                                }
+                                loadUploadedFilesListView();
+                                $('#imgLoadUpload').fadeOut();
+                                $('#btnUpload').fadeIn();
+                            },
+                            error: function(xhr, error, status) {
+                                alert(error, status);
+                            }
+                        });
+                        loadUploadedFilesListView();
+                        //$('#imgLoadUpload').fadeOut();
+                        //$('#btnUpload').fadeIn();
+                    });
+
+                    // Upload file for task
+                    $('#uploadTask').submit(function(e) {
+                        $('#imgLoadUploadTask').fadeIn();
+                        $('#btnUploadTask').fadeOut();
+                        e.preventDefault(); // stop the standard form submission
+
+                        var formData = new FormData();
+                        var totalFiles = document.getElementById("fileUploadTask").files.length;
+
+                        for (var i = 0; i < totalFiles; i++) {
+                            var file = document.getElementById("fileUploadTask").files[i];
+
+                            formData.append("FileUploadTask", file);
+                            formData.append("ImprovementActionID", @Model.ImprovementActionID);
+                            formData.append("ImprovementActionYear", @Model.ImprovementActionYear);
+                            formData.append("CorrectiveActionID", @Model.CorrectiveActionID);
+                        }
+
+                        $.ajax({
+                            // url: '/Quality/NonCompliances/FileUpload',
+                            url: "@Url.Action("TaskCAFileUpload", "ImprovementActions")",
+                            type: this.method,
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            switch(data)
+                            {
+                                case "0": alert("@ResNC.Update.lblErrFileNCNotFound"); break;
+                                case "1": break;
+                                case "2": alert("@ResNC.Update.lblErrFilename"); break;
+                                case "3": alert("@ResNC.Update.lblErrorGenerico"); break;
+                                case "4": alert("@ResNC.Update.lblErrFileSize"); break;
+                                case "5": alert("@ResNC.Update.lblErrFileTypeNotAllowed" + " .doc, .docx, .log, .msg, .odt, .pages,"
+                                    + ".rtf, .tex, .txt, .csv, .dat, .key, .ppt, .pptx, .pps, .xml, .3gp, .avi, .mp4, .mpg, .mov,"
+                                    + " .wmv, .bmp, .gif, .jpg, .jpeg, .png, .tif, .tiff, .xls, .xlsx, .dbf, .mdb, .sql, "
+                                    + ".dwg, .dxf, .htm, .html");
+                                default: break;
+
+                            }
+                            loadUploadedTaskFilesListView();
+                            $('#imgLoadUploadTask').fadeOut();
+                            $('#btnUploadTask').fadeIn();
+                        },
+                        error: function(xhr, error, status) {
+                            alert(error, status);
+                        }
+                    });
+                        loadUploadedTaskFilesListView();
+                    //$('#imgLoadUpload').fadeOut();
+                    //$('#btnUpload').fadeIn();
+                    });
+
+                    function loadUploadedTaskFilesListView() {
+                        $.ajax({
+                            url: "@Url.Action("TaskCAFileList", "ImprovementActions")",
+                            type: 'GET',
+                        dataType: 'html',
+                        data:{
+                            ImprovementActionID: @Model.ImprovementActionID,
+                            ImprovementActionYear: @Model.ImprovementActionYear,
+                            CorrectiveActionID: @Model.CorrectiveActionID,
+                            },
+                        success: function(result) {
+                            $('#fileListTask').html(result);
+                        }
+                    });
+                }
+
+                    $('#divTasksAdd').fadeOut();
+                    $('#divTasksList').fadeIn();
+                    $('#imgLoadAddTask').fadeOut();
+                    $('#imgLoadUpdateCAct').fadeOut();
+                    loadTeamMembers();
+                    $('#imgLoadTasksList').fadeOut();
+                    loadTasksList();
+                    $('#imgLoadUpload').fadeOut();
+                    $('#imgLoadUploadTask').fadeOut();
+                    loadUploadedFilesListView();
+                    loadUploadedTaskFilesListView();
+
+                    if(@Model.LateFinish.Year > 2000)
+                    {
+                        var dd = @Model.LateFinish.Day;
+                        var mm =  @Model.LateFinish.Month;
+                        var yyyy = @Model.LateFinish.Year;
+                        if (dd < 10) { dd = '0' + dd }
+                        if (mm < 10) { mm = '0' + mm }
+                        today = dd + '/' + mm + '/' + yyyy;
+                        $('#txtEndDate').attr("value", today);
+                    }
+
+                });
+            </script>
+            if (Model != null)
+            {
+        <div class="row-fluid">
+            <div class="span6">
+                <h5>@ResImprovementActions.CorrectiveActionEdit.lblTeam</h5>
+                <div id="tabTeamAdd">
+                    @if (ViewBag.authW)
+                    {
+                        <select id="lstTeamMember">
+                            <option value="">@ResImprovementActions.Update.ddlUserSelect</option>
+                            @{
+                                KIS.App_Sources.ImprovementAction iAct = new KIS.App_Sources.ImprovementAction(Model.ImprovementActionID, Model.ImprovementActionYear);
+                                iAct.loadTeamMembers();
+                                foreach (var usr in iAct.TeamMembers)
+                                {
+                                    KIS.App_Code.User curr = new KIS.App_Code.User(usr.User);
+                                    <option value="@Server.HtmlDecode(usr.User)">@curr.name @curr.cognome</option>
+                                }
+                            }
+                        </select>
+                        <select id="lstRoleMember">
+                            <option value="E">@ResImprovementActions.CorrectiveActionEdit.lblTeamExecutioner</option>
+                            <option value="H">@ResImprovementActions.CorrectiveActionEdit.lblTeamHelper</option>
+                        </select>
+                        <input type="image" id="addTeamMemberBtn" src="~/img/iconSave.jpg" style="width:30px;height:30px;" />
+                                }
+                    <div><img src="~/img/iconLoading.gif" id="imgLoadTeamList" style="width:40px;height: 40px;" /></div>
+                    <div id="tabTeamList"></div>
+                    <br />
+                    <h5>@ResImprovementActions.CorrectiveActionEdit.lblDescription</h5>
+                    @Html.TextArea("txtDescription", Server.HtmlDecode(Server.HtmlDecode(Model.Description)), new { rows = 5, cols = 50, @class = "form-control", @style = "width:100%;" })
+                    <pre id="preDescription">@Server.HtmlDecode(Server.HtmlDecode(Model.Description))</pre>
+                    <br />@ResImprovementActions.CorrectiveActionEdit.lblLeadTime <input type="number" value="@Model.LeadTimeExpected" id="txtLeadTimeExpected" step="1" min="0" max="9999" style="min-height: 30px; min-width:80px; max-width:80px;" /><br />
+                    @ResImprovementActions.CorrectiveActionEdit.lblEndDate <input type="text" id="txtEndDate" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" /><br />
+
+                    @ResImprovementActions.CorrectiveActionEdit.lblStatus
+                    @Html.DropDownList("stat",
+                        new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text=ResImprovementActions.CorrectiveActionEdit.lblOpen, Value = "O", Selected = (Model.Status == 'O') },
+                    new SelectListItem{ Text=ResImprovementActions.CorrectiveActionEdit.lblRunning, Value = "I", Selected = (Model.Status == 'I') },
+                    new SelectListItem{ Text=ResImprovementActions.CorrectiveActionEdit.lblClosed, Value = "C", Selected = (Model.Status == 'C') },
+                 },
+                        new { @class = "btn btn-default dropdown-toggle", @style = "width:150px;" }
+    )
+                    <br />
+                    @if (ViewBag.authW)
+                    {
+                    <button type="submit" id="btnUpdateiAct" value="submit" style="border:0px;background:transparent;"><img src="~/img/iconSave.jpg" style="width:40px; height:40px;" /></button>
+                    <img src="~/img/iconLoading.gif" id="imgLoadUpdateCAct" style="width:40px;height: 40px;" />
+                    <button type="reset" style="border:0px;background:transparent;"><img src="~/img/iconUndo.png" style="width:40px; height:40px;" /></button>
+                    <br />
+                    <div class="text-info" id="lblInfoUpdate"></div>
+                    }
+
+                </div>
+                @if (!ViewBag.authW)
+                {
+                <script>
+                $(document).ready(function () {
+                    $('#txtDescription').prop('disabled', true);
+                    $('#txtLeadTimeExpected').prop('disabled', true);
+                    $('#txtEndDate').prop('disabled', true);
+                    $('#stat').prop('disabled', true);
+                    $('#txtDescription').hide();
+                });
+                </script>
+                }
+                else
+                {
+                    <script>
+                    $('#txtDescription').show();
+                    $('#preDescription').hide();
+                    </script>
+                }
+                <h5>@ResImprovementActions.CorrectiveActionEdit.lblUploadDocument</h5>
+                @if (ViewBag.authW)
+                {
+                    <form id="upload" enctype="multipart/form-data" method="POST">
+                        <input type="hidden" name="ImprovementActionID" value="@Model.ImprovementActionID" />
+                        <input type="hidden" name="ImprovementActionYear" value="@Model.ImprovementActionYear" />
+                        <input type="hidden" name="CorrectiveActionID" value="@Model.CorrectiveActionID" />
+                        <input type="file" name="fileUpload" id="fileUpload" size="23" />
+                        <button id="btnUpload" name="btnUpload">@ResImprovementActions.Update.lblUpload</button>
+                        <img src="~/img/iconLoading.gif" name="imgLoadUpload" id="imgLoadUpload" style="width:40px;height: 40px; background-color: transparent;" />
+                    </form><br />
+                }
+                <div id="fileList"></div>
+            </div>
+            <div class="span6">
+                                @if (ViewBag.authX || ViewBag.authW)
+                                {
+                                    <h5>
+                                        @ResImprovementActions.CorrectiveActionEdit.lblTaskTitle
+                                    <img src="~/img/iconAdd2.png" id="btnViewTaskAdd" style="min-width:30px; max-width:40px; cursor:pointer;" />
+                                </h5>
+                                    <div id="divTasksAdd">
+                                        @ResImprovementActions.CorrectiveActionEdit.lblAddTask<br />
+                                    @Html.TextArea("txtTaskDescription", "", new { rows = 5, cols = 50, @class = "form-control" })
+                                    <br />
+
+                                    @Html.DropDownList("ddlcActStat",
+                        new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text=ResImprovementActions.CorrectiveActionEdit.lblOpen, Value = "O", Selected = (Model.Status == 'O') },
+                    new SelectListItem{ Text=ResImprovementActions.CorrectiveActionEdit.lblRunning, Value = "I", Selected = (Model.Status == 'I') },
+                    new SelectListItem{ Text=ResImprovementActions.CorrectiveActionEdit.lblClosed, Value = "C", Selected = (Model.Status == 'C') },
+                 },
+                        new { @class = "btn btn-default dropdown-toggle", @style = "width:120px;" })
+                                    <br />
+                                    <button type="submit" id="btnAddTask" value="submit" style="border:0px;background:transparent;"><img src="~/img/iconSave.jpg" style="width:40px; height:40px;" /></button>
+                                    <img src="~/img/iconLoading.gif" id="imgLoadAddTask" style="width:40px;height: 40px;" />
+                                    <button type="reset" style="border:0px;background:transparent;">
+                                        <img src="~/img/iconUndo.png" style="width:40px; height:40px;" />
+                                    </button>
+                                    <br />
+                                    <div class="text-info" id="lblInfoTaskUpdate"></div>
+                                </div>
+
+
+                                }
+                                <img src="~/img/iconLoading.gif" id="imgLoadTasksList" style="width:40px;height: 40px;" />
+                                <div id="divTasksList"></div>
+                <br />
+                <h5>@ResImprovementActions.CorrectiveActionEdit.lblUploadDocument</h5>
+                                @if (ViewBag.authX || ViewBag.authW)
+                                {
+                                <form id="uploadTask" enctype="multipart/form-data" method="POST">
+                                    <input type="hidden" name="ImprovementActionID" value="@Model.ImprovementActionID" />
+                                    <input type="hidden" name="ImprovementActionYear" value="@Model.ImprovementActionYear" />
+                                    <input type="hidden" name="CorrectiveActionID" value="@Model.CorrectiveActionID" />
+                                    <input type="file" name="fileUpload" id="fileUploadTask" size="23" />
+                                    <button id="btnUploadTask" name="btnUploadTask">@ResImprovementActions.Update.lblUpload</button>
+                                    <img src="~/img/iconLoading.gif" name="imgLoadUploadTask" id="imgLoadUploadTask" style="width:40px;height: 40px; background-color: transparent;" />
+                                </form>
+                                }
+                                <div id="fileListTask"></div>
+</div>
+        </div>
+                                    }
+                                }
+                                else
+                                {
+                                <div class="row-fluid">
+                                    <div class="span12">
+                                        @ResImprovementActions.CorrectiveActionEdit.lblNotLoggedIn
+                                    </div>
+                                </div>
+                            }

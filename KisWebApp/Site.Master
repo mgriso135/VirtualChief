@@ -1,0 +1,230 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="KIS.SiteMaster" %>
+<%@ Import Namespace="System.Net.Mail" %>
+<%@ Register tagprefix="menu" TagName="bar" Src="~/menuBar.ascx" %>
+<%@ Register tagprefix="login" TagName="welcomeBox" Src="~/Login/welcomeBox.ascx" %>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Virtual Chief</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Virtual Chief" />
+    <meta name="author" content="Matteo Griso" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" runat="server" />
+    <link href="Styles/Site.css" rel="stylesheet" type="text/css"  runat="server" />
+    <link href="Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" runat="server" rel="stylesheet" type="text/css" />
+	<script src="../Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
+	<script src="../Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+    	<script>
+    	    $(function () {
+
+    	        $("#accordion").accordion();
+
+
+
+    	        var availableTags = [
+                    "ActionScript",
+                    "AppleScript",
+                    "Asp",
+                    "BASIC",
+                    "C",
+                    "C++",
+                    "Clojure",
+                    "COBOL",
+                    "ColdFusion",
+                    "Erlang",
+                    "Fortran",
+                    "Groovy",
+                    "Haskell",
+                    "Java",
+                    "JavaScript",
+                    "Lisp",
+                    "Perl",
+                    "PHP",
+                    "Python",
+                    "Ruby",
+                    "Scala",
+                    "Scheme"
+    	        ];
+    	        /*$("#autocomplete").autocomplete({
+    	            source: availableTags
+    	        });
+
+
+
+    	        $("#button").button();
+    	        $("#radioset").buttonset();
+
+
+
+    	        $("#tabs").tabs();
+
+
+
+    	        $("#dialog").dialog({
+    	            autoOpen: false,
+    	            width: 400,
+    	            buttons: [
+                        {
+                            text: "Ok",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        {
+                            text: "Cancel",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        }
+    	            ]
+    	        });
+
+    	        // Link to open the dialog
+    	        $("#dialog-link").click(function (event) {
+    	            $("#dialog").dialog("open");
+    	            event.preventDefault();
+    	        });
+
+                */
+
+    	        $("#datepicker").datepicker({
+    	            inline: true
+    	        });
+
+/*
+
+    	        $("#slider").slider({
+    	            range: true,
+    	            values: [17, 67]
+    	        });
+
+
+
+    	        $("#progressbar").progressbar({
+    	            value: 20
+    	        });
+
+
+    	        // Hover states on the static widgets
+    	        $("#dialog-link, #icons li").hover(
+                    function () {
+                        $(this).addClass("ui-state-hover");
+                    },
+                    function () {
+                        $(this).removeClass("ui-state-hover");
+                    }
+                );*/
+    	    });
+	</script>
+   
+    		<!-- CSS GIORDANO -->
+		<link href="Styles/assets/css/bootstrap.css" rel="stylesheet" runat="server" />
+		<link href="Styles/assets/css/bootstrap-responsive.css" rel="stylesheet" runat="server" />
+		<!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		      <script src="~/Styles/assets/js/html5shiv.js"></script>
+		    <![endif]-->
+		<!-- Fav and touch icons -->
+		
+
+    <!-- FINE CSS GIORDANO -->
+  
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+<script type="text/javascript">
+    window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website.<br/>Navigando sul nostro sito accetti la privacy policy. Il sito utilizza i cookie di terze parti per profilare gli utenti.", "dismiss": "Chiudi e accetta", "learnMore": "More info", "link": null, "theme": "light-bottom" };
+</script>
+
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+<!-- End Cookie Consent plugin -->
+
+    <!-- Never expiring session -->
+    <script type="text/javascript">
+        window.setInterval("renewSession();", 60000);
+        function renewSession()
+        {
+            document.getElementById("renewSession").src = "../renewSes.aspx?par=" + Math.random();
+        }
+    </script>
+    <!-- End Never expiring sessione -->
+
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    
+    <form runat="server">
+        <div id="wrap">
+    <!--<header>-->
+        			<!-- Fixed navbar -->
+			<div class="masthead">
+				<div class="container header">
+                    <asp:Image runat="server" ID="kisLogo" CssClass="logo" />
+                    <a class="brand">Virtual Chief</a>
+					<div class="pull-right text-right">
+						<login:welcomebox runat="server" />
+
+					</div>
+				</div>
+
+        <menu:bar runat="server" id="menuBar" />
+            </div>
+            <div class="container">
+                <asp:Label runat="server" ID="lblLicenseExpired" CssClass="text-error" Font-Size="Large"/>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"/>
+                
+                </div>
+        <!--</section>-->
+ <div id="push"></div><!-- non rimuovere -->
+            </div>
+
+        
+            <div id="footer">
+			<div class="container">
+				<div class="static-link">
+					<a href="http://www.virtualchief.net" target="_blank" title="Chi siamo">
+						<i class="icon-user"></i>&nbsp;
+                        <asp:Literal runat="server" ID="lblAboutUs" Text="<%$Resources:lblAboutUs %>" />
+                        </a>
+					<a href="mailto:info@virtualchief.net" title="Contatti">
+						<i class="icon-info-sign"></i>&nbsp;
+                        <asp:Literal runat="server" ID="lblContactUs" Text="<%$Resources:lblContactUs %>" />
+                        </a>
+				</div>
+				<p class="muted credit"><small>&copy; 2018
+						<a href="https://www.linkedin.com/in/matteo-griso/" target="_blank">Matteo Griso</a>&nbsp;-&nbsp;
+                    <asp:Literal runat="server" ID="lblRightsReserved" Text="<%$Resources:lblRightsReserved %>" />
+                    &nbsp;|&nbsp;
+                    <asp:Literal runat="server" ID="lblInfo" Text="<%$Resources:lblInfo %>" />
+						<a href="mailto:info@virtualchief.net">info@virtualchief.net</a>; Skype: m.griso
+                        
+				                        </small>
+				</p>
+			</div>
+		</div>
+
+
+
+        <img id="renewSession" />
+    </form>
+    
+
+    <!-- Le javascript
+		    ================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="../Styles/assets/js/bootstrap-transition.js"></script>
+		<script src="../Styles/assets/js/bootstrap-alert.js"></script>
+		<script src="../Styles/assets/js/bootstrap-modal.js"></script>
+		<script src="../Styles/assets/js/bootstrap-dropdown.js"></script>
+		<script src="../Styles/assets/js/bootstrap-scrollspy.js"></script>
+		<script src="../Styles/assets/js/bootstrap-tab.js"></script>
+		<script src="../Styles/assets/js/bootstrap-tooltip.js"></script>
+		<script src="../Styles/assets/js/bootstrap-popover.js"></script>
+		<script src="../Styles/assets/js/bootstrap-button.js"></script>
+		<script src="../Styles/assets/js/bootstrap-collapse.js"></script>
+		<script src="../Styles/assets/js/bootstrap-carousel.js"></script>
+    <script src="../Styles/assets/js/bootstrap-typeahead.js"></script>
+    </body>
+</html>

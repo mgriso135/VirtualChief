@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = ResNC.Create.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResNC.Create.lblTitle</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li><a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">
+            @Resources.Shared.lblNavNonCompliances</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Create">
+            @Resources.Shared.lblNavCreate</a><span class="divider"></span>
+    </li>
+</ul>
+@ViewBag.Message
+
+@if (ViewBag.authenticated)
+{
+        if (!ViewBag.created)
+        {
+            <div class="row-fluid"><div class="span12">
+                @ResNC.Create.lblErrAdd
+                </div></div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResNC.Create.lblNotLoggedIn
+        </div>
+    </div>
+}

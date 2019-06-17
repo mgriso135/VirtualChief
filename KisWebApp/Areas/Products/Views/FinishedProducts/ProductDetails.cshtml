@@ -1,0 +1,154 @@
+﻿@model KIS.App_Code.Articolo
+
+@{
+    ViewBag.Title = ResFinishedProducts.ProductDetails.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResFinishedProducts.ProductDetails.lblTitle</h3>
+
+@if (ViewBag.authR)
+{
+    if (Model != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#imgLoadProductParameters").fadeOut();
+                loadProductParameters();
+                loadProductTaskParameters();
+                loadBillingDetails();
+
+                function loadProductParameters()
+                {
+                    $("#imgLoadProductParameters").fadeIn();
+                    $.ajax({
+                        url: "@Url.Action("ProductParametersList", "FinishedProducts")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        ProdID: @Model.ID,
+                        ProdYear: @Model.Year,
+                    },
+                        success: function (result) {
+                            $("#imgLoadProductParameters").fadeOut();
+                        $("#lblProductParameters").html(result);
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $("#imgLoadProductParameters").fadeOut();
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $("#imgLoadProductParameters").fadeOut();
+                    }
+                });
+                }
+
+                function loadProductTaskParameters()
+                {
+                    $("#imgLoadTaskParameters").fadeIn();
+                    $.ajax({
+                        url: "@Url.Action("ProductTasksParametersList", "FinishedProducts")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        ProdID: @Model.ID,
+                        ProdYear: @Model.Year,
+                        },
+                    success: function (result) {
+                        $("#imgLoadTaskParameters").fadeOut();
+                        $("#lblTaskParameters").html(result);
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $("#imgLoadTaskParameters").fadeOut();
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $("#imgLoadTaskParameters").fadeOut();
+                    }
+                });
+                }
+
+                function loadBillingDetails()
+                {
+                    $("#imgLoadBillingDetails").fadeIn();
+                    $.ajax({
+                        url: "@Url.Action("BillingDetails", "FinishedProducts")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        ProdID: @Model.ID,
+                        ProdYear: @Model.Year,
+                        },
+                    success: function (result) {
+                        $("#imgLoadBillingDetails").fadeOut();
+                        $("#lblBillingDetails").html(result);
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $("#imgLoadBillingDetails").fadeOut();
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $("#imgLoadBillingDetails").fadeOut();
+                    }
+                });
+            }
+
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span6"><br /><br />
+                <table class="table table-condensed table-striped">
+                    <tbody>
+                        <tr>
+                            <td>@ResFinishedProducts.ProductDetails.lblOrder</td>
+                            <td>@Model.Commessa/@Model.AnnoCommessa</td>
+                        </tr>
+                        <tr>
+                            <td>@ResFinishedProducts.ProductDetails.lblProductID</td>
+                            <td>@Model.ID/@Model.Year</td>
+                        </tr>
+                        <tr>
+                            <td>@ResFinishedProducts.ProductDetails.lblProductName</td>
+                            <td>@Model.Proc.process.processName - @Model.Proc.variant.nomeVariante</td>
+                        </tr>
+                        <tr>
+                            <td>@ResFinishedProducts.ProductDetails.lblQuantity</td>
+                            <td>@Model.QuantitaProdotta (@Model.Quantita)</td>
+                        </tr>
+                        <tr>
+                            <td>@ResFinishedProducts.ProductDetails.lblFinishDate</td>
+                            <td>@Model.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        </tr>
+                        <tr>
+                            <td>@ResFinishedProducts.ProductDetails.lblFinishDateReal</td>
+                            <td>@Model.DataFineAttivita.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span6><img src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadProductParameters"/><div id="lblProductParameters"></div>
+            </span6>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadTaskParameters" />
+                <div id="lblTaskParameters"></div>
+                </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadBillingDetails" />
+                <div id="lblBillingDetails"></div>
+            </div>
+        </div>
+    }
+}
+else
+{
+                <div class="row-fluid">
+                    <div class="span12">@ResFinishedProducts.ProductDetails.lblErrNoAuth</div>
+                </div>
+                }

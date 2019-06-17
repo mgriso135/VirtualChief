@@ -1,0 +1,56 @@
+﻿@model IEnumerable<KIS.App_Sources.CorrectiveActionTeamMember>
+
+@if (ViewBag.authR || ViewBag.authW)
+{
+    foreach (var m in Model)
+    {
+        KIS.App_Code.User curr = new KIS.App_Code.User(m.User);
+        var badgeClass = "badge badge-warning";
+        var badgeTitle = ResImprovementActions.CorrectiveActionTeamMembers.lblTeamHelper;
+        if (m.Role == 'E')
+        {
+            badgeClass = "badge badge-info";
+            badgeTitle = ResImprovementActions.CorrectiveActionTeamMembers.lblTeamExecutor;
+        }
+        <span class="@badgeClass" id="badgeTM_@curr.ID" title="@badgeTitle">
+            @curr.name @curr.cognome&nbsp;
+            @if (ViewBag.authW)
+            {
+                <input type="image" src="~/img/iconClose.png" style="height:15px;" class="del-TeamMember" value="@curr.ID" />
+            }
+        </span>
+    }
+    if (ViewBag.authW)
+    {
+        <script>
+        // Remove Team Member
+
+        $('.del-TeamMember').click(function () {
+        $(this).hide();
+                var badgeID = "#badgeTM_" + $(this).val();
+        $.ajax({
+                    //url: '/Quality/NonCompliances/NCCategoriesDel',
+                    url: "@Url.Action("CorrectiveActionTeamMemberRemove", "ImprovementActions")",
+            type: 'POST',
+            data:{
+                ImprovementActionID: @ViewBag.iActID,
+                ImprovementActionYear: @ViewBag.iActYear,
+                CorrectiveActionID: @ViewBag.cActID,
+                User: $(this).val()
+            },
+            success: function(data) {$(badgeID).remove(); },
+            statusCode : {
+                        404: function(content) { $(this).show(); alert('Error'); },
+                500: function(content) { $(this).show(); alert('Error'); }
+                    },
+            error: function(req, status, errorObj) {
+                $(this).show();
+                    }
+
+                });
+
+            });
+
+        </script>
+    }
+}

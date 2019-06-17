@@ -1,0 +1,68 @@
+﻿@model KIS.App_Sources.NonComplianceType
+
+@{
+    ViewBag.Title = ResNCCategories.Update.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">
+            @Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">
+            @Resources.Shared.lblNavNonCompliances</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceTypes/Index">
+            @Resources.Shared.lblNavNCTypes</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceTypes/Create">
+            @Resources.Shared.lblNavNCTypesUpd</a><span class="divider"></span>
+    </li>
+</ul>
+
+<h3>@ResNCCategories.Update.lblTitle</h3>
+@ViewBag.Message
+
+@if (ViewBag.authenticated)
+{
+    if (ViewBag.nctypeFound && Model != null)
+    {
+    <form method="post">
+        <div class="row-fluid">
+            <div class="span12">
+                <table>
+                    <tr>
+                        <td>@ResNCCategories.Update.lblName</td>
+                        <td><input type="text" id="name" name="name" value="@Server.HtmlDecode(Model.Name)" required />
+                    </tr>
+                    <tr>
+                        <td>@ResNCCategories.Update.lblDescription</td>
+                        <td><textarea id="description" name="description">@Server.HtmlDecode(Model.Description)</textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="submit" style="border:0px;background:transparent;"><img src="~/img/iconSave.jpg" style="height:40px" /></button>
+                            <button type="reset" style="border:0px;background:transparent;"><img src="~/img/iconUndo.png" style="height:40px" /></button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </form>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">@ResNCCategories.Update.lblTypeNotFound</div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResNCCategories.Update.lblNotLoggedIn</div>
+    </div>
+}

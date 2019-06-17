@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = ResNCCategories.Create.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">
+            @Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">
+            @Resources.Shared.lblNavNonCompliances</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceTypes/Index">
+            @Resources.Shared.lblNavNCTypes</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceTypes/Create">
+            @Resources.Shared.lblNavNCTypesNew</a><span class="divider"></span>
+    </li>
+</ul>
+
+<div><h3>@ResNCCategories.Create.lblTitle</h3></div>
+@ViewBag.Message
+@if (ViewBag.Submitted)
+{
+    if (!ViewBag.created)
+    {
+        <div class="row-fluid"><div class="span12">@ResNCCategories.Create.lblAddError</div></div>
+    }
+}
+@if(ViewBag.authenticated)
+{
+<form method="post">
+    <div class="row-fluid">
+        <div class="span12">
+            <table>
+                <tr>
+                    <td>@ResNCCategories.Create.lblName</td>
+                    <td><input type="text" id="name" name="name" required />
+                </tr>
+                <tr>
+                    <td>@ResNCCategories.Create.lblDescription</td>
+                    <td><textarea id="description" name="description"></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="image" src="~/img/iconSave.jpg" name="btn" value="add" style="height:40px" />
+                        <input type="image" src="~/img/iconUndo.png" name="reset" style="height:40px" onclick="name.innerHTML = ''; description.innerHTML = '';" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</form>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResNCCategories.Create.lblNotLoggedIn</div>
+    </div>
+}

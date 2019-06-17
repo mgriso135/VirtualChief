@@ -1,0 +1,78 @@
+﻿@if (Session["user"] != null && (ViewBag.Delay != -1 || ViewBag.PastDelay != -1 || ViewBag.Quantity != -1 || ViewBag.PastQuantity != -1 || ViewBag.PastLeadTime != -1 || ViewBag.LeadTime != -1))
+{
+<div class="row-fluid">
+    <div class="span12"><h3>@ResGetGlobalKPIs.GetGlobalKPIs.lblTitle</h3></div>
+</div>
+<div class="row-fluid">
+    <div class="span12"><b>@ResGetGlobalKPIs.GetGlobalKPIs.lblGlobal</b>&nbsp;-&nbsp;<a href="~/Analysis/ProductAnalysis/Index">@ResGetGlobalKPIs.GetGlobalKPIs.lblViewAllIndicators</a></div>
+</div>
+<div class="row-fluid" style="text-align:center;">
+    <div class="span4">
+        @if (ViewBag.Delay >= 0)
+        {
+            <p>
+                @ResGetGlobalKPIs.GetGlobalKPIs.lblCurrentDelay: <b>@Math.Round((double)ViewBag.Delay, 2) @ResGetGlobalKPIs.GetGlobalKPIs.lblHours</b>
+            </p>
+
+        }
+        @if (ViewBag.PastDelay >= 0)
+        {
+            <p>@ResGetGlobalKPIs.GetGlobalKPIs.lblLastDelay: <b>@Math.Round((double)ViewBag.PastDelay, 2) @ResGetGlobalKPIs.GetGlobalKPIs.lblHours</b></p>
+        }
+        @if (ViewBag.PastDelay > 0 && ViewBag.Delay >= 0)
+        {
+            String color = "red";
+            if (ViewBag.PastDelay >= ViewBag.Delay)
+            {
+                color = "green";
+            }
+            <p>@ResGetGlobalKPIs.GetGlobalKPIs.lblVariation: <b style="color: @color;font-size: 36px;">@Math.Round((double)(100 * (ViewBag.Delay - ViewBag.PastDelay) / ViewBag.PastDelay), 2)%</b></p>
+        }
+    </div>
+    <div class="span4">
+        @if (ViewBag.Quantity >= 0)
+        {
+            <p>
+                @ResGetGlobalKPIs.GetGlobalKPIs.lblCurrentQuantity: <b>@Math.Round((double)ViewBag.Quantity, 2)</b>
+            </p>
+
+        }
+        @if (ViewBag.PastQuantity >= 0)
+        {
+            <p>@ResGetGlobalKPIs.GetGlobalKPIs.lblLastQuantity: <b>@Math.Round((double)ViewBag.PastQuantity, 2)</b></p>
+        }
+        @if (ViewBag.PastQuantity > 0 && ViewBag.Quantity >= 0)
+        {
+            String color = "red";
+            if (ViewBag.PastQuantity <= ViewBag.Quantity)
+            {
+                color = "green";
+            }
+            <p>@ResGetGlobalKPIs.GetGlobalKPIs.lblVariation: <b style="color: @color;font-size: 36px;">@Math.Round((double)(100 * (ViewBag.Quantity - ViewBag.PastQuantity) / ViewBag.PastQuantity), 2)%</b></p>
+        }
+    </div>
+    <div class="span4">
+        @if (ViewBag.LeadTime >= 0)
+        {
+            <p>
+                @ResGetGlobalKPIs.GetGlobalKPIs.lblCurrentLeadTime: <b>@Math.Round((double)ViewBag.LeadTime, 2) @ResGetGlobalKPIs.GetGlobalKPIs.lblHours</b>
+            </p>
+
+        }
+        @if (ViewBag.PastLeadTime >= 0)
+        {
+            <p>@ResGetGlobalKPIs.GetGlobalKPIs.lblLastLeadTime: <b>@Math.Round((double)ViewBag.PastLeadTime, 2) @ResGetGlobalKPIs.GetGlobalKPIs.lblHours</b></p>
+        }
+        @if (ViewBag.PastLeadTime > 0 && ViewBag.LeadTime >= 0)
+        {
+            String color = "red";
+            if (ViewBag.PastLeadTime >= ViewBag.LeadTime)
+            {
+                color = "green";
+            }
+            <p>@ResGetGlobalKPIs.GetGlobalKPIs.lblVariation: <b style="color: @color;font-size: 36px;">@Math.Round((double)(100 * (ViewBag.LeadTime - ViewBag.PastLeadTime) / ViewBag.PastLeadTime), 2)%</b></p>
+        }
+    </div>
+
+</div>
+}

@@ -1,0 +1,138 @@
+﻿@model IEnumerable<KIS.App_Sources.CorrectiveAction>
+
+@if (ViewBag.authR || ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+            $('.btnRemoveCorrectiveAction').click(function () {
+                var cAct = $(this).val();
+
+                if (window.confirm("@Server.HtmlDecode(ResImprovementActions.CorrectiveActionsList.lblDelWarning)")) 
+                {
+                    var rowToDelete = "#row_" + cAct;
+                    $.ajax({
+                        //url: '/Quality/NonCompliances/NCProductDel',
+                        url: "@Url.Action("CorrectiveActionDelete", "ImprovementActions")",
+                        type: 'POST',
+                        data:{
+                            ImprovementActionID: @ViewBag.ImprovementActionID,
+                            ImprovementActionYear: @ViewBag.ImprovementActionYear,
+                            CorrectiveActionID: cAct
+                        },
+                        success: function(data) { if(data == "False") {
+                            alert("@(ResImprovementActions.CorrectiveActionsList.lblErrorDelete)");
+                        } else {$(rowToDelete).remove(); }},
+                        statusCode : {
+                            404: function(content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show();},
+                            500: function(content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show();}
+                        },
+                        error: function(req, status, errorObj) {
+                            alert("Error");
+                            $(this).show();
+                        }
+
+                    });
+                }
+            });
+        });
+        </script>
+
+    if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>@ResImprovementActions.CorrectiveActionsList.lblTHDescription</th>
+                    <th>@ResImprovementActions.CorrectiveActionsList.lblTHLeadTime</th>
+                    <th>@ResImprovementActions.CorrectiveActionsList.lblTHEarlyStartDate</th>
+                    <th>@ResImprovementActions.CorrectiveActionsList.lblTHLateFinishDate</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(var m in Model)
+                {
+                    var color = "";
+                    if(m.Status !='C')
+                    {
+                        if (DateTime.UtcNow > m.LateFinish)
+                        {
+                            color = "red";
+                        }
+                        else if (DateTime.UtcNow >= m.EarlyStart && DateTime.UtcNow <= m.LateFinish)
+                        {
+                            color = "yellow";
+                        }
+                    }
+                    <tr id="row_@m.CorrectiveActionID" style="background-color: @color;">
+                        <td>
+                            <a href="~/Quality/ImprovementActions/CorrectiveActionEdit?ImprovementActionID=@m.ImprovementActionID&ImprovementActionYear=@m.ImprovementActionYear&CorrectiveActionID=@m.CorrectiveActionID">
+                                <img src="~/img/edit.png" style="min-width:30px; max-width:30px;" id="btnEditProduct" value="@m.CorrectiveActionID" />
+                            </a>
+                        </td>
+                        
+                        <td>
+                        @if(ViewBag.authW)
+                        { 
+                            <input type="image" class="btnRemoveCorrectiveAction" src="~/img/iconDelete.png" style="min-width:30px; max-width:30px;" id="btnRemoveProduct" value="@m.CorrectiveActionID" />
+                        }
+                        </td>
+                        @if (m.Description.Length <= 100)
+                        {
+                            <td>@Server.HtmlDecode(Server.HtmlDecode(m.Description))</td>
+                        }
+                        else
+                        {
+                            <td>@Server.HtmlDecode(Server.HtmlDecode(m.Description.Substring(0, 100)))...</td>
+                        }
+                        <td>@m.LeadTimeExpected</td>
+                        @if(m.EarlyStart > new DateTime(2000,1,1))
+                        { 
+                        <td>@m.EarlyStart.ToString("dd/MM/yyyy")</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+@if (m.LateFinish > new DateTime(2000, 1, 1))
+{
+                        <td>@m.LateFinish.ToString("dd/MM/yyyy")</td>
+}
+else
+{ 
+<td></td>}
+                        @switch(m.Status)
+                                            {
+                                                case 'O':   
+                                <td>@ResImprovementActions.CorrectiveActionsList.lblOpen</td>
+                                break;
+                            case 'I':
+                                <td>@ResImprovementActions.CorrectiveActionsList.lblRunning</td>
+                                break;
+                            case 'C':
+                                <td>@ResImprovementActions.CorrectiveActionsList.lblClosed</td>
+                                break;
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+                                    else
+                                    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResImprovementActions.CorrectiveActionsList.lblNoCorrectiveActions
+            </div>
+        </div>
+    }
+                        }
+else
+{
+<div class="row-fluid">
+    <div class="span12">
+        @ResImprovementActions.CorrectiveActionsList.lblNotLoggedIn
+    </div>
+</div>
+}

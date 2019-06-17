@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = ResUsers.ActivateUser.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResUsers.ActivateUser.lblTitle</h3>
+
+<div class="row-fluid">
+    
+        @if (ViewBag.Activated)
+        {
+            <div class="span12">
+                <h3>@ResUsers.ActivateUser.lblActivated1</h3>
+                @ResUsers.ActivateUser.lblActivated2
+            </div>
+            <script>
+                $(document).ready(function () {
+                    var num = 10;
+                    decrease();
+                    function decrease()
+                    {
+                        if(num <= 0)
+                        {
+                            window.location.href = "/Login/login.aspx";
+                        }
+                        else
+                        {
+                            num--;
+                            $('#countdown').html(num + ' seconds');
+                            var myvar = setTimeout(decrease, 1000);
+                        }
+                    }
+                });
+            </script>
+            <div id="countdown"></div>
+        }
+        else
+        {
+            <div class="span12">@ResUsers.ActivateUser.lblNotActivated @ViewBag.checksum</div>
+        }
+            
+</div>

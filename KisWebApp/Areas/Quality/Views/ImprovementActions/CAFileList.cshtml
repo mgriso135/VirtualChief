@@ -1,0 +1,64 @@
+﻿@model IEnumerable<String>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <script>
+
+        $('.del-button').click(function () {
+        // Now the div itself as an object is $(this)
+        var filewOutDot = ($(this).val()).replace(/\./g, '')
+        filewOutDot = filewOutDot.replace(/\ /g, '');
+        filewOutDot = filewOutDot.replace(/\(/g, '');
+        filewOutDot = filewOutDot.replace(/\)/g, '');
+        //filewOutDot = filewOutDot.replace(/\-/g, '');
+
+        var fileName = "#file_" + filewOutDot;
+        //alert(fileName);
+
+        $.ajax({
+            //url: '/Quality/NonCompliances/NCDeleteFile',
+            url: "@Url.Action("CADeleteFile", "ImprovementActions")",
+            type: 'POST',
+            data:{
+                ImprovementActionID: @ViewBag.ImprovementActionID,
+                ImprovementActionYear: @ViewBag.ImprovementActionYear,
+                CorrectiveActionID: @ViewBag.CorrectiveActionID,
+                fileName: $(this).val()
+            },
+            success: function(data) { if(data == "True"){$(fileName).remove();}
+            else
+            {
+                alert("Error while deleting");
+            }
+            },
+            statusCode : {
+                404: function(content) { alert('cannot find resource'); },
+                500: function(content) { alert('internal server error'); }
+            },
+            error: function(req, status, errorObj) {
+
+            }
+
+    });
+
+
+});
+    </script>
+
+
+    foreach (var f in Model)
+    {
+        var fileWoutDot = f.Replace(".", String.Empty);
+        fileWoutDot = fileWoutDot.Replace(" ", String.Empty);
+        fileWoutDot = fileWoutDot.Replace("(", String.Empty);
+        fileWoutDot = fileWoutDot.Replace(")", String.Empty);
+        <div id="file_@fileWoutDot">
+            <a href="~/Data/Quality/CA_@ViewBag.CombinedID/@f" target="_blank">@f</a>
+            @if (ViewBag.authW)
+            {
+                <input type="image" name="del-button" value="@f" class="del-button" src="~/img/iconDelete.png" style="height:30px;" />
+            }
+        </div>
+
+    }
+}

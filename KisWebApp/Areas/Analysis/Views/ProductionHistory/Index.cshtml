@@ -1,0 +1,373 @@
+﻿
+@{
+    ViewBag.Title = ResProductionHistory.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResProductionHistory.Index.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <span class="divider">/</span>
+    </li>
+        <a href="~/Analysis/analysis.aspx">@ResProductionHistory.Index.lblAnalisis</a>
+    <li>
+        <a href="@Request.RawUrl">@ResProductionHistory.Index.lblTitle</a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+
+@if (ViewBag.authR)
+{
+    <script type="text/javascript">
+               $(document).ready(function () {
+                   var CustomersArr = [];
+                   var DepartmentsArr = [];
+                   var TypeOfProductsArr = [];
+
+                $(function () {
+                    $("[id*=txtEndDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+                $(function () {
+                    $("[id*=txtEndDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+
+                var enddate = new Date();
+                var enddateStr = enddate.getDate() + "/"
+                    + (enddate.getMonth()+1) + "/"
+                    + enddate.getFullYear();
+                $("#txtEndDateEnd").val(enddateStr);
+
+                var startdate = new Date();
+                startdate.setMonth(startdate.getMonth() - 1);
+                var startdateStr = startdate.getDate() + "/"
+                    + (startdate.getMonth() + 1) + "/"
+                    + startdate.getFullYear();
+
+                $("#txtEndDateStart").val(startdateStr);
+
+                $("#txtEndDateStart").bind("propertychange change keyup paste input", function () {
+                // load the page
+                    var endPDateS = $('#txtEndDateStart').val();
+                    var endPDateA = endPDateS.split('/');
+                        startdate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                    if (startdate) {
+                        loadPanel();
+                    }
+                    else {
+                        alert("Invalid date");
+                    }
+                });
+
+                $("#txtEndDateEnd").bind("propertychange change keyup paste input", function () {
+                    // load the page
+                        var endPDateS = $('#txtEndDateEnd').val();
+                        var endPDateA = endPDateS.split('/');
+                        enddate = new Date(endPDateA[2], endPDateA[1] - 1, endPDateA[0]);
+                    if (enddate) {
+                        loadPanel();
+                    }
+                    else {
+                        alert("Invalid date");
+                    }
+                });
+
+
+
+                function loadPanel() {
+                    $("#HistoricPanel").fadeTo(0, 0.5);
+                    $("#txtEndDateStart").prop("disabled", true);
+                    $("#txtEndDateEnd").prop("disabled", true);
+
+                    var startPeriod = startdate.getFullYear() + "-" +
+                        (startdate.getMonth() + 1) + "-" + startdate.getDate();
+                    var endPeriod = enddate.getFullYear() + "-" +
+                        (enddate.getMonth() + 1) + "-" + enddate.getDate();
+
+                    var jsonData = {
+                        "StartPeriod": startPeriod, "EndPeriod": endPeriod, "Customer": {}};
+
+                    var customersStr = "";
+                    for (i = 0; i < CustomersArr.length; i++) {
+                        customersStr += " " + CustomersArr[i];
+                    }
+
+                    var departmentsStr = "";
+                    for (i = 0; i < DepartmentsArr.length; i++) {
+                        departmentsStr += DepartmentsArr[i] + ";";
+                    }
+
+                    var TypeOfProductsStr = "";
+                    for (i = 0; i < TypeOfProductsArr.length; i++) {
+                        TypeOfProductsStr += TypeOfProductsArr[i][0] + "_"
+                            + TypeOfProductsArr[i][1]
+                            + "_" + TypeOfProductsArr[i][2]
+                            + ";";
+                    }
+                    //alert(customersStr);
+
+                    $.ajax({
+                        url: "@Url.Action("HistoricDataPanel", "ProductionHistory")",
+                        type: 'POST',
+                        dataType: "html",
+                        data: {
+                            startPeriod: startPeriod,
+                            endPeriod: endPeriod,
+                            customers: customersStr,
+                            departments: departmentsStr,
+                            TypeOfProducts: TypeOfProductsStr
+                        },
+                    success: function (result) {
+                        $("#HistoricPanel").html(result);
+                        $("#HistoricPanel").fadeTo(0, 1);
+                        $("#txtEndDateStart").prop("disabled", false);
+                        $("#txtEndDateEnd").prop("disabled", false);
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $("#HistoricPanel").fadeTo(0, 1);
+                        $("#txtEndDateStart").prop("disabled", false);
+                        $("#txtEndDateEnd").prop("disabled", false);
+                        //$("#frmListWorkstations").html("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $("#HistoricPanel").fadeTo(0, 1);
+                        $("#txtEndDateStart").prop("disabled", false);
+                        $("#txtEndDateEnd").prop("disabled", false);
+                        //$("#frmListWorkstations").html("Warning");
+                    }
+                });
+                }
+
+
+                //$("#frmCustomersList").hide();
+                $("#btnShowCustomerPanel").click(function () {
+                    if ($("#frmCustomersList").is(':visible')) {
+                        $("#frmCustomersList").fadeOut();
+                    }
+                    else {
+                        $("#frmCustomersList").fadeIn();
+                    }
+                });
+
+                   $("#frmCustomersList :checkbox").each(function () {
+                       var badgeOrig = $(this).attr('id').split('_');
+                       var cst = badgeOrig[1];
+                       CustomersArr.push(cst);
+                   });
+
+                   $("#frmCustomersList :checkbox").change(function () {
+                       var badgeOrig = $(this).attr('id').split('_');
+                       var id = badgeOrig[1];
+                       var name = $("#customerName_" + id).text();
+                       if ($(this).is(":checked")) {
+                           CustomersArr.push(id);
+                           loadPanel();
+                       }
+                       else {
+                           var index = $.inArray(id, CustomersArr);
+                           if (index >= 0) CustomersArr.splice(index, 1);
+
+                           loadPanel();
+                       }
+                   });
+
+                   //TypeOfProducts filter
+                   //$("#frmProductsList").hide();
+                   $("#btnShowProductsPanel").click(function () {
+                       if ($("#frmProductsList").is(':visible')) {
+                           $("#frmProductsList").fadeOut();
+                       }
+                       else {
+                           $("#frmProductsList").fadeIn();
+                       }
+                   });
+                   $("#frmProductsList :checkbox").each(function () {
+                       var badgeOrig = $(this).attr('id').split('_');
+                       var badgeOrig2 = badgeOrig[1].split(';');
+                       var cst = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                       TypeOfProductsArr.push(cst);
+                   });
+                   $("#frmProductsList :checkbox").change(function () {
+                       var badgeOrig = $(this).attr('id').split('_');
+                       var badgeOrig2 = badgeOrig[1].split(';');
+                       var id = badgeOrig[1];
+                       var ids = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                       //var name = $("#productName_" + id).text();
+                       if ($(this).is(":checked")) {
+                           TypeOfProductsArr.push(ids);
+                       }
+                       else {
+                           var index = -1;
+                           for (var i = 0; i < TypeOfProductsArr.length; i++) {
+                               if (TypeOfProductsArr[i][0] == badgeOrig2[0] && TypeOfProductsArr[i][1] == badgeOrig2[1] && TypeOfProductsArr[i][2] == badgeOrig2[2]) {
+
+                                   index = i;
+                                   break;
+                               }
+                           }
+                           if (index >= 0) TypeOfProductsArr.splice(index, 1);
+                       }
+                       loadPanel();
+                   });
+
+                   // Departments filter
+                   //$("#frmDepartmentsList").hide();
+                   $("#btnShowDepartmentsPanel").click(function () {
+                       if ($("#frmDepartmentsList").is(':visible')) {
+                           $("#frmDepartmentsList").fadeOut();
+                       }
+                       else {
+                           $("#frmDepartmentsList").fadeIn();
+                       }
+                   });
+                   $("#frmDepartmentsList :checkbox").each(function () {
+                       var badgeOrig = $(this).attr('id').split('_');
+                       var cst = badgeOrig[1];
+                       DepartmentsArr.push(cst);
+                   });
+                   $("#frmDepartmentsList :checkbox").change(function () {
+                       var badgeOrig = $(this).attr('id').split('_');
+                       var id = badgeOrig[1];
+                       var name = $("#departmentName_" + id).text();
+                       if ($(this).is(":checked")) {
+                           DepartmentsArr.push(id);
+                       }
+                       else {
+                           var index = $.inArray(id, DepartmentsArr);
+                           if (index >= 0) DepartmentsArr.splice(index, 1);
+                       }
+                       loadPanel();
+                   });
+
+                   loadPanel();
+               });
+    </script>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="well sidebar-nav sidebar-nav-fixed">
+                    @ResProductionHistory.Index.lblFilterSelection
+                    <p>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalTypeOfProducts">
+                            @ResProductionHistory.Index.lblTypesOfProducts
+                        </button>
+
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalProductionDates">
+                            @ResProductionHistory.Index.lblEndProductionDate
+                        </button>
+
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalCustomers">
+                            @ResProductionHistory.Index.lblCustomers
+                        </button>
+
+
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modalDepartments">
+                            @ResProductionHistory.Index.lblDepartments
+                        </button>
+
+
+                    </p>
+                </div>
+            </div>
+            <div class="span9">
+                <div id="HistoricPanel" />
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modalTypeOfProducts" tabindex="-1" role="dialog" aria-labelledby="modalTypeOfProducts" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="examplemodalTypeOfProducts">@ResProductionHistory.Index.lblTypesOfProducts</h5>
+                    </div>
+                    <div class="modal-body" id="frmProductsList">
+                        @{
+                            List<KIS.App_Code.ProcessoVariante> TypeOfProductList = ViewBag.TypeOfProducts;
+                            foreach (var prod in TypeOfProductList)
+                            {
+                                <input type="checkbox" id="product_@prod.process.processID;@prod.process.revisione;@prod.variant.idVariante" checked="checked" /><literal id="productName_@prod.process.processID;@prod.process.revisione;@prod.variant.idVariante">@Html.Raw(prod.process.processName + " - " + prod.variant.nomeVariante)</literal><br />
+                            }
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalProductionDates" tabindex="0" role="dialog" aria-labelledby="modalProductionDates" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="examplemodalDates">@ResProductionHistory.Index.lblEndProductionDate</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        @ResProductionHistory.Index.lblStartDate<input type="text" id="txtEndDateStart" name="txtEndDateStart" /><br />
+                        @ResProductionHistory.Index.lblEndDate<input type="text" id="txtEndDateEnd" name="txtEndDateStart" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalCustomers" tabindex="-1" role="dialog" aria-labelledby="modalCustomers" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">@ResProductionHistory.Index.lblCustomers</h5>
+                    </div>
+                    <div class="modal-body" id="frmCustomersList">
+                        @{
+                            List<KIS.App_Code.Cliente> cstList = ViewBag.Customers;
+                            foreach (var cst in cstList)
+                            {
+                                <input type="checkbox" id="customer_@cst.CodiceCliente" checked="checked" /><literal id="customerName_@cst.CodiceCliente">@Html.Raw(Server.HtmlEncode(cst.RagioneSociale))</literal><br />
+                            }
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="modalDepartments" tabindex="-1" role="dialog" aria-labelledby="modalDepartments" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="examplemodalDepartments">@ResProductionHistory.Index.lblDepartments</h5>
+                    </div>
+                    <div class="modal-body" id="frmDepartmentsList">
+                        @{
+                            List<KIS.App_Code.Reparto> DepartmentList = ViewBag.Departments;
+                            foreach (var dept in DepartmentList)
+                            {
+                                <input type="checkbox" id="department_@dept.id" checked="checked" /><literal id="departmentName_@dept.name">@Html.Raw(dept.name)</literal><br />
+                            }
+                        }
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+        }
+        else
+        {
+        <div>
+            @ResProductionHistory.Index.lblUserNotAuthorized<br />
+            <a href="/login/login.aspx?red=/Analysis/ProductionHistory/Index">@ResProductionHistory.Index.lblClickHere</a>
+        </div>
+        }

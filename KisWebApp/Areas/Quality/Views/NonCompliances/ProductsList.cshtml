@@ -1,0 +1,74 @@
+﻿@model IEnumerable<KIS.App_Code.FlatProduct>
+@ViewBag.Message
+@if(ViewBag.authenticated)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-condensed table-striped table-hover">
+            <tr>
+                <th></th>
+                <th>@ResNC.ProductsList.lblProduct</th>
+                <th>@ResNC.ProductsList.lblProductName</th>
+                <th>@ResNC.ProductsList.lblCustomer</th>
+                <th>@ResNC.ProductsList.lblSerialNumber</th>
+                <th>@ResNC.ProductsList.lblQuantity</th>
+            </tr>
+            @foreach (var m in Model)
+            {
+                <tr id="row_@m.ProductID-@m.ProductYear">
+                    <td>
+                        <input type="image" class="btnAddProduct" src="~/img/iconAdd2.png" style="height:30px;" id="btnAddProduct" value="@m.ProductID/@m.ProductYear" />
+                    </td>
+                    <td>@m.ProductID / @m.ProductYear</td>
+                    <td>@m.processName - @m.varianteName</td>
+                    <td>@m.CustomerName</td>
+                    <td>@m.SerialNumber</td>
+                    <td>@m.Quantity</td>
+                    <td>@if (m.Status == 'F')
+                    { <span>@ResNC.ProductsList.lblFinishedProd</span>}
+                    else { <span>@ResNC.ProductsList.lblInProduction</span>}</td>
+                </tr>
+            }
+        </table>
+
+        <script>
+        $(document).ready(function() {
+            $('.btnAddProduct').click(function() {
+                var prod = $(this).val().split('/');
+                var rowToDelete = "#row_" + prod[0] + "-" + prod[1];
+            $.ajax({
+                //url: '/Quality/NonCompliances/NCProductAdd',
+                url: "@Url.Action("NCProductAdd", "NonCompliances")",
+                type: 'POST',
+                data:
+                            {
+                                ID: @ViewBag.ncID,
+                    Year: @ViewBag.ncYear,
+                                prodID: prod[0],
+                                prodYear: prod[1]
+                },
+                success: function(data) {
+                    if (data == "False") {
+                        alert("@Server.HtmlDecode(ResNC.ProductsList.lblErrorAdd)");
+
+                } else {$(rowToDelete).remove(); } },
+                statusCode:
+                            {
+                                404: function(content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show(); },
+                    500: function(content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show(); }
+                            },
+                error: function(req, status, errorObj) {
+                                alert("error");
+                    $(this).show();
+                            }
+                        });
+                    });
+                });
+
+        </script>
+    }
+    else
+    {
+        <div>@ResNC.ProductsList.lblNoProducts</div>
+    }
+    }

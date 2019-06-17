@@ -1,0 +1,460 @@
+﻿@model KIS.App_Code.TaskVariante
+
+<script>
+    $(document).ready(function () {
+
+        var initTaskName = $('#txtTaskName').val();
+        var initTaskDesc = $('#txtTaskDesc').val();
+        $('#imgLoadSaveTaskDetails').fadeOut();
+        $('#imgLoadAddCycleTime').fadeOut();
+        $('#trCT1').fadeOut();
+        $('#trCT2').fadeOut();
+        $('#trCT3').fadeOut();
+        $('#trCT4').fadeOut();
+        $('#trCT5').fadeOut();
+        loadCycleTimes();
+        $('#trPAR1').fadeOut();
+        $('#trPAR2').fadeOut();
+        $('#trPAR3').fadeOut();
+        $('#trPAR4').fadeOut();
+        $('#trPAR5').fadeOut();
+        $('#trPAR6').fadeOut();
+        loadTaskParameters();
+        $('#imgLoadAddTaskParam').fadeOut();
+
+        $('#btnUndoTaskDetails').click(function () {
+            $('#txtTaskName').val(initTaskName);
+            $('#txtTaskDesc').val(initTaskDesc);
+            return false;
+        });
+
+        $('#btnSaveTaskDetails').click(function () {
+            $('#imgLoadSaveTaskDetails').fadeIn();
+            $('#btnSaveTaskDetails').fadeOut();
+            $('#btnUndoTaskDetails').fadeOut();
+            $('#lblInfoSaveTaskDetails').html('');
+
+            $.ajax({
+                url: "@Url.Action("SaveTaskDetails", "Products")",
+                type: 'GET',
+                dataType: 'html',
+                data: {
+                    TaskID: @ViewBag.TaskID,
+                    TaskRev: @ViewBag.TaskRev,
+                    variantID: @ViewBag.VariantID,
+                    TaskName: $('<div/>').text($('#txtTaskName').val()).html(),
+                    TaskDescription: $('<div/>').text($('#txtTaskDesc').val()).html(),
+                },
+                success: function (result) {
+                    if (result == "False") {
+                        alert("@ResProducts.EditTaskPanel.lblDetailEditTaskError");
+                        $('#imgLoadSaveTaskDetails').fadeOut();
+                        $('#btnSaveTaskDetails').fadeIn();
+                        $('#btnUndoTaskDetails').fadeIn();
+                    }
+                    else {
+                        $('#lblInfoSaveTaskDetails').html('@ResProducts.EditTaskPanel.lblDetailEditSuccess');
+                        $('#imgLoadSaveTaskDetails').fadeOut();
+                        $('#btnSaveTaskDetails').fadeIn();
+                        $('#btnUndoTaskDetails').fadeIn();
+                    }
+                },
+                error: function (result) {
+                    alert("@ResProducts.EditTaskPanel.lblDetailEditError");
+                    $('#imgLoadSaveTaskDetails').fadeOut();
+                    $('#btnSaveTaskDetails').fadeIn();
+                    $('#btnUndoTaskDetails').fadeIn();
+                },
+                warning: function (result) {
+                    alert("@ResProducts.EditTaskPanel.lblDetailEditError");
+                    $('#imgLoadSaveTaskDetails').fadeOut();
+                    $('#btnSaveTaskDetails').fadeIn();
+                    $('#btnUndoTaskDetails').fadeIn();
+                }
+            });
+            return false;
+        });
+
+
+        $('#btnResetCycleTime').click(function () {
+            $('#txtCTHours').val('0');
+            $('#txtCTMinutes').val('0');
+            $('#txtCTSeconds').val('0');
+            $('#txtSTHours').val('0');
+            $('#txtSTMinutes').val('0');
+            $('#txtSTSeconds').val('0');
+            $('#txtCTNumOps').val('1');
+            $('#chkCTDefault').prop("checked", false);
+            return false;
+        });
+
+        $('#btnAddCycleTime').click(function () {
+            var nOps = parseInt($('#txtCTNumOps').val());
+            var CTs = parseInt($('#txtCTSeconds').val());
+            var CTm = parseInt($('#txtCTMinutes').val());
+            var CTh = parseInt($('#txtCTHours').val());
+            var STs = parseInt($('#txtSTSeconds').val());
+            var STm = parseInt($('#txtSTMinutes').val());
+            var STh = parseInt($('#txtSTHours').val());
+            var def = false;
+            if ($('#chkCTDefault').is(":checked")) {
+                def = true;
+            }
+
+            if(nOps > 0 && STh >= 0 && CTh >=0 && CTm <60 && CTm >=0 && CTs <60 && CTs >=0 && STm <60 && STm >=0 && STs <60 && STs >=0)
+            {
+                var sTime = STh*3600 + STm*60 + STs;
+                var cTime = CTh*3600 + CTm*60 + CTs;
+
+                $('#imgLoadAddCycleTime').fadeIn();
+                $('#btnResetCycleTime').fadeOut();
+                $('#btnAddCycleTime').fadeOut();
+                $.ajax({
+                    url: "@Url.Action("AddWorkingTimeToTask", "Products")",
+                    type: 'GET',
+                dataType: 'html',
+                data: {
+                    TaskID: @ViewBag.TaskID,
+                    TaskRev: @ViewBag.TaskRev,
+                    VariantID: @ViewBag.VariantID,
+                    NumOps: nOps,
+                    SetupTime: sTime,
+                    CycleTime: cTime,
+                    def: def
+                    },
+                success: function (result) {
+                    if (result == "False") {
+                        alert("@ResProducts.EditTaskPanel.lblDetailEditError");
+                        $('#imgLoadAddCycleTime').fadeOut();
+                        $('#btnResetCycleTime').fadeIn();
+                        $('#btnAddCycleTime').fadeIn();
+                    }
+                    else {
+                        loadCycleTimes();
+                        $('#imgLoadAddCycleTime').fadeOut();
+                        $('#btnResetCycleTime').fadeIn();
+                        $('#btnAddCycleTime').fadeIn();
+                        $('#trCT1').fadeOut();
+                        $('#trCT2').fadeOut();
+                        $('#trCT3').fadeOut();
+                        $('#trCT4').fadeOut();
+                        $('#trCT5').fadeOut();
+                    }
+                },
+                error: function (result) {
+                    alert("@ResProducts.EditTaskPanel.lblDetailEditError");
+                    $('#imgLoadAddCycleTime').fadeOut();
+                    $('#btnResetCycleTime').fadeIn();
+                    $('#btnAddCycleTime').fadeIn();
+                },
+                warning: function (result) {
+                    alert("@ResProducts.EditTaskPanel.lblDetailEditError");
+                    $('#imgLoadAddCycleTime').fadeOut();
+                    $('#btnResetCycleTime').fadeIn();
+                    $('#btnAddCycleTime').fadeIn();
+                }
+            });
+            }
+            else
+            {
+                alert("@ResProducts.EditTaskPanel.lblWorkingTimeWrong");
+            }
+                return false;
+        });
+
+        function loadCycleTimes()
+        {
+            $('#imgLoadCycleTimes').fadeIn();
+            $.ajax({
+                url: "@Url.Action("TaskCycleTimesList", "Products")",
+                type: 'GET',
+                dataType: 'html',
+                data:{
+                    TaskID: @ViewBag.TaskID,
+                    TaskRev: @ViewBag.TaskRev,
+                    VariantID: @ViewBag.VariantID,
+                },
+                success: function (result) {
+                    $('#listCycleTimes').html(result);
+                    $('#imgLoadCycleTimes').fadeOut();
+                },
+                error: function (result) {
+                    alert("Error");
+                },
+                warning: function (result) {
+                    alert("Warning");
+                }
+            });
+        }
+
+
+        $('#showAddCycleTime').click(function () {
+            if ($('#trCT1').is(':visible')) {
+                $('#trCT1').fadeOut();
+                $('#trCT2').fadeOut();
+                $('#trCT3').fadeOut();
+                $('#trCT4').fadeOut();
+                $('#trCT5').fadeOut();
+            }
+            else
+            {
+                $('#trCT1').fadeIn();
+                $('#trCT2').fadeIn();
+                $('#trCT3').fadeIn();
+                $('#trCT4').fadeIn();
+                $('#trCT5').fadeIn();
+            }
+        });
+
+
+        $('#showAddTaskParams').click(function () {
+            if ($('#trPAR1').is(':visible')) {
+                $('#trPAR1').fadeOut();
+                $('#trPAR2').fadeOut();
+                $('#trPAR3').fadeOut();
+                $('#trPAR4').fadeOut();
+                $('#trPAR5').fadeOut();
+                $('#trPAR6').fadeOut();
+            }
+            else
+            {
+                $('#trPAR1').fadeIn();
+                $('#trPAR2').fadeIn();
+                $('#trPAR3').fadeIn();
+                $('#trPAR4').fadeIn();
+                $('#trPAR5').fadeIn();
+                $('#trPAR6').fadeIn();
+            }
+        });
+
+
+        function loadTaskParameters() {
+            var TaskID = parseInt(@ViewBag.TaskID);
+            var TaskRev = parseInt(@ViewBag.TaskRev);
+            var VariantID = parseInt(@ViewBag.VariantID);
+            if(TaskID != -1 && TaskRev!=-1 && VariantID!=-1)
+            {
+                $('#imgLoadParams').show();
+                $.ajax({
+                    url: "@Url.Action("TaskParametersList", "Products")",
+                    type: 'GET',
+                    dataType: 'html',
+                    data:{
+                        TaskID: TaskID,
+                        TaskRev: TaskRev,
+                        VariantID: VariantID
+                    },
+                    success: function (result) {
+                        $('#divTaskParams').html(result);
+                        $('#imgLoadParams').hide();
+                    },
+                    error: function(result){alert("Error");},
+                    warning: function(result){alert("Warning");}
+                });
+            }
+            else
+            {
+                $('#imgLoadParams').hide();
+            }
+        }
+
+        $('#imgAddTaskParam').click(function () {
+            $('#imgAddTaskParam').fadeOut();
+            $('#imgLoadAddParam').fadeIn();
+            var procID = parseInt(@ViewBag.TaskID);
+            var procRev = parseInt(@ViewBag.TaskRev);
+            var varID = parseInt(@ViewBag.VariantID);
+            var paramName = $('<div/>').text($('#txtTaskParamName').val()).html();
+            var paramDescription = $('<div/>').text($('#txtTaskParamDescription').val()).html();
+            var paramIsFixed = false;
+            if ($('#txtTaskParamIsFixed').is(":checked")) {
+                var paramIsFixed = true;
+            }
+            var paramIsRequired = false;
+            if ($('#txtTaskParamIsRequired').is(":checked")) {
+                var paramIsRequired = true;
+            }
+            var paramCategory = parseInt($('#ddlTaskParamCategory').val());
+
+            if(procID > -1 && procRev > -1 && varID > -1)
+            {
+                if (paramName.length > 0) {
+                    if (paramCategory > -1)
+                    {
+                        $.ajax({
+                            url: "@Url.Action("AddTaskParam", "Products")",
+                            type: 'GET',
+                            dataType: 'html',
+                            data: {
+                                TaskID: procID,
+                                TaskRev: procRev,
+                                variantID: varID,
+                                ParamName: paramName,
+                                ParamDescription: paramDescription,
+                                ParamCategory: paramCategory,
+                                ParamIsFixed: paramIsFixed,
+                                ParamIsRequired: paramIsRequired
+                            },
+                            success: function (result) {
+                                $('#imgAddTaskParam').fadeIn();
+                                $('#imgLoadAddParam').fadeOut();
+                                $('#addTaskParams').fadeOut();
+                                loadTaskParameters();
+                                $('#txtTaskParamName').val('');
+                                $('#txtTaskParamDescription').val('');
+                                $('#txtTaskParamIsFixed').attr('checked', false);
+                                $('#txtTaskParamIsRequired').attr('checked', false);
+                                $("#ddlTaskParamCategory").val('-1');
+                                $('#trPAR1').fadeOut();
+                                $('#trPAR2').fadeOut();
+                                $('#trPAR3').fadeOut();
+                                $('#trPAR4').fadeOut();
+                                $('#trPAR5').fadeOut();
+                                $('#trPAR6').fadeOut();
+                            },
+                            error: function(result)
+                            {
+                                $('#imgAddTaskParam').fadeIn();
+                                $('#imgLoadAddParam').fadeOut();
+                                alert("@ResProducts.EditTaskPanel.lblParamAddError");
+                            },
+                            warning: function (result)
+                            {
+                                $('#imgAddTaskParam').fadeIn();
+                                $('#imgLoadAddParam').fadeOut();
+                                alert("@ResProducts.EditTaskPanel.lblParamAddError");
+                            }
+                        });
+                        loadTaskParameters();
+                    }
+                    else
+                    {
+                        alert("@ResProducts.EditTaskPanel.lblParamErrCategory");
+                        $('#imgAddTaskParam').fadeIn();
+                        $('#imgLoadAddParam').fadeOut();
+                    }
+                }
+                else {
+                    alert("@ResProducts.EditTaskPanel.lblParamErrName");
+                    $('#imgAddTaskParam').fadeIn();
+                    $('#imgLoadAddParam').fadeOut();
+                }
+            }
+        });
+
+
+
+
+
+
+    });
+
+</script>
+
+@if(ViewBag.authW)
+{
+
+
+<table>
+    <tr>
+        <td>@ResProducts.EditTaskPanel.lblTaskName</td>
+        <td><input type="text" id="txtTaskName" value="@Server.HtmlDecode(Server.HtmlDecode(Model.Task.processName))" />
+        </td>
+    </tr>
+    <tr>
+        <td>@ResProducts.EditTaskPanel.lblTaskDescription</td>
+        <td><textarea id="txtTaskDesc">@Server.HtmlDecode(Server.HtmlDecode(Model.Task.processDescription))</textarea>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <input type="image" id="btnSaveTaskDetails" style="min-width:20px; max-width:30px;" src="~/img/iconSave.jpg" />
+            <input type="image" id="btnUndoTaskDetails" style="min-width:20px; max-width:30px;" src="~/img/iconUndo.png" />
+            <img src="~/img/iconLoading.gif" id="imgLoadSaveTaskDetails" style="min-width:20px; max-width:30px;"/>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div class="text-info" id="lblInfoSaveTaskDetails" />
+        </td>
+    </tr>
+    <tr><td style="text-align: center;" colspan="2"><b>@ResProducts.EditTaskPanel.lblTitleCycleTimes</b>
+        <img src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px; cursor:pointer;" id="showAddCycleTime"/>
+        </td></tr>
+    <tr id="trCT1"><td>@ResProducts.EditTaskPanel.lblCTNumOps</td>
+    <td><input type="number" id="txtCTNumOps" style="min-width:20px;max-width:40px;" min="1" value="1" /></td>
+    </tr>
+    <tr id="trCT2">
+        <td>@ResProducts.EditTaskPanel.lblCTSetupTime</td>
+        <td>HH:<input type="number" id="txtSTHours" min="0" style="min-width:20px;max-width:40px;" value="0" />mm:<input type="number" id="txtSTMinutes" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />ss:<input type="number" id="txtSTSeconds" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" /></td>
+    </tr>
+    <tr id="trCT3"><td>@ResProducts.EditTaskPanel.lblCTCycleTime</td>
+    <td>HH:<input type="number" id="txtCTHours" min="0" style="min-width:20px;max-width:40px;" value="0" />mm:<input type="number" id="txtCTMinutes" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />ss:<input type="number" id="txtCTSeconds" min="0" max="59"  style="min-width:20px;max-width:40px;" value="0" /></td></tr>
+    <tr id="trCT4">
+        <td>@ResProducts.EditTaskPanel.lblDefault</td>
+        <td><input type="checkbox" id="chkCTDefault" checked="true" /></td>
+    </tr>
+    <tr id="trCT5"><td colspan="2" style="text-align:center;">
+            <input type="image" id="btnAddCycleTime" style="min-width:20px; max-width:30px;" src="~/img/iconSave.jpg" />
+            <input type="image" id="btnResetCycleTime" style="min-width:20px; max-width:30px;" src="~/img/iconUndo.png" />
+            <img src="~/img/iconLoading.gif" id="imgLoadAddCycleTime" style="min-width:20px; max-width:30px;" />
+        </td></tr>
+    <tr>
+        <td colspan="2"><img src="~/img/iconLoading.gif" id="imgLoadCycleTimes" style="min-width:20px; max-width:30px;" />
+        <div id="listCycleTimes"/></td>
+    </tr>
+        <tr><td colspan="2" style="text-align: center;"><b>@ResProducts.EditTaskPanel.lblTitleParameters</b>
+            <img id="showAddTaskParams" src="../img/iconAdd2.png" style="cursor:pointer;min-width:20px; max-width:30px;" /></td></tr>
+    <tr id="trPAR1">
+        <td>@ResProducts.EditTaskPanel.lblParamName</td>
+        <td><input type="text" id="txtTaskParamName" /></td>
+    </tr>
+    <tr id="trPAR2">
+        <td>@ResProducts.EditTaskPanel.lblParamDescription</td>
+        <td><textarea id="txtTaskParamDescription"></textarea></td>
+    </tr>
+    <tr id="trPAR3">
+        <td>@ResProducts.EditTaskPanel.lblParamCategory</td>
+        <td>
+            <select id="ddlTaskParamCategory">
+                <option value="-1"></option>
+                @{ 
+                    KIS.App_Code.ProductParametersCategories parList = new KIS.App_Code.ProductParametersCategories();
+                    parList.loadCategories();
+                    foreach(var p in parList.Categories)
+                    {
+                        <option value="@p.ID">@p.Name</option>
+                    }
+                }
+            </select>
+            <a Target="_blank" href="~/Products/ProductParametersCategories/Index" ToolTip="@ResProducts.EditTaskPanel.lblAltParamCategoryManagement">
+                <img src="../img/iconCategory.png" style="min-width:10px; max-width:20px;" />
+            </a>
+        </td>
+    </tr>
+    <tr id="trPAR4">
+        <td>@ResProducts.EditTaskPanel.lblParamIsFixed</td>
+        <td><input type="checkbox" id="txtTaskParamIsFixed" /></td>
+    </tr>
+    <tr id="trPAR5">
+        <td>@ResProducts.EditTaskPanel.lblParamIsRequired</td>
+        <td><input type="checkbox" id="txtTaskParamIsRequired" /></td>
+    </tr>
+    <tr id="trPAR6">
+        <td colspan="2">
+            <img id="imgAddTaskParam" src="../img/iconSave.jpg" style="max-width:30px; min-width:20px; cursor:pointer;" />
+            <img src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadAddTaskParam" />
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <img src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadParams" />
+            <div id="divTaskParams" />
+        </td>
+    </tr>
+        </table>
+}
+else
+{
+    <div>Non sei autorizzato</div>
+}

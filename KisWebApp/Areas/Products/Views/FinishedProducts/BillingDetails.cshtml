@@ -1,0 +1,178 @@
+﻿@model KIS.App_Code.Articolo
+
+@if(ViewBag.authR)
+{    
+    <div>@ResFinishedProducts.BillingDetails.lblSystemAlive @if (ViewBag.CheckResponse)
+    {
+        <img src="~/img/iconComplete.png" style="min-height:15px; max-width:20px;" />
+    }
+    else
+    {
+        <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+    }
+    </div>
+
+    if(ViewBag.ExpiryDate.Length > 0)
+    { 
+    <div>@ResFinishedProducts.BillingDetails.lblExpiryDate @ViewBag.ExpiryDate</div>
+    }
+    else
+    {
+        @ResFinishedProducts.BillingDetails.lblExpiryDate <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+    }
+
+    <h3>@ResFinishedProducts.BillingDetails.lblTitle</h3>
+    <div class="row-fluid">
+        <div class="span6">
+            @if (ViewBag.OrdersResume != null)
+            {
+                List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>
+                           orders = (List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>)ViewBag.OrdersResume;
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>@ResFinishedProducts.BillingDetails.lblTHMonth</th>
+                            <th>@ResFinishedProducts.BillingDetails.lblTHOrders</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var n in orders)
+                        {
+                            <tr>
+                                <td>@n.Month/@n.Year</td>
+                                <td>@n.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                @ResFinishedProducts.BillingDetails.lblTHOrders <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+            }
+        </div>
+        <div class="span6">
+            @if (ViewBag.TasksResume != null)
+            {
+                var rep = (List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>)ViewBag.TasksResume;
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>@ResFinishedProducts.BillingDetails.lblTHMonth</th>
+                            <th>@ResFinishedProducts.BillingDetails.lblTHTasks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in rep)
+                        {
+                            <tr>
+                                <td>@m.Month/@m.Year</td>
+                                <td>@m.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                @ResFinishedProducts.BillingDetails.lblTHTasks <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+            }
+        </div>
+        
+        </div>
+        <div class="row-fluid">
+            <div class="span4">
+                @if (ViewBag.NonCompliances != null)
+                {
+                    List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>
+                               rep = (List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>)ViewBag.NonCompliances;
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>@ResFinishedProducts.BillingDetails.lblTHMonth</th>
+                                <th>@ResFinishedProducts.BillingDetails.lblTHNonCompliances</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in rep)
+                        {
+                                <tr>
+                                    <td>@m.Month/@m.Year</td>
+                                    <td>@m.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    @ResFinishedProducts.BillingDetails.lblTHNonCompliances <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+                }
+            </div>
+            <div class="span4">
+                @if (ViewBag.CorrectiveActions != null)
+                {
+                    List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>
+                               rep = (List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>)ViewBag.CorrectiveActions;
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>@ResFinishedProducts.BillingDetails.lblTHMonth</th>
+                                <th>@ResFinishedProducts.BillingDetails.lblTHCorrectiveActions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in rep)
+                        {
+                                <tr>
+                                    <td>@m.Month/@m.Year</td>
+                                    <td>@m.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    @ResFinishedProducts.BillingDetails.lblTHCorrectiveActions <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+                }
+            </div>
+            <div class="span4">
+                @if (ViewBag.ImprovementActions != null)
+                {
+                    List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>
+                               rep = (List<KIS.Areas.Products.Controllers.FinishedProductsController.PeriodicReport>)ViewBag.ImprovementActions;
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>@ResFinishedProducts.BillingDetails.lblTHMonth</th>
+                                <th>@ResFinishedProducts.BillingDetails.lblTHImprovementActions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in rep)
+                        {
+                                <tr>
+                                    <td>@m.Month/@m.Year</td>
+                                    <td>@m.Value</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    @ResFinishedProducts.BillingDetails.lblTHImprovementActions <img src="~/img/iconDead.png" style="min-height:15px; max-width:20px;" />
+                }
+            </div>
+            </div>
+            
+            }
+            else
+            {
+            <div class="row-fluid">
+                <div class="span12">
+                    @ResFinishedProducts.BillingDetails.lblErrNoAuth
+                </div>
+            </div>
+            }

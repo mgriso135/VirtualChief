@@ -1,0 +1,204 @@
+﻿@model IEnumerable<KIS.App_Sources.NonComplianceProduct>
+@ViewBag.Message
+@if (ViewBag.authenticated)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <script>
+    $(document).ready(function () {
+        $('.btnRemoveProduct').click(function () {
+            prod = ($(this).val()).split('.');
+            var rowToDelete = "#row_" + prod[0] + prod[1];
+            $.ajax({
+                //url: '/Quality/NonCompliances/NCProductDel',
+                url: "@Url.Action("NCProductDel", "NonCompliances")",
+                type: 'POST',
+                data:{
+                    ncID: @ViewBag.ncID,
+                    ncYear: @ViewBag.ncYear,
+                    prdID: prod[0],
+                    prdYear: prod[1]
+                },
+                success: function(data) { if(data == "False") {
+                    alert("@Server.HtmlDecode(ResNC.NCProductsList.lblErrDelete)");
+                } else {$(rowToDelete).remove(); }},
+                statusCode : {
+                    404: function(content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show();},
+                    500: function(content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show();}
+                },
+                error: function(req, status, errorObj) {
+                    alert("Error");
+                    $(this).show();
+                }
+            });
+        });
+
+
+        $('.btnEditProduct').click(function () {
+            prod = ($(this).val()).split('.');
+            var ddlSource = "#ddlSource_" + prod[0] + prod[1];
+            var ddlWStation = "#ddlWStation_" + prod[0] + prod[1];
+            var divSave = "#imgSave_" + prod[0] + prod[1];
+            var divEdit = "#imgEdit_" + prod[0] + prod[1];
+            var txtQty = "#txtQty_" + prod[0] + prod[1];
+            var lblWStation = "#lblWStation_" + prod[0] + prod[1];
+            var lblSource = "#lblSource_" + prod[0] + prod[1];
+            var lblQty = "#lblQty_" + prod[0] + prod[1];
+
+            if( $(ddlSource).is(':visible') )
+                {
+                $(ddlSource).hide();
+                $(ddlWStation).hide();
+                $(divSave).hide();
+                $(divEdit).show();
+                $(txtQty).hide();
+                $(lblQty).show();
+                $(lblWStation).show();
+                $(lblSource).show();
+            } else
+            {
+                $(ddlSource).show();
+                $(ddlWStation).show();
+                $(divSave).show();
+                $(divEdit).hide();
+                $(txtQty).show();
+                $(lblQty).hide();
+                $(lblWStation).hide();
+                $(lblSource).hide();
+            }
+        });
+
+        $('.btnSaveProduct').click(function () {
+            prod = ($(this).val()).split('.');
+            var ddlSource = "#ddlSource_" + prod[0] + prod[1];
+            var ddlWStation = "#ddlWStation_" + prod[0] + prod[1];
+            var divSave = "#imgSave_" + prod[0] + prod[1];
+            var divEdit = "#imgEdit_" + prod[0] + prod[1];
+            var txtQty = "#txtQty_" + prod[0] + prod[1];
+            var lblWStation = "#lblWStation_" + prod[0] + prod[1];
+            var lblSource = "#lblSource_" + prod[0] + prod[1];
+            var lblQty = "#lblQty_" + prod[0] + prod[1];
+            var lblMaxQty = "#txtMaxQty_" + prod[0] + prod[1];
+            var quant = $(txtQty).val() <= $(lblMaxQty).val() ? $(txtQty).val() : $(lblMaxQty).val();
+            var lblSourceName = $(ddlSource).val() == 'P' ? "@ResNC.NCProductsList.lblProduction" : "@ResNC.NCProductsList.lblCustomer";
+            //alert($(ddlWStation).val());
+            $.ajax({
+                //url: '/Quality/NonCompliances/NCProductUpd',
+                url: "@Url.Action("NCProductUpd", "NonCompliances")",
+                type: 'POST',
+                data:{
+                    ncID: @ViewBag.ncID,
+                    NCYear: @ViewBag.ncYear,
+                    prdID: prod[0],
+                    prdYear: prod[1],
+                    Qty: quant,
+                    source: $(ddlSource).val(),
+                    WStation: $(ddlWStation).val()
+                },
+                success: function(data) {
+                    $(ddlSource).hide();
+                    $(ddlWStation).hide();
+                    $(divSave).hide();
+                    $(divEdit).show();
+                    $(txtQty).hide();
+                    $(txtQty).val($(txtQty).val());
+                    $(ddlWStation).val($(ddlWStation).val());
+                    $(ddlSource).val($(ddlSource).val());
+
+                    $(lblQty).html(quant);
+                    $(lblWStation).html($(ddlWStation + " :selected").text());
+                    $(lblSource).html(lblSourceName);
+                    $(lblQty).show();
+                    $(lblWStation).show();
+                    $(lblSource).show();
+                },
+                statusCode : {
+                    404: function(content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show();},
+                    500: function(content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show();}
+                },
+                error: function(req, status, errorObj) {
+                    alert("error");
+                    $(this).show();
+                }
+            });
+
+        });
+
+        });
+        </script>
+
+        <table class="table table-condensed table-bordered table-responsive table-hover table-striped">
+            <tr>
+                <th></th>
+                <th>@ResNC.NCProductsList.lblProduct</th>
+                <th>@ResNC.NCProductsList.lblProductName</th>
+                <th>@ResNC.NCProductsList.lblCustomer</th>
+                <th>@ResNC.NCProductsList.lblSerialNumber</th>
+                <th>@ResNC.NCProductsList.lblQuantity</th>
+                <th>@ResNC.NCProductsList.lblSource</th>
+                <th>@ResNC.NCProductsList.lblWorkstation</th>
+                <th>@ResNC.NCProductsList.lblWarning</th>
+                <th></th>
+            </tr>
+            @foreach (var m in Model)
+            {
+                <tr id="row_@m.ProductID@m.ProductYear">
+                    <td><span id="imgEdit_@m.ProductID@m.ProductYear">
+    <input type="image" class="btnEditProduct" src="~/img/edit.png" style="height:30px;" id="btnEditProduct" value="@m.ProductID.@m.ProductYear" />
+                        </span>
+    <span id="imgSave_@m.ProductID@m.ProductYear" style="display:none">
+        <input type="image" class="btnSaveProduct" src="~/img/iconSave.jpg" style="height:30px;" id="btnSaveProduct" value="@m.ProductID.@m.ProductYear" />
+    </span>
+</td>
+                    
+                    <td>@m.ProductID / @m.ProductYear</td>
+                    <td>@m.processName - @m.varianteName</td>
+                    <td>@m.CustomerName</td>
+                    <td>@m.SerialNumber</td>
+                    <td><span id="lblQty_@m.ProductID@m.ProductYear">@m.QuantityInvolved</span>
+                        <input type="hidden" id="txtMaxQty_@m.ProductID@m.ProductYear" value="@m.Quantity" />
+                    <input type="number" id="txtQty_@m.ProductID@m.ProductYear" value="@m.QuantityInvolved" style="display:none;width:80px;" /></td>
+                    <td>
+    @if (m.Source == 'P')
+    { <span id="lblSource_@m.ProductID@m.ProductYear">@ResNC.NCProductsList.lblProduction</span>}
+    else if (m.Source == 'C')
+    { <span id="lblSource_@m.ProductID@m.ProductYear">@ResNC.NCProductsList.lblCustomer</span>}
+    <select id="ddlSource_@m.ProductID@m.ProductYear" style="display:none;">
+        @if (m.Source == 'P')
+        {
+                        <option value="P" SELECTED>@ResNC.NCProductsList.lblProduction</option> }
+        else
+        {
+                        <option value="P">@ResNC.NCProductsList.lblProduction</option> }
+        @if (m.Source == 'C')
+                        {
+                        <option value="C" SELECTED>@ResNC.NCProductsList.lblCustomer</option> }
+        else
+        {
+                        <option value="C">@ResNC.NCProductsList.lblCustomer</option>}
+    </select>
+</td>
+                    <td><span id="lblWStation_@m.ProductID@m.ProductYear">@m.WorkstationName</span>
+    <select id="ddlWStation_@m.ProductID@m.ProductYear" style="display:none;">
+        <option value="-1"/>
+        @foreach (var pst in ViewBag.ddlPostazioni)
+        {
+            if (m.Workstation.ToString() == pst[0])
+            {
+                <option value="@pst[0]" SELECTED>@pst[1]</option>
+            }
+            else
+            {
+                <option value="@pst[0]">@pst[1]</option>
+            }
+        }
+    </select>
+</td>
+                    <td>@if(m.WarningID!=-1) { @m.WarningID }</td>
+                    <td><input type="image" class="btnRemoveProduct" src="~/img/iconDelete.png" style="height:30px;" id="btnRemoveProduct" value="@m.ProductID.@m.ProductYear" /></td>
+                </tr>
+            }
+        </table>
+
+    }
+}

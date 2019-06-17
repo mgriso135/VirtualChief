@@ -1,0 +1,53 @@
+﻿
+@{
+    ViewBag.Title = ResImprovementActions.ImprovementActionsProgress.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResImprovementActions.ImprovementActionsProgress.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/ImprovementActions/Index?stat=O&sortOrder=init">@Resources.Shared.lblNavImprovementActions</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResImprovementActions.ImprovementActionsProgress.lblTitle</a><span class="divider"></span>
+    </li>
+</ul>
+
+
+<script>
+    $(document).ready(function () {
+
+        function loadCorrectiveActionsAndon() {
+            $('#imgLoadCorrectiveActions').fadeIn();
+            $.ajax({
+                url: "@Url.Action("ImprovementActionsProgressAndon", "ImprovementActions")",
+                type: 'GET',
+            data:{
+                },
+            dataType: 'html' ,
+            success: function(result) {
+                $('#divAndonCorrectiveActions').html(result);
+                $('#imgLoadAndonCorrectiveActions').fadeOut();
+                var dateNow = new Date();
+                $('#lblInfoUpdate').html('Last update: ' + dateNow.getDate() + '/' + (dateNow.getMonth() + 1)
+                    + '/' + dateNow.getFullYear() + ' ' + dateNow.getHours() + ':' + dateNow.getMinutes() + ':'
+                    + dateNow.getSeconds());
+            },
+            error: function(result){ alert("Error loadCorrectiveActions" + result);},
+            warning: function(result){alert("Warning loadCorrectiveActions" + result);},
+            });
+    }
+
+
+        loadCorrectiveActionsAndon();
+        myVar = setInterval(loadCorrectiveActionsAndon, 60000);
+        
+    });
+</script>
+<div id="lblInfoUpdate" class="text-info"></div>
+<img src="~/img/iconLoading.gif" id="imgLoadAndonCorrectiveActions" style="width:40px;height: 40px;" />
+<div id="divAndonCorrectiveActions"></div>

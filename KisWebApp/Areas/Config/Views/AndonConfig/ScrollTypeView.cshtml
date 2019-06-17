@@ -1,0 +1,70 @@
+﻿@if (ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+            $("#imgSaving").fadeOut();
+            var scrollType = @ViewBag.ScrollType;
+            $("#ScrollType" + scrollType).prop("checked", true);
+            if (scrollType == 0) {
+                $("#ContinuousScrollParams").fadeOut();
+            }
+            else {
+                $("#ContinuousScrollParams").fadeIn();
+            }
+
+
+            $('input[type=radio][name=ScrollType]').change(function () {
+                if (this.value == 0) {
+                    $("#ContinuousScrollParams").fadeOut();
+                }
+                else if (this.value == 1) {
+                    $("#ContinuousScrollParams").fadeIn();
+                }
+            });
+
+            $("#imgSave").click(function () {
+                var ScrollType = $('input[name=ScrollType]:checked').val();
+                var txtScrollParams = "";
+                if (ScrollType == "0") { }
+                else if (ScrollType == "1") {
+                    txtScrollParams = $("#txtContinuousScrollGoSpeed").val() + ";" + $("#txtContinuousScrollBackSpeed").val();
+                }
+
+                $.ajax({
+                    url: "@Url.Action("ScrollTypeEdit", "AndonConfig")",
+                    type: 'POST',
+                    data: {
+                        ScrollType: ScrollType,
+                        ScrollParams: txtScrollParams
+                    },
+                    success: function (result) {
+                    },
+                    error: function (result) { $("#imgLoadScrollView").fadeOut(); alert("Error loadScrollTypeView" + result); },
+                    warning: function (result) { $("#imgLoadScrollView").fadeOut(); alert("Warning loadScrollTypeView" + result); },
+                });
+                $("#imgSaving").fadeOut();
+            });
+
+        });
+    </script>
+    <div class="row-fluid">
+        <div class="span12">
+            <input type="radio" name="ScrollType" value="0" id="ScrollType0">@ResScrollTypeView.ScrollTypeView.lblNoScroll<br />
+            <input type="radio" name="ScrollType" value="1" id="ScrollType1">@ResScrollTypeView.ScrollTypeView.lblContinuousScroll<br />
+            <div id="ContinuousScrollParams">
+                @ResScrollTypeView.ScrollTypeView.lblContinuousScrollGoSpeed<input type="number" min="0" id="txtContinuousScrollGoSpeed" value="@ViewBag.ContinuousScrollGoSpeed" /><br />
+                @ResScrollTypeView.ScrollTypeView.lblContinuousScrollBackSpeed<input type="number" min="0" id="txtContinuousScrollBackSpeed" value="@ViewBag.ContinuousScrollBackSpeed" />
+            </div>
+            <input type="image" id="imgSave" src="~/img/iconSave.jpg" style="min-width:20px;max-width:30px;" />
+            <input type="image" id="imgSaving" src="~/img/iconLoading.gif" style="min-width:20px;max-width:30px;" />
+        </div>
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResScrollTypeView.ScrollTypeView.lblNoAuth
+        </div>
+    </div>
+}

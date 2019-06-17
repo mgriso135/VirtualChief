@@ -1,0 +1,125 @@
+﻿@model IEnumerable<KIS.App_Code.TaskProduzione>
+
+@if (ViewBag.authX)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <script>
+            $(document).ready(function () {
+
+                $(".btnStartTask").click(function () {
+                    var rowid = "row_" + $(this).val();
+                    $.ajax({
+                        url: "@Url.Action("StartTask", "WebGemba")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        TaskID: $(this).val()
+                    },
+                    success: function (result) {
+                        if(result=="1")
+                        {
+                            $("#" + rowid).fadeOut();
+                            window.location.href = window.location.href;
+                        }
+                        else if(result=="2")
+                        {
+                            $("#lblInfo").html("@ResWebGemba.ListTasksAvailable.lblErrNotAuthorized");
+                        }
+                        else if (result == "3") {
+                            $("#lblInfo").html("@ResWebGemba.ListTasksAvailable.lblErrToManyTasks");
+                        }
+                    },
+                    error: function (result) {
+                        //alert("Error");
+                        //$("#lblInfo").html("Error");
+                    },
+                    warning: function (result) {
+                        //alert("Warning");
+                        //$("#lblInfo").html("Warning");
+                    }
+                });
+                });
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="lblInfo" class="text-info" />
+                <table class="table table-hover" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@ResWebGemba.ListTasksAvailable.lblTHTaskID</th>
+                            <th>@ResWebGemba.ListTasksAvailable.lblTHProduct</th>
+                            <th>@ResWebGemba.ListTasksInExecution.lblTHOrder</th>
+                            <th>@ResWebGemba.ListTasksInExecution.lblTHCustomerName</th>
+                            <th>@ResWebGemba.ListTasksAvailable.lblTHProductName</th>
+                            <th>@ResWebGemba.ListTasksAvailable.lblTHTaskName</th>
+                            <th>@ResWebGemba.ListTasksAvailable.lblTHQuantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
+                            KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(art.Reparto);
+                            var bgcolor = "";
+                            DateTime EarlyStart = m.EarlyStart;
+                            DateTime LateStart = m.LateStart;
+                            DateTime Now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
+                            if (LateStart <= Now)
+                            {
+                                bgcolor = "#FF0000";
+                            }
+                            else if (EarlyStart <= Now)
+                            {
+                                bgcolor = "#FFFF00";
+                            }
+                            else
+                            {
+                                bgcolor = "#FFFFFF";
+                            }
+                        <tr style="background-color: @bgcolor;" id="row_@m.TaskProduzioneID">
+                            <td>
+                                <input type="image" class="btnStartTask"
+                                       style="min-width:20px; max-width:30px;"
+                                       src="~/img/iconPlay.png"
+                                       value="@m.TaskProduzioneID" />
+                            </td>
+                            <td>@m.TaskProduzioneID</td>
+                            <td>@m.ArticoloID/@m.ArticoloAnno</td>
+                            @if(m.ExternalID.Length>0)
+                            {
+                                <td>@m.ExternalID</td>
+                            }
+                            else
+                            {
+                            <td>@art.Commessa/@art.AnnoCommessa</td>
+                            }                            
+                            <td>@m.CustomerName</td>
+                            <td>@art.Proc.variant.nomeVariante</td>
+                            <td>@m.Name</td>
+                            <td>@m.QuantitaProdotta/@m.QuantitaPrevista</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResWebGemba.ListTasksAvailable.lblZeroTasks
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResWebGemba.ListTasksAvailable.lblErrUserNotAuthorized
+        </div>
+    </div>}

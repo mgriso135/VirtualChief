@@ -1,0 +1,291 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="lblAddProdottoBlank" xml:space="preserve">
+    <value>Aggiungi un processo produttivo vuoto</value>
+  </data>
+  <data name="lblCopiaPostazioni" xml:space="preserve">
+    <value>Copia le postazioni assegnate ai tasks</value>
+  </data>
+  <data name="lblCopiaProd" xml:space="preserve">
+    <value>Copia un processo produttivo esistente</value>
+  </data>
+  <data name="lblCopiaReparti" xml:space="preserve">
+    <value>Copia reparti assegnati al prodotto</value>
+  </data>
+  <data name="lblCopiaTempiCiclo" xml:space="preserve">
+    <value>Copia tempi ciclo</value>
+  </data>
+  <data name="lblDeleteKO1" xml:space="preserve">
+    <value>Attenzione: processo non cancellato. E' necessario cancellare tutte le sue varianti ed i suoi sotto-processi.</value>
+  </data>
+  <data name="lblDeleteKO2" xml:space="preserve">
+    <value>Attenzione: processo non cancellato. E' necessario rimuovere l'associazione con tutti i reparti produttivi in cui esso è presente.</value>
+  </data>
+  <data name="lblDeleteKO3" xml:space="preserve">
+    <value>Attenzione: devi cancellare tutte le varianti prima di procedere alla cancellazione del processo.</value>
+  </data>
+  <data name="lblDeleteOK" xml:space="preserve">
+    <value>Processo cancellato correttamente.</value>
+  </data>
+  <data name="lblDeleteProcess" xml:space="preserve">
+    <value>Cancella il processo</value>
+  </data>
+  <data name="lblDescrizione" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="lblErrorCopy" xml:space="preserve">
+    <value>Attenzione: si è verificato un errore. Il prodotto potrebbe essere stato copiato parzialmente. Ricaricare la pagina e verificare completamente il prodotto creato.</value>
+  </data>
+  <data name="lblErrorCreatingProcess" xml:space="preserve">
+    <value>E' avvenuto un errore durante la creazione del processo produttivo.</value>
+  </data>
+  <data name="lblErrorQueryString" xml:space="preserve">
+    <value>Querystring variante presente ma non esiste nessuna variante con quell'id</value>
+  </data>
+  <data name="lblErrorUnknown" xml:space="preserve">
+    <value>Si è verificato un errore imprevisto.</value>
+  </data>
+  <data name="lblGoBackToFather" xml:space="preserve">
+    <value>Torna al processo padre</value>
+  </data>
+  <data name="lblGoToLineaProdotti" xml:space="preserve">
+    <value>Torna all'elenco linee di prodotto</value>
+  </data>
+  <data name="lblModificaOK" xml:space="preserve">
+    <value>Modifica eseguita con successo.</value>
+  </data>
+  <data name="lblNavAssociaProcPost" xml:space="preserve">
+    <value>3. Associa i task alle postazioni di esecuzione</value>
+  </data>
+  <data name="lblNavAssociaProcRep" xml:space="preserve">
+    <value>2. Associa il processo produttivo al reparto</value>
+  </data>
+  <data name="lblNavCreaProc" xml:space="preserve">
+    <value>1. Crea il processo produttivo</value>
+  </data>
+  <data name="lblNavDettaglioProc" xml:space="preserve">
+    <value>Dettaglio processo</value>
+  </data>
+  <data name="lblNavProcessMan" xml:space="preserve">
+    <value>Process Manager</value>
+  </data>
+  <data name="lblNome" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="lblNuovoProcDefault" xml:space="preserve">
+    <value>New Default Version</value>
+  </data>
+  <data name="lblNuovoProdotto" xml:space="preserve">
+    <value>Nuovo prodotto</value>
+  </data>
+  <data name="lblPermessoKo" xml:space="preserve">
+    <value>Non hai il permesso di visualizzare e di gestire i processi.</value>
+  </data>
+  <data name="lblPERT" xml:space="preserve">
+    <value>PERT</value>
+  </data>
+  <data name="lblProdotto" xml:space="preserve">
+    <value>Prodotto</value>
+  </data>
+  <data name="lblReqField" xml:space="preserve">
+    <value>* Campo obbligatorio</value>
+  </data>
+  <data name="lblRevisione1" xml:space="preserve">
+    <value>Revisione</value>
+  </data>
+  <data name="lblRevisione2" xml:space="preserve">
+    <value>del</value>
+  </data>
+  <data name="lblRiutilizzaTasks" xml:space="preserve">
+    <value>Riutilizza i tasks esistenti</value>
+  </data>
+  <data name="lblSelProdotto" xml:space="preserve">
+    <value>Seleziona un prodotto</value>
+  </data>
+  <data name="lblTipoDiagramma" xml:space="preserve">
+    <value>Tipo di diagramma</value>
+  </data>
+  <data name="lblTTAddProdottoBlank" xml:space="preserve">
+    <value>Aggiungi un processo produttivo vuoto</value>
+  </data>
+  <data name="lblTTCancellaProcessoProd" xml:space="preserve">
+    <value>Cancella il processo produttivo</value>
+  </data>
+  <data name="lblTTModifica" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="lblTTModificaProcessoProd" xml:space="preserve">
+    <value>Modifica il processo produttivo</value>
+  </data>
+  <data name="lblTTNONSalvaModifiche" xml:space="preserve">
+    <value>NON salvare le modifiche</value>
+  </data>
+  <data name="lblTTNuovoProcesso" xml:space="preserve">
+    <value>Crea una nuova revisione del processo produttivo</value>
+  </data>
+  <data name="lblTTSalvaModifiche" xml:space="preserve">
+    <value>Salva le modifiche</value>
+  </data>
+  <data name="lblValueStream" xml:space="preserve">
+    <value>Value-Stream</value>
+  </data>
+  <data name="lblVSM" xml:space="preserve">
+    <value>VSM</value>
+  </data>
+  <data name="lblShowAddParam" xml:space="preserve">
+    <value>Aggiungi parametri al prodotto</value>
+  </data>
+  <data name="lblParamCategory" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="lblParamDescription" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="lblParamIsFixed" xml:space="preserve">
+    <value>Valore fisso</value>
+  </data>
+  <data name="lblParamIsRequired" xml:space="preserve">
+    <value>Obbligatorio</value>
+  </data>
+  <data name="lblParamName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="lblParamAddError" xml:space="preserve">
+    <value>Si è verificato un errore durante l'aggiunta del parametro.</value>
+  </data>
+  <data name="lblParamErrCategory" xml:space="preserve">
+    <value>Attenzione: selezionare una categoria</value>
+  </data>
+  <data name="lblParamErrName" xml:space="preserve">
+    <value>Attenzione: inserire un nome del parametro</value>
+  </data>
+  <data name="lblAltParamCategoryManagement" xml:space="preserve">
+    <value>Gestione categorie di parametro</value>
+  </data>
+  <data name="lblCopyParameters" xml:space="preserve">
+    <value>Copia i parametri del prodotto</value>
+  </data>
+  <data name="lblExternalID" xml:space="preserve">
+    <value>Codice prodotto</value>
+  </data>
+  <data name="lblMeasurementUnit" xml:space="preserve">
+    <value>Unità di misura</value>
+  </data>
+</root>

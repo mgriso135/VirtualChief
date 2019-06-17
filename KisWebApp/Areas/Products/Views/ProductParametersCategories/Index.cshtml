@@ -1,0 +1,188 @@
+﻿@model IEnumerable<KIS.App_Code.ProductParametersCategory>
+
+@{
+    ViewBag.Title = ResProducts.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResProducts.Index.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Processi/MacroProcessi.aspx">
+            @ResProducts.Index.lblNavProducts</a><span class="divider"></span></li>
+    <li>
+        <a href="~/Products/ProductParametersCategories/Index">
+            @ResProducts.Index.lblNavParameters</a><span class="divider"></span></li>
+    <li>
+        <a href="@Request.RawUrl">
+            @ResProducts.Index.lblNavParametersCategories</a><span class="divider"></span></li>
+</ul>
+@if (ViewBag.authR)
+{
+    if (ViewBag.authW)
+    {
+        <script>
+            $(document).ready(function () {
+                $('.btnRemoveCategory').click(function () {
+                    var cAct = $(this).val();
+
+                    if (window.confirm("@Server.HtmlDecode(ResProducts.Index.lblConfirmDelete)")) {
+                        var rowToDelete = "#row_" + cAct;
+                        var objBtnEdit = "#btnEditCategory_" + $(this).val();
+                        $(this).fadeOut();
+                        $(objBtnEdit).fadeOut();
+                        $.ajax({
+                            //url: '/Quality/NonCompliances/NCProductDel',
+                            url: "@Url.Action("Delete", "ProductParametersCategories")",
+                            type: 'POST',
+                            data: {
+                                catID: cAct
+                            },
+                            success: function (data) {
+                                if (data == "False") {
+                                    alert("@(ResProducts.Index.lblErrorDelete)"); $(this).fadeIn(); $(objBtnEdit).fadeIn();
+                                } else { $(rowToDelete).remove(); }
+                            },
+                            statusCode: {
+                                404: function (content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).fadeIn(); $(objBtnEdit).fadeIn },
+                                500: function (content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).fadeIn(); $(objBtnEdit).fadeIn }
+                            },
+                            error: function (req, status, errorObj) {
+                                alert("Error");
+                                $(this).fadeIn();
+                                $(objBtnEdit).fadeIn
+                            }
+
+                        });
+                    }
+                });
+
+
+                $('.btnEditCategory').click(function () {
+                    var objName = "#txtName_" + $(this).val();
+                    var objDesc = "#txtDescription_" + $(this).val();
+                    var lblName = "#lblName_" + $(this).val();
+                    var lblDesc = "#lblDescription_" + $(this).val();
+                    var objBtnDel = "#btnRemoveCategory_" + $(this).val();
+                    var objBtnEdit = "#btnEditCategory_" + $(this).val();
+                    var objBtnSave = "#btnSaveCategory_" + $(this).val();
+
+                    if ($(objName).is(':visible')) {
+                        $(objName).fadeOut();
+                        $(objDesc).fadeOut();
+                        $(lblName).fadeIn();
+                        $(lblDesc).fadeIn();
+                        $(objBtnDel).fadeIn();
+                        $(objBtnEdit).fadeIn();
+                        $(objBtnSave).fadeOut();
+                    }
+                    else {
+                        $(lblName).fadeOut();
+                        $(lblDesc).fadeOut();
+                        $(objName).fadeIn();
+                        $(objDesc).fadeIn();
+                        $(objBtnDel).fadeOut();
+                        $(objBtnEdit).fadeOut();
+                        $(objBtnSave).fadeIn();
+                    }
+                });
+
+                $('.btnSaveCategory').click(function () {
+                    var objName = "#txtName_" + $(this).val();
+                    var objDesc = "#txtDescription_" + $(this).val();
+                    var lblName = "#lblName_" + $(this).val();
+                    var lblDesc = "#lblDescription_" + $(this).val();
+                    var objBtnDel = "#btnRemoveCategory_" + $(this).val();
+                    var objBtnEdit = "#btnEditCategory_" + $(this).val();
+                    var objBtnSave = "#btnSaveCategory_" + $(this).val();
+
+                    var catName = $('<div/>').text($(objName).val()).html();
+                    var catDesc = $('<div/>').text($(objDesc).val()).html();
+                    $.ajax({
+                        //url: '/Quality/NonCompliances/NCProductDel',
+                        url: "@Url.Action("Edit", "ProductParametersCategories")",
+                        type: 'POST',
+                    data: {
+                        CategoryID: $(this).val(),
+                        CategoryName: catName,
+                        CategoryDescription: catDesc
+                    },
+                    success: function (data) {
+                        if (data == "False") {
+                            alert("@ResProducts.Index.lblEditError");
+                        } else {
+                            $(lblName).html(catName);
+                            $(lblDesc).html(catDesc);
+                        }
+                        $(objName).fadeOut();
+                        $(objDesc).fadeOut();
+                        $(lblName).fadeIn();
+                        $(lblDesc).fadeIn();
+                        $(objBtnDel).fadeIn();
+                        $(objBtnEdit).fadeIn();
+                        $(objBtnSave).fadeOut();
+                    },
+                    statusCode: {
+                        404: function (content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).fadeIn(); },
+                        500: function (content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).fadeIn(); }
+                    },
+                    error: function (req, status, errorObj) {
+                        alert("@ResProducts.Index.lblEditError");
+                    }
+
+                });
+
+                        
+                });
+
+            });
+        </script>
+
+        <a href="~/Products/ProductParametersCategories/Create">@ResProducts.Index.lblAddCategory</a>
+    }
+    <div class="row-fluid">
+        <div class="span12">
+            @if (Model != null && Model.Count() > 0)
+            {
+            <table class="table table-hover table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@ResProducts.Index.lblTHCatName</th>
+                        <th>@ResProducts.Index.lblTHCatDescription</th>
+                    </tr>
+                </thead>
+
+                @foreach (var m in Model)
+                {
+                    <tr id="row_@m.ID">
+                        <td>
+                            @if (ViewBag.authW)
+                    {<input class="btnRemoveCategory" id="btnRemoveCategory_@m.ID" type="image" src="~/img/iconDelete.png" style="min-width:20px; max-width:30px;" value="@m.ID" />
+                        <input type="image" class="btnEditCategory" id="btnEditCategory_@m.ID" src="~/img/edit.png" style="min-width:20px; max-width:30px;" value="@m.ID"/>
+                            }
+                    </td>
+                    <td><span id="lblName_@m.ID">@Server.HtmlDecode(Server.HtmlDecode(m.Name))</span>
+                        <input type="text" id="txtName_@m.ID" value="@Server.HtmlDecode(Server.HtmlDecode(m.Name))" style="display:none;"/>
+                        </td>
+                    <td><span id="lblDescription_@m.ID">@Server.HtmlDecode(Server.HtmlDecode(m.Description))</span>
+                    <textarea id="txtDescription_@m.ID" style="display:none;">@Server.HtmlDecode(Server.HtmlDecode(m.Description))</textarea>
+</td>
+                        <td>
+                            <input type="image" id="btnSaveCategory_@m.ID" class="btnSaveCategory" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px; display:none;" value="@m.ID" />
+                        </td>
+                </tr>
+                }
+            </table>
+            }
+            else
+            {
+            <div>@ResProducts.Index.lblNoCategories</div>
+            }
+            </div></div>
+            }
+            else
+            {
+            <div class="row-fluid">
+        <div class="span12">@ResProducts.Index.lblNoAuth</div></div>
+            }

@@ -1,0 +1,61 @@
+﻿@model KIS.App_Sources.WorkInstructions.WorkInstruction
+
+
+@{
+    /**/
+
+    ViewBag.Title = ResWorkInstructions.WiEdit.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResWorkInstructions.WiEdit.lblTitle</h3>
+
+@if (ViewBag.authW)
+{
+    if (Model != null)
+    {
+        <!-- Current manual -->
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="tblEditManual">
+                    <tr>
+                        <td>@ResWorkInstructions.WiEdit.lblName</td>
+                        <td><input type="text" class="input-group-text" id="lblName" value="@Model.Name" /></td>
+                        <td>@ResWorkInstructions.WiEdit.lblDescription</td>
+                        <td><input type="text" class="input-group-text" id="lblName" value="@Model.Description" /></td>
+                        <td>@ResWorkInstructions.WiEdit.lblUploadDate</td>
+                        <td>@Model.UploadDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!--Labels-->
+        <div class="row-fluid">
+            <div class="span12">
+
+            </div>
+        </div>
+        <!-- Older versions (read only) -->
+        <div class="row-fluid">
+            <div class="span12">
+                
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResWorkInstructions.WiEdit.lblWINotFound
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResWorkInstructions.WiEdit.lblUserNotAuthorized
+        </div>
+    </div>
+}

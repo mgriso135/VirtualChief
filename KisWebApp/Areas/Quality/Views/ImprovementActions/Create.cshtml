@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@Resources.Shared.lblNavCreate</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/ImprovementActions/Index?stat=O&sortOrder=init">@Resources.Shared.lblNavImprovementActions</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@Resources.Shared.lblNavCreate</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if(ViewBag.authenticated)
+{ 
+    if(!ViewBag.result)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResImprovementActions.Create.lblError
+                <br />
+                @ViewBag.Message
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResImprovementActions.Create.lblNotLoggedIn
+        </div>
+    </div>
+}
+

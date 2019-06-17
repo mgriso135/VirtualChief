@@ -1,0 +1,92 @@
+﻿@model IEnumerable<KIS.App_Sources.AnalysisNCCause>
+
+
+@if (ViewBag.authenticated)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        var lista2 = Model.GroupBy(m => m.CauseName)
+                            .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                            .OrderByDescending(x => x.YAxys)
+                            .ToList();
+        <table class="table table-bordered table-striped table-condensed table-hover">
+            <thead>
+                <tr>
+                    <th>@ResAnalysis.NCCausesPerPeriodList.lblTHCauseName</th>
+                    <th>@ResAnalysis.NCCausesPerPeriodList.lblTHQuantity</th>
+                    </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in lista2)
+                {
+                    <tr>
+                        <td>@m.XAxys</td>
+                        <td>@m.YAxys</td>
+                    </tr>
+                }
+            </tbody>
+            </table>
+
+                    <table class="table table-bordered table-striped table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHCauseID</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHCauseName</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHNCID</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHOpeningDate</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHDescription</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHImmAction</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHCost</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHStatus</th>
+                                <th>@ResAnalysis.NCCausesPerPeriodList.lblTHClosureDate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                <tr>
+                                    <td>@m.CauseID</td>
+                                    <td>@m.CauseName</td>
+                                    <td>@m.NCID/@m.NCYear</td>
+                                    <td>@m.OpeningDate</td>
+                                    @if (m.NCDescription.Length <= 100)
+                                    {
+                                        <td>@Server.HtmlDecode(m.NCDescription)</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Server.HtmlDecode(m.NCDescription.Substring(0, 100))...</td>
+                                    }
+
+                                    @if (m.ImmediateAction.Length <= 100)
+                                    {
+                                        <td>@Server.HtmlDecode(m.ImmediateAction)</td>
+                                    }
+                                    else
+                                    {
+                                        <td>@Server.HtmlDecode(m.ImmediateAction.Substring(0, 100))...</td>
+                                    }
+                                    <td>@m.Cost</td>
+                                    <td>@m.Status</td>
+                                    @if (m.Status == 'C')
+                                    {
+                                        <td>@m.ClosureDate</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+    }
+    else
+    {
+                    <div class="row-fluid">@ResAnalysis.NCCausesPerPeriodList.lblZeroCauses</div>
+                }
+            }
+            else
+            {
+                    <div class="row-fluid">@ResAnalysis.NCCausesPerPeriodList.lblErrNoAuth</div>
+    }

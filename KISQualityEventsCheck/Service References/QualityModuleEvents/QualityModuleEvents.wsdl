@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="NotifyImprovementActionsDelays">
+        <s:complexType />
+      </s:element>
+      <s:element name="NotifyImprovementActionsDelaysResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NotifyImprovementActionsDelaysResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="NotifyCorrectiveActionsDelays">
+        <s:complexType />
+      </s:element>
+      <s:element name="NotifyCorrectiveActionsDelaysResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NotifyCorrectiveActionsDelaysResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="NotifyImprovementActionsDelaysSoapIn">
+    <wsdl:part name="parameters" element="tns:NotifyImprovementActionsDelays" />
+  </wsdl:message>
+  <wsdl:message name="NotifyImprovementActionsDelaysSoapOut">
+    <wsdl:part name="parameters" element="tns:NotifyImprovementActionsDelaysResponse" />
+  </wsdl:message>
+  <wsdl:message name="NotifyCorrectiveActionsDelaysSoapIn">
+    <wsdl:part name="parameters" element="tns:NotifyCorrectiveActionsDelays" />
+  </wsdl:message>
+  <wsdl:message name="NotifyCorrectiveActionsDelaysSoapOut">
+    <wsdl:part name="parameters" element="tns:NotifyCorrectiveActionsDelaysResponse" />
+  </wsdl:message>
+  <wsdl:portType name="QualityModuleEventsSoap">
+    <wsdl:operation name="NotifyImprovementActionsDelays">
+      <wsdl:input message="tns:NotifyImprovementActionsDelaysSoapIn" />
+      <wsdl:output message="tns:NotifyImprovementActionsDelaysSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyCorrectiveActionsDelays">
+      <wsdl:input message="tns:NotifyCorrectiveActionsDelaysSoapIn" />
+      <wsdl:output message="tns:NotifyCorrectiveActionsDelaysSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="QualityModuleEventsSoap" type="tns:QualityModuleEventsSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="NotifyImprovementActionsDelays">
+      <soap:operation soapAction="http://tempuri.org/NotifyImprovementActionsDelays" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyCorrectiveActionsDelays">
+      <soap:operation soapAction="http://tempuri.org/NotifyCorrectiveActionsDelays" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="QualityModuleEventsSoap12" type="tns:QualityModuleEventsSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="NotifyImprovementActionsDelays">
+      <soap12:operation soapAction="http://tempuri.org/NotifyImprovementActionsDelays" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyCorrectiveActionsDelays">
+      <soap12:operation soapAction="http://tempuri.org/NotifyCorrectiveActionsDelays" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="QualityModuleEvents">
+    <wsdl:port name="QualityModuleEventsSoap" binding="tns:QualityModuleEventsSoap">
+      <soap:address location="http://localhost:3358/Eventi/QualityModuleEvents.asmx" />
+    </wsdl:port>
+    <wsdl:port name="QualityModuleEventsSoap12" binding="tns:QualityModuleEventsSoap12">
+      <soap12:address location="http://localhost:3358/Eventi/QualityModuleEvents.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

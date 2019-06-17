@@ -1,0 +1,34 @@
+﻿@if (ViewBag.authenticated)
+{
+    foreach (var cat in Model.Categories)
+    {
+        <span class="badge badge-info" id="badgeCat_@cat.ID">@Server.HtmlDecode(cat.Name)&nbsp;<input type="image" src="~/img/iconClose.png" style="height:15px;" class="del-category" value="@cat.ID" /></span>
+    }
+    <script>
+    // Delete category
+    $('.del-category').click(function () {
+        $(this).hide();
+        var badgeID = "#badgeCat_" + $(this).val();
+        $.ajax({
+            //url: '/Quality/NonCompliances/NCCategoriesDel',
+            url: "@Url.Action("NCCategoriesDel", "NonCompliances")",
+            type: 'POST',
+            data:{
+                ID: @Model.ID,
+                Year: @Model.Year,
+                catID: $(this).val()
+            },
+            success: function(data) { $(badgeID).remove(); },
+            statusCode : {
+                404: function(content) { $(this).show(); alert('Error'); },
+                500: function(content) { $(this).show(); alert('Error'); }
+            },
+            error: function(req, status, errorObj) {
+                $(this).show();
+            }
+
+        });
+
+    });
+    </script>
+}

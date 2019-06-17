@@ -1,0 +1,142 @@
+﻿
+@{
+    ViewBag.Title = ResWebGemba.ListWorkstationsTasks.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.authX)
+{
+    if (ViewBag.WorkstationID != -1)
+    {
+        <script>
+            $(document).ready(function () {
+                loadTasksInExecution();
+                loadAvailableTasks();
+
+                function loadTasksInExecution() {
+                    $.ajax({
+                        url: "@Url.Action("ListTasksInExecution", "WebGemba")",
+                        type: 'GET',
+                        dataType: "html",
+                        data: {
+                            WorkstationID: @ViewBag.WorkstationID,
+                            user: "@ViewBag.user"
+                        },
+                        success: function (result) {
+                            $("#frmTasksInExecution").html(result);
+                        },
+                        error: function (result) {
+                            //alert("Error");
+                            //$("#frmTasksInExecution").html("Error");
+                        },
+                        warning: function (result) {
+                            //alert("Warning");
+                            //$("#frmTasksInExecution").html("Warning");
+                        }
+                    });
+                    //var loadWstCmpl = setTimeout(loadTasksInExecution, 5000);
+                }
+
+                function loadAvailableTasks() {
+                    $.ajax({
+                        url: "@Url.Action("ListTasksAvailable", "WebGemba")",
+                        type: 'GET',
+                        dataType: "html",
+                        data: {
+                            WorkstationID: @ViewBag.WorkstationID,
+                            user: "@ViewBag.user"
+                        },
+                        success: function (result) {
+                            $("#frmAvailableTasks").html(result);
+                        },
+                        error: function (result) {
+                            //alert("Error");
+                            //$("#frmAvailableTasks").html("Error");
+                        },
+                        warning: function (result) {
+                            //alert("Warning");
+                            //$("#frmAvailableTasks").html("Warning");
+                        }
+                    });
+                    var loadWstCmpl = setTimeout(loadAvailableTasks, 5000);
+                }
+
+                function loadKPIWorkstation() {
+                    $.ajax({
+                        url: "@Url.Action("WorkstationKPI", "WebGemba")",
+                        type: 'POST',
+                        dataType: "html",
+                        data: {
+                            WorkstationID: @ViewBag.WorkstationID
+                        },
+                        success: function (result) {
+                            $("#frmKPIWorkstation").html(result);
+                        },
+                        error: function (result) {
+                            //alert("Error");
+                            //$("#frmAvailableTasks").html("Error");
+                        },
+                        warning: function (result) {
+                            //alert("Warning");
+                            //$("#frmAvailableTasks").html("Warning");
+                        }
+                    });
+                }
+
+                loadKPIWorkstation();
+
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span12">
+                <h3>@ViewBag.WorkstationName</h3>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <ul class="breadcrumb hidden-phone">
+                    <li>
+                        <a href="Index">@ResWebGemba.Index.lblNavWorkplace</a><span class="divider"></span>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Index", "WebGemba")">@ResWebGemba.Index.lblNavWebGemba</a><span class="divider"></span>
+                    </li>
+                    <li>
+                        <a href="@Request.RawUrl">@ViewBag.workstationName</a><span class="divider"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="frmKPIWorkstation" />
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="frmTasksInExecution" />
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="frmAvailableTasks" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResWebGemba.ListWorkstationsTasks.lblErrWorkstationNotFound
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResWebGemba.ListWorkstationsTasks.lblErrNoAuth
+        </div>
+    </div>
+}

@@ -1,0 +1,159 @@
+﻿@model IEnumerable<KIS.App_Sources.TaskProductionAnalysisResultStruct>
+
+@if (ViewBag.authR && Model != null && Model.Count() > 0)
+{
+    int periodType = 0;
+    try
+    {
+        periodType = Int32.Parse(ViewBag.periodType.ToString());
+    }
+    catch
+    {
+        periodType = 0;
+    }
+
+    Boolean groupProducts = true;
+    try
+    {
+        groupProducts = (Boolean)ViewBag.groupProducts;
+    }
+    catch
+    {
+        groupProducts = false;
+    }
+    int graphType = 0;
+    try
+    {
+        graphType = Int32.Parse(ViewBag.graphType.ToString());
+    }
+    catch
+    {
+        graphType = 0;
+    }
+    DateTime startPeriod = new DateTime(1970, 1, 1);
+    DateTime endPeriod = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+    try
+    {
+        startPeriod = (DateTime)ViewBag.startPeriod;
+        endPeriod = (DateTime)ViewBag.endPeriod;
+    }
+    catch
+    {
+
+    }
+    
+    <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['line'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+
+                var data = new google.visualization.DataTable();
+                 @Html.Raw(ViewBag.TaskFilter);
+
+               
+
+                var options = {
+                    chart: {
+                            title: '@ResTaskAnalysis.TaskPanel.lblChartTitle',
+                        subtitle: '@ResTaskAnalysis.TaskPanel.lblChartSubTitle' + ': @startPeriod.ToString("dd/MM/yyyy") - @endPeriod.ToString("dd/MM/yyyy")',
+
+                        },
+                    //width: 500,
+                    height: 500,
+                    legend: { position: "bottom", alignment: 'start' }
+                    };
+
+                    var chart = new google.charts.Line(document.getElementById('barchart_material'));
+
+                    chart.draw(data, google.charts.Line.convertOptions(options));
+                }
+    </script>
+
+
+
+    <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+
+
+
+    <table class="table table-hover table-striped table-condensed" width="100%">
+        <thead>
+            <tr>
+                @if (periodType == 0)
+                {
+                    <th>@ResTaskAnalysis.TaskPanel.lblEndProductionDate</th>
+                }
+                @if (periodType == 1)
+                {
+                    <th>@ResTaskAnalysis.TaskPanel.lblWeek/@ResTaskAnalysis.TaskPanel.lblYear</th>
+                }
+                @if (periodType == 2)
+                {
+                    <th>@ResTaskAnalysis.TaskPanel.lblMonth/@ResTaskAnalysis.TaskPanel.lblYear</th>
+                }
+                <th>@ResTaskAnalysis.TaskPanel.lblTaskName</th>
+                <th>@ResTaskAnalysis.TaskPanel.lblQuantity</th>
+                <th>@ResTaskAnalysis.TaskPanel.lblWorkingTime</th>
+                <th>@ResTaskAnalysis.TaskPanel.lblUnitaryWorkingTime</th>
+                <th>@ResTaskAnalysis.TaskPanel.lblMeanLeadTime</th>
+                <th>@ResTaskAnalysis.TaskPanel.lblDelays</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                double Quantity = 0.0;
+                double WorkingTime = 0.0;
+                double UnitaryWorkingTime = 0.0;
+                double LeadTime = 0.0;
+                double Delay = 0.0;
+
+                foreach (var m in Model)
+                {
+                    <tr id="row_@m.Month;@m.Year">
+                        @if (periodType == 0)
+                        {
+                            <td>@m.Day/@m.Month/@m.Year</td>
+                        }
+                        @if (periodType == 1)
+                        {
+                            <td>@m.Week/@m.Year</td>
+                        }
+                        @if (periodType == 2)
+                        {
+                            <td>@m.Month/@m.Year</td>
+                        }
+
+                        <td>@m.TaskName</td>
+                        <td>@m.Quantity</td>
+                        <td>@Math.Round(m.WorkingTime, 2)</td>
+                        <td>@Math.Round(m.UnitaryWorkingTime, 2)</td>
+                        <td>@Math.Round(m.LeadTime, 2)</td>
+                        <td>@Math.Round(m.Delay, 2)</td>
+
+                    </tr>
+
+                        Quantity += m.Quantity;
+                        WorkingTime += m.WorkingTime;
+                        UnitaryWorkingTime += m.UnitaryWorkingTime;
+                        LeadTime += m.LeadTime;
+                        Delay += m.Delay;
+                    }
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    @if (!groupProducts)
+                    {
+                        <td></td>
+                    }
+                    <td><b>@Quantity</b></td>
+                    <td><b>@Math.Round(WorkingTime, 2)</b></td>
+                    <td><b>@Math.Round(UnitaryWorkingTime / Model.Count(), 2)</b></td>
+                    <td><b>@Math.Round(LeadTime / Model.Count(), 2)</b></td>
+                    <td><b>@Math.Round(Delay, 2)</b></td>
+                </tr>
+            </tfoot>
+        </table>
+}

@@ -1,0 +1,140 @@
+﻿@model IEnumerable<KIS.App_Sources.ImprovementAction>
+
+@if (Model != null && Model.Count() > 0)
+{
+    <div class="row-fluid">
+        <div class="span12">
+
+            @foreach (var m in Model)
+            {
+                m.loadCorrectiveActions();
+                <table class="table table-condensed table-hover" style="border: 1px solid black;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHCurrentSituation</th>
+                            <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHExpectedResults</th>
+                            <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHiActEndDateExpected</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                            <a href="~/Quality/ImprovementActions/Update?ID=@m.ID&Year=@m.Year">
+                                <img src="~/img/iconView.png" style="min-width:30px; max-width:40px"/>
+                            </a>
+                            </td>
+                            @if (m.CurrentSituation.Length <= 100)
+                    {
+                                <td>@Server.HtmlDecode(Server.HtmlDecode(m.CurrentSituation))</td>
+                            }
+                            else
+                            {
+                                <td>@Server.HtmlDecode(Server.HtmlDecode(m.CurrentSituation.Substring(0, 100)))...</td>
+                            }
+                            @if (m.ExpectedResults.Length <= 100)
+                    {
+                                <td>@Server.HtmlDecode(Server.HtmlDecode(m.ExpectedResults))</td>
+                            }
+                            else
+                            {
+                                <td>@Server.HtmlDecode(Server.HtmlDecode(m.ExpectedResults.Substring(0, 100)))...</td>
+                            }
+                            @if(m.EndDateExpected.Year > 2000)
+                            { 
+                            <td>@m.EndDateExpected.ToString("dd/MM/yyyy")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="3">
+                                @if(m.CorrectiveActions.Count > 0)
+                                { 
+                                <table>
+                                    <tr>
+                                        <th></th>
+                                        <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHcActDescription</th>
+                                        <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHcActLeadTimeExpected</th>
+                                        <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHEarlyStart</th>
+                                        <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHLateFinish</th>
+                                        <th>@ResImprovementActions.ImprovementActionProgressAndon.lblTHcActStatus</th>
+                                    </tr>
+
+                                    @foreach (var c in m.CorrectiveActions)
+                                    {
+                                        var color = "";
+                                        if (c.Status != 'C')
+                                        {
+                                            KIS.App_Code.FusoOrario fuso = new KIS.App_Code.FusoOrario();
+                                            if (TimeZoneInfo.ConvertTimeToUtc(c.LateStart, fuso.tzFusoOrario) < DateTime.UtcNow && DateTime.UtcNow.AddDays(-1) < TimeZoneInfo.ConvertTimeToUtc(c.LateFinish, fuso.tzFusoOrario))
+                                            {
+                                                color = "yellow";
+                                            }
+                                            else if (DateTime.UtcNow.AddDays(-1) > TimeZoneInfo.ConvertTimeToUtc(c.LateFinish, fuso.tzFusoOrario))
+                                            {
+                                                color = "red";
+                                            }
+                                        }
+                                        <tr style="background-color: @color;">
+                                            <td><a href="~/Quality/ImprovementActions/CorrectiveActionEdit?ImprovementActionID=@m.ID&ImprovementActionYear=@m.Year&CorrectiveActionID=@c.CorrectiveActionID">
+                                                <img src="~/img/iconTask2.jpg" style="min-width:20px; max-width:30px; background: transparent;" /></a></td>
+                                            @if (c.Description.Length <= 100)
+                        {
+                                                <td>@Server.HtmlDecode(Server.HtmlDecode(c.Description))</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@Server.HtmlDecode(Server.HtmlDecode(c.Description.Substring(0, 100)))...</td>
+                                            }
+                                            <td>@c.LeadTimeExpected</td>
+                                            @if(c.EarlyStart.Year > 2000)
+                                            { 
+                                            <td>@c.EarlyStart.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            { <td></td>}
+                                            @if(c.LateFinish.Year > 2000)
+                                            { 
+                                            <td>@c.LateFinish.ToString("dd/MM/yyyy")</td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+                                            @if (c.Status == 'O')
+                        {
+                                                <td>@ResImprovementActions.ImprovementActionProgressAndon.lblOpen</td>
+                                            }
+                                            else if (c.Status == 'C')
+                                            {
+                                                <td>@ResImprovementActions.ImprovementActionProgressAndon.lblClosed</td>
+                                            }
+                                            else if(c.Status == 'I')
+                                            {
+                                                <td>@ResImprovementActions.ImprovementActionProgressAndon.lblExecuting</td>
+                                            }
+                                        </tr>
+                                    }
+                                </table>
+                                }
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <hr />
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResImprovementActions.ImprovementActionProgressAndon.lblNoDataFound</div>
+    </div>
+}

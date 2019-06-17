@@ -1,0 +1,118 @@
+﻿@model IEnumerable<KIS.App_Code.Postazione>
+
+@if (ViewBag.authX)
+{
+    <div class="row-fluid">
+        <div class="span12">
+            <div id="lblInfo" class="text-info"/>
+            @if (Model != null && Model.Count() > 0)
+            {
+                <script>
+                    $(document).ready(function () {
+
+                        $(".btnCheckOut").click(function () {
+                            $("#lblInfo").html("");
+                            var workstationID = $(this).val();
+                            $(this).hide();
+                            $.ajax({
+                                url: "@Url.Action("WorkstationCheckOut", "WebGemba")",
+                                type: 'GET',
+                            dataType: "html",
+                            data: {
+                                workstationID: workstationID
+                            },
+                            success: function (result) {
+                                if (result == "1")
+                                {
+                                    var rowid = "#row_" + workstationID;
+                                    $(rowid).hide();
+                                }
+                                else if (result == "2") {
+                                    $("#lblInfo").html("@ResWebGemba.ListWorkstationsActives.lblErrWorkstationNotFound");
+                                    $(this).show();
+                                }
+                                else if (result == "3") {
+                                    $("#lblInfo").html("@ResWebGemba.ListWorkstationsActives.lblErrNotAuthorized");
+                                    $(this).show();
+                                }
+                                else if(result=="4")
+                                {
+                                    $("#lblInfo").html("@ResWebGemba.ListWorkstationsActives.lblErrCheckOut");
+                                    $(this).show();
+                                }
+                                else
+                                {
+                                    $("#lblInfo").html("@ResWebGemba.ListWorkstationsActives.lblErrorGeneric");
+                                    $(this).show();
+                                }
+                            },
+                            error: function (result) {
+                                //alert("Error");
+                                $(this).show();
+                            },
+                            warning: function (result) {
+                                //alert("Warning");
+                                $(this).show();
+                            }
+                        });
+                        });
+
+                        $(".goInside").click(function () {
+                            window.location.href = "@Url.Action("ListWorkstationsTasks2", "WebGemba")?WorkstationID=" + $(this).val();
+                        });
+
+                    });
+                </script>
+                <table class="table table-condensed table-striped table-hover" width="100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@ResWebGemba.ListWorkstationsActives.lblTHWorkstation</th>
+                            <th>@ResWebGemba.ListWorkstationsActives.lblTHOtherUsers</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model)
+                        {
+                            <tr id="row_@p.id">
+                                <td style="vertical-align: middle;">
+                                    <input class="btnCheckOut" value="@p.id"
+                                           type="image" src="~/img/iconCheckIn7.jpg"
+                                           style="min-height:40px; max-height:40px;" />
+                                </td>
+                                <td style="vertical-align: middle;">@Server.HtmlDecode(p.name)</td>
+                                <td style="vertical-align: middle;">
+                                    @{
+                                        KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                                        p.loadUtentiLoggati();
+                                        foreach (var u in p.UtentiLoggati)
+                                        {
+                                            if(u!=curr.username)
+                                            { 
+                                            <div>@u</div>
+                                            }
+                                        }
+                                    }
+                                </td>
+                                <td><input class="goInside" type="image"
+                                            src="~/img/iconTask2.jpg" 
+                                           style="min-height:40px; max-height:40px;"
+                                           value="@p.id"/></td>
+                            </tr>
+                                        }
+                    </tbody>
+                </table>
+                                        }
+        </div>
+    </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="row-fluid">
+                                                <div class="span12">
+
+                                                </div>
+                                            </div>
+                                        }
+

@@ -1,0 +1,185 @@
+﻿@model IEnumerable<KIS.Areas.Workplace.Controllers.WebGembaController.StructTaskParameters>
+
+@if (ViewBag.authW)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <script>
+            $(document).ready(function () {
+                $(".btnAddParam").click(function () {
+                    var par = $(this).val().split('.');
+                    var txtValue = $("#val_" + par[0] + "" + par[1]).val();
+                    var txtName = $("#name_" + par[0] + "" + par[1]).val();
+
+                    $.ajax({
+                        url: "@Url.Action("AddTaskParameters", "WebGemba")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        TaskID: @ViewBag.TaskID,
+                        ParamID: par[1],
+                        ParamCategory: par[0],
+                        ParamName: txtName,
+                        ParamValue: $('<div/>').text(txtValue).html()
+                    },
+                        success: function (result) {
+                            //alert(result);
+                        if(result=="1")
+                        {
+                            $("#val_" + par[0] + "" + par[1]).fadeOut();
+                            $("#lblVal_" + par[0] + "" + par[1]).html(txtValue);
+                            $("#val_" + par[0] + "" + par[1]).fadeOut();
+                            $("#btnAddParam_" + par[0] + "" + par[1]).fadeOut();
+                            $("#btnDelParam_" + par[0] + "" + par[1]).fadeIn();
+                        }
+                        else if(result=="2")
+                        {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrUserNotAuthorized");
+                        }
+                        else if (result == "3") {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrParamAlreadySet");
+                        }
+                        else if (result == "4") {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrNonExistentParameter");
+                        }
+                        else if (result == "5") {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrAdding");
+                        }
+                        else {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrAdding");
+                        }
+                    },
+                    error: function (result) {
+                        //alert("Error");
+                        //$("#lblInfo").html("Error");
+                    },
+                    warning: function (result) {
+                        //alert("Warning");
+                        //$("#lblInfo").html("Warning");
+                    }
+                });
+                });
+
+                $(".btnDelParam").click(function () {
+                    var par = $(this).val().split('.');
+                    var txtValue = $("#val_" + par[0] + "" + par[1]).val();
+                    var txtName = $("#name_" + par[0] + "" + par[1]).val();
+
+                    $.ajax({
+                        url: "@Url.Action("DeleteTaskParameters", "WebGemba")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        TaskID: @ViewBag.TaskID,
+                        ParamCategory: par[0],
+                        ParamID: par[1],
+                    },
+                        success: function (result) {
+                        if(result=="1")
+                        {
+                            $("#lblVal_" + par[0] + "" + par[1]).html('');
+                            $("#val_" + par[0] + "" + par[1]).val('');
+                            $("#btnDelParam_" + par[0] + "" + par[1]).fadeOut();
+                            $("#val_" + par[0] + "" + par[1]).fadeIn();
+                            $("#btnAddParam_" + par[0] + "" + par[1]).fadeIn();
+                        }
+                        else if(result=="2")
+                        {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrUserNotAuthorized");
+                        }
+                        else if (result == "3") {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrGeneric");
+                        }
+                        else
+                        {
+                            $("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrGeneric");
+                        }
+                    },
+                    error: function (result) {
+                        //$("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrGeneric");
+                    },
+                    warning: function (result) {
+                        //$("#lblInfo").html("@ResWebGemba.ListTaskParameters.lblErrGeneric");
+                    }
+                });
+            });
+            });
+        </script>
+        <div id="lblInfo" class="text-info" />
+        <div class="row-fluid">
+            <div class="span12">
+ <table class="table">
+     <thead>
+         <tr>
+             <th>@ResWebGemba.ListTaskParameters.lblTHCategory</th>
+             <th>@ResWebGemba.ListTaskParameters.lblTHParamName</th>
+             <th>@ResWebGemba.ListTaskParameters.lblTHDescription</th>
+             <th></th>
+         </tr>
+     </thead>
+     <tbody>
+         @foreach (var m in Model)
+         {
+             <tr id="row_@m.ParameterCategory.ID@m.ParameterID">
+                 <td>@m.ParameterCategory.Name</td>
+                 <td>@m.Name<input type="hidden" id="name_@m.ParameterCategory.ID@m.ParameterID" value="@m.Name"/></td>
+                 <td><div id="lblVal_@m.ParameterCategory.ID@m.ParameterID">@m.Description</div></td>
+                 @{ var existent = "auto";
+                     var nonexistent = "none";
+                     if (m.Exists)
+                     {
+                         existent = "auto";
+                         nonexistent = "none";
+                     }
+                     else
+                     {
+                         existent = "none";
+                         nonexistent = "auto";
+                     }
+                     if(m.isFixed)
+                     {
+                         <td></td>
+                        <td></td>
+                     }
+                     else
+                     {
+                     <td><textarea id="val_@m.ParameterCategory.ID@m.ParameterID" style="display:@nonexistent"></textarea>
+                 </td>
+                     <td><input type="image" class="btnAddParam" id="btnAddParam_@m.ParameterCategory.ID@m.ParameterID"
+                                style="min-width:15px; max-width:20px;display:@nonexistent;"
+                                src="~/img/iconSave.jpg"
+                                value="@m.ParameterCategory.ID.@m.ParameterID"
+                                />
+                         <input type="image" class="btnDelParam" id="btnDelParam_@m.ParameterCategory.ID@m.ParameterID"
+                                style="min-width:15px; max-width:20px;display:@existent"
+                                src="~/img/iconDelete.png"
+                                value="@m.ParameterCategory.ID.@m.ParameterID" />
+                 </td>
+                     }
+                 }
+             </tr>
+               
+         }
+     </tbody>
+
+     </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResWebGemba.ListTaskParameters.lblNoItems
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResWebGemba.ListTaskParameters.lblErrUserNotAuthorized
+        </div>
+    </div>
+}

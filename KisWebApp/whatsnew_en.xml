@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Stories>
+  <Story id="2019/01">
+    <Date>02/01/2019</Date>
+    <Title>Workstation's key performance indicators</Title>
+    <Description>
+      <![CDATA[In the WebGemba, are shown the most valuable key performance indicators of each workstation, suc as:
+      <ul>
+      <li>Produced quantity</li>
+      <li>Delays</li>
+      <li>Lead time</li>
+      </ul>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/17">
+    <Date>31/12/2018</Date>
+    <Title>Manual recording of work intervals</Title>
+    <Description>
+      <![CDATA[From today it is possible to manually register / modify the work intervals registered by the operators. <br />
+       To access the new interface, go to Admin --> User Management <br />
+       Then click on the clock icon next to the desired user.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/12">
+    <Date>26/11/2018</Date>
+    <Title>Destination URL after login</Title>
+    <Description>
+      <![CDATA[Implemented the function to set an automatic login URL after login.<br />
+To set up your personalized login page, log in to your personal area (MyArea) and set your destination URL.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/15">
+    <Date>17/11/2018</Date>
+    <Title>Scrollable Andon</Title>
+    <Description>
+      <![CDATA[It is now possible to set the Continuous Scroll of the Andon, in order to display all the orders in progress and even those not yet started.
+       Furthermore, the scroll speed can be set. <br />
+       For the Andon Reparto, you can access the configuration of the department (Plant -> Departments) and access the "Scrolling" section. <br />
+       To configure the Complete Andon, you can access from the Admin -> Complete Andon Management menu
+      ]]>
+    </Description>
+  </Story>
+  <Story id="2018/10">
+    <Date>06/10/2018</Date>
+    <Title>Order External ID</Title>
+    <Description>
+      <![CDATA[With the external order code you can maintain the link between the data of your ERP and Virtual Chief
+      ]]>
+    </Description>
+  </Story>
+  <Story id="110">
+    <Date>09/11/2017</Date>
+    <Title>Quality Module</Title>
+    <Description>
+      <![CDATA[It now available as an option the Quality Management Module, with the following functions:
+      <ul>
+      <li>Non compliances' management - <a href="https://www.youtube.com/watch?v=niknol6ikUQ&t=336s" target="_blank">Watch the video</a></li>
+      <li>Non compliances' analysis and Risk Management - <a href="https://www.youtube.com/watch?v=ARWdOV0fTyE&t=49s" target="_blank">Watch the video</a></li>
+      <li>Improvement actions' management with 8D form, assignment of corrective actions to Team Members and Real time progress monitoring</li>
+      </ul>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="113">
+    <Date>31/07/2017</Date>
+    <Title>Automatic check-in and check-out from workstations</Title>
+      <Description>
+      <![CDATA[Often using the BARCODE GEMBA interface, the task of CHECK-IN and CHECK-OUT at a workstation can represent a significant burden on the activities.<br />
+Now you can configure Workstations to AUTOMATICALLY make check-in and check-out when using Gemba barcode]]>
+    </Description>
+  </Story>
+  <Story id="109">
+    <Date>16/07/2017</Date>
+    <Title>BugFix: user language selection</Title>
+      <Description>
+      <![CDATA[In the initial configuration you can now select the user's language.]]>
+    </Description>
+  </Story>
+  <Story id="107">
+    <Date>16/07/2017</Date>
+    <Title>Notice of expiration of the license of use</Title>
+      <Description>
+      <![CDATA[Now Kaizen Indicator System informs you 1 month in advance when your license expires.<br />Remember that in case of non-renewal, the service will be automatically stopped after 15 days from the expiry date.]]>
+    </Description>
+  </Story>
+  <Story id="0103">
+    <Date>01/07/2017</Date>
+    <Title>KIS Multilanguage</Title>
+    <Description>
+      <![CDATA[Now <i>Kaizen Indicator System</i> speaks three languages:
+      <ul>
+      <li>English</li>
+      <li>Spanish</li>
+      <li>Italian</li>
+      </ul>
+      System can be used by people of different countries because every user can choose the language that he prefers
+      to use Kaizen Indicato System.
+      ]]>
+    </Description>
+  </Story>
+</Stories>

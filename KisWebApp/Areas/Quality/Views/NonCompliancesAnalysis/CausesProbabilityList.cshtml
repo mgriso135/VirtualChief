@@ -1,0 +1,47 @@
+﻿@model IEnumerable<KIS.App_Sources.AnalysisNCCause>
+
+@if (ViewBag.authenticated)
+{
+
+    <h5>@ResAnalysis.CausesProbabilityList.lblTitle</h5>
+    @ResAnalysis.CausesProbabilityList.lblCauseDesc<br />
+    if (Model != null && Model.Count() > 0 && ViewBag.NcNumber > 0)
+    {
+        <img id="imgCategoriesGraph" src="@Url.Action("CausesProbabilityGraph", "NonCompliancesAnalysis")?start=@ViewBag.start&end=@ViewBag.end" />
+
+        var ncAnalys3 = Model.GroupBy(x => x.CauseName)
+        .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                .OrderByDescending(x => x.YAxys)
+                .ToList();
+
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+
+                    <th>@ResAnalysis.CausesProbabilityList.lblTHCauses</th>
+                    <th>@ResAnalysis.CausesProbabilityList.lblTHFrequency</th>
+                    <th>@ResAnalysis.CausesProbabilityList.lblTHFrequencyRel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in ncAnalys3)
+                {
+                    <tr>
+                        <td>@m.XAxys</td>
+                        <td>@m.YAxys</td>
+                        <td>@Math.Round((100 * (double)m.YAxys / (double)ViewBag.NcNumber), 2)%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>@ResAnalysis.CausesProbabilityList.lblErrNoCauses</div>
+    }
+}
+else
+{
+
+}
+

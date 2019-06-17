@@ -1,0 +1,272 @@
+﻿@model IEnumerable<KIS.App_Code.ModelParameter>
+
+@if (ViewBag.authW)
+{
+    <script>
+    $(document).ready(function () {
+
+        $('.imgDeleteParam').click(function () {
+            var params = $(this).val().split('.');
+
+            var row = "#row_" + params[3];
+            var btnDel = "#btnDel_" + params[3];
+            $(btnDel).fadeOut();
+            var btnEdit = "#btnEdit_" + params[3];
+            $(btnEdit).fadeOut();
+            var ddlCategory = "#ddlCategory_" + params[3];
+
+            $.ajax({
+                url: "../Products/ProductParameters/DeleteParam",
+                type: 'GET',
+                dataType: 'html',
+                data: {
+                    processID: params[0],
+                    processRev: params[1],
+                    variantID: params[2],
+                    ParamID: params[3]
+                },
+                success: function (result) {
+                    if (result == "False") {
+                        alert("@ResProductParameters.Index.lblDeleteError");
+                        $(btnDel).fadeIn();
+                        $(btnEdit).fadeIn();
+                        return false;
+                    }
+                    else {
+                        $(row).remove();
+                        return false;
+                    }
+                },
+                error: function (result) {
+                    alert("@ResProductParameters.Index.lblDeleteError");
+                    $(btnDel).fadeIn();
+                    $(btnEdit).fadeIn();
+                    return false;
+                },
+                warning: function (result) {
+                    alert("@ResProductParameters.Index.lblDeleteError");
+                    $(btnDel).fadeIn();
+                    $(btnEdit).fadeIn();
+                    return false;
+                }
+            });
+            return false;
+        });
+
+        $('.imgEditParam').click(function () {
+            var params = $(this).val().split('.');
+
+            var row = "#row_" + params[3];
+            var btnDel = "#btnDel_" + params[3];
+            $(btnDel).fadeOut();
+            var btnEdit = "#btnEdit_" + params[3];
+            $(btnEdit).fadeOut();
+
+            var lblName = "#lblName_" + params[3];
+            var txtName = "#txtName_" + params[3];
+            var lblDescription = "#lblDescription_" + params[3];
+            var txtDescription = "#txtDescription_" + params[3];
+            var ddlCategory = "#ddlCategory_" + params[3];
+            var chkIsFixed = "#chkIsFixed_" + params[3];
+            var chkIsRequired = "#chkIsRequired_" + params[3];
+            var btnSave = "#btnSave_" + params[3];
+
+            if ($('#txtName_').is(':visible')) {
+                $(lblName).fadeIn();
+                $(txtName).fadeOut();
+                $(lblDescription).fadeIn();
+                $(txtDescription).fadeOut();
+                $(ddlCategory).prop("disabled", true);
+                $(chkIsFixed).prop("disabled", true);
+                $(chkIsRequired).prop("disabled", true);
+                $(btnSave).fadeOut();
+            }
+            else {
+                $(lblName).fadeOut();
+                $(txtName).fadeIn();
+                $(lblDescription).fadeOut();
+                $(txtDescription).fadeIn();
+                $(ddlCategory).prop("disabled", false);
+                $(chkIsFixed).prop("disabled", false);
+                $(chkIsRequired).prop("disabled", false);
+                $(btnSave).fadeIn();
+            }
+
+            return false;
+        });
+
+        $('.imgSaveParam').click(function () {
+            var params = $(this).val().split('.');
+
+            var row = "#row_" + params[3];
+            var btnDel = "#btnDel_" + params[3];
+            $(btnDel).fadeOut();
+            var btnEdit = "#btnEdit_" + params[3];
+            $(btnEdit).fadeOut();
+
+            var lblName = "#lblName_" + params[3];
+            var txtName = "#txtName_" + params[3];
+            var lblDescription = "#lblDescription_" + params[3];
+            var txtDescription = "#txtDescription_" + params[3];
+            var ddlCategory = "#ddlCategory_" + params[3];
+            var chkIsFixed = "#chkIsFixed_" + params[3];
+            var chkIsRequired = "#chkIsRequired_" + params[3];
+            var btnSave = "#btnSave_" + params[3];
+
+
+            var paramIsFixed = false;
+            if ($(chkIsFixed).is(":checked")) {
+                paramIsFixed = true;
+            }
+            var paramIsRequired = false;
+            if ($(chkIsRequired).is(":checked")) {
+                paramIsRequired = true;
+            }
+
+            $.ajax({
+                url: "../Products/ProductParameters/EditParam",
+                type: 'GET',
+                dataType: 'html',
+                data: {
+                    processID: params[0],
+                    processRev: params[1],
+                    variantID: params[2],
+                    ParamID: params[3],
+                    paramName: $(txtName).val(),
+                    paramDescription: $(txtDescription).val(),
+                    paramCategory: $(ddlCategory).val(),
+                    isFixed: paramIsFixed,
+                    isRequired: paramIsRequired
+                },
+                success: function (result) {
+                    if (result == "False") {
+                        alert("@ResProductParameters.Index.lblEditError 1");
+                    }
+                    else {
+                        $(lblName).html($(txtName).val());
+                        $(lblDescription).html($(txtDescription).val());
+                        $(lblName).fadeIn();
+                        $(txtName).fadeOut();
+                        $(lblDescription).fadeIn();
+                        $(txtDescription).fadeOut();
+                        $(ddlCategory).prop("disabled", true);
+                        $(chkIsFixed).prop("disabled", true);
+                        $(chkIsRequired).prop("disabled", true);
+                        $(btnSave).fadeOut();
+                        $(btnDel).fadeIn();
+                        $(btnEdit).fadeIn();
+                        $(ddlCategory).prop("disabled", true);
+                        $(chkIsFixed).prop("disabled", true);
+                        $(chkIsRequired).prop("disabled", true);
+                    }
+                },
+                error: function (result) {
+                    alert("@ResProductParameters.Index.lblEditError 2");
+                },
+                warning: function (result) {
+                    alert("@ResProductParameters.Index.lblEditError 3");
+                }
+            });
+
+
+            return false;
+        });
+
+
+    });
+    </script>
+}
+
+@if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        KIS.App_Code.ProductParametersCategories paramList = new KIS.App_Code.ProductParametersCategories();
+        paramList.loadCategories();
+        <div class="row-fluid">
+            <div class="span12">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@ResProductParameters.Index.lblTHName</th>
+                            <th>@ResProductParameters.Index.lblTHDescription</th>
+                            <th>@ResProductParameters.Index.lblTHCategory</th>
+                            <th>@ResProductParameters.Index.lblTHisFixed</th>
+                            <th>@ResProductParameters.Index.lblTHisRequired</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            <tr id="row_@m.ParameterID">
+                                @if (ViewBag.authW)
+                                {
+                                    <td>
+                                        <button id="btnDel_@m.ParameterID" value="@ViewBag.processID.@ViewBag.processRev.@ViewBag.varianteID.@m.ParameterID" class="imgDeleteParam" style="background-color:transparent;border:0;">
+                                            <img src="~/img/iconDelete.png" style="min-width:10px; max-width: 20px;" />
+                                        </button>
+                                        <button id="btnEdit_@m.ParameterID" value="@ViewBag.processID.@ViewBag.processRev.@ViewBag.varianteID.@m.ParameterID" class="imgEditParam" style="background-color:transparent;border:0;">
+                                            <img src="~/img/edit.png" style="min-width:10px; max-width: 20px;" />
+                                        </button>
+                                        <button id="btnSave_@m.ParameterID" value="@ViewBag.processID.@ViewBag.processRev.@ViewBag.varianteID.@m.ParameterID" class="imgSaveParam" style="background-color:transparent;border:0;display:none;">
+                                            <img src="~/img/iconSave.jpg" style="min-width:10px; max-width: 20px;" />
+                                        </button>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                <td>
+                                    <span id="lblName_@m.ParameterID">@Server.HtmlDecode(Server.HtmlDecode(m.Name))</span>
+                                    <input type="text" id="txtName_@m.ParameterID" value="@Server.HtmlDecode(Server.HtmlDecode(m.Name))" style="display:none;" />
+                                </td>
+                                <td>
+                                    <span id="lblDescription_@m.ParameterID">@Server.HtmlDecode(Server.HtmlDecode(m.Description))</span>
+                                    <textarea id="txtDescription_@m.ParameterID" style="display:none;">@Server.HtmlDecode(Server.HtmlDecode(m.Description))</textarea>
+                                </td>
+                                <td>
+                                    <select id="ddlCategory_@m.ParameterID" disabled>
+                                        @{
+
+                                            foreach (var cat in paramList.Categories)
+                                            {
+                                                if (cat.ID == m.ParameterCategory.ID)
+                                                {
+                                                    <option value="@cat.ID" selected>@Server.HtmlDecode(Server.HtmlDecode(cat.Name))</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@cat.ID">@Server.HtmlDecode(Server.HtmlDecode(cat.Name))</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td><input type="checkbox" id="chkIsFixed_@m.ParameterID" checked="@m.isFixed" disabled /></td>
+                                <td><input type="checkbox" id="chkIsRequired_@m.ParameterID" checked="@m.isRequired" disabled /></td>
+                            </tr>
+                                            }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="row-fluid">
+                                                    <div class="span12">
+                                                        @ResProductParameters.Index.lblNoItems
+                                                    </div>
+                                                </div>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <div class="row-fluid">
+                                                    <div class="span12">
+                                                        @ResProductParameters.Index.lblNoAuth
+                                                    </div>
+                                                </div>
+                                            }

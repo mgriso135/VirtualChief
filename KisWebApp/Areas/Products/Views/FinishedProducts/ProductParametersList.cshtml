@@ -1,0 +1,37 @@
+﻿@model IEnumerable<KIS.App_Code.ProductParameter>
+<b>@ResFinishedProducts.ProductParametersList.lblTitle</b>
+@if (ViewBag.authR)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+                <table class="table-striped table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <th>@ResFinishedProducts.ProductParametersList.lblTHParamID</th>
+                            <th>@ResFinishedProducts.ProductParametersList.lblTHParamCategory</th>
+                            <th>@ResFinishedProducts.ProductParametersList.lblTHName</th>
+                            <th>@ResFinishedProducts.ProductParametersList.lblTHDescription</th>
+                        </tr>
+                    </thead>
+                    @foreach(var m in Model)
+                    { 
+                    <tbody>
+                        <tr>
+                            <td>@m.ParameterID</td>
+                            <td>@m.ParameterCategory.Name</td>
+                            <td>@m.Name</td>
+                            <td>@m.Description</td>
+                        </tr>
+                    </tbody>
+                    }
+                </table>
+    }
+    else
+    {
+        <div>@ResFinishedProducts.ProductParametersList.lblNoParameters</div>
+    }
+}
+else
+{
+    <div>@ResFinishedProducts.ProductParametersList.lblErrNoAuth</div>
+}

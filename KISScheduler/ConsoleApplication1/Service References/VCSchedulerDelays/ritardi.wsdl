@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://kis.org" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://kis.org" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://kis.org">
+      <s:element name="Main">
+        <s:complexType />
+      </s:element>
+      <s:element name="MainResponse">
+        <s:complexType />
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="MainSoapIn">
+    <wsdl:part name="parameters" element="tns:Main" />
+  </wsdl:message>
+  <wsdl:message name="MainSoapOut">
+    <wsdl:part name="parameters" element="tns:MainResponse" />
+  </wsdl:message>
+  <wsdl:portType name="RitardiSoap">
+    <wsdl:operation name="Main">
+      <wsdl:input message="tns:MainSoapIn" />
+      <wsdl:output message="tns:MainSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="RitardiSoap" type="tns:RitardiSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Main">
+      <soap:operation soapAction="http://kis.org/Main" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="RitardiSoap12" type="tns:RitardiSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Main">
+      <soap12:operation soapAction="http://kis.org/Main" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Ritardi">
+    <wsdl:port name="RitardiSoap" binding="tns:RitardiSoap">
+      <soap:address location="http://localhost:89/vc_dev/Eventi/ritardi.asmx" />
+    </wsdl:port>
+    <wsdl:port name="RitardiSoap12" binding="tns:RitardiSoap12">
+      <soap12:address location="http://localhost:89/vc_dev/Eventi/ritardi.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,247 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<Stories>
+  <Story ID="0021">
+    <Date>24/04/2019</Date>
+    <Title>WebGemba 2.0</Title>
+    <Description>
+      <![CDATA[L'interfaccia del WebGemba è stata rivista per migliorare drasticamente le sue performance!
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0020">
+    <Date>10/01/2019</Date>
+    <Title>Puoi verificare il carico di lavoro delle postazioni in fase di pianificazione della produzione?</Title>
+    <Description>
+      <![CDATA[Utilizzando lo Wizard Nuovo Ordine è infatti possibile simulare il carico di lavoro dei reparti e delle postazioni di lavoro e variare la pianificazione della produzione per ottimizzare le tue risorse!
+      <br />
+      <br />
+      <a href="../Commesse/wzAddCommessa.aspx" target="_blank" style="font-size:24px">Clicca qui per accedere allo Wizard Nuovo Ordine</a>
+      <br /><br/>
+      Lo Wizard Nuovo Ordine si trova nel menu Clienti --> Wizard Nuovo Ordine
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0019">
+    <Date>08/01/2019</Date>
+    <Title>Virtual Chief permette di aumentare le chance di successo dei Progetti e delle tue Azioni di Miglioramento?</Title>
+    <Description>
+      <![CDATA[Grazie alla gestione delle Azioni di Miglioramento di Virtual Chief, puoi assegnare attività ed azioni correttive specifiche a ciascuno dei tuoi collaboratori.<br /><br />
+      Virtual Chief si occuperà di ricordare a tutti le scadenze di ogni Azione; inoltre Virtual Chief permette di registrare le attività realizzate da ogni persona e per ogni Attività, mantenendo così l'evidenza dello stato di avanzamento delle attività realizzate.<br />
+      <br />
+      <a href="../Quality/ImprovementActions/Index?stat=O&sortOrder=init" target="_blank" style="font-size:24px">Clicca qui per iniziare a gestire le tue Azioni di Miglioramento!</a>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0018">
+    <Date>08/01/2019</Date>
+    <Title>Puoi essere avvisato in tempo reale di ritardi nella tua produzione?</Title>
+    <Description>
+      <![CDATA[Virtual Chief ti manda una e-mail in tempo reale non appena si verificano ritardi di produzione nei reparti in cui desideri essere avvisato.
+      <br />
+      Per impostare gli utenti da avvisare, entra al menu Admin --> Gestione Reparti e accedi al reparto per il quale vuoi impostare l'avviso.<br />
+      Importante: verifica che il tuo utente contenga un indirizzo e-mail associato!
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0017">
+    <Date>31/12/2018</Date>
+    <Title>Registrazione manuale degli intervalli di lavoro</Title>
+    <Description>
+      <![CDATA[Da oggi é possibile registrare / modificare manualmente gli intervalli di lavoro registrati dagli operatori.<br />
+      Per accedere alla nuova interfaccia, accedere a Admin --> Gestione utenti<br />
+      Poi fare click sull'icona dell'orologio al lato dell'utente desiderato.
+      <br /><br/>
+      <a href="https://www.youtube.com/watch?v=iaSG7bV2d4E" target="_blank">Per visualizzare il tutorial clicca qui</a>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0016">
+    <Date>26/11/2018</Date>
+    <Title>Ogni utente può impostare la propria pagina di destinazione dopo io login</Title>
+    <Description>
+      <![CDATA[Per impostare la tua pagina di accesso personalizzata, accedi alla tua area personale (MyArea) ed imposta il tuo URL di destinazione.
+      <br /><br />
+      <a href="../Personal/my.aspx" target="_BLANK" style="font-size:24px">Clicca qui per accedere alla tua area personale</a>
+      ]]>
+    </Description>
+  </Story>
+    <Story id="0015">
+    <Date>06/10/2018</Date>
+    <Title>Puoi mantenere la relazione con il Codice dell'Ordine del tuo software di fatturazione</Title>
+    <Description>
+      <![CDATA[Con il codice dell'ordine <i>esterno</i>, Virtual Chief ti permette di mantenere il collegamento tra i dati del tuo ERP e Virtual Chief
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0014">
+    <Date>09/11/2017</Date>
+    <Title>Il Modulo di Gestione Qualità di Virtual Chief è l'ideale per gestire Non Conformità e programmare Azioni di Miglioramento?</Title>
+    <Description>
+      <![CDATA[E' ora disponibile in maniera opzionale il Modulo di Gestione Qualità, che comprende:
+      <ul>
+      <li>Gestione delle non conformità - <a href="https://www.youtube.com/watch?v=niknol6ikUQ&t=336s" target="_blank">Vedere il tutorial</a></li>
+      <li>Analisi delle non conformità e Gestione del Rischio - <a href="https://www.youtube.com/watch?v=ARWdOV0fTyE&t=49s" target="_blank">Vedere il video</a></li>
+      <li>Gestione delle Azioni di Miglioramento con formato modulo 8D e assegnazione delle Azioni Correttive ai membri del Team</li>
+      </ul>
+      <br /><br />
+<a href="https://youtu.be/kqELUlMc6Y4" target="_BLANK">Clicca qui per vedere la presentazione</a>
+<br /> <br/>
+<a href="../Quality/Home/Index" target="_BLANK" style="font-size:24px">Clicca qui per accedere al modulo Gestione Qualità</a>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0013">
+    <Date>31/07/2017</Date>
+    <Title>Check-in e check-out automatico dalle postazioni di lavoro</Title>
+    <Description>
+      <![CDATA[Spesso utilizzando l'interfaccia di lavoro BARCODE GEMBA, l'operazione di eseguire il check-in in una postazione
+       di lavoro, ed il conseguente check-out, rappresentano un appesantimento delle attività stesse.<br />
+       Ora è possibile configurare le Postazioni di lavoro per fare in modo che il check-in ed il check-out siano eseguiti in automatico durante l'utilizzo del barcode Gemba]]>
+    </Description>
+  </Story>
+  <Story id="0012">
+    <Date>16/07/2017</Date>
+    <Title>Avviso scadenza licenza</Title>
+    <Description>
+      <![CDATA[Ora Virtual Chief ti informa quando sta per scadere la tua licenza d'uso con 1 mese di anticipo rispetto alla scadenza.]]>
+    </Description>
+  </Story>
+  <Story id="0011">
+    <Date>01/07/2017</Date>
+    <Title>Virtual Chief parla 3 lingue</Title>
+    <Description>
+      <![CDATA[Ora <i>Virtual Chief</i> parla ben tre lingue:
+      <ul>
+      <li>Italiano</li>
+      <li>Inglese</li>
+      <li>Spagnolo</li>
+      </ul>
+     Inoltre, ogni utente può configurare la proprio lingua dal menu myArea
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0010">
+    <Date>22/09/2016</Date>
+    <Title>Puoi impostare dei tempi di attesa tra fine task ed inizio successivo</Title>
+    <Description>
+      <![CDATA[E' stata aggiunta la possibilità di introdurre dei tempi di attesa tra la fine di un task 
+      e l'inizio del successivo, per poter pianificare eventuali soste dei WIP tra una postazione di lavoro e l'altra.
+       I tempi di pausa sono configurabili sullo Wizard Nuovo Ordine, sia tramite PERT che tramite interfaccia tabellare.
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0009">
+    <Date>03/04/2016</Date>
+    <Title>I campi visualizzati sull'Andon sono completamente personalizzabili</Title>
+    <Description>
+      <![CDATA[L'Andon è divenuto completamente personalizzabile, dando la possibilità di scegliere quali campi visualizzare,
+      sia per i prodotti che per i task.<br />
+      Per personalizzare i campi dell'Andon Completo è sufficiente accedere al menu Admin --> Configurazione Andon --> Campi da Visualizzare.<br />
+      Per personalizzare i campi dell'Andon Reparto bisogna accedere al Menu Plant --> Reparti, poi selezionare il reparto
+      desiderato ed infine espandere il menu Andon.      
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0008">
+  <Date>19/01/2016</Date>
+  <Title>Puoi condividedere lo stato degli ordini con ciascuno dei tuoi clienti, con un click?</Title>
+  <Description>
+    <![CDATA[Virtual Chief implementa un Report avanzamento ordini per cliente, che esporta un pdf con lo stato degli ordini del tuo cliente.
+    <br />
+    Questo report è completamente personalizzabile in generale o per ciascun cliente, per mostrare solo informazioni necessarie.
+    <br />
+    Per accedere al report clicca sul menu Analisi Dati --> Report avanzamento ordini per cliente
+    <br />
+    Per configurare i report, clicca sul menu Admin --> Configurazione reports
+      ]]>
+  </Description>
+</Story>
+<Story id="0007">
+  <Date>05/01/2016</Date>
+  <Title>Virtual Chief parla con altri sistemi</Title>
+  <Description>
+    <![CDATA[Virtual Chief contiene Web API, che sono funzioni che possono essere richiamate da remoto da altri software.
+    <br />
+    Grazie a queste funzioni, per esempio, è possibile creare un cliente solamente nel tuo sistema di fatturazione, il quale si occuperà di comunicare il nuovo cliente a Virtual Chief.<br />
+    In questo modo è possibile evitare semplici errori di trascrizione.<br />
+    <br />
+    Le API di Virtual Chief sono completamente sicure perché comunicano solamente con software autorizzati.
+      ]]>
+  </Description>
+</Story>
+  <Story id="0006">
+    <Date>28/12/2015</Date>
+    <Title>Virtual Chief ti permette di ri-programmare prodotti già iniziati in produzione</Title>
+    <Description>
+      <![CDATA[Se è necessario ripianificare la produzione di un prodotto, Virtual Chief ti permette di farlo in pochi click.
+      <br />
+      Utilizzando il "Piano Produzione" e facendo click sull'icona alla destra di ogni prodotto, un semplice Wizard ti permetterà di riprogrammare la tua produzione verificando il carico di lavoro dei reparti e delle postazioni.
+      <br /><br />
+      <a href="../Produzione/PianoProduzioneCompleto.aspx" target="_blank" style="font-size:24px">Clicca qui per accedere al Piano Produzione</a>
+      <br/><br/>
+      <a href="https://www.youtube.com/watch?v=ZUrqYs6Vai8" target="_blank">Clicca qui per visualizzare il tutorial</a>
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0005">
+    <Date>08/12/2015</Date>
+    <Title>Lo sai quali sono i clienti che maggiormente impegnano la tua produzione?</Title>
+    <Description>
+      <![CDATA[Virtual Chief sa perfettamente quali sono i clienti per cui stai lavorando maggiormente e ti permette di verificare se questo sforzo è commisurato alla fatturazione.<br />
+      Per accedere alla gestione dei clienti, clicca sul menu Analisi --> Analisi dati per Cliente. <br/><br />
+      Un piccolo trucco: se fai clic sull'icona con il grafico in alto a destra, Virtual Chief ti mostrerà la classifica dei tuoi clienti per ore di manodopera!
+      <br />
+      <br/>
+      <a href="../Analysis/CustomerPareto.aspx" target="_BLANK" style="font-size:24px">Clicca qui per accedere alla classifica dei tuoi clienti</a><br /><br />
+      <a href="../Analysis/CustomerPortfolio.aspx" target="_BLANK" style="font-size:24px">Clicca qui per accedere all'analisi del singolo cliente</a>]]>
+    </Description>
+  </Story>
+  <Story id="0004">
+    <Date>23/07/2015</Date>
+    <Title>E' possibile gestire <i>straordinari</i> e <i>festività</i> per ciascun reparto?</Title>
+    <Description>
+      <![CDATA[Dal menu Admin --> Gestione Reparti è possibile impostare le festività e le ore di straordinario programmato per ogni reparto, tramite i cuali è possibile pianificare in maniera corretta la produzione.]]>
+    </Description>
+  </Story>
+  <Story id="0003">
+    <Date>29/05/2014</Date>
+    <Title>Puoi ottimizzare la tua produzione, verificando il carico di lavoro delle postazioni e dei reparti in fase di pianificazione</Title>
+    <Description>
+      <![CDATA[Lo <i>Wizard nuovo ordine</i> ti permette di simulare il carico di lavoro delle postazioni e dei reparti, in fase di pianificazione della produzione.<br/>
+      Con un grafico intuitivo, puoi verificare se hai ore di manodopera disponibili oppure se la tua produzione è già satura.<br /><br />
+      Lo <i>Wizard nuovo ordine</i> si trova sotto il menu Clienti --> Wizard nuovo ordine]]>
+    </Description>
+  </Story>
+  <Story id="0002">
+    <Date>24/03/2014</Date>
+    <Title>Puoi controllare le performance di produzione grazie ad una semplice interfaccia</Title>
+    <Description>
+      <![CDATA[Grazie all'interfaccia di Analisi Dati per Tipo di Prodotto puoi conoscere i dati <b>reali</b> delle performance della tua produzione, come per esempio:
+      <ul>
+      <li>Lead time</li>
+      <li>Ore di ritardo</li>
+      <li>Quantità di prodotti realizzati</li>
+      <li>Ore di manodopera per tipo di prodotto</li>
+      </ul>
+      Per accedere a questa interfaccia, clicca sul menu Analisi Dati --> Analisi dati per tipo di prodotto
+      <br />
+      <br/>
+      <a href="../Analysis/ProductAnalysis/Index" target="_BLANK" style="font-size:24px">Clicca qui per accedere all'analisi dati di produzione</a>]]>
+    </Description>
+  </Story>
+  <Story id="0001">
+    <Date>04/03/2014</Date>
+    <Title>Con Virtual Chief puoi controllare il lavoro dei tuoi operatori</Title>
+    <Description>
+      <![CDATA[Grazie all'analisi dati degli operatori, Virtual Chief ti permette di verificare, per ciascun operatore:
+      <ul>
+        <li>In quali postazioni ha lavorato e per quanto tempo</li>
+        <li>Quali sono le attività assegnategli</li>
+        <li>In quali prodotti e per quale cliente ha lavorato</li>
+        <li>I giorni di presenza attiva</li>
+      </ul>
+      <a href="../Analysis/ListAnalysisOperatori.aspx" style="font-size:24px;">Per accedere all'interfaccia di Analisi Dati Operatori clicca qui</a>, oppure clicca sul menu Analisi Dati --> Analisi operatori / personale]]>
+    </Description>
+  </Story>
+</Stories>

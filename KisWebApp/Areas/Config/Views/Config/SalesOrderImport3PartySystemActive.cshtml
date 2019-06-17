@@ -1,0 +1,48 @@
+﻿@if (ViewBag.authW)
+{
+    <script>
+    $(document).ready(function () {
+        $('input:radio[name=SalesOrderImport]').bind('change', function () {
+            var att = $("input[name='SalesOrderImport']:checked").val();
+            var act = false;
+            if (att == "1") { act = true;}
+
+            $.ajax({
+                url: "@Url.Action("/SetSalesOrderImport3PartySystem")",
+                type: 'POST',
+                dataType: "html",
+                data: {
+                    ThirdPartyActive: act
+                },
+                success: function (result) {
+                },
+                error: function (result) {
+                    //alert("Error");
+                },
+                warning: function (result) {
+                    //alert("Warning");
+                }
+            });
+
+        });
+    });
+    </script>
+
+    <div class="row-fluid">
+        <div class="span12">
+            @if (ViewBag.ThirdPartyActive)
+            {
+                <input type="radio" id="SalesOrderImportTrue" name="SalesOrderImport" value="1" checked />@ResSalesOrderImportConfig.SalesOrderImport3PartySystemActive.lblActive<br />
+                <input type="radio" id="SalesOrderImportFalse" name="SalesOrderImport" value="0" />@ResSalesOrderImportConfig.SalesOrderImport3PartySystemActive.lblInactive
+            }
+            else
+            {
+                <input type="radio" id="SalesOrderImportTrue" name="SalesOrderImport" value="1" />@ResSalesOrderImportConfig.SalesOrderImport3PartySystemActive.lblActive<br />
+                <input type="radio" id="SalesOrderImportFalse" name="SalesOrderImport" value="0" checked />@ResSalesOrderImportConfig.SalesOrderImport3PartySystemActive.lblInactive
+            }
+        </div>
+    </div>
+}
+else
+{
+}

@@ -1,0 +1,87 @@
+﻿@if (Session["user"] != null)
+{
+
+
+    <div class="row-fluid">
+        <div class="span12"><h5>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblTitle</h5></div>
+    </div>
+    <div class="row-fluid" style="text-align:center;">
+        <div class="span3">
+            @if (ViewBag.OpenWarnings >= 0)
+            {
+                <p>
+                    @ResGetGlobalKPIs.GetNonCompliancesKPIs.lblCurrentlyOpenedWarnings: <b>@ViewBag.OpenWarnings</b>
+                </p>
+
+            }
+        </div>
+        <div class="span3">
+            @if (ViewBag.OpenedThisWeek >= 0)
+            {
+                <p>
+                    @ResGetGlobalKPIs.GetNonCompliancesKPIs.lblWarningOpenedThisWeek: <b>@ViewBag.OpenedThisWeek</b>
+                </p>
+
+            }
+            @if (ViewBag.OpenedLastWeek >= 0)
+            {
+                <p>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblWarningOpenedLastWeek: <b>@ViewBag.OpenedLastWeek</b></p>
+            }
+            @if (ViewBag.OpenedThisWeek >= 0 && ViewBag.OpenedLastWeek > 0)
+            {
+                String color = "red";
+                if (ViewBag.OpenedLastWeek > ViewBag.OpenedThisWeek)
+                {
+                    color = "green";
+                }
+                <p>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblVariation: <b style="color: @color;font-size: 36px;">@Math.Round((double)(100 * (ViewBag.OpenedThisWeek - ViewBag.OpenedLastWeek) / ViewBag.OpenedLastWeek), 2)%</b></p>
+            }
+        </div>
+        <div class="span3">
+            @if (ViewBag.ClosedThisWeek >= 0)
+            {
+                <p>
+                    @ResGetGlobalKPIs.GetNonCompliancesKPIs.lblWarningClosedThisWeek: <b>@ViewBag.ClosedThisWeek</b>
+                </p>
+
+            }
+            @if (ViewBag.ClosedLastWeek >= 0)
+            {
+                <p>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblWarningClosedLastWeek: <b>@ViewBag.ClosedLastWeek</b></p>
+            }
+            @if (ViewBag.ClosedLastWeek > 0 && ViewBag.ClosedThisWeek >= 0)
+            {
+                String color = "red";
+                if (ViewBag.ClosedLastWeek <= ViewBag.ClosedThisWeek)
+                {
+                    color = "green";
+                }
+                <p>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblVariation: <b style="color: @color;font-size: 36px;">@Math.Round((double)(100 * (ViewBag.ClosedThisWeek - ViewBag.ClosedLastWeek) / ViewBag.ClosedLastWeek), 2)%</b></p>
+            }
+        </div>
+        <div class="span3">
+            @if (ViewBag.ClosedThisWeekLeadTime.TotalDays >= 0)
+            {
+            <p>                
+                @ResGetGlobalKPIs.GetNonCompliancesKPIs.lblWarningClosedThisWeekLeadTime: <b>@Math.Round(ViewBag.ClosedThisWeekLeadTimeDays, 2)</b> @ResGetGlobalKPIs.GetNonCompliancesKPIs.lblDays
+            </p>
+
+            }
+            @if (((TimeSpan)ViewBag.ClosedLastWeekLeadTime).TotalDays >= 0)
+            {
+                <p>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblWarningClosedLastWeekLeadTime: <b>@Math.Round(ViewBag.ClosedLastWeekLeadTimeDays, 2)</b>  @ResGetGlobalKPIs.GetNonCompliancesKPIs.lblDays</p>
+            }
+            @if (((TimeSpan)ViewBag.ClosedThisWeekLeadTime).TotalDays >= 0 && ((TimeSpan)ViewBag.ClosedLastWeekLeadTime).TotalDays > 0)
+            {
+                String color = "red";
+                if (ViewBag.ClosedLastWeekLeadTime > ViewBag.ClosedThisWeekLeadTime)
+                {
+                    color = "green";
+                }
+                <p>@ResGetGlobalKPIs.GetNonCompliancesKPIs.lblVariation: <b style="color: @color;font-size: 36px;">@Math.Round((double)(100 * (ViewBag.ClosedThisWeekLeadTimeDays - ViewBag.ClosedLastWeekLeadTimeDays) / ViewBag.ClosedLastWeekLeadTimeDays), 2)%</b></p>
+            }
+        </div>
+
+    </div>
+}
+

@@ -1,5 +1,7 @@
-C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.exe.config
-C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.exe
-C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.pdb
-C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.exe
-C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KIS\KIS-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.pdb
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.exe.config
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.exe
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\bin\Debug\KISLicenseCheck.pdb
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.csprojAssemblyReference.cache
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.csproj.CoreCompileInputs.cache
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.exe
+C:\Users\mgris\Documents\Visual Studio 2017\Projects\Virtual Chief\VC-develop\KISLicenseCheck\obj\Debug\KISLicenseCheck.pdb

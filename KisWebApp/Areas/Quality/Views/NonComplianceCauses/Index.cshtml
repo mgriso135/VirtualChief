@@ -1,0 +1,69 @@
+﻿@model IEnumerable <KIS.App_Sources.NonComplianceCause>
+@{
+    ViewBag.Title = @ResNCCauses.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">
+            @Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">
+            @Resources.Shared.lblNavNonCompliances</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonComplianceCauses/Index">
+            @Resources.Shared.lblNavNCCauses</a><span class="divider"></span>
+    </li>
+</ul>
+
+
+<h3>@ResNCCauses.Index.lblTitle</h3>
+@ViewBag.Message
+@{
+    if (ViewBag.authorized)
+    {
+        <a href="~/Quality/NonComplianceCauses/Create">
+            <img src="~/img/iconAdd2.png" style="height: 40px;" />@ResNCCauses.Index.lblAdd
+        </a>
+        if (Model != null && Model.Count() > 0)
+        {
+            <table class="table table-striped table-hover table-condensed">
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>@ResNCCauses.Index.lblTHID</th>
+                    <th>@ResNCCauses.Index.lblTHName</th>
+                    <th>@ResNCCauses.Index.lblTHDescription</th>
+                </tr>
+                @foreach (var tipo in Model)
+                {
+                    // Create the list of these clients
+                    <tr>
+                        <td>
+                            <a href="~/Quality/NonComplianceCauses/Update?ID=@tipo.ID">
+                                <img src="~/img/edit.png" style="height:40px" title="@ResNCCauses.Index.lblUpdate" />
+                            </a>
+                        </td>
+                        <td>
+                            <a href="~/Quality/NonComplianceCauses/Delete/@tipo.ID">
+                                <img src="~/img/iconDelete.png" style="height:40px" title="@ResNCCauses.Index.lblDelete" />
+                            </a>
+                        </td>
+                        <td>@tipo.ID</td>
+                        <td>@Server.HtmlDecode(tipo.Name)</td>
+                        <td>@Server.HtmlDecode(tipo.Description)</td>
+
+                    </tr>
+                }
+            </table>
+        }
+    }
+    else
+    {
+        @ResNCCauses.Index.lblNotLoggedIn
+    }
+}
+

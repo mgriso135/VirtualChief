@@ -1,0 +1,389 @@
+﻿@model KIS.App_Code.Commessa
+
+@{
+    ViewBag.Title = ResAddSalesOrder.AddSalesOrder.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $("#imgAddEditLoad").fadeOut();
+        $("#imgDetailPanelLoad").fadeOut();
+        $("#pnlAddOrderDetail").fadeOut();
+        $("#lblEditCliente").fadeOut();
+        $("#imgEditOrder").fadeOut();
+        $("#imgDepartmentsLoad").fadeOut();
+        $("#imgProductListPanelLoad").fadeOut();
+        $("#imgLinkProductToOrderLoad").fadeOut();
+
+        var orderID = -1;
+        var orderYear = -1;
+        @if(Model!=null)
+        {
+            @Html.Raw("orderID = " + Model.ID +";");
+            @Html.Raw("orderYear = " + Model.Year + ";");
+            @Html.Raw("$('#txtExternalID').val('" + Model.ExternalID+"');");
+            @Html.Raw("$('#txtNotes').val('" + Model.Note+"');");
+            @Html.Raw("$('#imgEditOrder').fadeIn();");
+            @Html.Raw("$('#imgAddOrder').fadeOut();");
+            @Html.Raw("$('#ddlCliente').fadeOut();");
+            @Html.Raw("$('#lblEditCliente').html('"+Model.RagioneSocialeCliente +"');");
+            @Html.Raw("$('#lblEditCliente').fadeIn();");
+            @Html.Raw("$('#lnkAddCustomer').fadeOut();");
+            @Html.Raw("loadOrderDetailsPanel(orderID, orderYear);");
+            @Html.Raw("$('#pnlAddOrderDetail').fadeIn();");
+            
+
+        }
+
+        $("#imgEditOrder").click(function () {
+            $("#imgEditOrder").fadeOut();
+            $("#imgAddEditLoad").fadeIn();
+            $.ajax({
+                url: "@Url.Action("EditSalesOrderHeader", "SalesOrder")",
+                type: 'POST',
+                data: {
+                    OrderID: orderID,
+                    OrderYear: orderYear,
+                    ExternalID: $('<div/>').text($('#txtExternalID').val()).html(),
+                    Notes: $('<div/>').text($('#txtNotes').val()).html(),
+                },
+                success: function (data) {
+                    $("#imgEditOrder").fadeIn();
+                    $("#imgAddEditLoad").fadeOut();
+                },
+                statusCode: {
+                    404: function (content) { alert('cannot find resource'); $("#imgAddEditLoad").fadeOut(); $("#imgEditOrder").fadeIn(); },
+                    500: function (content) { alert('internal server error'); $("#imgAddEditLoad").fadeOut(); $("#imgEditOrder").fadeIn(); }
+                },
+                error: function (data) {
+                    alert("Error " + data);
+                    $("#imgAddEditLoad").fadeOut();
+                    $("#imgEditOrder").fadeIn();
+                }
+
+            });
+        });
+
+        $("#imgAddOrder").click(function () {
+            $("#imgAddOrder").fadeOut();
+            $("#imgAddEditLoad").fadeIn();
+
+            var customer = $("#ddlCliente").val();
+
+            $.ajax({
+                url: "@Url.Action("AddSalesOrderHeader", "SalesOrder")",
+                type: 'POST',
+                data: {
+                    customer: $('<div/>').text(customer).html(),
+                    ExternalID: $('<div/>').text($('#txtExternalID').val()).html(),
+                    Notes: $('<div/>').text($('#txtNotes').val()).html(),
+            },
+                success: function (data) {
+                    $('#lblEditCliente').html(customer);
+                    $('#ddlCliente').fadeOut();
+                    $('#lblEditCliente').fadeIn();
+                    $("#imgEditOrder").fadeIn();
+                    $("#imgAddEditLoad").fadeOut();
+                    $("#lnkAddCustomer").fadeOut();
+                    orderID = data;
+                    orderYear = @DateTime.UtcNow.Year;
+                    loadOrderDetailsPanel(orderID, orderYear);
+                    $('#pnlAddOrderDetail').fadeIn();
+            },
+            statusCode : {
+                404: function (content) { alert('cannot find resource'); $("#imgAddEditLoad").fadeOut();},
+                500: function (content) { alert('internal server error'); $("#imgAddEditLoad").fadeOut();}
+            },
+            error: function(data) {
+                alert("Error " + data);
+                $("#imgAddEditLoad").fadeOut();
+                $("#imgAddOrder").fadeIn();
+
+            }
+
+        });
+
+        });
+
+        function loadOrderDetailsPanel(ordID, ordYear) {
+
+            $("#imgProductListPanelLoad").fadeIn();
+             $.ajax({
+                        url: "@Url.Action("ListOrderProduct", "SalesOrder")",
+                        type: 'POST',
+                        data: {
+                            OrderID: ordID,
+                            OrderYear: ordYear
+                        },
+                 success: function (data) {
+                     $("#pnlProductsList").html(data);
+                            $("#pnlProductsList").fadeIn();
+                            $("#imgProductListPanelLoad").fadeOut();
+                        },
+                        statusCode: {
+                            404: function (content) { alert('cannot find resource'); $("#imgProductListPanelLoad").fadeOut(); },
+                            500: function (content) { alert('internal server error'); $("#imgProductListPanelLoad").fadeOut(); }
+                        },
+                        error: function (data) {
+                            $("#imgProductListPanelLoad").fadeOut();
+                        }
+
+                    });
+
+        }
+
+        /*$("#ddlProducts").on('input', function () {
+            $("#imgDepartmentsLoad").fadeIn();
+            if ($(this).val() != null && $(this).val().length > 0) {
+                var g = $('#ddlProducts').val();
+                var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
+                // in here I need to load departments
+                var ids = id.split('/');
+                if (ids[0] !== null && ids[1] !== null && ids[2] !== null && $.isNumeric(ids[0]) && $.isNumeric(ids[1]) && $.isNumeric(ids[2])) {
+                    var ProcID = ids[0];
+                    var Rev = ids[1];
+                    var variant = ids[2];
+
+                    $.ajax({
+                        url: "@{//Url.Action("GetProductDepartments", "SalesOrder")
+                            }",
+                        /*type: 'POST',
+                        data: {
+                            ProdID: ProcID,
+                            ProdRev: Rev,
+                            Variant: variant,
+                        },
+                        success: function (data) {
+                            $("#imgDepartmentsLoad").fadeOut();
+                            alert(data);
+                        },
+                        statusCode: {
+                            404: function (content) { alert('cannot find resource'); $("#imgDepartmentsLoad").fadeOut(); },
+                            500: function (content) { alert('internal server error'); $("#imgDepartmentsLoad").fadeOut(); }
+                        },
+                        error: function (data) {
+                            $("#imgDepartmentsLoad").fadeOut();
+
+                        }
+
+                    });
+                }
+            }
+        });*/
+
+        $(function () {
+            $("[id*=txtDeliveryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+        });
+
+        $("#imgAddProduct").click(function () {
+            var g = $('#ddlProducts').val();
+            var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
+            if ($("#ddlProductsList option[value='" + g + "']").attr('data-id') !== null
+                && $("#txtQuantity").val() !== null
+                && $("#txtDeliveryDate").val() !== null
+            && id !=null) {
+
+                // in here I need to load departments
+                var ids = id.split('/');
+
+                var deliveryDateArr = $("#txtDeliveryDate").val().split('/');
+
+                var Quantity = $("#txtQuantity").val();
+
+                if (ids[0] !== null && ids[1] !== null && ids[2] !== null && $.isNumeric(ids[0]) && $.isNumeric(ids[1]) && $.isNumeric(ids[2])
+                    && deliveryDateArr[0] !== null && deliveryDateArr[1] !== null && deliveryDateArr[2] !== null
+                    && $.isNumeric(deliveryDateArr[0]) && $.isNumeric(deliveryDateArr[1]) && $.isNumeric(deliveryDateArr[2])
+                    && $.isNumeric(Quantity)) {
+                    var ProcID = ids[0];
+                    var Rev = ids[1];
+                    var variant = ids[2];
+
+                    deliveryDate = new Date(deliveryDateArr[2], deliveryDateArr[1] - 1, deliveryDateArr[0]);
+
+                    $("#imgAddProduct").fadeOut();
+                    $("#imgLinkProductToOrderLoad").fadeIn();
+
+                    $.ajax({
+                        url: "@Url.Action("AddProductToSalesOrder", "SalesOrder")",
+                        type: 'POST',
+                        data: {
+                            OrderID: orderID,
+                            OrderYear: orderYear,
+                            ProdID: ProcID,
+                            ProdRev: Rev,
+                            ProdVar: variant,
+                            Quantity: Quantity,
+                            DeliveryDate: deliveryDate.getFullYear() + "-" + (deliveryDate.getMonth() + 1) + "-" + deliveryDate.getDate(),
+                        },
+                        success: function (data) {
+                            $("#imgLinkProductToOrderLoad").fadeOut();
+                            $("#imgAddProduct").fadeIn();
+                            $('#ddlProducts').val("");
+                            $("#txtQuantity").val("");
+                            $("#txtDeliveryDate").val("");
+                            loadOrderDetailsPanel(orderID, orderYear);
+                        },
+                        statusCode: {
+                            404: function (content) { alert('cannot find resource'); $("#imgAddProduct").fadeIn(); $("#imgLinkProductToOrderLoad").fadeOut(); },
+                            500: function (content) { alert('internal server error'); $("#imgAddProduct").fadeIn(); $("#imgLinkProductToOrderLoad").fadeOut(); }
+                        },
+                        error: function (req, status, errorObj) {
+                            alert("Error");
+                            $("#imgAddProduct").fadeIn();
+                        }
+
+                    });
+
+                }
+                else {
+                    alert("Error");
+                }
+            }
+            else
+                alert("Error in input data");
+        });
+
+
+    });
+</script>
+
+<h3>@ResAddSalesOrder.AddSalesOrder.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Commesse/commesse.aspx">
+            @ResAddSalesOrder.AddSalesOrder.lblNavOrder
+        </a>
+        <span class="divider">/</span>
+        <a href="@Request.RawUrl">
+            @ResAddSalesOrder.AddSalesOrder.lblNavOrderAdd
+        </a>
+    </li>
+</ul>
+@if (ViewBag.authW)
+{
+
+    if (ViewBag.CustomersList != null)
+    {
+        List<KIS.App_Code.Cliente> cstList = new List<KIS.App_Code.Cliente>();
+        try
+        {
+            cstList = (List<KIS.App_Code.Cliente>)ViewBag.CustomersList;
+        }
+        catch
+        {
+
+        }
+        if (cstList != null && cstList.Count > 0)
+        {
+            <div class="row-fluid">
+                <div class="span12">
+                    <table runat="server" id="frmAddCommessa" class="table table-bordered table-condensed" style="width: 100%">
+                        <tr>
+                            <th>@ResAddSalesOrder.AddSalesOrder.lblCliente</th>
+                            <th>@ResAddSalesOrder.AddSalesOrder.lblExternalID</th>
+                            <th>@ResAddSalesOrder.AddSalesOrder.lblNotes</th>
+                            <th></th>
+                        </tr>
+                        <tr style="vertical-align: middle;">
+                            <td style="vertical-align: middle;">
+                                <div id="lblEditCliente"></div>
+                                <input list="ddlClienteList" id="ddlCliente">
+                                <datalist id="ddlClienteList">
+                                    @foreach (var cln in cstList)
+                                    {
+                                        <option value="@cln.CodiceCliente" label="@cln.RagioneSociale"></option>
+                                    }
+                                </datalist>
+                                <a id="lnkAddCustomer" href="~/Clienti/AddCliente.aspx">@ResAddSalesOrder.AddSalesOrder.lblLnkAddCustomer</a>
+
+                            </td>
+                            <td style="vertical-align: middle;"><input type="text" id="txtExternalID" style="width:95%;" /></td>
+                            <td style="vertical-align: middle;"><textarea id="txtNotes" name="txtNotes" style="width:95%;"></textarea></td>
+                            <td style="vertical-align: middle;">
+                                <input type="image" src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgAddEditLoad" />
+                                <input type="image" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" id="imgEditOrder" />
+                                <input type="image" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" id="imgAddOrder" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            if (ViewBag.authAddProductW)
+            {
+                <div class="row-fluid">
+                    <div class="span12">
+                        <input type="image" src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgDetailPanelLoad" />
+                        <div id="pnlAddOrderDetail">
+                            <h3>@ResAddSalesOrder.AddSalesOrder.lblTitleAddProduct</h3>
+                            <table>
+                                <tr>
+                                    <th>@ResAddSalesOrder.AddSalesOrder.lblProduct</th>
+                                    <th>@ResAddSalesOrder.AddSalesOrder.lblQuantity</th>
+                                    <th>@ResAddSalesOrder.AddSalesOrder.lblDeliveryDate</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align:middle">
+                                        <input list="ddlProductsList" id="ddlProducts">
+                                        <datalist id="ddlProductsList">
+                                            @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                                                var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
+                                                foreach (var prd in sortedProducts)
+                                                {
+                                                    <option data-id="@prd.IDCombinato2" value="@prd.process.processName - @prd.variant.nomeVariante"></option>
+                                                }
+                                            }
+                                        </datalist>
+
+                                    </td>
+                                    <td style="vertical-align:middle"><input type="number" id="txtQuantity" min="0" step="1" style="width:60px;" /></td>
+                                    <td style="vertical-align:middle">
+                                        <input type="text" id="txtDeliveryDate" />
+                                    </td>
+                                    <td>
+                                        <input type="image" id="imgAddProduct" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" />
+                                        <input type="image" src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLinkProductToOrderLoad" />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div>@ResAddSalesOrder.AddSalesOrder.lblNoAuth</div>
+            }
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <input type="image" src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgProductListPanelLoad" />
+                    <div id="pnlProductsList"></div>
+                    </div>
+                </div>
+
+                    }
+                    else
+                    {
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <a href="~/Clienti/AddCliente.aspx">@ResAddSalesOrder.AddSalesOrder.lblLnkAddCustomer</a>
+                        </div>
+                    </div>
+                    }
+                    }
+                    else
+                    {
+                    <div class="row-fluid">
+                        <div class="span12">
+                            <a href="~/Clienti/AddCliente.aspx">@ResAddSalesOrder.AddSalesOrder.lblLnkAddCustomer</a>
+                        </div>
+                    </div>
+                    }
+                    }
+                    else
+                    {
+                    <div>@ResAddSalesOrder.AddSalesOrder.lblNoAuth</div>
+                    }

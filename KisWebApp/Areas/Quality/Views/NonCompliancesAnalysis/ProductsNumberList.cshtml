@@ -1,0 +1,131 @@
+﻿@model IEnumerable<KIS.App_Sources.AnalysisNCProduct>
+
+@{
+    ViewBag.Title = ResAnalysis.ProductsNumberList.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAnalysis.ProductsNumberList.lblTitle</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavNonCompliancesAnalysis</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResAnalysis.ProductsNumberList.lblTitle</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (ViewBag.authenticated)
+{
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("[id*=txtDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $(function () {
+                $("[id*=txtDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+
+            $('#txtDateStart').attr("value", "@ViewBag.start");
+            $('#txtDateEnd').attr("value", "@ViewBag.end");
+
+            $('.btnSearch').click(function () {
+                var start = $("#txtDateStart").val();
+                var end = $("#txtDateEnd").val();
+
+                var startS = start.split('/');
+                var endS = end.split('/');
+
+                var startD = new Date(startS[2], startS[1] - 1, startS[0]);
+                var endD = new Date(endS[2], endS[1] - 1, endS[0]);
+
+                var startY = startD.getFullYear();
+                var startM = (startD.getMonth() + 1);
+                if (startM < 10) { startM = "0" + startM; }
+                var startG = startD.getDate();
+                if (startG < 10) { startG = "0" + startG; }
+
+                var endY = endD.getFullYear();
+                var endM = (endD.getMonth() + 1);
+                if (endM < 10) { endM = "0" + endM; }
+                var endG = endD.getDate();
+                if (endG < 10) { endG = "0" + endG; }
+
+                if (startD < endD) {
+                    window.location.href = "@Url.Action("ProductsNumberList", "NonCompliancesAnalysis")?start="
+                        + startY + "-" + startM + "-" + startG + "&end="
+                        + endY + "-" + endM + "-" + endG;
+                }
+                else {
+                    alert("@ResAnalysis.ProductsNumberList.lblInputDateError");
+                }
+            });
+        });
+    </script>
+
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAnalysis.ProductsNumberList.lblDateStart
+            <input type="text" id="txtDateStart" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            @ResAnalysis.ProductsNumberList.lblDateEnd
+            <input type="text" id="txtDateEnd" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            <input type="image" src="~/img/iconView.png" style="min-width: 40px; max-width: 40px;" id="btnSearch" class="btnSearch" />
+        </div>
+    </div>
+    if (Model != null && Model.Count() > 0)
+    {
+        String strStartY = ((DateTime)ViewBag.startD).Year.ToString();
+        String strStartD = ((DateTime)ViewBag.startD).Day < 10 ? "0" + ((DateTime)ViewBag.startD).Day.ToString() : ((DateTime)ViewBag.startD).Day.ToString();
+        String strStartM = ((DateTime)ViewBag.startD).Month < 10 ? "0" + ((DateTime)ViewBag.startD).Month.ToString() : ((DateTime)ViewBag.startD).Month.ToString();
+        String strStart = strStartY + "-" + strStartM + "-" + strStartD;
+
+        String strEndY = ((DateTime)ViewBag.endD).Year.ToString();
+        String strEndD = ((DateTime)ViewBag.endD).Day < 10 ? "0" + ((DateTime)ViewBag.endD).Day.ToString() : ((DateTime)ViewBag.endD).Day.ToString();
+        String strEndM = ((DateTime)ViewBag.endD).Month < 10 ? "0" + ((DateTime)ViewBag.endD).Month.ToString() : ((DateTime)ViewBag.endD).Month.ToString();
+        String strEnd = strEndY + "-" + strEndM + "-" + strEndD;
+        <div class="row-fluid">
+            <div class="span12">
+                <img id="imgCategoriesGraph" src="@Url.Action("ProductsNumberGraph", "NonCompliancesAnalysis")?start=@strStart&end=@strEnd" />
+            </div>
+        </div>
+
+        var lista2 = Model.GroupBy(m => new { m.ProcessID, m.ProcessRev, m.VariantID, m.NCQuantity, m.ProcessName, m.VariantName })
+                            .Select(group => new { XAxys = group.Key.ProcessName + " - " + group.Key.VariantName, YAxys = group.Sum(s => s.NCQuantity) })
+                            .OrderByDescending(x => x.YAxys)
+                            .ToList();
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-bordered table-hover table-condensed">
+                    <thead>
+                        <tr>
+                            <th>@ResAnalysis.ProductsNumberList.lblTHProduct</th>
+                            <th>@ResAnalysis.ProductsNumberList.lblTHQuantity</th>
+                        </tr>
+                    </thead>
+                    @foreach (var m in lista2)
+                    {
+                            <tr>
+                                <td>@m.XAxys</td>
+                                <td>@m.YAxys</td>
+                            </tr>
+                     
+                    }
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>@ResAnalysis.ProductsNumberList.lblNoProducts</div>
+    }
+}
+else
+{
+    <div>@ResAnalysis.ProductsNumberList.lblErrNoAuth</div>
+}

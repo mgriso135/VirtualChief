@@ -1,0 +1,169 @@
+﻿@model IEnumerable<KIS.App_Sources.NonCompliance>
+
+@{
+    ViewBag.Title = ResNC.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResNC.Index.lblTitle</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/NonCompliances/Index?stat=O&sortOrder=init">@Resources.Shared.lblNavNonCompliances</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (ViewBag.authorized)
+{
+    <a href="~/Quality/NonCompliances/Create">
+        <img src="~/img/iconAdd2.png" style="height: 40px;" />@ResNC.Index.lblAdd
+    </a>
+
+    using (Html.BeginForm("Index", "NonCompliances/Index", FormMethod.Get))
+    {
+        <div>
+            Status:&nbsp;@Html.DropDownList("stat",
+                        new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text=ResNC.Index.lblAll, Value = "A" },
+                    new SelectListItem{ Text=ResNC.Index.lblOpen, Value = "O" },
+                    new SelectListItem{ Text=ResNC.Index.lblClosed, Value = "C" }
+                 },
+                        new { @class = "btn btn-default dropdown-toggle", @style = "width:100px;" }
+
+    )
+            <input type="submit" value="@ResNC.Index.lblSubmit" />
+        </div>
+    }
+
+    if (Model != null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>
+                                <a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortID">@ResNC.Index.lblID</a>
+                            </th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortOpeningDate">@ResNC.Index.lblOpeningDate</a></th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortUser">@ResNC.Index.lblUser</a></th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortDescription">@ResNC.Index.lblDescription</a></th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortImmAction">@ResNC.Index.lblImmediateAction</a></th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortCost">@ResNC.Index.lblCost</a></th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortStatus">@ResNC.Index.lblStatus</a></th>
+                            <th><a href="~/Quality/NonCompliances/Index?stat=@ViewBag.filterStat&sortOrder=@ViewBag.sortClosureDate">@ResNC.Index.lblClosingDate</a></th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                    {
+                            <tr id="row_@m.ID-@m.Year">
+                                <td><a href="~/Quality/NonCompliances/Update?ID=@m.ID&Year=@m.Year"><img src="~/img/edit.png" style="min-width:30px;max-width:30px;" title="@ResNC.Index.lblUpdate" /></a></td>
+                                <td><input type="image" class="btnDelete" src="~/img/iconDelete.png" style="min-width:30px;max-width:30px;" id="btnDelete" value="@m.ID.@m.Year" /></td>
+                                <td>@m.ID/@m.Year</td>
+                                <td>@m.OpeningDate.ToString("dd/MM/yyyy")</td>
+                                <td>@m.user.name @m.user.cognome</td>
+                                @if (m.Description.Length <= 200)
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.Description))</td> 
+                                }
+                                else
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.Description.Substring(0, 200)))...</td>
+                                }
+                                @if (m.ImmediateAction.Length <= 200)
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.ImmediateAction))</td> }
+                                else
+                                {
+                                    <td>@Server.HtmlDecode(Server.HtmlDecode(m.ImmediateAction.Substring(0, 200)))...</td>
+                                }
+                                <td>@m.Cost</td>
+                                <td>
+                                    @switch (m.Status)
+                                    {
+                                        case 'O': @ResNC.Index.lblOpen; break;
+                                        case 'C': @ResNC.Index.lblClosed; break;
+                                        default: break;
+                                    }
+                                </td>
+
+
+                                <td>
+                                    @if (m.ClosureDate > new DateTime(1970, 1, 1))
+                                { @m.ClosureDate.ToString("dd/MM/yyyy") }
+                            </td>
+
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+            <script>
+                $('.btnDelete').click(function () {
+                    var nonC = $(this).val().split('.');
+                    if (window.confirm("@Server.HtmlDecode(ResNC.Index.lblDelWarn1)" +
+                        " " +
+                        nonC[0] + "/" + nonC[1] + ". " + "@Server.HtmlDecode(ResNC.Index.lblDelWarn2)")) {
+
+                        var rowToDelete = "#row_" + nonC[0] + "-" + nonC[1];
+
+                        $.ajax({
+                            //url: '../../Quality/NonCompliances/Delete',
+                            url: "@Url.Action("Delete", "NonCompliances")",
+                            type: 'POST',
+                            data: {
+                                ID: nonC[0],
+                                Year: nonC[1],
+                            },
+                            success: function (data) {
+                                if (data == "False")
+                                { alert("@Server.HtmlDecode(ResNC.Index.lblDelError)"); }
+                                else {
+                                    $(rowToDelete).remove();
+                                }
+                            },
+                            statusCode: {
+                                404: function (content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show(); },
+                                500: function (content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show(); }
+                            },
+                            error: function (req, status, errorObj) {
+                                alert("error");
+                                $(this).show();
+                            }
+                        });
+                    }
+                    else {
+                    }
+                });
+
+            </script>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResNC.Index.lblNCNotFound
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResNC.Index.lblNotLoggedIn
+        </div>
+    </div>
+}

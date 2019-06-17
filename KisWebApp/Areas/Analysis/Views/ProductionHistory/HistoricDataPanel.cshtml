@@ -1,0 +1,159 @@
+﻿@model IEnumerable<KIS.App_Sources.ProductionHistoryStruct>
+
+@if (Model != null && Model.Count() > 0)
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.imgExhumate').click(function () {
+                $(this).fadeOut();
+                var prodID = $(this).val().split(';');
+                if ($.isNumeric(prodID[0]) && $.isNumeric(prodID[1])) {
+                    $.ajax({
+                    url: "@Url.Action("ExhumateProduct", "ProductionHistory")",
+                    type: 'GET',
+                    dataType: "html",
+                    data: {
+                        ProdID: prodID[0],
+                        ProdYear: prodID[1]
+                    },
+                        success: function (result) {
+                        if (result) {
+                            $("#row_" + prodID[0] + prodID[1]).fadeOut();
+                        }
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $(this).fadeIn();
+                        //$("#frmListWorkstations").html("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $(this).fadeIn();
+                        //$("#frmListWorkstations").html("Warning");
+                    }
+                    });
+                }
+            });
+
+        });
+        </script>
+<table class="table table-hover table-striped table-condensed">
+    <thead>
+        <tr>
+            <th></th>
+            <th>@ResProductionHistory.Index.lblTHCustomerName</th>
+            <th>@ResProductionHistory.Index.lblTHCustomerCountry</th>
+            <th>@ResProductionHistory.Index.lblTHCustomerProvince</th>
+            <th>@ResProductionHistory.Index.lblTHSalesOrderID</th>
+            <th>@ResProductionHistory.Index.lblTHSalesOrderNotes</th>
+            <th>@ResProductionHistory.Index.lblTHProductExternalID</th>
+            <th>@ResProductionHistory.Index.lblTHProductName</th>
+            <th>@ResProductionHistory.Index.lblTHQuantityOrdered</th>
+            <th>@ResProductionHistory.Index.lblTHQuantityProduced</th>
+            <th>@ResProductionHistory.Index.lblMeasurementUnit</th>
+            <th>@ResProductionHistory.Index.lblTHSerialNumber</th>
+            <th>@ResProductionHistory.Index.lblTHProductionOrderID</th>
+            <th>@ResProductionHistory.Index.lblTHDepartment</th>
+            <th>@ResProductionHistory.Index.lblTHRealWorkingTime</th>
+            <th>@ResProductionHistory.Index.lblTHRealLeadTime</th>
+            <th>@ResProductionHistory.Index.lblTHRealDelay</th>
+            <th>@ResProductionHistory.Index.lblTHEndProductionDateReal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            double QuantityOrdered = 0.0;
+            double QuantityProduced = 0.0;
+            TimeSpan WorkingTime = new TimeSpan(0,0,0);
+            TimeSpan LeadTime = new TimeSpan(0, 0, 0) ;
+            TimeSpan Delay = new TimeSpan(0,0,0);
+
+            foreach (var m in Model)
+            {
+                <tr id="row_@m.ProductionOrderID@m.ProductionOrderYear">
+
+                    <td>
+                        <a href="~/Produzione/statoAvanzamentoArticolo.aspx?id=@m.ProductionOrderID&anno=@m.ProductionOrderYear" target="_blank">
+                            <img src="~/img/iconView.png" style="max-width:30px; min-width:20px; min-height:20px;" />
+                        </a>
+                    </td>
+                    <td>@m.CustomerName</td>
+                    <td>@m.CustomerCountry</td>
+                    <td>@m.CustomerProvince</td>
+                    @if (m.SalesOrderExternalID.Length > 0)
+                        {
+                        <td>@m.SalesOrderExternalID</td>
+                    }
+                    else
+                    {
+                        <td>@m.SalesOrderID/@m.SalesOrderYear</td>
+                    }
+                    <td>@m.SalesOrderNotes</td>
+                    <td>@m.ProductExternalID</td>
+                    <td>@m.ProductTypeName - @m.ProductName</td>
+                    <td>@m.ProductionOrderQuantityOrdered</td>
+                    <td>@m.ProductionOrderQuantityProduced</td>
+                    <td>@m.MeasurementUnit</td>
+                    <td>@m.ProductionOrderSerialNumber</td>
+                    <td>@m.ProductionOrderID/@m.ProductionOrderYear</td>
+                    <td>@m.DepartmentName</td>
+                    <td>@Math.Round(m.RealWorkingTime.TotalHours, 2)</td>
+                    <td>@Math.Round(m.RealLeadTime.TotalHours, 2)</td>
+                    <td>@Math.Round(m.RealDelay.TotalHours, 2)</td>
+                    <td>@m.ProductionOrderEndProductionDateReal.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td><input type="image" class="imgExhumate" value="@m.ProductionOrderID;@m.ProductionOrderYear" src="~/img/iconExhume.png" style="max-width:30px; min-width:20px; min-height:20px;" alt="@ResProductionHistory.Index.lblExhumate" /></td>
+
+                    <!--
+                <td>@m.ProductDescription</td>
+                <td>@m.ProductionOrderDeliveryDate</td>
+                <td>@m.ProductionOrderEndProductionDate</td>
+
+                <td>@m.ProductionOrderKanbanCardID</td>
+                <td>@m.ProductionOrderPlanner</td>
+                <td>@m.ProductionOrderProductTypeID</td>
+                <td>@m.ProductionOrderProductID</td>
+                <td>@m.ProductionOrderProductTypeReview</td>
+
+
+
+                <td>@m.ProductTypeID</td>
+
+                <td>@m.ProductTypeDescription</td>
+                <td>@m.ProductTypeReview</td>
+                <td>@m.ProductTypeReviewDate.ToString("dd/MM/yyyy")</td>
+                <td>@m.ProductTypeEnabled</td>-->
+                    @{
+                        QuantityOrdered += m.ProductionOrderQuantityOrdered;
+                        QuantityProduced += m.ProductionOrderQuantityProduced;
+                        WorkingTime = WorkingTime.Add(m.RealWorkingTime);
+                        LeadTime = LeadTime.Add(m.RealLeadTime);
+                        Delay = Delay.Add(m.RealDelay);
+                    }
+                </tr>
+                        }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>@QuantityOrdered</b></td>
+            <td><b>@QuantityProduced</b></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><b>@Math.Round(WorkingTime.TotalHours / Model.Count(), 2)</b></td>
+            <td><b>@Math.Round(LeadTime.TotalHours / Model.Count(), 2)</b></td>
+            <td><b>@Math.Round(Delay.TotalHours / Model.Count(), 2)</b></td>
+        </tr>
+    </tfoot>
+</table>
+}

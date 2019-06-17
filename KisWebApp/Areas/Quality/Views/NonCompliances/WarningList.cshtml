@@ -1,0 +1,85 @@
+﻿@model IEnumerable<KIS.App_Code.FlatWarning>
+
+@if (ViewBag.authenticated)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+
+<script>
+    $(document).ready(function () {
+        $('.btnAddWarning').click(function () {
+            var rowToDelete = "#row_" + $(this).val();
+            $.ajax({
+                //url: '/Quality/NonCompliances/NCProductWarningAdd',
+                url: "@Url.Action("NCProductWarningAdd", "NonCompliances")",
+                type: 'POST',
+                data:{
+                    ID: @ViewBag.ncID,
+                    Year: @ViewBag.ncYear,
+                    wrnID: $(this).val()
+                },
+                success: function(data) { if(data == "False") {
+                    alert("@Server.HtmlDecode(ResNC.WarningList.lblAddError)");
+                }
+                else {$(rowToDelete).remove();
+                }},
+                statusCode : {
+                    404: function(content) { $(this).prop('disabled', false); alert('Error 404 ' + content); $(this).show();},
+                    500: function(content) { $(this).prop('disabled', false); alert('Error 500 ' + content); $(this).show();}
+                },
+                error: function(req, status, errorObj) {
+                    alert("error");
+                    $(this).show();
+                }
+            });
+    });
+        });
+</script>
+        
+        <table class="table table-condensed table-striped table-hover">
+            <tr>
+                <th></th>
+                <th>@ResNC.WarningList.lblWarning</th>
+                <th>@ResNC.WarningList.lblWarningDate</th>
+                <th>@ResNC.WarningList.lblProduct</th>
+                <th>@ResNC.WarningList.lblProductName</th>
+                <th>@ResNC.WarningList.lblCustomer</th>
+                <th>@ResNC.WarningList.lblSerialNumber</th>
+                <th>@ResNC.WarningList.lblQuantity</th>
+                <th>@ResNC.WarningList.lblTask</th>
+                <th>@ResNC.WarningList.lblWorkstation</th>
+                <th>@ResNC.WarningList.lblUser</th>
+                <th>@ResNC.WarningList.lblReason</th>
+                <th>@ResNC.WarningList.lblResolution</th>
+            </tr>
+            @foreach (var m in Model)
+            {
+                <tr id="row_@m.WarningID">
+                    <td>
+                        <input type="image" class="btnAddWarning" src="~/img/iconAdd2.png" style="height:30px;" id="btnAddWaring" value="@m.WarningID" />
+                    </td>
+                    <td>@m.WarningID</td>
+                    <td>@m.WarningDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td>@m.ProductID / @m.ProductYear</td>
+                    <td>@m.processName @m.varianteName</td>
+                    <td>@m.CustomerName</td>
+                    <td>@m.SerialNumber</td>
+                    <td>@m.Quantity</td>
+                    <td>@m.TaskName</td>
+                    <td>@m.WorkstationName</td>
+                    <td>@m.User</td>
+                    <td>@m.Reason</td>
+                    <td>@m.Resolution</td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <div>@ResNC.WarningList.lblNoWarnings</div>
+    }
+}
+else
+{
+    <div>@ResNC.WarningList.lblNotLoggedIn</div>
+}

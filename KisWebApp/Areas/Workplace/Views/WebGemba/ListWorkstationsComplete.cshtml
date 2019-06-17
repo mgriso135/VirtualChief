@@ -1,0 +1,87 @@
+﻿@model IEnumerable<KIS.App_Code.Postazione>
+
+@if (ViewBag.authX)
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @if(Model!=null && Model.Count()> 0)
+            {                
+                <script>
+                    $(document).ready(function () {
+
+                        $(".btnCheckIn").click(function () {
+                            var workstationID = $(this).val();
+                            $(this).hide();
+                            $.ajax({
+                                url: "@Url.Action("WorkstationCheckIn", "WebGemba")",
+                                type: 'GET',
+                            dataType: "html",
+                            data: {
+                                workstationID: workstationID
+                            },
+                            success: function (result) {
+                                if (result == "1")
+                                {
+                                    var rowid = "#row_" + workstationID;
+                                    $(rowid).hide();
+                                }
+                                else
+                                {
+                                    alert("An error occured.");
+                                    $(this).show();
+                                }
+                            },
+                            error: function (result) {
+                                //alert("Error");
+                                $(this).show();
+                            },
+                            warning: function (result) {
+                                //alert("Warning");
+                                $(this).show();
+                            }
+                        });
+                        });
+                        
+                    });
+                </script>
+                <table class="table table-condensed table-striped table-hover" width="100%">
+                    <thead>
+                        <tr>
+                        <th>@ResWebGemba.ListWorkstationsComplete.lblTHWorkstation</th>
+                            <th>@ResWebGemba.ListWorkstationsComplete.lblTHOtherUsers</th>
+                            <th></th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var p in Model)
+                        {
+                            <tr id="row_@p.id">
+                                <td style="vertical-align: middle;">@Server.HtmlDecode(p.name)</td>
+                                <td style="vertical-align: middle;">
+                                    @{
+                                        p.loadUtentiLoggati();
+                                        foreach (var u in p.UtentiLoggati)
+                                        {
+                                            <div>@u</div>
+                                        }
+                                    }
+                                </td>
+                                <td style="vertical-align: middle;"><input class="btnCheckIn" value="@p.id" 
+                                           type="image" src="~/img/iconCheckIn6.jpg"
+                                           style="min-height:40px; max-height:40px;"/></td>
+                            </tr>
+                        }
+                                        </tbody>
+                </table>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+
+        </div>
+    </div>
+}

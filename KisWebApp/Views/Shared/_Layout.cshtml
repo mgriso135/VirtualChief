@@ -1,0 +1,265 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Virtual Chief</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/img/favicon.ico" />
+    <link href="~/Styles/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+    <script src="~/Styles/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js"></script>
+    <script src="~/Styles/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+
+    <script>
+        $(function () {
+
+            $("#accordion").accordion();
+
+
+
+            var availableTags = [
+                "ActionScript",
+                "AppleScript",
+                "Asp",
+                "BASIC",
+                "C",
+                "C++",
+                "Clojure",
+                "COBOL",
+                "ColdFusion",
+                "Erlang",
+                "Fortran",
+                "Groovy",
+                "Haskell",
+                "Java",
+                "JavaScript",
+                "Lisp",
+                "Perl",
+                "PHP",
+                "Python",
+                "Ruby",
+                "Scala",
+                "Scheme"
+            ];
+            /*$("#autocomplete").autocomplete({
+                source: availableTags
+            });
+
+
+
+            $("#button").button();
+            $("#radioset").buttonset();
+
+
+
+            $("#tabs").tabs();
+
+
+
+            $("#dialog").dialog({
+                autoOpen: false,
+                width: 400,
+                buttons: [
+                    {
+                        text: "Ok",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                ]
+            });
+
+            // Link to open the dialog
+            $("#dialog-link").click(function (event) {
+                $("#dialog").dialog("open");
+                event.preventDefault();
+            });
+
+            */
+
+            $("#datepicker").datepicker({
+                inline: true
+            });
+
+            /*
+
+                            $("#slider").slider({
+                                range: true,
+                                values: [17, 67]
+                            });
+
+
+
+                            $("#progressbar").progressbar({
+                                value: 20
+                            });
+
+
+                            // Hover states on the static widgets
+                            $("#dialog-link, #icons li").hover(
+                                function () {
+                                    $(this).addClass("ui-state-hover");
+                                },
+                                function () {
+                                    $(this).removeClass("ui-state-hover");
+                                }
+                            );*/
+        });
+    </script>
+
+    <!-- CSS GIORDANO -->
+    <link href="~/Styles/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Styles/assets/css/bootstrap-responsive.css" rel="stylesheet" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+          <script src="~/Styles/assets/js/html5shiv.js"></script>
+        <![endif]-->
+    <!-- Fav and touch icons -->
+    <!-- FINE CSS GIORDANO -->
+    <!-- Begin Cookie Consent plugin by Silktide - http://silktide.com/cookieconsent -->
+    <script type="text/javascript">
+        window.cookieconsent_options = { "message": "This website uses cookies to ensure you get the best experience on our website.<br/>Navigando sul nostro sito accetti la privacy policy. Il sito utilizza i cookie di terze parti per profilare gli utenti.", "dismiss": "Chiudi e accetta", "learnMore": "More info", "link": null, "theme": "light-bottom" };
+    </script>
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+    <!-- End Cookie Consent plugin -->
+    <!-- Never expiring session -->
+    <script type="text/javascript">
+        window.setInterval("renewSession();", 60000);
+        function renewSession() {
+            document.getElementById("renewSession").src = "../../renewSes.aspx?par=" + Math.random();
+        }
+    </script>
+    <!-- End Never expiring sessione -->
+
+</head>
+<body>
+    <div id="wrap">
+        <!--<header>-->
+        <!-- Fixed navbar -->
+        <div class="masthead">
+            <div class="container header">
+                @{ KIS.App_Code.Logo logo = new KIS.App_Code.Logo();
+                    if (logo.filePath.Length > 0)
+                    {
+                        <img src="@Url.Content(logo.filePath)" alt="Company's logo" style="height:50px;" />
+                    }
+                }
+                <a class="brand">Virtual Chief</a>
+                <div class="pull-right text-right">
+                    @{ Html.RenderPartial("~/Views/Shared/welcomeBox.ascx"); }
+                </div>
+            </div>
+            @{ Html.RenderPartial("~/Views/Shared/menuBar.ascx"); }
+        </div>
+        <div class="container">
+            @{
+                KIS.App_Code.KISConfig kisCfg = new KIS.App_Code.KISConfig();
+                DateTime licenseExpDate = kisCfg.ExpiryDate;
+                if (licenseExpDate.AddDays(7) <= DateTime.UtcNow)
+                {
+                    Response.Redirect("~/LicenseExpired.aspx");
+                }
+
+                else if (licenseExpDate <= DateTime.UtcNow)
+                {
+                    TimeSpan diffDate = (DateTime.UtcNow - licenseExpDate);
+                    <br /><div>
+                        Attenzione: la licenza di Virtual Chief è scaduta da&nbsp;
+                        @Math.Round(diffDate.TotalDays, 0)
+                        &nbsp;giorni
+                    </div>
+                }
+                else if (DateTime.UtcNow.AddDays(30) >= licenseExpDate && DateTime.UtcNow <= licenseExpDate)
+                {
+                    TimeSpan diffDate = (licenseExpDate - DateTime.UtcNow);
+                    <br /><div>
+                        Attenzione: la licenza di Virtual Chief scadrà fra&nbsp;
+                        @Math.Round(diffDate.TotalDays, 0)
+                        &nbsp;giorni
+                    </div>
+                }
+            }
+            <br />
+            <div class="container body-content">
+                @RenderBody()
+            </div>
+
+        </div>
+        <!--</section>-->
+        <div id="push"></div><!-- non rimuovere -->
+    </div>
+
+    <footer>
+
+        <div id="footer">
+            <div class="container">
+                <div class="static-link">
+                    <a href="http://www.virtualchief.net" target="_blank" title="Chi siamo">
+                        <i class="icon-user"></i>&nbsp;@Resources._Layout.lblAboutUs
+                    </a>
+                    <a href="mailto:info@virtualchief.net" title="Contatti">
+                        <i class="icon-info-sign"></i>&nbsp;@Resources._Layout.lblContactUs
+                    </a>
+                </div>
+                <p class="muted credit">
+                    <small>
+                        &copy; 2018
+                        <a href="https://www.linkedin.com/in/matteo-griso/" target="_blank">Matteo Griso</a>&nbsp;-&nbsp;
+                        @Resources._Layout.lblRightsReserved
+                        &nbsp;|&nbsp;
+                        @Resources._Layout.lblInfo
+                        <a href="mailto:info@virtualchief.net">info@virtualchief.net</a>; Skype: m.griso
+
+                    </small>
+                </p>
+            </div>
+        </div>
+        <img id="renewSession" />
+    </footer>
+
+    <!-- Le javascript
+            ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="../../Styles/assets/js/bootstrap-transition.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-alert.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-modal.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-dropdown.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-tab.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-tooltip.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-popover.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-button.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-collapse.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-carousel.js"></script>
+    <script src="../../Styles/assets/js/bootstrap-typeahead.js"></script>
+
+</body>
+</html>
+@{
+    // Register user action
+    String ipAddr = Request.UserHostAddress;
+    String path = Request.RawUrl;
+    try
+    {
+        var pageS = Request.RawUrl.Split('?');
+        path = pageS[0];
+    }
+    catch { path = Request.RawUrl; }
+    if (Session["user"] != null)
+    {
+        KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+
+        Dati.Utilities.LogAction(curr.username, "Page", path, Request.QueryString.ToString(), ipAddr);
+    }
+    else
+    {
+        Dati.Utilities.LogAction(Session.SessionID, "Page", path, Request.QueryString.ToString(), ipAddr);
+    }
+}

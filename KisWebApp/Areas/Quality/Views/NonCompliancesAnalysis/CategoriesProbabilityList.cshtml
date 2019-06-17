@@ -1,0 +1,46 @@
+﻿@model IEnumerable<KIS.App_Sources.AnalysisNCCategory>
+
+@if(ViewBag.authenticated)
+{ 
+    
+    <h5>@ResAnalysis.CategoriesProbabilityList.lblTitle</h5>
+    @ResAnalysis.CategoriesProbabilityList.lblCatDesc<br />
+    if (Model != null && Model.Count() > 0 && ViewBag.NcNumber > 0)
+    {
+        <img id="imgCategoriesGraph" src="@Url.Action("CategoriesProbabilityGraph", "NonCompliancesAnalysis")?start=@ViewBag.start&end=@ViewBag.end" />
+
+        var ncAnalys3 = Model.GroupBy(x => x.CategoryName)
+        .Select(group => new { XAxys = group.Key, YAxys = group.Count() })
+                .OrderByDescending(x => x.YAxys)
+                .ToList();
+
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+
+                    <th>@ResAnalysis.CategoriesProbabilityList.lblTHCategory</th>
+                    <th>@ResAnalysis.CategoriesProbabilityList.lblTHFrequency</th>
+                    <th>@ResAnalysis.CategoriesProbabilityList.lblTHFrequencyRel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in ncAnalys3)
+                {
+                    <tr>
+                        <td>@m.XAxys</td>
+                        <td>@m.YAxys</td>
+                        <td>@Math.Round((100 * (double)m.YAxys / (double)ViewBag.NcNumber), 2)%</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div>@ResAnalysis.CategoriesProbabilityList.lblErrNoCategories</div>
+    }
+}
+else
+{
+
+}

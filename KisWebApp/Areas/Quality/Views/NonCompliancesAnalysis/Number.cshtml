@@ -1,0 +1,287 @@
+﻿
+@{
+    ViewBag.Title = @ResAnalysis.Number.AnalysisNumTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAnalysis.Number.AnalysisNumTitle</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li><a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavNonCompliancesAnalysis</a><span class="divider"></span>
+    </li>
+        <li>
+            <a href="~/Quality/NonCompliancesAnalysis/Number">@Resources.Shared.lblNavNonCompliancesAnalysisNum</a><span class="divider"></span>
+        </li>
+</ul>
+
+@if (ViewBag.authenticated)
+{
+    <script>
+
+        function loadNCPerPeriodGraphView(start, end, format) {
+
+    $('#imgLoadNcMonth').show();
+    $('#imgNcMonth').attr("src", "@Url.Action("NCPerPeriod", "NonCompliancesAnalysis")?start="
+        + start.getFullYear()+"-" + (start.getMonth() + 1)
+        + "-" + start.getDate()
+        + "&end="+ end.getFullYear()+"-" + (end.getMonth() + 1)
+        + "-" + end.getDate() + "&format=" + format);
+
+            $('#imgLoadNcMonth').hide();
+        }
+
+        function loadNCPerPeriodListView(start, end, format) {
+            $('#imgLoadNcPerPeriodList').fadeIn();
+            $.ajax({
+                    url: "@Url.Action("NCPerPeriodList", "NonCompliancesAnalysis")",
+                type: 'GET',
+                data:{
+                    start: start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + start.getDate(),
+                    end: end.getFullYear() + "-" + (end.getMonth() + 1)  + "-" + end.getDate(),
+                    format: format
+                },
+                    dataType: 'html',
+                    success: function(result) {
+                        $('#lnkNCPerPeriodDetail').html(result);
+                        $('#imgLoadNcPerPeriodList').fadeOut();
+                    },
+                    error: function (result) { alert("Error loadNCPerPeriodListView ");},
+                    warning: function (result) { alert("Warning loadNCPerPeriodListView"); },
+                });
+        }
+
+        function loadParetoCauseGraphView(start, end) {
+            $('#imgLoadParetoCause').show();
+
+            $('#imgParetoCause').attr("src", "@Url.Action("NCCausesPerPeriodGraph", "NonCompliancesAnalysis")?start="
+                + start.getFullYear()+"-" + (start.getMonth() + 1)
+                + "-" + start.getDate()
+                + "&end="+ end.getFullYear()+"-" + (end.getMonth() + 1)
+                + "-" + end.getDate());
+
+            $('#imgLoadParetoCause').hide();
+        }
+        
+        function loadCausesListView(start, end) {
+            $('#imgLoadCausesList').fadeIn();
+            $.ajax({
+                url: "@Url.Action("NCCausesPerPeriodList", "NonCompliancesAnalysis")",
+                type: 'GET',
+            data:{
+                start: start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + start.getDate(),
+                end: end.getFullYear() + "-" + (end.getMonth() + 1)  + "-" + end.getDate(),
+            },
+            dataType: 'html',
+            success: function(result) {
+                $('#lnkCausesDetail').html(result);
+                $('#imgLoadCausesList').fadeOut();
+            },
+            error: function (result) { alert("Error loadCausesListView "); },
+            warning: function (result) { alert("Warning loadCausesListView"); },
+                });
+        }
+
+        function loadParetoCategoriesGraphView(start, end) {
+            $('#imgLoadParetoCategories').show();
+
+            $('#imgParetoCategories').attr("src", "@Url.Action("NCParetoCategoriesChart", "NonCompliancesAnalysis")?start="
+                + start.getFullYear()+"-" + (start.getMonth() + 1)
+                + "-" + start.getDate()
+                + "&end="+ end.getFullYear()+"-" + (end.getMonth() + 1)
+                + "-" + end.getDate());
+
+            $('#imgLoadParetoCategories').hide();
+        }
+
+        function loadCategoriesListView(start, end) {
+            $('#imgLoadCategoriesList').fadeIn();
+            $.ajax({
+                url: "@Url.Action("NCParetoCategoriesList", "NonCompliancesAnalysis")",
+                type: 'GET',
+            data:{
+                start: start.getFullYear() + "-" + (start.getMonth() + 1) + "-" + start.getDate(),
+                end: end.getFullYear() + "-" + (end.getMonth() + 1)  + "-" + end.getDate(),
+                },
+            dataType: 'html',
+            success: function(result) {
+                $('#lnkCategoriesDetail').html(result);
+                $('#imgLoadCategoriesList').fadeOut();
+            },
+            error: function (result) { alert("Error loadCategoriesListView"); },
+            warning: function (result) { alert("Warning loadCategoriesListView"); },
+                });
+        }
+
+        $(document).ready(function () {
+            $(function () {
+                $("[id*=txtDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $(function () {
+                $("[id*=txtDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+
+            var currDate = new Date();
+            var nextDate = new Date();
+            currDate.setMonth(currDate.getMonth() - 1);
+            nextDate.setDate(nextDate.getDate() + 1);
+
+            var dd = currDate.getDate();
+            var mm = currDate.getMonth() + 1; //January is 0!
+            var yyyy = currDate.getFullYear();
+            if (dd < 10) { dd = '0' + dd }
+            if (mm < 10) { mm = '0' + mm }
+            today = dd + '/' + mm + '/' + yyyy;
+            $('#txtDateStart').attr("value", today);
+
+            dd = nextDate.getDate();
+            mm = nextDate.getMonth() + 1; //January is 0!
+            yyyy = nextDate.getFullYear();
+            if (dd < 10) { dd = '0' + dd }
+            if (mm < 10) { mm = '0' + mm }
+            today = dd + '/' + mm + '/' + yyyy;
+            $('#txtDateEnd').attr("value", today);
+
+
+            loadNCPerPeriodListView(currDate, nextDate, 'W');
+            loadCausesListView(currDate, nextDate);
+            loadCategoriesListView(currDate, nextDate);
+            loadNCPerPeriodGraphView(currDate, nextDate, 'W');
+            loadParetoCauseGraphView(currDate, nextDate);
+            loadParetoCategoriesGraphView(currDate, nextDate);
+            $('#lnkNCPerPeriodDetail').fadeOut();
+            $('#lnkCausesDetail').fadeOut();
+            $('#lnkCategoriesDetail').fadeOut();
+
+            $('.btnSearch').click(function () {
+                var start = $("#txtDateStart").val();
+                var end = $("#txtDateEnd").val();
+                var format = $("#ddlGraphFormat").val();
+
+                var startS = start.split('/');
+                var endS = end.split('/');
+
+                var startD = new Date(startS[2], startS[1] - 1, startS[0]);
+                var endD = new Date(endS[2], endS[1] - 1, endS[0]);
+                if (startD < endD)
+                {
+                    if (format == 'W')
+                    { $('#lblTitleNCPeriod').html("@ResAnalysis.Number.lblNCWeek"); }
+                    else
+                    { $('#lblTitleNCPeriod').html("@ResAnalysis.Number.lblNCMonth"); }
+
+                    loadNCPerPeriodListView(startD, endD, format);
+                    loadCausesListView(startD, endD);
+                    loadCategoriesListView(startD, endD);
+                    loadNCPerPeriodGraphView(startD, endD, format);
+                    loadParetoCauseGraphView(startD, endD);
+                    loadParetoCategoriesGraphView(startD, endD);
+                }
+                else
+                {
+                    alert("@ResAnalysis.Number.lblInputDateError");
+                }
+            });
+
+            $('#lnkTabNCDetail').click(function () {
+                if ($('#lnkNCPerPeriodDetail').is(':visible')) {
+                    $('#lnkNCPerPeriodDetail').fadeOut();
+                }
+                else {
+                    $('#lnkNCPerPeriodDetail').fadeIn();
+                }
+            });
+
+            $('#lnkTabCausesDetail').click(function () {
+                if ($('#lnkCausesDetail').is(':visible')) {
+                    $('#lnkCausesDetail').fadeOut();
+                }
+                else {
+                    $('#lnkCausesDetail').fadeIn();
+                }
+            });
+
+            $('#lnkTabCategoriesDetail').click(function () {
+                if ($('#lnkCategoriesDetail').is(':visible')) {
+                    $('#lnkCategoriesDetail').fadeOut();
+                }
+                else {
+                    $('#lnkCategoriesDetail').fadeIn();
+                }
+            });
+
+        });
+    </script>
+
+
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAnalysis.Number.lblDateStart
+            <input type="text" id="txtDateStart" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            @ResAnalysis.Number.lblDateEnd
+            <input type="text" id="txtDateEnd" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            @ResAnalysis.Number.lblGraphFormat
+            <select id="ddlGraphFormat" style="min-width:150px; max-width:150px;" >
+                <option value="W">@ResAnalysis.Number.lblGraphFormatWeekly</option>
+                <option value="M">@ResAnalysis.Number.lblGraphFormatMonthly</option>
+            </select>
+            <input type="image" src="~/img/iconView.png" style="min-width: 40px; max-width: 40px;" id="btnSearch" class="btnSearch" />
+
+        </div>
+    </div>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h5 id="lblTitleNCPeriod">@ResAnalysis.Number.lblNCWeek</h5>
+        <img src="~/img/iconLoading.gif" id="imgLoadNcMonth" style="width:40px;height: 40px;" />
+        <img id="imgNcMonth" />
+    </div>
+</div>
+<div class="pagination">
+    <ul>
+        <li><a id="lnkTabNCDetail" style="cursor: pointer">@ResAnalysis.Number.lblViewDetails</a></li>
+    </ul>
+</div>
+    <div class="row-fluid">
+        <div id="lnkNCPerPeriodDetail" class="span12">
+        </div><img src="~/img/iconLoading.gif" id="imgLoadNcPerPeriodList" style="width:40px;height: 40px;" />
+    </div>
+
+<div class="row-fluid">
+<div class="span12"><h5>@ResAnalysis.Number.lblNCCause</h5>
+    <img src="~/img/iconLoading.gif" id="imgLoadParetoCause" style="width:40px;height: 40px;" />
+    <img id="imgParetoCause" />
+    </div>
+</div>
+<div class="pagination">
+    <ul>
+        <li><a id="lnkTabCausesDetail" style="cursor: pointer">@ResAnalysis.Number.lblViewDetails</a></li>
+    </ul>
+</div>
+<div class="row-fluid">
+    <div id="lnkCausesDetail" class="span12">
+    </div><img src="~/img/iconLoading.gif" id="imgLoadCausesList" style="width:40px;height: 40px;" />
+</div>
+
+
+<div class="row-fluid">
+    <div class="span12">
+        <h5>@ResAnalysis.Number.lblNCCategories</h5>
+        <img src="~/img/iconLoading.gif" id="imgLoadParetoCategories" style="width:40px;height: 40px;" />
+        <img id="imgParetoCategories" />
+    </div>
+</div>
+<div class="pagination">
+    <ul>
+        <li><a id="lnkTabCategoriesDetail" style="cursor: pointer">@ResAnalysis.Number.lblViewDetails</a></li>
+    </ul>
+</div>
+<div class="row-fluid">
+    <div id="lnkCategoriesDetail" class="span12">
+    </div><img src="~/img/iconLoading.gif" id="imgLoadCategoriesList" style="width:40px;height: 40px;" />
+</div>
+}

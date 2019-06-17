@@ -1,0 +1,203 @@
+﻿@model IEnumerable<KeyValuePair<string, double>>
+
+
+@{
+    ViewBag.Title = ResAnalysis.CategoriesCostList.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAnalysis.CategoriesCostList.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavQuality</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="~/Quality/Home/Index">@Resources.Shared.lblNavNonCompliancesAnalysis</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResAnalysis.CategoriesCostList.lblNavTitle</a><span class="divider"></span>
+    </li>
+</ul>
+@if (ViewBag.authenticated)
+{
+    String strStartY = ((DateTime)ViewBag.startD).Year.ToString();
+    String strStartD = ((DateTime)ViewBag.startD).Day < 10 ? "0" + ((DateTime)ViewBag.startD).Day.ToString() : ((DateTime)ViewBag.startD).Day.ToString();
+    String strStartM = ((DateTime)ViewBag.startD).Month < 10 ? "0" + ((DateTime)ViewBag.startD).Month.ToString() : ((DateTime)ViewBag.startD).Month.ToString();
+    String strEndY = ((DateTime)ViewBag.endD).Year.ToString();
+    String strEndD = ((DateTime)ViewBag.endD).Day < 10 ? "0" + ((DateTime)ViewBag.endD).Day.ToString() : ((DateTime)ViewBag.endD).Day.ToString();
+    String strEndM = ((DateTime)ViewBag.endD).Month < 10 ? "0" + ((DateTime)ViewBag.endD).Month.ToString() : ((DateTime)ViewBag.endD).Month.ToString();
+    String strStartR = strStartD + "/" + strStartM + "/" + strStartY;
+    String strEndR = strEndD + "/" + strEndM + "/" + strEndY;
+    String strStartRev = strStartY + "-" + strStartM + "-" + strStartD;
+    String strEndRev = strEndY + "-" + strEndM + "-" + strEndD;
+
+    <script>
+        $(document).ready(function () {
+            $(function () {
+                $("[id*=txtDateStart]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $(function () {
+                $("[id*=txtDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+            });
+
+            $('#txtDateStart').attr("value", "@strStartR");
+            $('#txtDateEnd').attr("value", "@strEndR");
+
+                    function loadCategoryProbability(start, end) {
+                        var start ="@strStartR";
+                        var end = "@strEndR";
+
+                        var startS = start.split('/');
+                        var endS = end.split('/');
+
+                        var startD = new Date(startS[2], startS[1] - 1, startS[0]);
+                        var endD = new Date(endS[2], endS[1] - 1, endS[0]);
+
+                $('#imgLoadCatProbability').fadeIn();
+                $.ajax({
+                            url: "@Url.Action("CategoriesProbabilityList", "NonCompliancesAnalysis")",
+                            type: 'GET',
+                            data:{
+                        start: startD.getFullYear() + "-" + (startD.getMonth() + 1) + "-" + startD.getDate(),
+                        end: endD.getFullYear() + "-" + (endD.getMonth() + 1)  + "-" + endD.getDate()
+                            },
+                    dataType: 'html',
+                    success: function(result) {
+                        $('#imgCatProbability').html(result);
+                        $('#imgLoadCatProbability').fadeOut();
+                    },
+                    error: function (result) { alert("Error loadCategoryProbability "); },
+                    warning: function (result) { alert("Warning loadCategoryProbability"); },
+                });
+            }
+
+            function loadCategoryRisk(start, end) {
+            var start ="@strStartR";
+            var end = "@strEndR";
+
+            var startS = start.split('/');
+            var endS = end.split('/');
+
+            var startD = new Date(startS[2], startS[1] - 1, startS[0]);
+            var endD = new Date(endS[2], endS[1] - 1, endS[0]);
+
+                $('#imgLoadCatRisk').fadeIn();
+                $.ajax({
+                url: "@Url.Action("CategoriesRiskList", "NonCompliancesAnalysis")",
+                    type: 'GET',
+                    data:{
+                start: startD.getFullYear() + "-" + (startD.getMonth() + 1) + "-" + startD.getDate(),
+                        end: endD.getFullYear() + "-" + (endD.getMonth() + 1)  + "-" + endD.getDate()
+                    },
+                    dataType: 'html',
+                    success: function(result) {
+                        $('#imgCatRisk').html(result);
+                        $('#imgLoadCatRisk').fadeOut();
+            },
+                    error: function (result) { alert("Error loadCategoryRisk "); },
+                    warning: function (result) { alert("Warning loadCategoryRisk"); },
+                });
+            }
+
+            loadCategoryRisk(@strStartRev, @strEndRev   );
+            loadCategoryProbability(@strStartRev, @strEndRev);
+
+            $('.btnSearch').click(function () {
+        var start = $("#txtDateStart").val();
+        var end = $("#txtDateEnd").val();
+
+        var startS = start.split('/');
+        var endS = end.split('/');
+
+        var startD = new Date(startS[2], startS[1] - 1, startS[0]);
+        var endD = new Date(endS[2], endS[1] - 1, endS[0]);
+
+        var startY = startD.getFullYear();
+        var startM = (startD.getMonth() + 1);
+        if (startM < 10) { startM = "0" + startM; }
+        var startG = startD.getDate();
+        if (startG < 10) { startG = "0" + startG; }
+
+        var endY = endD.getFullYear();
+        var endM = (endD.getMonth() + 1);
+        if (endM < 10) { endM = "0" + endM; }
+        var endG = endD.getDate();
+        if (endG < 10) { endG = "0" + endG; }
+
+        if (startD < endD) {
+            window.location.href = "@Url.Action("CategoriesCostList", "NonCompliancesAnalysis")?start="
+                + startY + "-" + startM + "-" + startG + "&end="
+                + endY + "-" + endM + "-" + endG;
+        }
+        else {
+            alert("@ResAnalysis.CategoriesCostList.lblInputDateError");
+        }
+    });
+        });
+    </script>
+
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAnalysis.CategoriesCostList.lblDateStart
+            <input type="text" id="txtDateStart" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            @ResAnalysis.CategoriesCostList.lblDateEnd
+            <input type="text" id="txtDateEnd" class="form-control" style="min-height: 30px; min-width:150px; max-width:150px;" />
+            <input type="image" src="~/img/iconView.png" style="min-width: 40px; max-width: 40px;" id="btnSearch" class="btnSearch" />
+</div>
+        </div>
+    if (Model != null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <img src="~/img/iconLoading.gif" id="imgLoadCatRisk" style="width:40px;height: 40px;" />
+                <div id="imgCatRisk"></div>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+            <div class="span12">
+                <img src="~/img/iconLoading.gif" id="imgLoadCatProbability" style="width:40px;height: 40px;" />
+                <div id="imgCatProbability"></div>
+            </div>
+        </div>
+
+            <div class="row-fluid">
+                <div class="span12">
+                    <h5>@ResAnalysis.CategoriesCostList.lblTitleMeanCost</h5>
+                    @ResAnalysis.CategoriesCostList.lblDescMeanCost<br />
+                    <img id="imgCategoriesGraph" src="@Url.Action("CategoriesCostGraph", "NonCompliancesAnalysis")?start=@strStartRev&end=@strEndRev" />
+                    <table class="table table-striped table-hover table-condensed">
+                        <thead>
+                            <tr>
+                                <th>@ResAnalysis.CategoriesCostList.lblTHCategories</th>
+                                <th>@ResAnalysis.CategoriesCostList.lblTHCost</th>
+                            </tr>
+                        </thead>
+                        @foreach (KeyValuePair<string, double> m in Model)
+                        {
+                            if (m.Value < 10 * Math.Exp(10) && m.Value > 0)
+                            {
+                                <tr>
+                                    <td>@m.Key</td>
+                                    <td>@Math.Round(m.Value, 2) @ResAnalysis.CategoriesCostList.lblCurrency</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr><td>@m.Key</td><td>@ResAnalysis.CategoriesCostList.lblErrValNotFeasible</td></tr>
+                            }
+                        }
+                    </table>
+                </div>
+            </div>
+            }
+            else
+            {
+            <div>@ResAnalysis.CategoriesCostList.lblNoCategories</div>
+            }
+            }
+            else
+            {
+            <div>@ResAnalysis.CategoriesCostList.lblErrNoAuth</div>
+            }

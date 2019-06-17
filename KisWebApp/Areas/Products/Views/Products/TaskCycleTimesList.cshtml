@@ -1,0 +1,95 @@
+﻿@model IEnumerable<KIS.App_Code.TempoCiclo>
+
+@if(ViewBag.authR || ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+            $('.btnDelCycleTime').click(function () {
+                $(this).fadeOut();
+                var nOps = parseInt($(this).val());
+                var row = "#row_" + nOps;
+
+                $.ajax({
+                    url: "@Url.Action("TaskCycleTimeDelete", "Products")",
+                    type: 'POST',
+                dataType: 'html',
+                data:{
+                    TaskID: @ViewBag.TaskID,
+                    TaskRev: @ViewBag.TaskRev,
+                    VariantID: @ViewBag.VariantID,
+                    nOps: nOps
+                },
+                    success: function (result) {
+                        $(row).remove();
+                },
+                error: function (result) {
+                    alert("Error");
+                    $(this).fadeIn();
+                },
+                warning: function (result) {
+                    alert("Warning");
+                    $(this).fadeIn();
+                }                
+                });
+
+                return false;
+            });
+        });
+    </script>
+    if(Model!=null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>@ResProducts.TaskCycleTimesList.lblNOps</th>
+                            <th>@ResProducts.TaskCycleTimesList.lblSetupTime</th>
+                            <th>@ResProducts.TaskCycleTimesList.lblCycleTime</th>
+                            <th>@ResProducts.TaskCycleTimesList.lblDefault</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var m in Model)
+                        {
+                            <tr id="row_@m.NumeroOperatori">
+                                @if (ViewBag.authW)
+                                {
+                                    <td>
+                                        <input type="image" class="btnDelCycleTime" src="~/img/iconDelete.png" style="min-width:10px; max-width:20px;" value="@m.NumeroOperatori"/>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                                <td>@m.NumeroOperatori</td>
+                                <td>@m.TempoSetup.ToString()</td>
+                                <td>@m.Tempo.ToString()</td>
+                                @if(m.Default)
+                                {
+                                    <td>
+                                        <img src="~/img/iconComplete.png" style="min-width:15px; max-width:20px;" />
+                                    </td>
+                                }
+                                else
+                                { 
+                                <td></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div>@ResProducts.TaskCycleTimesList.lblNoItems</div>
+    }
+}
+else
+{
+    <div>@ResProducts.TaskCycleTimesList.lblNoAuth</div>
+}
