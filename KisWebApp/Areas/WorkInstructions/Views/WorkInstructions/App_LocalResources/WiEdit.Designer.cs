@@ -70,6 +70,15 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Autore.
+        /// </summary>
+        public static string lblAuthor {
+            get {
+                return ResourceManager.GetString("lblAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Descrizione.
         /// </summary>
         public static string lblDescription {
@@ -133,6 +142,15 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attivo.
+        /// </summary>
+        public static string lblIsActive {
+            get {
+                return ResourceManager.GetString("lblIsActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Etichette.
         /// </summary>
         public static string lblLabels {
@@ -147,6 +165,24 @@ namespace ResWorkInstructions {
         public static string lblName {
             get {
                 return ResourceManager.GetString("lblName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Versioni precedenti.
+        /// </summary>
+        public static string lblOlderVersions {
+            get {
+                return ResourceManager.GetString("lblOlderVersions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks.
+        /// </summary>
+        public static string lblTasks {
+            get {
+                return ResourceManager.GetString("lblTasks", resourceCulture);
             }
         }
         

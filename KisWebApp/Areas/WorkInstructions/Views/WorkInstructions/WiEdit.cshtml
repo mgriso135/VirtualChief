@@ -189,6 +189,7 @@
 
                 $("#pLabels").on("click", ".delLbl", function () {
                     var lblID = $(this).val();
+                    $("#spanLbl_" + lblID).fadeOut();
                     $.ajax({
                             url: "@Url.Action("DeleteLabel", "WorkInstructions")",
                             type: 'POST',
@@ -203,12 +204,17 @@
                                     $("#spanLbl_" + lblID).remove();
                                 }
                                 else {
+                                    alert("Error");
+                                    $("#spanLbl_" + lblID).fadeIn();
                                 }
                             },
-                            error: function (result) {
+                        error: function (result) {
+                            alert("Error");
+                            $("#spanLbl_" + lblID).fadeIn();
                             },
-                            warning: function (result) {
-
+                        warning: function (result) {
+                            alert("Error");
+                                $("#spanLbl_" + lblID).fadeIn();
                             }
                         });
                 });
@@ -220,10 +226,12 @@
             <div class="span12">
                 <table id="tblEditManual" class="table">
                     <tr>
-                        <td>@ResWorkInstructions.WiEdit.lblName</td>
-                        <td>@ResWorkInstructions.WiEdit.lblDescription</td>
-                        <td>@ResWorkInstructions.WiEdit.lblUploadDate</td>
-                        <td>@ResWorkInstructions.WiEdit.lblExpiryDate</td>
+                        <th>@ResWorkInstructions.WiEdit.lblName</th>
+                        <th>@ResWorkInstructions.WiEdit.lblDescription</th>
+                        <th>@ResWorkInstructions.WiEdit.lblUploadDate</th>
+                        <th>@ResWorkInstructions.WiEdit.lblExpiryDate</th>
+                        <th>@ResWorkInstructions.WiEdit.lblIsActive</th>
+                        <th>@ResWorkInstructions.WiEdit.lblAuthor</th>
                     </tr>
                     <tr>
                         <td><input type="text" class="input-group-text" id="lblName" value="@Model.Name" /></td>
@@ -244,6 +252,7 @@
                                 }
                             </select>
                         </td>
+                        <td>@Model.Author</td>
                         <td>
                             <input type="image" src="~/img/iconSave.jpg" style="min-height:20px; max-height:30px;" id="imgSave" />
                             <input type="image" src="~/img/iconUndo.png" style="min-height:20px; max-height:30px;" id="imgUndo" />
@@ -289,15 +298,72 @@
                 </p>
             </div>
         </div>
+        <!--Tasks-->
+                            if(Model.listTasksProducts.Count>0)
+                            { 
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <h5>@ResWorkInstructions.WiEdit.lblTasks</h5>
+                                    <p>
+                                        <table id="tblTasks">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var tsk in Model.listTasksProducts)
+                                                {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td>@tsk.ProductType</td>
+                                                        <td>@tsk.ProductName</td>
+                                                        <td>@tsk.TaskName</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                        </p>
+                                </div>
+                            </div>
+                            }
         <!-- Older versions (read only) -->
+                            if (Model.OlderVersions.Count > 0)
+                            {
         <div class="row-fluid">
             <div class="span12">
-
+                <p>
+                    <h5>@ResWorkInstructions.WiEdit.lblOlderVersions</h5>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@ResWorkInstructions.WiEdit.lblName</th>
+                                <th>@ResWorkInstructions.WiEdit.lblDescription</th>
+                                <th>@ResWorkInstructions.WiEdit.lblUploadDate</th>
+                                <th>@ResWorkInstructions.WiEdit.lblExpiryDate</th>
+                                <th>@ResWorkInstructions.WiEdit.lblIsActive</th>
+                                <th>@ResWorkInstructions.WiEdit.lblAuthor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var olVer in Model.OlderVersions)
+                            {
+                                <tr>
+                                    <td>@olVer.Name</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </p>
             </div>
         </div>
-    }
-    else
-    {
+                            }
+                            }
+                            else
+                            {
         <div class="row-fluid">
             <div class="span12">
                 @ResWorkInstructions.WiEdit.lblWINotFound

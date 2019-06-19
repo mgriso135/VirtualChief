@@ -162,4 +162,16 @@
   <data name="lblLabels" xml:space="preserve">
     <value>Etichette</value>
   </data>
+  <data name="lblAuthor" xml:space="preserve">
+    <value>Autore</value>
+  </data>
+  <data name="lblIsActive" xml:space="preserve">
+    <value>Attivo</value>
+  </data>
+  <data name="lblOlderVersions" xml:space="preserve">
+    <value>Versioni precedenti</value>
+  </data>
+  <data name="lblTasks" xml:space="preserve">
+    <value>Tasks</value>
+  </data>
 </root>

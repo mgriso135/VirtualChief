@@ -563,5 +563,32 @@ namespace KIS.Areas.Products.Controllers
             }
             return retCT;
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if manual connected correctly
+         * 2 if user not authorized
+         */
+         public int LinkTaskToWorkInstruction(int TaskID, int TaskRev, int variantID, int WorkInstructionID, int WorkInstructionVersion)
+        {
+            int ret = 0;
+            // Task WorkInstructions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task WorkInstructions";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+
+            }
+            else
+            {
+                ret = 2;
+            }
+                return ret;
+        }
     }
 }

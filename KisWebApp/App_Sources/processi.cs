@@ -4095,9 +4095,12 @@ namespace KIS.App_Code
             get { return this._variant; }
         }
 
+        public List<KIS.App_Sources.WorkInstructions.WorkInstruction> WorkInstructions;
+
         public TaskVariante(processo prc, variante vr)
         {
             this.Parameters = new List<ModelTaskParameter>();
+            this.WorkInstructions = new List<App_Sources.WorkInstructions.WorkInstruction>();
                 this._Task = prc;
                 this._variant = vr;
                 prc.loadFigli(vr);
@@ -4391,6 +4394,27 @@ namespace KIS.App_Code
             }
             return ret;
         }
+
+        public void loadWorkInstructions()
+        {
+            this.WorkInstructions = new List<App_Sources.WorkInstructions.WorkInstruction>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT manualID, manualVersion FROM tasksmanuals WHERE taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante";
+            cmd.Parameters.AddWithValue("@TaskId", this.Task.processID);
+            cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@variante", this.variant.idVariante);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                this.WorkInstructions.Add(new KIS.App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
     }
 
     public class TempoCiclo

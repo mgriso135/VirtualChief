@@ -183,4 +183,13 @@
   <data name="lblWorkingTimeWrong" xml:space="preserve">
     <value>Error in input values</value>
   </data>
+  <data name="lblWorkInstrucion" xml:space="preserve">
+    <value>Work Instruction</value>
+  </data>
+  <data name="lblWIExpiryDate" xml:space="preserve">
+    <value>End validity date</value>
+  </data>
+  <data name="lblWIInitialValidity" xml:space="preserve">
+    <value>Initial validity date</value>
+  </data>
 </root>

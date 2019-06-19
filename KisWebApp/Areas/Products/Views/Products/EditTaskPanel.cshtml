@@ -21,6 +21,8 @@
         $('#trPAR6').fadeOut();
         loadTaskParameters();
         $('#imgLoadAddTaskParam').fadeOut();
+        $('#imgLoadWorkInstructions').fadeOut();
+        loadTaskManuals();
 
         $('#btnUndoTaskDetails').click(function () {
             $('#txtTaskName').val(initTaskName);
@@ -343,8 +345,47 @@
         });
 
 
+        function loadTaskManuals() {
+            //taskManuals
+            var TaskID = parseInt(@ViewBag.TaskID);
+            var TaskRev = parseInt(@ViewBag.TaskRev);
+            var VariantID = parseInt(@ViewBag.VariantID);
+            if(TaskID != -1 && TaskRev!=-1 && VariantID!=-1)
+            {
+                $('#imgLoadWorkInstructions').fadeIn();
+                $.ajax({
+                    url: "@Url.Action("EditTaskWorkInstruction", "../WorkInstructions/WorkInstructions")",
+                    type: 'GET',
+                    dataType: 'html',
+                    data:{
+                        TaskID: TaskID,
+                        TaskRev: TaskRev,
+                        VariantID: VariantID
+                    },
+                    success: function (result) {
+                        $('#taskManuals').html(result);
+                        $('#imgLoadWorkInstructions').fadeOut();
+                    },
+                    error: function (result) { alert("Error"); $('#imgLoadWorkInstructions').fadeOut();},
+                    warning: function (result) { alert("Warning"); $('#imgLoadWorkInstructions').fadeOut();}
+                });
+            }
+            else
+            {
+                $('#imgLoadWorkInstructions').fadeOut();
+            }
+        }
 
 
+        $("#imgAddWorkInstruction").on("click", function () {
+
+            if ($('#addManual').is(':visible')) {
+                $("#addManual").fadeOut();
+            }
+            else {
+                $("#addManual").fadeIn();
+            }
+        });
 
 
     });
@@ -453,6 +494,43 @@
         </td>
     </tr>
         </table>
+        <div id="divManuals" class="row-fluid">
+            <div class="span12" style="text-align:center;">
+                <h5>@ResProducts.EditTaskPanel.lblWorkInstrucion&nbsp;<img src="~/img/iconAdd2.png" style="cursor:pointer;min-width:20px; max-width:30px;" id="imgAddWorkInstruction" /></h5>
+                <img src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadWorkInstructions" />
+                <div id="addManual" style="display:none;">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td>@ResProducts.EditTaskPanel.lblWorkInstrucion</td>
+                            <td>
+                                <input list="ddlWorkIstructionsList" id="ddlWorkIstructions">
+                                <datalist id="ddlWorkIstructionsList">
+                                    @{KIS.App_Sources.WorkInstructions.WorkInstructionsList lstWI = new KIS.App_Sources.WorkInstructions.WorkInstructionsList();
+                                        lstWI.loadWorkInstructionList();
+                                        foreach (var wi in lstWI.List)
+                                        {
+                                            <option data-id="@wi.ID;@wi.Version" value="@wi.Name"></option>
+                                        }
+                                    }
+                                </datalist>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@ResProducts.EditTaskPanel.lblWIInitialValidity</td>
+                            <td><input type="text" id="manualInitialValidity" /></td>
+                        </tr>
+                        <tr>
+                            <td>@ResProducts.EditTaskPanel.lblWIExpiryDate</td>
+                            <td><input type="text" id="manualExpiryDate" /></td>
+                        </tr>
+                    </table>
+                    
+                    
+                </div>
+                <div id="taskManuals" />
+            </div>
+
+        </div>
 }
 else
 {

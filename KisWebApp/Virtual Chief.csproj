@@ -2953,6 +2953,11 @@
       <DependentUpon>WorkHoursManualRegistration.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\WorkInstructions\Controllers\WorkInstructionsController.cs" />
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditTaskWorkInstruction.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -5039,6 +5044,7 @@
     <Content Include="Areas\Products\Views\FinishedProducts\ProductParametersList.cshtml" />
     <Content Include="Areas\Products\Views\FinishedProducts\ProductTasksParametersList.cshtml" />
     <Content Include="img\iconStateOfHealth.png" />
+    <Content Include="img\iconWorkInstruction.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -5097,6 +5103,7 @@
     <Content Include="Backload\Client\blueimp\blob\package.json" />
     <Content Include="Areas\WorkInstructions\Views\WorkInstructions\Index.cshtml" />
     <Content Include="Areas\WorkInstructions\Views\WorkInstructions\WiEdit.cshtml" />
+    <Content Include="Areas\WorkInstructions\Views\WorkInstructions\EditTaskWorkInstruction.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -7982,6 +7989,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ActivateUser.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResUsers</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditTaskWorkInstruction.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

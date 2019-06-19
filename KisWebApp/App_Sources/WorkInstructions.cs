@@ -5,6 +5,7 @@ using MySql.Data.MySqlClient;
 using System.Web.Mvc;
 using System.IO;
 using System.Web.Hosting;
+using KIS.App_Code;
 
 
 namespace KIS.App_Sources
@@ -185,7 +186,21 @@ namespace KIS.App_Sources
                 }
             }
 
+            private String _Author;
+            public String Author
+            {
+                get
+                {
+                    return this._Author;
+                }
+                set {; }
+            }
+
+            public List<WIOlderVersion> OlderVersions;
+
             public List<WILabel> Labels;
+
+            public List<TaskProduct> listTasksProducts;
 
             public WorkInstruction(int id, int version)
             {
@@ -198,11 +213,14 @@ namespace KIS.App_Sources
                 this._ExpiryDate = new DateTime(1970, 1, 1);
                 this._IsActive = false;
                 this.Labels = new List<WILabel>();
+                this._Author = "";
+                this.listTasksProducts = new List<TaskProduct>();
+                this.OlderVersions = new List<WIOlderVersion>();
 
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive FROM manuals WHERE "
+                cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
                     + "ID = " + id.ToString()
                     + " AND Version = " + version.ToString();
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -216,7 +234,7 @@ namespace KIS.App_Sources
                     this._UploadDate = rdr.GetDateTime(5);
                     this._ExpiryDate = rdr.GetDateTime(6);
                     this._IsActive = rdr.GetBoolean(7);
-
+                    this._Author = rdr.GetString(8);
                 }
                 rdr.Close();
                 conn.Close();
@@ -234,11 +252,13 @@ namespace KIS.App_Sources
                 this._ExpiryDate = new DateTime(1970, 1, 1);
                 this._IsActive = false;
                 this.Labels = new List<WILabel>();
+                this.listTasksProducts = new List<TaskProduct>();
+                this.OlderVersions = new List<WIOlderVersion>();
 
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive FROM manuals WHERE "
+                cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
                     + "ID = " + id.ToString()
                     + " ORDER BY version DESC";
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -252,7 +272,7 @@ namespace KIS.App_Sources
                     this._UploadDate = rdr.GetDateTime(5);
                     this._ExpiryDate = rdr.GetDateTime(6);
                     this._IsActive = rdr.GetBoolean(7);
-
+                    this._Author = rdr.GetString(8);
                 }
                 rdr.Close();
                 conn.Close();
@@ -358,10 +378,137 @@ namespace KIS.App_Sources
                 WILabel lblCurr = new WILabel(labelID);
                 lblCurr.Delete();
 
+
                 conn.Close();
                 return ret;
             }
+
+            public void loadTaskProducts()
+            {
+                this.listTasksProducts = new List<TaskProduct>();
+                if (this.ID!=-1 && this.Version!=-1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti FROM "
+                        + " tasksmanuals INNER JOIN processo ON (tasksmanuals.taskid=processo.processid AND tasksmanuals.taskrev=processo.revisione) "
+                        + "INNER JOIN varianti ON (tasksmanuals.taskVarianti = varianti.idvariante)"
+                        + " WHERE tasksmanuals.taskid = @ManualID"
+                        + " AND tasksmanuals.manualVersion=@ManualVersion";
+                    cmd.Parameters.AddWithValue("@ManualID", this.ID);
+                    cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
+
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while(rdr.Read())
+                    {
+                        processo proc = new processo(rdr.GetInt32(0), rdr.GetInt32(1));
+                        if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
+                        {
+                            proc.loadImplosioneProdotti();
+                            List<ProcessoVariante> prodotti = proc.ImplosioneProdotti;
+                            for(int i =0; i < prodotti.Count; i++)
+                            {
+                                TaskProduct curr = new TaskProduct();
+                                curr.ProductID = prodotti[i].process.processID;
+                                curr.ProductVersion = prodotti[i].process.revisione;
+                                curr.VariantID = prodotti[i].variant.idVariante;
+                                curr.ProductName = prodotti[i].variant.nomeVariante;
+                                curr.ProductType = prodotti[i].process.processName;
+                                curr.TaskID = rdr.GetInt32(0);
+                                curr.TaskVersion = rdr.GetInt32(1);
+                                curr.TaskName = proc.processName;
+
+                                this.listTasksProducts.Add(curr);
+                            }
+                        }
+                    }
+                    conn.Close();
+                }
+            }
+
+            public void loadOlderVersions()
+            {
+                this.OlderVersions = new List<WIOlderVersion>();
+                if(this.ID!=-1 && this.Version!=-1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT ID, Version, Name, Description, path, uploaddate, expirydate, isActive, user FROM manuals WHERE "
+                        + "ID = @ID "
+                        + " AND Version < @Version "
+                        + " AND IsActive = false";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    cmd.Parameters.AddWithValue("@Version", this.Version);
+
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while(rdr.Read())
+                    {
+                        WIOlderVersion curr = new WIOlderVersion();
+                        curr.ID = rdr.GetInt32(0);
+                        curr.Version = rdr.GetInt32(1);
+                        curr.Name = rdr.GetString(2);
+                        curr.Description = rdr.GetString(3);
+                        curr.Path = rdr.GetString(4);
+                        curr.UploadDate = rdr.GetDateTime(5);
+                        curr.ExpiryDate = rdr.GetDateTime(6);
+                        curr.IsActive = rdr.GetBoolean(7);
+                        curr.Author = rdr.GetString(8);
+
+                        this.OlderVersions.Add(curr);
+                    }
+                    rdr.Close();
+
+                    conn.Clone();
+                }
+            }
+            
+            /*Returns
+             * 0 if generic error
+             * 1 if ok
+             * 3 if error while adding
+             */
+            public int linkManualToTask(int TaskID, int TaskVersion, int VariantID, DateTime ValidityInitialDate, DateTime ValidityExpiryDate, int sequence, Boolean isActive)
+            {
+                int ret = 0;
+                if(this.ID!=-1 && this.Version!=-1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "INSERT INTO tasksmanuals(taskID, taskRev, taskVarianti, manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive "
+                        + "VALUES(@TaskId, @TaskRev, @TaskVariante, @ManualID, @ManualVersion, @ValidityInitialDate, @ExpiryDate, @Sequence, @IsActive)";
+                    cmd.Parameters.AddWithValue("@TaskId", TaskID);
+                    cmd.Parameters.AddWithValue("@TaskRev", TaskVersion);
+                    cmd.Parameters.AddWithValue("@TaskVariante", VariantID);
+                    cmd.Parameters.AddWithValue("@ManualID", this.ID);
+                    cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
+                    cmd.Parameters.AddWithValue("@ValidityInitialDate", ValidityInitialDate);
+                    cmd.Parameters.AddWithValue("@ExpiryDate", ValidityExpiryDate);
+                    cmd.Parameters.AddWithValue("@Sequence", sequence);
+                    cmd.Parameters.AddWithValue("@IsActive", isActive);
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        ret = 1;
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                        ret = 3;
+                    }
+
+                    conn.Close();
+                }
+                return ret;
+            }
         }
+
 
         public class WorkInstructionsList
         {
@@ -649,6 +796,32 @@ namespace KIS.App_Sources
                 conn.Close();
                 return ret;
             }
+        }
+
+        public struct TaskProduct
+        {
+            public int ProductID;
+            public int ProductVersion;
+            public int VariantID;
+            public int TaskID;
+            public int TaskVersion;
+
+            public String ProductType;
+            public String ProductName;
+            public String TaskName;
+        }
+
+        public struct WIOlderVersion
+        {
+            public int ID;
+            public int Version;
+            public String Name;
+            public String Description;
+            public String Path;
+            public DateTime UploadDate;
+            public DateTime ExpiryDate;
+            public Boolean IsActive;
+            public String Author;
         }
     }
 }

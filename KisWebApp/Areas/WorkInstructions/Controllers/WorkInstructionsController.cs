@@ -179,6 +179,8 @@ namespace KIS.Areas.WorkInstructions.Controllers
             {
                 currWI = new App_Sources.WorkInstructions.WorkInstruction(manualID);
                 currWI.loadLabels();
+                currWI.loadTaskProducts();
+                currWI.loadOlderVersions();
             }
 
             return View(currWI);
@@ -327,6 +329,48 @@ namespace KIS.Areas.WorkInstructions.Controllers
             }
                 return ret;
         }
+
+        public ActionResult EditTaskWorkInstruction(int TaskID, int TaskRev, int VariantID)
+        {
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task WorkInstructions";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new App_Code.variante(VariantID));
+                ViewBag.showAdd = false;
+                if (tskVar != null && tskVar.Task != null && tskVar.variant != null &&
+                    tskVar.Task.processID != -1 && tskVar.variant.idVariante != -1)
+                {
+                    tskVar.loadWorkInstructions();
+                    ViewBag.showAdd = tskVar.WorkInstructions.Count == 0 ? true : false;
+                }
+                List<KIS.App_Sources.WorkInstructions.WorkInstruction> ret = new List<App_Sources.WorkInstructions.WorkInstruction>();
+                if (
+ViewBag.showAdd)
+                {
+                    KIS.App_Sources.WorkInstructions.WorkInstructionsList totalLst = new App_Sources.WorkInstructions.WorkInstructionsList();
+                    totalLst.loadWorkInstructionList();
+                    ret = totalLst.List;
+                }
+                else
+                {
+                    ret = tskVar.WorkInstructions;
+                }
+                return View(ret);
+            }
+            return View();
+        }
+
     }
         
 
