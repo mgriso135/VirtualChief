@@ -444,8 +444,12 @@ namespace KIS.App_Code
             }
         }
 
+        public KIS.App_Sources.WorkInstructions.WorkInstruction WorkInstructionActive;
+
         public TaskProduzione(int tskProdID)
         {
+            this.WorkInstructionActive = null;
+
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
@@ -734,6 +738,7 @@ namespace KIS.App_Code
         public List<TaskParameter> Parameters;
 
         public List<TaskParameter> CompleteParameters;
+
 
         public void loadOperatori()
         {
@@ -3268,7 +3273,29 @@ namespace KIS.App_Code
             }
         }
           
+        public void loadWorkInstructionActive()
+        {
+            this.WorkInstructionActive = null;
+            if(this.TaskProduzioneID!=-1 && this.OriginalTask!=-1 && this.OriginalTaskRevisione!=-1 && this.VarianteID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT ManualID, ManualVersion FROM tasksmanuals WHERE taskid=@TaskID AND taskRev=@TaskVersion AND taskVarianti=@TaskVariant "
+                    + " AND isActive=true AND expiryDate >= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "' AND validityInitialDate <= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "'";
+                cmd.Parameters.AddWithValue("@TaskID", this.OriginalTask);
+                cmd.Parameters.AddWithValue("@TaskVersion", this.OriginalTaskRevisione);
+                cmd.Parameters.AddWithValue("@TaskVariant", this.VarianteID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if(rdr.Read() && !rdr.IsDBNull(0) && !rdr.IsDBNull(1))
+                {
+                    this.WorkInstructionActive = new App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1));
+                }
 
+                rdr.Close();
+                conn.Close();
+            }
+        }
     }
 
     public class ProductionPlan

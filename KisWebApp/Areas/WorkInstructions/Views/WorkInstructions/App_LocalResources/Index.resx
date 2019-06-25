@@ -168,4 +168,16 @@
   <data name="lblOlderVersions" xml:space="preserve">
     <value>Versioni precedenti</value>
   </data>
+  <data name="lblExpiryDate" xml:space="preserve">
+    <value>Fine validità</value>
+  </data>
+  <data name="lblInitialDate" xml:space="preserve">
+    <value>Data di inizio validità</value>
+  </data>
+  <data name="lblErrorExpiryDate" xml:space="preserve">
+    <value>Errore nella data di fine validità</value>
+  </data>
+  <data name="lblErrorFileType" xml:space="preserve">
+    <value>Errore: il file non è un PDF</value>
+  </data>
 </root>

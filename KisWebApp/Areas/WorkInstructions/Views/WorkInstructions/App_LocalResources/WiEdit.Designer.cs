@@ -142,6 +142,15 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data di inizio validità.
+        /// </summary>
+        public static string lblInitialDate {
+            get {
+                return ResourceManager.GetString("lblInitialDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attivo.
         /// </summary>
         public static string lblIsActive {
@@ -178,11 +187,38 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sostituisce la versione attuale.
+        /// </summary>
+        public static string lblReplaceCurrentVersion {
+            get {
+                return ResourceManager.GetString("lblReplaceCurrentVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tasks.
         /// </summary>
         public static string lblTasks {
             get {
                 return ResourceManager.GetString("lblTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prodotto.
+        /// </summary>
+        public static string lblTHProduct {
+            get {
+                return ResourceManager.GetString("lblTHProduct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string lblTHTask {
+            get {
+                return ResourceManager.GetString("lblTHTask", resourceCulture);
             }
         }
         
@@ -201,6 +237,15 @@ namespace ResWorkInstructions {
         public static string lblUploadDate {
             get {
                 return ResourceManager.GetString("lblUploadDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carica una nuova versione.
+        /// </summary>
+        public static string lblUploadNewVersion {
+            get {
+                return ResourceManager.GetString("lblUploadNewVersion", resourceCulture);
             }
         }
         

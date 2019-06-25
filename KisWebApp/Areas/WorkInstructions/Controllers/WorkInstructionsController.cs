@@ -330,8 +330,9 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 return ret;
         }
 
-        public ActionResult EditTaskWorkInstruction(int TaskID, int TaskRev, int VariantID)
+        /*public ActionResult EditTaskWorkInstruction(int TaskID, int TaskRev, int VariantID)
         {
+            List<KIS.App_Sources.WorkInstructions.WorkInstruction> ret = new List<App_Sources.WorkInstructions.WorkInstruction>();
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
             prmUser[0] = "Task WorkInstructions";
@@ -343,33 +344,20 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 User curr = (User)Session["user"];
                 ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
             }
-
+            ViewBag.showAdd = false;
             if (ViewBag.authW)
             {
                 TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new App_Code.variante(VariantID));
-                ViewBag.showAdd = false;
                 if (tskVar != null && tskVar.Task != null && tskVar.variant != null &&
                     tskVar.Task.processID != -1 && tskVar.variant.idVariante != -1)
                 {
                     tskVar.loadWorkInstructions();
                     ViewBag.showAdd = tskVar.WorkInstructions.Count == 0 ? true : false;
-                }
-                List<KIS.App_Sources.WorkInstructions.WorkInstruction> ret = new List<App_Sources.WorkInstructions.WorkInstruction>();
-                if (
-ViewBag.showAdd)
-                {
-                    KIS.App_Sources.WorkInstructions.WorkInstructionsList totalLst = new App_Sources.WorkInstructions.WorkInstructionsList();
-                    totalLst.loadWorkInstructionList();
-                    ret = totalLst.List;
-                }
-                else
-                {
                     ret = tskVar.WorkInstructions;
                 }
-                return View(ret);
             }
-            return View();
-        }
+            return View(ret);
+        }*/
 
     }
         
@@ -393,43 +381,122 @@ ViewBag.showAdd)
 
 
         [HttpPost]
-        public JsonResult Upload(String action)
+        public JsonResult Upload(String action, String NewVerInitialDate, String NewVerExpiryDate)
         {
             var resultList = new List<ViewDataUploadFilesResult>();
 
             var CurrentContext = HttpContext;
 
-            filesHelper.UploadAndShowResults(CurrentContext, resultList);
-            JsonFiles files = new JsonFiles(resultList);
+            String[] aExpDate = NewVerExpiryDate.Split('/');
+            String[] aInitDate = NewVerInitialDate.Split('/');
+            DateTime initial = DateTime.UtcNow;
+            DateTime expiry = new DateTime(2099, 12, 31);
 
-            for(int i=0; i < resultList.Count; i++)
+            bool checkdates = true;
+            try
             {
-                if(action == "add")
-                {
+                initial = new DateTime(Int32.Parse(aInitDate[2]), Int32.Parse(aInitDate[1]), Int32.Parse(aInitDate[0]));
+                expiry = new DateTime(Int32.Parse(aExpDate[2]), Int32.Parse(aExpDate[1]), Int32.Parse(aExpDate[0]));
+                checkdates = true;
+            }
+        
+            catch
+            {
+                initial = DateTime.UtcNow;
+                expiry = new DateTime(2099, 12, 31);
+                checkdates = false;
+            }
 
-                }
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList();
-                int[] res = wiList.Add(resultList[i].name, "", resultList[i].name, ((KIS.App_Code.User)Session["user"]).username);
-                if(res[0]!=-1 && res[1]!=-1)
-                {
-                    System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) +"/"+ resultList[i].name, 
-                        HostingEnvironment.MapPath(serverMapPath) + "/" + res[0]+"_"+res[1]+".pdf");
-                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(res[0], res[1]);
-                    curr.Path = res[0] + "_" + res[1] + ".pdf";
+            if(action == "add")
+            {
+                initial = DateTime.UtcNow.AddDays(1);
+            }
 
+            if (checkdates && initial >= DateTime.UtcNow && initial < expiry)
+            {
+                checkdates = true;
+            }
+            else
+            {
+                checkdates = false;
+            }
+
+
+            if (checkdates)
+            {
+            
+
+                filesHelper.UploadAndShowResults(CurrentContext, resultList);
+
+                for (int i=0; i < resultList.Count; i++)
+                {
+                    if(checkdates)
+                    {
+                        if (resultList[i].name.Substring(resultList[i].name.Length - 4, 4) == ".pdf")
+                        {
+                            if (action == "add")
+                            {
+                                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList();
+                                int[] res = wiList.Add(resultList[i].name, "", resultList[i].name, ((KIS.App_Code.User)Session["user"]).username);
+                                if (res[0] != -1 && res[1] != -1)
+                                {
+                                    System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
+                                    HostingEnvironment.MapPath(serverMapPath) + "/" + res[0] + "_" + res[1] + ".pdf");
+                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(res[0], res[1]);
+                                    curr.Path = res[0] + "_" + res[1] + ".pdf";
+                                    curr.ExpiryDate = expiry;
+                                }
+                            }
+                            else if(action == "NewVersion")
+                            {
+
+                            }
+               
+                        }
+                        else
+                        {
+                            // If it's not a pdf, delete it.
+                            System.IO.File.Delete(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name);
+                            resultList[i].error = ResWorkInstructions.Index.lblErrorFileType;
+                        }
+                    }
+                    else
+                    {
+                        resultList[i].error = ResWorkInstructions.Index.lblErrorExpiryDate;
+                    }
                 }
             }
+            else
+            {
+                resultList = new List<ViewDataUploadFilesResult>();
+                ViewDataUploadFilesResult curr = new ViewDataUploadFilesResult();
+                curr.error = ResWorkInstructions.Index.lblErrorExpiryDate;
+                resultList.Add(curr);
+            }
+
+            // Delete all thumbs
+            try
+            { 
+            System.IO.DirectoryInfo di = new DirectoryInfo(HostingEnvironment.MapPath(serverMapPath) + "/thumbs/");
+            foreach (FileInfo file in di.GetFiles())
+            {
+                file.Delete();
+            }
+            }
+            catch { }
+            JsonFiles files = new JsonFiles(resultList);
 
             bool isEmpty = !resultList.Any();
             if (isEmpty)
             {
-                return Json("Error ");
+                return Json("Error isEmpty");
             }
             else
             {
                 return Json(files);
             }
         }
+
         public JsonResult GetFileList()
         {
             var list = filesHelper.GetFileList();

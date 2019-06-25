@@ -1336,6 +1336,21 @@ namespace KIS.Areas.Workplace.Controllers
             public DateTime LateStart;
             public String BgColor;
         }
+
+        public String GetWorkInstruction(int TaskID)
+        {
+            String ret = "";
+            TaskProduzione curr = new TaskProduzione(TaskID);
+            if(curr!=null && curr.TaskProduzioneID!=-1)
+            { 
+            curr.loadWorkInstructionActive();
+                if(curr.WorkInstructionActive!=null && curr.WorkInstructionActive.Path.Length > 0)
+                {
+                    ret = curr.WorkInstructionActive.Path;
+                }
+            }
+            return ret;
+        }
     }
             
 

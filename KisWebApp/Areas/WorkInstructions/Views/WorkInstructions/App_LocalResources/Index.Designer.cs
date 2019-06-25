@@ -88,11 +88,47 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errore nella data di fine validità.
+        /// </summary>
+        public static string lblErrorExpiryDate {
+            get {
+                return ResourceManager.GetString("lblErrorExpiryDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: il file non è un PDF.
+        /// </summary>
+        public static string lblErrorFileType {
+            get {
+                return ResourceManager.GetString("lblErrorFileType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fine validità.
+        /// </summary>
+        public static string lblExpiryDate {
+            get {
+                return ResourceManager.GetString("lblExpiryDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Errore generico.
         /// </summary>
         public static string lblGenericError {
             get {
                 return ResourceManager.GetString("lblGenericError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data di inizio validità.
+        /// </summary>
+        public static string lblInitialDate {
+            get {
+                return ResourceManager.GetString("lblInitialDate", resourceCulture);
             }
         }
         

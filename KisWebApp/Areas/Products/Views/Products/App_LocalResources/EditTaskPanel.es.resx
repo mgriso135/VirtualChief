@@ -192,4 +192,7 @@
   <data name="lblWIInitialValidity" xml:space="preserve">
     <value>Fecha inicio de validez</value>
   </data>
+  <data name="lblWIErrOverlap" xml:space="preserve">
+    <value>Error: las fechas de validez se superponen con otras instrucciones de trabajo</value>
+  </data>
 </root>

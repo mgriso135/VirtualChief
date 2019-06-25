@@ -250,6 +250,15 @@ namespace ResProducts {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errore: le date di validità si sovrappongono con altre istruzioni di lavoro.
+        /// </summary>
+        public static string lblWIErrOverlap {
+            get {
+                return ResourceManager.GetString("lblWIErrOverlap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data fine validità.
         /// </summary>
         public static string lblWIExpiryDate {

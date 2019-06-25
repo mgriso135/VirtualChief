@@ -228,14 +228,14 @@ namespace jQuery_File_Upload.MVC5.Helpers
                 {
                     if (extansion.Equals("octet-stream")) //Fix for exe files
                     {
-                        return "/Content/Free-file-icons/48px/exe.png";
+                        return "../../Content/Free-file-icons/48px/exe.png";
 
                     }
                     if (extansion.Contains("zip")) //Fix for exe files
                     {
-                        return "/Content/Free-file-icons/48px/zip.png";
+                        return "../../Content/Free-file-icons/48px/zip.png";
                     }
-                    String thumbnailUrl = "/Content/Free-file-icons/48px/"+ extansion +".png";
+                    String thumbnailUrl = "../../Content/Free-file-icons/48px/" + extansion +".png";
                     return thumbnailUrl;
                 }
             }
@@ -273,6 +273,7 @@ namespace jQuery_File_Upload.MVC5.Helpers
         public string deleteUrl { get; set; }
         public string thumbnailUrl { get; set; }
         public string deleteType { get; set; }
+        public string error { get; set; }
     }
     public class JsonFiles
     {

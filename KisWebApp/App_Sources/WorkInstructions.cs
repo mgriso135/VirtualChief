@@ -394,8 +394,10 @@ namespace KIS.App_Sources
                     cmd.CommandText = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti FROM "
                         + " tasksmanuals INNER JOIN processo ON (tasksmanuals.taskid=processo.processid AND tasksmanuals.taskrev=processo.revisione) "
                         + "INNER JOIN varianti ON (tasksmanuals.taskVarianti = varianti.idvariante)"
-                        + " WHERE tasksmanuals.taskid = @ManualID"
-                        + " AND tasksmanuals.manualVersion=@ManualVersion";
+                        + " WHERE tasksmanuals.manualID = @ManualID"
+                        + " AND tasksmanuals.manualVersion=@ManualVersion"
+                        + " AND tasksmanuals.validityInitialDate <= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")
+                        +"' AND expiryDate >= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")+"'";
                     cmd.Parameters.AddWithValue("@ManualID", this.ID);
                     cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
 
@@ -403,24 +405,22 @@ namespace KIS.App_Sources
                     while(rdr.Read())
                     {
                         processo proc = new processo(rdr.GetInt32(0), rdr.GetInt32(1));
+                        variante var = new variante(rdr.GetInt32(2));
                         if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
                         {
-                            proc.loadImplosioneProdotti();
-                            List<ProcessoVariante> prodotti = proc.ImplosioneProdotti;
-                            for(int i =0; i < prodotti.Count; i++)
-                            {
+                            int[] padre = proc.getPadre(var);
+                            ProcessoVariante prodotti = new ProcessoVariante(new processo(padre[0], padre[1]), var);
                                 TaskProduct curr = new TaskProduct();
-                                curr.ProductID = prodotti[i].process.processID;
-                                curr.ProductVersion = prodotti[i].process.revisione;
-                                curr.VariantID = prodotti[i].variant.idVariante;
-                                curr.ProductName = prodotti[i].variant.nomeVariante;
-                                curr.ProductType = prodotti[i].process.processName;
+                                curr.ProductID = prodotti.process.processID;
+                                curr.ProductVersion = prodotti.process.revisione;
+                                curr.VariantID = prodotti.variant.idVariante;
+                                curr.ProductName = prodotti.variant.nomeVariante;
+                                curr.ProductType = prodotti.process.processName;
                                 curr.TaskID = rdr.GetInt32(0);
                                 curr.TaskVersion = rdr.GetInt32(1);
                                 curr.TaskName = proc.processName;
 
                                 this.listTasksProducts.Add(curr);
-                            }
                         }
                     }
                     conn.Close();
@@ -468,25 +468,66 @@ namespace KIS.App_Sources
              * 0 if generic error
              * 1 if ok
              * 3 if error while adding
+             * 4 if there is an overlap with other manuals for the same task
              */
             public int linkManualToTask(int TaskID, int TaskVersion, int VariantID, DateTime ValidityInitialDate, DateTime ValidityExpiryDate, int sequence, Boolean isActive)
             {
                 int ret = 0;
                 if(this.ID!=-1 && this.Version!=-1)
                 {
+                    TaskVariante tsk = new TaskVariante(new processo(TaskID, TaskVersion), new variante(VariantID));
+                    tsk.loadWorkInstructions();
+                    bool checkOverlaps = false;
+                    for(int i = 0; i < tsk.WorkInstructions.Count && !checkOverlaps; i++)
+                    {
+                        if((ValidityExpiryDate >= tsk.WorkInstructions[i].InitialDate && ValidityExpiryDate <= tsk.WorkInstructions[i].ExpiryDate) || 
+                            (ValidityInitialDate >= tsk.WorkInstructions[i].InitialDate && ValidityInitialDate <= tsk.WorkInstructions[i].ExpiryDate) ||
+                            (ValidityInitialDate <= tsk.WorkInstructions[i].InitialDate && ValidityExpiryDate >= tsk.WorkInstructions[i].ExpiryDate)
+                            )
+                        {
+                            checkOverlaps = true;
+                            ret = 4;
+                        }
+                    }
+                    tsk.loadWorkInstructionsArchive();
+                    for (int i = 0; i < tsk.WorkInstructionsArchive.Count && !checkOverlaps; i++)
+                    {
+                        if ((ValidityExpiryDate >= tsk.WorkInstructionsArchive[i].InitialDate && ValidityExpiryDate <= tsk.WorkInstructionsArchive[i].ExpiryDate) ||
+                            (ValidityInitialDate >= tsk.WorkInstructionsArchive[i].InitialDate && ValidityInitialDate <= tsk.WorkInstructionsArchive[i].ExpiryDate) ||
+                            (ValidityInitialDate <= tsk.WorkInstructionsArchive[i].InitialDate && ValidityExpiryDate >= tsk.WorkInstructionsArchive[i].ExpiryDate)
+                            )
+                        {
+                            checkOverlaps = true;
+                            ret = 4;
+                        }
+                    }
+
+                    if (!checkOverlaps)
+                    { 
+
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "INSERT INTO tasksmanuals(taskID, taskRev, taskVarianti, manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive "
+                        int maxSequence = 0;
+                        cmd.CommandText = "SELECT MAX(sequence) FROM tasksmanuals WHERE TaskId=@TaskId AND TaskRev=@TaskRev AND taskVarianti=@TaskVariante";
+                        cmd.Parameters.AddWithValue("@TaskId", TaskID);
+                        cmd.Parameters.AddWithValue("@TaskRev", TaskVersion);
+                        cmd.Parameters.AddWithValue("@TaskVariante", VariantID);
+                        
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        if(rdr.Read() && !rdr.IsDBNull(0))
+                        {
+                            maxSequence = rdr.GetInt32(0) + 1;
+                        }
+                        rdr.Close();
+
+                        cmd.CommandText = "INSERT INTO tasksmanuals(taskID, taskRev, taskVarianti, manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive) "
                         + "VALUES(@TaskId, @TaskRev, @TaskVariante, @ManualID, @ManualVersion, @ValidityInitialDate, @ExpiryDate, @Sequence, @IsActive)";
-                    cmd.Parameters.AddWithValue("@TaskId", TaskID);
-                    cmd.Parameters.AddWithValue("@TaskRev", TaskVersion);
-                    cmd.Parameters.AddWithValue("@TaskVariante", VariantID);
-                    cmd.Parameters.AddWithValue("@ManualID", this.ID);
-                    cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
-                    cmd.Parameters.AddWithValue("@ValidityInitialDate", ValidityInitialDate);
+                        cmd.Parameters.AddWithValue("@ManualID", this.ID);
+                        cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
+                        cmd.Parameters.AddWithValue("@ValidityInitialDate", ValidityInitialDate);
                     cmd.Parameters.AddWithValue("@ExpiryDate", ValidityExpiryDate);
-                    cmd.Parameters.AddWithValue("@Sequence", sequence);
+                    cmd.Parameters.AddWithValue("@Sequence", maxSequence);
                     cmd.Parameters.AddWithValue("@IsActive", isActive);
 
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -504,6 +545,7 @@ namespace KIS.App_Sources
                     }
 
                     conn.Close();
+                    }
                 }
                 return ret;
             }

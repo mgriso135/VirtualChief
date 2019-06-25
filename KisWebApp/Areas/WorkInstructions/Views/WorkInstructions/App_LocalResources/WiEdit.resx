@@ -174,4 +174,19 @@
   <data name="lblTasks" xml:space="preserve">
     <value>Tasks</value>
   </data>
+  <data name="lblTHProduct" xml:space="preserve">
+    <value>Prodotto</value>
+  </data>
+  <data name="lblTHTask" xml:space="preserve">
+    <value>Task</value>
+  </data>
+  <data name="lblReplaceCurrentVersion" xml:space="preserve">
+    <value>Sostituisce la versione attuale</value>
+  </data>
+  <data name="lblUploadNewVersion" xml:space="preserve">
+    <value>Carica una nuova versione</value>
+  </data>
+  <data name="lblInitialDate" xml:space="preserve">
+    <value>Data di inizio validità</value>
+  </data>
 </root>

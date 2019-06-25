@@ -4095,13 +4095,15 @@ namespace KIS.App_Code
             get { return this._variant; }
         }
 
-        public List<KIS.App_Sources.WorkInstructions.WorkInstruction> WorkInstructions;
+        public List<TaskWorkInstruction> WorkInstructions;
+        public List<TaskWorkInstruction> WorkInstructionsArchive;
 
         public TaskVariante(processo prc, variante vr)
         {
             this.Parameters = new List<ModelTaskParameter>();
-            this.WorkInstructions = new List<App_Sources.WorkInstructions.WorkInstruction>();
-                this._Task = prc;
+            this.WorkInstructions = new List<TaskWorkInstruction>();
+            this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
+            this._Task = prc;
                 this._variant = vr;
                 prc.loadFigli(vr);
                 this.loadPostazioni();
@@ -4397,19 +4399,48 @@ namespace KIS.App_Code
 
         public void loadWorkInstructions()
         {
-            this.WorkInstructions = new List<App_Sources.WorkInstructions.WorkInstruction>();
+            this.WorkInstructions = new List<TaskWorkInstruction>();
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT manualID, manualVersion FROM tasksmanuals WHERE taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante";
+            cmd.CommandText = "SELECT manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante "
+                +" AND isActive = true AND ExpiryDate >= @ExpiryDate";
             cmd.Parameters.AddWithValue("@TaskId", this.Task.processID);
             cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
             cmd.Parameters.AddWithValue("@variante", this.variant.idVariante);
+            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.UtcNow.ToString("yyyy-MM-dd"));
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.WorkInstructions.Add(new KIS.App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                TaskWorkInstruction curr = new TaskWorkInstruction(this.Task.processID, this.Task.revisione, this.variant.idVariante,
+                    rdr.GetInt32(0), rdr.GetInt32(1));
+
+                this.WorkInstructions.Add(curr);
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public void loadWorkInstructionsArchive()
+        {
+            this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT manualID, manualVersion FROM tasksmanuals WHERE taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante "
+                + " AND ExpiryDate < @ExpiryDate";
+            cmd.Parameters.AddWithValue("@TaskId", this.Task.processID);
+            cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@variante", this.variant.idVariante);
+            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                TaskWorkInstruction curr = new TaskWorkInstruction(this.Task.processID, this.Task.revisione, this.variant.idVariante,
+                    rdr.GetInt32(0), rdr.GetInt32(1));
+                this.WorkInstructionsArchive.Add(curr);
             }
             rdr.Close();
             conn.Close();
@@ -5423,6 +5454,124 @@ namespace KIS.App_Code
             }
             rdr.Close();
             conn.Close();
+        }
+    }
+
+    public class TaskWorkInstruction
+    {
+        public KIS.App_Sources.WorkInstructions.WorkInstruction WI;
+
+        private int _TaskID;
+        public int TaskID
+        {
+            get
+            {
+                return this._TaskID;
+            }
+        }
+        private int _TaskRev;
+        public int TaskRev
+        {
+            get
+            {
+                return this._TaskRev;
+            }
+        }
+        private int _VariantID;
+        public int VariantID
+        {
+            get
+            {
+                return this._VariantID;
+            }
+        }
+
+        private DateTime _InitialDate;
+        public DateTime InitialDate { 
+            get{return this._InitialDate;}
+        }
+
+        private DateTime _ExpiryDate;
+        public DateTime ExpiryDate
+        {
+            get { return this._ExpiryDate; }
+        }
+
+        private int _Sequence;
+        public int Sequence { get { return this._Sequence; } }
+
+        private Boolean _IsActive;
+        public Boolean IsActive { get { return this._IsActive; } }
+
+        public TaskWorkInstruction(int TaskID, int TaskRev, int VariantID, int ManualID, int ManualVersion)
+        {
+            this._TaskID = -1;
+            this._TaskRev = -1;
+            this._VariantID = -1;
+            this.WI = null;
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE "
+                + " taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante "
+                + " AND manualID = @ManualID AND manualVersion=@ManualVersion";
+            cmd.Parameters.AddWithValue("@TaskId", TaskID);
+            cmd.Parameters.AddWithValue("@TaskRev", TaskRev);
+            cmd.Parameters.AddWithValue("@variante", VariantID);
+            cmd.Parameters.AddWithValue("@ManualID", ManualID);
+            cmd.Parameters.AddWithValue("@ManualVersion", ManualVersion);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                this.WI = new App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1));
+                this._InitialDate = rdr.GetDateTime(2);
+                this._ExpiryDate = rdr.GetDateTime(3);
+                this._Sequence = rdr.GetInt32(4);
+                this._IsActive = rdr.GetBoolean(5);
+                this._TaskID = TaskID;
+                this._TaskRev = TaskRev;
+                this._VariantID = VariantID;
+            }
+            rdr.Close();
+
+            conn.Close();
+        }
+
+        /*Returns:
+         */
+         public int Delete()
+        {
+            int ret = 0;
+            if(this.WI!=null && this.WI.ID!=-1 && this.WI.Version!=-1 && this.TaskID!=-1 && this.VariantID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                cmd.CommandText = "DELETE FROM tasksmanuals WHERE taskId=@TaskID AND TaskRev=@TaskRev AND taskVarianti=@VariantID "
+                    + " AND manualID=@ManualID AND manualVersion=@ManualVersion";
+                cmd.Parameters.AddWithValue("@TaskID", TaskID);
+                cmd.Parameters.AddWithValue("@TaskRev", TaskRev);
+                cmd.Parameters.AddWithValue("@VariantID", VariantID);
+                cmd.Parameters.AddWithValue("@ManualID", this.WI.ID);
+                cmd.Parameters.AddWithValue("@ManualVersion", this.WI.Version);
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch
+                {
+                    ret = 2;
+                    tr.Rollback();
+                }
+               conn.Close();
+            }
+            return ret;
         }
     }
 }
