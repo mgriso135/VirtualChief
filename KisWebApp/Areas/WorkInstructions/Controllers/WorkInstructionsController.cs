@@ -148,7 +148,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return Json(JsonConvert.SerializeObject(manualLst), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult WiEdit(int manualID)
+        public ActionResult WiEdit(int manualID, int manualRev)
         {
             KIS.App_Sources.WorkInstructions.WorkInstruction currWI = null;
             // Register user action
@@ -177,7 +177,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             if (ViewBag.authW)
             {
-                currWI = new App_Sources.WorkInstructions.WorkInstruction(manualID);
+                currWI = new App_Sources.WorkInstructions.WorkInstruction(manualID, manualRev);
                 currWI.loadLabels();
                 currWI.loadTaskProducts();
                 currWI.loadOlderVersions();
@@ -381,7 +381,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
 
         [HttpPost]
-        public JsonResult Upload(String action, String NewVerInitialDate, String NewVerExpiryDate)
+        public JsonResult Upload(String action, String NewVerInitialDate, String NewVerExpiryDate, int origManualID)
         {
             var resultList = new List<ViewDataUploadFilesResult>();
 
@@ -412,7 +412,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 initial = DateTime.UtcNow.AddDays(1);
             }
 
-            if (checkdates && initial >= DateTime.UtcNow && initial < expiry)
+            if (checkdates && initial >= DateTime.UtcNow.AddDays(-1) && initial < expiry)
             {
                 checkdates = true;
             }
@@ -421,13 +421,27 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 checkdates = false;
             }
 
+            if(checkdates && action== "NewVersion")
+            {
+                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(origManualID);
+                wi.loadTaskProducts();
+                for(int i = 0; i < wi.listTasksProducts.Count && checkdates; i++)
+                {
+                    if(wi.listTasksProducts[i].ExpiryDate.AddDays(1) >= expiry)
+                    {
+                        checkdates = false;
+                    }
+                    if(initial < wi.listTasksProducts[i].ExpiryDate.AddDays(1))
+                    {
+                        initial = wi.listTasksProducts[i].ExpiryDate.AddDays(1);
+                    }
+                }
+            }
+
 
             if (checkdates)
             {
-            
-
                 filesHelper.UploadAndShowResults(CurrentContext, resultList);
-
                 for (int i=0; i < resultList.Count; i++)
                 {
                     if(checkdates)
@@ -449,7 +463,25 @@ namespace KIS.Areas.WorkInstructions.Controllers
                             }
                             else if(action == "NewVersion")
                             {
+                                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(origManualID);
+                                if(wi!=null && wi.ID!=-1 && wi.Version>=0)
+                                { 
 
+                                int[] res = wi.ReviewManual(resultList[i].name, initial, expiry, ((KIS.App_Code.User)Session["user"]).username);
+                                if (res[0] >= 0 && res[1] >= 0)
+                                {
+                                        
+                                    System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
+                                    HostingEnvironment.MapPath(serverMapPath) + "/" + res[0] + "_" + res[1] + ".pdf");
+                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(res[0], res[1]);
+                                    curr.Path = res[0] + "_" + res[1] + ".pdf";
+                                    curr.ExpiryDate = expiry;
+                                }
+                                }
+                                else
+                                {
+                                    resultList[i].error = ResWorkInstructions.WiEdit.lblErrOrigNotFound;
+                                }
                             }
                
                         }

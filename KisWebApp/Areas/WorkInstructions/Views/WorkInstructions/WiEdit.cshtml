@@ -227,7 +227,6 @@
 
 
                 $("#tblTasks").on("click", ".btnTaskDelete", function () {
-                    alert("Delete");
                     var inp = $(this).val();
                     var aInp = inp.split(';');
 
@@ -245,7 +244,6 @@
                         WorkInstructionVersion: @Model.Version,
                     },
                          success: function (result) {
-                             alert(result);
                              if (result == "1") {
                                  $("#trTask_"+aInp[0]+aInp[1]+aInp[2]).remove();
                              }
@@ -263,6 +261,9 @@
                 });
 
 
+                $('#uploadNewVersion').on('hidden.bs.modal', function () {
+                    window.location.href = "../../WorkInstructions/WorkInstructions/Index";
+                });
 
             });
         </script>
@@ -280,7 +281,7 @@
                     </tr>
                     <tr>
                         <td><input type="text" class="input-group-text" id="lblName" value="@Model.Name" /></td>
-                        <td><textarea class="input-group-text" id="lblDescription" value="@Model.Description"></textarea></td>
+                        <td><textarea class="input-group-text" id="lblDescription">@Model.Description</textarea></td>
                         <td>@Model.UploadDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
                         <td><input type="text" id="txtExpiryDate" value="@Model.ExpiryDate.ToString("dd/MM/yyyy")" style="max-width:80px" /></td>
                         <td>
@@ -384,7 +385,7 @@
                 <div class="span12">
                     <p>
                         <h5>@ResWorkInstructions.WiEdit.lblOlderVersions</h5>
-                        <table>
+                        <table class="table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>@ResWorkInstructions.WiEdit.lblName</th>
@@ -398,9 +399,14 @@
                             <tbody>
                                 @foreach (var olVer in Model.OlderVersions)
                                 {
-                                    <tr>
-                                        <td>@olVer.Name</td>
-                                    </tr>
+                                <tr>
+                                    <td>@olVer.Name</td>
+                                    <td>@olVer.Description</td>
+                                    <td>@olVer.UploadDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@olVer.ExpiryDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@olVer.IsActive</td>
+                                    <td>@olVer.Author</td>
+                                </tr>
                                 }
                             </tbody>
                         </table>
@@ -420,10 +426,8 @@
                     <div class="modal-body">
                         <!-- The file upload form used as target for the file upload widget -->
                         <form id="fileupload" action="https://jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data">
-                            <input type="text" id="NewVerInitialDate" />&nbsp;@ResWorkInstructions.WiEdit.lblInitialDate<br />
-                            <input type="text" id="NewVerExpiryDate" />&nbsp;@ResWorkInstructions.WiEdit.lblExpiryDate<br />
-                            <input type="checkbox" id="chkReplaceOldVersions" checked />&nbsp;@ResWorkInstructions.WiEdit.lblReplaceCurrentVersion
-                            <input type="hidden" name="action" value="addSingle">
+                            <input type="hidden" id="origManualID" name="origManualID" value="@Model.ID" />
+                            <input type="hidden" name="action" value="NewVersion">
                             <input type="hidden" name="id" />
                             <input type="hidden" name="version" />
                             <!-- Redirect browsers with JavaScript disabled to the origin page -->
@@ -435,7 +439,7 @@
                                     <span class="btn btn-secondary fileinput-button">
                                         <i class="glyphicon glyphicon-plus"></i>
                                         <span>@ResWorkInstructions.Index.lblAddFiles</span>
-                                        <input type="file" name="files[]" class="custom-file-input" multiple>
+                                        <input type="file" name="files" class="custom-file-input" multiple>
                                     </span>
                                     <button type="submit" class="btn btn-secondary start">
                                         <i class="glyphicon glyphicon-upload"></i>
@@ -462,6 +466,9 @@
                                     <!-- The extended global progress state -->
                                     <div class="progress-extended">&nbsp;</div>
                                 </div>
+                                <input type="text" id="NewVerInitialDate" name="NewVerInitialDate" value="@DateTime.UtcNow.ToString("dd/MM/yyyy")" style="display:none;" />
+                                <input type="text" id="NewVerExpiryDate" name="NewVerExpiryDate" />&nbsp;@ResWorkInstructions.WiEdit.lblExpiryDate<br />
+                                <input type="checkbox" id="chkReplaceOldVersions" checked disabled />&nbsp;@ResWorkInstructions.WiEdit.lblReplaceCurrentVersion
                             </div>
                             <!-- The table listing the files available for upload/download -->
                             <table role="presentation" class="table table-striped table-condensed"><tbody class="files"></tbody></table>

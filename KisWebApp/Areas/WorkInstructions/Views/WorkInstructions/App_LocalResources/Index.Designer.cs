@@ -88,6 +88,15 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errore: la data di scadenza del manuale non è corretta..
+        /// </summary>
+        public static string lblErrDatesOverlaps {
+            get {
+                return ResourceManager.GetString("lblErrDatesOverlaps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Errore nella data di fine validità.
         /// </summary>
         public static string lblErrorExpiryDate {

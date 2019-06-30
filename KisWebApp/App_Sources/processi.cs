@@ -3455,7 +3455,7 @@ namespace KIS.App_Code
         }
 
         /*Funzione di copia del PERT */
-        public bool CopyTo(processo dest, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters)
+        public bool CopyTo(processo dest, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters, bool copyWorkInstructions)
         {
             bool rt = true;
             if (!(copiaPostazioni == true && copiaReparti == false))
@@ -3604,6 +3604,30 @@ namespace KIS.App_Code
                                     }
                                 }
 
+
+                                // CopyWorkInstructions
+                                if (copyWorkInstructions && checkCopiaProcessi && checkCopiaPrecedenze)
+                                {
+                                    for (int i = 0; i < this.process.subProcessi.Count; i++)
+                                    {
+                                        TaskVariante orig = new TaskVariante(this.process.subProcessi[i], this.variant);
+                                        TaskVariante nuovo = new TaskVariante(this.process.subProcessi[i], nuovoProcVar.variant);
+                                        orig.loadWorkInstructions();
+                                        for (int j = 0; j < orig.WorkInstructions.Count; j++)
+                                        {
+                                            //nuovo.loadWorkInstructions();
+                                            //nuovo.WorkInstructions.Add(nuovo.WorkInstructions[i]);
+                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
+                                            int lnkRet = currWI.linkManualToTask(nuovo.Task.processID, nuovo.Task.revisione, nuovo.variant.idVariante,
+                                                orig.WorkInstructions[j].InitialDate,
+                                                orig.WorkInstructions[j].ExpiryDate,
+                                                orig.WorkInstructions[j].Sequence,
+                                                orig.WorkInstructions[j].IsActive
+                                                );
+                                        }
+                                    }
+                                }
+
                                 if (checkCopiaProcessi == false || checkCopiaPrecedenze == false)
                                 {
                                     rt = false;
@@ -3640,7 +3664,7 @@ namespace KIS.App_Code
          * overload con inserimento nome e descrizione
          * Restituisce l'id della variante creata
          */
-        public int CopyTo(processo dest, String nomeVariante, String descVariante, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters)
+        public int CopyTo(processo dest, String nomeVariante, String descVariante, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters, bool copyWorkInstructions)
         {
             bool rt = true;
             int retVarID = -1;
@@ -3791,6 +3815,27 @@ namespace KIS.App_Code
                                         }
                                     }
 
+                                }
+
+                                // CopyWorkInstructions
+                                if (copyWorkInstructions && checkCopiaProcessi && checkCopiaPrecedenze)
+                                {
+                                    for (int i = 0; i < this.process.subProcessi.Count; i++)
+                                    {
+                                        TaskVariante orig = new TaskVariante(this.process.subProcessi[i], this.variant);
+                                        TaskVariante nuovo = new TaskVariante(this.process.subProcessi[i], nuovoProcVar.variant);
+                                        orig.loadWorkInstructions();
+                                        for (int j = 0; j < orig.WorkInstructions.Count; j++)
+                                        {
+                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
+                                            int lnkRet = currWI.linkManualToTask(nuovo.Task.processID, nuovo.Task.revisione, nuovo.variant.idVariante,
+                                                orig.WorkInstructions[j].InitialDate,
+                                                orig.WorkInstructions[j].ExpiryDate,
+                                                orig.WorkInstructions[j].Sequence,
+                                                orig.WorkInstructions[j].IsActive
+                                                );
+                                        }
+                                    }
                                 }
 
                                 if (checkCopiaProcessi == false || checkCopiaPrecedenze == false)

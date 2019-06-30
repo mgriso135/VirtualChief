@@ -200,7 +200,7 @@ namespace KIS.App_Sources
 
             public List<WILabel> Labels;
 
-            public List<TaskProduct> listTasksProducts;
+            public List<WITaskProduct> listTasksProducts;
 
             public WorkInstruction(int id, int version)
             {
@@ -214,7 +214,7 @@ namespace KIS.App_Sources
                 this._IsActive = false;
                 this.Labels = new List<WILabel>();
                 this._Author = "";
-                this.listTasksProducts = new List<TaskProduct>();
+                this.listTasksProducts = new List<WITaskProduct>();
                 this.OlderVersions = new List<WIOlderVersion>();
 
                 MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -252,7 +252,7 @@ namespace KIS.App_Sources
                 this._ExpiryDate = new DateTime(1970, 1, 1);
                 this._IsActive = false;
                 this.Labels = new List<WILabel>();
-                this.listTasksProducts = new List<TaskProduct>();
+                this.listTasksProducts = new List<WITaskProduct>();
                 this.OlderVersions = new List<WIOlderVersion>();
 
                 MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -385,19 +385,19 @@ namespace KIS.App_Sources
 
             public void loadTaskProducts()
             {
-                this.listTasksProducts = new List<TaskProduct>();
+                this.listTasksProducts = new List<WITaskProduct>();
                 if (this.ID!=-1 && this.Version!=-1)
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti FROM "
+                    cmd.CommandText = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti, tasksmanuals.validityInitialDate, tasksmanuals.expiryDate FROM "
                         + " tasksmanuals INNER JOIN processo ON (tasksmanuals.taskid=processo.processid AND tasksmanuals.taskrev=processo.revisione) "
                         + "INNER JOIN varianti ON (tasksmanuals.taskVarianti = varianti.idvariante)"
                         + " WHERE tasksmanuals.manualID = @ManualID"
-                        + " AND tasksmanuals.manualVersion=@ManualVersion"
-                        + " AND tasksmanuals.validityInitialDate <= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")
-                        +"' AND expiryDate >= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")+"'";
+                        + " AND tasksmanuals.manualVersion=@ManualVersion AND tasksmanuals.isactive=true";
+                        //+ " AND tasksmanuals.validityInitialDate <= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")
+                        //+"' AND expiryDate >= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")+"'";
                     cmd.Parameters.AddWithValue("@ManualID", this.ID);
                     cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
 
@@ -410,7 +410,7 @@ namespace KIS.App_Sources
                         {
                             int[] padre = proc.getPadre(var);
                             ProcessoVariante prodotti = new ProcessoVariante(new processo(padre[0], padre[1]), var);
-                                TaskProduct curr = new TaskProduct();
+                            WITaskProduct curr = new WITaskProduct(this.ID, this.Version, rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetInt32(2));
                                 curr.ProductID = prodotti.process.processID;
                                 curr.ProductVersion = prodotti.process.revisione;
                                 curr.VariantID = prodotti.variant.idVariante;
@@ -473,7 +473,7 @@ namespace KIS.App_Sources
             public int linkManualToTask(int TaskID, int TaskVersion, int VariantID, DateTime ValidityInitialDate, DateTime ValidityExpiryDate, int sequence, Boolean isActive)
             {
                 int ret = 0;
-                if(this.ID!=-1 && this.Version!=-1)
+                if(this.ID!=-1 && this.Version!=-1 && ValidityInitialDate < ValidityExpiryDate)
                 {
                     TaskVariante tsk = new TaskVariante(new processo(TaskID, TaskVersion), new variante(VariantID));
                     tsk.loadWorkInstructions();
@@ -549,8 +549,108 @@ namespace KIS.App_Sources
                 }
                 return ret;
             }
-        }
 
+            /* Returns:
+             * 0, 0 if generic error
+             * ManualID, ManualVersion if manual was reviewed correctly
+             */
+            public int[] ReviewManual(String FileName, DateTime InitialDate, DateTime ExpiryDate, String user)
+            {
+                int[] ret = new int[2];
+                ret[0] = 0; ret[1] = 0;
+                if(this.ID!=-1 && this.Version >=0)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+
+                    cmd.CommandText = "INSERT INTO manuals(ID, Version, Name, Description, path, uploaddate, expirydate, isactive, user) VALUES("
+                        + "@id, @version, @name, @description, @path, @uploaddate, @expirydate, @isactive, @user)";
+                    cmd.Parameters.AddWithValue("@id", this.ID);
+                    cmd.Parameters.AddWithValue("@version", (this.Version + 1));
+                    cmd.Parameters.AddWithValue("@name", this.Name);
+                    cmd.Parameters.AddWithValue("@description", this.Description);
+                    cmd.Parameters.AddWithValue("@path", FileName);
+                    cmd.Parameters.AddWithValue("@uploaddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@expirydate", ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@isactive", true);
+                    cmd.Parameters.AddWithValue("@user", user);
+
+                    Boolean checkNewVer = false;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        checkNewVer = true;
+                        ret[0] = this.ID;
+                        ret[1] = this.Version + 1;
+                    }
+                    catch
+                    {
+                        checkNewVer = false;
+                        tr.Rollback();
+                    }
+
+                    if(checkNewVer)
+                    {
+                        // Disable manual
+                        if (this.ExpiryDate <= DateTime.UtcNow)
+                        {
+                            this.IsActive = false;
+                        }
+                        if (this.ExpiryDate >= ExpiryDate)
+                        {
+                            this.ExpiryDate = ExpiryDate.AddDays(-1);
+                        }
+                        this.IsActive = false;
+
+                        WorkInstruction newWI = new WorkInstruction(this.ID, (this.Version) + 1);
+                        // Copy tasks and set end date as ExpiryDate-1Day for tasks in current manual
+                        this.loadTaskProducts();
+                        for(int i = 0; i < this.listTasksProducts.Count; i++)
+                        {
+                            if (this.listTasksProducts[i].InitialDate >= InitialDate)
+                            {
+                                this.listTasksProducts[i].InitialDate = ExpiryDate.AddDays(-2);
+                            }
+                            if (this.listTasksProducts[i].ExpiryDate >= InitialDate)
+                            {
+                                this.listTasksProducts[i].ExpiryDate = ExpiryDate.AddDays(-1);
+                            }
+                            int lnkRet = newWI.linkManualToTask(this.listTasksProducts[i].TaskID,
+                                this.listTasksProducts[i].TaskVersion,
+                                this.listTasksProducts[i].VariantID,
+                                InitialDate,
+                                ExpiryDate,
+                                this.listTasksProducts[i].Sequence,
+                                true);
+                            if(lnkRet ==1)
+                            { 
+                            this.listTasksProducts[i].IsActive = false;
+                            }
+                            else
+                            {
+                                ret[0] = -lnkRet;
+                            }
+                        }
+
+                        // Copy labels
+                        this.loadLabels();
+                        for(int i = 0; i < this.Labels.Count; i++)
+                        {
+                            newWI.addLabel(this.Labels[i].WILabelID);
+                        }
+
+
+                    }
+
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
 
         public class WorkInstructionsList
         {
@@ -573,7 +673,7 @@ namespace KIS.App_Sources
                 String strOnlyActives = "";
                 if(onlyActives)
                 {
-                    strOnlyActives = "WHERE isActive = true ";
+                    strOnlyActives = "WHERE isActive = true AND expiryDate >= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "'";
                 }
                 cmd.CommandText = "SELECT ID, Version FROM Manuals "+strOnlyActives+" ORDER BY Name";
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -840,8 +940,11 @@ namespace KIS.App_Sources
             }
         }
 
-        public struct TaskProduct
+        public class WITaskProduct
         {
+            public int ManualID;
+            public int ManualVersion;
+
             public int ProductID;
             public int ProductVersion;
             public int VariantID;
@@ -851,6 +954,143 @@ namespace KIS.App_Sources
             public String ProductType;
             public String ProductName;
             public String TaskName;
+
+            private DateTime _InitialDate;
+            public DateTime InitialDate
+            {
+                get {return this._InitialDate; }
+                set {
+                    if (this.TaskID != -1 && this.TaskVersion != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE tasksmanuals SET validityInitialDate='" + value.ToString("yyyy-MM-dd") 
+                            + "' WHERE taskid = " + this.TaskID.ToString() + " AND TaskRev = " + this.TaskVersion.ToString()
+                            +" AND taskVarianti = " + this.VariantID
+                            + " AND manualID = " + this.ManualID.ToString()
+                            + " AND manualVersion = " + this.ManualVersion.ToString()
+                            ;
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._InitialDate = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
+                }
+            }
+
+            private DateTime _ExpiryDate;
+            public DateTime ExpiryDate
+            {
+                get { return this._ExpiryDate; }
+                set
+                {
+                    if (this.TaskID != -1 && this.TaskVersion != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE tasksmanuals SET expiryDate='" + value.ToString("yyyy-MM-dd")
+                            + "' WHERE taskid = " + this.TaskID.ToString() + " AND TaskRev = " + this.TaskVersion.ToString()
+                            + " AND taskVarianti = " + this.VariantID
+                            + " AND manualID = " + this.ManualID.ToString()
+                            + " AND manualVersion = " + this.ManualVersion.ToString()
+                            ;
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._ExpiryDate = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
+                }
+            }
+
+            public int Sequence;
+
+            private Boolean _IsActive;
+            public Boolean IsActive {
+                get { return this._IsActive; }
+                set
+                {
+                    if (this.TaskID != -1 && this.TaskVersion != -1)
+                    {
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "UPDATE tasksmanuals SET IsActive=" + value
+                            + " WHERE taskid = " + this.TaskID.ToString() + " AND TaskRev = " + this.TaskVersion.ToString()
+                            + " AND taskVarianti = " + this.VariantID
+                            + " AND manualID = " + this.ManualID.ToString()
+                            + " AND manualVersion = " + this.ManualVersion.ToString()
+                            ;
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                            this._IsActive = value;
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                        conn.Close();
+                    }
+                }
+            }
+
+            public WITaskProduct(int ManualID, int ManualVersion, int TaskID, int TaskVersion, int VariantID)
+            {
+                this.ManualID = -1;
+                this.ManualVersion = -1;
+                this.VariantID = -1;
+                this.TaskID = -1;
+                this.TaskVersion = -1;
+                this._InitialDate = new DateTime(1970, 1, 1);
+                this._ExpiryDate = new DateTime(1970, 1, 1);
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE TaskID=@TaskId AND taskRev=@TaskVersion AND "
+                    + " taskVarianti=@VariantID AND manualID=@ManualID AND manualVersion=@ManualVersion";
+                cmd.Parameters.AddWithValue("@TaskId", TaskID); 
+                cmd.Parameters.AddWithValue("@TaskVersion", TaskVersion);
+                cmd.Parameters.AddWithValue("@VariantID", VariantID);
+                cmd.Parameters.AddWithValue("@ManualID", ManualID);
+                cmd.Parameters.AddWithValue("@ManualVersion", ManualVersion);
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if(rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    this.ManualID = ManualID;
+                    this.ManualVersion = ManualVersion;
+                    this.TaskID = TaskID;
+                    this.TaskVersion = TaskVersion;
+                    this.VariantID = VariantID;
+                    this._InitialDate = rdr.GetDateTime(0);
+                    this._ExpiryDate = rdr.GetDateTime(1);
+                }
+                rdr.Close();
+                conn.Close();
+            }
         }
 
         public struct WIOlderVersion

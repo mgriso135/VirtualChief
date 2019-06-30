@@ -488,13 +488,14 @@ namespace KIS.Commesse
                         bool flagCopiaReparto = chkCopiaReparti.Checked;
                         bool flagCopiaPostazioni = chkCopiaPostazioni.Checked;
                         bool flagCopyParameters = chkCopyParameters.Checked;
+                        bool flagCopyWorkInstructions = chkCopyWorkInstructions.Checked;
                         if (chkCopiaPostazioni.Checked && !chkCopiaReparti.Checked)
                         {
                             lbl1.Text = GetLocalResourceObject("lblErrPostRep").ToString();
                         }
                         else
                         {
-                            int newVarID = daCopiare.CopyTo(curr, Server.HtmlEncode(txtNomeCopiaProd.Text), Server.HtmlEncode(txtDescCopiaProd.Text), flagCopia, flagCopiaTC, flagCopiaReparto, flagCopiaPostazioni, flagCopyParameters);
+                            int newVarID = daCopiare.CopyTo(curr, Server.HtmlEncode(txtNomeCopiaProd.Text), Server.HtmlEncode(txtDescCopiaProd.Text), flagCopia, flagCopiaTC, flagCopiaReparto, flagCopiaPostazioni, flagCopyParameters, flagCopyWorkInstructions);
                             if (newVarID != -1)
                             {
                                 String page = "wzEditPERT.aspx";

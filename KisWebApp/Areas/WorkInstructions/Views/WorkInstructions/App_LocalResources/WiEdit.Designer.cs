@@ -133,6 +133,15 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errore: istruzione di lavoro originale non trovata..
+        /// </summary>
+        public static string lblErrOrigNotFound {
+            get {
+                return ResourceManager.GetString("lblErrOrigNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fine validità.
         /// </summary>
         public static string lblExpiryDate {

@@ -180,4 +180,7 @@
   <data name="lblErrorFileType" xml:space="preserve">
     <value>Errore: il file non è un PDF</value>
   </data>
+  <data name="lblErrDatesOverlaps" xml:space="preserve">
+    <value>Errore: la data di scadenza del manuale non è corretta.</value>
+  </data>
 </root>

@@ -189,4 +189,7 @@
   <data name="lblInitialDate" xml:space="preserve">
     <value>Data di inizio validità</value>
   </data>
+  <data name="lblErrOrigNotFound" xml:space="preserve">
+    <value>Errore: istruzione di lavoro originale non trovata.</value>
+  </data>
 </root>
