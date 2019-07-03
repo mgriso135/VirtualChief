@@ -2963,10 +2963,40 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>WiEdit.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WiEdit.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\WorkInstructions\WorkInstructionsAreaRegistration.cs" />
     <Compile Include="Areas\Workplace\Controllers\WebGembaController.cs" />
@@ -8248,6 +8278,36 @@
     <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EditTaskWorkInstruction.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WiEdit.it.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.resx">

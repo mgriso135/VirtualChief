@@ -106,7 +106,7 @@
                         var strUDate = v.UploadDate.substr(0, 10);
                         var strEDate = v.ExpiryDate.substr(0, 10);
                         newrows += "<tr>"
-                            + "<td><a href='../../WorkInstructions/WorkInstructions/WiEdit?manualID="+v.ID+"'><img src='../../img/edit.png' style='min-height:15px; max-height:20px;' /></a></td>"
+                            + "<td><a href='../../WorkInstructions/WorkInstructions/WiEdit?manualID=" + v.ID + "&manualRev=" + v.Version+"'><img src='../../img/edit.png' style='min-height:15px; max-height:20px;' /></a></td>"
                             + "<td>" + v.ID + "</td>"
                             + "<td>" + v.Version + "</td>"
                             + "<td>" + v.Name + "</td>"
