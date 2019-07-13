@@ -664,6 +664,58 @@ namespace KIS.App_Sources
                 this._List = new List<WorkInstruction>();
             }
 
+            public WorkInstructionsList(List<int> idLabels, Boolean onlyActives=true)
+            {
+                this._List = new List<WorkInstruction>();
+                this._List = new List<WorkInstruction>();
+                if (idLabels.Count > 0)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+
+                    String strFilter = "";
+                    for(int i =0; i < idLabels.Count; i++)
+                    {
+                        if(idLabels[i]==-1)
+                        {
+                            strFilter += "manualswilabels.LabelID IS NULL";
+                        }
+                        else
+                        { 
+                            strFilter += "manualswilabels.LabelID = " + idLabels[i].ToString();
+                        }
+                        if (i < idLabels.Count-1)
+                        {
+                            strFilter += " OR ";
+                        }
+                    }
+
+
+                    String strOnlyActives = "";
+                    if (onlyActives)
+                    {
+                        strOnlyActives = " AND (isActive = true AND expiryDate >= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "')";
+                    }
+
+                    
+                    cmd.CommandText = "SELECT DISTINCT(ID), Version, Name, Description, path, uploaddate, expirydate, isActive, user from manuals "
+                        + " LEFT JOIN manualswilabels ON(manuals.ID = manualswilabels.ManualID AND manuals.Version = manualswilabels.manualVersion) "
+                        + " WHERE ("+strFilter+")";
+                    if (onlyActives)
+                    {
+                        cmd.CommandText += strOnlyActives;
+                    }
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        this._List.Add(new WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    }
+                    rdr.Close();
+                    conn.Close();
+                }
+            }
+
             public void loadWorkInstructionList(Boolean onlyActives =true)
             {
                 this._List = new List<WorkInstruction>();

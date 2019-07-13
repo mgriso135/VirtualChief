@@ -183,4 +183,7 @@
   <data name="lblErrDatesOverlaps" xml:space="preserve">
     <value>Error: la fecha de vencimiento de la instrucción de trabajo no es correcta</value>
   </data>
+  <data name="lblWithoutLabels" xml:space="preserve">
+    <value>Sin etiquetas</value>
+  </data>
 </root>

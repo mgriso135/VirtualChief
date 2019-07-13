@@ -257,5 +257,14 @@ namespace ResWorkInstructions {
                 return ResourceManager.GetString("lblUserNotAuthorized", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Senza etichette.
+        /// </summary>
+        public static string lblWithoutLabels {
+            get {
+                return ResourceManager.GetString("lblWithoutLabels", resourceCulture);
+            }
+        }
     }
 }

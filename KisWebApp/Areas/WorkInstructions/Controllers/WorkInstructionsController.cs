@@ -130,8 +130,20 @@ namespace KIS.Areas.WorkInstructions.Controllers
             }
             if (ViewBag.authR)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList();
-                wiList.loadWorkInstructionList();
+                List<int> ids = new List<int>();
+                var strArr = param.Split(';');
+                foreach(var m in strArr)
+                {
+                    try
+                    {
+                        ids.Add(Int32.Parse(m));
+                    }
+                    catch
+                    { }
+                }
+
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(ids);
+                //wiList.loadWorkInstructionList();
                 for (int i = 0; i < wiList.List.Count; i++)
                 {
                     JsonManual curr = new JsonManual();
@@ -359,6 +371,41 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return View(ret);
         }*/
 
+        public JsonResult getAllLabels()
+        {
+            List<WILabels> retW = new List<WILabels>();
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "WorkInstructions Manage";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (Session["user"] != null)
+            {
+                if(ViewBag.authR)
+                {
+                    KIS.App_Sources.WorkInstructions.WILabelList currList = new App_Sources.WorkInstructions.WILabelList();
+                    currList.loadLabelsList();
+                    for(int i =0; i < currList.List.Count; i++)
+                    {
+                        WILabels curr = new WILabels();
+                        curr.LabelID = currList.List[i].WILabelID;
+                        curr.LabelName = currList.List[i].WILabelName;
+                        retW.Add(curr);
+                    }
+                }
+            }
+
+            return Json(retW) ;
+
+            }
+
     }
         
 
@@ -555,5 +602,11 @@ namespace KIS.Areas.WorkInstructions.Controllers
         public String Description;
         public DateTime UploadDate;
         public DateTime ExpiryDate;
+    }
+
+    public struct WILabels
+    {
+        public int LabelID;
+        public String LabelName;
     }
 }

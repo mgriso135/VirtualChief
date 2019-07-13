@@ -183,4 +183,7 @@
   <data name="lblErrDatesOverlaps" xml:space="preserve">
     <value>Error: expiry date of the work instruction is not valid</value>
   </data>
+  <data name="lblWithoutLabels" xml:space="preserve">
+    <value>Without labels</value>
+  </data>
 </root>

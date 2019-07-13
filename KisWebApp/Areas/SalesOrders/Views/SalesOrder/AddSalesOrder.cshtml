@@ -133,44 +133,6 @@
 
         }
 
-        /*$("#ddlProducts").on('input', function () {
-            $("#imgDepartmentsLoad").fadeIn();
-            if ($(this).val() != null && $(this).val().length > 0) {
-                var g = $('#ddlProducts').val();
-                var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
-                // in here I need to load departments
-                var ids = id.split('/');
-                if (ids[0] !== null && ids[1] !== null && ids[2] !== null && $.isNumeric(ids[0]) && $.isNumeric(ids[1]) && $.isNumeric(ids[2])) {
-                    var ProcID = ids[0];
-                    var Rev = ids[1];
-                    var variant = ids[2];
-
-                    $.ajax({
-                        url: "@{//Url.Action("GetProductDepartments", "SalesOrder")
-                            }",
-                        /*type: 'POST',
-                        data: {
-                            ProdID: ProcID,
-                            ProdRev: Rev,
-                            Variant: variant,
-                        },
-                        success: function (data) {
-                            $("#imgDepartmentsLoad").fadeOut();
-                            alert(data);
-                        },
-                        statusCode: {
-                            404: function (content) { alert('cannot find resource'); $("#imgDepartmentsLoad").fadeOut(); },
-                            500: function (content) { alert('internal server error'); $("#imgDepartmentsLoad").fadeOut(); }
-                        },
-                        error: function (data) {
-                            $("#imgDepartmentsLoad").fadeOut();
-
-                        }
-
-                    });
-                }
-            }
-        });*/
 
         $(function () {
             $("[id*=txtDeliveryDate]").datepicker({ dateFormat: 'dd/mm/yy' })

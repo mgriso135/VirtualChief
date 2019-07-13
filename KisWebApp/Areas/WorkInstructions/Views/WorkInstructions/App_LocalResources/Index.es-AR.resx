@@ -183,4 +183,7 @@
   <data name="lblErrDatesOverlaps" xml:space="preserve">
     <value>Errore: la data di scadenza del manuale non è corretta.</value>
   </data>
+  <data name="lblWithoutLabels" xml:space="preserve">
+    <value>Sin etiquetas</value>
+  </data>
 </root>

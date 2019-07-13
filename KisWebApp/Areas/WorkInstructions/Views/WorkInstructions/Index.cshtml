@@ -17,6 +17,7 @@
             <script>
                 $(document).ready(function () {
 
+                    var lblFilter;
 
                     $(function () {
                         $("[id*=NewVerExpiryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
@@ -91,18 +92,16 @@
             });
 
 
-                        function getManuals() {
-                var param = "param";
+                    function getManuals() {
+                        var param = "";
+                            for (var i = 0; i < lblFilter.length; i++) {
+                    param += lblFilter[i] + ";";
+                        }
                 $.getJSON("@Url.Action("getJsonWorkInstructions")", { param }, function (data) {
-                    //alert(data);
                     data = $.parseJSON(data);
                     var newrows = "";
                     $.each(data, function (i, v) {
                         console.log(i, v);
-                        //alert(v.ProdName);
-                        // Replace the whole table
-/*                        var strUDate = v.UploadDate.getDate() + "/" + (v.UploadDate.getMonth() + 1) + "/"+ v.UploadDate.getYear();
-                        var strEDate = v.ExpiryDate.getDate() + "/" + (v.ExpiryDate.getMonth() + 1) + "/" +v.ExpiryDate.getYear();*/
                         var strUDate = v.UploadDate.substr(0, 10);
                         var strEDate = v.ExpiryDate.substr(0, 10);
                         newrows += "<tr>"
@@ -121,6 +120,56 @@
                 });
             }
 
+                    function loadLabels() {
+                        lblFilter = new Array();
+                        
+                        $.ajax({
+                        url: "@Url.Action("getAllLabels", "WorkInstructions")",
+                        type: 'POST',
+                        dataType: "html",
+                        data: {
+                        },
+                        success: function (result) {
+                            var jsonobj = $.parseJSON(result); 
+                            var lblList = "";
+                            lblList += "<button class='badge badge-info' id='lblBadge' name='lblBadge' value='-1'>@ResWorkInstructions.Index.lblWithoutLabels</span>"
+                            lblFilter.push("-1");
+                            for (var i = 0; i < jsonobj.length; i++) {
+                                lblFilter.push(jsonobj[i].LabelID.toString());
+                                console.log(jsonobj[i].LabelID);
+                                lblList += "<button class='badge badge-info' id='lblBadge' name='lblBadge_"+jsonobj[i].LabelID+"' value='" + jsonobj[i].LabelID + "'>" + jsonobj[i].LabelName +"</span>"
+
+                            }
+                            $("#lblLabelsList").html(lblList)
+                        },
+                        error: function (result) {
+
+                        },
+                        warning: function (result) {
+  
+                        }
+                    });
+                    }
+                    loadLabels();
+
+                    $("#dvLabelsContainer").on("click", "#lblBadge", function () {
+                        var val = $(this).val();
+                        var index = lblFilter.indexOf(val);
+                        if (index > -1) {
+                            lblFilter.splice(index, 1);
+                            $(this).prop("class", "badge badge-light");
+                            getManuals();
+                        }
+                        else {
+                            lblFilter.push(val);
+                            $(this).prop("class", "badge badge-info");
+                            getManuals();
+                        }
+                    });
+
+                    
+
+
         });
 
             </script>
@@ -136,7 +185,12 @@
                     @ResWorkInstructions.Index.lblAddWorkInstrucions
                 </button>
             }
-
+            <br /><br />
+            <div class="row-fluid">
+                <div class="span12" id="dvLabelsContainer">
+                    <div id="lblLabelsList" />
+                </div>
+            </div>
             <div class="row-fluid">
                 <!-- WORK INSTRUCTIONS LIST -->
                 <div class="span12">
@@ -322,7 +376,7 @@
                     </td>
                     <td>
                         {% if (file.deleteUrl) { %}
-                        <button style="display:none;" class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                        <button style="display:none;" class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}' ☺{% } %}>
                             <i class="glyphicon glyphicon-trash"></i>
                             <span>Delete</span>
                         </button>
@@ -373,4 +427,8 @@
             <script src="js/cors/jquery.xdr-transport.js"></script>
             <![endif]-->
 
+        }
+        else
+        {
+            <div>User not authorized</div>
         }
