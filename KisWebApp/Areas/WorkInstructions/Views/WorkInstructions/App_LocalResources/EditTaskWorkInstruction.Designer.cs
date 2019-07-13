@@ -22,14 +22,14 @@ namespace ResWorkInstructions {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Index {
+    public class EditTaskWorkInstruction {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Index() {
+        internal EditTaskWorkInstruction() {
         }
         
         /// <summary>
@@ -39,7 +39,8 @@ namespace ResWorkInstructions {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.WorkInstructions.Views.WorkInstructions.App_LocalResources.Index", typeof(Index).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.WorkInstructions.Views.WorkInstructions.App_LocalResources.EditTaskWork" +
+                            "Instruction", typeof(EditTaskWorkInstruction).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -88,56 +89,11 @@ namespace ResWorkInstructions {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Errore: la data di scadenza del manuale non è corretta..
-        /// </summary>
-        public static string lblErrDatesOverlaps {
-            get {
-                return ResourceManager.GetString("lblErrDatesOverlaps", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Errore nella data di fine validità.
-        /// </summary>
-        public static string lblErrorExpiryDate {
-            get {
-                return ResourceManager.GetString("lblErrorExpiryDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Errore: il file non è un PDF.
-        /// </summary>
-        public static string lblErrorFileType {
-            get {
-                return ResourceManager.GetString("lblErrorFileType", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fine validità.
-        /// </summary>
-        public static string lblExpiryDate {
-            get {
-                return ResourceManager.GetString("lblExpiryDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Errore generico.
         /// </summary>
         public static string lblGenericError {
             get {
                 return ResourceManager.GetString("lblGenericError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Data di inizio validità.
-        /// </summary>
-        public static string lblInitialDate {
-            get {
-                return ResourceManager.GetString("lblInitialDate", resourceCulture);
             }
         }
         
@@ -255,15 +211,6 @@ namespace ResWorkInstructions {
         public static string lblUserNotAuthorized {
             get {
                 return ResourceManager.GetString("lblUserNotAuthorized", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Senza etichette.
-        /// </summary>
-        public static string lblWithoutLabels {
-            get {
-                return ResourceManager.GetString("lblWithoutLabels", resourceCulture);
             }
         }
     }

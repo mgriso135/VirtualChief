@@ -117,16 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblErrNoAuth" xml:space="preserve">
-    <value>Advertencia: usted no tienes permiso para realizar las tareas de esta estación</value>
+  <data name="lblAddWorkInstrucion" xml:space="preserve">
+    <value>Aggiungi un nuovo manuale</value>
   </data>
-  <data name="lblErrWINotFound" xml:space="preserve">
-    <value>Work instruction not present for this task</value>
+  <data name="lblMDescription" xml:space="preserve">
+    <value>Descrizione</value>
   </data>
-  <data name="lblErrWorkstationNotFound" xml:space="preserve">
-    <value>Workstation not found</value>
+  <data name="lblMName" xml:space="preserve">
+    <value>Nome del manuale</value>
+  </data>
+  <data name="lblTHDescription" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="lblTHExpiryDate" xml:space="preserve">
+    <value>Data di fine validità</value>
+  </data>
+  <data name="lblTHIsActive" xml:space="preserve">
+    <value>Attivo</value>
+  </data>
+  <data name="lblTHManualID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="lblTHManualRevision" xml:space="preserve">
+    <value>Version</value>
+  </data>
+  <data name="lblTHMName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="lblTHUploadDate" xml:space="preserve">
+    <value>Data di caricamento</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
-    <value>Workstation's tasks</value>
+    <value>Istruzioni di lavoro</value>
+  </data>
+  <data name="lblAddFiles" xml:space="preserve">
+    <value>Seleziona files</value>
+  </data>
+  <data name="lblAddWorkInstrucions" xml:space="preserve">
+    <value>Carica nuovi manuali</value>
+  </data>
+  <data name="lblGenericError" xml:space="preserve">
+    <value>Errore generico</value>
+  </data>
+  <data name="lblStartUpload" xml:space="preserve">
+    <value>Carica</value>
+  </data>
+  <data name="lblUserNotAuthorized" xml:space="preserve">
+    <value>Utente non autorizzato.</value>
+  </data>
+  <data name="lblOlderVersions" xml:space="preserve">
+    <value>Versioni precedenti</value>
+  </data>
+  <data name="lblExpiryDate" xml:space="preserve">
+    <value>Fine validità</value>
+  </data>
+  <data name="lblInitialDate" xml:space="preserve">
+    <value>Data di inizio validità</value>
+  </data>
+  <data name="lblErrorExpiryDate" xml:space="preserve">
+    <value>Errore nella data di fine validità</value>
+  </data>
+  <data name="lblErrorFileType" xml:space="preserve">
+    <value>Errore: il file non è un PDF</value>
+  </data>
+  <data name="lblErrDatesOverlaps" xml:space="preserve">
+    <value>Errore: la data di scadenza del manuale non è corretta.</value>
+  </data>
+  <data name="lblWithoutLabels" xml:space="preserve">
+    <value>Sin etiquetas</value>
   </data>
 </root>

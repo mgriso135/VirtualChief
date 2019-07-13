@@ -843,13 +843,14 @@ namespace KIS.Processi
                     bool flagCopiaReparto = chkCopiaReparti.Checked;
                     bool flagCopiaPostazioni = chkCopiaPostazioni.Checked;
                     bool flagCopyParameters = chkCopyParameters.Checked;
+                    bool flagCopyWorkInstruction = chkCopyWorkInstructions.Checked;
                     if (chkCopiaPostazioni.Checked && !chkCopiaReparti.Checked)
                     {
                         lblErr.Text = "Errore: se copio le postazioni devo anche copiare i reparti";
                     }
                     else
                     {
-                        bool rt = daCopiare.CopyTo(curr, flagCopia, flagCopiaTC, flagCopiaReparto, flagCopiaPostazioni, flagCopyParameters);
+                        bool rt = daCopiare.CopyTo(curr, flagCopia, flagCopiaTC, flagCopiaReparto, flagCopiaPostazioni, flagCopyParameters, flagCopyWorkInstruction);
                         if (rt == true)
                         {
                             Response.Redirect(Request.RawUrl);

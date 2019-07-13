@@ -3455,7 +3455,7 @@ namespace KIS.App_Code
         }
 
         /*Funzione di copia del PERT */
-        public bool CopyTo(processo dest, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters)
+        public bool CopyTo(processo dest, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters, bool copyWorkInstructions)
         {
             bool rt = true;
             if (!(copiaPostazioni == true && copiaReparti == false))
@@ -3604,6 +3604,30 @@ namespace KIS.App_Code
                                     }
                                 }
 
+
+                                // CopyWorkInstructions
+                                if (copyWorkInstructions && checkCopiaProcessi && checkCopiaPrecedenze)
+                                {
+                                    for (int i = 0; i < this.process.subProcessi.Count; i++)
+                                    {
+                                        TaskVariante orig = new TaskVariante(this.process.subProcessi[i], this.variant);
+                                        TaskVariante nuovo = new TaskVariante(this.process.subProcessi[i], nuovoProcVar.variant);
+                                        orig.loadWorkInstructions();
+                                        for (int j = 0; j < orig.WorkInstructions.Count; j++)
+                                        {
+                                            //nuovo.loadWorkInstructions();
+                                            //nuovo.WorkInstructions.Add(nuovo.WorkInstructions[i]);
+                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
+                                            int lnkRet = currWI.linkManualToTask(nuovo.Task.processID, nuovo.Task.revisione, nuovo.variant.idVariante,
+                                                orig.WorkInstructions[j].InitialDate,
+                                                orig.WorkInstructions[j].ExpiryDate,
+                                                orig.WorkInstructions[j].Sequence,
+                                                orig.WorkInstructions[j].IsActive
+                                                );
+                                        }
+                                    }
+                                }
+
                                 if (checkCopiaProcessi == false || checkCopiaPrecedenze == false)
                                 {
                                     rt = false;
@@ -3640,7 +3664,7 @@ namespace KIS.App_Code
          * overload con inserimento nome e descrizione
          * Restituisce l'id della variante creata
          */
-        public int CopyTo(processo dest, String nomeVariante, String descVariante, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters)
+        public int CopyTo(processo dest, String nomeVariante, String descVariante, bool copiaTasks, bool copiaTempiCiclo, bool copiaReparti, bool copiaPostazioni, bool copyParameters, bool copyWorkInstructions)
         {
             bool rt = true;
             int retVarID = -1;
@@ -3791,6 +3815,27 @@ namespace KIS.App_Code
                                         }
                                     }
 
+                                }
+
+                                // CopyWorkInstructions
+                                if (copyWorkInstructions && checkCopiaProcessi && checkCopiaPrecedenze)
+                                {
+                                    for (int i = 0; i < this.process.subProcessi.Count; i++)
+                                    {
+                                        TaskVariante orig = new TaskVariante(this.process.subProcessi[i], this.variant);
+                                        TaskVariante nuovo = new TaskVariante(this.process.subProcessi[i], nuovoProcVar.variant);
+                                        orig.loadWorkInstructions();
+                                        for (int j = 0; j < orig.WorkInstructions.Count; j++)
+                                        {
+                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
+                                            int lnkRet = currWI.linkManualToTask(nuovo.Task.processID, nuovo.Task.revisione, nuovo.variant.idVariante,
+                                                orig.WorkInstructions[j].InitialDate,
+                                                orig.WorkInstructions[j].ExpiryDate,
+                                                orig.WorkInstructions[j].Sequence,
+                                                orig.WorkInstructions[j].IsActive
+                                                );
+                                        }
+                                    }
                                 }
 
                                 if (checkCopiaProcessi == false || checkCopiaPrecedenze == false)
@@ -4095,10 +4140,15 @@ namespace KIS.App_Code
             get { return this._variant; }
         }
 
+        public List<TaskWorkInstruction> WorkInstructions;
+        public List<TaskWorkInstruction> WorkInstructionsArchive;
+
         public TaskVariante(processo prc, variante vr)
         {
             this.Parameters = new List<ModelTaskParameter>();
-                this._Task = prc;
+            this.WorkInstructions = new List<TaskWorkInstruction>();
+            this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
+            this._Task = prc;
                 this._variant = vr;
                 prc.loadFigli(vr);
                 this.loadPostazioni();
@@ -4391,6 +4441,56 @@ namespace KIS.App_Code
             }
             return ret;
         }
+
+        public void loadWorkInstructions()
+        {
+            this.WorkInstructions = new List<TaskWorkInstruction>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante "
+                +" AND isActive = true AND ExpiryDate >= @ExpiryDate";
+            cmd.Parameters.AddWithValue("@TaskId", this.Task.processID);
+            cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@variante", this.variant.idVariante);
+            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                TaskWorkInstruction curr = new TaskWorkInstruction(this.Task.processID, this.Task.revisione, this.variant.idVariante,
+                    rdr.GetInt32(0), rdr.GetInt32(1));
+
+                this.WorkInstructions.Add(curr);
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public void loadWorkInstructionsArchive()
+        {
+            this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT manualID, manualVersion FROM tasksmanuals WHERE taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante "
+                + " AND ExpiryDate < @ExpiryDate";
+            cmd.Parameters.AddWithValue("@TaskId", this.Task.processID);
+            cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@variante", this.variant.idVariante);
+            cmd.Parameters.AddWithValue("@ExpiryDate", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                TaskWorkInstruction curr = new TaskWorkInstruction(this.Task.processID, this.Task.revisione, this.variant.idVariante,
+                    rdr.GetInt32(0), rdr.GetInt32(1));
+                this.WorkInstructionsArchive.Add(curr);
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
     }
 
     public class TempoCiclo
@@ -5399,6 +5499,124 @@ namespace KIS.App_Code
             }
             rdr.Close();
             conn.Close();
+        }
+    }
+
+    public class TaskWorkInstruction
+    {
+        public KIS.App_Sources.WorkInstructions.WorkInstruction WI;
+
+        private int _TaskID;
+        public int TaskID
+        {
+            get
+            {
+                return this._TaskID;
+            }
+        }
+        private int _TaskRev;
+        public int TaskRev
+        {
+            get
+            {
+                return this._TaskRev;
+            }
+        }
+        private int _VariantID;
+        public int VariantID
+        {
+            get
+            {
+                return this._VariantID;
+            }
+        }
+
+        private DateTime _InitialDate;
+        public DateTime InitialDate { 
+            get{return this._InitialDate;}
+        }
+
+        private DateTime _ExpiryDate;
+        public DateTime ExpiryDate
+        {
+            get { return this._ExpiryDate; }
+        }
+
+        private int _Sequence;
+        public int Sequence { get { return this._Sequence; } }
+
+        private Boolean _IsActive;
+        public Boolean IsActive { get { return this._IsActive; } }
+
+        public TaskWorkInstruction(int TaskID, int TaskRev, int VariantID, int ManualID, int ManualVersion)
+        {
+            this._TaskID = -1;
+            this._TaskRev = -1;
+            this._VariantID = -1;
+            this.WI = null;
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE "
+                + " taskID = @TaskId AND taskRev = @TaskRev AND taskVarianti = @variante "
+                + " AND manualID = @ManualID AND manualVersion=@ManualVersion";
+            cmd.Parameters.AddWithValue("@TaskId", TaskID);
+            cmd.Parameters.AddWithValue("@TaskRev", TaskRev);
+            cmd.Parameters.AddWithValue("@variante", VariantID);
+            cmd.Parameters.AddWithValue("@ManualID", ManualID);
+            cmd.Parameters.AddWithValue("@ManualVersion", ManualVersion);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                this.WI = new App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1));
+                this._InitialDate = rdr.GetDateTime(2);
+                this._ExpiryDate = rdr.GetDateTime(3);
+                this._Sequence = rdr.GetInt32(4);
+                this._IsActive = rdr.GetBoolean(5);
+                this._TaskID = TaskID;
+                this._TaskRev = TaskRev;
+                this._VariantID = VariantID;
+            }
+            rdr.Close();
+
+            conn.Close();
+        }
+
+        /*Returns:
+         */
+         public int Delete()
+        {
+            int ret = 0;
+            if(this.WI!=null && this.WI.ID!=-1 && this.WI.Version!=-1 && this.TaskID!=-1 && this.VariantID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                cmd.CommandText = "DELETE FROM tasksmanuals WHERE taskId=@TaskID AND TaskRev=@TaskRev AND taskVarianti=@VariantID "
+                    + " AND manualID=@ManualID AND manualVersion=@ManualVersion";
+                cmd.Parameters.AddWithValue("@TaskID", TaskID);
+                cmd.Parameters.AddWithValue("@TaskRev", TaskRev);
+                cmd.Parameters.AddWithValue("@VariantID", VariantID);
+                cmd.Parameters.AddWithValue("@ManualID", this.WI.ID);
+                cmd.Parameters.AddWithValue("@ManualVersion", this.WI.Version);
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch
+                {
+                    ret = 2;
+                    tr.Rollback();
+                }
+               conn.Close();
+            }
+            return ret;
         }
     }
 }

@@ -19,6 +19,7 @@
                     $("#btnPauseTask_" + $(this).val()).fadeOut();
                     $("#btnCompleteTask_" + $(this).val()).fadeOut();
                     $("#btnWarning_" + $(this).val()).fadeOut();
+                    $("#btnViewWI_" + $(this).val()).fadeOut();
                     $.ajax({
                         url: "@Url.Action("PauseTask", "WebGemba")",
                         type: 'GET',
@@ -28,19 +29,18 @@
                         },
                         success: function (result) {
                             if (result == "1") {
-                                var TaskId = $("#" + rowid).find("td:eq(2)").html();
-                                var ProductId = $("#" + rowid).find("td:eq(3)").html();
-                                var Order = $("#" + rowid).find("td:eq(4)").html();
-                                var Customer = $("#" + rowid).find("td:eq(5)").html();
-                                var ProductName = $("#" + rowid).find("td:eq(6)").html();
-                                var TaskName = $("#" + rowid).find("td:eq(7)").html();
-                                var Quantity = $("#" + rowid).find("td:eq(11)").html();
+                                var TaskId = $("#" + rowid).find("td:eq(3)").html();
+                                var ProductId = $("#" + rowid).find("td:eq(4)").html();
+                                var Order = $("#" + rowid).find("td:eq(5)").html();
+                                var Customer = $("#" + rowid).find("td:eq(6)").html();
+                                var ProductName = $("#" + rowid).find("td:eq(7)").html();
+                                var TaskName = $("#" + rowid).find("td:eq(8)").html();
+                                var Quantity = $("#" + rowid).find("td:eq(12)").html();
                                 var aQuantity = Quantity.split('/');
                                 var bgcolor = $("#" + rowid).css("background-color");
 
-
                                 $("#tblTaskAvailable tbody").prepend("<tr style=\"background-color: " + bgcolor + "\" id=\"rowAv_" + TaskId + "\">"
-                                    + "<td>" + "<input type=\"image\" class=\"btnStartTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPlay.png\" value=\""+TaskId+"\" id=\"btnStartTask_"+TaskId+"\"  />"+ "</td>"
+                                    + "<td>" + "<input type='image' class='btnStartTask' style='min-width:20px; max-width:30px;' src='../../img/iconPlay.png' value='"+TaskId+"' id='btnStartTask_"+TaskId+"'  />"+ "</td>"
                                     + "<td>" + TaskId + "</td>"
                                     + "<td>" + ProductId + "</td>"
                                     + "<td>" + Order + "</td>"
@@ -61,6 +61,7 @@
                                 $("#btnPauseTask_" + $(this).val()).fadeIn();
                                 $("#btnWarning_" + $(this).val()).fadeIn();
                                 $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                                $("#btnViewWI_" + $(this).val()).fadeIn();
                                 $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
                                                 $("#lblModalInfo").dialog({
                                                     modal: true,
@@ -78,6 +79,7 @@
                                 $("#btnPauseTask_" + $(this).val()).fadeIn();
                                 $("#btnWarning_" + $(this).val()).fadeIn();
                                 $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                                $("#btnViewWI_" + $(this).val()).fadeIn();
                                 $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrUserNotAuthorized");
                                 $("#lblModalInfo").dialog({
                                     modal: true,
@@ -96,11 +98,13 @@
                             $("#btnPauseTask_" + $(this).val()).fadeIn();
                             $("#btnWarning_" + $(this).val()).fadeIn();
                             $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                            $("#btnViewWI_" + $(this).val()).fadeIn();
                         },
                         warning: function (result) {
                             $("#btnPauseTask_" + $(this).val()).fadeIn();
                             $("#btnWarning_" + $(this).val()).fadeIn();
                             $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                            $("#btnViewWI_" + $(this).val()).fadeIn();
                         }
                     });
                 });
@@ -404,8 +408,9 @@
                             $("#" + rowid).fadeOut().remove();
                             $("#panelTasks").fadeIn();
                             $("#panelTasks > tbody").append("<tr  style=\"background-color: " + bgcolor + "\" id=\"rowEx_" + TaskId + "\">"
-                                + "<td><input type=\"image\" class=\"btnPauseTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPause.png\" value=\""+TaskId+"\" id=\"btnPauseTask_" + TaskId + "\" /></td>"
+                                + "<td><input type=\"image\" class=\"btnPauseTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPause.png\" value=\"" + TaskId + "\" id=\"btnPauseTask_" + TaskId + "\" /></td>"
                                 + "<td>" + "<input type=\"image\" class=\"btnWarning\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconWarning.png\" value=\"" + TaskId + "\"  id=\"btnWarning_" + TaskId + "\" />" + "</td>"
+                                + "<td>" + "<input type='image' src='../../img/iconWorkInstruction.png' style='min-width:10px; max-width:20px;' class='btnViewWorkInstruction' id='btnViewWI_" + TaskId + "' value='" + TaskId + "' />" + "</td>"
                                 + "<td>" + TaskId + "</td>"
                                 + "<td>" + ProductId + "</td>"
                                 + "<td>" + Order + "</td>"
@@ -500,7 +505,7 @@
                             //alert(v.ProdName);
                             // Replace the while table
                             newrows += "<tr style=\"background-color: " + v.BgColor + "\" id=\"rowAv_" + v.TaskID + "\">"
-                                + "<td>" + "<input type=\"image\" class=\"btnStartTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPlay.png\" value=\"" + v.TaskID + "\" id=\"btnStartTask_" + v.TaskID + "\"  />" + "</td>"
+                                + "<td>" + "<input type=\"image\" class=\"btnStartTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPlay.png\" value=\"" + v.TaskID + "\" id='btnStartTask_" + v.TaskID + "'  />" + "</td>"
                                 + "<td>" + v.TaskID + "</td>"
                                 + "<td>" + v.ProdID +"/" + v.ProdYear + "</td>"
                                 + "<td>" + v.ExternalID + "</td>"
@@ -521,7 +526,66 @@
 
 
                     var loadWstCmpl = setTimeout(getNewAvailableTasks, 120000);
-                        }
+                }
+
+
+                //btnViewWorkInstruction
+                //$(".btnViewWorkInstruction").on("click", function () {
+                $("#panelTasks").on("click", ".btnViewWorkInstruction", function () {
+                    var taskid = $(this).val();
+                    $("#btnViewWI_" + taskid).fadeOut();
+                    $.ajax({
+                        url: "@Url.Action("GetWorkInstruction", "WebGemba")",
+                        type: 'POST',
+                    dataType: "html",
+                    data: {
+                        TaskID: $(this).val(),
+                    },
+                        success: function (result) {
+                            if (result.length > 0) {
+                                var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 100%; overflow: hidden; top:10px;' id='viewPdf'>"
+                                    + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:40px' />"
+                                    + "<div style='overflow: hidden;'>"
+                                    + "</div>"
+                                    + "<iframe id='fred' style='border:1px solid #666CCC; height:95%; width:95%; position:absolute;top:70px;' title='' src='../../Data/WorkInstructions/"
+                                    + result + "' frameborder='1' scrolling='auto'></iframe></div>";
+
+                                $("#iframeWI").html(ifrmWI);
+                                $("#iframeWI").fadeIn();
+                                $("#btnViewWI_" + taskid).fadeIn();
+                            }
+                            else {
+                                $("#btnViewWI_" + taskid).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListWorkstationsTasks.lblErrWINotFound");
+                                                $("#lblModalInfo").dialog({
+                                                    modal: true,
+                                                    title: "Info",
+                                                    open: function (event, ui) {
+                                                        setTimeout(function () {
+                                                            $("#lblModalInfo").dialog("close");
+                                                        }, 5000);
+                                                    }
+                                });
+                            }
+                    },
+                    error: function (result) {
+                        //$("#lblInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                        $("#btnViewWI_" + taskid).fadeIn();
+                    },
+                    warning: function (result) {
+                        //$("#lblInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                        $("#btnViewWI_" + taskid).fadeIn();
+                    }
+                });
+
+                });
+
+
+                $("#iframeWI").on("click", "#imgClosePdf", function () {
+                    $("#iframeWI").fadeOut();
+                });
+
+
 
                 loadKPIWorkstation();
                 
@@ -563,6 +627,7 @@
                 <tr>
                     <th></th>
                     <th></th>
+                    <th></th>
                     <th>@ResWebGemba.ListTasksInExecution.lblTHTaskID</th>
                     <th>@ResWebGemba.ListTasksInExecution.lblTHProduct</th>
                     <th>@ResWebGemba.ListTasksInExecution.lblTHOrder</th>
@@ -596,62 +661,67 @@
                         {
                             bgcolor = "#FFFFFF";
                         }
-                        <tr style="background-color: @bgcolor;" id="rowEx_@m.TaskProduzioneID">
-                            <td>
-                                <input type="image" class="btnPauseTask" id="btnPauseTask_@m.TaskProduzioneID"
-                                       style="min-width:20px; max-width:30px;"
-                                       src="~/img/iconPause.png"
-                                       value="@m.TaskProduzioneID" />
-                            </td>
-                            <td>
-                                <input type="image" class="btnWarning" id="btnWarning_@m.TaskProduzioneID"
-                                       style="min-width:20px; max-width:30px;"
-                                       src="~/img/iconWarning.png"
-                                       value="@m.TaskProduzioneID" />
-                            </td>
-                            <td>@m.TaskProduzioneID</td>
-                            <td>@m.ArticoloID/@m.ArticoloAnno</td>
-                            @if (m.ExternalID.Length > 0)
-                            {
-                                <td>@m.ExternalID</td>
-                            }
-                            else
-                            {
-                                <td>@art.Commessa/@art.AnnoCommessa</td>
-                            }
-                            <td>@m.CustomerName</td>
-                            <td>@art.Proc.variant.nomeVariante</td>
-                            <td>@m.Name</td>
-                            <td>
-                                <input type="image" class="btnViewQuantity" id="btnViewQty_@m.TaskProduzioneID"
-                                       style="min-width:10px; max-width:20px;"
-                                       src="~/img/iconQuantity.jpg"
-                                       value="@m.TaskProduzioneID" />
-                                <input type="number" id="txtQty_@m.TaskProduzioneID" value="@m.QuantitaProdotta"
-                                       style="display:none;min-width:30px; max-width:60px;" />
-                                <span id="lblQty_@m.TaskProduzioneID">@m.QuantitaProdotta</span>/@m.QuantitaPrevista
-                                <input type="image" class="btnSaveQuantity" id="btnSaveQty_@m.TaskProduzioneID"
-                                       style="min-width:10px; max-width:20px;display:none;"
-                                       src="~/img/iconSave.jpg"
-                                       value="@m.TaskProduzioneID" />
-                            </td>
-                            <td>
-                                <input type="image" class="btnEditParameters"
-                                       style="min-width:20px; max-width:30px;"
-                                       src="~/img/iconParameters.png"
-                                       value="@m.TaskProduzioneID" />
-                            </td>
-                            <td>
-                                @if (m.CheckNonFixedParametersComplete())
-                                {
-                                    <input type="image" class="btnCompleteTask" id="btnCompleteTask_@m.TaskProduzioneID"
-                                           style="min-width:20px; max-width:30px;"
-                                           src="~/img/iconComplete.png"
-                                           value="@m.TaskProduzioneID" />
-                                }
-                            </td>
-                            <td style="visibility:hidden">@m.QuantitaProdotta/@m.QuantitaPrevista</td>
-                        </tr>
+                <tr style="background-color: @bgcolor;" id="rowEx_@m.TaskProduzioneID">
+                    <td>
+                        <input type="image" class="btnPauseTask" id="btnPauseTask_@m.TaskProduzioneID"
+                               style="min-width:20px; max-width:30px;"
+                               src="~/img/iconPause.png"
+                               value="@m.TaskProduzioneID" />
+                    </td>
+                    <td>
+                        <input type="image" class="btnWarning" id="btnWarning_@m.TaskProduzioneID"
+                               style="min-width:20px; max-width:30px;"
+                               src="~/img/iconWarning.png"
+                               value="@m.TaskProduzioneID" />
+                    </td>
+                    <td>
+                        <input type="image" src="~/img/iconWorkInstruction.png" style="min-width:10px; max-width:20px;" class="btnViewWorkInstruction"
+                               id="btnViewWI_@m.TaskProduzioneID"
+                               value="@m.TaskProduzioneID" />
+                    </td>
+                    <td>@m.TaskProduzioneID</td>
+                    <td>@m.ArticoloID/@m.ArticoloAnno</td>
+                    @if (m.ExternalID.Length > 0)
+                    {
+                        <td>@m.ExternalID</td>
+                    }
+                    else
+                    {
+                        <td>@art.Commessa/@art.AnnoCommessa</td>
+                    }
+                    <td>@m.CustomerName</td>
+                    <td>@art.Proc.variant.nomeVariante</td>
+                    <td>@m.Name</td>
+                    <td>
+                        <input type="image" class="btnViewQuantity" id="btnViewQty_@m.TaskProduzioneID"
+                               style="min-width:10px; max-width:20px;"
+                               src="~/img/iconQuantity.jpg"
+                               value="@m.TaskProduzioneID" />
+                        <input type="number" id="txtQty_@m.TaskProduzioneID" value="@m.QuantitaProdotta"
+                               style="display:none;min-width:30px; max-width:60px;" />
+                        <span id="lblQty_@m.TaskProduzioneID">@m.QuantitaProdotta</span>/@m.QuantitaPrevista
+                        <input type="image" class="btnSaveQuantity" id="btnSaveQty_@m.TaskProduzioneID"
+                               style="min-width:10px; max-width:20px;display:none;"
+                               src="~/img/iconSave.jpg"
+                               value="@m.TaskProduzioneID" />
+                    </td>
+                    <td>
+                        <input type="image" class="btnEditParameters"
+                               style="min-width:20px; max-width:30px;"
+                               src="~/img/iconParameters.png"
+                               value="@m.TaskProduzioneID" />
+                    </td>
+                    <td>
+                        @if (m.CheckNonFixedParametersComplete())
+                        {
+                            <input type="image" class="btnCompleteTask" id="btnCompleteTask_@m.TaskProduzioneID"
+                                   style="min-width:20px; max-width:30px;"
+                                   src="~/img/iconComplete.png"
+                                   value="@m.TaskProduzioneID" />
+                        }
+                    </td>
+                    <td style="visibility:hidden">@m.QuantitaProdotta/@m.QuantitaPrevista</td>
+                </tr>
                     }
                 }
             </tbody>
@@ -739,7 +809,7 @@
             </table>
         </div>
     </div>
-
+    <div id="iframeWI" />
     <div id="lblModalInfo" />
 
 }

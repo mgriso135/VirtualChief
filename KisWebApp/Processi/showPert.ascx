@@ -8,7 +8,7 @@
 <br /><asp:Label runat="server" ID="Label1" />
 <img ID="imgAddTaskPert" src="../img/iconAdd.jpg" OnClick="addDefaultTask()" style="height:40px; cursor: pointer" Height="40" />
 
-<script src="../Scripts/jquery-ui-1.8.23.custom.min.js" type="text/javascript" ></script>
+
 <script src="../Scripts/jquery.svg.js" type="text/javascript" ></script>
 
 <asp:UpdatePanel runat="server" ID="upd1">

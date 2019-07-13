@@ -210,4 +210,7 @@
   <data name="lblCopyParameters" xml:space="preserve">
     <value>Copia los parametros del producto</value>
   </data>
+  <data name="lblCopyWorkInstructions" xml:space="preserve">
+    <value>Copia las instrucciones de trabajo</value>
+  </data>
 </root>

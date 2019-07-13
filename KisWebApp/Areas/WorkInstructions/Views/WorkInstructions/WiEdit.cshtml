@@ -2,45 +2,599 @@
 
 
 @{
-    /**/
-
     ViewBag.Title = ResWorkInstructions.WiEdit.lblTitle;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h3>@ResWorkInstructions.WiEdit.lblTitle</h3>
 
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/WorkInstructions/WorkInstructions/Index">@ResWorkInstructions.WiEdit.lblWorkInstructions</a><span class="divider"></span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl">@ResWorkInstructions.WiEdit.lblEdit</a><span class="divider"></span>
+    </li>
+</ul>
+
 @if (ViewBag.authW)
 {
     if (Model != null)
     {
+        <script>
+            $(document).ready(function () {
+                var oName = $('<div/>').text($('#lblName').val()).html();
+                var oDescription = $('<div/>').text($('#lblDescription').val()).html();
+                var oExpiryDate = $('<div/>').text($('#txtExpiryDate').val()).html();
+                var oIsActive = $('<div/>').text($('#lblActive').val()).html();
+
+                $(function () {
+                    $("[id*=txtExpiryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+                $(function () {
+                    $("[id*=NewVerExpiryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+                $(function () {
+                    $("[id*=NewVerInitialDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                });
+
+
+                $("#imgUndo").on("click", function () {
+                    $("#imgSave").fadeOut();
+                    $("#imgUndo").fadeOut();
+                    $('#lblName').val(oName);
+                    $('#lblDescription').val(oDescription);
+                    $('#txtExpiryDate').val(oExpiryDate);
+                    $('#lblActive').val(oIsActive);
+                    $("#imgSave").fadeIn();
+                    $("#imgUndo").fadeIn();
+                });
+
+                $("#imgSave").on("click", function () {
+                    $("#imgSave").fadeOut();
+                    $("#imgUndo").fadeOut();
+                    var mName = $('<div/>').text($('#lblName').val()).html();
+                    var mDescription = $('<div/>').text($('#lblDescription').val()).html();
+                    var mExpiryDate = $('<div/>').text($('#txtExpiryDate').val()).html();
+                    var mIsActive = $('<div/>').text($('#lblActive').val()).html();
+
+                    var isActive = true;
+                    if (mIsActive == "false") {
+                        isActive = false;
+                    }
+
+                    var aExpiryDate = mExpiryDate.split('/');
+                    var expiryDate = new Date(aExpiryDate[2], aExpiryDate[1], aExpiryDate[0]);
+
+                    var check = true;
+
+                    if (!isActive) {
+                        check = confirm("@ResWorkInstructions.WiEdit.lblDisableAreYouSure");
+                    }
+
+                    if (check) {
+                        $.ajax({
+                            url: "@Url.Action("EditWorkInstruction", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                Name: mName,
+                                Description: mDescription,
+                                ExpiryDate: expiryDate.getFullYear() + "-" + expiryDate.getMonth() + "-" + expiryDate.getDate(),
+                                IsActive: isActive
+                            },
+                            success: function (result) {
+                                alert("Ok");
+                                $("#imgSave").fadeIn();
+                                $("#imgUndo").fadeIn();
+                            },
+                            error: function (result) {
+                                $("#imgSave").fadeIn();
+                                $("#imgUndo").fadeIn();
+                            },
+                            warning: function (result) {
+                                $("#imgSave").fadeIn();
+                                $("#imgUndo").fadeIn();
+                            }
+                        });
+                    }
+                    else {
+                        alert("@ResWorkInstructions.WiEdit.lblEditNotDone");
+                        $("#imgSave").fadeIn();
+                        $("#imgUndo").fadeIn();
+                    }
+                });
+
+                $("#imgViewPdf").on("click", function () {
+                    $("#viewPdf").fadeIn();
+                });
+
+                $("#imgClosePdf").on("click", function () {
+                    $("#viewPdf").fadeOut();
+                });
+
+
+                $("#imgAddLabel").on("click", function () {
+                    $("#imgAddLabel").fadeOut();
+
+                    var g = $('#ddLalbels').val();
+                    var id = $("#ddlLabelsList option[value='" + g + "']").attr('data-id');
+
+                    if (typeof id === 'undefined')
+                    {
+                        $.ajax({
+                            url: "@Url.Action("AddLabelByName", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                LabelName: g
+                            },
+                            success: function (result) {
+                                var iResult = parseInt(result);
+                                if (iResult >= 0) {
+                                    var strNew = "<span class='badge badge-primary' id='spanLbl_" + iResult + "'>" + $('#ddLalbels').val()
+                                        + "<input type='image' value='" + iResult + "' class='delLbl' id='delLbl' src='../../img/iconClose.png' style='min-height:10px; max-height:15px;' /></span>";
+                                    $("#pLabels").append(strNew);
+                                }
+                                else {
+                                }
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            error: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            warning: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            }
+                        });
+                    }
+                    else
+                    {
+                        $.ajax({
+                            url: "@Url.Action("AddLabelById", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                LabelID: id
+                            },
+                            success: function (result) {
+                                var iResult = parseInt(result);
+                                if (iResult >= 0) {
+                                    var strNew = "<span class='badge badge-primary' id='spanLbl_" + id + "'>" + $('#ddLalbels').val()
+                                        + "<input type='image' value='" + id + "' class='delLbl' id='delLbl' src='../../img/iconClose.png' style='min-height:10px; max-height:15px;' /></span>";
+                                    $("#pLabels").append(strNew);
+                                }
+                                else {
+                                    alert("Ko");
+                                }
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            error: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            },
+                            warning: function (result) {
+                                $("#imgAddLabel").fadeIn();
+                                var g = $('#ddLalbels').val('');
+                            }
+                        });
+                    }
+                });
+
+                $("#pLabels").on("click", ".delLbl", function () {
+                    var lblID = $(this).val();
+                    $("#spanLbl_" + lblID).fadeOut();
+                    $.ajax({
+                            url: "@Url.Action("DeleteLabel", "WorkInstructions")",
+                            type: 'POST',
+                            dataType: "html",
+                            data: {
+                                ID: @Model.ID,
+                                Version: @Model.Version,
+                                LabelID: lblID
+                            },
+                        success: function (result) {
+                                if (result == "1") {
+                                    $("#spanLbl_" + lblID).remove();
+                                }
+                                else {
+                                    alert("Error");
+                                    $("#spanLbl_" + lblID).fadeIn();
+                                }
+                            },
+                        error: function (result) {
+                            alert("Error");
+                            $("#spanLbl_" + lblID).fadeIn();
+                            },
+                        warning: function (result) {
+                            alert("Error");
+                                $("#spanLbl_" + lblID).fadeIn();
+                            }
+                        });
+                });
+
+
+                $("#tblTasks").on("click", ".btnTaskDelete", function () {
+                    var inp = $(this).val();
+                    var aInp = inp.split(';');
+
+                    if (aInp.length == 3) {
+
+                     $.ajax({
+                    url: "@Url.Action("DeleteTaskWorkInstruction", "../Products/Products")",
+                    type: 'GET',
+                    dataType: 'html',
+                    data: {
+                        TaskID: aInp[0],
+                        TaskRev: aInp[1],
+                        variantID: aInp[2],
+                        WorkInstructionID: @Model.ID,
+                        WorkInstructionVersion: @Model.Version,
+                    },
+                         success: function (result) {
+                             if (result == "1") {
+                                 $("#trTask_"+aInp[0]+aInp[1]+aInp[2]).remove();
+                             }
+                    },
+                    error: function (result) {
+                        $(this).fadeIn();
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        $(this).fadeIn();
+                        alert("Warning");
+                    }
+                        });
+                    }
+                });
+
+
+                $('#uploadNewVersion').on('hidden.bs.modal', function () {
+                    window.location.href = "../../WorkInstructions/WorkInstructions/Index";
+                });
+
+            });
+        </script>
         <!-- Current manual -->
         <div class="row-fluid">
             <div class="span12">
-                <table class="tblEditManual">
+                <table id="tblEditManual" class="table">
                     <tr>
-                        <td>@ResWorkInstructions.WiEdit.lblName</td>
+                        <th>@ResWorkInstructions.WiEdit.lblName</th>
+                        <th>@ResWorkInstructions.WiEdit.lblDescription</th>
+                        <th>@ResWorkInstructions.WiEdit.lblUploadDate</th>
+                        <th>@ResWorkInstructions.WiEdit.lblExpiryDate</th>
+                        <th>@ResWorkInstructions.WiEdit.lblIsActive</th>
+                        <th>@ResWorkInstructions.WiEdit.lblAuthor</th>
+                    </tr>
+                    <tr>
                         <td><input type="text" class="input-group-text" id="lblName" value="@Model.Name" /></td>
-                        <td>@ResWorkInstructions.WiEdit.lblDescription</td>
-                        <td><input type="text" class="input-group-text" id="lblName" value="@Model.Description" /></td>
-                        <td>@ResWorkInstructions.WiEdit.lblUploadDate</td>
+                        <td><textarea class="input-group-text" id="lblDescription">@Model.Description</textarea></td>
                         <td>@Model.UploadDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td><input type="text" id="txtExpiryDate" value="@Model.ExpiryDate.ToString("dd/MM/yyyy")" style="max-width:80px" /></td>
+                        <td>
+                            <select id="lblActive" style="max-width:80px">
+                                @if (Model.IsActive)
+                                {
+                                    <option value="true" selected>@ResWorkInstructions.WiEdit.lblEnabled</option>
+                                    <option value="false">@ResWorkInstructions.WiEdit.lblDisabled</option>
+                                }
+                                else
+                                {
+                                    <option value="true">@ResWorkInstructions.WiEdit.lblEnabled</option>
+                                    <option value="false" selected>@ResWorkInstructions.WiEdit.lblDisabled</option>
+                                }
+                            </select>
+                        </td>
+                        <td>@Model.Author</td>
+                        <td>
+                            <input type="image" src="~/img/iconSave.jpg" style="min-height:20px; max-height:30px;" id="imgSave" />
+                            <input type="image" src="~/img/iconUndo.png" style="min-height:20px; max-height:30px;" id="imgUndo" />
+                        </td>
+                        <td><input type="image" src="~/img/iconPdf.png" style="min-height: 20px; max-height:40px;" id="imgViewPdf"</td>
                     </tr>
                 </table>
             </div>
         </div>
+
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#uploadNewVersion">
+            @ResWorkInstructions.WiEdit.lblUploadNewVersion
+        </button>
+
+        <div style="left: 10px; border: 0px none; height: 100%; position: fixed; width: 100%; overflow: hidden; top:10px;display:none" id="viewPdf">
+            <input type="image" src="~/img/iconClose.png" id="imgClosePdf" style="max-width:30px; min-width:30px; position:relative;top:40px" />
+            <div style="overflow: hidden;">
+
+            </div>
+            <iframe id="fred" style="border:1px solid #666CCC; height:95%; width:95%; position:absolute;top:70px;" title="" src="~/Data/WorkInstructions/@Model.Path" frameborder="1" scrolling="auto"></iframe>
+        </div>
+
         <!--Labels-->
         <div class="row-fluid">
             <div class="span12">
-
+                <h5>@ResWorkInstructions.WiEdit.lblLabels</h5>
+                <p>
+                    <input list="ddlLabelsList" id="ddLalbels">
+                    <datalist id="ddlLabelsList">
+                        @{KIS.App_Sources.WorkInstructions.WILabelList el = new KIS.App_Sources.WorkInstructions.WILabelList();
+                            el.loadLabelsList();
+                            foreach (var lbl in el.List)
+                            {
+                                <option data-id="@lbl.WILabelID" value="@lbl.WILabelName"></option>
+                            }
+                        }
+                    </datalist>
+                    <input type="image" src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px;" id="imgAddLabel" />
+                </p>
+                <p id="pLabels">
+                    @foreach (var wiLbl in Model.Labels)
+                    {
+                        <span class="badge badge-primary" id="spanLbl_@wiLbl.WILabelID">
+                            @wiLbl.WILabelName <input type="image" value="@wiLbl.WILabelID" class="delLbl" id="delLbl" src="~/img/iconClose.png" style="min-height:10px; max-height:15px;" />
+                        </span>
+                    }
+                </p>
             </div>
         </div>
+        <!--Tasks-->
+        if (Model.listTasksProducts.Count > 0)
+        {
+            <div class="row-fluid">
+                <div class="span12">
+                    <h5>@ResWorkInstructions.WiEdit.lblTasks</h5>
+                    <p>
+                        <table id="tblTasks" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>@ResWorkInstructions.WiEdit.lblTHProduct</th>
+                                    <th>@ResWorkInstructions.WiEdit.lblTHTask</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tsk in Model.listTasksProducts)
+                                {
+                                    <tr id="trTask_@tsk.TaskID@tsk.TaskVersion@tsk.VariantID">
+                                        <td><input type="image" src="~/img/iconDelete.png" style="min-width:15px; max-width:20px" value="@tsk.TaskID;@tsk.TaskVersion;@tsk.VariantID" class="btnTaskDelete" id="btnTaskDelete" /></td>
+                                        <td>@tsk.ProductType&nbsp;-&nbsp;@tsk.ProductName</td>
+                                        <td>@tsk.TaskName</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </p>
+                </div>
+            </div>
+        }
         <!-- Older versions (read only) -->
-        <div class="row-fluid">
-            <div class="span12">
-                
+        if (Model.OlderVersions.Count > 0)
+        {
+            <div class="row-fluid">
+                <div class="span12">
+                    <p>
+                        <h5>@ResWorkInstructions.WiEdit.lblOlderVersions</h5>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>@ResWorkInstructions.WiEdit.lblName</th>
+                                    <th>@ResWorkInstructions.WiEdit.lblDescription</th>
+                                    <th>@ResWorkInstructions.WiEdit.lblUploadDate</th>
+                                    <th>@ResWorkInstructions.WiEdit.lblExpiryDate</th>
+                                    <th>@ResWorkInstructions.WiEdit.lblIsActive</th>
+                                    <th>@ResWorkInstructions.WiEdit.lblAuthor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var olVer in Model.OlderVersions)
+                                {
+                                <tr>
+                                    <td>@olVer.Name</td>
+                                    <td>@olVer.Description</td>
+                                    <td>@olVer.UploadDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@olVer.ExpiryDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@olVer.IsActive</td>
+                                    <td>@olVer.Author</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </p>
+                </div>
+            </div>
+        }
+        <div class="modal fade" id="uploadNewVersion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">@ResWorkInstructions.Index.lblAddWorkInstrucions</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- The file upload form used as target for the file upload widget -->
+                        <form id="fileupload" action="https://jquery-file-upload.appspot.com/" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" id="origManualID" name="origManualID" value="@Model.ID" />
+                            <input type="hidden" name="action" value="NewVersion">
+                            <input type="hidden" name="id" />
+                            <input type="hidden" name="version" />
+                            <!-- Redirect browsers with JavaScript disabled to the origin page -->
+                            <noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+                            <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+                            <div class="row fileupload-buttonbar">
+                                <div class="col-lg-7">
+                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                    <span class="btn btn-secondary fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>@ResWorkInstructions.Index.lblAddFiles</span>
+                                        <input type="file" name="files" class="custom-file-input" multiple>
+                                    </span>
+                                    <button type="submit" class="btn btn-secondary start">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                        <span>@ResWorkInstructions.Index.lblStartUpload</span>
+                                    </button>
+                                    <button type="reset" class="btn btn-warning cancel" style="display:none;">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Cancel upload</span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger delete" style="display:none;">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                    <input type="checkbox" class="toggle" style="display:none;">
+                                    <!-- The global file processing state -->
+                                    <span class="fileupload-process"></span>
+                                </div>
+                                <!-- The global progress state -->
+                                <div class="col-lg-5 fileupload-progress fade">
+                                    <!-- The global progress bar -->
+                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                    </div>
+                                    <!-- The extended global progress state -->
+                                    <div class="progress-extended">&nbsp;</div>
+                                </div>
+                                <input type="text" id="NewVerInitialDate" name="NewVerInitialDate" value="@DateTime.UtcNow.ToString("dd/MM/yyyy")" style="display:none;" />
+                                <input type="text" id="NewVerExpiryDate" name="NewVerExpiryDate" />&nbsp;@ResWorkInstructions.WiEdit.lblExpiryDate<br />
+                                <input type="checkbox" id="chkReplaceOldVersions" checked disabled />&nbsp;@ResWorkInstructions.WiEdit.lblReplaceCurrentVersion
+                            </div>
+                            <!-- The table listing the files available for upload/download -->
+                            <table role="presentation" class="table table-striped table-condensed"><tbody class="files"></tbody></table>
+                            <!-- The template to display files available for upload -->
+                            <script id="template-upload" type="text/x-tmpl">
+                                {% for (var i=0, file; file=o.files[i]; i++) { %}
+                                <tr class="template-upload fade">
+                                    <td>
+                                        <span class="preview"></span>
+                                    </td>
+                                    <td>
+                                        {% if (window.innerWidth > 480 || !o.options.loadImageFileTypes.test(file.type)) { %}
+                                        <p class="name">{%=file.name%}</p>
+                                        {% } %}
+                                        <strong class="error text-danger"></strong>
+                                    </td>
+                                    <td>
+                                        <p class="size">Processing...</p>
+                                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+                                    </td>
+                                    <td>
+                                        {% if (!i && !o.options.autoUpload) { %}
+                                        <button class="btn btn-secondary start" disabled>
+                                            <i class="glyphicon glyphicon-upload"></i>
+                                            <span>@ResWorkInstructions.Index.lblStartUpload</span>
+                                        </button>
+                                        {% } %}
+                                        {% if (!i) { %}
+                                        <button class="btn btn-secondary cancel">
+                                            <i class="glyphicon glyphicon-ban-circle"></i>
+                                            <span>Cancel</span>
+                                        </button>
+                                        {% } %}
+                                    </td>
+                                </tr>
+                                {% } %}
+                            </script>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
+
+        <!-- The template to display files available for download -->
+        <script id="template-download" type="text/x-tmpl">
+            {% for (var i=0, file; file=o.files[i]; i++) { %}
+            <tr class="template-download fade">
+                <td>
+                    <span class="preview">
+                        {% if (file.thumbnailUrl) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                        {% } %}
+                    </span>
+                </td>
+                <td>
+                    {% if (window.innerWidth > 480 || !file.thumbnailUrl) { %}
+                    <p class="name">
+                        {% if (file.url) { %}
+                        <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                        {% } else { %}
+                        <span>{%=file.name%}</span>
+                        {% } %}
+                    </p>
+                    {% } %}
+                    {% if (file.error) { %}
+                    <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+                    {% } %}
+                </td>
+                <td>
+                    <span class="size">{%=o.formatFileSize(file.size)%}</span>
+                </td>
+                <td>
+                    {% if (file.deleteUrl) { %}
+                    <button style="display:none;" class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}" {% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}' {% } %}>
+                        <i class="glyphicon glyphicon-trash"></i>
+                        <span>Delete</span>
+                    </button>
+                    <input type="checkbox" name="delete" value="1" class="toggle" style="display:none;">
+                    {% } else { %}
+                    <button class="btn btn-warning cancel" style="display:none;">
+                        <i class="glyphicon glyphicon-ban-circle"></i>
+                        <span>Cancel</span>
+                    </button>
+                    {% } %}
+                </td>
+            </tr>
+            {% } %}
+        </script>
+        <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha384-xBuQ/xzmlsLoJpyjoggmTEz8OWUFM0/RC5BsqQBDX2v5cMvDHcMakNTNrHIW2I5f" crossorigin="anonymous"></script>-->
+        <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+        <script src="~/Scripts/jQuery.FileUpload/vendor/jquery.ui.widget.js"></script>
+        <!-- The Templates plugin is included to render the upload/download listings -->
+        <script src="https://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+        <!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+        <script src="https://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+        <!-- The Canvas to Blob plugin is included for image resizing functionality -->
+        <script src="https://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+        <!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+        <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>-->
+        <!-- blueimp Gallery script -->
+        <script src="https://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+        <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.iframe-transport.js"></script>
+        <!-- The basic File Upload plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload.js"></script>
+        <!-- The File Upload processing plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload-process.js"></script>
+        <!-- The File Upload image preview & resize plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload-image.js"></script>
+        <!-- The File Upload audio preview plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload-audio.js"></script>
+        <!-- The File Upload video preview plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload-video.js"></script>
+        <!-- The File Upload validation plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload-validate.js"></script>
+        <!-- The File Upload user interface plugin -->
+        <script src="~/Scripts/jQuery.FileUpload/jquery.fileupload-ui.js"></script>
+        <!-- The main application script -->
+        <script src="~/Scripts/jQuery.FileUpload/main.js"></script>
+        <!-- The XDomainRequest Transport is included for cross-domain file deletion for IE 8 and IE 9 -->
+        <!--[if (gte IE 8)&(lt IE 10)]>
+        <script src="js/cors/jquery.xdr-transport.js"></script>
+        <![endif]-->
     }
     else
     {

@@ -114,7 +114,8 @@
             <asp:checkbox runat="server" ID="chkCopiaTC" Checked="true" /><asp:Label runat="server" ID="lblCopiaTempiCiclo" meta:resourcekey="lblCopiaTempiCiclo" /><br />
             <asp:checkbox runat="server" ID="chkCopiaReparti" Checked="true" OnCheckedChanged="chkCopiaReparti_CheckedChanged" AutoPostBack="true" /><asp:Label runat="server" ID="lblCopiaReparti" meta:resourcekey="lblCopiaReparti" /><br />
             <asp:checkbox runat="server" ID="chkCopiaPostazioni" Checked="true" OnCheckedChanged="chkCopiaPostazioni_CheckedChanged" AutoPostBack="true" /><asp:Label runat="server" ID="lblCopiaPostazioni" meta:resourcekey="lblCopiaPostazioni" /><br />
-                        <asp:CheckBox runat="server" ID="chkCopyParameters" Checked="true" /><asp:Literal runat="server" Text="<%$Resources:lblCopyParameters %>" />
+                        <asp:CheckBox runat="server" ID="chkCopyParameters" Checked="true" /><asp:Literal runat="server" Text="<%$Resources:lblCopyParameters %>" /><br />
+                        <asp:CheckBox runat="server" ID="chkCopyWorkInstructions" Checked="true" /><asp:Literal runat="server" Text="<%$Resources:lblCopyWorkInstructions %>" />
                         </td><td style="vertical-align: middle;">
                         <asp:ImageButton runat="server" ID="btnCopiaPERT" ImageUrl="~/img/iconArrowRight.png" Height="40px" OnClick="btnCopiaPERT_Click" ValidationGroup="CopiaProd"  />
                         <asp:Label runat="server" ID="lblCopiaPERTLog" />

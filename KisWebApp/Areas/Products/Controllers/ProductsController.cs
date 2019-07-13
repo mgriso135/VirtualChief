@@ -38,10 +38,12 @@ namespace KIS.Areas.Products.Controllers
                 User curr = (User)Session["user"];
                 ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
             }
-
-            if(ViewBag.authW)
+            ViewBag.showAddWI = false;
+            if (ViewBag.authW)
             { 
                 TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new variante(VariantID));
+                tskVar.loadWorkInstructions();
+                ViewBag.showAddWI = tskVar.WorkInstructions.Count == 0 ? true : false;
                 return View(tskVar);
             }
             return View();
@@ -563,5 +565,92 @@ namespace KIS.Areas.Products.Controllers
             }
             return retCT;
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if manual connected correctly
+         * 2 if user not authorized
+         * 4 if WorkInstruction not found
+         */
+         public int LinkTaskToWorkInstruction(int TaskID, int TaskRev, int variantID, int WorkInstructionID, int WorkInstructionVersion,
+             DateTime InitialValidity, DateTime EndValidity)
+        {
+            int ret = 0;
+            // Task WorkInstructions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task WorkInstructions";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(WorkInstructionID, WorkInstructionVersion);
+                if(currWI!=null && currWI.ID!=-1 && currWI.Version!=-1)
+                {
+                    TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                    if(tskVar!=null && tskVar.Task!=null && tskVar.Task.processID!=-1
+                        && tskVar.variant!=null && tskVar.variant.idVariante!=-1)
+                    {
+                        ret = currWI.linkManualToTask(TaskID, TaskRev, variantID, InitialValidity, EndValidity, 0, true);
+                    }
+                }
+                else
+                {
+                    ret = 4;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+                return ret;
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if deleted correctly
+         * 2 if user not authorized
+         * 3 if TaskWorkstationNotFound
+         */
+        public int DeleteTaskWorkInstruction(int TaskID, int TaskRev, int variantID, int WorkInstructionID, int WorkInstructionVersion)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task WorkInstructions";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskWorkInstruction curr = new TaskWorkInstruction(TaskID, TaskRev, variantID, WorkInstructionID, WorkInstructionVersion);
+                if (curr != null)
+                {
+                    ret = curr.Delete();
+                }
+                else
+                {
+                    ret = 3;
+                }
+
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+            }
     }
 }

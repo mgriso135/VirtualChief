@@ -288,4 +288,7 @@
   <data name="lblMeasurementUnit" xml:space="preserve">
     <value>Unità di misura</value>
   </data>
+  <data name="lblCopyWorkInstructions" xml:space="preserve">
+    <value>Copia le istruzioni di lavoro</value>
+  </data>
 </root>

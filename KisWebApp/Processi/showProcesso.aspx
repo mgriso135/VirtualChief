@@ -246,7 +246,8 @@ CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateR
             <asp:checkbox runat="server" ID="chkCopiaTC" Checked="true" /><asp:literal runat="server" ID="lblCopiaTempiCiclo" Text="<%$Resources:lblCopiaTempiCiclo %>" /><br />
             <asp:checkbox runat="server" ID="chkCopiaReparti" Checked="true" OnCheckedChanged="chkCopiaReparti_CheckedChanged" AutoPostBack="true" /><asp:literal runat="server" ID="lblCopiaReparti" Text="<%$Resources:lblCopiaReparti %>" /><br />
             <asp:checkbox runat="server" ID="chkCopiaPostazioni" Checked="true" OnCheckedChanged="chkCopiaPostazioni_CheckedChanged" AutoPostBack="true" /><asp:literal runat="server" ID="lblCopiaPostazioni" Text="<%$Resources:lblCopiaPostazioni %>" /><br />
-                        <asp:CheckBox runat="server" ID="chkCopyParameters" Checked="true" /><asp:Literal runat="server" Text="<%$Resources:lblCopyParameters %>" />
+                        <asp:CheckBox runat="server" ID="chkCopyParameters" Checked="true" /><asp:Literal runat="server" Text="<%$Resources:lblCopyParameters %>" /><br />
+                        <asp:CheckBox runat="server" ID="chkCopyWorkInstructions" Checked="true" /><asp:Literal runat="server" Text="<%$Resources:lblCopyWorkInstructions %>" />
                         <br />
                         <asp:ImageButton runat="server" ID="btnCopiaPERT" ImageUrl="~/img/iconSave.jpg" Height="40px" OnClick="btnCopiaPERT_Click" />
                         <asp:Label runat="server" ID="lblCopiaPERTLog" />

@@ -2228,19 +2228,19 @@ input[type="button"].btn-block {
 .btn-success.active,
 .btn-info.active,
 .btn-inverse.active {
-  color: rgba(255, 255, 255, 0.75);
+  /*color: rgba(255, 255, 255, 0.75);*/
 }
 .btn-primary {
   color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #cc1b00;
-  background-repeat: repeat-x;
+/*  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);*/
+  /*background-color: #cc1b00;*/
+  /*background-repeat: repeat-x;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-image: linear-gradient(to bottom, #cc0000, #cc4400);
+  /**background-image: linear-gradient(to bottom, #cc0000, #cc4400);
     border-left-color: #cc4400;
     border-right-color: #cc4400;
     border-top-color: #cc4400;
-    border-bottom-color: #802b00;
+    border-bottom-color: #802b00;*/
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -2248,13 +2248,13 @@ input[type="button"].btn-block {
 .btn-primary.active,
 .btn-primary.disabled,
 .btn-primary[disabled] {
-  color: #ffffff;
+/*  color: #ffffff;
   background-color: #cc4400;
-  *background-color: #b33c00;
+  *background-color: #b33c00;*/
 }
 .btn-primary:active,
 .btn-primary.active {
-  background-color: #993300 \9;
+  /*background-color: #993300 \9;*/
 }
 .btn-warning {
   color: #ffffff;
@@ -3069,8 +3069,8 @@ input[type="submit"].btn.btn-mini {
 .btn-info .caret,
 .btn-success .caret,
 .btn-inverse .caret {
-  border-top-color: #ffffff;
-  border-bottom-color: #ffffff;
+/*  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;*/
 }
 .btn-group-vertical {
   display: inline-block;

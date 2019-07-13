@@ -21,6 +21,8 @@
         $('#trPAR6').fadeOut();
         loadTaskParameters();
         $('#imgLoadAddTaskParam').fadeOut();
+        $('#imgLoadWorkInstructions').fadeOut();
+        //loadTaskManuals();
 
         $('#btnUndoTaskDetails').click(function () {
             $('#txtTaskName').val(initTaskName);
@@ -342,10 +344,156 @@
             }
         });
 
+        $("#imgAddWorkInstruction").on("click", function () {
+
+            if ($('#addManual').is(':visible')) {
+                $("#addManual").fadeOut();
+            }
+            else {
+                $("#addManual").fadeIn();
+            }
+        });
+
+        $(function () {
+            $("[id*=manualExpiryDate]").datepicker({ dateFormat: 'dd/mm/yy' });
+            $("[id*=manualInitialValidity]").datepicker({ dateFormat: 'dd/mm/yy' });
+        });
+
+        $("#imgLoadAddManual").fadeOut();
+
+        $("#imgAddManual").on("click", function () {
+            var TaskID = parseInt(@ViewBag.TaskID);
+            var TaskRev = parseInt(@ViewBag.TaskRev);
+            var varID = parseInt(@ViewBag.VariantID);
+            $("#imgAddManual").fadeOut();
+            $("#imgLoadAddManual").fadeIn();
+            var sInitialDate = $("#manualInitialValidity").val();
+            var sExpiryDate = $("#manualExpiryDate").val();
+
+            var aInitialDate = sInitialDate.split('/');
+            var aExpiryDate = sExpiryDate.split('/');
+            if (aInitialDate.length == 3 && aExpiryDate.length == 3) {
+
+                var i = new Date(aInitialDate[2], (aInitialDate[1]-1), aInitialDate[0]);
+                var f = new Date(aExpiryDate[2], (aExpiryDate[1]-1), aExpiryDate[0]);
+                if (i <= f) {
+
+                    var g = $('#ddlWorkIstructions').val();
+                    var id = $("#ddlWorkIstructionsList option[value='" + g + "']").attr('data-id');
 
 
+                    if (!(typeof id === 'undefined')) {
+                        var aWI = id.split(';');
+                        if (aWI.length == 2 && $.isNumeric(aWI[0]) && $.isNumeric(aWI[1])) {
 
+                            $.ajax({
+                                url: "@Url.Action("LinkTaskToWorkInstruction", "Products")",
+                                type: 'GET',
+                                dataType: 'html',
+                                data: {
+                                    TaskID: TaskID,
+                                    TaskRev: TaskRev,
+                                    variantID: varID,
+                                    WorkInstructionID: aWI[0],
+                                    WorkInstructionVersion: aWI[1],
+                                    InitialValidity: aInitialDate[2] + "-" + aInitialDate[1] + "-" + aInitialDate[0],
+                                    EndValidity: aExpiryDate[2] + "-" + aExpiryDate[1] + "-" + aExpiryDate[0]
+                                },
+                                success: function (result) {
+                                    if (result == "1") {
+                                        $("#manualInitialValidity").val("");
+                                        $("#manualExpiryDate").val("");
+                                        $('#ddlWorkIstructions').val("");
+                                        $("#imgLoadAddManual").fadeOut();
+                                        $("#imgAddWorkInstruction").fadeOut();
+                                        $("#addManual").fadeOut();
 
+                                        //$("#tblManual")
+                                        //$("#tblManual").empty();
+                                        $("#tblManual tbody").append("<tr>"
+                                            + "<td><input type='image' value='" + aWI[0] + ";" + aWI[1] + "' src='../../img/iconDelete.png' style='max-width:30px; min-width:20px; cursor:pointer;' id='imgDeleteWorkInstruction' class='imgDeleteWorkInstruction' /></td>"
+                                            + "<td>" + g + "</td>"
+                                            + "<td>" + aInitialDate[0] + "/" + aInitialDate[1] + "/" + aInitialDate[2] + "</td>"
+                                            + "<td>" + aExpiryDate[0] + "/" + aExpiryDate[1] + "/" + aExpiryDate[2] + "</td>"
+                                            + "</tr>");
+                                        $("#taskManuals").fadeIn();
+                                        $("#tblManual").fadeIn();
+                                    }
+                                    else if (result == "4") {
+                                        alert("@ResProducts.EditTaskPanel.lblWIErrOverlap");
+                                        $("#imgLoadAddManual").fadeOut();
+                                        $("#imgAddWorkInstruction").fadeIn();
+                                        $("#imgAddManual").fadeIn();
+                                    }
+                                    else {
+                                        alert("Generic error");
+                                        $("#imgLoadAddManual").fadeOut();
+                                        $("#imgAddWorkInstruction").fadeIn();
+                                        $("#imgAddManual").fadeIn();
+                                    }
+                                },
+                                error: function (result) {
+                                    alert("Error");
+                                },
+                                warning: function (result) {
+                                    alert("Warning");
+                                }
+                            });
+                        }
+                        else {
+                            alert("Manual not recognized");
+                        }
+                    }
+                } else {
+                    alert("Error dates!");
+                    $("#imgAddManual").fadeIn();
+                    $("#imgLoadAddManual").fadeOut();
+                }
+            }
+            else {
+                alert("Invalid date formats");
+            }
+
+        });
+
+        $("#taskManuals").on("click", ".imgDeleteWorkInstruction", function () {
+            var TaskID = parseInt(@ViewBag.TaskID);
+            var TaskRev = parseInt(@ViewBag.TaskRev);
+            var varID = parseInt(@ViewBag.VariantID);
+            var aWI = $(this).val().split(';');
+            $(this).fadeOut();
+            if (aWI.length == 2 && $.isNumeric(aWI[0]) && $.isNumeric(aWI[1])) {
+                $.ajax({
+                    url: "@Url.Action("DeleteTaskWorkInstruction", "Products")",
+                    type: 'GET',
+                    dataType: 'html',
+                    data: {
+                        TaskID: TaskID,
+                        TaskRev: TaskRev,
+                        variantID: varID,
+                        WorkInstructionID: aWI[0],
+                        WorkInstructionVersion: aWI[1],
+                    },
+                    success: function (result) {
+                        $("#tblManual tr").remove();
+                        $(this).fadeIn();
+                        $("#taskManuals").fadeOut();
+                        $("#imgLoadAddManual").fadeOut();
+                        $("#imgAddWorkInstruction").fadeIn();
+                        $("#imgAddManual").fadeIn();
+                    },
+                    error: function (result) {
+                        $(this).fadeIn();
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        $(this).fadeIn();
+                        alert("Warning");
+                    }
+                });
+            }
+            return false;
+        });
 
     });
 
@@ -378,8 +526,7 @@
             <div class="text-info" id="lblInfoSaveTaskDetails" />
         </td>
     </tr>
-    <tr><td style="text-align: center;" colspan="2"><b>@ResProducts.EditTaskPanel.lblTitleCycleTimes</b>
-        <img src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px; cursor:pointer;" id="showAddCycleTime"/>
+    <tr><td style="text-align: center;" colspan="2"><h5>@ResProducts.EditTaskPanel.lblTitleCycleTimes&nbsp;<img src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px; cursor:pointer;" id="showAddCycleTime" /></h5>
         </td></tr>
     <tr id="trCT1"><td>@ResProducts.EditTaskPanel.lblCTNumOps</td>
     <td><input type="number" id="txtCTNumOps" style="min-width:20px;max-width:40px;" min="1" value="1" /></td>
@@ -403,8 +550,8 @@
         <td colspan="2"><img src="~/img/iconLoading.gif" id="imgLoadCycleTimes" style="min-width:20px; max-width:30px;" />
         <div id="listCycleTimes"/></td>
     </tr>
-        <tr><td colspan="2" style="text-align: center;"><b>@ResProducts.EditTaskPanel.lblTitleParameters</b>
-            <img id="showAddTaskParams" src="../img/iconAdd2.png" style="cursor:pointer;min-width:20px; max-width:30px;" /></td></tr>
+        <tr><td colspan="2" style="text-align: center;"><h5>
+    @ResProducts.EditTaskPanel.lblTitleParameters&nbsp;<img id="showAddTaskParams" src="../img/iconAdd2.png" style="cursor:pointer;min-width:20px; max-width:30px;" /></h5></td></tr>
     <tr id="trPAR1">
         <td>@ResProducts.EditTaskPanel.lblParamName</td>
         <td><input type="text" id="txtTaskParamName" /></td>
@@ -453,6 +600,71 @@
         </td>
     </tr>
         </table>
+        <div id="divManuals" class="row-fluid">
+            <div class="span12" style="text-align:center;">
+                @if (ViewBag.showAddWI)
+                {
+                    <h5>@ResProducts.EditTaskPanel.lblWorkInstrucion&nbsp;<img src="~/img/iconAdd2.png" style="cursor:pointer;min-width:20px; max-width:30px;" id="imgAddWorkInstruction" /></h5>
+                }
+                else
+                {
+                    <h5>@ResProducts.EditTaskPanel.lblWorkInstrucion&nbsp;<img src="~/img/iconAdd2.png" style="cursor:pointer;min-width:20px; max-width:30px;display:none;" id="imgAddWorkInstruction" /></h5>
+                }
+                <div id="addManual" style="display:none;">
+                    <table class="table table-condensed table-striped">
+                        <tr>
+                            <td>@ResProducts.EditTaskPanel.lblWorkInstrucion</td>
+                            <td>
+                                <input list="ddlWorkIstructionsList" id="ddlWorkIstructions">
+                                <datalist id="ddlWorkIstructionsList">
+                                    @{KIS.App_Sources.WorkInstructions.WorkInstructionsList lstWI = new KIS.App_Sources.WorkInstructions.WorkInstructionsList();
+                                        lstWI.loadWorkInstructionList();
+                                        foreach (var wi in lstWI.List)
+                                        {
+                                            <option data-id="@wi.ID;@wi.Version" value="@wi.Name"></option>
+                                        }
+                                    }
+                                </datalist>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@ResProducts.EditTaskPanel.lblWIInitialValidity</td>
+                            <td><input type="text" id="manualInitialValidity" /></td>
+                        </tr>
+                        <tr>
+                            <td>@ResProducts.EditTaskPanel.lblWIExpiryDate</td>
+                            <td><input type="text" id="manualExpiryDate" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="text-align: center;">
+                                <img id="imgAddManual" src="../img/iconSave.jpg" style="max-width:30px; min-width:20px; cursor:pointer;" />
+                                <img id="imgLoadAddManual" src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <img src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadWorkInstructions" />
+                <div id="taskManuals">
+                    @{
+                        Model.loadWorkInstructions();
+                            <table class="table table-striped table-active" id="tblManual">
+                                <tbody>
+                                    @if (Model.WorkInstructions.Count > 0)
+                                    {
+                                    <tr>
+                                        <td><input type="image" value="@Model.WorkInstructions[0].WI.ID;@Model.WorkInstructions[0].WI.Version" src="~/img/iconDelete.png" style="max-width:30px; min-width:20px; cursor:pointer;" id="imgDeleteWorkInstruction" class="imgDeleteWorkInstruction" /></td>
+                                        <td>@Model.WorkInstructions[0].WI.Name</td>
+                                        <td>@Model.WorkInstructions[0].InitialDate.ToString("dd/MM/yyyy")</td>
+                                        <td>@Model.WorkInstructions[0].ExpiryDate.ToString("dd/MM/yyyy")</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                </div>
+            </div>
+
+        </div>
 }
 else
 {

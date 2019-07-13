@@ -120,6 +120,9 @@
   <data name="lblErrNoAuth" xml:space="preserve">
     <value>Advertencia: usted no tienes permiso para realizar las tareas de esta estación</value>
   </data>
+  <data name="lblErrWINotFound" xml:space="preserve">
+    <value>Work instruction not present for this task</value>
+  </data>
   <data name="lblErrWorkstationNotFound" xml:space="preserve">
     <value>Workstation not found</value>
   </data>
