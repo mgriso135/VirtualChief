@@ -747,6 +747,13 @@
       <DependentUpon>TaskPanel.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Andon\AndonAreaRegistration.cs" />
+    <Compile Include="Areas\Andon\Controllers\DepartmentAndonConfigController.cs" />
+    <Compile Include="Areas\Andon\Controllers\DepartmentAndonController.cs" />
+    <Compile Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetDepartmentAndonConfig.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Config\AndonConfigController.cs" />
     <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
     <Compile Include="Areas\Config\Controllers\ConfigController.cs" />
@@ -4696,12 +4703,12 @@
     <Compile Include="Reconnect.aspx.designer.cs">
       <DependentUpon>Reconnect.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Reparti\configAndonReparto.ascx.cs">
-      <DependentUpon>configAndonReparto.ascx</DependentUpon>
+    <Compile Include="Reparti\configAndonReparto_OLD.ascx.cs">
+      <DependentUpon>configAndonReparto_OLD.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Reparti\configAndonReparto.ascx.designer.cs">
-      <DependentUpon>configAndonReparto.ascx</DependentUpon>
+    <Compile Include="Reparti\configAndonReparto_OLD.ascx.designer.cs">
+      <DependentUpon>configAndonReparto_OLD.ascx</DependentUpon>
     </Compile>
     <Compile Include="Reparti\configAvvioTasks.ascx.cs">
       <DependentUpon>configAvvioTasks.ascx</DependentUpon>
@@ -5391,6 +5398,8 @@
     <Content Include="Content\Free-file-icons\icons.pdf" />
     <Content Include="Content\Free-file-icons\LICENSE" />
     <Content Include="Areas\Andon\Views\web.config" />
+    <Content Include="Areas\Andon\Views\DepartmentAndonConfig\GetDepartmentAndonConfig.cshtml" />
+    <Content Include="Areas\Andon\Views\DepartmentAndon\Index.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -5911,6 +5920,11 @@
       <CustomToolNamespace>ResTaskAnalysis</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TaskPanel.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.resx">
+      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetDepartmentAndonConfig.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Config\Views\AndonConfig\App_LocalResources\DepartmentScrollTypeView.resx">
       <CustomToolNamespace>ResScrollTypeView</CustomToolNamespace>
@@ -8982,8 +8996,8 @@
     <Content Include="Reparti\App_LocalResources\addReparto.ascx.es-AR.resx" />
     <Content Include="Reparti\App_LocalResources\addStraordinario.ascx.en-US.resx" />
     <Content Include="Reparti\App_LocalResources\addStraordinario.ascx.es-AR.resx" />
-    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.en-US.resx" />
-    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.es-AR.resx" />
+    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.en-US_OLD.resx" />
+    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.es-AR_OLD.resx" />
     <Content Include="Reparti\App_LocalResources\configAvvioTasks.ascx.en-US.resx" />
     <Content Include="Reparti\App_LocalResources\configAvvioTasks.ascx.es-AR.resx" />
     <Content Include="Reparti\App_LocalResources\configCadenza.ascx.en-US.resx" />
@@ -9175,7 +9189,7 @@
     <Content Include="Produzione\workLoadListReparti.aspx" />
     <Content Include="Produzione\WorkLoadReparti.aspx" />
     <Content Include="Reconnect.aspx" />
-    <Content Include="Reparti\configAndonReparto.ascx" />
+    <Content Include="Reparti\configAndonReparto_OLD.ascx" />
     <Content Include="Reparti\configAvvioTasks.ascx" />
     <Content Include="Reparti\configModoCalcoloTC.ascx" />
     <Content Include="Reparti\processoWorkLoad.ascx" />
@@ -10336,10 +10350,10 @@
     <Folder Include="App_GlobalResources\" />
     <Folder Include="Areas\Analysis\Models\" />
     <Folder Include="Areas\Analysis\Views\Shared\" />
-    <Folder Include="Areas\Andon\Controllers\" />
     <Folder Include="Areas\Andon\Models\" />
     <Folder Include="Areas\Andon\Views\Shared\" />
     <Folder Include="Areas\Config\Models\" />
+    <Folder Include="Areas\Config\Views\DepartmentsConfig\" />
     <Folder Include="Areas\Config\Views\Shared\" />
     <Folder Include="Areas\Customers\Models\" />
     <Folder Include="Areas\Customers\Views\Shared\" />
@@ -11392,10 +11406,10 @@
     <Content Include="Reparti\App_LocalResources\configAvvioTasks.ascx.it.resx" />
     <Content Include="Reparti\App_LocalResources\configAvvioTasks.ascx.es.resx" />
     <Content Include="Reparti\App_LocalResources\configAvvioTasks.ascx.en.resx" />
-    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.resx" />
-    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.it.resx" />
-    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.es.resx" />
-    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.en.resx" />
+    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx_OLD.resx" />
+    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.it_OLD.resx" />
+    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.es_OLD.resx" />
+    <Content Include="Reparti\App_LocalResources\configAndonReparto.ascx.en_OLD.resx" />
     <Content Include="Reparti\App_LocalResources\addStraordinario.ascx.resx" />
     <Content Include="Reparti\App_LocalResources\addStraordinario.ascx.it.resx" />
     <Content Include="Reparti\App_LocalResources\addStraordinario.ascx.es.resx" />

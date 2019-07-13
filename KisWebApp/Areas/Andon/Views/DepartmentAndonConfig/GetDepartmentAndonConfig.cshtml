@@ -1,0 +1,145 @@
+﻿@if (ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+            $("#imgSaveShorProdInd").fadeOut();
+            $("#imgSaveShowActiveUsers").fadeOut();
+            $("#imgSaveUsernameFormat").fadeOut();
+            
+
+            $('input[type=radio][name=ShowProductivityIndicators]').change(function () {
+                $("#imgSaveShorProdInd").fadeIn();
+                var prodShow = false;
+                if (this.value == "1") {
+                    prodShow = true;
+                }
+                $.ajax({
+                    url: "@Url.Action("setShowProductivityIndicators", "DepartmentAndonConfig")",
+                    type: 'POST',
+                    data: {
+                        DepartmentID: @ViewBag.DepartmentID,
+                        flag: prodShow
+                    },
+                    success: function (result) {
+                        $("#imgSaveShorProdInd").fadeOut();
+                    },
+                    error: function (result) { $("#imgSaveShorProdInd").fadeOut(); alert("Error " + result); },
+                    warning: function (result) { $("#imgSaveShorProdInd").fadeOut(); alert("Warning " + result); },
+                });
+            });
+
+            $('input[type=radio][name=ShowActiveUsers]').change(function () {
+                $("#imgSaveShowActiveUsers").fadeIn();
+                var usersShow = false;
+                if (this.value == "1") {
+                    usersShow = true;
+                }
+                $.ajax({
+                    url: "@Url.Action("setShowActiveUsers", "DepartmentAndonConfig")",
+                    type: 'POST',
+                    data: {
+                        DepartmentID: @ViewBag.DepartmentID,
+                        flag: usersShow
+                    },
+                    success: function (result) {
+                        $("#imgSaveShowActiveUsers").fadeOut();
+                    },
+                    error: function (result) { $("#imgSaveShowActiveUsers").fadeOut(); alert("Error " + result); },
+                    warning: function (result) { $("#imgSaveShowActiveUsers").fadeOut(); alert("Warning " + result); },
+                });
+            });
+
+            $('input[type=radio][name=UsernameFormat]').change(function () {
+                $("#imgSaveUsernameFormat").fadeIn();
+                $.ajax({
+                    url: "@Url.Action("setUsernameFormat", "DepartmentAndonConfig")",
+                    type: 'POST',
+                    data: {
+                        DepartmentID: @ViewBag.DepartmentID,
+                        flag: this.value
+                    },
+                    success: function (result) {
+                        $("#imgSaveUsernameFormat").fadeOut();
+                    },
+                    error: function (result) { $("#imgSaveUsernameFormat").fadeOut(); alert("Error " + result); },
+                    warning: function (result) { $("#imgSaveUsernameFormat").fadeOut(); alert("Warning " + result); },
+                });
+            });
+
+        });
+    </script>
+    <div class="row-fluid">
+        <div class="span12">
+            @{ String ProdIndActive = "";
+                String ProdIndInactive = "checked";
+                if (ViewBag.ShowProdIndicator)
+                {
+                    ProdIndActive = "checked";
+                    ProdIndInactive = "";
+                }
+            }
+            <h5>@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowProductivityIndicatorsTitle</h5>
+            <input type="radio" name="ShowProductivityIndicators" value="0" id="ShowProductivityIndicators0" @ProdIndInactive />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowProductivityIndicatorsInactive<br />
+            <input type="radio" name="ShowProductivityIndicators" value="1" id="ShowProductivityIndicators1" @ProdIndActive/>@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowProductivityIndicatorsActive<br />
+            <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:20px;" id="imgSaveShorProdInd" />
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            @{ String UserPanelActive = "";
+                String UserPanelInactive = "checked";
+                if (ViewBag.ShowActiveUsers)
+                {
+                    UserPanelActive = "checked";
+                    UserPanelInactive = "";
+                }
+            }
+            <h5>@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowActiveUsersTitle</h5>
+            <input type="radio" name="ShowActiveUsers" value="0" id="ShowActiveUsers0" @UserPanelInactive />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowActiveUsersInactive<br />
+            <input type="radio" name="ShowActiveUsers" value="1" id="ShowActiveUsers1" @UserPanelActive />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowActiveUsersActive<br />
+            <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:20px;" id="imgSaveShowActiveUsers" />
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            @{ String UserFormat1 = "checked";
+                String UserFormat2 = "";
+                String UserFormat3 = "";
+                String UserFormat4 = "";
+                if (ViewBag.UsernameFormat == '2')
+                {
+                    UserFormat1 = "";
+                    UserFormat2 = "checked";
+                    UserFormat3 = "";
+                    UserFormat4 = "";
+                }
+                else if (ViewBag.UsernameFormat == '3')
+                {
+                    UserFormat1 = "";
+                    UserFormat2 = "";
+                    UserFormat3 = "checked";
+                    UserFormat4 = "";
+                }
+                else if (ViewBag.UsernameFormat == '4')
+                {
+                    UserFormat1 = "";
+                    UserFormat2 = "";
+                    UserFormat3 = "";
+                    UserFormat4 = "checked";
+                }
+            }
+            <h5>@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblUsernameFormatTitle</h5>
+            <input type="radio" name="UsernameFormat" value="0" id="UsernameFormat0" @UserFormat1 />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblVisUsername<br />
+            <input type="radio" name="UsernameFormat" value="1" id="UsernameFormat1" @UserFormat2 />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblShowName<br />
+            <input type="radio" name="UsernameFormat" value="2" id="UsernameFormat0" @UserFormat3 />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblVisNombreYA<br />
+            <input type="radio" name="UsernameFormat" value="3" id="UsernameFormat1" @UserFormat4 />@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblVisNombreYAppellido<br />
+            <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:20px;" id="imgSaveUsernameFormat" />
+        </div>
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResDepartmentAndonConfig.GetDepartmentAndonConfig.lblNoAuth</div>
+    </div>
+}

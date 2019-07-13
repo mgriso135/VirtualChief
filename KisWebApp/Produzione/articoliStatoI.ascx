@@ -55,6 +55,6 @@
             </FooterTemplate>
         </asp:Repeater>
 
-        <asp:Timer runat="server" ID="timer1" Interval="120000" OnTick="timer1_Tick" />
+        <asp:Timer runat="server" ID="timer1" Interval="3600000" OnTick="timer1_Tick" />
     </ContentTemplate>
 </asp:UpdatePanel>

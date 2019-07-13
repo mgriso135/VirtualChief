@@ -590,26 +590,25 @@ namespace KIS.App_Code
             }
         }
 
+        private String _DepartmentName;
+        public String DepartmentName { get { return this._DepartmentName; } }
+
         private List<Articolo> _WIP;
+
+        private TimeZoneInfo _DepartmentTimezone;
+        public TimeZoneInfo DepartmentTimezone
+        {
+            get { return this._DepartmentTimezone; }
+        }
 
         public AndonReparto(int idRep):base()
         {
             Reparto rp = new Reparto(idRep);
             this._RepartoID = idRep;
+            this._DepartmentName = rp.name;
             this._WIP = new List<Articolo>();
-            if (rp.id != -1)
-            {
-                this._RepartoID = rp.id;
-                ElencoArticoliAperti elOpenArt = new ElencoArticoliAperti(rp.id);
-                for (int j = 0; j < elOpenArt.ArticoliAperti.Count; j++)
-                {
-                    this._WIP.Add(elOpenArt.ArticoliAperti[j]);
-                }
-            }
-            else
-            {
-                this._RepartoID = -1;
-            }
+            this._DepartmentTimezone = rp.tzFusoOrario;
+
 
             // Campi Andon Reparto
             this._FieldList = new Dictionary<string, int>();
@@ -779,6 +778,114 @@ namespace KIS.App_Code
         public new double ContinuousScrollGoSpeed;
         public new double ContinuousScrollBackSpeed;
 
+        private Boolean _ShowActiveUsers;
+        public Boolean ShowActiveUsers
+        {
+            get { return this._ShowActiveUsers; }
+            set
+            {
+                if (this.RepartoID != -1)
+                {
+                    Char cValue = value ? '1' : '0';
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = " + this.RepartoID;
+                    bool CreateOrUpdate = false;
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        CreateOrUpdate = true;
+                    }
+                    else
+                    {
+                        CreateOrUpdate = false;
+                    }
+                    rdr.Close();
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    if (CreateOrUpdate)
+                    {
+                        // Update
+                        cmd.CommandText = "UPDATE configurazione SET valore ='" + cValue + "' WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowActiveUsers' AND ID = " + this.RepartoID.ToString();
+                    }
+                    else
+                    {
+                        // Create
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', " + this.RepartoID + ", 'ShowActiveUsers', '" + cValue + "')";
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+            }
+        }
+
+        private Boolean _ShowProductionIndicator;
+        public Boolean ShowProductionIndicator
+        {
+            get { return this._ShowProductionIndicator; }
+            set
+            {
+                if (this.RepartoID != -1)
+                {
+                    Char cValue = value ? '1' : '0';
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = " + this.RepartoID;
+                    bool CreateOrUpdate = false;
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        CreateOrUpdate = true;
+                    }
+                    else
+                    {
+                        CreateOrUpdate = false;
+                    }
+                    rdr.Close();
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    if (CreateOrUpdate)
+                    {
+                        // Update
+                        cmd.CommandText = "UPDATE configurazione SET valore ='" + cValue + "' WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowProductionIndicator' AND ID = " + this.RepartoID.ToString();
+                    }
+                    else
+                    {
+                        // Create
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', " + this.RepartoID + ", 'ShowProductionIndicator', '" + cValue + "')";
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+            }
+        }
+
+        
+
         /* String format in database: ScrollType;Param1;Param2
          if ContinuousScroll: ScrollType = 1, Param1 = Speed1 (from top to bottom), Param2 = Speed2 (from bottom to top)
              */
@@ -825,7 +932,7 @@ namespace KIS.App_Code
                 this.ContinuousScrollBackSpeed = 0.0;
             }
             rdr.Close();
-            conn.Clone();
+            conn.Close();
             }
         }
 
@@ -1185,6 +1292,171 @@ namespace KIS.App_Code
                 conn.Close();
             }
             return ret;
+        }
+
+        public void loadShowActiveUsers()
+        {
+            this._ShowActiveUsers = false;
+            if (this.RepartoID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = " + this.RepartoID;
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    String sVal = rdr.GetString(0);
+                    if (sVal == "1")
+                    {
+                        this._ShowActiveUsers = true;
+                    }
+                    else
+                    {
+                        this._ShowActiveUsers = false;
+                    }
+                }
+
+                else
+                {
+                    this._ShowActiveUsers = false;
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        public void loadShowProductionIndicator()
+        {
+            this._ShowActiveUsers = false;
+            if (this.RepartoID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = " + this.RepartoID;
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    String sVal = rdr.GetString(0);
+                    if (sVal == "1")
+                    {
+                        this._ShowProductionIndicator = true;
+                    }
+                    else
+                    {
+                        this._ShowProductionIndicator = false;
+                    }
+                }
+
+                else
+                {
+                    this._ShowProductionIndicator = false;
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        // Completely re-write this function
+        public void loadWIP()
+        {
+            this._WIP = new List<Articolo>();
+            if (this.RepartoID != -1)
+            {
+                ElencoArticoliAperti elOpenArt = new ElencoArticoliAperti(this.RepartoID);
+                for (int j = 0; j < elOpenArt.ArticoliAperti.Count; j++)
+                {
+                    this._WIP.Add(elOpenArt.ArticoliAperti[j]);
+                }
+            }
+        }
+
+
+        /* Configurazione visualizzazione nomi utente su Andon:
+         * 0 --> vedo username
+         * 1 --> vedo il nome
+         * 2 --> nome e iniziale del cognome
+         * 3 --> nome e cognome
+         */
+        public char UsernameFormat
+        {
+            get
+            {
+                char ret = '0';
+                if (this.RepartoID!=-1)
+                { 
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                    + "AND ID = " + this.RepartoID.ToString() + " AND parametro LIKE 'Andon FormatoUsername'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    String valore = rdr.GetString(0);
+                    if (valore.Length > 0)
+                    {
+                        ret = valore[0];
+                    }
+                }
+                rdr.Close();
+
+                conn.Close();
+                }
+                return ret;
+            }
+            set
+            {
+                if (this.RepartoID != -1)
+                {
+                    // Verifico che sia presente la configurazione
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                        + "AND ID = " + this.RepartoID.ToString() + " AND parametro LIKE 'Andon FormatoUsername'";
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    bool add = false;
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        add = false;
+                    }
+                    else
+                    {
+                        add = true;
+                    }
+                    rdr.Close();
+
+                    cmd.Transaction = tr;
+                    if (add == true)
+                    {
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                            + this.RepartoID.ToString() + ", 'Andon FormatoUsername', '" + value.ToString() + "')";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                        + " Sezione = 'Reparto' AND ID = " + this.RepartoID.ToString() +
+                        " AND parametro LIKE 'Andon FormatoUsername'";
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+
+                    rdr.Close();
+                }
+            }
         }
     }
 
