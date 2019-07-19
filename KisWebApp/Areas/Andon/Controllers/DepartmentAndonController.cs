@@ -77,16 +77,101 @@ namespace KIS.Areas.Andon.Controllers
                 {
                     aCfgStruct.TasksViewFields.Add(aRep.CampiVisualizzatiTasks.Keys.ElementAt(i));
                 }
+
+                aCfgStruct.DepartmentTimeZoneOffset = aRep.DepartmentTimezone.BaseUtcOffset.TotalHours;
             }
             return Json(JsonConvert.SerializeObject(aCfgStruct), JsonRequestBehavior.AllowGet);
         }
     }
 
+    /*  QUERY
+     *  SELECT 
+commesse.idcommesse AS SalesOrderID,
+commesse.anno AS SalesOrderYear,
+commesse.ExternalID AS OrderExternalID,
+anagraficaclienti.codice AS CustomerID, 
+anagraficaclienti.ragsociale AS CustomerName,
+commesse.dataInserimento AS SalesOrderDate,
+commesse.note AS SalesOrderNotes,
+variantiprocessi.ExternalID AS ProductExternalID,
+productionplan.id AS ProductionOrderID,
+productionplan.anno AS ProductionOrderYear,
+productionplan.processo AS ProductionOrderProductTypeID,
+productionplan.revisione AS ProductionOrderProductTypeReview,
+productionplan.variante AS ProductionOrderProductID,
+productionplan.matricola AS ProductionOrderSerialNumber,
+productionplan.status AS ProductionOrderStatus,
+productionplan.reparto AS ProductionOrderDepartmentID,
+productionplan.startTime AS ProductionOrderStartTime,
+productionplan.dataConsegnaPrevista AS ProductionOrderDeliveryDate,
+productionplan.dataPrevistaFineProduzione AS ProductionOrderEndProductionDate,
+productionplan.planner AS ProductionOrderPlanner,
+productionplan.quantita AS ProductionOrderQuantityOrdered,
+productionplan.quantitaProdotta AS ProductionOrderQuantityProduced,
+productionplan.kanbanCard AS ProductionOrderKanbanCardID,
+processo.processID AS ProductTypeID,
+processo.revisione AS ProductTypeReview,
+processo.dataRevisione AS ProductTypeReviewDate,
+processo.Name AS ProductTypeName,
+processo.description AS ProductTypeDescription,
+processo.attivo AS ProductTypeEnabled,
+varianti.idvariante AS ProductID,
+varianti.nomeVariante AS ProductName,
+varianti.descVariante AS ProductDescription,
+reparti.idreparto AS DepartmentID,
+reparti.nome AS DepartmentName,
+reparti.descrizione AS DepartmentDescription,
+reparti.cadenza AS DepartmentTaktTime,
+reparti.timezone AS DepartmentTimeZone,
+ productionplan.LeadTime AS ProductRealLeadTime,
+ productionplan.WorkingTime AS ProductRealWorkingTime, 
+ productionplan.Delay AS ProductRealDelay,
+ productionplan.EndProductionDateReal AS ProductRealEndProductionDate,
+tasksproduzione.TaskiD AS TaskID,
+tasksproduzione.name AS TaskName,
+tasksproduzione.description AS TaskDescription,
+tasksproduzione.earlyStart As TaskEarlyStart,
+tasksproduzione.lateStart AS TaskLateStart,
+tasksproduzione.earlyFinish AS TaskEarlyFinish,
+tasksproduzione.lateFinish AS TaskLateFinish,
+tasksproduzione.status AS TaskStatus,
+tasksproduzione.nOperatori AS TaskNumOperators,
+tasksproduzione.qtaPrevista AS TaskQuantityOrdered,
+tasksproduzione.qtaProdotta AS TaskQuantityProduced,
+tempiciclo.setup AS TaskSetupTimePlanned,
+tempiciclo.tempo AS TaskCycleTimePlanned,
+tempiciclo.tunload AS TaskUnloadTimePlanned,
+postazioni.idpostazioni AS WorkstationID,
+postazioni.name AS WorkstationName,
+postazioni.description AS WorkstationDescription,
+tasksproduzione.endDateReal as TaskEndDateReal,
+tasksproduzione.LeadTime AS TaskLeadTime,
+tasksproduzione.WorkingTime AS TaskWorkingTime,
+ tasksproduzione.Delay AS TaskDelay, 
+ tasksproduzione.OrigTask AS TaskOriginalTaskID, 
+ tasksproduzione.RevOrigTask AS TaskOriginalTaskRev, 
+ tasksproduzione.variante AS TaskOriginalTaskVar 
+ FROM anagraficaclienti INNER JOIN commesse ON(anagraficaclienti.codice = commesse.cliente) INNER JOIN
+ productionplan ON(commesse.anno = productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)
+ INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)
+ INNER JOIN variantiprocessi ON(productionplan.variante = variantiprocessi.variante AND productionplan.processo = variantiprocessi.processo AND productionplan.revisione=variantiprocessi.revProc)
+ INNER JOIN varianti ON(varianti.idvariante = variantiprocessi.variante)
+ INNER JOIN processo ON(processo.ProcessID = variantiprocessi.processo AND processo.revisione = variantiprocessi.revProc)
+ INNER JOIN tasksproduzione ON(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)
+  inner join processo AS TaskProcess ON(TaskProcess.processID = tasksproduzione.origTask AND TaskProcess.revisione = TasksProduzione.revOrigTask)
+ INNER JOIN varianti AS TaskVariant ON(taskvariant.idvariante = tasksproduzione.variante)
+ INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)
+ INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)
+
+  WHERE  productionplan.status<>'F' 
+  order by productionplan.dataConsegnaPrevista, productionplan.anno, productionplan.id, tasksproduzione.lateStart
+     */
+
     public struct AndonConfigurationStruct
     {
         public int DepartmentID;
         public String DepartmentName;
-        //public TimeZoneInfo DepartmentTimezone;
+        public double DepartmentTimeZoneOffset;
         public Boolean ShowActiveUsers;
         public Boolean ShowProductivityIndicators;
         public int ScrollType;
@@ -98,5 +183,58 @@ namespace KIS.Areas.Andon.Controllers
 
         public List<String> ProductViewFields;
         public List<String> TasksViewFields;
+    }
+
+    public struct AndonDepartmentProductsStruct
+    {
+        public int CommessaID;
+        public String OrderExternalID;
+        public String CommessaCodiceCliente;
+        public String CommessaRagioneSocialeCliente;
+        public DateTime CommessaDataInserimento;
+        public String CommessaNote;
+        public String ProductExternalID;
+        public int ProdottoID;
+        public String ProdottoLineaProdotto;
+        public String ProdottoNomeProdotto;
+        public String ProdottoMatricola;
+        public Char ProdottoStatus;
+        public String Reparto;
+        public DateTime DataPrevistaConsegna;
+        public DateTime DataPrevistaFineProduzione;
+        public DateTime EarlyStart;
+        public DateTime LateStart;
+        public DateTime EarlyFinish;
+        public DateTime LateFinish;
+        public double ProdottoQuantita;
+        public double ProdottoQuantitaRealizzata;
+        public String MeasurementUnit;
+        public TimeSpan ProdottoRitardo;
+        public TimeSpan ProdottoTempodiLavoroTotale;
+        public Double ProdottoIndicatoreCompletamentoTasks;
+        public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
+
+        public List<DepartmentAndonTasksStruct> Tasks;
+    }
+    public struct DepartmentAndonTasksStruct
+    {
+        public int TaskID;
+        public String TaskNome;
+        public String TaskDescrizione;
+        public String TaskPostazione;
+        public DateTime TaskEarlyStart;
+        public DateTime TaskLateStart;
+        public DateTime TaskEarlyFinish;
+        public DateTime TaskLateFinish;
+        public int TaskNumeroOperatori;
+        public TimeSpan TaskTempoCiclo;
+        public TimeSpan TaskTempoDiLavoroPrevisto;
+        public TimeSpan TaskTempoDiLavoroEffettivo;
+        public Char TaskStatus;
+        public Double TaskQuantitaPrevista;
+        public Double TaskQuantitaProdotta;
+        public TimeSpan TaskRitardo;
+        public DateTime TaskInizioEffettivo;
+        public DateTime TaskFineEffettiva;
     }
 }

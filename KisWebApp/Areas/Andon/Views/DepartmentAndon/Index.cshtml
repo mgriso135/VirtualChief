@@ -83,8 +83,6 @@
                     var newrows = "";
                     $.each(data, function (i, v) {
                         console.log(i, v);
-                        //var strUDate = v.UploadDate.substr(0, 10);
-                        //var strEDate = v.ExpiryDate.substr(0, 10);
                     });
 
                     $.each(data.ProductViewFields, function (i, v) {
@@ -102,7 +100,7 @@
                     ShowProductivityIndicators = data.ShowProductivityIndicators;
                     ShowUserPanel = data.ShowActiveUsers;
                 });
-                console.log("Done");
+                //console.log("Done");
             }
 
 
@@ -118,25 +116,26 @@
 
             }
 
+            getConfiguration();
 
     //        $.when(getConfiguration()).done(function () {
          //       alert("After getConfiguration(): " + ScrollType);
                 if (ScrollType == 1) {
-                    alert("Scroll");
                     continuousScroll();
                 }
        //     });
 
             if (!ShowProductivityIndicators && !ShowUserPanel) {
-                alert("Entro");
                 $("#mainproducts").prop("class", "span12");
                 $("#sidebar").hide();
             }
             else {
-                alert(ShowProductivityIndicators + ShowUserPanel);
+
             }
-
-
+            
+            
+            
+            console.log(new Date(Date.UTC(2019, 07-1, 17, 20, 00, 0)));
 
         });
     </script>
@@ -149,12 +148,11 @@
     </div>
     <div class="row-fluid">
         <div class="span9" id="mainproducts">
-            aascasvsdvds
-
+            MAIN PRODUCTS
         </div>
 
         <div class="span3" id="sidebar">
-           ascasvdavd
+           SIDEBAR
         </div>
 
     </div>
