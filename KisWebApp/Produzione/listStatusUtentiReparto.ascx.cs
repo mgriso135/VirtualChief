@@ -102,10 +102,6 @@ namespace KIS.Produzione
                             tRow.BgColor = "#00FF00";
                             tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#00FF00'");
                         }
-
-                        
-
-
                     }
 
                 }

@@ -601,8 +601,11 @@ namespace KIS.App_Code
             get { return this._DepartmentTimezone; }
         }
 
+        public List<DepartmentAndonProductsStruct> WIP;
+
         public AndonReparto(int idRep):base()
         {
+            this.WIP = new List<DepartmentAndonProductsStruct>();
             Reparto rp = new Reparto(idRep);
             this._RepartoID = idRep;
             this._DepartmentName = rp.name;
@@ -1373,6 +1376,251 @@ namespace KIS.App_Code
             }
         }
 
+        public void loadWIP2()
+        {
+            this.WIP = new List<DepartmentAndonProductsStruct>();
+            if (this.RepartoID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT "
++ "commesse.idcommesse AS SalesOrderID,"                        //0
++ "commesse.anno AS SalesOrderYear,"
++ "commesse.ExternalID AS OrderExternalID,"                     //2
++ "anagraficaclienti.codice AS CustomerID, "
++ "anagraficaclienti.ragsociale AS CustomerName,"               //4
++ "commesse.dataInserimento AS SalesOrderDate,"
++ "commesse.note AS SalesOrderNotes,"                           //6
++ "variantiprocessi.ExternalID AS ProductExternalID,"              
++ "productionplan.id AS ProductionOrderID,"                     //8
++ "productionplan.anno AS ProductionOrderYear,"
++ "productionplan.processo AS ProductionOrderProductTypeID,"    //10
++ "productionplan.revisione AS ProductionOrderProductTypeReview,"
++ "productionplan.variante AS ProductionOrderProductID,"        //12
++ "productionplan.matricola AS ProductionOrderSerialNumber,"
++ "productionplan.status AS ProductionOrderStatus,"             //14
++ "productionplan.reparto AS ProductionOrderDepartmentID,"
++ "productionplan.startTime AS ProductionOrderStartTime,"       //16
++ "productionplan.dataConsegnaPrevista AS ProductionOrderDeliveryDate,"
++ "productionplan.dataPrevistaFineProduzione AS ProductionOrderEndProductionDate,"  //18
++ "productionplan.planner AS ProductionOrderPlanner,"
++ "productionplan.quantita AS ProductionOrderQuantityOrdered,"  //20
++ "productionplan.quantitaProdotta AS ProductionOrderQuantityProduced,"
++ "productionplan.kanbanCard AS ProductionOrderKanbanCardID,"   //22
++ "productionplan.measurementunit AS MeasurementUnit, "
++ "processo.processID AS ProductTypeID,"                        //24
++ "processo.revisione AS ProductTypeReview,"
++ "processo.dataRevisione AS ProductTypeReviewDate,"            //26
++ "processo.Name AS ProductTypeName,"
++ "processo.description AS ProductTypeDescription,"             //28
++ "processo.attivo AS ProductTypeEnabled,"
++ "varianti.idvariante AS ProductID,"                           //30
++ "varianti.nomeVariante AS ProductName,"                       //31
++ " varianti.descVariante AS ProductDescription,"               //32
++ " reparti.idreparto AS DepartmentID,"
++ " reparti.nome AS DepartmentName,"    
++ " reparti.descrizione AS DepartmentDescription,"
++ " reparti.cadenza AS DepartmentTaktTime,"
++ " reparti.timezone AS DepartmentTimeZone,"
++ " productionplan.LeadTime AS ProductRealLeadTime,"
++ " productionplan.WorkingTime AS ProductRealWorkingTime, "
++ " productionplan.Delay AS ProductRealDelay,"
++ " productionplan.EndProductionDateReal AS ProductRealEndProductionDate,"
++ " tasksproduzione.TaskiD AS TaskID,"
++ " tasksproduzione.name AS TaskName,"
++ " tasksproduzione.description AS TaskDescription,"
++ " tasksproduzione.earlyStart As TaskEarlyStart,"
++ " tasksproduzione.lateStart AS TaskLateStart,"
++ " tasksproduzione.earlyFinish AS TaskEarlyFinish,"
++ " tasksproduzione.lateFinish AS TaskLateFinish,"
++ "tasksproduzione.status AS TaskStatus,"
++ "tasksproduzione.nOperatori AS TaskNumOperators,"
++ "tasksproduzione.qtaPrevista AS TaskQuantityOrdered,"
++ "tasksproduzione.qtaProdotta AS TaskQuantityProduced,"
++ "tempiciclo.setup AS TaskSetupTimePlanned,"
++ "tempiciclo.tempo AS TaskCycleTimePlanned,"
++ "tempiciclo.tunload AS TaskUnloadTimePlanned,"
++ "postazioni.idpostazioni AS WorkstationID,"
++ "postazioni.name AS WorkstationName,"
++ "postazioni.description AS WorkstationDescription,"
++ "tasksproduzione.endDateReal as TaskEndDateReal,"
++ "tasksproduzione.LeadTime AS TaskLeadTime,"
++ "tasksproduzione.WorkingTime AS TaskWorkingTime,"
++ " tasksproduzione.Delay AS TaskDelay, "
++ " tasksproduzione.OrigTask AS TaskOriginalTaskID, "
++ " tasksproduzione.RevOrigTask AS TaskOriginalTaskRev, "
+ + " tasksproduzione.variante AS TaskOriginalTaskVar"
+ + " FROM anagraficaclienti INNER JOIN commesse ON(anagraficaclienti.codice = commesse.cliente) INNER JOIN "
+ + " productionplan ON(commesse.anno = productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)"
+ + " INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)"
+ + " INNER JOIN variantiprocessi ON(productionplan.variante = variantiprocessi.variante AND productionplan.processo = variantiprocessi.processo AND productionplan.revisione= variantiprocessi.revProc)"
+ + " INNER JOIN varianti ON(varianti.idvariante = variantiprocessi.variante)"
+ + " INNER JOIN processo ON(processo.ProcessID = variantiprocessi.processo AND processo.revisione = variantiprocessi.revProc)"
+ + " INNER JOIN tasksproduzione ON(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
+ + " inner join processo AS TaskProcess ON(TaskProcess.processID = tasksproduzione.origTask AND TaskProcess.revisione = TasksProduzione.revOrigTask)"
+ + " INNER JOIN varianti AS TaskVariant ON(taskvariant.idvariante = tasksproduzione.variante)"
+ + " INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)"
+ + " INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)"
+ + " WHERE productionplan.status <> 'F' AND productionplan.status <> 'N' AND reparti.idreparto = "+this.RepartoID.ToString()
+ + " order by productionplan.dataConsegnaPrevista, productionplan.anno, productionplan.id, tasksproduzione.lateStart";
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                List<DepartmentAndonFullStruct> fullList = new List<DepartmentAndonFullStruct>();
+
+                while(rdr.Read())
+                {
+                    DepartmentAndonFullStruct curr = new DepartmentAndonFullStruct();
+                    curr.CommessaID = rdr.GetInt32(0);
+                    curr.SalesOrderYear = rdr.GetInt32(1);
+                    curr.OrderExternalID = rdr.GetString(2);
+                    curr.CommessaCodiceCliente = rdr.GetString(3);
+                    curr.CommessaRagioneSocialeCliente = rdr.GetString(4);
+                    curr.CommessaDataInserimento = rdr.GetDateTime(5);
+                    if (!rdr.IsDBNull(6))
+                    { 
+                        curr.CommessaNote = rdr.GetString(6);
+                    }
+                    if (!rdr.IsDBNull(7))
+                    { 
+                        curr.ProductExternalID = rdr.GetString(7);
+                    }
+                    curr.ProdottoID = rdr.GetInt32(8);
+                    curr.ProdottoYear = rdr.GetInt32(9);
+                    if(!rdr.IsDBNull(13))
+                    { 
+                    curr.ProdottoMatricola = rdr.GetString(13);
+                    }
+                    curr.ProdottoStatus = rdr.GetChar(14);
+                    if(!rdr.IsDBNull(15))
+                    { 
+                        curr.DepartmentID = rdr.GetInt32(15);
+                    }
+                    curr.Reparto = rdr.GetString(34);
+                    curr.DataPrevistaConsegna = rdr.GetDateTime(17);
+                    curr.DataPrevistaFineProduzione = rdr.GetDateTime(18);
+                    curr.ProdottoQuantita = rdr.GetDouble(20);
+                    curr.ProdottoQuantitaRealizzata = rdr.GetDouble(21);
+                    curr.MeasurementUnit = rdr.GetString(23);
+                    curr.ProdottoLineaProdotto = rdr.GetString(27);
+                    curr.ProdottoNomeProdotto = rdr.GetString(31);
+                    curr.ProdottoRitardo = rdr.GetTimeSpan(40);
+                    curr.ProdottoTempodiLavoroTotale = rdr.GetTimeSpan(39);
+
+                    curr.DepartmentID = rdr.GetInt32(33);
+                    curr.Reparto = rdr.GetString(34);
+                    curr.TaskID = rdr.GetInt32(42);
+                    curr.TaskNome = rdr.GetString(43);
+                    curr.TaskDescrizione = rdr.GetString(44);
+                    curr.TaskEarlyStart = rdr.GetDateTime(45);
+                    curr.TaskLateStart = rdr.GetDateTime(46);
+                    curr.TaskEarlyFinish = rdr.GetDateTime(47);
+                    curr.TaskLateFinish = rdr.GetDateTime(48);
+                    curr.TaskStatus = rdr.GetChar(49);
+                    curr.TaskNumeroOperatori = rdr.GetInt32(50);
+                    curr.TaskQuantitaPrevista = rdr.GetDouble(51);
+                    curr.TaskQuantitaProdotta = rdr.GetDouble(52);
+                    curr.TaskTempoCiclo = rdr.GetTimeSpan(54);
+                    curr.TaskPostazione = rdr.GetString(57);
+
+                    /*
+        public Double ProdottoIndicatoreCompletamentoTasks;
+        public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
+                     * */
+                    fullList.Add(curr);
+                }
+
+                var prodList = fullList.Select(s=> new { s.CommessaID, s.SalesOrderYear,
+                    s.OrderExternalID, s.CommessaCodiceCliente, s.CommessaRagioneSocialeCliente, 
+                    s.CommessaDataInserimento, s.CommessaNote, s.ProductExternalID, s.ProdottoID,
+                    s.ProdottoYear, s.ProdottoLineaProdotto, s.ProdottoNomeProdotto,
+                    s.ProdottoMatricola, s.ProdottoStatus, s.DepartmentID, s.Reparto,
+                    s.DataPrevistaConsegna, s.DataPrevistaFineProduzione, s.EarlyStart,
+                    s.LateStart, s.EarlyFinish, s.LateFinish, s.ProdottoQuantita,
+                    s.ProdottoQuantitaRealizzata, s.MeasurementUnit, s.ProdottoRitardo, s.ProdottoTempodiLavoroTotale
+        })
+        .Distinct();
+
+                this.WIP = new List<DepartmentAndonProductsStruct>();
+
+                foreach (var m in prodList)
+                {
+                    DepartmentAndonProductsStruct currProd = new DepartmentAndonProductsStruct();
+                    currProd.CommessaID = m.CommessaID;
+                    currProd.SalesOrderYear = m.SalesOrderYear;
+                    currProd.OrderExternalID = m.OrderExternalID;
+
+                    currProd.CommessaCodiceCliente = m.CommessaCodiceCliente;
+                    currProd.CommessaRagioneSocialeCliente=m.CommessaRagioneSocialeCliente;
+                    currProd.CommessaDataInserimento = m.CommessaDataInserimento;
+                    currProd.CommessaNote = m.CommessaNote;
+                    currProd.ProductExternalID = m.ProductExternalID;
+                    currProd.ProdottoID = m.ProdottoID;
+                    currProd.ProdottoYear = m.ProdottoYear;
+                    currProd.ProdottoLineaProdotto = m.ProdottoLineaProdotto;
+                    currProd.ProdottoNomeProdotto = m.ProdottoNomeProdotto;
+                    currProd.ProdottoMatricola = m.ProdottoMatricola;
+                    currProd.ProdottoStatus = m.ProdottoStatus;
+                    currProd.DepartmentID = m.DepartmentID;
+                    currProd.Reparto = m.Reparto;
+                    currProd.DataPrevistaConsegna = m.DataPrevistaConsegna;
+                    currProd.DataPrevistaFineProduzione = m.DataPrevistaFineProduzione;
+                    currProd.EarlyStart = m.EarlyStart;
+                    currProd.LateStart = m.LateStart;
+                    currProd.EarlyFinish = m.EarlyFinish;
+                    currProd.LateFinish = m.LateFinish;
+                    currProd.ProdottoQuantita = m.ProdottoQuantita;
+                    currProd.ProdottoQuantitaRealizzata = m.ProdottoQuantitaRealizzata;
+                    currProd.MeasurementUnit = m.MeasurementUnit;
+                    currProd.ProdottoRitardo= m.ProdottoRitardo;
+                    currProd.ProdottoTempodiLavoroTotale = m.ProdottoTempodiLavoroTotale;
+
+                    currProd.Tasks = new List<DepartmentAndonTasksStruct>();
+
+                    var tasksList = fullList
+                        .Where(s => s.ProdottoID == currProd.ProdottoID && s.ProdottoYear == currProd.ProdottoYear)
+                        .Select(s => new
+                        {
+                            s.TaskID, s.TaskNome, s.TaskDescrizione, s.TaskPostazione,
+                            s.TaskEarlyStart, s.TaskLateStart, s.TaskEarlyFinish, s.TaskLateFinish,
+                            s.TaskNumeroOperatori, s.TaskTempoCiclo, s.TaskTempoDiLavoroPrevisto, s.TaskTempoDiLavoroEffettivo,
+                            s.TaskStatus, s.TaskQuantitaPrevista, s.TaskQuantitaProdotta, s.TaskRitardo, s.TaskInizioEffettivo,
+                            s.TaskFineEffettiva
+
+    }).OrderBy(x=>x.TaskLateStart);
+
+                    foreach(var t in tasksList)
+                    {
+                        DepartmentAndonTasksStruct currTask = new DepartmentAndonTasksStruct();
+                        currTask.TaskID = t.TaskID;
+                        currTask.TaskNome = t.TaskNome;
+                        currTask.TaskDescrizione=t.TaskDescrizione;
+                        currTask.TaskPostazione=t.TaskPostazione;
+                        currTask.TaskEarlyStart=t.TaskEarlyStart;
+                        currTask.TaskLateStart=t.TaskLateStart;
+                        currTask.TaskEarlyFinish=t.TaskEarlyFinish;
+                        currTask.TaskLateFinish=t.TaskLateFinish;
+                        currTask.TaskNumeroOperatori=t.TaskNumeroOperatori;
+                        currTask.TaskTempoCiclo=t.TaskTempoCiclo;
+                        currTask.TaskTempoDiLavoroPrevisto=t.TaskTempoDiLavoroPrevisto;
+                        currTask.TaskTempoDiLavoroEffettivo=t.TaskTempoDiLavoroEffettivo;
+                        currTask.TaskStatus=t.TaskStatus;
+                        currTask.TaskQuantitaPrevista=t.TaskQuantitaPrevista;
+                        currTask.TaskQuantitaProdotta=t.TaskQuantitaProdotta;
+                        currTask.TaskRitardo=t.TaskRitardo;
+                        currTask.TaskInizioEffettivo=t.TaskInizioEffettivo;
+                        currTask.TaskFineEffettiva = t.TaskFineEffettiva;
+
+                        currProd.Tasks.Add(currTask);
+                    }
+
+                    this.WIP.Add(currProd);
+                }
+
+                conn.Close();
+            }
+
+        }
 
         /* Configurazione visualizzazione nomi utente su Andon:
          * 0 --> vedo username
@@ -1460,4 +1708,111 @@ namespace KIS.App_Code
         }
     }
 
+    public struct DepartmentAndonProductsStruct
+    {
+        public int CommessaID;
+        public int SalesOrderYear;
+        public String OrderExternalID;
+        public String CommessaCodiceCliente;
+        public String CommessaRagioneSocialeCliente;
+        public DateTime CommessaDataInserimento;
+        public String CommessaNote;
+        public String ProductExternalID;
+        public int ProdottoID;
+        public int ProdottoYear;
+        public String ProdottoLineaProdotto;
+        public String ProdottoNomeProdotto;
+        public String ProdottoMatricola;
+        public Char ProdottoStatus;
+        public int DepartmentID;
+        public String Reparto;
+        public DateTime DataPrevistaConsegna;
+        public DateTime DataPrevistaFineProduzione;
+        public DateTime EarlyStart;
+        public DateTime LateStart;
+        public DateTime EarlyFinish;
+        public DateTime LateFinish;
+        public double ProdottoQuantita;
+        public double ProdottoQuantitaRealizzata;
+        public String MeasurementUnit;
+        public TimeSpan ProdottoRitardo;
+        public TimeSpan ProdottoTempodiLavoroTotale;
+        public Double ProdottoIndicatoreCompletamentoTasks;
+        public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
+
+        public List<DepartmentAndonTasksStruct> Tasks;
+    }
+    public struct DepartmentAndonTasksStruct
+    {
+        public int TaskID;
+        public String TaskNome;
+        public String TaskDescrizione;
+        public String TaskPostazione;
+        public DateTime TaskEarlyStart;
+        public DateTime TaskLateStart;
+        public DateTime TaskEarlyFinish;
+        public DateTime TaskLateFinish;
+        public int TaskNumeroOperatori;
+        public TimeSpan TaskTempoCiclo;
+        public TimeSpan TaskTempoDiLavoroPrevisto;
+        public TimeSpan TaskTempoDiLavoroEffettivo;
+        public Char TaskStatus;
+        public Double TaskQuantitaPrevista;
+        public Double TaskQuantitaProdotta;
+        public TimeSpan TaskRitardo;
+        public DateTime TaskInizioEffettivo;
+        public DateTime TaskFineEffettiva;
+    }
+
+    public struct DepartmentAndonFullStruct
+    {
+        public int CommessaID;
+        public int SalesOrderYear;
+        public String OrderExternalID;
+        public String CommessaCodiceCliente;
+        public String CommessaRagioneSocialeCliente;
+        public DateTime CommessaDataInserimento;
+        public String CommessaNote;
+        public String ProductExternalID;
+        public int ProdottoID;
+        public int ProdottoYear;
+        public String ProdottoLineaProdotto;
+        public String ProdottoNomeProdotto;
+        public String ProdottoMatricola;
+        public Char ProdottoStatus;
+        public int DepartmentID;
+        public String Reparto;
+        public DateTime DataPrevistaConsegna;
+        public DateTime DataPrevistaFineProduzione;
+        public DateTime EarlyStart;
+        public DateTime LateStart;
+        public DateTime EarlyFinish;
+        public DateTime LateFinish;
+        public double ProdottoQuantita;
+        public double ProdottoQuantitaRealizzata;
+        public String MeasurementUnit;
+        public TimeSpan ProdottoRitardo;
+        public TimeSpan ProdottoTempodiLavoroTotale;
+        public Double ProdottoIndicatoreCompletamentoTasks;
+        public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
+
+        public int TaskID;
+        public String TaskNome;
+        public String TaskDescrizione;
+        public String TaskPostazione;
+        public DateTime TaskEarlyStart;
+        public DateTime TaskLateStart;
+        public DateTime TaskEarlyFinish;
+        public DateTime TaskLateFinish;
+        public int TaskNumeroOperatori;
+        public TimeSpan TaskTempoCiclo;
+        public TimeSpan TaskTempoDiLavoroPrevisto;
+        public TimeSpan TaskTempoDiLavoroEffettivo;
+        public Char TaskStatus;
+        public Double TaskQuantitaPrevista;
+        public Double TaskQuantitaProdotta;
+        public TimeSpan TaskRitardo;
+        public DateTime TaskInizioEffettivo;
+        public DateTime TaskFineEffettiva;
+    }
 }

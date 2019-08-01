@@ -82,9 +82,25 @@ namespace KIS.Areas.Andon.Controllers
             }
             return Json(JsonConvert.SerializeObject(aCfgStruct), JsonRequestBehavior.AllowGet);
         }
+
+        public JsonResult loadWIP(int DepartmentID)
+        {
+            List<KIS.App_Code.DepartmentAndonProductsStruct> wipList = new List<DepartmentAndonProductsStruct>();
+            KIS.App_Code.AndonReparto currAndon = new AndonReparto(DepartmentID);
+            if(currAndon.RepartoID!=-1)
+            {
+                currAndon.loadWIP2();
+                wipList = currAndon.WIP;
+            }
+            return Json(JsonConvert.SerializeObject(wipList), JsonRequestBehavior.AllowGet);
+        }
     }
 
-    /*  QUERY
+    
+
+    /*  User AndonReparto.loadWIP2();
+     *  
+     *  QUERY
      *  SELECT 
 commesse.idcommesse AS SalesOrderID,
 commesse.anno AS SalesOrderYear,
@@ -163,7 +179,7 @@ tasksproduzione.WorkingTime AS TaskWorkingTime,
  INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)
  INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)
 
-  WHERE  productionplan.status<>'F' 
+  WHERE  productionplan.status<>'F' AND reparti.idreparto=2
   order by productionplan.dataConsegnaPrevista, productionplan.anno, productionplan.id, tasksproduzione.lateStart
      */
 
@@ -185,56 +201,5 @@ tasksproduzione.WorkingTime AS TaskWorkingTime,
         public List<String> TasksViewFields;
     }
 
-    public struct AndonDepartmentProductsStruct
-    {
-        public int CommessaID;
-        public String OrderExternalID;
-        public String CommessaCodiceCliente;
-        public String CommessaRagioneSocialeCliente;
-        public DateTime CommessaDataInserimento;
-        public String CommessaNote;
-        public String ProductExternalID;
-        public int ProdottoID;
-        public String ProdottoLineaProdotto;
-        public String ProdottoNomeProdotto;
-        public String ProdottoMatricola;
-        public Char ProdottoStatus;
-        public String Reparto;
-        public DateTime DataPrevistaConsegna;
-        public DateTime DataPrevistaFineProduzione;
-        public DateTime EarlyStart;
-        public DateTime LateStart;
-        public DateTime EarlyFinish;
-        public DateTime LateFinish;
-        public double ProdottoQuantita;
-        public double ProdottoQuantitaRealizzata;
-        public String MeasurementUnit;
-        public TimeSpan ProdottoRitardo;
-        public TimeSpan ProdottoTempodiLavoroTotale;
-        public Double ProdottoIndicatoreCompletamentoTasks;
-        public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
-
-        public List<DepartmentAndonTasksStruct> Tasks;
-    }
-    public struct DepartmentAndonTasksStruct
-    {
-        public int TaskID;
-        public String TaskNome;
-        public String TaskDescrizione;
-        public String TaskPostazione;
-        public DateTime TaskEarlyStart;
-        public DateTime TaskLateStart;
-        public DateTime TaskEarlyFinish;
-        public DateTime TaskLateFinish;
-        public int TaskNumeroOperatori;
-        public TimeSpan TaskTempoCiclo;
-        public TimeSpan TaskTempoDiLavoroPrevisto;
-        public TimeSpan TaskTempoDiLavoroEffettivo;
-        public Char TaskStatus;
-        public Double TaskQuantitaPrevista;
-        public Double TaskQuantitaProdotta;
-        public TimeSpan TaskRitardo;
-        public DateTime TaskInizioEffettivo;
-        public DateTime TaskFineEffettiva;
-    }
+    
 }

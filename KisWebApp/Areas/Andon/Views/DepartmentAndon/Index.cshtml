@@ -74,6 +74,9 @@
             var ScrollType = 0;
             var ShowProductivityIndicators = false;
             var ShowUserPanel = false;
+            var ProductViewFields = [];
+            var TasksViewFields = [];
+            var DepartmentTimeZoneOffset = 0;
 
         // use var dt = new Date("3/11/2013 1:00 UTC");
             function getConfiguration() {
@@ -85,6 +88,9 @@
                         console.log(i, v);
                     });
 
+                    ProductViewFields = data.ProductViewFields;
+                    TasksViewFields = data.TasksViewFields;
+
                     $.each(data.ProductViewFields, function (i, v) {
                         console.log(i, v);
                     });
@@ -94,11 +100,11 @@
 
                     DepartmentName = data.DepartmentName;
                     ScrollType = data.ScrollType;
-                   // alert("data.ScrollType: " + data.ScrollType);
                     ScrollTypeContinuousGoSpeed = data.ContinuousScrollGoSpeed;
                     ScrollTypeContinuousBackSpeed = data.ContinuousScrollBackSpeed;
                     ShowProductivityIndicators = data.ShowProductivityIndicators;
                     ShowUserPanel = data.ShowActiveUsers;
+                    DepartmentTimeZoneOffset = data.DepartmentTimeZoneOffset;
                 });
                 //console.log("Done");
             }
@@ -116,7 +122,325 @@
 
             }
 
+            function loadWIP() {
+                var date_start = new Date();
+                $("#lblLastUpdate").html("Last update: " + date_start);
+                //$("#imgLoadWIP").fadeIn();
+                $.ajaxSetup({ async: false });
+                $.post("@Url.Action("loadWIP")", { DepartmentID }, function (data) {
+                    var strTableWIP = "";
+                    data = $.parseJSON(data);
+                    var newrows = "";
+                    console.log(data);
+                    strTableWIP += "<table class='table table-condensed table-hover' style='width:100%;'>"
+                            + "<thead><tr style='font-size:20px; font-family:Calibri; font-weight:bold;border-radius: 5px;'>";
+                        $.each(ProductViewFields, function (z, k) {
+                            switch (k) {
+                                case "CommessaCodiceCliente":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaCodiceCliente</th>";
+                                    break;
+                                case "CommessasDataInserimento":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaDataInserimento</th>";
+                                    break;
+                                case "CommessaID":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaID</th>";
+                                    break;
+                                case "CommessaNote":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaNote</th>";
+                                    break;
+                                case "CommessaRagioneSocialeCliente":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaRagioneSocialeCliente</th>";
+                                    break;
+                                case "DataPrevistaConsegna":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.DataPrevistaConsegna</th>";
+                                    break;
+                                case "DataPrevistaFineProduzione":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.DataPrevistaFineProduzione</th>";
+                                    break;
+                                case "DepartmentID":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.DepartmentID</th>";
+                                    break;
+                                case "EarlyFinish":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.EarlyFinish</th>";
+                                    break;
+                                case "EarlyStart":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.EarlyStart</th>";
+                                    break;
+                                case "LateFinish":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.LateFinish</th>";
+                                    break;
+                                case "LateStart":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.LateStart</th>";
+                                    break;
+                                case "MeasurementUnit":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.MeasurementUnit</th>";
+                                    break;
+                                case "OrderExternalID":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.OrderExternalID</th>";
+                                    break;
+                                case "ProdottoID":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoYear</th>";
+                                    break;
+                                case "ProdottoIndicatoreCompletamentoTasks":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoIndicatoreCompletamentoTasks</th>";
+                                    break;
+                                case "ProdottoIndicatoreCompletamentoTempoPrevisto":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoIndicatoreCompletamentoTempoPrevisto</th>";
+                                    break;
+                                case "ProdottoLineaProdotto":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoLineaProdotto</th>";
+                                    break;
+                                case "ProdottoMatricola":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoMatricola</th>";
+                                    break;
+                                case "ProdottoNomeProdotto":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoNomeProdotto</th>";
+                                    break;
+                                case "ProdottoQuantita":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoQuantita</th>";
+                                    break;
+                                case "ProdottoQuantitaRealizzata":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoQuantitaRealizzata</th>";
+                                    break;
+                                case "ProdottoRitardo":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoRitardo</th>";
+                                    break;
+                                case "ProdottoStatus":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoStatus</th>";
+                                    break;
+                                case "ProdottoTempodiLavoroTotale":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoTempodiLavoroTotale</th>";
+                                    break;
+                                case "ProductExternalID":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProductExternalID</th>";
+                                    break;
+                                case "Reparto":
+                                    strTableWIP += "<th>@ResDepartmentAndon.Index.Reparto</th>";
+                                    break;
+
+                                default: break;
+                            }
+                        });
+
+                        strTableWIP += "</tr></thead>"
+                            + "<tbody><tr><td></td></tr>";
+                    $.each(data, function (i, v) {
+                       
+                        strTableWIP += "<tr style='font-size:20px; font-family:Calibri; font-weight:bold;border-radius: 5px; background-color: #CFD8DC;'>";
+
+                        $.each(ProductViewFields, function (z, k) {
+                            switch (k) {
+                                case "CommessaCodiceCliente":
+                                    strTableWIP += "<td>" + v.CommessaCodiceCliente + "</td>";
+                                    break;
+                                case "CommessasDataInserimento":
+                                    strTableWIP += "<td>" + v.CommessaDataInserimento + "</td>";
+                                    break;
+                                case "CommessaID":
+                                    strTableWIP += "<td>" + v.CommessaID + "/" + v.SalesOrderYear + "</td>";
+                                    break;
+                                case "CommessaNote":
+                                    strTableWIP += "<td>" + v.CommessaNote + "</td>";
+                                    break;
+                                case "CommessaRagioneSocialeCliente":
+                                    strTableWIP += "<td>" + v.CommessaRagioneSocialeCliente + "</td>";
+                                    break;
+                                case "DataPrevistaConsegna":
+                                    var dt = new Date(v.DataPrevistaConsegna + ".000Z");
+                                   
+                                    strTableWIP += "<td>" + dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                        + dt.getHours() + ":" + dt.getMinutes()+":"+dt.getSeconds()
+                                        "</td>";
+                                    break;
+                                case "DataPrevistaFineProduzione":
+                                    var dt = new Date(v.DataPrevistaFineProduzione + ".000Z");
+                                    strTableWIP += "<td>" + dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                        + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds()+ "</td>";
+                                    break;
+                                case "DepartmentID":
+                                    strTableWIP += "<td>" + v.DepartmentID + "</td>";
+                                    break;
+                                case "EarlyFinish":
+                                    strTableWIP += "<td>" + v.EarlyFinish + "</td>";
+                                    break;
+                                case "EarlyStart":
+                                    strTableWIP += "<td>" + v.EarlyStart + "</td>";
+                                    break;
+                                case "LateFinish":
+                                    strTableWIP += "<td>" + v.LateFinish + "</td>";
+                                    break;
+                                case "LateStart":
+                                    strTableWIP += "<td>" + v.LateStart + "</td>";
+                                    break;
+                                case "MeasurementUnit":
+                                    strTableWIP += "<td>" + v.MeasurementUnit + "</td>";
+                                    break;
+                                case "OrderExternalID":
+                                    strTableWIP += "<td>" + v.OrderExternalID + "</td>";
+                                    break;
+                                case "ProdottoID":
+                                    strTableWIP += "<td>" + v.ProdottoID + "/" + v.ProdottoYear + "</td>";
+                                    break;
+                                case "ProdottoIndicatoreCompletamentoTasks":
+                                    strTableWIP += "<td>" + v.ProdottoIndicatoreCompletamentoTasks + "</td>";
+                                    break;
+                                case "ProdottoIndicatoreCompletamentoTempoPrevisto":
+                                    strTableWIP += "<td>" + v.ProdottoIndicatoreCompletamentoTempoPrevisto + "</td>";
+                                    break;
+                                case "ProdottoLineaProdotto":
+                                    strTableWIP += "<td>" + v.ProdottoLineaProdotto + "</td>";
+                                    break;
+                                case "ProdottoMatricola":
+                                    strTableWIP += "<td>" + v.ProdottoMatricola + "</td>";
+                                    break;
+                                case "ProdottoNomeProdotto":
+                                    strTableWIP += "<td>" + v.ProdottoNomeProdotto + "</td>";
+                                    break;
+                                case "ProdottoQuantita":
+                                    strTableWIP += "<td>" + v.ProdottoQuantita + "</td>";
+                                    break;
+                                case "ProdottoQuantitaRealizzata":
+                                    strTableWIP += "<td>" + v.ProdottoQuantitaRealizzata + "</td>";
+                                    break;
+                                case "ProdottoRitardo":
+                                    strTableWIP += "<td>" + v.ProdottoRitardo + "</td>";
+                                    break;
+                                case "ProdottoStatus":
+                                    strTableWIP += "<td>" + v.ProdottoStatus + "</td>";
+                                    break;
+                                case "ProdottoTempodiLavoroTotale":
+                                    strTableWIP += "<td>" + v.ProdottoTempodiLavoroTotale + "</td>";
+                                    break;
+                                case "ProductExternalID":
+                                    strTableWIP += "<td>" + v.ProductExternalID + "</td>";
+                                    break;
+                                case "Reparto":
+                                    strTableWIP += "<td>" + v.Reparto + "</td>";
+                                    break;
+
+                                default: break;
+                            }
+                        });
+
+
+                        strTableWIP+= "</tr>";
+                        strTableWIP += "<tr><td colspan='" + ProductViewFields.length + "'><table style='width:100%'><tr style='font-family: Calibri; font-size: 18px; border-radius:5px;width:100%;'>";
+
+                        $.each(v.Tasks, function (g, h) {
+                            var bgcolor = "transparent;";
+                            if (h.TaskStatus == 'F') {
+                                bgcolor = "#00FF00;";
+                            }
+                            else if (h.TaskStatus == 'I') {
+                                bgcolor = "#2196F3";
+                            }
+                            else if (h.TaskStatus == 'P') {
+                                bgcolor = "orange;";
+                            }
+                            else if (h.TaskStatus == 'N') {
+                                var dt_ls = new Date(h.TaskLateStart + ".000Z");
+                                var dt_es = new Date(h.TaskEarlyStart + ".000Z");
+                                var dt_now = new Date();
+                                if (dt_ls <= dt_now) {
+                                    bgcolor = "#FF0000;";
+                                }
+                                else if (dt_now >= dt_es && dt_now <= dt_ls) {
+                                    bgcolor = "#FFFF00;";
+                                }
+                            }
+                            strTableWIP += "<td style='background-color:" + bgcolor +"'>";
+                        $.each(TasksViewFields, function (j, t) {
+                                switch (t) {
+                                    case "TaskDescrizione":
+                                        strTableWIP += h.TaskDescrizione;
+                                        break;
+                                    case "TaskEarlyFinish":
+                                        var dt = new Date(h.TaskEarlyFinish + ".000Z");
+                                        strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                            + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        break;
+                                    case "TaskEarlyStart":
+                                        var dt = new Date(h.TaskEarlyStart + ".000Z");
+                                        strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                            + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        break;
+                                    case "TaskFineEffettiva":
+                                        var dt = new Date(h.TaskFineEffettiva + ".000Z");
+                                        strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                            + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        break;
+                                    case "TaskID":
+                                        strTableWIP += h.TaskID;
+                                        break;
+                                    case "TaskInizioEffettivo":
+                                        var dt = new Date(h.TaskInizioEffettivo + ".000Z");
+                                        strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                            + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        break;
+                                    case "TaskLateFinish":
+                                        var dt = new Date(h.TaskLateFinish+".000Z");
+                                        strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                            + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        break;
+                                    case "TaskNome":
+                                        strTableWIP += h.TaskNome;
+                                        break;
+                                    case "TaskNumeroOperatori":
+                                        strTableWIP += h.TaskNumeroOperatori;
+                                        break;
+                                    case "TaskPostazione":
+                                        strTableWIP += h.TaskPostazione;
+                                        break;
+                                    case "TaskQuantitaPrevista":
+                                        strTableWIP += h.TaskQuantitaPrevista;
+                                        break;
+                                    case "TaskQuantitaProdotta":
+                                        strTableWIP += h.TaskQuantitaProdotta;
+                                        break;
+                                    case "TaskRitardo":
+                                        strTableWIP += h.TaskRitardo;
+                                        break;
+                                    case "TaskLateStart":
+                                        var dt = new Date(h.TaskLateStart +".000Z");
+                                        strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
+                                            + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
+                                        break;
+                                    case "TaskStatus":
+                                        strTableWIP += h.TaskStatus;
+                                        break;
+                                    case "TaskTempoCiclo":
+                                        strTableWIP += h.TaskTempoCiclo;
+                                        break;
+                                    case "TaskTempoDiLavoroEffettivo":
+                                        strTableWIP += h.TaskTempoDiLavoroEffettivo;
+                                        break;
+                                    case "TaskTempoDiLavoroPrevisto":
+                                        strTableWIP += h.TaskTempoDiLavoroPrevisto;
+                                        break;
+
+                                    default: break;
+                            }
+                            strTableWIP += "<br/>";
+                            });
+                            strTableWIP += "</td>";
+                        });
+                        strTableWIP += "</tr></table>";
+                        
+                    });
+                    strTableWIP += "</tbody></table>";
+
+                    $("#tableproducts").html(strTableWIP);
+                    myVar = setTimeout(loadWIP, 60000);
+                });
+
+                var date_end = new Date();
+                var datedifference = date_end - date_start;
+                console.log("Duration: " + datedifference + "ms");
+            }
+
+
             getConfiguration();
+            loadWIP();
 
     //        $.when(getConfiguration()).done(function () {
          //       alert("After getConfiguration(): " + ScrollType);
@@ -134,9 +458,7 @@
             }
             
             
-            
-            console.log(new Date(Date.UTC(2019, 07-1, 17, 20, 00, 0)));
-
+            $("#imgLoadWIP").fadeOut();
         });
     </script>
 
@@ -148,11 +470,15 @@
     </div>
     <div class="row-fluid">
         <div class="span9" id="mainproducts">
-            MAIN PRODUCTS
+            
+                <div id="lblLastUpdate"></div>
+                <div id="tableproducts">
+                </div>
+            
         </div>
 
         <div class="span3" id="sidebar">
-           SIDEBAR
+            SIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBAR
         </div>
 
     </div>

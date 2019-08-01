@@ -754,6 +754,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GetDepartmentAndonConfig.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Config\AndonConfigController.cs" />
     <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
     <Compile Include="Areas\Config\Controllers\ConfigController.cs" />
@@ -5925,6 +5930,11 @@
       <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GetDepartmentAndonConfig.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResDepartmentAndon</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Config\Views\AndonConfig\App_LocalResources\DepartmentScrollTypeView.resx">
       <CustomToolNamespace>ResScrollTypeView</CustomToolNamespace>
