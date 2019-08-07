@@ -153,6 +153,9 @@
   <data name="LateStart" xml:space="preserve">
     <value>LateStart</value>
   </data>
+  <data name="lblOpenWarnings" xml:space="preserve">
+    <value>Warnings aperti</value>
+  </data>
   <data name="MeasurementUnit" xml:space="preserve">
     <value>Unità di misura</value>
   </data>
@@ -206,5 +209,8 @@
   </data>
   <data name="Reparto" xml:space="preserve">
     <value>Reparto</value>
+  </data>
+  <data name="UserPanelTitle" xml:space="preserve">
+    <value>Elenco Operatori</value>
   </data>
 </root>

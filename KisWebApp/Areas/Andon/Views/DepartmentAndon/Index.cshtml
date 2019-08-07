@@ -68,7 +68,7 @@
 </head>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             var DepartmentID = @ViewBag.DepartmentID;
             var DepartmentName = "";
             var ScrollType = 0;
@@ -77,11 +77,14 @@
             var ProductViewFields = [];
             var TasksViewFields = [];
             var DepartmentTimeZoneOffset = 0;
+            var UsernameFormat = 0;
+            var StartCurrentShift = new Date(1970, 1, 1);
+            var EndCurrentShift = new Date(1970, 1, 1);
 
-        // use var dt = new Date("3/11/2013 1:00 UTC");
+            // use var dt = new Date("3/11/2013 1:00 UTC");
             function getConfiguration() {
                 $.ajaxSetup({ async: false });
-                $.post("@Url.Action("GetConfigurationParameters")", { DepartmentID}, function (data) {
+                $.post("@Url.Action("GetConfigurationParameters")", { DepartmentID }, function (data) {
                     data = $.parseJSON(data);
                     var newrows = "";
                     $.each(data, function (i, v) {
@@ -105,8 +108,14 @@
                     ShowProductivityIndicators = data.ShowProductivityIndicators;
                     ShowUserPanel = data.ShowActiveUsers;
                     DepartmentTimeZoneOffset = data.DepartmentTimeZoneOffset;
+                    UsernameFormat = data.UsernameFormat;
+                    StartCurrentShift = new Date(data.StartCurrentShift);
+                    EndCurrentShift = new Date(data.EndCurrentShift);
+                    console.log("Configuration Loaded");
                 });
-                //console.log("Done");
+
+                $("#divTitle").html("<h3>" + DepartmentName + "</h3>");
+                myVar = setTimeout(getConfiguration, 1800000);
             }
 
 
@@ -133,99 +142,99 @@
                     var newrows = "";
                     console.log(data);
                     strTableWIP += "<table class='table table-condensed table-hover' style='width:100%;'>"
-                            + "<thead><tr style='font-size:20px; font-family:Calibri; font-weight:bold;border-radius: 5px;'>";
-                        $.each(ProductViewFields, function (z, k) {
-                            switch (k) {
-                                case "CommessaCodiceCliente":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaCodiceCliente</th>";
-                                    break;
-                                case "CommessasDataInserimento":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaDataInserimento</th>";
-                                    break;
-                                case "CommessaID":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaID</th>";
-                                    break;
-                                case "CommessaNote":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaNote</th>";
-                                    break;
-                                case "CommessaRagioneSocialeCliente":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaRagioneSocialeCliente</th>";
-                                    break;
-                                case "DataPrevistaConsegna":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.DataPrevistaConsegna</th>";
-                                    break;
-                                case "DataPrevistaFineProduzione":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.DataPrevistaFineProduzione</th>";
-                                    break;
-                                case "DepartmentID":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.DepartmentID</th>";
-                                    break;
-                                case "EarlyFinish":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.EarlyFinish</th>";
-                                    break;
-                                case "EarlyStart":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.EarlyStart</th>";
-                                    break;
-                                case "LateFinish":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.LateFinish</th>";
-                                    break;
-                                case "LateStart":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.LateStart</th>";
-                                    break;
-                                case "MeasurementUnit":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.MeasurementUnit</th>";
-                                    break;
-                                case "OrderExternalID":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.OrderExternalID</th>";
-                                    break;
-                                case "ProdottoID":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoYear</th>";
-                                    break;
-                                case "ProdottoIndicatoreCompletamentoTasks":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoIndicatoreCompletamentoTasks</th>";
-                                    break;
-                                case "ProdottoIndicatoreCompletamentoTempoPrevisto":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoIndicatoreCompletamentoTempoPrevisto</th>";
-                                    break;
-                                case "ProdottoLineaProdotto":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoLineaProdotto</th>";
-                                    break;
-                                case "ProdottoMatricola":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoMatricola</th>";
-                                    break;
-                                case "ProdottoNomeProdotto":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoNomeProdotto</th>";
-                                    break;
-                                case "ProdottoQuantita":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoQuantita</th>";
-                                    break;
-                                case "ProdottoQuantitaRealizzata":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoQuantitaRealizzata</th>";
-                                    break;
-                                case "ProdottoRitardo":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoRitardo</th>";
-                                    break;
-                                case "ProdottoStatus":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoStatus</th>";
-                                    break;
-                                case "ProdottoTempodiLavoroTotale":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoTempodiLavoroTotale</th>";
-                                    break;
-                                case "ProductExternalID":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.ProductExternalID</th>";
-                                    break;
-                                case "Reparto":
-                                    strTableWIP += "<th>@ResDepartmentAndon.Index.Reparto</th>";
-                                    break;
+                        + "<thead><tr style='font-size:20px; font-family:Calibri; font-weight:bold;border-radius: 5px;'>";
+                    $.each(ProductViewFields, function (z, k) {
+                        switch (k) {
+                            case "CommessaCodiceCliente":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaCodiceCliente</th>";
+                                break;
+                            case "CommessasDataInserimento":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaDataInserimento</th>";
+                                break;
+                            case "CommessaID":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaID</th>";
+                                break;
+                            case "CommessaNote":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaNote</th>";
+                                break;
+                            case "CommessaRagioneSocialeCliente":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.CommessaRagioneSocialeCliente</th>";
+                                break;
+                            case "DataPrevistaConsegna":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.DataPrevistaConsegna</th>";
+                                break;
+                            case "DataPrevistaFineProduzione":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.DataPrevistaFineProduzione</th>";
+                                break;
+                            case "DepartmentID":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.DepartmentID</th>";
+                                break;
+                            case "EarlyFinish":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.EarlyFinish</th>";
+                                break;
+                            case "EarlyStart":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.EarlyStart</th>";
+                                break;
+                            case "LateFinish":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.LateFinish</th>";
+                                break;
+                            case "LateStart":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.LateStart</th>";
+                                break;
+                            case "MeasurementUnit":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.MeasurementUnit</th>";
+                                break;
+                            case "OrderExternalID":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.OrderExternalID</th>";
+                                break;
+                            case "ProdottoID":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoYear</th>";
+                                break;
+                            case "ProdottoIndicatoreCompletamentoTasks":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoIndicatoreCompletamentoTasks</th>";
+                                break;
+                            case "ProdottoIndicatoreCompletamentoTempoPrevisto":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoIndicatoreCompletamentoTempoPrevisto</th>";
+                                break;
+                            case "ProdottoLineaProdotto":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoLineaProdotto</th>";
+                                break;
+                            case "ProdottoMatricola":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoMatricola</th>";
+                                break;
+                            case "ProdottoNomeProdotto":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoNomeProdotto</th>";
+                                break;
+                            case "ProdottoQuantita":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoQuantita</th>";
+                                break;
+                            case "ProdottoQuantitaRealizzata":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoQuantitaRealizzata</th>";
+                                break;
+                            case "ProdottoRitardo":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoRitardo</th>";
+                                break;
+                            case "ProdottoStatus":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoStatus</th>";
+                                break;
+                            case "ProdottoTempodiLavoroTotale":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProdottoTempodiLavoroTotale</th>";
+                                break;
+                            case "ProductExternalID":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.ProductExternalID</th>";
+                                break;
+                            case "Reparto":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.Reparto</th>";
+                                break;
 
-                                default: break;
-                            }
-                        });
+                            default: break;
+                        }
+                    });
 
-                        strTableWIP += "</tr></thead>"
-                            + "<tbody><tr><td></td></tr>";
+                    strTableWIP += "</tr></thead>"
+                        + "<tbody><tr><td></td></tr>";
                     $.each(data, function (i, v) {
-                       
+
                         strTableWIP += "<tr style='font-size:20px; font-family:Calibri; font-weight:bold;border-radius: 5px; background-color: #CFD8DC;'>";
 
                         $.each(ProductViewFields, function (z, k) {
@@ -247,15 +256,15 @@
                                     break;
                                 case "DataPrevistaConsegna":
                                     var dt = new Date(v.DataPrevistaConsegna + ".000Z");
-                                   
+
                                     strTableWIP += "<td>" + dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
-                                        + dt.getHours() + ":" + dt.getMinutes()+":"+dt.getSeconds()
-                                        "</td>";
+                                        + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds()
+                                    "</td>";
                                     break;
                                 case "DataPrevistaFineProduzione":
                                     var dt = new Date(v.DataPrevistaFineProduzione + ".000Z");
                                     strTableWIP += "<td>" + dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
-                                        + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds()+ "</td>";
+                                        + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds() + "</td>";
                                     break;
                                 case "DepartmentID":
                                     strTableWIP += "<td>" + v.DepartmentID + "</td>";
@@ -323,7 +332,7 @@
                         });
 
 
-                        strTableWIP+= "</tr>";
+                        strTableWIP += "</tr>";
                         strTableWIP += "<tr><td colspan='" + ProductViewFields.length + "'><table style='width:100%'><tr style='font-family: Calibri; font-size: 18px; border-radius:5px;width:100%;'>";
 
                         $.each(v.Tasks, function (g, h) {
@@ -348,8 +357,8 @@
                                     bgcolor = "#FFFF00;";
                                 }
                             }
-                            strTableWIP += "<td style='background-color:" + bgcolor +"'>";
-                        $.each(TasksViewFields, function (j, t) {
+                            strTableWIP += "<td style='background-color:" + bgcolor + "'>";
+                            $.each(TasksViewFields, function (j, t) {
                                 switch (t) {
                                     case "TaskDescrizione":
                                         strTableWIP += h.TaskDescrizione;
@@ -378,7 +387,7 @@
                                             + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                                         break;
                                     case "TaskLateFinish":
-                                        var dt = new Date(h.TaskLateFinish+".000Z");
+                                        var dt = new Date(h.TaskLateFinish + ".000Z");
                                         strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
                                             + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                                         break;
@@ -401,7 +410,7 @@
                                         strTableWIP += h.TaskRitardo;
                                         break;
                                     case "TaskLateStart":
-                                        var dt = new Date(h.TaskLateStart +".000Z");
+                                        var dt = new Date(h.TaskLateStart + ".000Z");
                                         strTableWIP += dt.getDate() + "/" + (1 + dt.getMonth()) + "/" + dt.getFullYear() + " " +
                                             + dt.getHours() + ":" + dt.getMinutes() + ":" + dt.getSeconds();
                                         break;
@@ -419,18 +428,18 @@
                                         break;
 
                                     default: break;
-                            }
-                            strTableWIP += "<br/>";
+                                }
+                                strTableWIP += "<br/>";
                             });
                             strTableWIP += "</td>";
                         });
                         strTableWIP += "</tr></table>";
-                        
+
                     });
                     strTableWIP += "</tbody></table>";
 
                     $("#tableproducts").html(strTableWIP);
-                    myVar = setTimeout(loadWIP, 60000);
+                    myVar = setTimeout(loadWIP, 120000);
                 });
 
                 var date_end = new Date();
@@ -438,9 +447,104 @@
                 console.log("Duration: " + datedifference + "ms");
             }
 
+            function loadUserPanel() {
+                if (ShowUserPanel) {
+                    $.ajaxSetup({ async: false });
+                    $.post("@Url.Action("loadUserPanel")", { DepartmentID }, function (data) {
+                        data = $.parseJSON(data);
+                        var tblUsers = "<h5>@ResDepartmentAndon.Index.UserPanelTitle</h5><table class='table table-striped' style='width:100%;font-size:20px;'>";
+                        $.each(data, function (i, v) {
+                            /* Configurazione visualizzazione nomi utente su Andon:
+             * 0 --> vedo username
+             * 1 --> vedo il nome
+             * 2 --> nome e iniziale del cognome
+             * 3 --> nome e cognome
+             */
+                            var username = v.firstName + " " + v.lastName;
+                            switch (UsernameFormat) {
+                                case "0": username = v.username; break;
+                                case "1": username = v.firstName; break;
+                                case "2":
+                                    var frstLetter = "";
+                                    if (v.lastName.length > 0) {
+                                        frstLetter = v.lastName.substring(0, 1);
+                                    }
+                                    username = v.firstName + " " + frstLetter; break;
+                                case 3: username = v.firstName + " " + v.lastName; break;
+                                default: username = v.username; break;
+                            }
+
+                            var strColor = "";
+                            if (v.isActive) {
+                                strColor = " style='background-color: #00FF00;'"
+                            }
+                            tblUsers += "<tr><td" + strColor + ">" + username + "</td></tr>";
+                        });
+                        tblUsers += "</table>";
+
+                        $("#tblUsers").html(tblUsers);
+                        console.log("User panel loaded");
+                    });
+                    myVar = setTimeout(loadUserPanel, 600000);
+                }
+            }
+
+            function loadProductivityIndicators() {
+                if (ShowUserPanel) {
+
+
+                    $.post("@Url.Action("loadProductivityIndicators")", {
+                        DepartmentID: DepartmentID,
+                        endShift: EndCurrentShift.toISOString() }, function (data) {
+                    data = $.parseJSON(data);
+                    console.log("Productivity Indicators");
+                    var prodInd = "<h1>" + data.OrdersToBeCompletedByTheEndOfTheShift+"</h1>";
+                    $.each(data, function (i, v) {
+                        console.log(i, v);                        
+                    });
+
+                            $("#tblProductivityIndicators").html(prodInd);
+
+                            console.log("Productivity Indicators loaded");
+                    });
+                    myVar = setTimeout(loadProductivityIndicators, 600000);
+                }
+            }
+
+            function loadOpenWarnings() {
+                var tblWarnings = "";
+                    $.ajaxSetup({ async: false });
+                    $.post("@Url.Action("loadOpenWarnings")", { DepartmentID }, function (data) {
+                        data = $.parseJSON(data);
+                        //console.log(data);
+                        if (data.length > 0) {
+                            tblWarnings = "<h5>@ResDepartmentAndon.Index.lblOpenWarnings</h5><table class='table table-striped' style='font-size:20px; background-color: red'>";
+                        $.each(data, function (i, v) {
+                           
+                            tblWarnings += "<tr style='font-size: 18px; font-family: Calibri; background-color: red; vertical-align:middle'>"
+                                + "<td style='background-color: red;'><img src='../../img/problemIcon.jpg' style='min-height:70px; max-height:90px;' /></td>"
+                                + "<td style='vertical-align:middle; background-color: red'>" + v.WarningID + "</td>"
+                                + "<td style='vertical-align:middle; background-color: red'>" + v.WorkstationName + "</td>"
+                                + "<td style='vertical-align:middle; background-color: red'>" + v.User + "</td>"
+                                + "<td style='vertical-align:middle; background-color: red'>" + v.OpeningDate + "</td>"
+                                + "<td style='background-color:white'>"
+                                + "<a target='_BLANK' href='../../Produzione/solveProblem.aspx?id=" + v.WarningID + "'><img src='../../img/iconRubik.png' style='min-height:70px; max-height:90px;'  /></a>"
+                                + "</td></tr>";
+                           
+                            });
+                        }
+                        tblWarnings += "</table>";
+
+                        $("#frmWarnings").html(tblWarnings);
+                        console.log("Warnings panel loaded");
+                    });
+                    myVar = setTimeout(loadOpenWarnings, 90000);
+                }
+
 
             getConfiguration();
             loadWIP();
+            loadOpenWarnings();
 
     //        $.when(getConfiguration()).done(function () {
          //       alert("After getConfiguration(): " + ScrollType);
@@ -456,20 +560,28 @@
             else {
 
             }
-            
+
+            if (ShowUserPanel) {
+                loadUserPanel();
+            }
+
+            if (ShowProductivityIndicators) {
+                loadProductivityIndicators();
+            }
             
             $("#imgLoadWIP").fadeOut();
         });
     </script>
 
 <body>
+    <div id="divTitle"></div>
     <div class="row-fluid">
         <div class="span12">
-            WARNINGS
+            <div id="frmWarnings"></div>
         </div>
     </div>
     <div class="row-fluid">
-        <div class="span9" id="mainproducts">
+        <div class="span10" id="mainproducts">
             
                 <div id="lblLastUpdate"></div>
                 <div id="tableproducts">
@@ -477,8 +589,10 @@
             
         </div>
 
-        <div class="span3" id="sidebar">
-            SIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBARSIDEBAR
+        <div class="span2" id="sidebar">
+            <div id="tblShift"></div>
+            <div id="tblProductivityIndicators"></div>
+            <div id="tblUsers"></div>
         </div>
 
     </div>

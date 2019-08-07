@@ -169,6 +169,15 @@ namespace ResDepartmentAndon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warnings aperti.
+        /// </summary>
+        public static string lblOpenWarnings {
+            get {
+                return ResourceManager.GetString("lblOpenWarnings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unità di misura.
         /// </summary>
         public static string MeasurementUnit {
@@ -327,6 +336,15 @@ namespace ResDepartmentAndon {
         public static string Reparto {
             get {
                 return ResourceManager.GetString("Reparto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elenco Operatori.
+        /// </summary>
+        public static string UserPanelTitle {
+            get {
+                return ResourceManager.GetString("UserPanelTitle", resourceCulture);
             }
         }
     }

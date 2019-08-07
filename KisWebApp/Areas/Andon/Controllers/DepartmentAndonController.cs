@@ -45,8 +45,8 @@ namespace KIS.Areas.Andon.Controllers
 
                 if(curr!=-1)
                 {
-                    aCfgStruct.StartCurrentShift = rp.CalendarioRep.Intervalli[curr].Inizio;
-                    aCfgStruct.EndCurrentShift = rp.CalendarioRep.Intervalli[curr].Fine;
+                    aCfgStruct.StartCurrentShift = TimeZoneInfo.ConvertTimeToUtc(rp.CalendarioRep.Intervalli[curr].Inizio, rp.tzFusoOrario);
+                    aCfgStruct.EndCurrentShift = TimeZoneInfo.ConvertTimeToUtc(rp.CalendarioRep.Intervalli[curr].Fine, rp.tzFusoOrario);
                 }
                 else
                 {
@@ -91,98 +91,35 @@ namespace KIS.Areas.Andon.Controllers
             {
                 currAndon.loadWIP2();
                 wipList = currAndon.WIP;
+
             }
             return Json(JsonConvert.SerializeObject(wipList), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult loadUserPanel(int DepartmentID)
+        {
+            AndonReparto currAndon = new AndonReparto(DepartmentID);
+            currAndon.loadUserPanelData();
+            return Json(JsonConvert.SerializeObject(currAndon.UserPanel), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult loadProductivityIndicators(int DepartmentID, DateTime endShift)
+        {
+            AndonReparto currAndon = new AndonReparto(DepartmentID);
+            ProductivityIndicatorsStruct prdIndStruct = new ProductivityIndicatorsStruct();
+            prdIndStruct.OrdersToBeCompletedByTheEndOfTheShift = currAndon.OrdersToBeCompletedByTheEndOfTheShift(endShift);
+            return Json(JsonConvert.SerializeObject(prdIndStruct), JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult loadOpenWarnings(int DepartmentID)
+        {
+            AndonReparto currAndon = new AndonReparto(DepartmentID);
+            currAndon.loadOpenWarnings();
+            return Json(JsonConvert.SerializeObject(currAndon.Warnings), JsonRequestBehavior.AllowGet);
         }
     }
 
     
-
-    /*  User AndonReparto.loadWIP2();
-     *  
-     *  QUERY
-     *  SELECT 
-commesse.idcommesse AS SalesOrderID,
-commesse.anno AS SalesOrderYear,
-commesse.ExternalID AS OrderExternalID,
-anagraficaclienti.codice AS CustomerID, 
-anagraficaclienti.ragsociale AS CustomerName,
-commesse.dataInserimento AS SalesOrderDate,
-commesse.note AS SalesOrderNotes,
-variantiprocessi.ExternalID AS ProductExternalID,
-productionplan.id AS ProductionOrderID,
-productionplan.anno AS ProductionOrderYear,
-productionplan.processo AS ProductionOrderProductTypeID,
-productionplan.revisione AS ProductionOrderProductTypeReview,
-productionplan.variante AS ProductionOrderProductID,
-productionplan.matricola AS ProductionOrderSerialNumber,
-productionplan.status AS ProductionOrderStatus,
-productionplan.reparto AS ProductionOrderDepartmentID,
-productionplan.startTime AS ProductionOrderStartTime,
-productionplan.dataConsegnaPrevista AS ProductionOrderDeliveryDate,
-productionplan.dataPrevistaFineProduzione AS ProductionOrderEndProductionDate,
-productionplan.planner AS ProductionOrderPlanner,
-productionplan.quantita AS ProductionOrderQuantityOrdered,
-productionplan.quantitaProdotta AS ProductionOrderQuantityProduced,
-productionplan.kanbanCard AS ProductionOrderKanbanCardID,
-processo.processID AS ProductTypeID,
-processo.revisione AS ProductTypeReview,
-processo.dataRevisione AS ProductTypeReviewDate,
-processo.Name AS ProductTypeName,
-processo.description AS ProductTypeDescription,
-processo.attivo AS ProductTypeEnabled,
-varianti.idvariante AS ProductID,
-varianti.nomeVariante AS ProductName,
-varianti.descVariante AS ProductDescription,
-reparti.idreparto AS DepartmentID,
-reparti.nome AS DepartmentName,
-reparti.descrizione AS DepartmentDescription,
-reparti.cadenza AS DepartmentTaktTime,
-reparti.timezone AS DepartmentTimeZone,
- productionplan.LeadTime AS ProductRealLeadTime,
- productionplan.WorkingTime AS ProductRealWorkingTime, 
- productionplan.Delay AS ProductRealDelay,
- productionplan.EndProductionDateReal AS ProductRealEndProductionDate,
-tasksproduzione.TaskiD AS TaskID,
-tasksproduzione.name AS TaskName,
-tasksproduzione.description AS TaskDescription,
-tasksproduzione.earlyStart As TaskEarlyStart,
-tasksproduzione.lateStart AS TaskLateStart,
-tasksproduzione.earlyFinish AS TaskEarlyFinish,
-tasksproduzione.lateFinish AS TaskLateFinish,
-tasksproduzione.status AS TaskStatus,
-tasksproduzione.nOperatori AS TaskNumOperators,
-tasksproduzione.qtaPrevista AS TaskQuantityOrdered,
-tasksproduzione.qtaProdotta AS TaskQuantityProduced,
-tempiciclo.setup AS TaskSetupTimePlanned,
-tempiciclo.tempo AS TaskCycleTimePlanned,
-tempiciclo.tunload AS TaskUnloadTimePlanned,
-postazioni.idpostazioni AS WorkstationID,
-postazioni.name AS WorkstationName,
-postazioni.description AS WorkstationDescription,
-tasksproduzione.endDateReal as TaskEndDateReal,
-tasksproduzione.LeadTime AS TaskLeadTime,
-tasksproduzione.WorkingTime AS TaskWorkingTime,
- tasksproduzione.Delay AS TaskDelay, 
- tasksproduzione.OrigTask AS TaskOriginalTaskID, 
- tasksproduzione.RevOrigTask AS TaskOriginalTaskRev, 
- tasksproduzione.variante AS TaskOriginalTaskVar 
- FROM anagraficaclienti INNER JOIN commesse ON(anagraficaclienti.codice = commesse.cliente) INNER JOIN
- productionplan ON(commesse.anno = productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)
- INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)
- INNER JOIN variantiprocessi ON(productionplan.variante = variantiprocessi.variante AND productionplan.processo = variantiprocessi.processo AND productionplan.revisione=variantiprocessi.revProc)
- INNER JOIN varianti ON(varianti.idvariante = variantiprocessi.variante)
- INNER JOIN processo ON(processo.ProcessID = variantiprocessi.processo AND processo.revisione = variantiprocessi.revProc)
- INNER JOIN tasksproduzione ON(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)
-  inner join processo AS TaskProcess ON(TaskProcess.processID = tasksproduzione.origTask AND TaskProcess.revisione = TasksProduzione.revOrigTask)
- INNER JOIN varianti AS TaskVariant ON(taskvariant.idvariante = tasksproduzione.variante)
- INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)
- INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)
-
-  WHERE  productionplan.status<>'F' AND reparti.idreparto=2
-  order by productionplan.dataConsegnaPrevista, productionplan.anno, productionplan.id, tasksproduzione.lateStart
-     */
-
     public struct AndonConfigurationStruct
     {
         public int DepartmentID;

@@ -606,11 +606,13 @@ namespace KIS.App_Code
         public AndonReparto(int idRep):base()
         {
             this.WIP = new List<DepartmentAndonProductsStruct>();
+            this.Warnings = new List<DepartmentWarningStruct>();
             Reparto rp = new Reparto(idRep);
             this._RepartoID = idRep;
             this._DepartmentName = rp.name;
             this._WIP = new List<Articolo>();
             this._DepartmentTimezone = rp.tzFusoOrario;
+            this.UserPanel = new List<UserPanelStruct>();
 
 
             // Campi Andon Reparto
@@ -887,7 +889,9 @@ namespace KIS.App_Code
             }
         }
 
-        
+        public List<UserPanelStruct> UserPanel;
+
+        public List<DepartmentWarningStruct> Warnings;
 
         /* String format in database: ScrollType;Param1;Param2
          if ContinuousScroll: ScrollType = 1, Param1 = Speed1 (from top to bottom), Param2 = Speed2 (from bottom to top)
@@ -1463,7 +1467,7 @@ namespace KIS.App_Code
  + " INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)"
  + " INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)"
  + " WHERE productionplan.status <> 'F' AND productionplan.status <> 'N' AND reparti.idreparto = "+this.RepartoID.ToString()
- + " order by productionplan.dataConsegnaPrevista, productionplan.anno, productionplan.id, tasksproduzione.lateStart";
+ + " order by productionplan.dataPrevistaFineProduzione";
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 List<DepartmentAndonFullStruct> fullList = new List<DepartmentAndonFullStruct>();
@@ -1706,6 +1710,68 @@ namespace KIS.App_Code
                 }
             }
         }
+
+        public void loadUserPanelData()
+        {
+            this.UserPanel = new List<UserPanelStruct>();
+            if(this.RepartoID!=-1)
+            { 
+                UserList usrList = new UserList(new Permesso("Task Produzione"));
+                foreach(var m in usrList.listUsers)
+                {
+                    m.loadTaskAvviati();
+                    UserPanelStruct curr = new UserPanelStruct();
+                    curr.firstName = m.name;
+                    curr.lastName = m.cognome;
+                    curr.username = m.username;
+                    curr.isActive = m.TaskAvviati.Count == 0 ? false : true;
+                    this.UserPanel.Add(curr);
+                }
+            }
+        }
+
+        public int OrdersToBeCompletedByTheEndOfTheShift(DateTime endDate)
+        {
+            int ret = 0;
+            if(this.RepartoID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT COUNT(id) FROM productionplan WHERE (status = 'I' OR status='P') AND reparto = "+this.RepartoID.ToString()
+                    +" AND dataPrevistaFineProduzione <= '" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if(rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    ret = rdr.GetInt32(0);
+                }
+                conn.Close();
+            }
+            return ret;
+        }
+
+        public void loadOpenWarnings()
+        {
+            this.Warnings = new List<DepartmentWarningStruct>();
+            if(this.RepartoID!=-1)
+            { 
+                WarningAperti Elenco = new WarningAperti(new Reparto(this.RepartoID));
+                if(Elenco!=null && Elenco.Elenco!=null)
+                {
+                    for(int i = 0; i < Elenco.Elenco.Count; i++)
+                    {
+                        DepartmentWarningStruct curr = new DepartmentWarningStruct();
+                        curr.WarningID = Elenco.Elenco[i].ID;
+                        curr.TaskID = Elenco.Elenco[i].TaskID;
+                        curr.OpeningDate = Elenco.Elenco[i].DataChiamata;
+                        curr.WorkstationName = Elenco.Elenco[i].NomePostazione;
+                        curr.User = Elenco.Elenco[i].User;
+
+                        this.Warnings.Add(curr);
+                    }
+                }
+            }
+        }
     }
 
     public struct DepartmentAndonProductsStruct
@@ -1814,5 +1880,27 @@ namespace KIS.App_Code
         public TimeSpan TaskRitardo;
         public DateTime TaskInizioEffettivo;
         public DateTime TaskFineEffettiva;
+    }
+
+    public struct UserPanelStruct
+    {
+        public String username;
+        public String firstName;
+        public String lastName;
+        public Boolean isActive;
+    }
+
+    public struct ProductivityIndicatorsStruct
+    {
+        public int OrdersToBeCompletedByTheEndOfTheShift;
+    }
+
+    public struct DepartmentWarningStruct
+    {
+        public int WarningID;
+        public int TaskID;
+        public DateTime OpeningDate;
+        public String WorkstationName;
+        public String User;
     }
 }
