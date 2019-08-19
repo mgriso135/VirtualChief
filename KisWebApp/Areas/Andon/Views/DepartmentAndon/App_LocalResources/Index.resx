@@ -213,4 +213,7 @@
   <data name="UserPanelTitle" xml:space="preserve">
     <value>Elenco Operatori</value>
   </data>
+  <data name="lblShowProdIndicatorsTitle" xml:space="preserve">
+    <value>Produzione rimanente</value>
+  </data>
 </root>

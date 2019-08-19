@@ -463,14 +463,14 @@
                             var username = v.firstName + " " + v.lastName;
                             switch (UsernameFormat) {
                                 case "0": username = v.username; break;
-                                case "1": username = v.firstName; break;
+                                case "1": username = v.firstName;  break;
                                 case "2":
                                     var frstLetter = "";
                                     if (v.lastName.length > 0) {
                                         frstLetter = v.lastName.substring(0, 1);
                                     }
                                     username = v.firstName + " " + frstLetter; break;
-                                case 3: username = v.firstName + " " + v.lastName; break;
+                                case "3": username = v.firstName + " " + v.lastName; break;
                                 default: username = v.username; break;
                             }
 
@@ -498,7 +498,8 @@
                         endShift: EndCurrentShift.toISOString() }, function (data) {
                     data = $.parseJSON(data);
                     console.log("Productivity Indicators");
-                    var prodInd = "<h1>" + data.OrdersToBeCompletedByTheEndOfTheShift+"</h1>";
+                            var prodInd = "<h5>@ResDepartmentAndon.Index.lblShowProdIndicatorsTitle</h5>"
+                                +"<h1>" + data.OrdersToBeCompletedByTheEndOfTheShift + "</h1>";
                     $.each(data, function (i, v) {
                         console.log(i, v);                        
                     });
@@ -589,7 +590,7 @@
             
         </div>
 
-        <div class="span2" id="sidebar">
+        <div class="span2" id="sidebar" style="  position: sticky; position: -webkit-sticky; top: 0;">
             <div id="tblShift"></div>
             <div id="tblProductivityIndicators"></div>
             <div id="tblUsers"></div>

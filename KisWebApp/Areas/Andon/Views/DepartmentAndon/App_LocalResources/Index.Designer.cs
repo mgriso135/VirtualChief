@@ -178,6 +178,15 @@ namespace ResDepartmentAndon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Produzione rimanente.
+        /// </summary>
+        public static string lblShowProdIndicatorsTitle {
+            get {
+                return ResourceManager.GetString("lblShowProdIndicatorsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unità di misura.
         /// </summary>
         public static string MeasurementUnit {
