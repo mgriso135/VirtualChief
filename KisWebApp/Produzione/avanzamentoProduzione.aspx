@@ -224,7 +224,7 @@
         </FooterTemplate>
     </asp:Repeater>
                 
-            <asp:Timer runat="server" ID="TimeCheck" OnTick="TimeCheck_Tick" Interval="300000" />
+            <asp:Timer runat="server" ID="TimeCheck" OnTick="TimeCheck_Tick" Interval="3600000" />
             </ContentTemplate>
         </asp:UpdatePanel>
             </div>

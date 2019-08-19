@@ -8,7 +8,6 @@
 <%@ Register TagPrefix="reparti" TagName="eventoRitardo" Src="~/Eventi/RepartoRitardo.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="eventoWarning" Src="~/Eventi/RepartoWarning.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="ModoCalcoloTC" Src="~/Reparti/configModoCalcoloTC.ascx" %>
-<%@ Register TagPrefix="config" TagName="AndonReparto" Src="~/Reparti/configAndonReparto.ascx" %>
 <%@ Register TagPrefix="config" TagName="AvvioTasks" Src="~/Reparti/configAvvioTasks.ascx" %>
 <%@ Register TagPrefix="Andon" TagName="MaxViewDays" Src="~/Andon/configMaxViewDaysAndonReparto_OLD.ascx" %>
 <%@ Register TagPrefix="config" TagName="Kanban" Src="~/Reparti/configKanban.ascx" %>
@@ -41,9 +40,31 @@
                     warning: function(result){$("#imgLoadScrollView").fadeOut();alert("Warning loadScrollTypeView" + result);},
                     });
                 }
+            }
+
+            function loadDepartmentAndonConfig() {
+                var deptID = parseInt($("#<%=DepartmentID.ClientID%>").val());
+                if (deptID != -1) {
+                $("#imgLoadAndonConfig").fadeIn();
+                    $.ajax({
+                        url: "../Andon/DepartmentAndonConfig/GetDepartmentAndonConfig",
+                        type: 'GET',
+                        data: {
+                            DepartmentID: deptID
+                        },
+                    dataType: 'html' ,
+                        success: function (result) {
+                        $("#imgLoadAndonConfig").fadeOut();
+                        $('#frmAndonConfig').html(result);
+                    },
+                    error: function(result){ $("#imgLoadAndonConfig").fadeOut();alert("Error loadDepartmentAndonConfig" + result);},
+                    warning: function(result){$("#imgLoadAndonConfig").fadeOut();alert("Warning loadDepartmentAndonConfig" + result);},
+                    });
                 }
+            }
 
             loadScrollTypeView();
+            loadDepartmentAndonConfig();
         });
     </script>
 
@@ -160,8 +181,8 @@
     </div>
             <div id="collapseNine" class="accordion-body collapse">
       <div class="accordion-inner">
-        
-          <config:AndonReparto runat="server" ID="frmConfigAndonReparto" />
+        <img src="../img/iconLoading.gif" id="imgLoadAndonConfig" style="min-width:20px; max-width:20px;" />
+          <div id="frmAndonConfig"></div><br />
           <Andon:MaxViewDays runat="server" ID="frmAndonMaxDays" Visible="false" />
           <andon:configViewFields runat="server" id="frmAndonViewFields" />
 

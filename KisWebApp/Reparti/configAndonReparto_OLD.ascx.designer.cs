@@ -7,19 +7,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KIS.Produzione {
+namespace KIS.Reparti {
     
     
-    public partial class articoliStatoI {
-        
-        /// <summary>
-        /// lblTitle control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTitle;
+    public partial class configAndonReparto {
         
         /// <summary>
         /// upd1 control.
@@ -31,6 +22,15 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.UpdatePanel upd1;
         
         /// <summary>
+        /// lblTitleAndonRep control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblTitleAndonRep;
+        
+        /// <summary>
         /// lbl1 control.
         /// </summary>
         /// <remarks>
@@ -40,30 +40,12 @@ namespace KIS.Produzione {
         protected global::System.Web.UI.WebControls.Label lbl1;
         
         /// <summary>
-        /// lblData control.
+        /// rbList control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblData;
-        
-        /// <summary>
-        /// rptArticoliAvviati control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptArticoliAvviati;
-        
-        /// <summary>
-        /// timer1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.Timer timer1;
+        protected global::System.Web.UI.WebControls.RadioButtonList rbList;
     }
 }

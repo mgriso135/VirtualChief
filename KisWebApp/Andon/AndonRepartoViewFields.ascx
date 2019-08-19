@@ -16,7 +16,7 @@
         <asp:Label runat="server" ID="lbl1" />
 <div class="row-fluid" runat="server" id="frmContainer">
     <div class="span12">
-        <h3><asp:Label runat="server" ID="lblTitleCampiVis" meta:resourcekey="lblTitleCampiVis" /></h3>
+        <b><asp:Label runat="server" ID="lblTitleCampiVis" meta:resourcekey="lblTitleCampiVis" /></b>
         <asp:Label runat="server" ID="lblInfo" CssClass="text-info" />
         <asp:Repeater runat="server" ID="rptFields" OnItemCommand="rptFields_ItemCommand" OnItemDataBound="rptFields_ItemDataBound">
             <HeaderTemplate>

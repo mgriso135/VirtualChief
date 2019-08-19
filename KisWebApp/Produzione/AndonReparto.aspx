@@ -94,29 +94,7 @@
     	            inline: true
     	        });
 
-    	        /*
-                
-                                $("#slider").slider({
-                                    range: true,
-                                    values: [17, 67]
-                                });
-                
-                
-                
-                                $("#progressbar").progressbar({
-                                    value: 20
-                                });
-                
-                
-                                // Hover states on the static widgets
-                                $("#dialog-link, #icons li").hover(
-                                    function () {
-                                        $(this).addClass("ui-state-hover");
-                                    },
-                                    function () {
-                                        $(this).removeClass("ui-state-hover");
-                                    }
-                                );*/
+   
     	    });
 	</script>
 
@@ -215,7 +193,7 @@
             </table>
         </FooterTemplate>
     </asp:Repeater>
-            <asp:Timer runat="server" ID="TimeCheck" OnTick="TimeCheck_Tick" Interval="120000" />
+            <asp:Timer runat="server" ID="TimeCheck" OnTick="TimeCheck_Tick" Interval="3600000" />
             </ContentTemplate>
         </asp:UpdatePanel>
 

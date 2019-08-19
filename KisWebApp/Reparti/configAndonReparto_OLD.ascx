@@ -1,8 +1,8 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="configAndonReparto.ascx.cs" Inherits="KIS.Reparti.configAndonReparto" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="configAndonReparto_OLD.ascx.cs" Inherits="KIS.Reparti.configAndonReparto" %>
 
 <asp:UpdatePanel runat="server" ID="upd1">
     <ContentTemplate>
-        <h3><asp:literal runat="server" ID="lblTitleAndonRep" Text="<%$Resources:lblTitleAndonRep %>" /></h3>
+        <b><asp:literal runat="server" ID="lblTitleAndonRep" Text="<%$Resources:lblTitleAndonRep %>" /></b>
 <asp:Label runat="server" ID="lbl1" />
         <asp:RadioButtonList runat="server" ID="rbList" AutoPostBack="true" OnSelectedIndexChanged="rbList_SelectedIndexChanged" CssClass="radio">
             <asp:ListItem Value="0" Text="<%$Resources:lblVisUsername %>"></asp:ListItem>

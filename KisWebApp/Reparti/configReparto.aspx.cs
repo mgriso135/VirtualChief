@@ -53,8 +53,8 @@ namespace KIS.configReparto
                     accordion1.Visible = true;
                     frmModoCalcoloTC.idReparto = rep.id;
                     frmModoCalcoloTC.Visible = true;
-                    frmConfigAndonReparto.idReparto = rep.id;
-                    frmConfigAndonReparto.Visible = true;
+                    //frmConfigAndonReparto.idReparto = rep.id;
+                    //frmConfigAndonReparto.Visible = true;
                     frmAvvioTask.idReparto = rep.id;
                     frmAvvioTask.Visible = true;
                     frmAndonViewFields.Visible = true;
@@ -90,8 +90,8 @@ namespace KIS.configReparto
                     frmEvWarning.idReparto = -1;                    
                     frmModoCalcoloTC.idReparto = -1;
                     frmModoCalcoloTC.Visible = false;
-                    frmConfigAndonReparto.idReparto = -1;
-                    frmConfigAndonReparto.Visible = false;
+                    //frmConfigAndonReparto.idReparto = -1;
+                    //frmConfigAndonReparto.Visible = false;
                     frmAvvioTask.idReparto = -1;
                     frmAvvioTask.Visible = false;
                     frmAndonMaxDays.Visible = false;
@@ -116,8 +116,8 @@ namespace KIS.configReparto
                 frmEvWarning.idReparto = -1;                
                 frmModoCalcoloTC.idReparto = -1;
                 frmModoCalcoloTC.Visible = false;
-                frmConfigAndonReparto.idReparto = -1;
-                frmConfigAndonReparto.Visible = false;
+                //frmConfigAndonReparto.idReparto = -1;
+                //frmConfigAndonReparto.Visible = false;
                 frmAvvioTask.idReparto = -1;
                 frmAvvioTask.Visible = false;
                 frmAndonMaxDays.Visible = false;

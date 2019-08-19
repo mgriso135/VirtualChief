@@ -411,7 +411,7 @@
                                         //$("#tblManual")
                                         //$("#tblManual").empty();
                                         $("#tblManual tbody").append("<tr>"
-                                            + "<td><input type='image' value='" + aWI[0] + ";" + aWI[1] + "' src='../../img/iconDelete.png' style='max-width:30px; min-width:20px; cursor:pointer;' id='imgDeleteWorkInstruction' class='imgDeleteWorkInstruction' /></td>"
+                                            + "<td><input type='image' value='" + aWI[0] + ";" + aWI[1] + "' src='../img/iconDelete.png' style='max-width:20px; min-width:15px; cursor:pointer;' id='imgDeleteWorkInstruction' class='imgDeleteWorkInstruction' /></td>"
                                             + "<td>" + g + "</td>"
                                             + "<td>" + aInitialDate[0] + "/" + aInitialDate[1] + "/" + aInitialDate[2] + "</td>"
                                             + "<td>" + aExpiryDate[0] + "/" + aExpiryDate[1] + "/" + aExpiryDate[2] + "</td>"
@@ -652,7 +652,7 @@
                                     @if (Model.WorkInstructions.Count > 0)
                                     {
                                     <tr>
-                                        <td><input type="image" value="@Model.WorkInstructions[0].WI.ID;@Model.WorkInstructions[0].WI.Version" src="~/img/iconDelete.png" style="max-width:30px; min-width:20px; cursor:pointer;" id="imgDeleteWorkInstruction" class="imgDeleteWorkInstruction" /></td>
+                                        <td><input type="image" value="@Model.WorkInstructions[0].WI.ID;@Model.WorkInstructions[0].WI.Version" src="../../img/iconDelete.png" style="max-width:20px; min-width:15px; cursor:pointer;" id="imgDeleteWorkInstruction" class="imgDeleteWorkInstruction" /></td>
                                         <td>@Model.WorkInstructions[0].WI.Name</td>
                                         <td>@Model.WorkInstructions[0].InitialDate.ToString("dd/MM/yyyy")</td>
                                         <td>@Model.WorkInstructions[0].ExpiryDate.ToString("dd/MM/yyyy")</td>

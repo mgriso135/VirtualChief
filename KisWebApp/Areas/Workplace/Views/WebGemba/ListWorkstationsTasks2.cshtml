@@ -383,8 +383,9 @@
 
                 // Tasks Available
                 $("#tblTaskAvailable").on("click", ".btnStartTask", function () {
-                    var rowid = "rowAv_" + $(this).val();
-                    $("#btnStartTask_" + $(this).val()).fadeOut();
+                    var thisVal = $(this).val();
+                    var rowid = "rowAv_" + thisVal;
+                    $("#btnStartTask_" + thisVal).fadeOut();
                     $.ajax({
                         url: "@Url.Action("StartTask", "WebGemba")",
                         type: 'GET',
@@ -406,7 +407,7 @@
                             var bgcolor = $("#" + rowid).css("background-color");
 
                             $("#" + rowid).fadeOut().remove();
-                            $("#panelTasks").fadeIn();
+                           $("#panelTasks").fadeIn();
                             $("#panelTasks > tbody").append("<tr  style=\"background-color: " + bgcolor + "\" id=\"rowEx_" + TaskId + "\">"
                                 + "<td><input type=\"image\" class=\"btnPauseTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPause.png\" value=\"" + TaskId + "\" id=\"btnPauseTask_" + TaskId + "\" /></td>"
                                 + "<td>" + "<input type=\"image\" class=\"btnWarning\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconWarning.png\" value=\"" + TaskId + "\"  id=\"btnWarning_" + TaskId + "\" />" + "</td>"
@@ -429,7 +430,7 @@
                         }
                         else if(result=="2")
                         {
-                            $("#btnStartTask_" + $(this).val()).fadeIn();
+                            $("#btnStartTask_" + thisVal).fadeIn();
                             $("#lblModalInfo").html("@ResWebGemba.ListTasksAvailable.lblErrNotAuthorized");
                             $("#lblModalInfo").dialog({
                                 modal: true,
@@ -444,7 +445,7 @@
                             });
                         }
                         else if (result == "3") {
-                            $("#btnStartTask_" + $(this).val()).fadeIn();
+                            $("#btnStartTask_" + thisVal).fadeIn();
                             $("#lblModalInfo").html("@ResWebGemba.ListTasksAvailable.lblErrToManyTasks");
                             $("#lblModalInfo").dialog({
                                 modal: true,
@@ -460,10 +461,10 @@
                         }
                     },
                         error: function (result) {
-                            $("#btnStartTask_" + $(this).val()).fadeIn();
+                            $("#btnStartTask_" + thisVal).fadeIn();
                     },
                         warning: function (result) {
-                            $("#btnStartTask_" + $(this).val()).fadeIn();
+                            $("#btnStartTask_" + thisVal).fadeIn();
                     }
                 });
                 });
