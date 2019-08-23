@@ -759,6 +759,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Config\AndonConfigController.cs" />
     <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
     <Compile Include="Areas\Config\Controllers\ConfigController.cs" />
@@ -2971,6 +2996,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditTaskWorkInstruction.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditTaskWorkInstruction.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditTaskWorkInstruction.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditTaskWorkInstruction.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditTaskWorkInstruction.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EditTaskWorkInstruction.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -3005,6 +3055,26 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>WiEdit.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WiEdit.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WiEdit.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WiEdit.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WiEdit.es.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.it.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -5390,7 +5460,6 @@
     <Content Include="Areas\Workplace\Views\WebGemba\ListWorkstationsTasks2.cshtml" />
     <Content Include="Areas\Config\Views\MeasurementUnits\Index.cshtml" />
     <Content Include="Areas\WorkInstructions\Views\web.config" />
-    <Content Include="Areas\WorkInstructions\Views\WorkInstructions\TestUpload.cshtml" />
     <Content Include="Backload\Client\blueimp\templates\package.json" />
     <Content Include="Backload\Client\blueimp\loadimage\package.json" />
     <Content Include="Backload\Client\blueimp\gallery\package.json" />
@@ -5930,6 +5999,31 @@
       <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GetDepartmentAndonConfig.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResDepartmentAndon</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResDepartmentAndon</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResDepartmentAndon</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResDepartmentAndon</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResDepartmentAndon</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -8301,6 +8395,31 @@
       <LastGenOutput>ActivateUser.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResUsers</CustomToolNamespace>
     </EmbeddedResource>
+    <Content Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditTaskWorkInstruction.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </Content>
+    <Content Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditTaskWorkInstruction.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </Content>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditTaskWorkInstruction.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditTaskWorkInstruction.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>EditTaskWorkInstruction.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\EditTaskWorkInstruction.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EditTaskWorkInstruction.Designer.cs</LastGenOutput>
@@ -8329,6 +8448,26 @@
     <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\Index.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.en-US.resx">
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WiEdit.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WiEdit.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WiEdit.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WiEdit.es.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\WorkInstructions\Views\WorkInstructions\App_LocalResources\WiEdit.it.resx">
