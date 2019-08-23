@@ -754,6 +754,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GetDepartmentAndonConfig.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetDepartmentAndonConfig.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetDepartmentAndonConfig.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetDepartmentAndonConfig.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetDepartmentAndonConfig.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetDepartmentAndonConfig.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Andon\Views\DepartmentAndon\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -5994,6 +6019,31 @@
       <CustomToolNamespace>ResTaskAnalysis</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TaskPanel.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.it.resx">
+      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetDepartmentAndonConfig.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.es.resx">
+      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetDepartmentAndonConfig.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.en.resx">
+      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetDepartmentAndonConfig.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.es-AR.resx">
+      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetDepartmentAndonConfig.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.en-US.resx">
+      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetDepartmentAndonConfig.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Andon\Views\DepartmentAndonConfig\App_LocalResources\GetDepartmentAndonConfig.resx">
       <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
