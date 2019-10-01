@@ -274,6 +274,132 @@ namespace KIS.App_Code
             }
         }
 
+        /*Returns
+         * 0 if date
+         * 1 if week
+         */
+        private int _EndProductionDateFormat;
+        public int EndProductionDateFormat
+        {
+            get
+            {
+                return this._EndProductionDateFormat;
+            }
+            set
+            {
+                    if (this.id != -1)
+                    {
+                        // Verifico che sia presente la configurazione
+                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        conn.Open();
+                        MySqlTransaction tr = conn.BeginTransaction();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                            + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'EndProductionDate Format'";
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        bool add = false;
+                        if (rdr.Read() && !rdr.IsDBNull(0))
+                        {
+                            add = false;
+                        }
+                        else
+                        {
+                            add = true;
+                        }
+                        rdr.Close();
+
+                        cmd.Transaction = tr;
+                        if (add == true)
+                        {
+                            cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                                + this.id.ToString() + ", 'EndProductionDate Format', '" + value.ToString() + "')";
+                        }
+                        else
+                        {
+                            cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                            + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                            " AND parametro LIKE 'EndProductionDate Format'";
+                        }
+
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+
+                        rdr.Close();
+                    }
+                }
+        }
+
+        /* Returns
+  * 0 if date
+  * 1 if week
+  */
+        private int _DeliveryDateFormat;
+        public int DeliveryDateFormat
+        {
+            get
+            {
+                return this._DeliveryDateFormat;
+            }
+            set
+            {
+                if (this.id != -1)
+                {
+                    // Verifico che sia presente la configurazione
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'DeliveryDate Format'";
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    bool add = false;
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        add = false;
+                    }
+                    else
+                    {
+                        add = true;
+                    }
+                    rdr.Close();
+
+                    cmd.Transaction = tr;
+                    if (add == true)
+                    {
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                            + this.id.ToString() + ", 'DeliveryDate Format', '" + value.ToString() + "')";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                        " AND parametro LIKE 'DeliveryDate Format'";
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+
+                    rdr.Close();
+                }
+            }
+        }
+
         public Reparto()
         {
             this._id = -1;
@@ -1053,6 +1179,56 @@ namespace KIS.App_Code
                 ret = false;
             }
             return ret;
+        }
+
+        public void loadEndProductionDateFormat()
+        {
+            this._EndProductionDateFormat = 0;
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'EndProductionDate Format'";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                try
+                {
+                    this._EndProductionDateFormat = Int32.Parse(rdr.GetString(0));
+                }
+                catch
+                {
+                    this._EndProductionDateFormat = 0;
+                }
+            }
+            rdr.Close();
+
+            conn.Close();
+        }
+
+        public void loadDeliveryDateFormat()
+        {
+            this._EndProductionDateFormat = 0;
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'DeliveryDate Format'";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                try
+                {
+                    this._DeliveryDateFormat = Int32.Parse(rdr.GetString(0));
+                }
+                catch
+                {
+                    this._DeliveryDateFormat = 0;
+                }
+            }
+            rdr.Close();
+
+            conn.Close();
         }
     }
 
