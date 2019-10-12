@@ -279,4 +279,10 @@
   <data name="ProductExternalID" xml:space="preserve">
     <value>Product Code</value>
   </data>
+  <data name="DeliveryWeek" xml:space="preserve">
+    <value>Delivery week</value>
+  </data>
+  <data name="EndProductionWeek" xml:space="preserve">
+    <value>End production week</value>
+  </data>
 </root>

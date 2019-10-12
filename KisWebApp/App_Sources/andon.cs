@@ -42,6 +42,8 @@ namespace KIS.App_Code
             this._FieldList.Add("ProdottoTempodiLavoroTotale", 0);
             this._FieldList.Add("ProdottoIndicatoreCompletamentoTasks", 0);
             this._FieldList.Add("ProdottoIndicatoreCompletamentoTempoPrevisto", 0);
+            this._FieldList.Add("EndProductionWeek", 0);
+            this._FieldList.Add("DeliveryWeek", 0);
 
             this._FieldListTasks = new Dictionary<string, int>();
             this._FieldListTasks.Add("TaskID", 0);
@@ -643,6 +645,8 @@ namespace KIS.App_Code
             this._FieldList.Add("ProdottoTempodiLavoroTotale", 0);
             this._FieldList.Add("ProdottoIndicatoreCompletamentoTasks", 0);
             this._FieldList.Add("ProdottoIndicatoreCompletamentoTempoPrevisto", 0);
+            this._FieldList.Add("EndProductionWeek", 0);
+            this._FieldList.Add("DeliveryWeek", 0);
 
             this._FieldListTasks = new Dictionary<string, int>();
             this._FieldListTasks.Add("TaskID", 0);
@@ -1526,7 +1530,7 @@ namespace KIS.App_Code
                     curr.TaskQuantitaProdotta = rdr.GetDouble(52);
                     curr.TaskTempoCiclo = rdr.GetTimeSpan(54);
                     curr.TaskPostazione = rdr.GetString(57);
-
+                    
                     /*
         public Double ProdottoIndicatoreCompletamentoTasks;
         public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
@@ -1578,6 +1582,12 @@ namespace KIS.App_Code
                     currProd.MeasurementUnit = m.MeasurementUnit;
                     currProd.ProdottoRitardo= m.ProdottoRitardo;
                     currProd.ProdottoTempodiLavoroTotale = m.ProdottoTempodiLavoroTotale;
+                    int deliveryYear = currProd.DataPrevistaConsegna.Year;
+                    int deliveryWeek = Dati.Utilities.GetWeekOfTheYear(currProd.DataPrevistaConsegna);
+                    currProd.DeliveryWeek = deliveryWeek + "/" + deliveryYear;
+                    int endProdYear = currProd.DataPrevistaFineProduzione.Year;
+                    int endProdWeek = Dati.Utilities.GetWeekOfTheYear(currProd.DataPrevistaFineProduzione);
+                    currProd.EndProductionWeek = endProdWeek + "/" + endProdYear;
 
                     currProd.Tasks = new List<DepartmentAndonTasksStruct>();
 
@@ -1793,7 +1803,9 @@ namespace KIS.App_Code
         public int DepartmentID;
         public String Reparto;
         public DateTime DataPrevistaConsegna;
+        public String DeliveryWeek;
         public DateTime DataPrevistaFineProduzione;
+        public String EndProductionWeek;
         public DateTime EarlyStart;
         public DateTime LateStart;
         public DateTime EarlyFinish;

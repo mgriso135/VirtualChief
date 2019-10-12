@@ -216,4 +216,10 @@
   <data name="lblShowProdIndicatorsTitle" xml:space="preserve">
     <value>Producción restante</value>
   </data>
+  <data name="DeliveryWeek" xml:space="preserve">
+    <value>Semana entrega</value>
+  </data>
+  <data name="EndProductionWeek" xml:space="preserve">
+    <value>Semana fin de producción</value>
+  </data>
 </root>

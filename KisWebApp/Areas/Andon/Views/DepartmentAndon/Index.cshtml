@@ -226,6 +226,12 @@
                             case "Reparto":
                                 strTableWIP += "<th>@ResDepartmentAndon.Index.Reparto</th>";
                                 break;
+                            case "EndProductionWeek":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.EndProductionWeek</th>";
+                                break;
+                            case "DeliveryWeek":
+                                strTableWIP += "<th>@ResDepartmentAndon.Index.DeliveryWeek</th>";
+                                break;
 
                             default: break;
                         }
@@ -326,7 +332,12 @@
                                 case "Reparto":
                                     strTableWIP += "<td>" + v.Reparto + "</td>";
                                     break;
-
+                                case "EndProductionWeek":
+                                    strTableWIP += "<td>"+v.EndProductionWeek+"</td>";
+                                    break;
+                                case "DeliveryWeek":
+                                    strTableWIP += "<td>" +v.DeliveryWeek+ "</td>";
+                                    break;
                                 default: break;
                             }
                         });
