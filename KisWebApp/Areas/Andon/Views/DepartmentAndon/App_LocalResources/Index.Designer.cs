@@ -124,6 +124,15 @@ namespace ResDepartmentAndon {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Settimana consegna.
+        /// </summary>
+        public static string DeliveryWeek {
+            get {
+                return ResourceManager.GetString("DeliveryWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID reparto.
         /// </summary>
         public static string DepartmentID {
@@ -147,6 +156,15 @@ namespace ResDepartmentAndon {
         public static string EarlyStart {
             get {
                 return ResourceManager.GetString("EarlyStart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settimana fine produzione.
+        /// </summary>
+        public static string EndProductionWeek {
+            get {
+                return ResourceManager.GetString("EndProductionWeek", resourceCulture);
             }
         }
         

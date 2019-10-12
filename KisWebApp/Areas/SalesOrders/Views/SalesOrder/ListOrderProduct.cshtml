@@ -7,14 +7,24 @@
         <script>
                 $(document).ready(function () {
                     $(function () {
-                        $("[id*=txtDeliveryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                        //$("[id*=txtDeliveryDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                        $("[id*=txtDeliveryDate]").datepicker({
+                            dateFormat: 'dd/mm/yy',
+                            showWeek: true,
+                            firstDay: 1,
+                            minDate: 'today'
+                        });
                     });
                     $(function () {
-                        $("[id*=txtEndProductionDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+                        $("[id*=txtEndProductionDate]").datepicker({
+                            dateFormat: 'dd/mm/yy',
+                            showWeek: true,
+                            firstDay: 1,
+                            minDate: 'today'
+                        });
                     });
 
                     $(".imgSave").click(function () {
-
                         var currProd = $(this).val().split('.');
                         if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
                             var deliveryDateStr = $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).val();

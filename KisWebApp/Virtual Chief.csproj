@@ -890,18 +890,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>addCustomerContact.it.resx</DependentUpon>
     </Compile>
-    <Compile Include="Areas\Departments\Controllers\DepartmentsConfigController.cs" />
     <Compile Include="Areas\Departments\DepartmentsAreaRegistration.cs" />
-    <Compile Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\getDeliveryDateFormat.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>getDeliveryDateFormat.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\getEndProductionDateFormat.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>getEndProductionDateFormat.resx</DependentUpon>
-    </Compile>
     <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
     <Compile Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.Designer.cs">
@@ -5512,10 +5501,6 @@
     <Content Include="Areas\Andon\Views\DepartmentAndonConfig\GetDepartmentAndonConfig.cshtml" />
     <Content Include="Areas\Andon\Views\DepartmentAndon\Index.cshtml" />
     <Content Include="Areas\Departments\Views\web.config" />
-    <Content Include="Areas\Departments\Views\DepartmentsConfig\getEndProductionDateFormat.cshtml">
-      <CustomToolNamespace>ResDepartmentAndonConfig</CustomToolNamespace>
-    </Content>
-    <Content Include="Areas\Departments\Views\DepartmentsConfig\getDeliveryDateFormat.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6171,16 +6156,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>addCustomerContact.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResCustomer</CustomToolNamespace>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\getDeliveryDateFormat.resx">
-      <CustomToolNamespace>resDepartmentsConfig</CustomToolNamespace>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>getDeliveryDateFormat.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\getEndProductionDateFormat.resx">
-      <CustomToolNamespace>resDepartmentsConfig</CustomToolNamespace>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>getEndProductionDateFormat.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -10583,6 +10558,7 @@
     <Folder Include="Areas\Config\Views\Shared\" />
     <Folder Include="Areas\Customers\Models\" />
     <Folder Include="Areas\Customers\Views\Shared\" />
+    <Folder Include="Areas\Departments\Controllers\" />
     <Folder Include="Areas\Departments\Models\" />
     <Folder Include="Areas\Departments\Views\Shared\" />
     <Folder Include="Areas\Home\Models\" />

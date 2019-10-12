@@ -5,7 +5,10 @@
 
     <script type="text/javascript">
         $(function () {
-            $("[id*=txtProductDate]").datepicker({ dateFormat: 'dd/mm/yy' })
+            $("[id*=txtProductDate]").datepicker({ dateFormat: 'dd/mm/yy' },
+                           showWeek: true,
+                firstDay: 1,
+                minDate: 'today')
         });
     </script>              
 

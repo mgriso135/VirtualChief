@@ -63,52 +63,8 @@
                 }
             }
 
-            function loadDeliveryDateFormat() {
-                var deptID = parseInt($("#<%=DepartmentID.ClientID%>").val());
-                if (deptID != -1) {
-                $("#imgLoadDeliveryDateFormat").fadeIn();
-                    $.ajax({
-                        url: "../Departments/DepartmentsConfig/getDeliveryDateFormat",
-                        type: 'GET',
-                        data: {
-                            DepartmentID: deptID
-                        },
-                    dataType: 'html' ,
-                        success: function (result) {
-                        $("#imgLoadDeliveryDateFormat").fadeOut();
-                        $('#frmDeliveryDateFormat').html(result);
-                    },
-                    error: function(result){ $("#imgLoadDeliveryDateFormat").fadeOut();alert("Error loadDeliveryDateFormat " + result);},
-                    warning: function(result){$("#imgLoadDeliveryDateFormat").fadeOut();alert("Warning loadDeliveryDateFormat " + result);},
-                    });
-                }
-            }
-
-            function loadEndProductionDateFormat() {
-                var deptID = parseInt($("#<%=DepartmentID.ClientID%>").val());
-                if (deptID != -1) {
-                $("#imgLoadEndProductionDateFormat").fadeIn();
-                    $.ajax({
-                        url: "../Departments/DepartmentsConfig/getEndProductionDateFormat",
-                        type: 'GET',
-                        data: {
-                            DepartmentID: deptID
-                        },
-                    dataType: 'html' ,
-                        success: function (result) {
-                        $("#imgLoadEndProductionDateFormat").fadeOut();
-                        $('#frmEndProductionDateFormat').html(result);
-                    },
-                    error: function(result){ $("#imgLoadEndProductionDateFormat").fadeOut();alert("Error loadEndProductionDateFormat " + result);},
-                    warning: function(result){$("#imgLoadEndProductionDateFormat").fadeOut();alert("Warning loadEndProductionDateFormat " + result);},
-                    });
-                }
-            }
-
             loadScrollTypeView();
             loadDepartmentAndonConfig();
-            loadDeliveryDateFormat();
-            loadEndProductionDateFormat();
         });
     </script>
 
