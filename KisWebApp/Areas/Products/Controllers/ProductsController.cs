@@ -652,5 +652,152 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
             }
+
+        public ActionResult TaskDefaultOperatorsList(int TaskID, int TaskRev, int variantID)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskDefaultOperatorsList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Products/Products/TaskDefaultOperatorsList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
+            }
+
+            ViewBag.TaskID = -1;
+            ViewBag.TaskRev = -1;
+            ViewBag.VariantID = -1;
+
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task DefaultOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task DefaultOperators";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authR || ViewBag.authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    ViewBag.TaskID = tskVar.Task.processID;
+                    ViewBag.TaskRev = tskVar.Task.revisione;
+                    ViewBag.VariantID = tskVar.variant.idVariante;
+
+                    tskVar.loadDefaultOperators();
+                    return View(tskVar.DefaultOperators);
+                }
+            }
+                return View();
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if everything is ok
+         * 2 if user not autorized
+         * 3 if error while adding the default user
+         */
+         public int AddDefaultOperator(int TaskID, int TaskRev, int variantID, String user)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task DefaultOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if(authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    Boolean check = tskVar.addDefaultOperator(user);
+                    ret = check ? 1 : 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+
+        /* Returns:
+  * 0 if generic error
+  * 1 if everything is ok
+  * 2 if user not autorized
+  * 3 if error while adding the default user
+  */
+        public int DeleteDefaultOperator(int TaskID, int TaskRev, int variantID, String user)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task DefaultOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    Boolean check = tskVar.deleteDefaultOperator(user);
+                    ret = check ? 1 : 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
     }
 }

@@ -922,6 +922,12 @@ namespace KIS.App_Code
             get { return this._AnnoCommessa; }
         }
 
+        private String _CommessaExternalID;
+        public String CommessaExternalID
+        {
+            get { return this._CommessaExternalID; }
+        }
+
         private String _Cliente;
         public String Cliente
         {
@@ -1368,7 +1374,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
             + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
-            + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit "
+            + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
+            + " commesse.ExternalID "
             + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) WHERE id = " + idArticolo.ToString()
             + " AND productionplan.anno = " + AnnoArticolo.ToString()
             + " ORDER BY productionplan.anno DESC";
@@ -1458,6 +1465,7 @@ namespace KIS.App_Code
                 }
 
                 this._MeasurementUnitID = rdr.GetInt32(19);
+                this._CommessaExternalID = rdr.GetString(20);
             }
             else
             {
@@ -1476,6 +1484,7 @@ namespace KIS.App_Code
                 this._WorkingTime = new TimeSpan(0, 0, 0);
                 this._Delay = new TimeSpan(0, 0, 0);
                 this._MeasurementUnitID = -1;
+                this._CommessaExternalID = "";
             }
             rdr.Close();
             conn.Close();
@@ -1492,7 +1501,8 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
                 + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
-                + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.id, productionplan.anno, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit "
+                + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.id, productionplan.anno, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
+                + "commesse.ExternalID "
                 + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) "
                 + " WHERE productionplan.kanbanCard LIKE '" + card.ekanban_string.ToString() + "' AND "
                 + " productionplan.kanbanCard IS NOT NULL";
@@ -1583,6 +1593,7 @@ namespace KIS.App_Code
                         this._Delay = new TimeSpan(0, 0, 0);
                     }
                     this._MeasurementUnitID = rdr.GetInt32(21);
+                    this._CommessaExternalID = rdr.GetString(22);
                 }
                 else
                 {
@@ -1602,6 +1613,7 @@ namespace KIS.App_Code
                     this._WorkingTime = new TimeSpan(0, 0, 0);
                     this._Delay = new TimeSpan(0, 0, 0);
                     this._MeasurementUnitID = -1;
+                    this._CommessaExternalID = "";
                 }
                 rdr.Close();
                 conn.Close();

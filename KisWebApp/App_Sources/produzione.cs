@@ -4168,8 +4168,7 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
                 try
-                {
-                    
+                {                    
                     Articolo artcl = new Articolo(this.ArticoloID, this.ArticoloAnno);
                     
                     // Inserisco i task nel piano di produzione
@@ -4209,6 +4208,7 @@ namespace KIS.App_Code
                         cmd.CommandText = strSQL;
                         cmd.ExecuteNonQuery();
 
+
                         // Array di corrispondenza id+revisione processo e taskproduzione
                         int[] idOLDNEW = new int[3];
                         idOLDNEW[0] = this.Processi[i].Task.Task.processID;
@@ -4233,6 +4233,36 @@ namespace KIS.App_Code
                     log += ex.Message;
                     tr.Rollback();
                     rt = 0;
+                }
+                conn.Close();
+                conn.Open();
+                // Copy Default Operators
+                MySqlCommand cmdDefOps = conn.CreateCommand();
+                if(rt!=0)
+                { 
+                for(int i = 0; i < this.Processi.Count; i++)
+                {
+                        int taskid = -1;
+                        foreach(var itm in lstTaskIDOLDREVNEW)
+                        {
+                            if(itm[0] == this.Processi[i].Task.Task.processID && itm[1] == this.Processi[i].Task.Task.revisione)
+                            {
+                                taskid = itm[2];
+                            }
+                        }
+                        if(taskid!=-1)
+                        { 
+                    this.Processi[i].Task.loadDefaultOperators();
+                    foreach (var defOp in this.Processi[i].Task.DefaultOperators)
+                    {
+                            cmdDefOps.CommandText = "INSERT INTO taskuser(taskID, user, exclusive) VALUES("+taskid+", '"+defOp.username+"', false)";
+                                //cmdDefOps.Parameters.AddWithValue("@TaskID", taskid);
+                                //cmdDefOps.Parameters.AddWithValue("@User", defOp.username);
+                                //cmdDefOps.Parameters.AddWithValue("@Exclusive", false);
+                                cmdDefOps.ExecuteNonQuery();
+                    }
+                        }
+                    }
                 }
 
                 // Ora inserisco i vincoli di precedenza
@@ -4263,10 +4293,11 @@ namespace KIS.App_Code
 
                             if (newPrecID != -1)
                             {
+                                MySqlCommand cmd2 = conn.CreateCommand();
                                 //log += "&nbsp;&nbsp;&nbsp;&nbsp;Precedente inserito: " + newPrecID.ToString() + " - " + newCurrID + "<br/>";
-                                cmd.CommandText = "INSERT INTO prectasksproduzione(prec, succ, relazione, pausa, ConstraintType) VALUES("
+                                cmd2.CommandText = "INSERT INTO prectasksproduzione(prec, succ, relazione, pausa, ConstraintType) VALUES("
                                     + newPrecID.ToString() + ", " + newCurrID.ToString() + ", 0, '00:00:00', " + this.Processi[i].PrecedentiConstraintType[q].ToString() + ")";
-                                cmd.ExecuteNonQuery();
+                                cmd2.ExecuteNonQuery();
                             }
 
                         }

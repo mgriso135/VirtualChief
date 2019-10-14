@@ -1061,5 +1061,24 @@ namespace KIS.Produzione
             rptArticoli.DataBind();
             ordine = "RepartoDown";
         }
+
+        protected void lnkCommessaExternalIDUp_Click(object sender, EventArgs e)
+        {
+            var artINPSorted = artINP.OrderBy(x => x.CommessaExternalID);
+            rptArticoli.DataSource = artINPSorted;
+            rptArticoli.DataBind();
+            ordine = "CommessaExternalIDUp";
+        }
+
+        protected void lnkCommessaExternalIDDown_Click(object sender, EventArgs e)
+        {
+            var artINPSorted = artINP.OrderByDescending(x => x.CommessaExternalID);
+            rptArticoli.DataSource = artINPSorted;
+            rptArticoli.DataBind();
+            ordine = "CommessaExternalIDDownwn";
+        }
+
+
+
     }
 }

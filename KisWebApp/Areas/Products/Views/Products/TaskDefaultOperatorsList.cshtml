@@ -1,0 +1,68 @@
+﻿@model IEnumerable<KIS.App_Code.User>
+
+@if(ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#tblDefOps").on("click", ".imgDelDefOp", function () {
+                var usr = $(this).val();
+               $.ajax({
+                    url: "@Url.Action("DeleteDefaultOperator", "Products")",
+                    type: 'POST',
+                    data: {
+                        TaskID: @ViewBag.TaskID,
+                        TaskRev: @ViewBag.TaskRev,
+                        variantID: @ViewBag.VariantID,
+                        user: usr,
+                    },
+                    success: function (result) {
+                    if (result == 1) {
+                        $("#row_" + usr).fadeOut();
+                    }
+                    else {
+                        alert("@ResProducts.TaskDefaultOperatorsList.lblErrorAdd");
+                    }
+                    },
+                    error: function (result) {
+                        alert("@ResProducts.TaskDefaultOperatorsList.lblErrorGeneric");
+                    },
+                    warning: function (result) {
+                        //alert("Warning");
+                    }
+                });
+
+                return false;
+            });
+        });
+
+    </script>
+}
+
+@if(ViewBag.authR && Model.Count()>0)
+{
+    <div id="tblDefOps">
+        <table class="table table-striped table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@ResProducts.TaskDefaultOperatorsList.lblOperators</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                    <tr id="row_@m.username">
+                        <td>
+                            @if (ViewBag.authW)
+                            {
+                                <input type="image" src="~/img/iconDelete.png" class="imgDelDefOp" value="@m.username" style="min-width:15px; max-width:20px;" />
+                            }
+                        </td>
+                        <td>@m.name @m.cognome</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

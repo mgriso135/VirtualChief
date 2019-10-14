@@ -195,4 +195,7 @@
   <data name="lblWIErrOverlap" xml:space="preserve">
     <value>Error: the validity dates overlap with other work instructions</value>
   </data>
+  <data name="lblDefaultOperators" xml:space="preserve">
+    <value>Operators assigned to tasks by default</value>
+  </data>
 </root>
