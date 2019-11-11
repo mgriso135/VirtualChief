@@ -936,7 +936,7 @@ namespace KIS.App_Code
 
         public UserList()
         {
-            String strSQL = "SELECT COUNT(userID) FROM users WHERE verified = true ORDER BY userID";
+            String strSQL = "SELECT COUNT(userID) FROM users WHERE verified = true AND enabled = true ORDER BY userID";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -948,7 +948,7 @@ namespace KIS.App_Code
 
             listUsers = new List<User>();
 
-            strSQL = "SELECT userID FROM users WHERE verified = true ORDER BY userID";
+            strSQL = "SELECT userID FROM users WHERE verified = true AND enabled = true ORDER BY userID";
             cmd = new MySqlCommand(strSQL, conn);
             rdr1 = cmd.ExecuteReader();
             int i = 0;
@@ -970,7 +970,7 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT DISTINCT(users.userID) FROM users INNER JOIN groupusers ON (users.userid = groupusers.user) "
             + " INNER JOIN gruppipermessi ON (groupusers.groupid = gruppipermessi.idgroup) INNER JOIN permessi ON "
-            +" (gruppipermessi.idpermesso = permessi.idpermesso) WHERE verified = true AND permessi.idpermesso = " + prm.ID.ToString();
+            +" (gruppipermessi.idpermesso = permessi.idpermesso) WHERE verified = true AND enabled = true AND permessi.idpermesso = " + prm.ID.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1185,6 +1185,38 @@ namespace KIS.App_Code
             get { return this._CreationDate; }
         }
 
+        private Boolean _Enabled;
+        public Boolean Enabled
+        {
+            get { return this._Enabled; }
+            set
+            {
+                if(this.username.Length > 0)
+                { 
+                    string strSQL = "UPDATE users SET enabled = "
+                        + value + " WHERE userID LIKE '" + this.username + "'";
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._Enabled = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+            }
+        }
+
         public List<Group> Gruppi;
 
         public List<String> Customers;
@@ -1196,8 +1228,8 @@ namespace KIS.App_Code
             this._authenticated = false;
             this._DestinationURL = "";
             this.Customers = new List<String>();
-            String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL "
-                +" FROM users WHERE verified = true AND userID LIKE '" + usr + "' AND password = MD5('" + pwd + "')";
+            String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL, enabled "
+                +" FROM users WHERE enabled=true AND verified = true AND userID LIKE '" + usr + "' AND password = MD5('" + pwd + "')";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -1233,6 +1265,12 @@ namespace KIS.App_Code
                 {
                     this._DestinationURL = rdr1.GetString(8);
                 }
+                this._Enabled = rdr1.GetBoolean(9);
+            }
+            else
+            {
+                this._username = "";
+                this._Enabled = false;
             }
             rdr1.Close();
             conn.Close();
@@ -1244,8 +1282,8 @@ namespace KIS.App_Code
             this._homeBoxes = null;
             this._authenticated = false;
             this._DestinationURL = "";
-            String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL "
-                +" FROM users WHERE userID LIKE '" + usr + "'";
+            String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL, enabled "
+                + " FROM users WHERE enabled=true AND userID LIKE '" + usr + "'";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -1276,10 +1314,12 @@ namespace KIS.App_Code
                 {
                     this._DestinationURL = rdr1.GetString(8);
                 }
+                this._Enabled = rdr1.GetBoolean(9);
             }
             else
             {
                 this._username = "";
+                this._Enabled = false;
             }
             rdr1.Close();
             conn.Close();
@@ -1291,8 +1331,8 @@ namespace KIS.App_Code
             this._homeBoxes = null;
             this._authenticated = false;
             this._DestinationURL = "";
-            String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL "
-                + " FROM users WHERE ID = " + IDn.ToString();
+            String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL, enabled "
+                + " FROM users WHERE enabled=true AND ID = " + IDn.ToString();
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -1323,10 +1363,12 @@ namespace KIS.App_Code
                 {
                     this._DestinationURL = rdr1.GetString(8);
                 }
+                this._Enabled = rdr1.GetBoolean(9);
             }
             else
             {
                 this._username = "";
+                this._Enabled = false;
             }
             rdr1.Close();
             conn.Close();
@@ -1344,6 +1386,7 @@ namespace KIS.App_Code
             this._Language = kisCfg.Language;
             this.Customers = new List<String>();
             this._DestinationURL = "";
+            this._Enabled = false;
         }
 
          /* Returns:
@@ -1384,16 +1427,18 @@ namespace KIS.App_Code
                 try
                 {
                     strSQL = "INSERT INTO users(userID, password, nome, cognome, tipoUtente, lastLogin, ID, language, "
-                        + "verified, checksum, creationdate) VALUES('"
+                        + "verified, checksum, creationdate, enabled) VALUES('"
                         + usr + "', MD5('" + pwd + "'), '" + nome + "', '" + cognome + "', '" + typeOf + "', '"
                         + DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss") + "',"
                         + maxID.ToString()
                         +", '" + idioma.ToString() + "', "
                         + skipVerify.ToString() + ", "
                         + "'" + checksum + "', "
-                        + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "'"
+                        + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "', "
+                        +"@enabled"
                         + ")";
                     cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@enabled", true);
                     cmd.ExecuteNonQuery();
 
                     tr.Commit();
@@ -3244,5 +3289,108 @@ namespace KIS.App_Code
             return rt;
         }
   
+    }
+
+    public class DisabledUser
+    {
+        public String log;
+
+        private String _username;
+        public String username
+        {
+            get { return this._username; }
+        }
+
+        private String _FirstName;
+        public String FirstName
+        {
+            get { return this._FirstName; }
+        }
+
+        private String _LastName;
+        public String LastName
+        {
+            get { return this._LastName; }
+        }
+
+        private Boolean _Enabled;
+        public Boolean Enabled
+        {
+            get { return this._Enabled; }
+            set
+            {
+                if (this.username.Length > 0)
+                {
+                    string strSQL = "UPDATE users SET enabled = "
+                        + value + " WHERE userID LIKE '" + this.username + "'";
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._Enabled = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+            }
+        }
+
+        public DisabledUser(String username)
+        {
+
+            String strSQL = "SELECT userID, nome, cognome, enabled "
+                + " FROM users WHERE enabled=false AND userID LIKE '" + username + "'";
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            MySqlDataReader rdr1 = cmd.ExecuteReader();
+            if (rdr1.Read() && !rdr1.IsDBNull(0))
+            {
+                this._username = rdr1.GetString(0);
+                this._FirstName = rdr1.GetString(1);
+                this._LastName = rdr1.GetString(2);
+                this._Enabled = rdr1.GetBoolean(3);
+            }
+            else
+            {
+                this._username = "";
+                this._FirstName = "";
+                this._LastName = "";
+                this._Enabled = false;
+            }
+            rdr1.Close();
+            conn.Close();
+        }
+    }
+
+    public class DisabledUsers
+    {
+        public List<DisabledUser> UserList;
+
+        public DisabledUsers()
+        {
+            this.UserList = new List<DisabledUser>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT userID FROM users WHERE verified=true AND enabled=false";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                this.UserList.Add(new DisabledUser(rdr.GetString(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
     }
 }

@@ -431,5 +431,165 @@ namespace KIS.Areas.Users.Controllers
 
             return Json(tasks, JsonRequestBehavior.AllowGet);
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if all is ok
+         * 2 if user is not allowed
+         */
+        public int DisableUser(String user)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/Users/Users/DisableUser", "", ipAddr);
+                
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Users/Users/DisableUser", "", ipAddr);
+            }
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "User Disable";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            User curr = null;
+            if (Session["user"] != null)
+            {
+                curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            int ret = 0;
+
+            if (ViewBag.authW)
+            {
+                User currUsr = new User(user);
+                if(currUsr!=null && currUsr.username.Length>0)
+                {
+                    bool isEnabled = currUsr.Enabled;
+                    currUsr.Enabled = !isEnabled;
+
+                    Dati.Utilities.Syslog(curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
+
+                    ret = 1;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+                
+            return ret;
+        }
+
+        public ActionResult DisabledUsers()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/Users/Users/DisabledUsers", "", ipAddr);
+
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Users/Users/DisabledUsers", "", ipAddr);
+            }
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "DisabledUsers";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authR = false;
+            User curr = null;
+            if (Session["user"] != null)
+            {
+                curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "DisabledUsers";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authR)
+            {
+                DisabledUsers lstDisabledUsers = new DisabledUsers();
+                return View(lstDisabledUsers.UserList);
+            }
+                return View();
+        }
+
+        /* Returns:
+  * 0 if generic error
+  * 1 if all is ok
+  * 2 if user is not allowed
+  */
+        public int ReenableUser(String user)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/Users/Users/ReenableUser", "", ipAddr);
+
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Users/Users/ReenableUser", "", ipAddr);
+            }
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "User Disable";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            User curr = null;
+            if (Session["user"] != null)
+            {
+                curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            int ret = 0;
+
+            if (ViewBag.authW)
+            {
+                DisabledUser currUsr = new DisabledUser(user);
+                if (currUsr != null && currUsr.username.Length > 0)
+                {
+                    bool isEnabled = currUsr.Enabled;
+                    currUsr.Enabled = !isEnabled;
+
+                    Dati.Utilities.Syslog(curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
+
+                    ret = 1;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+
+            return ret;
+        }
     }
 }

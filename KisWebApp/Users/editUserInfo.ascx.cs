@@ -20,6 +20,7 @@ namespace KIS.Users
                     lblUsername.Text = usr.username;
                     tbNome.Text = usr.name;
                     tbCognome.Text = usr.cognome;
+                    hdUsername.Value = usr.username;
                 }
                 else
                 {

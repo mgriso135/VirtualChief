@@ -1,0 +1,103 @@
+﻿@model IEnumerable<KIS.App_Code.DisabledUser>
+@{
+    ViewBag.Title = ResUsers.DisabledUsers.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if(ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#tblDisabledUsers").on("click", ".btnEnableUser", function () {
+                var currbtn = $(this);
+                var username = $(this).val();
+                currbtn.fadeOut();
+                $.ajax({
+                    url: "@Url.Action("ReenableUser", "Users")",
+                    type: 'POST',
+                    data: {
+                        user: username
+                    },
+                    success: function (data) {
+                        if (data == "1") {
+                            window.location.href = "../manageUsers.aspx";
+                        }
+                        else if (data == "0") {
+                            alert("Error");
+                            currbtn.fadeIn();
+                        }
+                        else if (data == "2") {
+                            alert("User not allowed");
+                            currbtn.fadeIn();
+                        }
+                    },
+                    statusCode: {
+                        404: function (content) { alert('cannot find resource'); currbtn.fadeIn(); },
+                        500: function (content) { alert('internal server error'); currbtn.fadeIn(); }
+                    },
+                    error: function (req, status, errorObj) {
+                        currbtn.fadeIn();
+                    }
+                });
+            });
+
+        });
+    </script>
+}
+
+<h3>@ResUsers.DisabledUsers.lblTitle</h3>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="~/Users/manageUsers.aspx">
+            @ResUsers.DisabledUsers.lblNavManageUsers
+        </a><span class="divider"></span>
+        <a href="@Request.RawUrl">
+            @ResUsers.DisabledUsers.lblTitle
+        </a>
+    </li>
+</ul>
+
+@if(ViewBag.authR)
+{
+    if(Model!=null && Model.Count()>0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-striped table-hover" id="tblDisabledUsers">
+                    <thead>
+                        <tr>
+                            <th>@ResUsers.DisabledUsers.lblUsername</th>
+                            <th>@ResUsers.DisabledUsers.lblFirstName</th>
+                            <th>@ResUsers.DisabledUsers.lblLastName</th>
+                            <th>@ResUsers.DisabledUsers.lblEnable</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach(var m in Model)
+                        {
+                        <tr>
+                            <td>@m.username</td>
+                            <td>@m.FirstName</td>
+                            <td>@m.LastName</td>
+                            <td>
+                            @if(ViewBag.authW)
+                            { 
+                            <input type="image" src="~/img/iconExhume.png" style="min-width:15px; max-width:20px;" id="exhumate" value="@m.username" class="btnEnableUser" />
+                            }</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResUsers.DisabledUsers.lblUserNotAuthorized
+        </div>
+    </div>
+}

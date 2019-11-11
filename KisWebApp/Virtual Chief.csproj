@@ -2996,6 +2996,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ActivateUser.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisabledUsers.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisabledUsers.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.enUS.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisabledUsers.enUS.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisabledUsers.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisabledUsers.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DisabledUsers.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Users\Views\Users\App_LocalResources\ListUserWorkTimespans.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -5412,6 +5442,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="debug.html" />
     <Content Include="Eventi\QualityModuleEvents.asmx" />
+    <Content Include="img\iconArchive.png" />
     <Content Include="img\iconCategory.png" />
     <Content Include="img\iconCause.png" />
     <Content Include="img\iconCheckIn6.jpg" />
@@ -5550,6 +5581,7 @@
     <Content Include="Areas\Workplace\Views\WebGemba\ListUserTasks.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\ShowManageOperators.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\ListTasksDefOperators.cshtml" />
+    <Content Include="Areas\Users\Views\Users\DisabledUsers.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -8445,6 +8477,36 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AddSalesOrder.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResAddSalesOrder</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisabledUsers.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResUsers</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisabledUsers.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResUsers</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.enUS.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisabledUsers.enUS.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResUsers</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisabledUsers.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResUsers</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisabledUsers.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResUsers</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\DisabledUsers.resx">
+      <CustomToolNamespace>ResUsers</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>DisabledUsers.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Users\Views\Users\App_LocalResources\ListUserWorkTimespans.en-US.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

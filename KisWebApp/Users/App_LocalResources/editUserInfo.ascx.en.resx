@@ -120,6 +120,12 @@
   <data name="lblCognome" xml:space="preserve">
     <value>Last name</value>
   </data>
+  <data name="lblDisableUser" xml:space="preserve">
+    <value>Disable user</value>
+  </data>
+  <data name="lblErrorDeleting" xml:space="preserve">
+    <value>An error occurred while deleting</value>
+  </data>
   <data name="lblModOk" xml:space="preserve">
     <value>Changes saved successfully.</value>
   </data>
