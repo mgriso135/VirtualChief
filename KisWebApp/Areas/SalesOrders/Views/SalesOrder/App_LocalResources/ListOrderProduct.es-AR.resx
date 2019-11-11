@@ -234,4 +234,7 @@
   <data name="lblTTUndo" xml:space="preserve">
     <value>Eliminar la planificación de la producción del producto.</value>
   </data>
+  <data name="lblManageOperators" xml:space="preserve">
+    <value>Gestionar operadores asignados a las tareas</value>
+  </data>
 </root>

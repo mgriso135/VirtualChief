@@ -739,6 +739,11 @@ namespace KIS.App_Code
 
         public List<TaskParameter> CompleteParameters;
 
+        private List<String> _AssignedOperators;
+        public List<String> AssignedOperators
+        {
+            get { return this._AssignedOperators; }
+        }
 
         public void loadOperatori()
         {
@@ -3296,6 +3301,81 @@ namespace KIS.App_Code
                 conn.Close();
             }
         }
+
+        public void loadAssignedOperators()
+        {
+            this._AssignedOperators = new List<string>();
+            if(this.TaskProduzioneID!=-1)
+            { 
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT user FROM taskuser WHERE taskid=@TaskID";
+                cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this._AssignedOperators.Add(rdr.GetString(0));
+                }
+                rdr.Close();
+            conn.Close();
+            }
+        }
+
+        /*Returns:
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int deleteAssignedOperator(String defOp)
+        {
+            int ret = 0;
+            if(this.TaskProduzioneID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM taskuser WHERE taskid=@TaskID AND user=@User";
+                cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@User", defOp);
+                cmd.ExecuteNonQuery();
+                conn.Close();
+                ret = 1;
+            }
+            return ret;
+        }
+
+        /*Returns:
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int addAssignedOperator(String defOp)
+        {
+            int ret = 0;
+            if (this.TaskProduzioneID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                cmd.CommandText = "INSERT INTO taskuser(TaskID, user, exclusive) VALUES(@TaskID, @User, @Exclusive)";
+                cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@User", defOp);
+                cmd.Parameters.AddWithValue("@Exclusive", false);
+                try
+                { 
+                cmd.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch
+                {
+                    tr.Rollback();
+                }
+                conn.Close();
+                ret = 1;
+            }
+            return ret;
+        }
     }
 
     public class ProductionPlan
@@ -4255,10 +4335,11 @@ namespace KIS.App_Code
                     this.Processi[i].Task.loadDefaultOperators();
                     foreach (var defOp in this.Processi[i].Task.DefaultOperators)
                     {
-                            cmdDefOps.CommandText = "INSERT INTO taskuser(taskID, user, exclusive) VALUES("+taskid+", '"+defOp.username+"', false)";
-                                //cmdDefOps.Parameters.AddWithValue("@TaskID", taskid);
-                                //cmdDefOps.Parameters.AddWithValue("@User", defOp.username);
-                                //cmdDefOps.Parameters.AddWithValue("@Exclusive", false);
+                                cmdDefOps.Parameters.Clear();
+                            cmdDefOps.CommandText = "INSERT INTO taskuser(taskID, user, exclusive) VALUES(@TaskID, @User, @Exclusive)";
+                                cmdDefOps.Parameters.AddWithValue("@TaskID", taskid);
+                                cmdDefOps.Parameters.AddWithValue("@User", defOp.username);
+                                cmdDefOps.Parameters.AddWithValue("@Exclusive", false);
                                 cmdDefOps.ExecuteNonQuery();
                     }
                         }

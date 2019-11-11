@@ -1351,6 +1351,289 @@ namespace KIS.Areas.Workplace.Controllers
             }
             return ret;
         }
+
+
+
+        /* Interface that shows user tasks */
+        public ActionResult ListUserTasks()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Page", "/Workplace/WebGemba/ListUsersTasks", "user=" + Session["user"], ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Page", "/Workplace/WebGemba/ListWorkstationsTasks", "", ipAddr);
+            }
+
+            ViewBag.authX = false;
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Produzione";
+            prmUser[1] = "X";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            ViewBag.user = "";
+
+            if (ViewBag.authX)
+            {
+                User curr = (User)Session["user"];
+
+                    ViewBag.user = curr.username;
+                    curr.loadTaskAvviati();
+                curr.LoadExecutableTasks();
+                    List<int> results = curr.ExecutableTasks.Where(f => !curr.TaskAvviati.Any(t => t == f)).ToList();
+                    List<TaskProduzione> tasks = new List<TaskProduzione>();
+                    for (int i = 0; i < results.Count; i++)
+                    {
+                        tasks.Add(new TaskProduzione(results[i]));
+                    }
+                    tasks = tasks.OrderBy(x => x.LateStart).ToList();
+
+                    ViewBag.TasksExecutableUser = tasks;
+                    List<TaskProduzione> TasksInExecution = new List<TaskProduzione>();
+                    for (int i = 0; i < curr.TaskAvviati.Count; i++)
+                    {
+                        TasksInExecution.Add(new TaskProduzione(curr.TaskAvviati[i]));
+                    }
+
+                    ViewBag.TasksInExecutionUser = TasksInExecution;
+
+            }
+
+            return View();
+        }
+
+       /* Returns:
+        * 1 if task has started correctly
+        * 2 if user has not the needed authorization
+        * 3 if user exceeded the max number of tasks he can do simultaneously
+        */
+        public int StartTaskUser(int TaskID)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/StartTaskUser", "TaskID=" + TaskID +"&user="+Session["user"], ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workplace/WebGemba/StartTaskUser", "TaskID=" + TaskID, ipAddr);
+            }
+
+            int ret = 1;
+            ViewBag.authX = false;
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Produzione";
+            prmUser[1] = "X";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authX)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if (tsk.TaskProduzioneID != -1)
+                {
+                    User curr = (User)Session["user"];
+                    curr.DoCheckIn(new Postazione(tsk.PostazioneID));
+                    bool rt = tsk.Start((User)Session["user"]);
+                    if (rt)
+                    {
+                        ret = 1;
+                    }
+                    else
+                    {
+                        Reparto rp = new Reparto(tsk.RepartoID);
+                        curr.loadTaskAvviati();
+                        if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && curr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
+                        {
+                            ret = 3;
+                        }
+                        else
+                        {
+                        }
+                    }
+                }
+                else
+                {
+                    ret = 2;
+                }
+            }
+            else
+            {
+                ret = 4;
+            }
+            return ret;
+        }
+
+        /*Returns:
+ * 1 if task has started correctly
+ * 2 if an error occured
+ * 3 if there are some mandatory parameters missing
+ * 4 if user has not the needed authorization
+ * 5 if there are some previous tasks that did not end
+ */
+        public int CompleteTaskUser(int TaskID)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/CompleteTaskUser", "TaskID=" + TaskID+"&user="+Session["user"], ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workplace/WebGemba/CompleteTask", "TaskID=" + TaskID, ipAddr);
+            }
+
+            int ret = 1;
+            String retS = "CompleteTask";
+            ViewBag.authX = false;
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Produzione";
+            prmUser[1] = "X";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+            }
+            if (ViewBag.authX)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if (tsk.TaskProduzioneID != -1)
+                {
+                    Articolo art = new Articolo(tsk.ArticoloID, tsk.ArticoloAnno);
+                    User curr = (User)Session["user"];
+                    Postazione pst = new Postazione(tsk.PostazioneID);
+                    curr.DoCheckIn(pst);
+                    bool rt = tsk.Complete((User)Session["user"]);
+                    if (rt == true)
+                    {
+                        ret = 1;
+                    }
+                    else
+                    {
+                        // Set generic error, if none of the following cases appears to be true.
+                        ret = 2;
+
+                        // Check if fault is caused by previous tasks
+                        tsk.loadPrecedenti();
+                        for (int i = 0; i < tsk.PreviousTasks.Count; i++)
+                        {
+                            TaskProduzione tskPrev = new TaskProduzione(tsk.PreviousTasks[i].NearTaskID);
+                            if (tskPrev.Status != 'F')
+                            {
+                                ret = 5;
+                            }
+                        }
+
+                        if (!tsk.CheckParametersComplete())
+                        {
+                            ret = 3;
+                        }
+                    }
+                    curr.DoCheckOut(pst);
+                }
+
+                retS = tsk.log;
+
+            }
+            else
+            {
+                ret = 4;
+            }
+            return ret;
+        }
+
+        public JsonResult GetTasksAvailableUser(String user)
+        {
+            ViewBag.authX = false;
+            List<JsonAvailableTasks> avTasks = new List<JsonAvailableTasks>();
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Produzione";
+            prmUser[1] = "X";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authX)
+            {
+                User curr = (User)Session["user"];
+
+                    curr.loadTaskAvviati();
+                curr.LoadExecutableTasks();
+                    List<int> results = curr.ExecutableTasks.Where(f => !curr.TaskAvviati.Any(t => t == f)).ToList();
+                    for (int i = 0; i < results.Count; i++)
+                    {
+                        TaskProduzione currTask = new TaskProduzione(results[i]);
+                        JsonAvailableTasks currAvTask = new JsonAvailableTasks();
+                        currAvTask.TaskID = currTask.TaskProduzioneID;
+                        currAvTask.CustomerName = currTask.CustomerName;
+                        currAvTask.ExternalID = "";
+                        currAvTask.ExternalID = currTask.ExternalID;
+                        Articolo currProd = new Articolo(currTask.ArticoloID, currTask.ArticoloAnno);
+                        if (currTask.ExternalID.Length == 0)
+                        {
+                            currAvTask.ExternalID = currTask.ArticoloID.ToString() + "/" + currTask.ArticoloAnno.ToString();
+                        }
+                        currAvTask.ProdID = currTask.ArticoloID;
+                        currAvTask.ProdYear = currTask.ArticoloAnno;
+                        currAvTask.QuantityOrdered = currTask.QuantitaPrevista;
+                        currAvTask.QuantityProduced = currTask.QuantitaProdotta;
+                        currAvTask.EarlyStart = currTask.EarlyStart;
+                        currAvTask.LateStart = currTask.LateStart;
+                        currAvTask.TaskName = currTask.Name;
+                        currAvTask.ProdName = currProd.Proc.variant.nomeVariante;
+                        if (currAvTask.LateStart <= DateTime.UtcNow)
+                        {
+                            currAvTask.BgColor = "#FF0000";
+                        }
+                        else if (currAvTask.EarlyStart <= DateTime.UtcNow)
+                        {
+                            currAvTask.BgColor = "#FFFF00";
+                        }
+                        else
+                        {
+                            currAvTask.BgColor = "#FFFFFF";
+                        }
+                        avTasks.Add(currAvTask);
+                    }
+                    var avTasks2 = avTasks.OrderBy(x => x.LateStart);
+                    return Json(JsonConvert.SerializeObject(avTasks2), JsonRequestBehavior.AllowGet);
+
+            }
+            var avTasks3 = avTasks.OrderBy(x => x.LateStart);
+            return Json(JsonConvert.SerializeObject(avTasks3), JsonRequestBehavior.AllowGet);
+        }
     }
             
 

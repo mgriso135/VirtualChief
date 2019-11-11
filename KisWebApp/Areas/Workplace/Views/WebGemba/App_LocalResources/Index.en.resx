@@ -132,6 +132,9 @@
   <data name="lblNavWorkplace" xml:space="preserve">
     <value>Workplace</value>
   </data>
+  <data name="lblPersonalWebGemba" xml:space="preserve">
+    <value>Personal WebGemba</value>
+  </data>
   <data name="lblTitle" xml:space="preserve">
     <value>WebGemba</value>
   </data>

@@ -1,0 +1,792 @@
+﻿
+@{
+    ViewBag.Title = ResWebGemba.ListUserTasks.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResWebGemba.ListUserTasks.lblTitle</h3>
+
+@if (ViewBag.authX)
+{
+
+    <script>
+            $(document).ready(function () {
+                $("#panelEditParameters").fadeOut();
+
+                //$(".btnPauseTask").click(function () {
+                $("#panelTasks").on("click", ".btnPauseTask", function () {
+                    var rowid = "rowEx_" + $(this).val();
+                    $("#btnPauseTask_" + $(this).val()).fadeOut();
+                    $("#btnCompleteTask_" + $(this).val()).fadeOut();
+                    $("#btnWarning_" + $(this).val()).fadeOut();
+                    $("#btnViewWI_" + $(this).val()).fadeOut();
+                    $.ajax({
+                        url: "@Url.Action("PauseTask", "WebGemba")",
+                        type: 'GET',
+                        dataType: "html",
+                        data: {
+                            TaskID: $(this).val()
+                        },
+                        success: function (result) {
+                            if (result == "1") {
+                                var TaskId = $("#" + rowid).find("td:eq(3)").html();
+                                var ProductId = $("#" + rowid).find("td:eq(4)").html();
+                                var Order = $("#" + rowid).find("td:eq(5)").html();
+                                var Customer = $("#" + rowid).find("td:eq(6)").html();
+                                var ProductName = $("#" + rowid).find("td:eq(7)").html();
+                                var TaskName = $("#" + rowid).find("td:eq(8)").html();
+                                var Quantity = $("#" + rowid).find("td:eq(12)").html();
+                                var aQuantity = Quantity.split('/');
+                                var bgcolor = $("#" + rowid).css("background-color");
+
+                                $("#tblTaskAvailable tbody").prepend("<tr style=\"background-color: " + bgcolor + "\" id=\"rowAv_" + TaskId + "\">"
+                                    + "<td>" + "<input type='image' class='btnStartTask' style='min-width:20px; max-width:30px;' src='../../img/iconPlay.png' value='"+TaskId+"' id='btnStartTask_"+TaskId+"'  />"+ "</td>"
+                                    + "<td>" + TaskId + "</td>"
+                                    + "<td>" + ProductId + "</td>"
+                                    + "<td>" + Order + "</td>"
+                                    + "<td>" + Customer + "</td>"
+                                    + "<td>" + ProductName + "</td>"
+                                    + "<td>" + TaskName + "</td>"
+                                    + "<td>" + Quantity + "</td>"
+                                    + "</tr>");
+
+
+
+                                $("#" + rowid).fadeOut().remove();
+                                if ($("#panelTasks tr").length <= 2) {
+                                    $("#panelTasks").fadeOut();
+                                }
+                            }
+                            else if (result == "2") {
+                                $("#btnPauseTask_" + $(this).val()).fadeIn();
+                                $("#btnWarning_" + $(this).val()).fadeIn();
+                                $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                                $("#btnViewWI_" + $(this).val()).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                                                $("#lblModalInfo").dialog({
+                                                    modal: true,
+                                                    title: "Info",
+                                                    //width: 300,
+                                                    //height: 150,
+                                                    open: function (event, ui) {
+                                                        setTimeout(function () {
+                                                            $("#lblModalInfo").dialog("close");
+                                                        }, 2000);
+                                                    }
+                                                });
+                            }
+                            else if (result == "3") {
+                                $("#btnPauseTask_" + $(this).val()).fadeIn();
+                                $("#btnWarning_" + $(this).val()).fadeIn();
+                                $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                                $("#btnViewWI_" + $(this).val()).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrUserNotAuthorized");
+                                $("#lblModalInfo").dialog({
+                                    modal: true,
+                                    title: "Info",
+                                    //width: 300,
+                                    //height: 150,
+                                    open: function (event, ui) {
+                                        setTimeout(function () {
+                                            $("#lblModalInfo").dialog("close");
+                                        }, 2000);
+                                    }
+                                });
+                            }
+                        },
+                        error: function (result) {
+                            $("#btnPauseTask_" + $(this).val()).fadeIn();
+                            $("#btnWarning_" + $(this).val()).fadeIn();
+                            $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                            $("#btnViewWI_" + $(this).val()).fadeIn();
+                        },
+                        warning: function (result) {
+                            $("#btnPauseTask_" + $(this).val()).fadeIn();
+                            $("#btnWarning_" + $(this).val()).fadeIn();
+                            $("#btnCompleteTask_" + $(this).val()).fadeIn();
+                            $("#btnViewWI_" + $(this).val()).fadeIn();
+                        }
+                    });
+                });
+
+                $("#panelTasks").on("click", ".btnCompleteTask", function () {
+
+                    tskID = $(this).val();
+
+                    var rowid = "rowEx_" + $(this).val();
+                    $("#btnCompleteTask_" + $(this).val()).fadeOut();
+                    $("#btnPauseTask_" + $(this).val()).fadeOut();
+                    $("#btnWarning_" + $(this).val()).fadeOut();
+                    botonPause = $("#btnPauseTask_" + $(this).val());
+                    botonWarning = $("#btnWarning_" + $(this).val());
+                    $.ajax({
+                        url: "@Url.Action("CompleteTaskUser", "WebGemba")",
+                        type: 'GET',
+                        dataType: "html",
+                        data: {
+                            TaskID: tskID
+                        },
+                        success: function (result) {
+                            if (result == "1") {
+                                $("#" + rowid).fadeOut();
+                                if ($("#panelTasks tr").length <= 2) {
+                                    $("#panelTasks").fadeOut();
+                                }
+                            }
+                            else if (result == "2") {
+                                boton = "#btnCompleteTask_" + tskID;
+                                $(boton).fadeIn();
+                                $(botonPause).fadeIn();
+                                $(botonWarning).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                                $("#lblModalInfo").dialog({
+                                    modal: true,
+                                    title: "Info",
+                                    open: function (event, ui) {
+                                        setTimeout(function () {
+                                            $("#lblModalInfo").dialog("close");
+                                        }, 2000);
+                                    }
+                                });
+                            }
+                            else if (result == "3") {
+                                boton = "#btnCompleteTask_" + tskID;
+                                $(boton).fadeIn();
+                                $(botonPause).fadeIn();
+                                $(botonWarning).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrParametersMissing");
+                                $("#lblModalInfo").dialog({
+                                    modal: true,
+                                    title: "Info",
+                                    //width: 300,
+                                    //height: 150,
+                                    open: function (event, ui) {
+                                        setTimeout(function () {
+                                            $("#lblModalInfo").dialog("close");
+                                        }, 2000);
+                                    }
+                                });
+                            }
+                            else if (result == "4") {
+                                boton = "#btnCompleteTask_" + tskID;
+                                $(boton).fadeIn();
+                                $(botonPause).fadeIn();
+                                $(botonWarning).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrUserNotAuthorized");
+                                $("#lblModalInfo").dialog({
+                                    modal: true,
+                                    title: "Info",
+                                    //width: 300,
+                                    //height: 150,
+                                    open: function (event, ui) {
+                                        setTimeout(function () {
+                                            $("#lblModalInfo").dialog("close");
+                                        }, 2000);
+                                    }
+                                });
+                            }
+                            else if (result == "5") {
+                                boton = "#btnCompleteTask_" + tskID;
+                                $(boton).fadeIn();
+                                $(botonPause).fadeIn();
+                                $(botonWarning).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrPreviousTasks");
+                                $("#lblModalInfo").dialog({
+                                    modal: true,
+                                    title: "Info",
+                                    //width: 300,
+                                    //height: 150,
+                                    open: function (event, ui) {
+                                        setTimeout(function () {
+                                            $("#lblModalInfo").dialog("close");
+                                        }, 2000);
+                                    }
+                                });
+                            }
+                            else {
+                                boton = "#btnCompleteTask_" + tskID;
+                                $(boton).fadeIn();
+                                $(botonPause).fadeIn();
+                                $(botonWarning).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                                $("#lblModalInfo").dialog({
+                                    modal: true,
+                                    title: "Info",
+                                    //width: 300,
+                                    //height: 150,
+                                    open: function (event, ui) {
+                                        setTimeout(function () {
+                                            $("#lblModalInfo").dialog("close");
+                                        }, 2000);
+                                    }
+                                });
+                            }
+
+                        },
+                        error: function (result) {
+                            boton = "#btnCompleteTask_" + tskID;
+                            $(boton).fadeIn();
+                            $(botonPause).fadeIn();
+                            $(botonWarning).fadeIn();
+                        },
+                        warning: function (result) {
+                            boton = "#btnCompleteTask_" + tskID;
+                            $(boton).fadeIn();
+                            $(botonPause).fadeIn();
+                            $(botonWarning).fadeIn();
+                        }
+                    });
+                });
+
+                $("#panelTasks").on("click", ".btnEditParameters", function () {
+
+                    $("#panelEditParameters").fadeIn();
+                    $('#panelEditTask').fadeOut();
+                    $("#panelTasks").fadeOut();
+                    $("#imgLoadToolBox").fadeIn();
+
+
+                    $.ajax({
+                        url: "@Url.Action("ListTaskParameters", "WebGemba")",
+                        type: 'GET',
+                        dataType: "html",
+                        data: {
+                            TaskID: $(this).val()
+                        },
+                        success: function (result) {
+                            $("#imgLoadToolBox").fadeOut();
+                            $("#innerPanelEditTask").html(result);
+                        },
+                        error: function (result) {
+
+                        },
+                        warning: function (result) {
+
+                        }
+                    });
+                });
+
+                $("#btnCloseParameters").click(function () {
+                    $("#panelEditParameters").fadeOut();
+                    $("#panelTasks").fadeIn();
+                    window.location.href = window.location.href;
+                });
+
+
+                $("#panelTasks").on("click",".btnWarning",function () {
+                    $.ajax({
+                        url: "@Url.Action("GenerateWarning", "WebGemba")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        TaskID: $(this).val()
+                    },
+                    success: function (result) {
+                        $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblWarningSent");
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            //width: 300,
+                            //height: 150,
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+
+                    },
+                    error: function (result) {
+                    },
+                    warning: function (result) {
+                    }
+                });
+                });
+
+                $("#panelTasks").on("click", ".btnViewQuantity", function () {
+                    $(this).fadeOut();
+                    $("#txtQty_" + $(this).val()).fadeIn();
+                    $("#lblQty_" + $(this).val()).fadeOut();
+                    $("#btnSaveQty_" + $(this).val()).fadeIn();
+                });
+
+
+                $("#panelTasks").on("click", ".btnSaveQuantity", function () {
+                    var newQty = $("#txtQty_" + $(this).val()).val();
+                    var taskID = $(this).val();
+                    $.ajax({
+                        url: "@Url.Action("ChangeQuantity", "WebGemba")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        TaskID: $(this).val(),
+                        Quantity: newQty
+                    },
+                    success: function (result) {
+                        if (result == "1")
+                        {
+                            $("#btnSaveQty_" + taskID).fadeOut();
+                            $("#txtQty_" + taskID).fadeOut();
+                            $("#lblQty_" + taskID).fadeIn();
+                            $("#lblQty_" + taskID).html(newQty);
+                            $("#btnViewQty_" + taskID).fadeIn();
+                        }
+                        else if(result=="2")
+                        {
+                            $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrUserNotAuthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                //width: 300,
+                                //height: 150,
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (result == "3") {
+                            $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrWrongQuantity");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                //width: 300,
+                                //height: 150,
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else
+                        {
+                            $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                //width: 300,
+                                //height: 150,
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                    error: function (result) {
+                    },
+                    warning: function (result) {
+                    }
+                });
+                });
+
+                // Tasks Available
+                $("#tblTaskAvailable").on("click", ".btnStartTask", function () {
+                    var thisVal = $(this).val();
+                    var rowid = "rowAv_" + thisVal;
+                    $("#btnStartTask_" + thisVal).fadeOut();
+                    $.ajax({
+                        url: "@Url.Action("StartTaskUser", "WebGemba")",
+                        type: 'GET',
+                    dataType: "html",
+                    data: {
+                        TaskID: thisVal
+                    },
+                        success: function (result) {
+
+                        if(result=="1")
+                        {
+                            var TaskId = $("#" + rowid).find("td:eq(1)").html();
+                            var ProductId = $("#" + rowid).find("td:eq(2)").html();
+                            var Order = $("#" + rowid).find("td:eq(3)").html();
+                            var Customer = $("#" + rowid).find("td:eq(4)").html();
+                            var ProductName = $("#" + rowid).find("td:eq(5)").html();
+                            var TaskName = $("#" + rowid).find("td:eq(6)").html();
+                            var Quantity = $("#" + rowid).find("td:eq(7)").html();
+                            var aQuantity = Quantity.split('/');
+                            var bgcolor = $("#" + rowid).css("background-color");
+
+                            $("#" + rowid).fadeOut().remove();
+                           $("#panelTasks").fadeIn();
+                            $("#panelTasks > tbody").append("<tr  style=\"background-color: " + bgcolor + "\" id=\"rowEx_" + TaskId + "\">"
+                                + "<td><input type=\"image\" class=\"btnPauseTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPause.png\" value=\"" + TaskId + "\" id=\"btnPauseTask_" + TaskId + "\" /></td>"
+                                + "<td>" + "<input type=\"image\" class=\"btnWarning\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconWarning.png\" value=\"" + TaskId + "\"  id=\"btnWarning_" + TaskId + "\" />" + "</td>"
+                                + "<td>" + "<input type='image' src='../../img/iconWorkInstruction.png' style='min-width:10px; max-width:20px;' class='btnViewWorkInstruction' id='btnViewWI_" + TaskId + "' value='" + TaskId + "' />" + "</td>"
+                                + "<td>" + TaskId + "</td>"
+                                + "<td>" + ProductId + "</td>"
+                                + "<td>" + Order + "</td>"
+                                + "<td>" + Customer + "</td>"
+                                + "<td>" + ProductName + "</td>"
+                                + "<td>" + TaskName + "</td>"
+                                + "<td>" + "<input type=\"image\" class=\"btnViewQuantity\" id=\"btnViewQty_"+TaskId+"\" style=\"min-width:10px; max-width:20px;\" src=\"../../img/iconQuantity.jpg\" value=\""+TaskId+"\" />"
+                                 +   "<input type=\"number\" id=\"txtQty_"+TaskId+"\" value=\""+aQuantity[0]+"\" style=\"display:none;min-width:30px; max-width:60px;\" />"
+                                + "<span id=\"lblQty_" + TaskId + "\">" + aQuantity[0] + "</span>/" + aQuantity[1]
+                                 +   "<input type=\"image\" class=\"btnSaveQuantity\" id=\"btnSaveQty_"+TaskId+"\" style=\"min-width:10px; max-width:20px;display:none;\" src=\"../../img/iconSave.jpg\" value=\""+TaskId+"\" />" + "</td>"
+                                + "<td>" +"<input type=\"image\" class=\"btnEditParameters\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconParameters.png\" value=\"" + TaskId +"\" />"+ "</td>"
+                                + "<td>" + "<input type=\"image\" class=\"btnCompleteTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconComplete.png\" value=\"" + TaskId + "\" id=\"btnCompleteTask_"+TaskId+"\" />" + "</td>"
+                                +"<td style=\"visibility:hidden\">"+Quantity+"</td>"
+                                + "</tr>");
+
+                        }
+                        else if(result=="2")
+                        {
+                            $("#btnStartTask_" + thisVal).fadeIn();
+                            $("#lblModalInfo").html("@ResWebGemba.ListTasksAvailable.lblErrNotAuthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                //width: 300,
+                                //height: 150,
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (result == "3") {
+                            $("#btnStartTask_" + thisVal).fadeIn();
+                            $("#lblModalInfo").html("@ResWebGemba.ListTasksAvailable.lblErrToManyTasks");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                //width: 300,
+                                //height: 150,
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                        error: function (result) {
+                            $("#btnStartTask_" + thisVal).fadeIn();
+                    },
+                        warning: function (result) {
+                            $("#btnStartTask_" + thisVal).fadeIn();
+                    }
+                });
+                });
+
+
+
+  
+                function getNewAvailableTasks() {
+                    console.log("getNewAvailableTasks " + (new Date()));
+                    usr = "@ViewBag.user";
+                    $.getJSON("@Url.Action("GetTasksAvailableUser")", { usr }, function (data) {
+                        //alert(data);
+                        data = $.parseJSON(data);
+                        var newrows = "";
+                        $.each(data, function (i, v) {
+                            console.log(i, v);
+                            //alert(v.ProdName);
+                            // Replace the while table
+                            newrows += "<tr style=\"background-color: " + v.BgColor + "\" id=\"rowAv_" + v.TaskID + "\">"
+                                + "<td>" + "<input type=\"image\" class=\"btnStartTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconPlay.png\" value=\"" + v.TaskID + "\" id='btnStartTask_" + v.TaskID + "'  />" + "</td>"
+                                + "<td>" + v.TaskID + "</td>"
+                                + "<td>" + v.ProdID +"/" + v.ProdYear + "</td>"
+                                + "<td>" + v.ExternalID + "</td>"
+                                + "<td>" + v.CustomerName + "</td>"
+                                + "<td>" + v.ProdName + "</td>"
+                                + "<td>" + v.TaskName + "</td>"
+                                + "<td>" + v.QuantityProduced + "/" + v.QuantityOrdered + "</td>"
+                                + "</tr>";
+                            if ($("#rowAv_" + v.TaskID).length == 0) {
+                                //alert("aggiungo");
+                            }
+                            else {  }
+
+                        });
+                        $("#tblTaskAvailable").find("tr:gt(0)").remove();
+                        $("#tblTaskAvailable > tbody").append(newrows);
+                    });
+
+
+                    var loadWstCmpl = setTimeout(getNewAvailableTasks, 120000);
+                }
+
+
+                //btnViewWorkInstruction
+                //$(".btnViewWorkInstruction").on("click", function () {
+                $("#panelTasks").on("click", ".btnViewWorkInstruction", function () {
+                    var taskid = $(this).val();
+                    $("#btnViewWI_" + taskid).fadeOut();
+                    $.ajax({
+                        url: "@Url.Action("GetWorkInstruction", "WebGemba")",
+                        type: 'POST',
+                    dataType: "html",
+                    data: {
+                        TaskID: $(this).val(),
+                    },
+                        success: function (result) {
+                            if (result.length > 0) {
+                                var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 100%; overflow: hidden; top:10px;' id='viewPdf'>"
+                                    + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:40px' />"
+                                    + "<div style='overflow: hidden;'>"
+                                    + "</div>"
+                                    + "<iframe id='fred' style='border:1px solid #666CCC; height:95%; width:95%; position:absolute;top:70px;' title='' src='../../Data/WorkInstructions/"
+                                    + result + "' frameborder='1' scrolling='auto'></iframe></div>";
+
+                                $("#iframeWI").html(ifrmWI);
+                                $("#iframeWI").fadeIn();
+                                $("#btnViewWI_" + taskid).fadeIn();
+                            }
+                            else {
+                                $("#btnViewWI_" + taskid).fadeIn();
+                                $("#lblModalInfo").html("@ResWebGemba.ListWorkstationsTasks.lblErrWINotFound");
+                                                $("#lblModalInfo").dialog({
+                                                    modal: true,
+                                                    title: "Info",
+                                                    open: function (event, ui) {
+                                                        setTimeout(function () {
+                                                            $("#lblModalInfo").dialog("close");
+                                                        }, 5000);
+                                                    }
+                                });
+                            }
+                    },
+                    error: function (result) {
+                        //$("#lblInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                        $("#btnViewWI_" + taskid).fadeIn();
+                    },
+                    warning: function (result) {
+                        //$("#lblInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
+                        $("#btnViewWI_" + taskid).fadeIn();
+                    }
+                });
+
+                });
+
+
+                $("#iframeWI").on("click", "#imgClosePdf", function () {
+                    $("#iframeWI").fadeOut();
+                });
+
+
+                setTimeout(getNewAvailableTasks, 120000);
+
+
+            });
+    </script>
+    <div id="debug" />
+    <div class="row-fluid">
+        <div class="row-fluid">
+            <div class="span12">
+                <h3>@ViewBag.WorkstationName</h3>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <ul class="breadcrumb hidden-phone">
+                    <li>
+                        <a href="Index">@ResWebGemba.Index.lblNavWorkplace</a><span class="divider"></span>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("ListUserTasks", "WebGemba")">@ResWebGemba.Index.lblNavWebGemba</a><span class="divider"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="span12">
+            <table class="table table-hover" id="panelTasks" width="100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHTaskID</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHProduct</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHOrder</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHCustomerName</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHProductName</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHTaskName</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHQuantity</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHParameters</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        List<KIS.App_Code.TaskProduzione> lstTasks = ViewBag.TasksInExecutionUser;
+                        foreach (var m in lstTasks)
+                        {
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
+                            KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(art.Reparto);
+                            var bgcolor = "";
+                            DateTime EarlyStart = m.EarlyStart;
+                            DateTime LateStart = m.LateStart;
+                            DateTime Now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
+                            if (LateStart <= Now)
+                            {
+                                bgcolor = "#FF0000";
+                            }
+                            else if (EarlyStart <= Now)
+                            {
+                                bgcolor = "#FFFF00";
+                            }
+                            else
+                            {
+                                bgcolor = "#FFFFFF";
+                            }
+                            <tr style="background-color: @bgcolor;" id="rowEx_@m.TaskProduzioneID">
+                                <td>
+                                    <input type="image" class="btnPauseTask" id="btnPauseTask_@m.TaskProduzioneID"
+                                           style="min-width:20px; max-width:30px;"
+                                           src="~/img/iconPause.png"
+                                           value="@m.TaskProduzioneID" />
+                                </td>
+                                <td>
+                                    <input type="image" class="btnWarning" id="btnWarning_@m.TaskProduzioneID"
+                                           style="min-width:20px; max-width:30px;"
+                                           src="~/img/iconWarning.png"
+                                           value="@m.TaskProduzioneID" />
+                                </td>
+                                <td>
+                                    <input type="image" src="~/img/iconWorkInstruction.png" style="min-width:10px; max-width:20px;" class="btnViewWorkInstruction"
+                                           id="btnViewWI_@m.TaskProduzioneID"
+                                           value="@m.TaskProduzioneID" />
+                                </td>
+                                <td>@m.TaskProduzioneID</td>
+                                <td>@m.ArticoloID/@m.ArticoloAnno</td>
+                                @if (m.ExternalID.Length > 0)
+                                {
+                                    <td>@m.ExternalID</td>
+                                }
+                                else
+                                {
+                                    <td>@art.Commessa/@art.AnnoCommessa</td>
+                                }
+                                <td>@m.CustomerName</td>
+                                <td>@art.Proc.variant.nomeVariante</td>
+                                <td>@m.Name</td>
+                                <td>
+                                    <input type="image" class="btnViewQuantity" id="btnViewQty_@m.TaskProduzioneID"
+                                           style="min-width:10px; max-width:20px;"
+                                           src="~/img/iconQuantity.jpg"
+                                           value="@m.TaskProduzioneID" />
+                                    <input type="number" id="txtQty_@m.TaskProduzioneID" value="@m.QuantitaProdotta"
+                                           style="display:none;min-width:30px; max-width:60px;" />
+                                    <span id="lblQty_@m.TaskProduzioneID">@m.QuantitaProdotta</span>/@m.QuantitaPrevista
+                                    <input type="image" class="btnSaveQuantity" id="btnSaveQty_@m.TaskProduzioneID"
+                                           style="min-width:10px; max-width:20px;display:none;"
+                                           src="~/img/iconSave.jpg"
+                                           value="@m.TaskProduzioneID" />
+                                </td>
+                                <td>
+                                    <input type="image" class="btnEditParameters"
+                                           style="min-width:20px; max-width:30px;"
+                                           src="~/img/iconParameters.png"
+                                           value="@m.TaskProduzioneID" />
+                                </td>
+                                <td>
+                                    @if (m.CheckNonFixedParametersComplete())
+                                    {
+                                        <input type="image" class="btnCompleteTask" id="btnCompleteTask_@m.TaskProduzioneID"
+                                               style="min-width:20px; max-width:30px;"
+                                               src="~/img/iconComplete.png"
+                                               value="@m.TaskProduzioneID" />
+                                    }
+                                </td>
+                                <td style="visibility:hidden">@m.QuantitaProdotta/@m.QuantitaPrevista</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            <table id="panelEditParameters" style="border: 1px solid black;">
+                <tr>
+                    <td style="text-align: right;">
+                        <img src="~/img/iconLoading2.gif" id="imgLoadToolBox" style="min-width: 30px; max-width:60px;" />
+                        <img src="~/img/iconClose.png" style="height: 20px; text-align:right;" id="btnCloseParameters" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <span id="innerPanelEditTask"></span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-hover" width="100%" id="tblTaskAvailable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@ResWebGemba.ListTasksAvailable.lblTHTaskID</th>
+                        <th>@ResWebGemba.ListTasksAvailable.lblTHProduct</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHOrder</th>
+                        <th>@ResWebGemba.ListTasksInExecution.lblTHCustomerName</th>
+                        <th>@ResWebGemba.ListTasksAvailable.lblTHProductName</th>
+                        <th>@ResWebGemba.ListTasksAvailable.lblTHTaskName</th>
+                        <th>@ResWebGemba.ListTasksAvailable.lblTHQuantity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{List<KIS.App_Code.TaskProduzione> lstTasksExecutable = ViewBag.TasksExecutableUser;
+
+                        foreach (var m in lstTasksExecutable)
+                        {
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
+                            KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(art.Reparto);
+                            var bgcolor = "";
+                            DateTime EarlyStart = m.EarlyStart;
+                            DateTime LateStart = m.LateStart;
+                            DateTime Now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
+                            if (LateStart <= Now)
+                            {
+                                bgcolor = "#FF0000";
+                            }
+                            else if (EarlyStart <= Now)
+                            {
+                                bgcolor = "#FFFF00";
+                            }
+                            else
+                            {
+                                bgcolor = "#FFFFFF";
+                            }
+                            <tr style="background-color: @bgcolor;" id="rowAv_@m.TaskProduzioneID">
+                                <td>
+                                    <input type="image" class="btnStartTask" id="btnStartTask_@m.TaskProduzioneID"
+                                           style="min-width:20px; max-width:30px;"
+                                           src="~/img/iconPlay.png"
+                                           value="@m.TaskProduzioneID" />
+                                </td>
+                                <td id="Av_Taskid">@m.TaskProduzioneID</td>
+                                <td>@m.ArticoloID/@m.ArticoloAnno</td>
+                                @if (m.ExternalID.Length > 0)
+                                {
+                                    <td>@m.ExternalID</td>
+                                }
+                                else
+                                {
+                                    <td>@art.Commessa/@art.AnnoCommessa</td>
+                                }
+                                <td>@m.CustomerName</td>
+                                <td>@art.Proc.variant.nomeVariante</td>
+                                <td>@m.Name</td>
+                                <td>@m.QuantitaProdotta/@m.QuantitaPrevista</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="iframeWI" />
+    <div id="lblModalInfo" />
+
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResWebGemba.ListTasksInExecution.lblErrUserNotAuthorized
+        </div>
+    </div>}
+

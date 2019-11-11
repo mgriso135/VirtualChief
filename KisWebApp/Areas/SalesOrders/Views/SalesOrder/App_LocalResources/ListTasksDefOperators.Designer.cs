@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ResWebGemba {
+namespace ResAddSalesOrder {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace ResWebGemba {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Index {
+    public class ListTasksDefOperators {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Index() {
+        internal ListTasksDefOperators() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ResWebGemba {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.Workplace.Views.WebGemba.App_LocalResources.Index", typeof(Index).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.SalesOrders.Views.SalesOrder.App_LocalResources.ListTasksDefOperators", typeof(ListTasksDefOperators).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,65 +61,20 @@ namespace ResWebGemba {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Per effettuare il login con un utente autorizzato clicca qui.
+        ///   Looks up a localized string similar to Operatori assegnati.
         /// </summary>
-        public static string lblClickHere {
+        public static string lblAssignedOperators {
             get {
-                return ResourceManager.GetString("lblClickHere", resourceCulture);
+                return ResourceManager.GetString("lblAssignedOperators", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Non hai il permesso di accedere al WebGemba.
+        ///   Looks up a localized string similar to Tasks.
         /// </summary>
-        public static string lblErrAuth {
+        public static string lblTasks {
             get {
-                return ResourceManager.GetString("lblErrAuth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check-in postazione.
-        /// </summary>
-        public static string lblNavCheckIn {
-            get {
-                return ResourceManager.GetString("lblNavCheckIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WebGemba.
-        /// </summary>
-        public static string lblNavWebGemba {
-            get {
-                return ResourceManager.GetString("lblNavWebGemba", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Workplace.
-        /// </summary>
-        public static string lblNavWorkplace {
-            get {
-                return ResourceManager.GetString("lblNavWorkplace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Personal WebGemba.
-        /// </summary>
-        public static string lblPersonalWebGemba {
-            get {
-                return ResourceManager.GetString("lblPersonalWebGemba", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WebGemba.
-        /// </summary>
-        public static string lblTitle {
-            get {
-                return ResourceManager.GetString("lblTitle", resourceCulture);
+                return ResourceManager.GetString("lblTasks", resourceCulture);
             }
         }
     }
