@@ -1422,5 +1422,130 @@ namespace KIS.Areas.SalesOrders.Controllers
             }
             return ret;
         }
+
+        public ActionResult ShowManageOperators(int ProductID, int ProductYear)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
+            }
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManageOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                ViewBag.ProductID = ProductID;
+                ViewBag.ProductYear = ProductYear;
+
+                Articolo art = new Articolo(ProductID, ProductYear);
+                art.loadTasksProduzione();
+                return View(art.Tasks);
+            }
+                return View();
+        }
+
+        /* Returns:
+         * 0 if error
+         * 1 if ok
+         */
+         public int AssignOperatorToTask(int TaskID, String defOp)
+        {
+            int ret = 0;
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManageOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if(tsk.TaskProduzioneID!=-1)
+                {
+                    ret = tsk.addAssignedOperator(defOp);
+                }
+            }
+
+                return ret;
+        }
+
+        public ActionResult ListTasksDefOperators(int ProductID, int ProductYear)
+        {
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManageOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                Articolo art = new Articolo(ProductID, ProductYear);
+                if(art.ID!=-1 && art.Year!=-1)
+                {
+                    art.loadTasksProduzione();
+                    return View(art.Tasks);
+                }
+            }
+                return View();
+        }
+
+        /* Returns:
+         * 0 if error
+         * 1 if ok
+         */
+        public int DeleteAssignedOperator(int TaskID, String defOp)
+        {
+            int ret = 0;
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManageOperators";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if (tsk.TaskProduzioneID != -1)
+                {
+                    ret = tsk.deleteAssignedOperator(defOp);
+                }
+            }
+
+            return ret;
+        }
     }
 }

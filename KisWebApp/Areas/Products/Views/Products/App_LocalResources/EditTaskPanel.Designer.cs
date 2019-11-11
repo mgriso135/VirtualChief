@@ -106,6 +106,15 @@ namespace ResProducts {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operatori assegnati ai task per default.
+        /// </summary>
+        public static string lblDefaultOperators {
+            get {
+                return ResourceManager.GetString("lblDefaultOperators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Attenzione: impossibile aggiungere il tempo ciclo. Verifica che non sia presente un altro tempo per il medesimo numero di operatori..
         /// </summary>
         public static string lblDetailEditError {

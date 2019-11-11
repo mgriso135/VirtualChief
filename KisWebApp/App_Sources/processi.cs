@@ -4148,6 +4148,7 @@ namespace KIS.App_Code
             this.Parameters = new List<ModelTaskParameter>();
             this.WorkInstructions = new List<TaskWorkInstruction>();
             this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
+            this._DefaultOperators = new List<User>();
             this._Task = prc;
                 this._variant = vr;
                 prc.loadFigli(vr);
@@ -4268,6 +4269,14 @@ namespace KIS.App_Code
         public List<Postazione> PostazioniDiLavoro
         {
             get { return this._PostazioniDiLavoro; }
+        }
+
+        private List<User> _DefaultOperators;
+        public List<User> DefaultOperators {
+            get
+            {
+                return this._DefaultOperators;
+            }
         }
 
         public void loadPostazioni()
@@ -4491,6 +4500,100 @@ namespace KIS.App_Code
             conn.Close();
         }
 
+        public void loadDefaultOperators()
+        {
+            this._DefaultOperators = new List<User>();
+            if (this.Task != null && this.variant != null && this.Task.processID > -1 && this.variant.idVariante > -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT user FROM taskusermodel WHERE taskid = " + this.Task.processID
+                    + " AND taskrev=" + this.Task.revisione
+                    + " AND variantid = " + this.variant.idVariante.ToString();
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this._DefaultOperators.Add(new User(rdr.GetString(0)));
+                }
+                rdr.Close();
+            conn.Close();
+            }
+        }
+
+        public Boolean addDefaultOperator(String usr)
+        {
+            Boolean ret = false;
+            
+            if (this.Task != null && this.variant != null && this.Task.processID > -1 && this.variant.idVariante > -1)
+            {
+                User curr = new User(usr);
+                if(usr!=null && curr.username.Length > 0)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "INSERT INTO taskusermodel(taskid, taskrev, variantid, user, exclusive) VALUES("
+                        +"@TaskID, @TaskRev, @VariantID, @User, @Exclusive)";
+                    cmd.Parameters.AddWithValue("@TaskID", this.Task.processID);
+                    cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
+                    cmd.Parameters.AddWithValue("@VariantID", this.variant.idVariante);
+                    cmd.Parameters.AddWithValue("@User", usr);
+                    cmd.Parameters.AddWithValue("@Exclusive", false);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        ret =true;
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                        ret = false;
+                    }
+
+                    conn.Close();
+                }
+            }
+            return ret;
+            }
+
+        public Boolean deleteDefaultOperator(String usr)
+        {
+            Boolean ret = false;
+
+            if (this.Task != null && this.variant != null && this.Task.processID > -1 && this.variant.idVariante > -1)
+            {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "DELETE FROM taskusermodel WHERE taskid=@TaskID AND taskrev=@TaskRev AND variantid=@VariantID AND user=@User";
+                    cmd.Parameters.AddWithValue("@TaskID", this.Task.processID);
+                    cmd.Parameters.AddWithValue("@TaskRev", this.Task.revisione);
+                    cmd.Parameters.AddWithValue("@VariantID", this.variant.idVariante);
+                    cmd.Parameters.AddWithValue("@User", usr);
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                        ret = false;
+                    }
+
+                    conn.Close();
+                }
+            return ret;
+        }
     }
 
     public class TempoCiclo

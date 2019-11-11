@@ -419,6 +419,43 @@
                     });
 
 
+                    $(".imgManageOperators").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("ShowManageOperators", "SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 90%; overflow: hidden; top:100px;background-color:rgba(255, 255, 255, 0.8);' id='viewPdf'>"
+                                        + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:0px;' />"
+                                        + "<div style='overflow: hidden;position:relative;top:30px;left: 100px;'>"+data  
+                                        + "</div>"
+                                        + "</div>";
+                                    $("#iframeWI").html(ifrmWI);
+                                    $("#iframeWI").fadeIn();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+                    });
+
+                    $("#iframeWI").on("click", "#imgClosePdf", function () {
+                        $("#iframeWI").fadeOut();
+                    });
 
                 $('.imgDelete').each(function () {
                     var id = this.id;
@@ -559,10 +596,15 @@
                                 <td>
                                     <input type="image" ID="imgPrintA3Barcode_@m.ID-@m.Year" class="imgPrintA3Barcode" src="~/img/iconA3.gif" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcodeA3" />
                                 </td>
+                                <td>
+                                    <input type="image" id="imgManageOperators_@m.ID-@m.Year" class="imgManageOperators" src="~/img/iconUser.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblManageOperators"/>
+                                </td>
                             </tr>
                         }
                     </tbody>
                 </table>
+
+                <div id="iframeWI"></div>
             </div>
         </div>
         <div id="lblModalInfo" />

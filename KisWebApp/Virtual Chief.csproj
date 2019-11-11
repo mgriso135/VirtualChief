@@ -1205,6 +1205,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>TaskCycleTimesList.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskDefaultOperatorsList.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskDefaultOperatorsList.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskDefaultOperatorsList.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskDefaultOperatorsList.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskDefaultOperatorsList.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskDefaultOperatorsList.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Products\Views\Products\App_LocalResources\TaskParametersList.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2924,6 +2954,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ListOrderProduct.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\SalesOrders\Views\SalesOrder\App_LocalResources\ListTasksDefOperators.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListTasksDefOperators.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\SalesOrders\Views\SalesOrder\App_LocalResources\ShowManageOperators.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ShowManageOperators.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Users\Controllers\UsersController.cs" />
     <Compile Include="Areas\Users\UsersAreaRegistration.cs" />
     <Compile Include="Areas\Users\Views\Users\App_LocalResources\ActivateUser.Designer.cs">
@@ -3228,6 +3268,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ListTasksInExecution.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\ListUserTasks.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListUserTasks.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\ListWorkstationsActives.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -5501,6 +5546,10 @@
     <Content Include="Areas\Andon\Views\DepartmentAndonConfig\GetDepartmentAndonConfig.cshtml" />
     <Content Include="Areas\Andon\Views\DepartmentAndon\Index.cshtml" />
     <Content Include="Areas\Departments\Views\web.config" />
+    <Content Include="Areas\Products\Views\Products\TaskDefaultOperatorsList.cshtml" />
+    <Content Include="Areas\Workplace\Views\WebGemba\ListUserTasks.cshtml" />
+    <Content Include="Areas\SalesOrders\Views\SalesOrder\ShowManageOperators.cshtml" />
+    <Content Include="Areas\SalesOrders\Views\SalesOrder\ListTasksDefOperators.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6461,6 +6510,36 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TaskCycleTimesList.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResProducts</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.en.resx">
+      <CustomToolNamespace>ResProducts</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskDefaultOperatorsList.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.en-US.resx">
+      <CustomToolNamespace>ResProducts</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskDefaultOperatorsList.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskDefaultOperatorsList.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProducts</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskDefaultOperatorsList.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProducts</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.it.resx">
+      <CustomToolNamespace>ResProducts</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskDefaultOperatorsList.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskDefaultOperatorsList.resx">
+      <CustomToolNamespace>ResProducts</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskDefaultOperatorsList.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\TaskParametersList.en-US.resx">
       <CustomToolNamespace>ResProducts</CustomToolNamespace>
@@ -8297,6 +8376,16 @@
     <Content Include="HomePage\App_LocalResources\UploadTooLarge.aspx.it.resx" />
     <Content Include="HomePage\App_LocalResources\UploadTooLarge.aspx.es.resx" />
     <Content Include="HomePage\App_LocalResources\UploadTooLarge.aspx.en.resx" />
+    <EmbeddedResource Include="Areas\SalesOrders\Views\SalesOrder\App_LocalResources\ListTasksDefOperators.resx">
+      <CustomToolNamespace>ResAddSalesOrder</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ListTasksDefOperators.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\SalesOrders\Views\SalesOrder\App_LocalResources\ShowManageOperators.resx">
+      <CustomToolNamespace>ResAddSalesOrder</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ShowManageOperators.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\SalesOrders\Views\SalesOrder\App_LocalResources\AddSalesOrder.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AddSalesOrder.it.Designer.cs</LastGenOutput>
@@ -8536,6 +8625,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\ListUserTasks.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ListUserTasks.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\Index.en.resx">
       <CustomToolNamespace>ResWebGemba</CustomToolNamespace>

@@ -22,6 +22,8 @@
         loadTaskParameters();
         $('#imgLoadAddTaskParam').fadeOut();
         $('#imgLoadWorkInstructions').fadeOut();
+        $('#imgLoadDefaultOperators').fadeOut();
+        $("#frmAddDefaultOperator").fadeOut();
         //loadTaskManuals();
 
         $('#btnUndoTaskDetails').click(function () {
@@ -495,6 +497,77 @@
             return false;
         });
 
+        function loadDefaultOperators()
+        {
+            $('#imgLoadDefaultOperators').fadeIn();
+            $.ajax({
+                url: "@Url.Action("TaskDefaultOperatorsList", "Products")",
+                type: 'GET',
+                dataType: 'html',
+                data:{
+                    TaskID: @ViewBag.TaskID,
+                    TaskRev: @ViewBag.TaskRev,
+                    variantID: @ViewBag.VariantID,
+                },
+                success: function (result) {
+                    $('#frmDefaultOperators').html(result);
+                    $('#imgLoadDefaultOperators').fadeOut();
+                },
+                error: function (result) {
+                    alert("Error");
+                    $('#imgLoadDefaultOperators').fadeOut();
+                },
+                warning: function (result) {
+                    alert("Warning");
+                    $('#imgLoadDefaultOperators').fadeOut();
+                }
+            });
+        }
+
+        $("#showAddDefaultOperator").click(function () {
+            if ($('#frmAddDefaultOperator').is(':visible')) {
+                $("#frmAddDefaultOperator").fadeOut();
+            }
+            else {
+                $("#frmAddDefaultOperator").fadeIn();
+            }
+        });
+
+        $("#imgSaveDefaultOperator").click(function () {
+            var usr = $("#defaultOperator").val();
+
+            $.ajax({
+                    url: "@Url.Action("AddDefaultOperator", "Products")",
+                    type: 'GET',
+                    dataType: 'html',
+                    data: {
+                        TaskID: @ViewBag.TaskID,
+                        TaskRev: @ViewBag.TaskRev,
+                        variantID: @ViewBag.VariantID,
+                        user: usr,
+                    },
+                success: function (result) {
+                    if (result == 1) {
+                        loadDefaultOperators();
+                        $("#frmAddDefaultOperator").fadeOut();
+                        //$('#defaultOperator option[value=]').attr('selected', 'selected');
+                    }
+                    else {
+                        alert("Error while adding a new operator");
+                    }
+                    },
+                    error: function (result) {
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                    }
+                });
+
+        });
+
+        loadDefaultOperators();
+
     });
 
 </script>
@@ -664,6 +737,25 @@
                 </div>
             </div>
 
+        </div>
+        <div class="row-fluid">
+            <div class="span12" style="text-align:center;">
+                <h5>@ResProducts.EditTaskPanel.lblDefaultOperators&nbsp;<img src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px; cursor:pointer;" id="showAddDefaultOperator" /></h5>
+                <div id="frmAddDefaultOperator">
+                    <select id="defaultOperator">
+                    <option value=""></option>
+                        @{
+                            KIS.App_Code.UserList usrList = new KIS.App_Code.UserList();
+                            foreach (var m in usrList.listUsers)
+                            {
+                                <option value="@m.username">@m.name @m.cognome</option>
+                            }
+                        }
+                    </select><img id="imgSaveDefaultOperator" src="../img/iconSave.jpg" style="max-width:30px; min-width:20px; cursor:pointer;" />
+                </div>
+                <img id="imgLoadDefaultOperators" src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" />
+                <div id="frmDefaultOperators"></div>
+            </div>
         </div>
 }
 else

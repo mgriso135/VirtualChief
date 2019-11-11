@@ -22,14 +22,14 @@ namespace ResWebGemba {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Index {
+    public class ListUserTasks {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Index() {
+        internal ListUserTasks() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ResWebGemba {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.Workplace.Views.WebGemba.App_LocalResources.Index", typeof(Index).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.Workplace.Views.WebGemba.App_LocalResources.ListUserTasks", typeof(ListUserTasks).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,60 +57,6 @@ namespace ResWebGemba {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Per effettuare il login con un utente autorizzato clicca qui.
-        /// </summary>
-        public static string lblClickHere {
-            get {
-                return ResourceManager.GetString("lblClickHere", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Non hai il permesso di accedere al WebGemba.
-        /// </summary>
-        public static string lblErrAuth {
-            get {
-                return ResourceManager.GetString("lblErrAuth", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Check-in postazione.
-        /// </summary>
-        public static string lblNavCheckIn {
-            get {
-                return ResourceManager.GetString("lblNavCheckIn", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to WebGemba.
-        /// </summary>
-        public static string lblNavWebGemba {
-            get {
-                return ResourceManager.GetString("lblNavWebGemba", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Workplace.
-        /// </summary>
-        public static string lblNavWorkplace {
-            get {
-                return ResourceManager.GetString("lblNavWorkplace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Personal WebGemba.
-        /// </summary>
-        public static string lblPersonalWebGemba {
-            get {
-                return ResourceManager.GetString("lblPersonalWebGemba", resourceCulture);
             }
         }
         

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<KIS.App_Code.TaskProduzione>
+
+<h3>@ResAddSalesOrder.ShowManageOperators.lblTitle</h3>
+
+@if(ViewBag.authW)
+{
+<script>
+    $(document).ready(function(){
+
+        var ProdID =@ViewBag.ProductID;
+        var ProdYear =@ViewBag.ProductYear;
+
+        function loadTasksOperators() {
+            $.ajax({
+                        url: "@Url.Action("ListTasksDefOperators", "SalesOrder")",
+                        type: 'POST',
+                        dataType: "html",
+                        data: {
+                            ProductID: ProdID,
+                            ProductYear: ProdYear
+                        },
+                        success: function (result) {
+                            $("#frmLstTaskOperators").html(result);
+                        },
+                        error: function (result) {
+
+                        },
+                        warning: function (result) {
+
+                        }
+                    });
+        }
+
+        $("#addTaskUser").click(function () {
+            $("#addTaskUser").fadeOut();
+            var username = $("#ddlUsers").val();
+            var task = $("#ddlTasks").val();
+             $.ajax({
+                        url: "@Url.Action("AssignOperatorToTask", "SalesOrder")",
+                        type: 'GET',
+                        dataType: "html",
+                 data: {
+                     TaskID: task,
+                     defOp: username
+                        },
+                        success: function (result) {
+                            loadTasksOperators();
+                            $("#addTaskUser").fadeIn();
+                        },
+                 error: function (result) {
+                     alert("Error");
+                            $("#addTaskUser").fadeIn();
+                        },
+                        warning: function (result) {
+                            $("#addTaskUser").fadeIn();
+                        }
+                    });
+        });
+
+        loadTasksOperators();
+
+    });
+</script>
+<div class="row-fluid">
+    <div class="span12">
+        <select id="ddlTasks">
+            @foreach(var m in Model) { 
+                               <option value="@m.TaskProduzioneID">@m.Name</option>
+            }
+        </select>
+        @{ KIS.App_Code.UserList usrList = new KIS.App_Code.UserList();
+        <select id="ddlUsers">
+            @foreach(var u in usrList.listUsers)
+            {
+                <option value="@u.username">@u.name @u.cognome</option>
+            }
+        </select>
+        }
+        <input type="image" src="~/img/iconSave.jpg" style="min-width:20px; max-width:25px;" id="addTaskUser" />
+    </div>
+</div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div id="frmLstTaskOperators"></div>
+        </div>
+    </div>
+            }
+            else
+            {
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAddSalesOrder.ShowManageOperators.lblErrNoAuth
+        </div>
+    </div>
+}

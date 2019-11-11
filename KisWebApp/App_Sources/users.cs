@@ -1629,6 +1629,12 @@ namespace KIS.App_Code
             get { return this._TaskAvviati; }
         }
 
+        private List<int> _ExecutableTasks;
+        public List<int> ExecutableTasks
+        {
+            get { return this._ExecutableTasks; }
+        }
+
         public void loadTaskAvviati()
         {
             this._TaskAvviati = new List<int>();
@@ -2918,6 +2924,60 @@ namespace KIS.App_Code
             rdr.Close();
             conn.Close();
             return ret;
+        }
+
+        public void LoadExecutableTasks()
+        {
+            this._ExecutableTasks = new List<int>();
+            if (this.username.Length > 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT taskuser.taskID FROM tasksproduzione INNER JOIN taskuser ON (tasksproduzione.taskid=taskuser.taskid) "
+                    +" WHERE (status = 'N' OR status = 'I' OR status = 'P') "
+                 + "AND taskuser.user = @User ORDER BY lateStart, earlyStart, idArticolo";
+                cmd.Parameters.AddWithValue("@User", this.username);
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+
+                    // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
+                    TaskProduzione tsk = new TaskProduzione(rdr.GetInt32(0));
+
+                    if (tsk.TaskProduzioneID != -1)
+                    {
+
+                        tsk.loadPrecedenti();
+                        bool controllo = true;
+                        for (int i = 0; i < tsk.PreviousTasks.Count; i++)
+                        {
+                            TaskProduzione prec = new TaskProduzione(tsk.PreviousTasks[i].NearTaskID);
+                            if (tsk.PreviousTasks[i].ConstraintType == 0)
+                            {
+                                if (prec.Status == 'N')
+                                {
+                                    controllo = false;
+                                }
+                            }
+                            else
+                            {
+                                if (prec.Status != 'F')
+                                {
+                                    controllo = false;
+                                }
+                            }
+                        }
+                        if (controllo == true)
+                        {
+                            this._ExecutableTasks.Add(rdr.GetInt32(0));
+                        }
+                    }
+                }
+                rdr.Close();
+                conn.Close();
+            }
         }
     }
 

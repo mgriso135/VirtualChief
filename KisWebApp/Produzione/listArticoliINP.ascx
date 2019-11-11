@@ -32,6 +32,14 @@
       <asp:Image ID="Image4" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
 </asp:LinkButton>
                     </th>
+                           <th>ID esterno
+                               <asp:LinkButton ID="LinkButton1" runat="server" onclick="lnkCommessaExternalIDUp_Click">
+      <asp:Image ID="Image21" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
+</asp:LinkButton>
+                        <asp:LinkButton ID="LinkButton2" runat="server" onclick="lnkCommessaExternalIDDown_Click">
+      <asp:Image ID="Image22" ImageUrl="~/img/iconArrowDown.png" alt="Descending" runat="server" height="20" Width="12" />
+</asp:LinkButton>
+                           </th>
                     <th><asp:Literal runat="server" ID="lblCliente" Text="<%$Resources:lblCliente %>" /><br />
                         <asp:LinkButton ID="lnkClienteUp" runat="server" onclick="lnkClienteUp_Click">
       <asp:Image ID="Image5" ImageUrl="~/img/iconArrowUp.png" alt="Ascending" runat="server" height="20" Width="12" />
@@ -135,6 +143,7 @@
                 <td><asp:HiddenField runat="server" ID="lblIDArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "ID") %>' />
                     <asp:HiddenField runat="server" ID="lblAnnoArticolo" Value='<%#DataBinder.Eval(Container.DataItem, "Year") %>' />
                     <%#DataBinder.Eval(Container.DataItem, "ID") %>/<%#DataBinder.Eval(Container.DataItem, "Year") %></td>
+                    <td><%#DataBinder.Eval(Container.DataItem, "CommessaExternalID") %></td>
                 <td><%#DataBinder.Eval(Container.DataItem, "RagioneSocialeCliente") %></td>
                 <td><%#DataBinder.Eval(Container.DataItem, "Commessa") %>/<%#DataBinder.Eval(Container.DataItem, "AnnoCommessa") %></td>
                     <td><%#DataBinder.Eval(Container.DataItem, "ProductExternalID") %></td>

@@ -117,85 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblAltParamCategoryManagement" xml:space="preserve">
-    <value>Parameter category management</value>
+  <data name="lblErrNoAuth" xml:space="preserve">
+    <value>Attenzione: non hai i permessi necessari.</value>
   </data>
-  <data name="lblCTCycleTime" xml:space="preserve">
-    <value>Cycle time</value>
-  </data>
-  <data name="lblCTNumOps" xml:space="preserve">
-    <value>Number of operators assigned</value>
-  </data>
-  <data name="lblCTSetupTime" xml:space="preserve">
-    <value>Setup time</value>
-  </data>
-  <data name="lblDefault" xml:space="preserve">
-    <value>Default</value>
-  </data>
-  <data name="lblDetailEditError" xml:space="preserve">
-    <value>Warning: it is impossible to add the cycle time. Verify that there is no other time for the same number of operators.</value>
-  </data>
-  <data name="lblDetailEditSuccess" xml:space="preserve">
-    <value>Data updated successfully.</value>
-  </data>
-  <data name="lblDetailEditTaskError" xml:space="preserve">
-    <value>Error: a task with this name already exists</value>
-  </data>
-  <data name="lblNoAuth" xml:space="preserve">
-    <value>You are not authorized to view the parameters</value>
-  </data>
-  <data name="lblParamAddError" xml:space="preserve">
-    <value>An error occurred while adding the parameter.</value>
-  </data>
-  <data name="lblParamCategory" xml:space="preserve">
-    <value>Categories</value>
-  </data>
-  <data name="lblParamDescription" xml:space="preserve">
-    <value>Value</value>
-  </data>
-  <data name="lblParamErrCategory" xml:space="preserve">
-    <value>Attention: select a category</value>
-  </data>
-  <data name="lblParamErrName" xml:space="preserve">
-    <value>Attention: enter a parameter name</value>
-  </data>
-  <data name="lblParamIsFixed" xml:space="preserve">
-    <value>Fixed value</value>
-  </data>
-  <data name="lblParamIsRequired" xml:space="preserve">
-    <value>Required</value>
-  </data>
-  <data name="lblParamName" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="lblTaskDescription" xml:space="preserve">
-    <value>Description</value>
-  </data>
-  <data name="lblTaskName" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="lblTitleCycleTimes" xml:space="preserve">
-    <value>Working time</value>
-  </data>
-  <data name="lblTitleParameters" xml:space="preserve">
-    <value>Parameters</value>
-  </data>
-  <data name="lblWorkingTimeWrong" xml:space="preserve">
-    <value>Error in input values</value>
-  </data>
-  <data name="lblWorkInstrucion" xml:space="preserve">
-    <value>Work Instruction</value>
-  </data>
-  <data name="lblWIExpiryDate" xml:space="preserve">
-    <value>End validity date</value>
-  </data>
-  <data name="lblWIInitialValidity" xml:space="preserve">
-    <value>Initial validity date</value>
-  </data>
-  <data name="lblWIErrOverlap" xml:space="preserve">
-    <value>Error: the validity dates overlap with other work instructions</value>
-  </data>
-  <data name="lblDefaultOperators" xml:space="preserve">
-    <value>Operators assigned to tasks by default</value>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Gestisci operatori assegnati ai task</value>
   </data>
 </root>
