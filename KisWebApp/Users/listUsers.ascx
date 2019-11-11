@@ -42,7 +42,7 @@
                 <asp:Label runat="server" ID="lblImg" />
             </td>
             <td>
-                <asp:HyperLink runat="server" ID="lnkEditUsers" Target="_blank" NavigateUrl='<%# "editUser.aspx?id=" + DataBinder.Eval(Container.DataItem, "username") %>'>
+                <asp:HyperLink runat="server" ID="lnkEditUsers" NavigateUrl='<%# "editUser.aspx?id=" + DataBinder.Eval(Container.DataItem, "username") %>'>
                 <asp:Image runat="server" ImageUrl="~/img/edit.png" Height="30px" CssClass="img-rounded" />
         </asp:HyperLink>
                 </td>

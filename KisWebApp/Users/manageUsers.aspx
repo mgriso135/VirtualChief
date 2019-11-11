@@ -16,8 +16,16 @@
 						<span class="divider">/</span>
 					</li>
 				</ul>
+    <div class="row-fluid">
+        <div class="span8">
 <user:add runat="server" ID="addUser" />
-<br />
+            </div>
+        <div class="span4">
+            <a href="../Users/DisabledUsers" title="Archived users">
+                <img src="../img/iconArchive.png" class="img-rounded" style="min-height: 20px; max-height:100px;" />
+            </a>
+        </div>
+        </div>
 <user:list runat="server" id="lstUsers" />
 
 </asp:Content>

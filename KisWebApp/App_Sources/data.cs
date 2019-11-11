@@ -108,5 +108,39 @@ namespace Dati
             conn.Close();
             return ret;
         }
+
+        public static Boolean Syslog(String user, String module, String itemtype, String itemid, String parameter, String oldvalue, String newvalue, String notes="")
+        {
+            MySqlConnection conn = (new Dati()).mycon();
+            conn.Open();
+            Boolean ret = false;
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "INSERT INTO syslog(date, user, module, itemtype, parameter, itemid, oldvalue, newvalue, notes) VALUES(@datetime, "
+                + "@user, @module, @itemtype, @parameter, @itemid, @oldvalue, @newvalue, @notes)";
+
+            cmd.Parameters.AddWithValue("@datetime", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+            cmd.Parameters.AddWithValue("@user", user);
+            cmd.Parameters.AddWithValue("@module", module);
+            cmd.Parameters.AddWithValue("@itemtype", itemtype);
+            cmd.Parameters.AddWithValue("@parameter", parameter);
+            cmd.Parameters.AddWithValue("@itemid", itemid);
+            cmd.Parameters.AddWithValue("@oldvalue", oldvalue);
+            cmd.Parameters.AddWithValue("@newvalue", newvalue);
+            cmd.Parameters.AddWithValue("@notes", notes);
+
+            MySqlTransaction tr = conn.BeginTransaction();
+            cmd.Transaction = tr;
+            try
+            {
+                cmd.ExecuteNonQuery();
+                tr.Commit();
+                ret = true;
+            }
+            catch {
+                tr.Rollback();
+            }
+            conn.Close();
+            return ret;
+        }
     }
 }

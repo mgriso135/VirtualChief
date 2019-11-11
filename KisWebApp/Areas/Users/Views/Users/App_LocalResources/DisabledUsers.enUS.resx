@@ -117,19 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblCognome" xml:space="preserve">
-    <value>Cognome</value>
+  <data name="lblEnable" xml:space="preserve">
+    <value>Re-activate</value>
   </data>
-  <data name="lblDisableUser" xml:space="preserve">
-    <value>Disabilita utente</value>
+  <data name="lblFirstName" xml:space="preserve">
+    <value>First name</value>
   </data>
-  <data name="lblErrorDeleting" xml:space="preserve">
-    <value>Si è verificato un errore.</value>
+  <data name="lblLastName" xml:space="preserve">
+    <value>Last name</value>
   </data>
-  <data name="lblModOk" xml:space="preserve">
-    <value>Modifiche eseguite</value>
+  <data name="lblNavManageUsers" xml:space="preserve">
+    <value>Manage users</value>
   </data>
-  <data name="lblNome" xml:space="preserve">
-    <value>Nome</value>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Disactivated users</value>
+  </data>
+  <data name="lblUsername" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="lblUserNotAuthorized" xml:space="preserve">
+    <value>User not authorized</value>
   </data>
 </root>
