@@ -437,7 +437,11 @@
                                     case "TaskTempoDiLavoroPrevisto":
                                         strTableWIP += h.TaskTempoDiLavoroPrevisto;
                                         break;
-
+                                    case "TaskAssignedUsers":
+                                        if (h.AssignedUser != null) {
+                                            strTableWIP += h.AssignedUser;
+                                        }
+                                            break;
                                     default: break;
                                 }
                                 strTableWIP += "<br/>";

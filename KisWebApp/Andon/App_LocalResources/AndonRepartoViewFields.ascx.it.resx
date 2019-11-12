@@ -273,4 +273,7 @@
   <data name="EndProductionWeek" xml:space="preserve">
     <value>Settimana fine produzione</value>
   </data>
+  <data name="TaskAssignedUsers" xml:space="preserve">
+    <value>Operatori assegnati</value>
+  </data>
 </root>

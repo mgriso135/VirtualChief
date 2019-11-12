@@ -667,6 +667,7 @@ namespace KIS.App_Code
             this._FieldListTasks.Add("TaskRitardo", 0);
             this._FieldListTasks.Add("TaskInizioEffettivo", 0);
             this._FieldListTasks.Add("TaskFineEffettiva", 0);
+            this._FieldListTasks.Add("TaskAssignedUsers", 0);
         }
 
         public List<TaskProduzione> ElencoTasks
@@ -1370,8 +1371,8 @@ namespace KIS.App_Code
             }
         }
 
-        // Completely re-write this function
-        public void loadWIP()
+        // OBSOLETE
+        /*public void loadWIP()
         {
             this._WIP = new List<Articolo>();
             if (this.RepartoID != -1)
@@ -1383,7 +1384,7 @@ namespace KIS.App_Code
                 }
             }
         }
-
+        */
         public void loadWIP2()
         {
             this.WIP = new List<DepartmentAndonProductsStruct>();
@@ -1458,7 +1459,8 @@ namespace KIS.App_Code
 + " tasksproduzione.Delay AS TaskDelay, "
 + " tasksproduzione.OrigTask AS TaskOriginalTaskID, "
 + " tasksproduzione.RevOrigTask AS TaskOriginalTaskRev, "
- + " tasksproduzione.variante AS TaskOriginalTaskVar"
+ + " tasksproduzione.variante AS TaskOriginalTaskVar, "
+ + " taskuser.user AS TaskUser "
  + " FROM anagraficaclienti INNER JOIN commesse ON(anagraficaclienti.codice = commesse.cliente) INNER JOIN "
  + " productionplan ON(commesse.anno = productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)"
  + " INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)"
@@ -1470,6 +1472,7 @@ namespace KIS.App_Code
  + " INNER JOIN varianti AS TaskVariant ON(taskvariant.idvariante = tasksproduzione.variante)"
  + " INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)"
  + " INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)"
+ + " LEFT JOIN taskuser on (tasksproduzione.taskID = taskuser.taskid) "
  + " WHERE productionplan.status <> 'F' AND productionplan.status <> 'N' AND reparti.idreparto = "+this.RepartoID.ToString()
  + " order by productionplan.dataPrevistaFineProduzione";
 
@@ -1530,7 +1533,11 @@ namespace KIS.App_Code
                     curr.TaskQuantitaProdotta = rdr.GetDouble(52);
                     curr.TaskTempoCiclo = rdr.GetTimeSpan(54);
                     curr.TaskPostazione = rdr.GetString(57);
-                    
+                    if (!rdr.IsDBNull(66))
+                    { 
+                    curr.AssignedUser = rdr.GetString(66);
+                    }
+
                     /*
         public Double ProdottoIndicatoreCompletamentoTasks;
         public Double ProdottoIndicatoreCompletamentoTempoPrevisto;
@@ -1593,37 +1600,41 @@ namespace KIS.App_Code
 
                     var tasksList = fullList
                         .Where(s => s.ProdottoID == currProd.ProdottoID && s.ProdottoYear == currProd.ProdottoYear)
+                        .GroupBy(g => new { g.TaskID, g.TaskNome, g.TaskDescrizione, g.TaskPostazione,
+                            g.TaskEarlyStart, g.TaskLateStart, g.TaskEarlyFinish, g.TaskLateFinish,
+                            g.TaskNumeroOperatori, g.TaskTempoCiclo, g.TaskTempoDiLavoroPrevisto, g.TaskTempoDiLavoroEffettivo,
+                            g.TaskStatus, g.TaskQuantitaPrevista, g.TaskQuantitaProdotta, g.TaskRitardo, g.TaskInizioEffettivo,
+                            g.TaskFineEffettiva})
                         .Select(s => new
                         {
-                            s.TaskID, s.TaskNome, s.TaskDescrizione, s.TaskPostazione,
-                            s.TaskEarlyStart, s.TaskLateStart, s.TaskEarlyFinish, s.TaskLateFinish,
-                            s.TaskNumeroOperatori, s.TaskTempoCiclo, s.TaskTempoDiLavoroPrevisto, s.TaskTempoDiLavoroEffettivo,
-                            s.TaskStatus, s.TaskQuantitaPrevista, s.TaskQuantitaProdotta, s.TaskRitardo, s.TaskInizioEffettivo,
-                            s.TaskFineEffettiva
-
-    }).OrderBy(x=>x.TaskLateStart);
+                            ID = s.Key,
+                            AssignedUsers = String.Join(", ", s.Select(ss=>ss.AssignedUser))
+ 
+                        })
+                        .OrderBy(x=>x.ID.TaskLateStart);
 
                     foreach(var t in tasksList)
                     {
                         DepartmentAndonTasksStruct currTask = new DepartmentAndonTasksStruct();
-                        currTask.TaskID = t.TaskID;
-                        currTask.TaskNome = t.TaskNome;
-                        currTask.TaskDescrizione=t.TaskDescrizione;
-                        currTask.TaskPostazione=t.TaskPostazione;
-                        currTask.TaskEarlyStart=t.TaskEarlyStart;
-                        currTask.TaskLateStart=t.TaskLateStart;
-                        currTask.TaskEarlyFinish=t.TaskEarlyFinish;
-                        currTask.TaskLateFinish=t.TaskLateFinish;
-                        currTask.TaskNumeroOperatori=t.TaskNumeroOperatori;
-                        currTask.TaskTempoCiclo=t.TaskTempoCiclo;
-                        currTask.TaskTempoDiLavoroPrevisto=t.TaskTempoDiLavoroPrevisto;
-                        currTask.TaskTempoDiLavoroEffettivo=t.TaskTempoDiLavoroEffettivo;
-                        currTask.TaskStatus=t.TaskStatus;
-                        currTask.TaskQuantitaPrevista=t.TaskQuantitaPrevista;
-                        currTask.TaskQuantitaProdotta=t.TaskQuantitaProdotta;
-                        currTask.TaskRitardo=t.TaskRitardo;
-                        currTask.TaskInizioEffettivo=t.TaskInizioEffettivo;
-                        currTask.TaskFineEffettiva = t.TaskFineEffettiva;
+                        currTask.TaskID = t.ID.TaskID;
+                        currTask.TaskNome = t.ID.TaskNome;
+                        currTask.TaskDescrizione=t.ID.TaskDescrizione;
+                        currTask.TaskPostazione=t.ID.TaskPostazione;
+                        currTask.TaskEarlyStart=t.ID.TaskEarlyStart;
+                        currTask.TaskLateStart=t.ID.TaskLateStart;
+                        currTask.TaskEarlyFinish=t.ID.TaskEarlyFinish;
+                        currTask.TaskLateFinish=t.ID.TaskLateFinish;
+                        currTask.TaskNumeroOperatori=t.ID.TaskNumeroOperatori;
+                        currTask.TaskTempoCiclo=t.ID.TaskTempoCiclo;
+                        currTask.TaskTempoDiLavoroPrevisto=t.ID.TaskTempoDiLavoroPrevisto;
+                        currTask.TaskTempoDiLavoroEffettivo=t.ID.TaskTempoDiLavoroEffettivo;
+                        currTask.TaskStatus=t.ID.TaskStatus;
+                        currTask.TaskQuantitaPrevista=t.ID.TaskQuantitaPrevista;
+                        currTask.TaskQuantitaProdotta=t.ID.TaskQuantitaProdotta;
+                        currTask.TaskRitardo=t.ID.TaskRitardo;
+                        currTask.TaskInizioEffettivo=t.ID.TaskInizioEffettivo;
+                        currTask.TaskFineEffettiva = t.ID.TaskFineEffettiva;
+                        currTask.AssignedUser = t.AssignedUsers;
 
                         currProd.Tasks.Add(currTask);
                     }
@@ -1840,6 +1851,7 @@ namespace KIS.App_Code
         public TimeSpan TaskRitardo;
         public DateTime TaskInizioEffettivo;
         public DateTime TaskFineEffettiva;
+        public String AssignedUser;
     }
 
     public struct DepartmentAndonFullStruct
@@ -1892,6 +1904,7 @@ namespace KIS.App_Code
         public TimeSpan TaskRitardo;
         public DateTime TaskInizioEffettivo;
         public DateTime TaskFineEffettiva;
+        public String AssignedUser;
     }
 
     public struct UserPanelStruct

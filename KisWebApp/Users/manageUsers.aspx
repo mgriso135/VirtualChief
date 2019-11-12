@@ -21,7 +21,7 @@
 <user:add runat="server" ID="addUser" />
             </div>
         <div class="span4">
-            <a href="../Users/DisabledUsers" title="Archived users">
+            <a href="../Users/Users/DisabledUsers" title="Archived users">
                 <img src="../img/iconArchive.png" class="img-rounded" style="min-height: 20px; max-height:100px;" />
             </a>
         </div>

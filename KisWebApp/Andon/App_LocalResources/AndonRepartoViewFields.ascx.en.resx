@@ -288,4 +288,7 @@
   <data name="EndProductionWeek" xml:space="preserve">
     <value>End production week</value>
   </data>
+  <data name="TaskAssignedUsers" xml:space="preserve">
+    <value>Assigned users</value>
+  </data>
 </root>
