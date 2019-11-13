@@ -1,6 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Stories>
+  <Story ID="2019012">
+    <Date>11/11/2019</Date>
+    <Title>Deshabilitar un usuario</Title>
+    <Description>
+      <![CDATA[La función para deshabilitar a un usuario inactivo se ha agregado al Jefe virtual. <br />
+Para deshabilitar a un usuario, acceda a la administración de usuarios, haga clic en "editar" al costado de un usuario y luego haga clic en el icono de la papelera en la esquina superior derecha.
+      ]]>
+    </Description>
+  </Story>
+  <Story ID="2019009">
+    <Date>30/09/2019</Date>
+    <Title>Asignación de tareas directamente a operadores y Personal WebGemba</Title>
+    <Description>
+      <![CDATA[¡Ahora es posible asignar tareas directamente a operadores específicos, y no solo a estaciones de trabajo! <br />
+El operador puede administrar sus tareas a través de <b> Personal WebGemba </b>, que es exactamente lo mismo que WebGemba, pero solo contiene las tareas asignadas a un operador específico.
+<br />
+Para acceder a <i> Personal WebGemba </i>, haga clic en el menú WorkPlace -> Personal WebGemba. <br />
+Para asignar tareas a los operadores, después de planificar un producto en producción, haga clic en el icono Operador. <br /> <br />
+Además, a través del Administrador de procesos es posible designar los operadores que se asignarán por defecto a una tarea.
+      ]]>
+    </Description>
+  </Story>
+  <Story ID="2019008">
+    <Date>30/09/2019</Date>
+    <Title>Gestión de la semana de entrega</Title>
+    <Description>
+      <![CDATA[Virtual Chief ahora le permite ver la <b>semana de entrega</b> en lugar de la fecha exacta.<br />
+Para activar la visualización de la semana de entrega, ingrese la Configuración de departamentos, seleccione el Departamento deseado. Luego, desde el menú "Departamento de Andon", active el campo "Fin de semana de producción" en los Campos de visualización de Andon
+      ]]>
+    </Description>
+  </Story>
   <Story id="2019/01">
     <Date>02/01/2019</Date>
     <Title>Indicadores de desempeño de las estaciones de trabajo</Title>

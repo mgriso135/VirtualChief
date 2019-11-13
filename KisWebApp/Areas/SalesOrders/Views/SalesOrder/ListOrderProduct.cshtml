@@ -143,6 +143,7 @@
                                         $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
                                         $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
                                         $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", false);
+                                        $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).hide();
                                     }
                                     else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
                                     else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblUserNotAuthorized"); }
@@ -202,6 +203,7 @@
                                                 $("#imgUndo_" + currProd[0] + "-" + currProd[1]).show();
                                                 $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).show();
                                                 $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                             }
                                             else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
                                             else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorStatus"); }
@@ -284,7 +286,7 @@
                                                 $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();
-
+                                                $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
 
                                             }
                                             else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorInProductCfg"); }
@@ -522,7 +524,17 @@
                             $("#txtDeliveryDate_" + prod[1]).prop("disabled", true);
                             $("#txtQuantity_" + prod[1]).prop("disabled", true);
                     }
-                });
+                    });
+
+                    $('.imgManageOperators').each(function () {
+
+                        var id = this.id;
+                        var prod = id.split('_');
+                        if ($("#status_" + prod[1]).val() == 'N') {
+                            $(this).hide();
+                        }
+                    });
+
                 });
         </script>
         <div class="row-fluid">

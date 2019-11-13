@@ -1810,6 +1810,16 @@ namespace KIS.App_Code
                 {
                     this.loadTasksProduzione();
 
+                    // Delete assigned operators
+                    foreach(var t in this.Tasks)
+                    {
+                        t.loadAssignedOperators();
+                        foreach(var op in t.AssignedOperators)
+                        {
+                            t.deleteAssignedOperator(op);
+                        }
+                    }
+
                     for (int i = 0; i < this.Tasks.Count; i++)
                     {
                         cmd.CommandText = "DELETE FROM prectasksproduzione WHERE prec = "

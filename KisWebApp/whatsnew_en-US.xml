@@ -1,6 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Stories>
+  <Story ID="2019012">
+    <Date>11/11/2019</Date>
+    <Title>Disable a user</Title>
+    <Description>
+      <![CDATA[The function to disable an inactive user has been added to the Virtual Chief. <br />
+To disable a user, access the user management, click on "edit" on the side of a user and then click on the trash can icon at the top right.
+      ]]>
+    </Description>
+  </Story>
+  <Story ID="2019009">
+    <Date>30/09/2019</Date>
+    <Title>Assign task directly to operators and Personal WebGemba</Title>
+    <Description>
+      <![CDATA[Now it is possible to assign tasks directly to specific operators, and not only to workstations !!! <br />
+The operator can manage his tasks via the <b> Personal WebGemba </b>, which is exactly the same as the WebGemba, but only contains the tasks assigned to a specific operator.
+<br />
+To access the <i> Personal WebGemba </i>, click on the WorkPlace menu -> Personal WebGemba. <br />
+To assign tasks to operators, after planning a product in production, click on the Operator icon. <br /> <br />
+Furthermore, through the Process Manager it is possible to designate the operators that will be assigned by default to a task.
+      ]]>
+    </Description>
+  </Story>
+  <Story ID="2019008">
+    <Date>30/09/2019</Date>
+    <Title>Delivery week</Title>
+    <Description>
+      <![CDATA[Virtual Chief now allows you to view the <b>delivery week</b> instead of the exact date.<br />
+To activate the display of the delivery week, enter the Departments Configuration, select the desired Department. Then, from the "Andon Department" menu, activate the "Week end of production" field in the Andon Display Fields
+      ]]>
+    </Description>
+  </Story>
   <Story id="2019/01">
     <Date>02/01/2019</Date>
     <Title>Workstation's key performance indicators</Title>

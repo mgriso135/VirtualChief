@@ -1,6 +1,51 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 
 <Stories>
+  <Story ID="2019012">
+    <Date>11/11/2019</Date>
+    <Title>Disabilitare un utente</Title>
+    <Description>
+      <![CDATA[E' stata aggiunta a Virtual Chief la funzione per disabilitare un utente inattivo.<br />
+      Per disabilitare un utente, accedere alla Gestione utenti, cliccare su "modifica" al lato di un utente e poi fare click sull'icona del cestino in alto a destra.
+      ]]>
+    </Description>
+  </Story>
+  <Story ID="2019009">
+    <Date>30/09/2019</Date>
+    <Title>Assegnazione dei task direttamente agli operatori e Personal WebGemba</Title>
+    <Description>
+      <![CDATA[Adesso é possibile assegnare i task direttamente ad operatori specifici, e non solo alle postazioni di lavoro!!!<br />
+      L'operatore può gestire i suoi task tramite il <b>Personal WebGemba</b>, che è esattamente identico al WebGemba, però contiene solamente i task assegnati ad un operatore specifico.
+      <br />
+      Per accedere al <i>Personal WebGemba</i>, fai click sul menu  WorkPlace --> Personal WebGemba.<br />
+      Per assegnare i task agli operatori, dopo aver pianificato un prodotto in produzione, fai click sull'icona dell'Operatore.<br /><br />
+      Inoltre tramite il Process Manager è possibile designare gli operatori che verranno assegnati per default ad un task.
+      ]]>
+    </Description>
+  </Story>
+  <Story ID="2019008">
+    <Date>30/09/2019</Date>
+    <Title>Gestione della settimana di consegna</Title>
+    <Description>
+      <![CDATA[Virtual Chief adesso permette di visualizzare la <b>settimana di consegna</b> anzichè la data esatta.<br />
+      Per attivare la visualizzazione della settimana di consegna, bisogna entrare nella Configurazione Reparti, selezionare il Reparto desiderato. Poi, dal menù "Andon Reparto", 
+      attivare il campo "Settimana fine produzione" tra i Campi da visualizzare dell'Andon
+      ]]>
+    </Description>
+  </Story>
+  <Story id="0020">
+    <Date>10/01/2019</Date>
+    <Title>Puoi verificare il carico di lavoro delle postazioni in fase di pianificazione della produzione?</Title>
+    <Description>
+      <![CDATA[Utilizzando lo Wizard Nuovo Ordine è infatti possibile simulare il carico di lavoro dei reparti e delle postazioni di lavoro e variare la pianificazione della produzione per ottimizzare le tue risorse!
+      <br />
+      <br />
+      <a href="../Commesse/wzAddCommessa.aspx" target="_blank" style="font-size:24px">Clicca qui per accedere allo Wizard Nuovo Ordine</a>
+      <br /><br/>
+      Lo Wizard Nuovo Ordine si trova nel menu Clienti --> Wizard Nuovo Ordine
+      ]]>
+    </Description>
+  </Story>
   <Story ID="0021">
     <Date>24/04/2019</Date>
     <Title>WebGemba 2.0</Title>
