@@ -1547,5 +1547,174 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             return ret;
         }
+
+        /*
+         * Returns:
+         * 1970-1-1 if generic error
+         * Foreseen end date if everything is ok
+         * 1970-1-2 if user not authorized
+         * 1970-1-3 if task not found
+         */
+        public DateTime RescheduleTaskGetEndDate(int TaskID, DateTime start)
+        {
+            DateTime ret = new DateTime(1970,1,1);
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/RescheduleTaskGetEndDate", "TaskID="+ TaskID+"&start="+start.ToString("yyyy-MM-dd HH:mm:ss"), ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/SalesOrders/SalesOrder/RescheduleTaskGetEndDate", "TaskID=" + TaskID + "&start=" + start.ToString("yyyy-MM-dd HH:mm:ss"), ipAddr);
+            }
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Articoli";
+            prmUser[1] = "X";
+            elencoPermessi.Add(prmUser);
+
+            bool checkUser = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                checkUser = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (checkUser == true)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if(tsk!=null && tsk.TaskProduzioneID!=-1)
+                {
+                    ret = tsk.getEndDate(start);
+                }
+                else
+                {
+                    ret = new DateTime(1970, 1, 3);
+                }
+            }
+            else
+            {
+                ret = new DateTime(19970, 1, 2);
+            }
+                return ret;
+        }
+
+        /*
+         */
+         public ActionResult RescheduleTasksManually(int ProductID, int ProductYear)
+        {
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManuallyReschedule";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                Articolo art = new Articolo(ProductID, ProductYear);
+                if (art.ID != -1 && art.Year != -1)
+                {
+                    art.loadTasksProduzione();
+                    return View(art.Tasks);
+                }
+            }
+            return View();
+        }
+
+        /* This function returns the foreseen end date by using start date (as input) and CycleTime (TempoC)
+         * Returns:
+         * 1970-1-1 if it is not possible to calculate the end date
+         * Foreseen finish date at UTC time otherwise
+         */
+        public DateTime GetFinishDateByStart(int TaskID, DateTime start)
+        {
+            DateTime ret = new DateTime(1970, 1, 1);
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManuallyReschedule";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                ret = tsk.getEndDate(start);
+            }
+                return ret;
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if saved changes successfully
+         * 2 if user not authorized
+         * 3 if error in input dates
+         * 4 if task not found
+         */
+         public int SaveTaskDates(int TaskID, DateTime start, DateTime end)
+        {
+            int ret = 0;
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Tasks ManuallyReschedule";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                if(start <= end && start >= DateTime.UtcNow)
+                {
+                    TaskProduzione tsk = new TaskProduzione(TaskID);
+                    if(tsk.TaskProduzioneID!=-1)
+                    { 
+                    TimeSpan oldWT = tsk.TempoC;
+                        DateTime oldstart = tsk.EarlyStart;
+                        DateTime oldend = tsk.LateFinish;
+                        User curr1 = (User)Session["user"];
+                        tsk.logRescheduledTasks(tsk.TaskProduzioneID, oldstart, oldend, oldWT, curr1.username);
+                        tsk.EarlyStart = start;
+                    tsk.LateStart = start;
+                    tsk.EarlyFinish = end;
+                    tsk.LateFinish = end;
+
+                    ret = 1;
+                        
+                    }
+                    else
+                    {
+                        ret = 4;
+                    }
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
     }
 }

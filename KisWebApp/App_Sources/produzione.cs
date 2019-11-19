@@ -395,6 +395,8 @@ namespace KIS.App_Code
             get { return this._NumOperatori; }
         }
 
+        /* Calculated as: Setup time + (Quantity*CycleTime) + UnloadTime
+         */
         private TimeSpan _TempoCiclo;
         public TimeSpan TempoC
         {
@@ -3375,6 +3377,106 @@ namespace KIS.App_Code
                 ret = 1;
             }
             return ret;
+        }
+
+        /* This function returns the foreseen end date by using start date (as input) and CycleTime (TempoC)
+         * Returns:
+         * 1970-1-1 if it is not possible to calculate the end date
+         * Foreseen finish date at UTC time otherwise
+         */
+        public DateTime getEndDate(DateTime start)
+        {
+            DateTime ret = new DateTime(1970, 1, 1);
+            if (this.TaskProduzioneID!=-1)
+            {
+                Reparto rp = new Reparto(this.RepartoID);
+                if (rp!=null && rp.id!=-1 && TimeZoneInfo.ConvertTimeToUtc(start, rp.tzFusoOrario) > DateTime.UtcNow)
+                {
+                    TimeSpan minsevendays = new TimeSpan(7, 0, 0, 0);
+                    rp.loadCalendario(start.AddDays(-7), TimeZoneInfo.ConvertTimeToUtc(start + this.TempoC + minsevendays).AddDays(this.TempoC.TotalDays*5));
+                    // Check if start is inside a shift
+                    int insideshift = -1;
+                    int closestshift = -1;
+                    for(int i = 0; i < rp.CalendarioRep.Intervalli.Count && insideshift==-1; i++)
+
+                    {
+                        if(rp.CalendarioRep.Intervalli[i].Inizio <= start && start <= rp.CalendarioRep.Intervalli[i].Fine)
+                        {
+                            insideshift = i;
+                        }
+                        if(closestshift == -1 && start<=rp.CalendarioRep.Intervalli[i].Inizio)
+                        {
+                            closestshift = i;
+                        }
+                    }
+
+                    if(insideshift ==-1 && closestshift!=-1)
+                    {
+                        start = rp.CalendarioRep.Intervalli[closestshift].Inizio;
+                        insideshift = closestshift;
+                    }
+
+                    if(insideshift!=-1)
+                    {
+                        TimeSpan progress = new TimeSpan(0, 0, 0);
+
+                        //1st round
+                        progress = rp.CalendarioRep.Intervalli[insideshift].Fine - start;
+                        if(progress > this.TempoC)
+                        {
+                            ret = start + this.TempoC;
+                        }
+                        else
+                        {
+                            Boolean endloop = false;
+                            for(int i = insideshift+1; i < rp.CalendarioRep.Intervalli.Count && !endloop; i++)
+                            {
+                                TimeSpan oldProg = progress;
+                                progress += rp.CalendarioRep.Intervalli[i].Fine - rp.CalendarioRep.Intervalli[i].Inizio;
+                                if (progress > this.TempoC)
+                                {
+                                    //ret = TimeZoneInfo.ConvertTimeToUtc(rp.CalendarioRep.Intervalli[i].Inizio + (this.TempoC - oldProg), rp.tzFusoOrario);
+                                    ret = rp.CalendarioRep.Intervalli[i].Inizio + (this.TempoC - oldProg);
+                                    endloop = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return ret;
+        }
+
+        public void logRescheduledTasks(int taskID, DateTime oldstart, DateTime oldend, TimeSpan oldworkingtime, String userid)
+        {
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "INSERT INTO taskreschedulelog(task, rescheduledate, oldstart, oldend, oldworkingtime, userid) VALUES(@TaskID, @rescheduledate, "
+                + "@oldstart, @oldend, @oldworkingtime, @userid)";
+
+            cmd.Parameters.AddWithValue("@TaskID", taskID);
+            cmd.Parameters.AddWithValue("@rescheduledate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+            cmd.Parameters.AddWithValue("@oldstart", oldstart.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@oldend", oldend.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@oldworkingtime", (Math.Truncate(oldworkingtime.TotalHours)).ToString() + ":"
+                +oldworkingtime.Minutes.ToString() + ":" + oldworkingtime.Seconds.ToString());
+            cmd.Parameters.AddWithValue("@userid", userid);
+
+            MySqlTransaction tr = conn.BeginTransaction();
+            cmd.Transaction = tr;
+            try
+            {
+                cmd.ExecuteNonQuery();
+                tr.Commit();
+            }
+            catch(Exception ex)
+            {
+                tr.Rollback();
+                this.log = ex.Message;
+            }
+            conn.Close();
         }
     }
 

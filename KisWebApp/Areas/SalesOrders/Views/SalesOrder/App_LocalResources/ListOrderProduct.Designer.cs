@@ -232,6 +232,15 @@ namespace ResListOrderProduct {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cambia pianificazione dei task.
+        /// </summary>
+        public static string lblManageTasks {
+            get {
+                return ResourceManager.GetString("lblManageTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ordine.
         /// </summary>
         public static string lblOrdine {

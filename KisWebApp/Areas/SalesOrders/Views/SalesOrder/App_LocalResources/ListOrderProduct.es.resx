@@ -237,4 +237,7 @@
   <data name="lblManageOperators" xml:space="preserve">
     <value>Gestionar operadores asignados a las tareas</value>
   </data>
+  <data name="lblManageTasks" xml:space="preserve">
+    <value>Cambiar planificación de tareas</value>
+  </data>
 </root>

@@ -45,32 +45,32 @@ namespace KIS.Operatori
 
                         if (controlloLogin == true)
                         {
-                            frmLstTaskAvviati.idPostazione = pst.id;
+                         //   frmLstTaskAvviati.idPostazione = pst.id;
                             lblPostazione.Text = pst.name;
-                            frmLstTaskAvviabili.idPostazione = pst.id;
+                            //frmLstTaskAvviabili.idPostazione = pst.id;
                         }
                         else
                         {
                             lbl1.Text = GetLocalResourceObject("lblErrorCheckIn").ToString();
-                            frmLstTaskAvviabili.idPostazione = -1;
-                            frmLstTaskAvviati.idPostazione = -1;
-                            frmLstTaskAvviati.Visible = false;
+                       //     frmLstTaskAvviabili.idPostazione = -1;
+                       //     frmLstTaskAvviati.idPostazione = -1;
+                       //     frmLstTaskAvviati.Visible = false;
                         }
                     }
                     else
                     {
-                        frmLstTaskAvviati.idPostazione = -1;
-                        frmLstTaskAvviati.Visible = false;
-                        frmLstTaskAvviabili.idPostazione = -1;
+                   //     frmLstTaskAvviati.idPostazione = -1;
+                   //     frmLstTaskAvviati.Visible = false;
+                        //frmLstTaskAvviabili.idPostazione = -1;
                         lbl1.Text = GetLocalResourceObject("lblPostazioneNotFound").ToString();
                     }
                 }
                 else
                 {
-                    frmLstTaskAvviati.idPostazione = -1;
-                    frmLstTaskAvviati.Visible = false;
-                    frmLstTaskAvviabili.idPostazione = -1;
-                    frmLstTaskAvviabili.Visible = false;
+               //     frmLstTaskAvviati.idPostazione = -1;
+                 //   frmLstTaskAvviati.Visible = false;
+                 //   frmLstTaskAvviabili.idPostazione = -1;
+                 //   frmLstTaskAvviabili.Visible = false;
                     lbl1.Text = "Querystring not found<br/>";
                 }
             
@@ -78,10 +78,10 @@ namespace KIS.Operatori
             else
             {
                 if (!Page.IsPostBack) { 
-                frmLstTaskAvviati.idPostazione = -1;
-                frmLstTaskAvviati.Visible = false;
-                frmLstTaskAvviabili.idPostazione = -1;
-                frmLstTaskAvviabili.Visible = false;
+            //    frmLstTaskAvviati.idPostazione = -1;
+            //    frmLstTaskAvviati.Visible = false;
+            //    frmLstTaskAvviabili.idPostazione = -1;
+              //  frmLstTaskAvviabili.Visible = false;
                 lbl1.Text = GetLocalResourceObject("lblNotLoggedIn1").ToString()
                     + " <a href=\"/Login/login.aspx\">"+ GetLocalResourceObject("lblNotLoggedIn2").ToString() + "</a>.";
                 }

@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="listArticoliINP.ascx.cs" Inherits="KIS.Produzione.listArticoliINP" %>
 
-
 <asp:ScriptManager runat="server" ID="ScriptMan1" />
 <asp:UpdatePanel runat="server" ID="updProduction" UpdateMode="Conditional">
 
