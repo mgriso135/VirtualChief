@@ -130,11 +130,11 @@ namespace KIS.App_Code
             }
         }
     }
-    
+
     public class TaskProduzione
     {
         public String log;
-        public String logP {get { return this.log; } }
+        public String logP { get { return this.log; } }
 
         public Reparto rp;
 
@@ -159,12 +159,14 @@ namespace KIS.App_Code
         private DateTime _EarlyStart;
         public DateTime EarlyStart
         {
-            get {
-                if(this.rp==null ||rp.id==-1)
-                { 
+            get
+            {
+                if (this.rp == null || rp.id == -1)
+                {
                     this.rp = new Reparto(this.RepartoID);
                 }
-                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStart, rp.tzFusoOrario); }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStart, rp.tzFusoOrario);
+            }
             set
             {
                 if (this.rp == null || rp.id == -1)
@@ -176,7 +178,7 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET earlyStart = '" 
+                cmd.CommandText = "UPDATE tasksproduzione SET earlyStart = '"
                     + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
@@ -185,7 +187,7 @@ namespace KIS.App_Code
                     tr.Commit();
                     this._EarlyStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     tr.Rollback();
                     log = ex.Message;
@@ -197,7 +199,8 @@ namespace KIS.App_Code
         private DateTime _LateStart;
         public DateTime LateStart
         {
-            get {
+            get
+            {
                 if (this.rp == null || rp.id == -1)
                 {
                     this.rp = new Reparto(this.RepartoID);
@@ -231,12 +234,14 @@ namespace KIS.App_Code
         private DateTime _EarlyFinish;
         public DateTime EarlyFinish
         {
-            get {
-                if(this.rp==null || rp.id==-1)
-                { 
-                this.rp = new Reparto(this.RepartoID);
+            get
+            {
+                if (this.rp == null || rp.id == -1)
+                {
+                    this.rp = new Reparto(this.RepartoID);
                 }
-                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinish, rp.tzFusoOrario); }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinish, rp.tzFusoOrario);
+            }
             set
             {
                 if (this.rp == null || rp.id == -1)
@@ -248,7 +253,7 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET earlyFinish = '" 
+                cmd.CommandText = "UPDATE tasksproduzione SET earlyFinish = '"
                     + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
@@ -267,12 +272,14 @@ namespace KIS.App_Code
         private DateTime _LateFinish;
         public DateTime LateFinish
         {
-            get {
+            get
+            {
                 if (this.rp == null || rp.id == -1)
                 {
                     this.rp = new Reparto(this.RepartoID);
                 }
-                return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinish, rp.tzFusoOrario); }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinish, rp.tzFusoOrario);
+            }
             set
             {
                 Reparto rp = new Reparto(this.RepartoID);
@@ -281,7 +288,7 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET lateFinish = '" 
+                cmd.CommandText = "UPDATE tasksproduzione SET lateFinish = '"
                     + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
                     + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
                 try
@@ -312,12 +319,14 @@ namespace KIS.App_Code
         private DateTime _FinishEffettivo;
         public DateTime FinishEffettivo
         {
-            get {
+            get
+            {
                 if (this.rp == null || rp.id == -1)
                 {
                     this.rp = new Reparto(this.RepartoID);
                 }
-                return TimeZoneInfo.ConvertTimeFromUtc(this._FinishEffettivo, rp.tzFusoOrario); }
+                return TimeZoneInfo.ConvertTimeFromUtc(this._FinishEffettivo, rp.tzFusoOrario);
+            }
         }
 
         private int _OriginalTask;
@@ -377,7 +386,7 @@ namespace KIS.App_Code
         {
             get { return this._Status; }
         }
-                
+
         private int _ArticoloID;
         public int ArticoloID
         {
@@ -436,7 +445,7 @@ namespace KIS.App_Code
                         tr.Commit();
                         this._QuantitaProdotta = value;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         log = ex.Message;
                         tr.Rollback();
@@ -482,7 +491,7 @@ namespace KIS.App_Code
                 this._QuantitaProdotta = rdr.GetInt32(18);
                 this._RealEndDate = new DateTime(1970, 1, 1);
                 if (!rdr.IsDBNull(19))
-                { 
+                {
                     this._RealEndDate = rdr.GetDateTime(19);
                 }
                 this._LeadTime = new TimeSpan(1970, 1, 1);
@@ -532,7 +541,7 @@ namespace KIS.App_Code
             rdr.Close();
             conn.Close();
         }
-    
+
         // Precedenti
         private List<int> _IdPrecedenti;
         public List<int> IdPrecedenti
@@ -563,7 +572,7 @@ namespace KIS.App_Code
             rdr.Close();
             conn.Close();
         }
-    
+
         // Eventi del task
         private List<EventoTaskProduzione> _Eventi;
         public List<EventoTaskProduzione> Eventi
@@ -600,10 +609,10 @@ namespace KIS.App_Code
             this._UtentiAttivi = new List<String>();
             List<String> utentiNonAttivi = new List<String>();
             this.loadEventi();
-            
+
             for (int i = this.Eventi.Count - 1; i >= 0; i--)
             {
-                
+
                 if (this.Eventi[i].Evento == 'P')
                 {
                     utentiNonAttivi.Add(this.Eventi[i].User);
@@ -633,11 +642,11 @@ namespace KIS.App_Code
             get
             {
                 String ret = "";
-                if(this.TaskProduzioneID !=-1)
-                { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
+                if (this.TaskProduzioneID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT anagraficaclienti.ragsociale FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
                         + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
                         + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
@@ -652,11 +661,11 @@ namespace KIS.App_Code
                         }
                         rdr.Close();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         this.log = ex.Message;
                     }
-                conn.Close();
+                    conn.Close();
                 }
                 return ret;
             }
@@ -753,7 +762,7 @@ namespace KIS.App_Code
             List<String> utentiNonAttivi = new List<String>();
             this.loadEventi();
 
-            for (int i =0; i < this.Eventi.Count; i++)
+            for (int i = 0; i < this.Eventi.Count; i++)
             {
                 utentiNonAttivi.Add(this.Eventi[i].User);
             }
@@ -813,10 +822,10 @@ namespace KIS.App_Code
                         checkPrecedenti = false;
                     }
                 }*/
-                for(int i = 0; i < this.PreviousTasks.Count; i++)
+                for (int i = 0; i < this.PreviousTasks.Count; i++)
                 {
                     TaskProduzione precedente = new TaskProduzione(this.PreviousTasks[i].NearTaskID);
-                    if(this.PreviousTasks[i].ConstraintType == 0)
+                    if (this.PreviousTasks[i].ConstraintType == 0)
                     {
                         if (precedente.Status == 'N')
                         {
@@ -830,7 +839,7 @@ namespace KIS.App_Code
                             checkPrecedenti = false;
                         }
                     }
-                    
+
                 }
 
                 bool controlloTasksAvviatiUtente = true;
@@ -925,7 +934,7 @@ namespace KIS.App_Code
                     }
                 }
 
-                if(!controlloUtente)
+                if (!controlloUtente)
                 {
                     rt = 7;
                 }
@@ -954,7 +963,7 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
 
-                if(!controlloUltimaAzione)
+                if (!controlloUltimaAzione)
                 {
                     rt = 6;
                 }
@@ -982,7 +991,7 @@ namespace KIS.App_Code
 
                 }
 
-                if(!checkPrecedenti)
+                if (!checkPrecedenti)
                 {
                     rt = 4;
                 }
@@ -1006,7 +1015,7 @@ namespace KIS.App_Code
                     }
                 }
 
-                if(!controlloTasksAvviatiUtente)
+                if (!controlloTasksAvviatiUtente)
                 {
                     rt = 5;
                 }
@@ -1073,7 +1082,7 @@ namespace KIS.App_Code
             cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
                 + " AND user = '" + usr.username + "' ORDER BY data desc";
             MySqlDataReader rdr = cmd.ExecuteReader();
-            
+
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
                 if (rdr.GetChar(0) == 'I')
@@ -1228,10 +1237,10 @@ namespace KIS.App_Code
 
                 bool checkIfPreviousCompleted = true;
                 this.loadPrecedenti();
-                for(int i =0; i < this.PreviousTasks.Count; i++)
+                for (int i = 0; i < this.PreviousTasks.Count; i++)
                 {
                     TaskProduzione prec = new TaskProduzione(this.PreviousTasks[i].NearTaskID);
-                    if(prec.Status!='F')
+                    if (prec.Status != 'F')
                     {
                         checkIfPreviousCompleted = false;
                     }
@@ -1246,9 +1255,9 @@ namespace KIS.App_Code
                     + " checkParameters: " + checkParameters.ToString()
                     + "<br/>";
                 if (checkUtenteAttivo == true && controlloUltimaAzione == true && checkParameters && checkIfPreviousCompleted)
-                {                    
+                {
                     MySqlTransaction tr = conn.BeginTransaction();
-                    
+
                     cmd.Transaction = tr;
                     try
                     {
@@ -1272,7 +1281,7 @@ namespace KIS.App_Code
                             cmd.ExecuteNonQuery();
                         }
                         // Imposto lo stato del task a terminato
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'F', endDateReal='"+ endDate.ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'F', endDateReal='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE taskID = " + this.TaskProduzioneID.ToString();
                         cmd.ExecuteNonQuery();
                         this._Status = 'F';
                         this._RealEndDate = endDate;
@@ -1290,7 +1299,7 @@ namespace KIS.App_Code
                         }
                         if (controlloFineTasks == true)
                         {
-                            
+
                             cmd.CommandText = "UPDATE productionplan SET status = 'F', quantitaProdotta=" + this.QuantitaProdotta.ToString()
                                 + ", EndProductionDateReal='" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "'"
                                 + " WHERE id = " + this.ArticoloID.ToString()
@@ -1302,13 +1311,13 @@ namespace KIS.App_Code
                             KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
                             Reparto rp = new Reparto(this.RepartoID);
                             Cliente cust = new Cliente(art.Cliente);
-                            if(rp.id!=-1 && cust.CodiceCliente.Length > 0)
+                            if (rp.id != -1 && cust.CodiceCliente.Length > 0)
                             {
-                            if (kboxCfg!=null && art!=null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
-                            {
-                                art.changeKanbanBoxCardStatus("full");
-                                //log +=  "<br />" + art.log;
-                            }
+                                if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
+                                {
+                                    art.changeKanbanBoxCardStatus("full");
+                                    //log +=  "<br />" + art.log;
+                                }
                             }
                         }
 
@@ -1324,67 +1333,68 @@ namespace KIS.App_Code
                     }
 
                     // Sets the working time, delay and leadtime
-                    if (rt) { 
-                    TimeSpan dela = this.ritardo;
-                    dela = dela < new TimeSpan(838, 59, 59) ? dela : new TimeSpan(838, 59, 58);
-                    String delaStr = Math.Floor(dela.TotalHours).ToString() + ":" + dela.Minutes.ToString() + ":" + dela.Seconds.ToString();
-                    TimeSpan workingtime = this.TempoDiLavoroEffettivo;
+                    if (rt)
+                    {
+                        TimeSpan dela = this.ritardo;
+                        dela = dela < new TimeSpan(838, 59, 59) ? dela : new TimeSpan(838, 59, 58);
+                        String delaStr = Math.Floor(dela.TotalHours).ToString() + ":" + dela.Minutes.ToString() + ":" + dela.Seconds.ToString();
+                        TimeSpan workingtime = this.TempoDiLavoroEffettivo;
                         workingtime = workingtime < new TimeSpan(838, 59, 59) ? this.TempoDiLavoroEffettivo : new TimeSpan(838, 59, 58);
                         String workingtimeStr = Math.Floor(workingtime.TotalHours).ToString() + ":" + workingtime.Minutes.ToString() + ":" + workingtime.Seconds.ToString();
-                    TimeSpan lt = this.getLeadTime();
+                        TimeSpan lt = this.getLeadTime();
                         lt = lt < new TimeSpan(838, 59, 59) ? this.getLeadTime() : new TimeSpan(838, 59, 58);
                         String ltStr = Math.Floor(lt.TotalHours).ToString() + ":" + lt.Minutes.ToString() + ":" + lt.Seconds.ToString();
-                    cmd.CommandText = "UPDATE tasksproduzione SET WorkingTime = '" + workingtimeStr + "', Delay='" + delaStr + "', LeadTime='" + ltStr + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
-                    cmd.ExecuteNonQuery();
+                        cmd.CommandText = "UPDATE tasksproduzione SET WorkingTime = '" + workingtimeStr + "', Delay='" + delaStr + "', LeadTime='" + ltStr + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                        cmd.ExecuteNonQuery();
 
-                    this.log = cmd.CommandText;
+                        this.log = cmd.CommandText;
                     }
 
                     if (this.Status == 'F')
-                    { 
-                    // Aggiorno il leadtime
-                    tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    try
                     {
-                        Articolo art = new Articolo(this.ArticoloID, this.ArticoloAnno);
-                        art.loadLeadTimes();
-                        TimeSpan finalLt = art.CalculateLeadTime();
-                        String leadtime = Math.Floor(finalLt.TotalHours).ToString()
-                            + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
-                        cmd.CommandText = "UPDATE productionplan SET leadtime='" + leadtime + "'"
-                            + " WHERE id = " + this.ArticoloID.ToString()
-                            + " AND anno = " + this.ArticoloAnno.ToString();
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch(Exception ex)
-                    {
-                        //this.log = "Lead time fail: " + ex.Message;
-                        tr.Rollback();
-                    }
+                        // Aggiorno il leadtime
+                        tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            Articolo art = new Articolo(this.ArticoloID, this.ArticoloAnno);
+                            art.loadLeadTimes();
+                            TimeSpan finalLt = art.CalculateLeadTime();
+                            String leadtime = Math.Floor(finalLt.TotalHours).ToString()
+                                + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET leadtime='" + leadtime + "'"
+                                + " WHERE id = " + this.ArticoloID.ToString()
+                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            //this.log = "Lead time fail: " + ex.Message;
+                            tr.Rollback();
+                        }
 
-                    // Aggiorno il WorkingTime
-                    tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    try
-                    {
-                        Articolo art = new Articolo(this.ArticoloID, this.ArticoloAnno);
-                        art.loadTempoDiLavoroTotale();
-                        TimeSpan tLavTot = art.TempoDiLavoroTotale;
-                        String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
-                            + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
-                        cmd.CommandText = "UPDATE productionplan SET WorkingTime='" + tLavTotStr + "'"
-                            + " WHERE id = " + this.ArticoloID.ToString()
-                            + " AND anno = " + this.ArticoloAnno.ToString();
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        //this.log = "Working time fail: " + ex.Message;
-                        tr.Rollback();
-                    }
+                        // Aggiorno il WorkingTime
+                        tr = conn.BeginTransaction();
+                        cmd.Transaction = tr;
+                        try
+                        {
+                            Articolo art = new Articolo(this.ArticoloID, this.ArticoloAnno);
+                            art.loadTempoDiLavoroTotale();
+                            TimeSpan tLavTot = art.TempoDiLavoroTotale;
+                            String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
+                                + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET WorkingTime='" + tLavTotStr + "'"
+                                + " WHERE id = " + this.ArticoloID.ToString()
+                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            //this.log = "Working time fail: " + ex.Message;
+                            tr.Rollback();
+                        }
                         // Updates delay
                         tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
@@ -1402,7 +1412,7 @@ namespace KIS.App_Code
                         }
                         catch (Exception ex)
                         {
-                         //   this.log = "Delay fail: " + ex.Message;
+                            //   this.log = "Delay fail: " + ex.Message;
                             tr.Rollback();
                         }
 
@@ -1467,10 +1477,10 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
 
-               if(!controlloUltimaAzione)
-               {
-                   rt = 3;
-               }
+                if (!controlloUltimaAzione)
+                {
+                    rt = 3;
+                }
 
                 bool checkIfPreviousCompleted = true;
                 this.loadPrecedenti();
@@ -1483,7 +1493,7 @@ namespace KIS.App_Code
                     }
                 }
 
-                if(!checkIfPreviousCompleted)
+                if (!checkIfPreviousCompleted)
                 {
                     rt = 4;
                 }
@@ -1493,7 +1503,7 @@ namespace KIS.App_Code
                 // Check that all mandatory parameters have been set
                 Boolean checkParameters = this.CheckParametersComplete();
 
-                if(!checkParameters)
+                if (!checkParameters)
                 {
                     rt = 5;
                 }
@@ -1580,7 +1590,7 @@ namespace KIS.App_Code
                     }
 
                     // Sets the working time, delay and leadtime
-                    if (rt==1)
+                    if (rt == 1)
                     {
                         TimeSpan dela = this.getDelay(regDate);
                         String delaStr = Math.Floor(dela.TotalHours).ToString() + ":" + dela.Minutes.ToString() + ":" + dela.Seconds.ToString();
@@ -1669,7 +1679,7 @@ namespace KIS.App_Code
             get
             {
                 TimeSpan tc = new TimeSpan(0, 0, 0);
-                if (this.TaskProduzioneID != -1 && this.RepartoID!=-1)
+                if (this.TaskProduzioneID != -1 && this.RepartoID != -1)
                 {
                     if (this.rp == null || rp.id == -1)
                     {
@@ -1962,8 +1972,8 @@ namespace KIS.App_Code
                 DateTime min = DateTime.UtcNow.AddDays(30);
                 if (this.Status == 'F' || this.Status == 'I')
                 {
-                    if(this.Eventi==null||this.Eventi.Count==0)
-                    { 
+                    if (this.Eventi == null || this.Eventi.Count == 0)
+                    {
                         this.loadEventi();
                     }
                     for (int i = 0; i < this.Eventi.Count; i++)
@@ -1999,33 +2009,33 @@ namespace KIS.App_Code
         {
             get
             {
-                if(this._RealEndDate.Year > 2000)
+                if (this._RealEndDate.Year > 2000)
                 {
                     return this.RealEndDate;
                 }
                 else
-                { 
-                DateTime max = new DateTime(1970, 1, 1);
-                if (this.Status == 'F')
                 {
-                    if (this.Eventi == null || this.Eventi.Count == 0)
+                    DateTime max = new DateTime(1970, 1, 1);
+                    if (this.Status == 'F')
                     {
-                        this.loadEventi();
-                    }
-                    for (int i = 0; i < this.Eventi.Count; i++)
-                    {
-                        if (this.Eventi[i].Evento == 'F')
+                        if (this.Eventi == null || this.Eventi.Count == 0)
                         {
-                            max = this.Eventi[i].Data;
+                            this.loadEventi();
+                        }
+                        for (int i = 0; i < this.Eventi.Count; i++)
+                        {
+                            if (this.Eventi[i].Evento == 'F')
+                            {
+                                max = this.Eventi[i].Data;
+                            }
                         }
                     }
-                }
-                if (this.rp == null || rp.id == -1)
-                {
-                    this.rp = new Reparto(this.RepartoID);
-                }
-                //return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
-                return max;
+                    if (this.rp == null || rp.id == -1)
+                    {
+                        this.rp = new Reparto(this.RepartoID);
+                    }
+                    //return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
+                    return max;
                 }
             }
         }
@@ -2042,7 +2052,7 @@ namespace KIS.App_Code
             this._Warnings = new List<Warning>();
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
-            MySqlCommand cmd= conn.CreateCommand();
+            MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM warningproduzione WHERE task = " + this.TaskProduzioneID.ToString() +
                 " ORDER BY dataChiamata";
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -2154,13 +2164,13 @@ namespace KIS.App_Code
                     if (Status == 'N')
                     {
                         DateTime df = new DateTime();
-                            df = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
-                            rit = df - this.LateStart;
+                        df = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
+                        rit = df - this.LateStart;
                         rp.loadCalendario(this.LateStart.AddDays(-7), df.AddDays(7));
                         int indInizio = -1;
                         int indFine = -1;
                         bool foundFine = false;
-                        for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && (indInizio == -1 || indFine==-1); i++)
+                        for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && (indInizio == -1 || indFine == -1); i++)
                         {
                             //log += i.ToString() + "<br />";
                             if (rp.CalendarioRep.Intervalli[i].Inizio <= lateStart && lateStart <= rp.CalendarioRep.Intervalli[i].Fine)
@@ -2168,7 +2178,7 @@ namespace KIS.App_Code
                                 //log += "indInizio: " + i.ToString() + " " + rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
                                 indInizio = i;
                             }
-                            else if ((i+1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < lateStart && lateStart < rp.CalendarioRep.Intervalli[i + 1].Inizio)
+                            else if ((i + 1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < lateStart && lateStart < rp.CalendarioRep.Intervalli[i + 1].Inizio)
                             {
                                 //log += "indInizio Esterno: " + i.ToString() + " " + rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + df.ToString("dd/MM/yyyy HH:mm:ss") + " <= " + rp.CalendarioRep.Intervalli[i + 1].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
                                 indInizio = i;
@@ -2229,7 +2239,7 @@ namespace KIS.App_Code
                         DateTime uno = df < lateFinish ? df : lateFinish;
                         DateTime due = df < lateFinish ? lateFinish : df;
                         //rp.loadCalendario(this.LateStart.AddDays(-1), df.AddDays(1));
-                        rp.loadCalendario(uno.AddDays(-7),due.AddDays(7));
+                        rp.loadCalendario(uno.AddDays(-7), due.AddDays(7));
                         int indInizio = -1;
                         int indFine = -1;
                         bool foundFine = false;
@@ -2242,62 +2252,62 @@ namespace KIS.App_Code
                             + " " + this.LateFinish.ToString("dd/MM/yyyy HH:mm:ss")
                             + " " + df.ToString("dd/MM/yyyy HH:mm:ss")
                             + "<br />";*/
-                            for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && (indInizio == -1 || indFine == -1); i++)
+                        for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && (indInizio == -1 || indFine == -1); i++)
                         {
-                                //log+=rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " "
-                                //+ rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
-                                if (rp.CalendarioRep.Intervalli[i].Inizio <= lateFinish && lateFinish <= rp.CalendarioRep.Intervalli[i].Fine)
-                                {
-                                    //log += " A";
-                                    indInizio = i;
-                                }
-                                else if((i+1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < lateFinish && lateFinish < rp.CalendarioRep.Intervalli[i + 1].Inizio)
-                                {
-                                    //log += " B";
-                                    indInizio = i;
-                                    foundFine = true;
-                                }
-                                if (rp.CalendarioRep.Intervalli[i].Inizio <= df && df <= rp.CalendarioRep.Intervalli[i].Fine)
-                                {
-                                    //log += " C";
-                                    indFine = i;
-                                    foundFine = true;
-                                }
-                                else if ((i + 1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < df && df < rp.CalendarioRep.Intervalli[i + 1].Inizio)
-                                {
-                                    //log += " D";
-                                    indFine = i;
-                                    foundFine = true;
-                                }
-                                //log += "<br/>";
+                            //log+=rp.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " "
+                            //+ rp.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                            if (rp.CalendarioRep.Intervalli[i].Inizio <= lateFinish && lateFinish <= rp.CalendarioRep.Intervalli[i].Fine)
+                            {
+                                //log += " A";
+                                indInizio = i;
+                            }
+                            else if ((i + 1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < lateFinish && lateFinish < rp.CalendarioRep.Intervalli[i + 1].Inizio)
+                            {
+                                //log += " B";
+                                indInizio = i;
+                                foundFine = true;
+                            }
+                            if (rp.CalendarioRep.Intervalli[i].Inizio <= df && df <= rp.CalendarioRep.Intervalli[i].Fine)
+                            {
+                                //log += " C";
+                                indFine = i;
+                                foundFine = true;
+                            }
+                            else if ((i + 1) < rp.CalendarioRep.Intervalli.Count && rp.CalendarioRep.Intervalli[i].Fine < df && df < rp.CalendarioRep.Intervalli[i + 1].Inizio)
+                            {
+                                //log += " D";
+                                indFine = i;
+                                foundFine = true;
+                            }
+                            //log += "<br/>";
                         }
 
 
                         //log += foundFine.ToString() + " " + indInizio.ToString() + " " + indFine.ToString() + "<br />";
                         if (foundFine == true)
-                         {
-                             while (indInizio < indFine)
-                             {
-                                 if ((indInizio + 1) < rp.CalendarioRep.Intervalli.Count && indInizio > -1)
-                                 {
-                                        DateTime prevFine = this.LateFinish > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateFinish : rp.CalendarioRep.Intervalli[indInizio].Fine;
-                                        rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - prevFine);
-                                    }
-                                    indInizio++;
-                                }
-
-                                if (rp.CalendarioRep.Intervalli[indFine].Fine < df)
-                                {
-                                    rit -= (df - rp.CalendarioRep.Intervalli[indFine].Fine);
-                                }
-                            }
-                            else
+                        {
+                            while (indInizio < indFine)
                             {
-                                rit = new TimeSpan(0, 0, 0);
+                                if ((indInizio + 1) < rp.CalendarioRep.Intervalli.Count && indInizio > -1)
+                                {
+                                    DateTime prevFine = this.LateFinish > rp.CalendarioRep.Intervalli[indInizio].Fine ? this.LateFinish : rp.CalendarioRep.Intervalli[indInizio].Fine;
+                                    rit -= (rp.CalendarioRep.Intervalli[indInizio + 1].Inizio - prevFine);
+                                }
+                                indInizio++;
                             }
-                        
+
+                            if (rp.CalendarioRep.Intervalli[indFine].Fine < df)
+                            {
+                                rit -= (df - rp.CalendarioRep.Intervalli[indFine].Fine);
+                            }
+                        }
+                        else
+                        {
+                            rit = new TimeSpan(0, 0, 0);
+                        }
+
                     }
-                    
+
                 }
 
                 if (rit.TotalHours < 0)
@@ -2509,43 +2519,43 @@ namespace KIS.App_Code
 
         protected TimeSpan getLeadTime()
         {
-                TimeSpan sommaLTs = new TimeSpan(0, 0, 0);
-                DateTime min = new DateTime(2999, 1, 1);
-                DateTime max = new DateTime(1970, 1, 1);
-                TimeSpan ret = new TimeSpan(0, 0, 0);
-                min = this.DataInizioTask;
-                max = this.RealEndDate;
-                if (this.Status == 'F' && min <= max)
+            TimeSpan sommaLTs = new TimeSpan(0, 0, 0);
+            DateTime min = new DateTime(2999, 1, 1);
+            DateTime max = new DateTime(1970, 1, 1);
+            TimeSpan ret = new TimeSpan(0, 0, 0);
+            min = this.DataInizioTask;
+            max = this.RealEndDate;
+            if (this.Status == 'F' && min <= max)
+            {
+                // Find earliest started task and latest finished task
+                Reparto rp = new Reparto(this.RepartoID);
+                rp.loadCalendario(min.AddDays(-30), max.AddDays(7));
+                for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
                 {
-                    // Find earliest started task and latest finished task
-                    Reparto rp = new Reparto(this.RepartoID);
-                    rp.loadCalendario(min.AddDays(-30), max.AddDays(7));
-                    for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
+                    if (min >= rp.CalendarioRep.Intervalli[i].Inizio && rp.CalendarioRep.Intervalli[i].Fine <= max && min <= rp.CalendarioRep.Intervalli[i].Fine)
                     {
-                        if (min >= rp.CalendarioRep.Intervalli[i].Inizio && rp.CalendarioRep.Intervalli[i].Fine <= max && min <= rp.CalendarioRep.Intervalli[i].Fine)
-                        {
-                            TimeSpan curr = (rp.CalendarioRep.Intervalli[i].Fine - min);
-                            ret = ret.Add(curr);
-                        }
-                        else if (min <= rp.CalendarioRep.Intervalli[i].Inizio && max >= rp.CalendarioRep.Intervalli[i].Fine)
-                        {
-                            TimeSpan curr = (rp.CalendarioRep.Intervalli[i].Fine - rp.CalendarioRep.Intervalli[i].Inizio);
-                            ret = ret.Add(curr);
-                        }
-                        else if (rp.CalendarioRep.Intervalli[i].Inizio >= min && max <= rp.CalendarioRep.Intervalli[i].Fine && max >= rp.CalendarioRep.Intervalli[i].Inizio)
-                        {
-                            TimeSpan curr = (max - rp.CalendarioRep.Intervalli[i].Inizio);
-                            ret = ret.Add(curr);
-                        }
-                        else if(min >= rp.CalendarioRep.Intervalli[i].Inizio && max <= rp.CalendarioRep.Intervalli[i].Fine)
+                        TimeSpan curr = (rp.CalendarioRep.Intervalli[i].Fine - min);
+                        ret = ret.Add(curr);
+                    }
+                    else if (min <= rp.CalendarioRep.Intervalli[i].Inizio && max >= rp.CalendarioRep.Intervalli[i].Fine)
+                    {
+                        TimeSpan curr = (rp.CalendarioRep.Intervalli[i].Fine - rp.CalendarioRep.Intervalli[i].Inizio);
+                        ret = ret.Add(curr);
+                    }
+                    else if (rp.CalendarioRep.Intervalli[i].Inizio >= min && max <= rp.CalendarioRep.Intervalli[i].Fine && max >= rp.CalendarioRep.Intervalli[i].Inizio)
+                    {
+                        TimeSpan curr = (max - rp.CalendarioRep.Intervalli[i].Inizio);
+                        ret = ret.Add(curr);
+                    }
+                    else if (min >= rp.CalendarioRep.Intervalli[i].Inizio && max <= rp.CalendarioRep.Intervalli[i].Fine)
                     {
                         TimeSpan curr = max - min;
                         ret = ret.Add(curr);
                     }
-                    }
+                }
 
                 this._LeadTime = ret;
-                }
+            }
             return ret;
         }
 
@@ -2680,8 +2690,8 @@ namespace KIS.App_Code
                             }
                             else if (rp.CalendarioRep.Intervalli[j].Inizio >= elenco[i].Inizio && rp.CalendarioRep.Intervalli[j].Fine <= elenco[i].Fine)
                             {
-                             //   tc += (rp.CalendarioRep.Intervalli[j].Fine - rp.CalendarioRep.Intervalli[j].Inizio);
-                             //   log += "if3 " + tc.TotalHours.ToString() + "<br />";
+                                //   tc += (rp.CalendarioRep.Intervalli[j].Fine - rp.CalendarioRep.Intervalli[j].Inizio);
+                                //   log += "if3 " + tc.TotalHours.ToString() + "<br />";
                                 IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
                                 curr.user = elenco[i].Username;
                                 curr.Inizio = rp.CalendarioRep.Intervalli[j].Inizio;
@@ -2998,10 +3008,10 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 try
                 {
-                        cmd.CommandText = "UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
-                        + "task = " + this.TaskProduzioneID.ToString()
-                        + " AND evento = 'F'";
-                        cmd.ExecuteNonQuery();
+                    cmd.CommandText = "UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
+                    + "task = " + this.TaskProduzioneID.ToString()
+                    + " AND evento = 'F'";
+                    cmd.ExecuteNonQuery();
 
                     cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE taskID = " + this.TaskProduzioneID.ToString();
                     cmd.ExecuteNonQuery();
@@ -3031,19 +3041,19 @@ namespace KIS.App_Code
         public void loadParameters()
         {
             this.Parameters = new List<TaskParameter>();
-            if(this.TaskProduzioneID!=-1)
-            { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT paramID FROM taskparameters WHERE taskID = " + this.TaskProduzioneID.ToString();
+            if (this.TaskProduzioneID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT paramID FROM taskparameters WHERE taskID = " + this.TaskProduzioneID.ToString();
                 MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                while (rdr.Read())
                 {
                     this.Parameters.Add(new TaskParameter(this.TaskProduzioneID, rdr.GetInt32(0)));
                 }
                 rdr.Close();
-            conn.Close();
+                conn.Close();
             }
         }
 
@@ -3051,7 +3061,7 @@ namespace KIS.App_Code
             Boolean isRequired, String user)
         {
             Boolean ret = false;
-            if (this.TaskProduzioneID!=-1)
+            if (this.TaskProduzioneID != -1)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
@@ -3076,10 +3086,10 @@ namespace KIS.App_Code
                     + "'" + name + "', '" + description + "', " + isFixed.ToString() + ", "
                     + isRequired.ToString() + ", "
                     + maxSequence.ToString() + ", ";
-                if(user.Length > 0)
+                if (user.Length > 0)
                 {
                     cmd.CommandText += "'" + user + "', ";
-                        }
+                }
                 else
                 {
                     cmd.CommandText += "null, ";
@@ -3145,17 +3155,17 @@ namespace KIS.App_Code
             TaskVariante prcVar = this.OriginalTaskVariante;
             prcVar.loadParameters();
             this.log = "Param count: " + prcVar.Parameters.Count + "<br/>";
-            if(prcVar.Parameters.Count > 0)
-            { 
-                for(int i = 0; i < prcVar.Parameters.Count && ret; i++)
+            if (prcVar.Parameters.Count > 0)
+            {
+                for (int i = 0; i < prcVar.Parameters.Count && ret; i++)
                 {
-                    this.log+=
+                    this.log +=
                         prcVar.Parameters[i].Name + " "
                         + prcVar.Parameters[i].isRequired.ToString() + " ";
                     if (prcVar.Parameters[i].isRequired)
                     {
                         try
-                        { 
+                        {
                             var lst = this.Parameters.First(x => x.Name == prcVar.Parameters[i].Name &&
                             x.ParameterCategory.ID == prcVar.Parameters[i].ParameterCategory.ID);
                             this.log += "Found";
@@ -3222,11 +3232,11 @@ namespace KIS.App_Code
             this.log = "Param count: " + prcVar.Parameters.Count + "<br/>";
             for (int i = 0; i < prcVar.Parameters.Count; i++)
             {
-                    this.log +=
-                        prcVar.Parameters[i].Name + " "
-                        + prcVar.Parameters[i].isFixed.ToString() + " ";
-                    if (prcVar.Parameters[i].isFixed)
-                    {
+                this.log +=
+                    prcVar.Parameters[i].Name + " "
+                    + prcVar.Parameters[i].isFixed.ToString() + " ";
+                if (prcVar.Parameters[i].isFixed)
+                {
                     Boolean exists = false;
                     try
                     {
@@ -3240,18 +3250,18 @@ namespace KIS.App_Code
                         exists = false;
                         this.log += "Not found ";
                     }
-                    if(!exists)
-                    { 
-                    this.addParameter(prcVar.Parameters[i].Name,
-                        prcVar.Parameters[i].Description,
-                        prcVar.Parameters[i].ParameterCategory,
-                        prcVar.Parameters[i].isFixed,
-                        prcVar.Parameters[i].isRequired,
-                        "");
+                    if (!exists)
+                    {
+                        this.addParameter(prcVar.Parameters[i].Name,
+                            prcVar.Parameters[i].Description,
+                            prcVar.Parameters[i].ParameterCategory,
+                            prcVar.Parameters[i].isFixed,
+                            prcVar.Parameters[i].isRequired,
+                            "");
                     }
                     this.log += "<br />";
-                    }
                 }
+            }
             return this.log;
         }
 
@@ -3262,28 +3272,28 @@ namespace KIS.App_Code
             get
             {
                 Boolean ret = false;
-                if(this.TaskProduzioneID!=-1)
-                { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' and TaskID = " + this.TaskProduzioneID.ToString();
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                if (this.TaskProduzioneID != -1)
                 {
-                    ret = true;
-                }
-                rdr.Close();
-                conn.Close();
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' and TaskID = " + this.TaskProduzioneID.ToString();
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        ret = true;
+                    }
+                    rdr.Close();
+                    conn.Close();
                 }
                 return ret;
             }
         }
-          
+
         public void loadWorkInstructionActive()
         {
             this.WorkInstructionActive = null;
-            if(this.TaskProduzioneID!=-1 && this.OriginalTask!=-1 && this.OriginalTaskRevisione!=-1 && this.VarianteID!=-1)
+            if (this.TaskProduzioneID != -1 && this.OriginalTask != -1 && this.OriginalTaskRevisione != -1 && this.VarianteID != -1)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
@@ -3294,7 +3304,7 @@ namespace KIS.App_Code
                 cmd.Parameters.AddWithValue("@TaskVersion", this.OriginalTaskRevisione);
                 cmd.Parameters.AddWithValue("@TaskVariant", this.VarianteID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0) && !rdr.IsDBNull(1))
+                if (rdr.Read() && !rdr.IsDBNull(0) && !rdr.IsDBNull(1))
                 {
                     this.WorkInstructionActive = new App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1));
                 }
@@ -3307,20 +3317,20 @@ namespace KIS.App_Code
         public void loadAssignedOperators()
         {
             this._AssignedOperators = new List<string>();
-            if(this.TaskProduzioneID!=-1)
-            { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
-            conn.Open();
+            if (this.TaskProduzioneID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT user FROM taskuser WHERE taskid=@TaskID";
                 cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                while (rdr.Read())
                 {
                     this._AssignedOperators.Add(rdr.GetString(0));
                 }
                 rdr.Close();
-            conn.Close();
+                conn.Close();
             }
         }
 
@@ -3331,7 +3341,7 @@ namespace KIS.App_Code
         public int deleteAssignedOperator(String defOp)
         {
             int ret = 0;
-            if(this.TaskProduzioneID!=-1)
+            if (this.TaskProduzioneID != -1)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
@@ -3365,8 +3375,8 @@ namespace KIS.App_Code
                 cmd.Parameters.AddWithValue("@User", defOp);
                 cmd.Parameters.AddWithValue("@Exclusive", false);
                 try
-                { 
-                cmd.ExecuteNonQuery();
+                {
+                    cmd.ExecuteNonQuery();
                     tr.Commit();
                 }
                 catch
@@ -3387,49 +3397,49 @@ namespace KIS.App_Code
         public DateTime getEndDate(DateTime start)
         {
             DateTime ret = new DateTime(1970, 1, 1);
-            if (this.TaskProduzioneID!=-1)
+            if (this.TaskProduzioneID != -1)
             {
                 Reparto rp = new Reparto(this.RepartoID);
-                if (rp!=null && rp.id!=-1 && TimeZoneInfo.ConvertTimeToUtc(start, rp.tzFusoOrario) > DateTime.UtcNow)
+                if (rp != null && rp.id != -1 && TimeZoneInfo.ConvertTimeToUtc(start, rp.tzFusoOrario) > DateTime.UtcNow)
                 {
                     TimeSpan minsevendays = new TimeSpan(7, 0, 0, 0);
-                    rp.loadCalendario(start.AddDays(-7), TimeZoneInfo.ConvertTimeToUtc(start + this.TempoC + minsevendays).AddDays(this.TempoC.TotalDays*5));
+                    rp.loadCalendario(start.AddDays(-7), TimeZoneInfo.ConvertTimeToUtc(start + this.TempoC + minsevendays).AddDays(this.TempoC.TotalDays * 5));
                     // Check if start is inside a shift
                     int insideshift = -1;
                     int closestshift = -1;
-                    for(int i = 0; i < rp.CalendarioRep.Intervalli.Count && insideshift==-1; i++)
+                    for (int i = 0; i < rp.CalendarioRep.Intervalli.Count && insideshift == -1; i++)
 
                     {
-                        if(rp.CalendarioRep.Intervalli[i].Inizio <= start && start <= rp.CalendarioRep.Intervalli[i].Fine)
+                        if (rp.CalendarioRep.Intervalli[i].Inizio <= start && start <= rp.CalendarioRep.Intervalli[i].Fine)
                         {
                             insideshift = i;
                         }
-                        if(closestshift == -1 && start<=rp.CalendarioRep.Intervalli[i].Inizio)
+                        if (closestshift == -1 && start <= rp.CalendarioRep.Intervalli[i].Inizio)
                         {
                             closestshift = i;
                         }
                     }
 
-                    if(insideshift ==-1 && closestshift!=-1)
+                    if (insideshift == -1 && closestshift != -1)
                     {
                         start = rp.CalendarioRep.Intervalli[closestshift].Inizio;
                         insideshift = closestshift;
                     }
 
-                    if(insideshift!=-1)
+                    if (insideshift != -1)
                     {
                         TimeSpan progress = new TimeSpan(0, 0, 0);
 
                         //1st round
                         progress = rp.CalendarioRep.Intervalli[insideshift].Fine - start;
-                        if(progress > this.TempoC)
+                        if (progress > this.TempoC)
                         {
                             ret = start + this.TempoC;
                         }
                         else
                         {
                             Boolean endloop = false;
-                            for(int i = insideshift+1; i < rp.CalendarioRep.Intervalli.Count && !endloop; i++)
+                            for (int i = insideshift + 1; i < rp.CalendarioRep.Intervalli.Count && !endloop; i++)
                             {
                                 TimeSpan oldProg = progress;
                                 progress += rp.CalendarioRep.Intervalli[i].Fine - rp.CalendarioRep.Intervalli[i].Inizio;
@@ -3461,7 +3471,7 @@ namespace KIS.App_Code
             cmd.Parameters.AddWithValue("@oldstart", oldstart.ToString("yyyy-MM-dd HH:mm:ss"));
             cmd.Parameters.AddWithValue("@oldend", oldend.ToString("yyyy-MM-dd HH:mm:ss"));
             cmd.Parameters.AddWithValue("@oldworkingtime", (Math.Truncate(oldworkingtime.TotalHours)).ToString() + ":"
-                +oldworkingtime.Minutes.ToString() + ":" + oldworkingtime.Seconds.ToString());
+                + oldworkingtime.Minutes.ToString() + ":" + oldworkingtime.Seconds.ToString());
             cmd.Parameters.AddWithValue("@userid", userid);
 
             MySqlTransaction tr = conn.BeginTransaction();
@@ -3471,14 +3481,98 @@ namespace KIS.App_Code
                 cmd.ExecuteNonQuery();
                 tr.Commit();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 tr.Rollback();
                 this.log = ex.Message;
             }
             conn.Close();
         }
+
+        /* Returns:
+  * 0 if generic error
+  * 1 if parameter added correctly
+  * 2 if user not found
+  * 3 if parameter already set
+  * 4 if original parameter in product model does not exists
+  * 5 if Error while adding parameter
+  * 6 if task not found
+  */
+        public int CompileParameter(User usr, /*int ParamID,*/ int ParamCategory, String ParamName, String ParamValue)
+        {
+
+            int ret = 0;
+            if (usr != null && usr.username.Length > 0)
+            {
+                if (this.TaskProduzioneID != -1)
+                {
+                    this.loadParameters();
+                    Boolean exists = false;
+                    try
+                    {
+                        this.Parameters.First(x => x.Name == ParamName
+                        && x.ParameterCategory.ID == ParamCategory);
+                        exists = true;
+                        ret = 3;
+                    }
+                    catch
+                    {
+                        exists = false;
+                    }
+
+                    if (!exists)
+                    {
+                        Boolean existsOriginal = false;
+                        TaskVariante origTsk = new TaskVariante(new App_Code.processo(this.OriginalTask,
+                            this.OriginalTaskRevisione), new variante(this.VarianteID));
+                        origTsk.loadParameters();
+                        //ret += "Parameters: " + origTsk.Parameters.Count + "<br />";
+                        ModelTaskParameter origParam = null;
+                        //ret += ParamName + "<br />";
+                        try
+                        {
+                            origParam = origTsk.Parameters
+                                    .First(x => x.Name == ParamName && x.ParameterCategory.ID == ParamCategory);
+                            existsOriginal = true;
+                        }
+                        catch
+                        {
+                            existsOriginal = false;
+                        }
+                        if (existsOriginal && origParam != null && origParam.ParameterID != -1)
+                        {
+                            ret = 1;
+                            Boolean checkAdd = this.addParameter(ParamName,
+                                ParamValue,
+                                new ProductParametersCategory(ParamCategory),
+                                origParam.isFixed,
+                                origParam.isRequired,
+                                usr.username);
+                            ret = checkAdd ? 1 : 5;
+                        }
+                        else
+                        {
+                            ret = 4;
+                        }
+                    }
+                    else
+                    {
+                        ret = 1;
+                    }
+                }
+                else
+                {
+                    ret = 6;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
     }
+    
 
     public class ProductionPlan
     {

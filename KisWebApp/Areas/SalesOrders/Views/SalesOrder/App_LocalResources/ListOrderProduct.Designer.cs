@@ -88,6 +88,15 @@ namespace ResListOrderProduct {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Termina forzatamente il prodotto.
+        /// </summary>
+        public static string lblCompleteProductBruteForce {
+            get {
+                return ResourceManager.GetString("lblCompleteProductBruteForce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data di consegna.
         /// </summary>
         public static string lblDataConsegna {
@@ -291,6 +300,15 @@ namespace ResListOrderProduct {
         public static string lblPProblema {
             get {
                 return ResourceManager.GetString("lblPProblema", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prodotto completato con successo.
+        /// </summary>
+        public static string lblProductCompletedOk {
+            get {
+                return ResourceManager.GetString("lblProductCompletedOk", resourceCulture);
             }
         }
         
