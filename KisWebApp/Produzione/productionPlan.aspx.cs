@@ -23,7 +23,7 @@ namespace KIS.Produzione
                 {
                     repID = -1;
                     showProductionPlan.Visible = false;
-                    addNewItemForm.Visible = false;
+                    //addNewItemForm.Visible = false;
                     showProductionPlan.repID = -1;
                     showAddItemForm.Visible = false;
                     hideAddItemForm.Visible = false;
@@ -36,7 +36,7 @@ namespace KIS.Produzione
                     {
                         if (!Page.IsPostBack)
                         {
-                            addNewItemForm.Visible = false;
+                       //     addNewItemForm.Visible = false;
                             hideAddItemForm.Visible = false;
                             
                         }
@@ -46,7 +46,7 @@ namespace KIS.Produzione
             else
             {
                 showProductionPlan.Visible = false;
-                addNewItemForm.Visible = false;
+              //  addNewItemForm.Visible = false;
                 showProductionPlan.repID = -1;
                 showAddItemForm.Visible = false;
                 hideAddItemForm.Visible = false;
@@ -55,14 +55,14 @@ namespace KIS.Produzione
 
         protected void showAddItemForm_Click(object sender, EventArgs e)
         {
-            addNewItemForm.Visible = true;
+          //  addNewItemForm.Visible = true;
             hideAddItemForm.Visible = true;
             showAddItemForm.Visible = false;
         }
 
         protected void hideAddItemForm_Click(object sender, EventArgs e)
         {
-            addNewItemForm.Visible = false;
+           // addNewItemForm.Visible = false;
             showAddItemForm.Visible = true;
             hideAddItemForm.Visible = false;
         }

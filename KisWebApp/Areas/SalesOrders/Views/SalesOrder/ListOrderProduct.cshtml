@@ -144,6 +144,7 @@
                                         $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
                                         $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", false);
                                         $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).hide();
                                     }
                                     else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
                                     else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblUserNotAuthorized"); }
@@ -204,6 +205,7 @@
                                                 $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).show();
                                                 $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                             }
                                             else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
                                             else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorStatus"); }
@@ -287,6 +289,7 @@
                                                 $("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                                 $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).fadeIn();
 
                                             }
                                             else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorInProductCfg"); }
@@ -459,6 +462,40 @@
                         $("#iframeWI").fadeOut();
                     });
 
+                    $(".imgManageTasks").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("RescheduleTasksManually", "SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 90%; overflow: hidden; top:100px;background-color:rgba(255, 255, 255, 0.8);' id='viewPdf'>"
+                                        + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:0px;' />"
+                                        + "<div style='overflow: hidden;position:relative;top:30px;left: 100px;'>"+data  
+                                        + "</div>"
+                                        + "</div>";
+                                    $("#iframeWI").html(ifrmWI);
+                                    $("#iframeWI").fadeIn();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+                    });
+
                 $('.imgDelete').each(function () {
                     var id = this.id;
                     var prod = id.split('_');
@@ -530,7 +567,16 @@
 
                         var id = this.id;
                         var prod = id.split('_');
-                        if ($("#status_" + prod[1]).val() == 'N') {
+                        if ($("#status_" + prod[1]).val() == 'N' || $("#status_" + prod[1]).val() == 'F') {
+                            $(this).hide();
+                        }
+                    });
+
+                    $('.imgManageTasks').each(function () {
+
+                        var id = this.id;
+                        var prod = id.split('_');
+                        if ($("#status_" + prod[1]).val() == 'N' || $("#status_" + prod[1]).val() == 'F') {
                             $(this).hide();
                         }
                     });
@@ -555,63 +601,66 @@
                     <tbody>
                         @foreach (var m in Model)
                         {
-                            <tr id="trproduct_@m.ID-@m.Year">
-                                <td>
-                                    @m.ID/@m.Year
-                                    <input type="hidden" class="status" id="status_@m.ID-@m.Year" value="@m.Status" />
-                                </td>
-                                <td>@m.Proc.process.processName - @m.Proc.variant.nomeVariante</td>
-                                <td><input type="number" min="0" step="1" value="@m.Quantita" id="txtQuantity_@m.ID-@m.Year" style="width:60px;" /></td>
-                                <td><input type="text" id="txtDeliveryDate_@m.ID-@m.Year" value="@m.DataPrevistaConsegna.ToString("dd/MM/yyyy")" /></td>
-                                <td>
-                                    <select id="ddlReparto_@m.ID-@m.Year">
-                                        @{
-                                            m.Proc.loadReparto();
-                                            foreach (var rp in m.Proc.RepartiProduttivi)
+                        <tr id="trproduct_@m.ID-@m.Year">
+                            <td>
+                                @m.ID/@m.Year
+                                <input type="hidden" class="status" id="status_@m.ID-@m.Year" value="@m.Status" />
+                            </td>
+                            <td>@m.Proc.process.processName - @m.Proc.variant.nomeVariante</td>
+                            <td><input type="number" min="0" step="1" value="@m.Quantita" id="txtQuantity_@m.ID-@m.Year" style="width:60px;" /></td>
+                            <td><input type="text" id="txtDeliveryDate_@m.ID-@m.Year" value="@m.DataPrevistaConsegna.ToString("dd/MM/yyyy")" /></td>
+                            <td>
+                                <select id="ddlReparto_@m.ID-@m.Year">
+                                    @{
+                                        m.Proc.loadReparto();
+                                        foreach (var rp in m.Proc.RepartiProduttivi)
+                                        {
+                                            if (m.Reparto == rp.id)
                                             {
-                                                if (m.Reparto == rp.id)
-                                                {
-                                                    <option value="@rp.id" selected>@rp.name</option>
-                                                }
-                                                else
-                                                {
-                                                    <option value="@rp.id">@rp.name</option>
-                                                }
-
+                                                <option value="@rp.id" selected>@rp.name</option>
                                             }
+                                            else
+                                            {
+                                                <option value="@rp.id">@rp.name</option>
+                                            }
+
                                         }
-                                    </select>
-                                </td>
-                                <td><input type="text" id="txtEndProductionDate_@m.ID-@m.Year" value="@m.DataPrevistaFineProduzione.ToString("dd/MM/yyyy")" /></td>
-                                <td>
-                                    <input type="image" src="~/img/iconSave.jpg" class="imgSave" name="imgSave" id="imgSave_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTSave" />
-                                </td>
-                                <td>
-                                    <input type="image" src="~/img/iconDelete.png" class="imgDelete" name="imgDelete" id="imgDelete_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTDelete" />
-                                </td>
-                                <td>
-                                    <input type="image" src="~/img/iconTimeline.jpg" class="imgPlan" name="imgPlan" id="imgPlan_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPlan" />
-                                </td>
-                                <td>
-                                    <input type="image" src="~/img/iconUndo.png" class="imgUndo" name="imgUndo" id="imgUndo_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTUndo" />
-                                </td>
-                                <td>
-                                    <input type="image" src="~/img/iconChangePlan.png" class="imgReprogram" name="imgReprogram" id="imgReprogram_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTReprogram" />
-                                </td>
-                                <td>
-                                    <input type="image" ID="imgPrintBarcodeA_@m.ID-@m.Year" class="imgPrintBarcode" src="~/img/iconBarcode.png" style="min-width:10px; max-width:15px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintBarcode" /><br />
-                                    <input type="image" ID="imgPrintBarcodeB_@m.ID-@m.Year" class="imgPrintBarcode" src="~/img/iconBarcode.png" style="min-width:10px; max-width:15px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintBarcode" />
-                                </td>
-                                <td>
-                                    <input type="image" ID="imgPrintSingleBarcode_@m.ID-@m.Year" class="imgPrintSingleBarcode" src="~/img/iconBarcode.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcode" />
-                                </td>
-                                <td>
-                                    <input type="image" ID="imgPrintA3Barcode_@m.ID-@m.Year" class="imgPrintA3Barcode" src="~/img/iconA3.gif" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcodeA3" />
-                                </td>
-                                <td>
-                                    <input type="image" id="imgManageOperators_@m.ID-@m.Year" class="imgManageOperators" src="~/img/iconUser.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblManageOperators"/>
-                                </td>
-                            </tr>
+                                    }
+                                </select>
+                            </td>
+                            <td><input type="text" id="txtEndProductionDate_@m.ID-@m.Year" value="@m.DataPrevistaFineProduzione.ToString("dd/MM/yyyy")" /></td>
+                            <td>
+                                <input type="image" src="~/img/iconSave.jpg" class="imgSave" name="imgSave" id="imgSave_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTSave" />
+                            </td>
+                            <td>
+                                <input type="image" src="~/img/iconDelete.png" class="imgDelete" name="imgDelete" id="imgDelete_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTDelete" />
+                            </td>
+                            <td>
+                                <input type="image" src="~/img/iconTimeline.jpg" class="imgPlan" name="imgPlan" id="imgPlan_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPlan" />
+                            </td>
+                            <td>
+                                <input type="image" src="~/img/iconUndo.png" class="imgUndo" name="imgUndo" id="imgUndo_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTUndo" />
+                            </td>
+                            <td>
+                                <input type="image" src="~/img/iconChangePlan.png" class="imgReprogram" name="imgReprogram" id="imgReprogram_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTReprogram" />
+                            </td>
+                            <td>
+                                <input type="image" id="imgManageTasks_@m.ID-@m.Year" class="imgManageTasks" src="~/img/iconTask.jpg" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblManageTasks" />
+                            </td>
+                            <td>
+                                <input type="image" ID="imgPrintBarcodeA_@m.ID-@m.Year" class="imgPrintBarcode" src="~/img/iconBarcode.png" style="min-width:10px; max-width:15px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintBarcode" /><br />
+                                <input type="image" ID="imgPrintBarcodeB_@m.ID-@m.Year" class="imgPrintBarcode" src="~/img/iconBarcode.png" style="min-width:10px; max-width:15px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintBarcode" />
+                            </td>
+                            <td>
+                                <input type="image" ID="imgPrintSingleBarcode_@m.ID-@m.Year" class="imgPrintSingleBarcode" src="~/img/iconBarcode.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcode" />
+                            </td>
+                            <td>
+                                <input type="image" ID="imgPrintA3Barcode_@m.ID-@m.Year" class="imgPrintA3Barcode" src="~/img/iconA3.gif" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcodeA3" />
+                            </td>
+                            <td>
+                                <input type="image" id="imgManageOperators_@m.ID-@m.Year" class="imgManageOperators" src="~/img/iconUser.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblManageOperators" />
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

@@ -237,4 +237,7 @@
   <data name="lblManageOperators" xml:space="preserve">
     <value>Manage operators assigned to tasks</value>
   </data>
+  <data name="lblManageTasks" xml:space="preserve">
+    <value>Change tasks schedule</value>
+  </data>
 </root>

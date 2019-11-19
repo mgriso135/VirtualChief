@@ -75,7 +75,7 @@ namespace KIS.Operatori {
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::KIS.Produzione.listTaskAvviatiPostazioneUtente frmLstTaskAvviati;
+        //protected global::KIS.Produzione.listTaskAvviatiPostazioneUtente frmLstTaskAvviati;
         
         /// <summary>
         /// Controllo frmLstTaskAvviabili.
@@ -84,7 +84,7 @@ namespace KIS.Operatori {
         /// Campo generato automaticamente.
         /// Per la modifica, spostare la dichiarazione di campo dal file di progettazione al file code-behind.
         /// </remarks>
-        protected global::KIS.Produzione.listTaskAvviabili frmLstTaskAvviabili;
+        //protected global::KIS.Produzione.listTaskAvviabili frmLstTaskAvviabili;
 
         protected ScriptManager ScriptMan { get => scriptMan; set => scriptMan = value; }
     }
