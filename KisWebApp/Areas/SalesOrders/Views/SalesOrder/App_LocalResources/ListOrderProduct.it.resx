@@ -246,4 +246,7 @@
   <data name="lblProductCompletedOk" xml:space="preserve">
     <value>Prodotto completato con successo</value>
   </data>
+  <data name="lblConfirmCompleteBruteForce" xml:space="preserve">
+    <value>Attenzione: il prodotto verra' terminato forzatamente ed i suoi task non saranno piu' disponibili nel WebGemba. Vuoi continuare?</value>
+  </data>
 </root>

@@ -500,6 +500,7 @@
                     });
 
                     $(".imgCompleteProduct").click(function () {
+                        if (confirm("@Server.HtmlDecode(ResListOrderProduct.ListOrderProduct.lblConfirmCompleteBruteForce)")) {
                         var currProd = $(this).val().split('.');
                         if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
                             $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
@@ -569,6 +570,7 @@
                                         }
 
                                     });
+                            }
                         }
                     });
 

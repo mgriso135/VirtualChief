@@ -97,6 +97,15 @@ namespace ResListOrderProduct {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attenzione: il prodotto verra&apos; terminato forzatamente ed i suoi task non saranno piu&apos; disponibili nel WebGemba. Vuoi continuare?.
+        /// </summary>
+        public static string lblConfirmCompleteBruteForce {
+            get {
+                return ResourceManager.GetString("lblConfirmCompleteBruteForce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data di consegna.
         /// </summary>
         public static string lblDataConsegna {
