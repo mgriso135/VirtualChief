@@ -240,4 +240,10 @@
   <data name="lblManageTasks" xml:space="preserve">
     <value>Change tasks schedule</value>
   </data>
+  <data name="lblCompleteProductBruteForce" xml:space="preserve">
+    <value>Complete product brute-force</value>
+  </data>
+  <data name="lblProductCompletedOk" xml:space="preserve">
+    <value>Product ended successfully</value>
+  </data>
 </root>

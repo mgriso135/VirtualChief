@@ -5509,6 +5509,7 @@
     <Content Include="img\iconCause.png" />
     <Content Include="img\iconCheckIn6.jpg" />
     <Content Include="img\iconCheckIn7.jpg" />
+    <Content Include="img\iconComplete2.png" />
     <Content Include="img\iconDead.png" />
     <Content Include="img\iconImprovementActions.png" />
     <Content Include="img\iconLoading2.gif" />

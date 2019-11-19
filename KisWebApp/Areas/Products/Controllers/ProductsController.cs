@@ -799,5 +799,60 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if product completed successfully
+         * 2 if user not authorized
+         * 3 if product not found
+         */
+        public int CompleteProductBruteForce(int ProductID, int ProductYear)
+        {
+            int ret = 0;
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/CompleteProductBruteForce", "ProductID=" + ProductID + "&ProductYear="+ProductYear, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Products/Products/CompleteProductBruteForce", "ProductID=" + ProductID + "&ProductYear=" + ProductYear, ipAddr);
+            }
+
+            ViewBag.authX = false;
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Produzione";
+            prmUser[1] = "X";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+            }
+            if (ViewBag.authX)
+            {
+                Articolo art = new Articolo(ProductID, ProductYear);
+                if(art!=null && art.ID!=-1 && art.Year > 2010)
+                {
+                    User curr1 = (User)Session["user"];
+                    ret = art.CompleteProductBruteForce(curr1);
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+
+                return ret;
+        }
     }
 }

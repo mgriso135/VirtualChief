@@ -145,6 +145,7 @@
                                         $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", false);
                                         $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).hide();
                                         $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
                                     }
                                     else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
                                     else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblUserNotAuthorized"); }
@@ -206,6 +207,7 @@
                                                 $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                                 $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                             }
                                             else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
                                             else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorStatus"); }
@@ -290,6 +292,7 @@
                                                 $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                                 $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
                                                 $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).fadeIn();
 
                                             }
                                             else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorInProductCfg"); }
@@ -496,6 +499,79 @@
                         }
                     });
 
+                    $(".imgCompleteProduct").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
+                            $("#imgDelete_" + currProd[0] + "-" + currProd[1]).hide();
+                            $("#imgPlan_" + currProd[0] + "-" + currProd[1]).hide();
+                            $.ajax({
+                                        url: "@Url.Action("CompleteProductBruteForce", "../Products/Products")",
+                                        type: 'POST',
+                                        data: {
+                                            ProductID: currProd[0],
+                                            ProductYear: currProd[1]
+                                        },
+                                success: function (data) {
+                                    if (data == "1") {
+                                                $("#lblModalInfo").html("@ResListOrderProduct.ListOrderProduct.lblProductCompletedOk");
+                                                $("#lblModalInfo").dialog({
+                                                    modal: true,
+                                                    title: "Info",
+                                                    //width: 300,
+                                                    //height: 150,
+                                                    open: function (event, ui) {
+                                                        setTimeout(function () {
+                                                            $("#lblModalInfo").dialog("close");
+                                                        }, 2000);
+                                                    }
+                                                });
+
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgSave_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgUndo_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
+                                            }
+                                            else {
+                                                alert("Error");
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                            }
+
+                                        },
+                                        statusCode: {
+                                            404: function (content) {
+                                                alert('cannot find resource');
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                            },
+                                            500: function (content) {
+                                                alert('internal server error');
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                            }
+                                        },
+                                        error: function (data) {
+                                            alert("@ResListOrderProduct.ListOrderProduct.lblGenericError");
+                                            $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                            $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                            $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                        }
+
+                                    });
+                        }
+                    });
+
                 $('.imgDelete').each(function () {
                     var id = this.id;
                     var prod = id.split('_');
@@ -573,6 +649,15 @@
                     });
 
                     $('.imgManageTasks').each(function () {
+
+                        var id = this.id;
+                        var prod = id.split('_');
+                        if ($("#status_" + prod[1]).val() == 'N' || $("#status_" + prod[1]).val() == 'F') {
+                            $(this).hide();
+                        }
+                    });
+
+                    $('.imgCompleteProduct').each(function () {
 
                         var id = this.id;
                         var prod = id.split('_');
@@ -659,6 +744,9 @@
                             </td>
                             <td>
                                 <input type="image" id="imgManageOperators_@m.ID-@m.Year" class="imgManageOperators" src="~/img/iconUser.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblManageOperators" />
+                            </td>
+                            <td>
+                                <input type="image" id="imgCompleteProduct_@m.ID-@m.Year" class="imgCompleteProduct" src="~/img/iconComplete2.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblCompleteProductBruteForce" />
                             </td>
                         </tr>
                         }

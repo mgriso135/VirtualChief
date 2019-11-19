@@ -2409,6 +2409,67 @@ namespace KIS.App_Code
                 this.MeasurementUnit = null;
             }
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if product correctly ended
+         * 2 if user not found
+         * 3 if product not found
+         */
+         public int CompleteProductBruteForce(User usr)
+        {
+            int ret = 0;
+            if(this.ID!=-1 && this.Year > 2010)
+            { 
+            if(usr!=null && usr.username.Length>0)
+            {
+                    this.loadTasksProduzione();
+                    var lstTasks = this.Tasks.Where(z=>z.Status != 'F').OrderBy(x => x.LateFinish);
+                    foreach(var tsk in lstTasks)
+                    {
+                        Postazione currWS = new Postazione(tsk.PostazioneID);
+                        if(currWS!=null)
+                        {
+                            Boolean checkCheckIn = usr.DoCheckIn(currWS);
+                            if(checkCheckIn)
+                            { 
+                                Boolean checkStart = tsk.Start(usr);
+                                if(checkStart)
+                                {
+                                    TaskVariante origTsk = new TaskVariante(new App_Code.processo(tsk.OriginalTask,
+                            tsk.OriginalTaskRevisione), new variante(tsk.VarianteID));
+                                    origTsk.loadParameters();
+                                    foreach(var prm in origTsk.Parameters)
+                                    {
+                                        if(prm.isRequired)
+                                        { 
+                                        int paramret = tsk.CompileParameter(usr, 
+                                            prm.ParameterCategory.ID, 
+                                            prm.Name, "Brute force completed by " + usr.username + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")
+                                            + " (UTC)");
+                                        }
+                                    }
+                                }
+
+                                Boolean checkComplete = tsk.Complete(usr);
+                            }
+                            Boolean checkOut = usr.DoCheckOut(currWS);
+                        }
+                    }
+                        ret = 1;
+
+            }
+            else
+            {
+                ret = 2;
+            }
+            }
+            else
+            {
+                ret = 3;
+            }
+            return ret;
+        }
     }
 
     public class ElencoArticoliAperti
