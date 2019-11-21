@@ -457,10 +457,12 @@ namespace KIS.App_Code
 
         public KIS.App_Sources.WorkInstructions.WorkInstruction WorkInstructionActive;
 
+        public List<TaskOperatorNote> TaskOperatorNotes;
+
         public TaskProduzione(int tskProdID)
         {
             this.WorkInstructionActive = null;
-
+            this.TaskOperatorNotes = null;
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
@@ -3571,6 +3573,96 @@ namespace KIS.App_Code
             }
             return ret;
         }
+        
+        /* Returns:
+         * 0 if generic error
+         * 1 if all is ok
+         * 3 if task not found
+         */
+        public int RegisterTaskOperatorNote(String user, String note)
+        {
+            int ret = 0;
+            if(this!=null && this.TaskProduzioneID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                // Check if a comment of the same user exists
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT * FROM tasksproduzioneoperatornotes WHERE taskid = " + this.TaskProduzioneID.ToString()
+                    + " AND user LIKE '" + user + "'";
+                Boolean exists = false;
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if(rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    exists = true;
+                }
+                rdr.Close();
+
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+
+                if(exists)
+                {
+                    cmd.CommandText = "UPDATE tasksproduzioneoperatornotes SET notes = '" + note + "' WHERE "
+                        + " taskid = " + this.TaskProduzioneID.ToString() + " AND user LIKE '" + user + "'";
+                }
+                else
+                {
+                    cmd.CommandText = "SELECT MAX(CommentID) FROM tasksproduzioneoperatornotes WHERE taskid=" + this.TaskProduzioneID.ToString();
+                    rdr = cmd.ExecuteReader();
+                    int maxID = 0;
+                    if(rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        maxID = rdr.GetInt32(0) + 1;
+                    }
+                    rdr.Close();
+                    cmd.CommandText = "INSERT INTO tasksproduzioneoperatornotes(taskid, commentid, date, user, notes) VALUES(@TaskID, @CommentID, @Date, @User, @Notes)";
+                    cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
+                    cmd.Parameters.AddWithValue("@commentid", maxID);
+                    cmd.Parameters.AddWithValue("@date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@user", user);
+                    cmd.Parameters.AddWithValue("@Notes", note);
+                }
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch(Exception ex)
+                {
+                    this.log = ex.Message;
+                    tr.Rollback();
+                    ret = 4;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = 3;
+            }
+            return ret;
+        }
+
+        public void loadTaskOperatorNotes()
+        {
+            this.TaskOperatorNotes = new List<TaskOperatorNote>();
+            if(this.TaskProduzioneID!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT CommentID FROM tasksproduzioneoperatornotes WHERE TaskID=@TaskID ORDER BY date DESC";
+                cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this.TaskOperatorNotes.Add(new TaskOperatorNote(this.TaskProduzioneID, rdr.GetInt32(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
     }
     
 
@@ -5603,6 +5695,88 @@ namespace KIS.App_Code
                 conn.Close();
             }
             return ret;
+        }
+    }
+
+    public class TaskOperatorNote
+    {
+        private int _TaskID;
+        public int TaskID
+        {
+            get
+            {
+                return this._TaskID;
+            }
+        }
+        private int _CommentID;
+        public int CommentID
+        {
+            get
+            {
+                return this._CommentID;
+            }
+        }
+        private String _User;
+        public String User
+        {
+            get
+            {
+                return this._User;
+            }
+        }
+        private DateTime _Date;
+        public DateTime Date
+        {
+            get
+            {
+                return this._Date;
+            }
+        }
+        private String _Note;
+        public String Note
+        {
+            get
+            {
+                return this._Note;
+            }
+        }
+
+        public TaskOperatorNote()
+        {
+            this._TaskID = -1;
+            this._CommentID = -1;
+            this._User = "";
+            this._Date = new DateTime(1970, 1, 1);
+            this._Note = "";
+        }
+
+        public TaskOperatorNote(int TaskID, int CommentID)
+        {
+            this._TaskID = -1;
+            this._CommentID = -1;
+            this._User = "";
+            this._Date = new DateTime(1970, 1, 1);
+            this._Note = "";
+            if(TaskID!=-1 && CommentID!=-1)
+            { 
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT date, user, notes FROM tasksproduzioneoperatornotes WHERE "
+                + " TaskID = " + TaskID.ToString()
+                + " AND CommentID = " + CommentID.ToString();
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if(rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._TaskID = TaskID;
+                this._CommentID = CommentID;
+                this._Date = rdr.GetDateTime(0);
+                this._User = rdr.GetString(1);
+                this._Note = rdr.GetString(2);
+            }
+            rdr.Close();
+            conn.Close();
+            }
         }
     }
     }

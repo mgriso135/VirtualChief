@@ -117,58 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblAccAlarmaDemora" xml:space="preserve">
-    <value>Delay alarm</value>
+  <data name="lblCommentAddedError" xml:space="preserve">
+    <value>An error occurred. The comment was not saved.</value>
   </data>
-  <data name="lblAccAlarmaProblema" xml:space="preserve">
-    <value>Warning alarm</value>
+  <data name="lblCommentAddedOK" xml:space="preserve">
+    <value>Comment saved successfully</value>
   </data>
-  <data name="lblAccAllowOperatorNotes" xml:space="preserve">
-    <value>Enable operator notes in the WebGemba</value>
+  <data name="lblNewNote" xml:space="preserve">
+    <value>Comment</value>
   </data>
-  <data name="lblAccAndonRep" xml:space="preserve">
-    <value>Department's Andon</value>
+  <data name="lblOtherOperatorsComments" xml:space="preserve">
+    <value>Comments from other operators</value>
   </data>
-  <data name="lblAccAnticipoMinimo" xml:space="preserve">
-    <value>Minimum advance</value>
+  <data name="lblTHComment" xml:space="preserve">
+    <value>Comment</value>
   </data>
-  <data name="lblAccAvvioTasks" xml:space="preserve">
-    <value>Start tasks mode</value>
+  <data name="lblTHDate" xml:space="preserve">
+    <value>Date</value>
   </data>
-  <data name="lblAccCalcoloTC" xml:space="preserve">
-    <value>Cycle time calculation</value>
+  <data name="lblTHUser" xml:space="preserve">
+    <value>Operator</value>
   </data>
-  <data name="lblAccFusoOrario" xml:space="preserve">
-    <value>Time zone</value>
-  </data>
-  <data name="lblAccKBBox" xml:space="preserve">
-    <value>KanbanBox by Sintesia management</value>
-  </data>
-  <data name="lblAccOpReparto" xml:space="preserve">
-    <value>Department's workforce</value>
-  </data>
-  <data name="lblAccScrolling" xml:space="preserve">
-    <value>Scrolling</value>
-  </data>
-  <data name="lblAccTaktTime" xml:space="preserve">
-    <value>Takt Time</value>
-  </data>
-  <data name="lblAccTurniLavoro" xml:space="preserve">
-    <value>Shift</value>
-  </data>
-  <data name="lblAddReparti" xml:space="preserve">
-    <value>Add a department</value>
-  </data>
-  <data name="lblCfgReparto" xml:space="preserve">
-    <value>Department's configuration</value>
-  </data>
-  <data name="lblErrorRepNotFound" xml:space="preserve">
-    <value>Department not found.</value>
-  </data>
-  <data name="lblNavManageReparti" xml:space="preserve">
-    <value>Departments management</value>
-  </data>
-  <data name="lblPlanTasks" xml:space="preserve">
-    <value>Tasks planning in production queue mode</value>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Add a comment</value>
   </data>
 </root>

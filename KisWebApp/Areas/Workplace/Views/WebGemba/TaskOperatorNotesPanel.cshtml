@@ -1,0 +1,109 @@
+﻿@model IEnumerable<KIS.App_Code.TaskOperatorNote>
+
+@if (ViewBag.authW && ViewBag.TaskID != -1)
+{
+    <script>
+        $(document).ready(function () {
+            $("#iconSaveNote").click(function () {
+                $.ajax({
+                                url: "@Url.Action("AddTaskOperatorNote", "WebGemba")",
+                                type: 'POST',
+                                data: {
+                                    TaskID: @ViewBag.TaskID,
+                                    CommentID: $("#txtCommentID").val(),
+                                    Note: $('<div/>').text($("#txtNote").val()).html()
+                                },
+                                success: function (data) {
+                                    if (data == "1") {
+                                        $("#lblModalInfo").html("@ResWebGemba.TaskOperatorNotesPanel.lblCommentAddedOK");
+                                        $("#lblModalInfo").dialog({
+                                            modal: true,
+                                            title: "Info",
+                                            open: function (event, ui) {
+                                                setTimeout(function () {
+                                                    $("#lblModalInfo").dialog("close");
+                                                }, 5000);
+                                            }
+                                        });
+                                    }
+                                    else {
+                                        $("#lblModalInfo").html("@ResWebGemba.TaskOperatorNotesPanel.lblCommentAddedError");
+                                        $("#lblModalInfo").dialog({
+                                            modal: true,
+                                            title: "Info",
+                                            open: function (event, ui) {
+                                                setTimeout(function () {
+                                                    $("#lblModalInfo").dialog("close");
+                                                }, 5000);
+                                            }
+                                        });
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+            });
+
+        });
+    </script>
+    DateTime lastDate = new DateTime(1970, 1, 1);
+    String note = "";
+    int commentID = -1;
+    if (Model != null && Model.Count() > 0)
+    {
+
+        // Find my comment
+
+        try
+        {
+            var currUsrNote = Model.First(x => x.User == ViewBag.user);
+            lastDate = currUsrNote.Date;
+            commentID = currUsrNote.CommentID;
+            note = currUsrNote.Note;
+        }
+        catch
+        {
+
+        }
+    }
+
+    <h3>@ResWebGemba.TaskOperatorNotesPanel.lblTitle</h3>
+    <div class="row-fluid">
+        <div class="span12">
+            <textarea id="txtNote" style="width:60%">@note</textarea>
+            <input type="hidden" id="txtCommentID" value="@commentID" />
+            <input type="image" src="~/img/iconSave.jpg" style="min-width:20px; max-width:30px;" id="iconSaveNote" />
+        </div>
+    </div>
+
+    if (Model != null && Model.Count() > 0)
+    {
+        <h5>@ResWebGemba.TaskOperatorNotesPanel.lblOtherOperatorsComments</h5>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>@ResWebGemba.TaskOperatorNotesPanel.lblTHDate</th>
+                    <th>@ResWebGemba.TaskOperatorNotesPanel.lblTHUser</th>
+                    <th>@ResWebGemba.TaskOperatorNotesPanel.lblTHComment</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                        <tr>
+                            <td>@m.Date.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@m.User</td>
+                            <td>@m.Note</td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+}
+    <div id="lblModalInfo" />
+}

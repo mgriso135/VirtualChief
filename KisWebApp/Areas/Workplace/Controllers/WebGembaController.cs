@@ -1634,6 +1634,87 @@ namespace KIS.Areas.Workplace.Controllers
             var avTasks3 = avTasks.OrderBy(x => x.LateStart);
             return Json(JsonConvert.SerializeObject(avTasks3), JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult TaskOperatorNotesPanel(int TaskID)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/TaskOperatorNotesPanel", "TaskID=" + TaskID, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workplace/WebGemba/TaskOperatorNotesPanel", "TaskID=" + TaskID, ipAddr);
+            }
+
+            int ret = 0;
+            ViewBag.authW = false;
+            ViewBag.TaskID = -1;
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Parameter";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if(tsk!=null && tsk.TaskProduzioneID!=-1)
+                {
+                    ViewBag.TaskID = tsk.TaskProduzioneID;
+                    tsk.loadTaskOperatorNotes();
+                    User curr = (User)Session["user"];
+                    ViewBag.user = curr.username;
+                    return View(tsk.TaskOperatorNotes);
+                }
+            }
+                return View();
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if note added/edited successfully
+         * 2 if user is not authorized
+         */
+        public int AddTaskOperatorNote(int TaskID, int CommentID, String Note)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Task Parameter";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                TaskProduzione tsk = new TaskProduzione(TaskID);
+                if(tsk!=null && tsk.TaskProduzioneID!=-1)
+                {
+                    User curr1 = (User)Session["user"];
+                    ret = tsk.RegisterTaskOperatorNote(curr1.username, Note);
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+                return ret;
+        }
     }
             
 

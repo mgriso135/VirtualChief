@@ -135,6 +135,9 @@
   <data name="lblTHCustomerName" xml:space="preserve">
     <value>Cliente</value>
   </data>
+  <data name="lblTHNote" xml:space="preserve">
+    <value>Note</value>
+  </data>
   <data name="lblTHOrder" xml:space="preserve">
     <value>Ordine</value>
   </data>
