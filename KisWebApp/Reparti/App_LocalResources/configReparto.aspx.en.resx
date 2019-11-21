@@ -123,6 +123,9 @@
   <data name="lblAccAlarmaProblema" xml:space="preserve">
     <value>Warning alarm</value>
   </data>
+  <data name="lblAccAllowOperatorNotes" xml:space="preserve">
+    <value>Enable operator notes in the WebGemba</value>
+  </data>
   <data name="lblAccAndonRep" xml:space="preserve">
     <value>Department's Andon</value>
   </data>

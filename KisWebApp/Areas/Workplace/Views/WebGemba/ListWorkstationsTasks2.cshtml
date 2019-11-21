@@ -20,6 +20,7 @@
                     $("#btnCompleteTask_" + $(this).val()).fadeOut();
                     $("#btnWarning_" + $(this).val()).fadeOut();
                     $("#btnViewWI_" + $(this).val()).fadeOut();
+                    //$("#btnOpenNotes_" + $(this).val()).fadeOut();
                     $.ajax({
                         url: "@Url.Action("PauseTask", "WebGemba")",
                         type: 'GET',
@@ -35,7 +36,7 @@
                                 var Customer = $("#" + rowid).find("td:eq(6)").html();
                                 var ProductName = $("#" + rowid).find("td:eq(7)").html();
                                 var TaskName = $("#" + rowid).find("td:eq(8)").html();
-                                var Quantity = $("#" + rowid).find("td:eq(12)").html();
+                                var Quantity = $("#" + rowid).find("td:eq(13)").html();
                                 var aQuantity = Quantity.split('/');
                                 var bgcolor = $("#" + rowid).css("background-color");
 
@@ -50,10 +51,9 @@
                                     + "<td>" + Quantity + "</td>"
                                     + "</tr>");
 
-
-
+                               
                                 $("#" + rowid).fadeOut().remove();
-                                if ($("#panelTasks tr").length <= 2) {
+                                if ($("#panelTasks tr").length <= 1) {
                                     $("#panelTasks").fadeOut();
                                 }
                             }
@@ -62,6 +62,7 @@
                                 $("#btnWarning_" + $(this).val()).fadeIn();
                                 $("#btnCompleteTask_" + $(this).val()).fadeIn();
                                 $("#btnViewWI_" + $(this).val()).fadeIn();
+                                $("#btnOpenNotes_" + $(this).val()).fadeIn();
                                 $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrGeneric");
                                                 $("#lblModalInfo").dialog({
                                                     modal: true,
@@ -80,6 +81,7 @@
                                 $("#btnWarning_" + $(this).val()).fadeIn();
                                 $("#btnCompleteTask_" + $(this).val()).fadeIn();
                                 $("#btnViewWI_" + $(this).val()).fadeIn();
+                                $("#btnOpenNotes_" + $(this).val()).fadeIn();
                                 $("#lblModalInfo").html("@ResWebGemba.ListTasksInExecution.lblErrUserNotAuthorized");
                                 $("#lblModalInfo").dialog({
                                     modal: true,
@@ -99,12 +101,14 @@
                             $("#btnWarning_" + $(this).val()).fadeIn();
                             $("#btnCompleteTask_" + $(this).val()).fadeIn();
                             $("#btnViewWI_" + $(this).val()).fadeIn();
+                            $("#btnOpenNotes_" + $(this).val()).fadeIn();
                         },
                         warning: function (result) {
                             $("#btnPauseTask_" + $(this).val()).fadeIn();
                             $("#btnWarning_" + $(this).val()).fadeIn();
                             $("#btnCompleteTask_" + $(this).val()).fadeIn();
                             $("#btnViewWI_" + $(this).val()).fadeIn();
+                            $("#btnOpenNotes_" + $(this).val()).fadeIn();
                         }
                     });
                 });
@@ -115,6 +119,7 @@
                     $("#btnCompleteTask_" + $(this).val()).fadeOut();
                     $("#btnPauseTask_" + $(this).val()).fadeOut();
                     $("#btnWarning_" + $(this).val()).fadeOut();
+                    $("#btnOpenNotes_" + $(this).val()).fadeOut();
                     botonPause = $("#btnPauseTask_" + $(this).val());
                     botonWarning = $("#btnWarning_" + $(this).val());
                     $.ajax({
@@ -422,7 +427,8 @@
                                  +   "<input type=\"number\" id=\"txtQty_"+TaskId+"\" value=\""+aQuantity[0]+"\" style=\"display:none;min-width:30px; max-width:60px;\" />"
                                 + "<span id=\"lblQty_" + TaskId + "\">" + aQuantity[0] + "</span>/" + aQuantity[1]
                                  +   "<input type=\"image\" class=\"btnSaveQuantity\" id=\"btnSaveQty_"+TaskId+"\" style=\"min-width:10px; max-width:20px;display:none;\" src=\"../../img/iconSave.jpg\" value=\""+TaskId+"\" />" + "</td>"
-                                + "<td>" +"<input type=\"image\" class=\"btnEditParameters\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconParameters.png\" value=\"" + TaskId +"\" />"+ "</td>"
+                                + "<td>" + "<input type='image' src='../../img/iconOperatorNotes.png' class='btnOpenNotes' id='btnOpenNotes_" + TaskId + "' style='min-width:20px; max-width:30px;' value='" + TaskId + "'/></td>"
+                                + "<td>" + "<input type=\"image\" class=\"btnEditParameters\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconParameters.png\" value=\"" + TaskId + "\" />" + "</td>"
                                 + "<td>" + "<input type=\"image\" class=\"btnCompleteTask\" style=\"min-width:20px; max-width:30px;\" src=\"../../img/iconComplete.png\" value=\"" + TaskId + "\" id=\"btnCompleteTask_"+TaskId+"\" />" + "</td>"
                                 +"<td style=\"visibility:hidden\">"+Quantity+"</td>"
                                 + "</tr>");
@@ -587,6 +593,35 @@
                 });
 
 
+                $("#panelTasks").on("click", ".btnOpenNotes", function () {
+                    var task = $(this).val();
+                    $.ajax({
+                                url: "@Url.Action("TaskOperatorNotesPanel", "WebGemba")",
+                                type: 'POST',
+                                data: {
+                                    TaskID: task
+                                },
+                                success: function (data) {
+                                    var ifrmWI = "<div style='overflow-y:auto;left: 20%; border: 0px none; height: 50%; position: fixed; width: 70%; top:30%;background-color:rgba(255, 255, 255, 0.85);' id='viewPdf'>"
+                                        + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:0px;overflow-y:auto;' />"
+                                        + "<div style='position:relative;top:0px;left: 100px;'>"+data  
+                                        + "</div>"
+                                        + "</div>";
+                                    $("#iframeWI").html(ifrmWI);
+                                    $("#iframeWI").fadeIn();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+
+                });
+
 
                 loadKPIWorkstation();
                 
@@ -596,6 +631,7 @@
             });
 </script>
     <div id="debug"/>
+    <div id="iframeWINotes"  />
 <div class="row-fluid">
     <div class="row-fluid">
         <div class="span12">
@@ -636,6 +672,7 @@
                     <th>@ResWebGemba.ListTasksInExecution.lblTHProductName</th>
                     <th>@ResWebGemba.ListTasksInExecution.lblTHTaskName</th>
                     <th>@ResWebGemba.ListTasksInExecution.lblTHQuantity</th>
+                    <th>@ResWebGemba.ListTasksInExecution.lblTHNote</th>
                     <th>@ResWebGemba.ListTasksInExecution.lblTHParameters</th>
                 </tr>
             </thead>
@@ -705,6 +742,13 @@
                                style="min-width:10px; max-width:20px;display:none;"
                                src="~/img/iconSave.jpg"
                                value="@m.TaskProduzioneID" />
+                    </td>
+                    <td>
+                        <input type="image" src="~/img/iconOperatorNotes.png"
+                               class="btnOpenNotes"
+                               style="min-width:20px; max-width:30px;"
+                               value="@m.TaskProduzioneID"
+                               id="btnOpenNotes_@m.TaskProduzioneID"/>
                     </td>
                     <td>
                         <input type="image" class="btnEditParameters"

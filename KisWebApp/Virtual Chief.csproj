@@ -891,6 +891,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>addCustomerContact.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Departments\Controllers\DepartmentsConfigController.cs" />
     <Compile Include="Areas\Departments\DepartmentsAreaRegistration.cs" />
     <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
@@ -3475,6 +3476,36 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ListWorkstationsTasks.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskOperatorNotesPanel.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskOperatorNotesPanel.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskOperatorNotesPanel.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskOperatorNotesPanel.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskOperatorNotesPanel.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TaskOperatorNotesPanel.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Workplace\Views\WebGemba\App_LocalResources\WorkstationKPI.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -5517,6 +5548,7 @@
     <Content Include="img\iconMeasurementUnits.png" />
     <Content Include="img\iconNonConformity.png" />
     <Content Include="HomePage\UploadTooLarge.aspx" />
+    <Content Include="img\iconOperatorNotes.png" />
     <Content Include="img\iconParameters.png" />
     <Content Include="img\iconPdf.png" />
     <Content Include="img\iconReload.png" />
@@ -5646,6 +5678,7 @@
     <Content Include="Areas\SalesOrders\Views\SalesOrder\ListTasksDefOperators.cshtml" />
     <Content Include="Areas\Users\Views\Users\DisabledUsers.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\RescheduleTasksManually.cshtml" />
+    <Content Include="Areas\Workplace\Views\WebGemba\TaskOperatorNotesPanel.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -8836,6 +8869,36 @@
       <LastGenOutput>Index.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResWorkInstructions</CustomToolNamespace>
     </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.en.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskOperatorNotesPanel.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.it.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskOperatorNotesPanel.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.es.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskOperatorNotesPanel.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.en-US.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskOperatorNotesPanel.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.es-AR.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskOperatorNotesPanel.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\TaskOperatorNotesPanel.resx">
+      <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>TaskOperatorNotesPanel.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\Workplace\Views\WebGemba\App_LocalResources\ListUserTasks.resx">
       <CustomToolNamespace>ResWebGemba</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -10851,8 +10914,8 @@
     <Folder Include="Areas\Config\Views\Shared\" />
     <Folder Include="Areas\Customers\Models\" />
     <Folder Include="Areas\Customers\Views\Shared\" />
-    <Folder Include="Areas\Departments\Controllers\" />
     <Folder Include="Areas\Departments\Models\" />
+    <Folder Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\" />
     <Folder Include="Areas\Departments\Views\Shared\" />
     <Folder Include="Areas\Home\Models\" />
     <Folder Include="Areas\Personal\Models\" />

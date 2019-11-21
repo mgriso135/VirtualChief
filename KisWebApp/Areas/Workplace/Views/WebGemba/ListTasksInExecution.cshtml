@@ -204,6 +204,36 @@
                 });
                 });
 
+                $(".btnOpenNotes").click(function () {
+                    alert("Open Notes");
+                    var task = $(this).val();
+                    $.ajax({
+                                url: "@Url.Action("", "WebGemba")",
+                                type: 'POST',
+                                data: {
+                                    TaskProduzione: task
+                                },
+                                success: function (data) {
+                                    var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 90%; overflow: hidden; top:100px;background-color:rgba(255, 255, 255, 0.8);' id='viewPdf'>"
+                                        + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:0px;' />"
+                                        + "<div style='overflow: hidden;position:relative;top:30px;left: 100px;'>"+data  
+                                        + "</div>"
+                                        + "</div>";
+                                    $("#iframeWI").html(ifrmWI);
+                                    $("#iframeWI").fadeIn();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+
+                });
+
                 
 
 
@@ -215,6 +245,7 @@
                 <table class="table table-hover" id="panelTasks" width="100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <th></th>
@@ -262,6 +293,7 @@
                                        src="~/img/iconWarning.png"
                                        value="@m.TaskProduzioneID" />
                             </td>
+
                             <td>@m.TaskProduzioneID</td>
                             <td>@m.ArticoloID/@m.ArticoloAnno</td> 
                             @if (m.ExternalID.Length > 0)

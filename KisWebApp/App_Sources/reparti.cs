@@ -400,6 +400,69 @@ namespace KIS.App_Code
             }
         }
 
+        /* Returns:
+         * TRUE if Operators comments are allowed
+         * FALSE if Operators comments are NOT allowed
+         */
+        private Boolean _AllowTaskOperatorsComments;
+        public Boolean AllowTaskOperatorsComments
+        {
+            get
+            {
+                return this._AllowTaskOperatorsComments;
+            }
+            set
+            {
+                if (this.id != -1)
+                {
+                    // Verifico che sia presente la configurazione
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'Allow Tasks Operators Comments'";
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    bool add = false;
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        add = false;
+                    }
+                    else
+                    {
+                        add = true;
+                    }
+                    rdr.Close();
+
+                    cmd.Transaction = tr;
+                    if (add == true)
+                    {
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                            + this.id.ToString() + ", 'Allow Tasks Operators Comments', '" + value.ToString() + "')";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                        " AND parametro LIKE 'Allow Tasks Operators Comments'";
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+
+                    rdr.Close();
+                }
+            }
+        }
+
         public Reparto()
         {
             this._id = -1;
@@ -1228,6 +1291,39 @@ namespace KIS.App_Code
             }
             rdr.Close();
 
+            conn.Close();
+        }
+
+        public void loadAllowTaskOperatorsCommentFlag()
+        {
+            this._AllowTaskOperatorsComments = true;
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'Allow Tasks Operators Comments'";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                try
+                {
+                    String flag = rdr.GetString(0);
+                    if(flag == "False")
+                    {
+                        this._AllowTaskOperatorsComments = false;
+                    }
+                    else
+                    {
+                        this._AllowTaskOperatorsComments = true;
+                    }
+                    
+                }
+                catch
+                {
+                    this._AllowTaskOperatorsComments = true;
+                }
+            }
+            rdr.Close();
             conn.Close();
         }
     }

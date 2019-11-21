@@ -123,6 +123,9 @@
   <data name="lblAccAlarmaProblema" xml:space="preserve">
     <value>Alarma de problemas</value>
   </data>
+  <data name="lblAccAllowOperatorNotes" xml:space="preserve">
+    <value>Habilitar notas de operador en WebGemba</value>
+  </data>
   <data name="lblAccAndonRep" xml:space="preserve">
     <value>Andon de departamento</value>
   </data>
