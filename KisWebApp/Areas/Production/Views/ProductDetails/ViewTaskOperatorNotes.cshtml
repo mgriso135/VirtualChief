@@ -1,0 +1,43 @@
+﻿@model IEnumerable<KIS.App_Code.TaskOperatorNote>
+
+
+@if (ViewBag.authR)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHID</th>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHParamCompiler</th>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHParamDate</th>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHParamDescription</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+                                <td>@m.CommentID</td>
+                                <td>@m.User</td>
+                                <td>@m.Date.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@m.Note</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResProductDetails.ViewTaskOperatorNotes.lblErrNoAuth
+        </div>
+    </div>
+}
+

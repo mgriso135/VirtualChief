@@ -1656,7 +1656,7 @@ namespace KIS.Areas.Workplace.Controllers
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
             prmUser[0] = "Task Parameter";
-            prmUser[1] = "W";
+            prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
 
             if (Session["user"] != null)

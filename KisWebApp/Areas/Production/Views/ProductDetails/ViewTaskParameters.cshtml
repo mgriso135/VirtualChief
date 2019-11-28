@@ -1,0 +1,46 @@
+﻿@model IEnumerable<KIS.App_Code.TaskParameter>
+
+
+@if(ViewBag.authR)
+{
+    if(Model!=null && Model.Count() >0)
+    {
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>@ResProductDetails.ViewTaskParameters.lblTHID</th>
+                        <th>@ResProductDetails.ViewTaskParameters.lblTHParamCategory</th>
+                        <th>@ResProductDetails.ViewTaskParameters.lblTHParamCompiler</th>
+                        <th>@ResProductDetails.ViewTaskParameters.lblTHParamDate</th>
+                        <th>@ResProductDetails.ViewTaskParameters.lblTHName</th>
+                        <th>@ResProductDetails.ViewTaskParameters.lblTHParamDescription</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var m in Model)
+                    {
+                    <tr>
+                        <td>@m.ParameterID</td>
+                        <td>@m.ParameterCategory.Name</td>
+                        <td>@m.CreatedBy</td>
+                        <td>@m.CreatedDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@m.Name</td>
+                        <td>@m.Description</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResProductDetails.ViewTaskParameters.lblErrNoAuth
+        </div>
+    </div>
+}

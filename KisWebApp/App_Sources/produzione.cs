@@ -459,6 +459,26 @@ namespace KIS.App_Code
 
         public List<TaskOperatorNote> TaskOperatorNotes;
 
+        /* This indicator is the productivity on the task
+         * Productivity is calculated as the relation between planned working time and real working time 
+         * if < 1 performance is poor
+         * if > 1 performance is good
+         */
+        public Double Productivity
+        {
+            get
+            {
+                if(this.TaskProduzioneID!=-1 && this.Status=='F' && this.WorkingTime.Ticks > 0)
+                {
+                    return (this.TempoC.TotalSeconds / this.WorkingTime.TotalSeconds);
+                }
+                else
+                {
+                    return 0.0;
+                }
+            }
+        }
+
         public TaskProduzione(int tskProdID)
         {
             this.WorkInstructionActive = null;
@@ -3666,9 +3686,11 @@ namespace KIS.App_Code
     }
     
 
-    public class ProductionPlan
+    public class ProductionSchedule
     {
-        public String err;
+        public String log;
+
+        public List<ProductionOrderStruct> ScheduledProducts;
 
         private int _RepartoID;
         public int RepartoID
@@ -3682,7 +3704,7 @@ namespace KIS.App_Code
             get { return this._ElencoCommesse; }
         }
 
-        public ProductionPlan(Reparto rp)
+        public ProductionSchedule(Reparto rp)
         {
             if (rp.id != -1)
             {
@@ -3750,6 +3772,346 @@ namespace KIS.App_Code
                 conn.Close();
             }
             return rt;
+        }
+
+        public ProductionSchedule()
+        {
+            this.ScheduledProducts = new List<ProductionOrderStruct>();
+        }
+
+        public void loadProductionSchedule()
+        {
+            this.ScheduledProducts = new List<ProductionOrderStruct>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, " //1
+                + " anagraficaclienti.ragsociale AS CustomerName,"//2
+                + " anagraficaclienti.partitaiva AS CustomerVATNumber,"//3
+                + " anagraficaclienti.codfiscale AS CustomerCodiceFiscale,"//4
++ " anagraficaclienti.indirizzo AS CustomerAddress,"                //5
++ " anagraficaclienti.citta AS CustomerCity,"
++ " anagraficaclienti.provincia AS CustomerProvince,"
++ " anagraficaclienti.CAP AS CustomerZipCode,"
++ " anagraficaclienti.stato AS CustomerCountry,"
++ " anagraficaclienti.telefono AS CustomerPhoneNumber,"
++ " anagraficaclienti.email AS CustomerEMail,"
++ " anagraficaclienti.kanbanmanaged AS CustomerKanbanManaged,"
++ " commesse.idcommesse AS SalesOrderID,"
++ " commesse.anno AS SalesOrderYear,"
++ " commesse.cliente AS SalesOrderCustomer,"
++ " commesse.dataInserimento AS SalesOrderDate,"
++ " commesse.note AS SalesOrderNotes,"
++ " productionplan.id AS ProductionOrderID,"
++ " productionplan.anno AS ProductionOrderYear,"
++ " productionplan.processo AS ProductionOrderProductTypeID,"
++ " productionplan.revisione AS ProductionOrderProductTypeReview,"
++ " productionplan.variante AS ProductionOrderProductID,"
++ " productionplan.matricola AS ProductionOrderSerialNumber,"
++ " productionplan.status AS ProductionOrderStatus,"
++ " productionplan.reparto AS ProductionOrderDepartmentID,"
++ " productionplan.startTime AS ProductionOrderStartTime,"
++ " productionplan.dataConsegnaPrevista AS ProductionOrderDeliveryDate,"
++ " productionplan.dataPrevistaFineProduzione AS ProductionOrderEndProductionDate,"
++ " productionplan.planner AS ProductionOrderPlanner,"
++ " productionplan.quantita AS ProductionOrderQuantityOrdered,"         // 30
++ " productionplan.quantitaProdotta AS ProductionOrderQuantityProduced,"
++ " productionplan.kanbanCard AS ProductionOrderKanbanCardID,"
++ " processo.processID AS ProductTypeID,"
++ " processo.revisione AS ProductTypeReview,"
++ " processo.dataRevisione AS ProductTypeReviewDate,"
++ " processo.Name AS ProductTypeName,"
++ " processo.description AS ProductTypeDescription,"
++ " processo.attivo AS ProductTypeEnabled,"
++ " varianti.idvariante AS ProductID,"
++ " varianti.nomeVariante AS ProductName,"
++ " varianti.descVariante AS ProductDescription,"
++ " reparti.idreparto AS DepartmentID,"
++ " reparti.nome AS DepartmentName,"
++ " reparti.descrizione AS DepartmentDescription,"
++ " reparti.cadenza AS DepartmentTaktTime,"
++ " reparti.timezone AS DepartmentTimeZone, "
++ " productionplan.leadtime AS RealLeadTime, "
++ " productionplan.WorkingTime AS RealWorkingTime, "
++ " productionplan.Delay AS RealDelay, "
++ " productionplan.EndProductionDateReal AS RealEndProductionDate, "
++ " commesse.ExternalID AS SalesOrderExternalID, "
++ " variantiprocessi.ExternalID AS ProductExternalID, "
+ + " measurementunits.type AS MeasurementUnit"
++ " FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) INNER JOIN"
+ + " productionplan ON(commesse.anno =productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)"
+ + "INNER JOIN variantiprocessi ON (productionplan.variante = variantiprocessi.variante AND productionplan.processo = variantiprocessi.processo AND productionplan.revisione = variantiprocessi.revProc)"
+ + " INNER JOIN varianti ON (varianti.idvariante = variantiprocessi.variante)"
+ + " INNER JOIN processo ON (processo.ProcessID = variantiprocessi.processo AND processo.revisione = variantiprocessi.revProc) "
++ " INNER JOIN measurementunits ON(variantiprocessi.measurementUnit = measurementunits.id)"
++ " LEFT JOIN reparti ON(reparti.idreparto = productionplan.reparto)"
+ + " WHERE productionplan.status <> 'F'"
+ + " order by productionplan.dataprevistafineproduzione";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            FusoOrario fuso = new FusoOrario();
+            while (rdr.Read())
+            {
+                ProductionOrderStruct curr = new ProductionOrderStruct();
+                KIS.App_Code.Reparto rp = null;
+                if (!rdr.IsDBNull(41))
+                { 
+                    curr.DepartmentID = rdr.GetInt32(41);
+                    rp = new App_Code.Reparto(curr.DepartmentID);
+                }
+                else
+                {
+                    curr.DepartmentID = -1;
+                }
+                if (!rdr.IsDBNull(0))
+                {
+                    curr.CustomerID = rdr.GetString(0);
+                }
+                if (!rdr.IsDBNull(1))
+                {
+                    curr.CustomerName = rdr.GetString(1);
+                }
+                if (!rdr.IsDBNull(2))
+                {
+                    curr.CustomerVATNumber = rdr.GetString(2);
+                }
+                if (!rdr.IsDBNull(3))
+                {
+                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                }
+                if (!rdr.IsDBNull(4))
+                {
+                    curr.CustomerAddress = rdr.GetString(4);
+                }
+                if (!rdr.IsDBNull(5))
+                {
+                    curr.CustomerCity = rdr.GetString(5);
+                }
+                if (!rdr.IsDBNull(6))
+                {
+                    curr.CustomerProvince = rdr.GetString(6);
+                }
+                if (!rdr.IsDBNull(7))
+                {
+                    curr.CustomerZipCode = rdr.GetString(7);
+                }
+                if (!rdr.IsDBNull(8))
+                {
+                    curr.CustomerCountry = rdr.GetString(8);
+                }
+                if (!rdr.IsDBNull(9))
+                {
+                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                }
+                if (!rdr.IsDBNull(10))
+                {
+                    curr.CustomerEMail = rdr.GetString(10);
+                }
+                if (!rdr.IsDBNull(11))
+                {
+                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                }
+                if (!rdr.IsDBNull(12))
+                {
+                    curr.SalesOrderID = rdr.GetInt32(12);
+                }
+                if (!rdr.IsDBNull(13))
+                {
+                    curr.SalesOrderYear = rdr.GetInt32(13);
+                }
+                if (!rdr.IsDBNull(14))
+                {
+                    curr.SalesOrderCustomer = rdr.GetString(14);
+                }
+                if (!rdr.IsDBNull(15))
+                {
+                    if(rp!=null)
+                    { 
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                    }
+                    else
+                    {
+                        curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), fuso.tzFusoOrario);
+                    }
+                }
+                if (!rdr.IsDBNull(16))
+                {
+                    curr.SalesOrderNotes = rdr.GetString(16);
+                }
+                if (!rdr.IsDBNull(17))
+                {
+                    curr.ProductionOrderID = rdr.GetInt32(17);
+                }
+                if (!rdr.IsDBNull(18))
+                {
+                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                }
+                if (!rdr.IsDBNull(19))
+                {
+                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                }
+                if (!rdr.IsDBNull(20))
+                {
+                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                }
+                if (!rdr.IsDBNull(21))
+                {
+                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                }
+                if (!rdr.IsDBNull(22))
+                {
+                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                }
+                if (!rdr.IsDBNull(23))
+                {
+                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                }
+                if (!rdr.IsDBNull(24))
+                {
+                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                }
+                if (!rdr.IsDBNull(25))
+                {
+                    if(rp!=null)
+                    { 
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                    }
+                    else
+                    {
+                        curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), fuso.tzFusoOrario);
+                    }
+                }
+                if (!rdr.IsDBNull(26))
+                {
+                    if (rp != null)
+                    {
+                        curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                    }
+                    else
+                    {
+                        curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), fuso.tzFusoOrario);
+                    }
+                }
+                if (!rdr.IsDBNull(27))
+                {
+                    if(rp!=null)
+                    { 
+                        curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                    }
+                    else
+                    {
+                        curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), fuso.tzFusoOrario);
+                    }
+                }
+                if (!rdr.IsDBNull(28))
+                {
+                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                }
+                if (!rdr.IsDBNull(29))
+                {
+                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                }
+                if (!rdr.IsDBNull(30))
+                {
+                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                }
+                if (!rdr.IsDBNull(31))
+                {
+                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                }
+                if (!rdr.IsDBNull(32))
+                {
+                    curr.ProductTypeID = rdr.GetInt32(32);
+                }
+                if (!rdr.IsDBNull(33))
+                {
+                    curr.ProductTypeReview = rdr.GetInt32(33);
+                }
+                if (!rdr.IsDBNull(34))
+                {
+                    if(rp!=null)
+                    { 
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                    }
+                    else
+                    {
+                        curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), fuso.tzFusoOrario);
+                    }
+                }
+                if (!rdr.IsDBNull(35))
+                {
+                    curr.ProductTypeName = rdr.GetString(35);
+                }
+                if (!rdr.IsDBNull(36))
+                {
+                    curr.ProductTypeDescription = rdr.GetString(36);
+                }
+                if (!rdr.IsDBNull(37))
+                {
+                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                }
+                if (!rdr.IsDBNull(38))
+                {
+                    curr.ProductID = rdr.GetInt32(38);
+                }
+                if (!rdr.IsDBNull(39))
+                {
+                    curr.ProductName = rdr.GetString(39);
+                }
+                if (!rdr.IsDBNull(40))
+                {
+                    curr.ProductDescription = rdr.GetString(40);
+                }
+                if (!rdr.IsDBNull(41))
+                {
+                    curr.DepartmentID = rdr.GetInt32(41);
+                }
+                if (!rdr.IsDBNull(42))
+                {
+                    curr.DepartmentName = rdr.GetString(42);
+                }
+                if (!rdr.IsDBNull(43))
+                {
+                    curr.DepartmentDescription = rdr.GetString(43);
+                }
+                if (!rdr.IsDBNull(44))
+                {
+                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                }
+                if (!rdr.IsDBNull(45))
+                {
+                    curr.DepartmentTimeZone = rdr.GetString(45);
+                }
+                if (!rdr.IsDBNull(46))
+                {
+                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                }
+                if (!rdr.IsDBNull(47))
+                {
+                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                }
+                if (!rdr.IsDBNull(48))
+                {
+                    curr.RealDelay = rdr.GetTimeSpan(48);
+                }
+                if (!rdr.IsDBNull(49))
+                {
+                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
+                }
+                if (!rdr.IsDBNull(50))
+                {
+                    curr.SalesOrderExternalID = rdr.GetString(50);
+                }
+                if (!rdr.IsDBNull(51))
+                {
+                    curr.ProductExternalID = rdr.GetString(51);
+                }
+                if (!rdr.IsDBNull(52))
+                {
+                    curr.MeasurementUnit = rdr.GetString(52);
+                }
+                this.ScheduledProducts.Add(curr);
+            }
+            conn.Close();
         }
     }
     
@@ -5779,4 +6141,61 @@ namespace KIS.App_Code
             }
         }
     }
+
+    public struct ProductionOrderStruct
+    {
+        public String CustomerID;
+        public String CustomerName;
+        public String CustomerVATNumber;
+        public String CustomerCodiceFiscale;
+        public String CustomerAddress;
+        public String CustomerCity;
+        public String CustomerProvince;
+        public String CustomerZipCode;
+        public String CustomerCountry;
+        public String CustomerPhoneNumber;
+        public String CustomerEMail;
+        public Boolean CustomerKanbanManaged;
+        public int SalesOrderID;
+        public int SalesOrderYear;
+        public String SalesOrderCustomer;
+        public DateTime SalesOrderDate;
+        public String SalesOrderNotes;
+        public String SalesOrderExternalID;
+        public int ProductionOrderID;
+        public int ProductionOrderYear;
+        public int ProductionOrderProductTypeID;
+        public int ProductionOrderProductTypeReview;
+        public int ProductionOrderProductID;
+        public String ProductionOrderSerialNumber;
+        public Char ProductionOrderStatus;
+        public int ProductionOrderDepartmentID;
+        public DateTime ProductionOrderStartTime;
+        public DateTime ProductionOrderDeliveryDate;
+        public DateTime ProductionOrderEndProductionDate;
+        public String ProductionOrderPlanner;
+        public int ProductionOrderQuantityOrdered;
+        public int ProductionOrderQuantityProduced;
+        public String ProductionOrderKanbanCardID;
+        public int ProductTypeID;
+        public int ProductTypeReview;
+        public DateTime ProductTypeReviewDate;
+        public String ProductTypeName;
+        public String ProductTypeDescription;
+        public Boolean ProductTypeEnabled;
+        public int ProductID;
+        public String ProductName;
+        public String ProductDescription;
+        public int DepartmentID;
+        public String DepartmentName;
+        public String DepartmentDescription;
+        public Double DepartmentTaktTime;
+        public String DepartmentTimeZone;
+        public TimeSpan RealWorkingTime;
+        public TimeSpan RealDelay;
+        public TimeSpan RealLeadTime;
+        public DateTime ProductionOrderEndProductionDateReal;
+        public String ProductExternalID;
+        public String MeasurementUnit;
     }
+}

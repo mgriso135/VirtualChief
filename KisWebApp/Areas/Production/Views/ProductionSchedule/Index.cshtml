@@ -1,0 +1,320 @@
+﻿
+@{
+    /**/
+
+    ViewBag.Title = ResProductionSchedule.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResProductionSchedule.Index.lblTitle</h3>
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="@Request.RawUrl">@ResProductionSchedule.Index.lblTitle</a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <span class="divider">/</span>
+    </li>
+</ul>
+
+@if (ViewBag.authR)
+{
+    <script>
+        $(document).ready(function () {
+            var CustomersArr = [];
+            var DepartmentsArr = [];
+            var TypeOfProductsArr = [];
+            var StatusArr = [];
+
+            $("#frmDepartmentsList :checkbox").each(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var cst = badgeOrig[1];
+                DepartmentsArr.push(cst);
+            });
+            $("#frmDepartmentsList :checkbox").change(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var id = badgeOrig[1];
+                var name = $("#departmentName_" + id).text();
+                if ($(this).is(":checked")) {
+                    DepartmentsArr.push(id);
+                }
+                else {
+                    var index = $.inArray(id, DepartmentsArr);
+                    if (index >= 0) DepartmentsArr.splice(index, 1);
+                }
+                loadPanel();
+            });
+
+            $("#frmCustomersList :checkbox").each(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var cst = badgeOrig[1];
+                CustomersArr.push(cst);
+            });
+
+            $("#frmCustomersList :checkbox").change(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var id = badgeOrig[1];
+                var name = $("#customerName_" + id).text();
+                if ($(this).is(":checked")) {
+                    CustomersArr.push(id);
+                    loadPanel();
+                }
+                else {
+                    var index = $.inArray(id, CustomersArr);
+                    if (index >= 0) CustomersArr.splice(index, 1);
+
+                    loadPanel();
+                }
+            });
+
+            $("#frmProductsList :checkbox").each(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var badgeOrig2 = badgeOrig[1].split(';');
+                var cst = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                TypeOfProductsArr.push(cst);
+            });
+            $("#frmProductsList :checkbox").change(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var badgeOrig2 = badgeOrig[1].split(';');
+                var id = badgeOrig[1];
+                var ids = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                //var name = $("#productName_" + id).text();
+                if ($(this).is(":checked")) {
+                    TypeOfProductsArr.push(ids);
+                }
+                else {
+                    var index = -1;
+                    for (var i = 0; i < TypeOfProductsArr.length; i++) {
+                        if (TypeOfProductsArr[i][0] == badgeOrig2[0] && TypeOfProductsArr[i][1] == badgeOrig2[1] && TypeOfProductsArr[i][2] == badgeOrig2[2]) {
+
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index >= 0) TypeOfProductsArr.splice(index, 1);
+                }
+                loadPanel();
+            });
+
+            $("#frmStatusList :checkbox").each(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var status = badgeOrig[1];
+                StatusArr.push(status);
+            });
+
+            $("#frmStatusList :checkbox").change(function () {
+                var badgeOrig = $(this).attr('id').split('_');
+                var id = badgeOrig[1];
+                var name = $("#statusName_" + id).text();
+                if ($(this).is(":checked")) {
+                    StatusArr.push(id);
+                    loadPanel();
+                }
+                else {
+                    var index = $.inArray(id, StatusArr);
+                    if (index >= 0) StatusArr.splice(index, 1);
+
+                    loadPanel();
+                }
+            });
+
+
+            function loadPanel() {
+
+                $("#iconLoadPanel").fadeIn();
+                $("#ProductionSchedulePanel").fadeTo(0, 0.5);
+
+
+                    var customersStr = "";
+                    for (i = 0; i < CustomersArr.length; i++) {
+                        customersStr += " " + CustomersArr[i];
+                    }
+
+                    var departmentsStr = "";
+                for (i = 0; i < DepartmentsArr.length; i++) {
+                    if (DepartmentsArr[i] == "A") {
+                        departmentsStr += "-1;";
+                    }
+                    else {
+                        departmentsStr += DepartmentsArr[i] + ";";
+                    }
+                }
+
+                var statusStr = "";
+                for (i = 0; i < StatusArr.length; i++) {
+                    statusStr += StatusArr[i] + ";";
+                }
+
+                    var TypeOfProductsStr = "";
+                    for (i = 0; i < TypeOfProductsArr.length; i++) {
+                        TypeOfProductsStr += TypeOfProductsArr[i][0] + "_"
+                            + TypeOfProductsArr[i][1]
+                            + "_" + TypeOfProductsArr[i][2]
+                            + ";";
+                    }
+                    //alert(customersStr);
+
+                    $.ajax({
+                        url: "@Url.Action("ProductionSchedulePanel", "ProductionSchedule")",
+                        type: 'POST',
+                        dataType: "html",
+                        data: {
+                            customers: customersStr,
+                            departments: departmentsStr,
+                            TypeOfProducts: TypeOfProductsStr,
+                            status:statusStr
+                        },
+                    success: function (result) {
+                        $("#ProductionSchedulePanel").html(result);
+                        $("#iconLoadPanel").fadeIn();
+                        $("#ProductionSchedulePanel").fadeTo(0, 1);
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $("#iconLoadPanel").fadeIn();
+                        $("#HistoricPanel").fadeTo(0, 1);
+
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $("#iconLoadPanel").fadeIn();
+                        $("#HistoricPanel").fadeTo(0, 1);
+                    }
+                });
+                }
+
+
+            $("#modCustomers").modal("show");
+            $("#modCustomers").modal("hide");
+            $("#modProducts").modal("show");
+            $("#modProducts").modal("hide");
+            loadPanel();
+
+        });
+    </script>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span2" id="sidebar">
+                <div class="well sidebar-nav sidebar-nav-fixed">
+                    <p>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modDepartments">
+                            @ResProductionSchedule.Index.lblBtnDepartments
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modStatus">
+                            @ResProductionSchedule.Index.lblBtnStatus
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modCustomers">
+                            @ResProductionSchedule.Index.lblBtnCustomers
+                        </button>
+                        <button type="button" class="alert alert-info" style="width:100%" data-toggle="modal" data-target="#modProducts">
+                            @ResProductionSchedule.Index.lblBtnProducts
+                        </button>
+                    </p>
+                </div>
+            </div>
+            <div class="span10">
+                <div id="ProductionSchedulePanel" />
+                <img src="~/img/iconLoading3.gif" style="min-width:20px; max-width:30px;" id="iconLoadPanel" />
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modStatus" tabindex="-1" role="dialog" aria-labelledby="modStatus" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="btnModStatus">Test</h5>
+                </div>
+                <div class="modal-body" id="frmStatusList">
+                    <input type="checkbox" id="status_N" checked="checked" value="N" /><literal id="statusName_N">@ResProductionSchedule.Index.lblStatusN</literal><br />
+                    <input type="checkbox" id="status_P" checked="checked" value="P" /><literal id="statusName_P">@ResProductionSchedule.Index.lblStatusP</literal><br />
+                    <input type="checkbox" id="status_I" checked="checked" value="I" /><literal id="statusName_I">@ResProductionSchedule.Index.lblStatusI</literal>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modDepartments" tabindex="-1" role="dialog" aria-labelledby="modDepartments" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="btnModDepartments">Test</h5>
+                </div>
+                <div class="modal-body" id="frmDepartmentsList">
+                    @{
+                        List<KIS.App_Code.Reparto> DepartmentList = ViewBag.Departments;
+                        foreach (var dept in DepartmentList)
+                        {
+                            <input type="checkbox" id="department_@dept.id" checked="checked" /><literal id="departmentName_@dept.name">@Html.Raw(dept.name)</literal><br />
+                        }
+                    }
+                    <input type="checkbox" id="department_A" checked="checked" /><literal id="departmentName_A">@ResProductionSchedule.Index.lblUnassignedDepartment</literal><br />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modCustomers" tabindex="-1" role="dialog" aria-labelledby="modCustomers" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="btnModCustomers">Test</h5>
+                </div>
+                <div class="modal-body" id="frmCustomersList">
+                    @{
+                        List<KIS.App_Code.Cliente> cstList = ViewBag.Customers;
+                        foreach (var cst in cstList)
+                        {
+                    <input type="checkbox" id="customer_@cst.CodiceCliente" checked="checked" /><literal id="customerName_@cst.CodiceCliente">@Html.Raw(Server.HtmlEncode(cst.RagioneSociale))</literal><br />
+                        }
+                    }
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="modProducts" tabindex="-1" role="dialog" aria-labelledby="modProducts" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="btnModProducts">Test</h5>
+                </div>
+                <div class="modal-body" id="frmProductsList">
+                    @{
+                        List<KIS.App_Code.ProcessoVariante> TypeOfProductList = ViewBag.TypeOfProducts;
+                        foreach (var prod in TypeOfProductList)
+                        {
+
+                            <input type="checkbox" id="product_@prod.process.processID;@prod.process.revisione;@prod.variant.idVariante" checked="checked" /><literal id="productName_@prod.process.processID;@prod.process.revisione;@prod.variant.idVariante">@Html.Raw(prod.process.processName + " - " + prod.variant.nomeVariante)</literal><br />
+                        }
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResProductionSchedule.Index.lblErrUserAuth
+        </div>
+    </div>
+}

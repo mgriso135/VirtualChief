@@ -1364,18 +1364,65 @@ namespace KIS.App_Code
 
         public List<TaskParameter> TaskParameters;
 
+        public TimeSpan PlannedWorkingTime
+        {
+            get
+            {
+                TimeSpan ret = new TimeSpan(0, 0, 0);
+                if(this.ID!=-1 && this.Year!=-1)
+                { 
+                this.loadTasksProduzione();
+                    foreach(var t in this.Tasks)
+                    {
+                        ret = ret.Add(t.TempoC);
+                    }
+                }
+                return ret;
+            }
+        }
+
+        /* This indicator is the productivity on the task
+         * Productivity is calculated as the relation between planned working time and real working time 
+         * if < 1 performance is poor
+         * if > 1 performance is good
+         */
+        public Double Productivity
+        {
+            get
+            {
+                if (this.ID != -1 && this.Year!=-1 && this.Status == 'F')
+                {
+                    return (this.PlannedWorkingTime.TotalSeconds / this.WorkingTime.TotalSeconds);
+                }
+                else
+                {
+                    return 0.0;
+                }
+            }
+        }
+
+        private DateTime _EndProductionDateReal;
+        public DateTime EndProductionDateReal
+        {
+            get
+            {
+                return this._EndProductionDateReal;
+            }
+        }
+
         public Articolo(int idArticolo, int AnnoArticolo)
         {
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
             this._LeadTimes = new List<TimeSpan>();
             this._ProductExternalID = "";
+            this._EndProductionDateReal = new DateTime(1970, 1, 1);
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
             + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
             + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
-            + " commesse.ExternalID "
+            + " commesse.ExternalID, endproductiondatereal "
             + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) WHERE id = " + idArticolo.ToString()
             + " AND productionplan.anno = " + AnnoArticolo.ToString()
             + " ORDER BY productionplan.anno DESC";
@@ -1466,6 +1513,11 @@ namespace KIS.App_Code
 
                 this._MeasurementUnitID = rdr.GetInt32(19);
                 this._CommessaExternalID = rdr.GetString(20);
+                this._EndProductionDateReal = new DateTime(1970, 1, 1);
+                if(!rdr.IsDBNull(21))
+                {
+                    this._EndProductionDateReal=rdr.GetDateTime(21);
+                }
             }
             else
             {
@@ -1485,6 +1537,7 @@ namespace KIS.App_Code
                 this._Delay = new TimeSpan(0, 0, 0);
                 this._MeasurementUnitID = -1;
                 this._CommessaExternalID = "";
+                this._EndProductionDateReal = new DateTime(1970, 1, 1);
             }
             rdr.Close();
             conn.Close();
@@ -1806,7 +1859,7 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 
-                try
+              try
                 {
                     this.loadTasksProduzione();
 
@@ -1818,6 +1871,13 @@ namespace KIS.App_Code
                         {
                             t.deleteAssignedOperator(op);
                         }
+                    }
+
+
+                    for (int i = 0; i < this.Tasks.Count; i++)
+                    {
+                        cmd.CommandText = "DELETE FROM taskreschedulelog WHERE task = " + this.Tasks[i].TaskProduzioneID.ToString();
+                        cmd.ExecuteNonQuery();
                     }
 
                     for (int i = 0; i < this.Tasks.Count; i++)

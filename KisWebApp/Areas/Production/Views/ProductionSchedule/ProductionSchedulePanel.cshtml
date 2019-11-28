@@ -1,0 +1,665 @@
+﻿@model IEnumerable<KIS.App_Code.ProductionOrderStruct>
+
+@if (Model != null && Model.Count() > 0)
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.imgExhumate').click(function () {
+                $(this).fadeOut();
+                var prodID = $(this).val().split(';');
+                if ($.isNumeric(prodID[0]) && $.isNumeric(prodID[1])) {
+                    $.ajax({
+                    url: "@Url.Action("ExhumateProduct", "ProductionHistory")",
+                    type: 'GET',
+                    dataType: "html",
+                    data: {
+                        ProdID: prodID[0],
+                        ProdYear: prodID[1]
+                    },
+                        success: function (result) {
+                        if (result) {
+                            $("#row_" + prodID[0] + prodID[1]).fadeOut();
+                        }
+                    },
+                    error: function (result) {
+                        alert("Error");
+                        $(this).fadeIn();
+                        //$("#frmListWorkstations").html("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                        $(this).fadeIn();
+                        //$("#frmListWorkstations").html("Warning");
+                    }
+                    });
+                }
+            });
+
+            $(function () {
+                $("[id*=txtEndProductionDate]").datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    showWeek: true,
+                    firstDay: 1,
+                    minDate: 'today'
+                });
+            });
+      
+            $(".imgReprogram").click(function () {
+                
+                        var currProd = $(this).val().split('.');
+                if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            var department = $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).val();
+                            var endProductionDateStr = $("#txtEndProductionDate_" + currProd[0] + "-" + currProd[1]).val();
+                            var deliveryDateStr = $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).val();
+                            var endProductionDateArr = endProductionDateStr.split('/');
+                            var endProductionDate = new Date(endProductionDateArr[2], endProductionDateArr[1] - 1, endProductionDateArr[0]);
+                            var deliveryDateArr = deliveryDateStr.split('/');
+                            var deliveryDate = new Date(deliveryDateArr[2], deliveryDateArr[1] - 1, deliveryDateArr[0]);
+
+                            if (endProductionDate <= deliveryDate) {
+                                if (endProductionDate > (new Date)) {
+                                    $(this).fadeOut();
+
+                                    $.ajax({
+                                        url: "@Url.Action("ReprogramProduct", "../SalesOrders/SalesOrder")",
+                                        type: 'POST',
+                                        data: {
+                                            ProductID: currProd[0],
+                                            ProductYear: currProd[1],
+                                            DepartmentID: department,
+                                            EndProductionDate: endProductionDate.getFullYear() + "-" + (endProductionDate.getMonth() + 1) + "-" + endProductionDate.getDate()
+                                        },
+                                        success: function (data) {
+                                            if (data == "1") {
+                                              
+                                                $("#lblModalInfo").html("@ResListOrderProduct.ListOrderProduct.lblDialogReplanOk");
+                                                $("#lblModalInfo").dialog({
+                                                    modal: true,
+                                                    title: "Info",
+                                                    //width: 300,
+                                                    //height: 150,
+                                                    open: function (event, ui) {
+                                                        setTimeout(function () {
+                                                            $("#lblModalInfo").dialog("close");
+                                                        }, 2000);
+                                                    }
+                                                });
+
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgPrintBarcodeA_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPrintBarcodeB_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPrintSingleBarcode_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPrintA3Barcode_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgSave_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).fadeIn();
+
+                                            }
+                                            else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorInProductCfg"); }
+                                            else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorStatus"); }
+                                            else if (data == "5") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
+                                            else if (data == "6") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorInProductCfg"); }
+                                            else if (data == "7") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
+                                            else if (data == "8") { alert("@ResListOrderProduct.ListOrderProduct.lblUserNotAuthorized"); }
+                                            else if (data == "0") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
+                                            $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                        },
+                                        statusCode: {
+                                            404: function (content) { alert('cannot find resource'); $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();},
+                                            500: function (content) { alert('internal server error'); $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();}
+                                        },
+                                        error: function (data) {
+                                            alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                        }
+
+                                    });
+                                }
+                                else {
+                                    alert("@ResListOrderProduct.ListOrderProduct.lblDateError2");
+                                }
+                            }
+                            else {
+                                alert("@ResListOrderProduct.ListOrderProduct.lblDateError1");
+                            }
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+            });
+
+
+            $(".imgManageTasks").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("RescheduleTasksManually", "../SalesOrders/SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 90%; overflow: hidden; top:100px;background-color:rgba(255, 255, 255, 0.8);' id='viewPdf'>"
+                                        + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:0px;' />"
+                                        + "<div style='overflow: hidden;position:relative;top:30px;left: 100px;'>"+data  
+                                        + "</div>"
+                                        + "</div>";
+                                    $("#iframeWI").html(ifrmWI);
+                                    $("#iframeWI").fadeIn();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+            });
+
+                               $(".imgCompleteProduct").click(function () {
+                        if (confirm("@Server.HtmlDecode(ResListOrderProduct.ListOrderProduct.lblConfirmCompleteBruteForce)")) {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
+                            $("#imgDelete_" + currProd[0] + "-" + currProd[1]).hide();
+                            $("#imgPlan_" + currProd[0] + "-" + currProd[1]).hide();
+                            $.ajax({
+                                        url: "@Url.Action("CompleteProductBruteForce", "../Products/Products")",
+                                        type: 'POST',
+                                        data: {
+                                            ProductID: currProd[0],
+                                            ProductYear: currProd[1]
+                                        },
+                                success: function (data) {
+                                    if (data == "1") {
+                                                $("#lblModalInfo").html("@ResListOrderProduct.ListOrderProduct.lblProductCompletedOk");
+                                                $("#lblModalInfo").dialog({
+                                                    modal: true,
+                                                    title: "Info",
+                                                    //width: 300,
+                                                    //height: 150,
+                                                    open: function (event, ui) {
+                                                        setTimeout(function () {
+                                                            $("#lblModalInfo").dialog("close");
+                                                        }, 2000);
+                                                    }
+                                                });
+
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgSave_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgUndo_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
+                                            }
+                                            else {
+                                                alert("Error");
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                            }
+
+                                        },
+                                        statusCode: {
+                                            404: function (content) {
+                                                alert('cannot find resource');
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                            },
+                                            500: function (content) {
+                                                alert('internal server error');
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                            }
+                                        },
+                                        error: function (data) {
+                                            alert("@ResListOrderProduct.ListOrderProduct.lblGenericError");
+                                            $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).show();
+                                            $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                            $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                        }
+
+                                    });
+                            }
+                        }
+            });
+
+             $(".imgManageOperators").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("ShowManageOperators", "../SalesOrders/SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    var ifrmWI = "<div style='left: 10px; border: 0px none; height: 100%; position: fixed; width: 90%; overflow: hidden; top:100px;background-color:rgba(255, 255, 255, 0.8);' id='viewPdf'>"
+                                        + "<input type='image' src='../../img/iconClose.png' id='imgClosePdf' style='max-width:30px; min-width:30px; position:relative;top:0px;' />"
+                                        + "<div style='overflow: hidden;position:relative;top:30px;left: 100px;'>"+data  
+                                        + "</div>"
+                                        + "</div>";
+                                    $("#iframeWI").html(ifrmWI);
+                                    $("#iframeWI").fadeIn();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+            });
+
+            $(".imgPlan").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            var endProductionDateStr = $("#txtEndProductionDate_" + currProd[0] + "-" + currProd[1]).val();
+                            var deliveryDateStr = $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).val();
+                            var endProductionDateArr = endProductionDateStr.split('/');
+                            var endProductionDate = new Date(endProductionDateArr[2], endProductionDateArr[1] - 1, endProductionDateArr[0]);
+                            var deliveryDateArr = deliveryDateStr.split('/');
+                            var deliveryDate = new Date(deliveryDateArr[2], deliveryDateArr[1] - 1, deliveryDateArr[0]);
+
+                            var department = $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).val();
+                            if (endProductionDate <= deliveryDate) {
+                                if (endProductionDate >= (new Date())) {
+
+                                    $.ajax({
+                                        url: "@Url.Action("PlanProduct", "../SalesOrders/SalesOrder")",
+                                        type: 'POST',
+                                        data: {
+                                            ProductID: currProd[0],
+                                            ProductYear: currProd[1],
+                                            DepartmentID: department,
+                                            EndProductionDate: endProductionDate.getFullYear() + "-" + (endProductionDate.getMonth() + 1) + "-" + endProductionDate.getDate()
+                                        },
+                                        success: function (data) {
+                                            if (data == "1") {
+                                                $("#imgDelete_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgPlan_" + currProd[0] + "-" + currProd[1]).hide();
+                                                $("#imgPrintBarcodeA_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPrintBarcodeB_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPrintSingleBarcode_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgPrintA3Barcode_" + currProd[0] + "-" + currProd[1]).show();
+                                                //$("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgUndo_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).show();
+                                                $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                                $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).fadeIn();
+                                            }
+                                            else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
+                                            else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorStatus"); }
+                                            else if (data == "5") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
+                                            else if (data == "6") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorInProductCfg"); }
+                                            else if (data == "7") { alert("@ResListOrderProduct.ListOrderProduct.lblErrorEndProductionDate"); }
+                                            else if (data == "8") { alert("@ResListOrderProduct.ListOrderProduct.lblUserNotAuthorized"); }
+                                            else if (data == "0") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
+                                        },
+                                        statusCode: {
+                                            404: function (content) { alert('cannot find resource'); },
+                                            500: function (content) { alert('internal server error'); }
+                                        },
+                                        error: function (data) {
+                                            alert("@ResListOrderProduct.ListOrderProduct.lblGenericError");
+                                        }
+
+                                    });
+                                }
+                                else {
+                                    alert("@ResListOrderProduct.ListOrderProduct.lblDateError2");
+                                }
+                            }
+                            else {
+                                alert("@ResListOrderProduct.ListOrderProduct.lblDateError1");
+                            }
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+                    });
+
+             $(".imgUndo").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("UndoProductSchedule", "../SalesOrders/SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    if (data == "1") {
+                                        $("#imgUndo_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgPrintA3Barcode_" + currProd[0] + "-" + currProd[1]).hide();
+
+                                        $("#imgPrintBarcodeA_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgPrintBarcodeB_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgPrintSingleBarcode_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgSave_" + currProd[0] + "-" + currProd[1]).show();
+                                        $("#txtDeliveryDate_" + + currProd[0] + "-" + currProd[1]).prop("disabled", false);
+                                        $("#txtQuantity_" + + currProd[0] + "-" + currProd[1]).prop("disabled", false);
+                                        $("#imgDelete_" + currProd[0] + "-" + currProd[1]).show();
+                                        $("#imgPlan_" + currProd[0] + "-" + currProd[1]).show();
+                                        $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).prop("disabled", false);
+                                        $("#imgManageOperators_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgManageTasks_" + currProd[0] + "-" + currProd[1]).hide();
+                                        $("#imgCompleteProduct_" + currProd[0] + "-" + currProd[1]).hide();
+                                    }
+                                    else if (data == "2") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
+                                    else if (data == "3") { alert("@ResListOrderProduct.ListOrderProduct.lblUserNotAuthorized"); }
+                                    else if (data == "4") { alert("@ResListOrderProduct.ListOrderProduct.lblInputError"); }
+                                    else if (data == "5") { alert("@ResListOrderProduct.ListOrderProduct.lblProductNotFound"); }
+                                    else if (data == "0") { alert("@ResListOrderProduct.ListOrderProduct.lblGenericError"); }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+            });
+
+                               $(".imgPrintBarcode").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("PrintMultipleSheetsBarcodes", "../SalesOrders/SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    if (data.length > 0) {
+                                        window.open("../.." + data, '_newtab');
+                                    }
+                                    else {
+                                        alert("@ResListOrderProduct.ListOrderProduct.lblGenericError");
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+                    });
+
+                    $(".imgPrintSingleBarcode").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("PrintSingleSheetsBarcodes", "../SalesOrders/SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    if (data.length > 0) {
+                                        window.open("../.." + data, '_newtab');
+                                    }
+                                    else {
+                                        alert("@ResListOrderProduct.ListOrderProduct.lblGenericError");
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+                    });
+
+                    $(".imgPrintA3Barcode").click(function () {
+                        var currProd = $(this).val().split('.');
+                        if ($.isNumeric(currProd[0]) && $.isNumeric(currProd[1])) {
+                            $.ajax({
+                                url: "@Url.Action("PrintSingleA3SheetsBarcodes", "../SalesOrders/SalesOrder")",
+                                type: 'POST',
+                                data: {
+                                    ProductID: currProd[0],
+                                    ProductYear: currProd[1]
+                                },
+                                success: function (data) {
+                                    if (data.length > 0) {
+                                        window.open("../.." + data, '_newtab');
+                                    }
+                                    else {
+                                        alert("@ResListOrderProduct.ListOrderProduct.lblGenericError");
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error");
+                                }
+
+                            });
+                        }
+                        else {
+                            alert("@ResListOrderProduct.ListOrderProduct.lblInputError");
+                        }
+                    });
+
+            $("#iframeWI").on("click", "#imgClosePdf", function () {
+                $("#iframeWI").fadeOut();
+            });
+
+            $('.imgReprogram').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() != 'I' && $("#status_" + prod[1]).val() != 'P') {
+                    $(this).hide();
+                }
+            });
+
+
+            $('.imgPlan').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() != 'N') {
+                    $(this).hide();
+                    $("#ddlReparto_" + prod[1]).prop("disabled", true);
+                }
+            });
+
+            $('.imgUndo').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() != 'P') {
+                    $(this).hide();
+                }
+            });
+
+            $('.imgPrintBarcode').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() == 'N') {
+                    $(this).hide();
+                }
+            });
+
+            $('.imgPrintSingleBarcode').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() == 'N') {
+                    $(this).hide();
+                }
+            });
+
+            $('.imgPrintA3Barcode').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() == 'N') {
+                    $(this).hide();
+                }
+            });
+
+        });
+    </script>
+    <table class="table table-hover table-striped table-condensed" style="width:100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHCustomerName</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHSalesOrderID</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHProductionOrderID</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHProductExternalID</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHProductName</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHQuantityOrdered</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHSerialNumber</th>
+                <th>@ResProductionSchedule.ProductionSchedulePanel.lblTHDepartment</th>
+                <th colspan="2">@ResProductionSchedule.ProductionSchedulePanel.lblTHEndProductionDate</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+  
+                TimeSpan WorkingTime = new TimeSpan(0, 0, 0);
+                TimeSpan LeadTime = new TimeSpan(0, 0, 0);
+                TimeSpan Delay = new TimeSpan(0, 0, 0);
+
+                foreach (var m in Model)
+                {
+            <tr id="row_@m.ProductionOrderID@m.ProductionOrderYear">
+                <td>
+                    <input type="hidden" id="status_@m.ProductionOrderID-@m.ProductionOrderYear" value="@m.ProductionOrderStatus" />
+                    <a href="~/Production/ProductDetails?ProductID=@m.ProductionOrderID&ProductYear=@m.ProductionOrderYear" target="_blank">
+                        <img src="~/img/iconView.png" style="max-width:20px; min-width:15px;" />
+                    </a>
+                </td>
+                <td>@m.CustomerName</td>
+                @if (m.SalesOrderExternalID.Length > 0)
+                {
+                    <td>@m.SalesOrderExternalID</td>
+                }
+                else
+                {
+                    <td>@m.SalesOrderID/@m.SalesOrderYear</td>
+                }
+                <td>@m.ProductionOrderID/@m.ProductionOrderYear</td>
+                <td>@m.ProductExternalID</td>
+                <td>@m.ProductTypeName - @m.ProductName</td>
+                <td>@m.ProductionOrderQuantityOrdered @m.MeasurementUnit
+                <td>@m.ProductionOrderSerialNumber</td>
+
+                <td>
+                    <select id="ddlReparto_@m.ProductionOrderID-@m.ProductionOrderYear">
+                        @{
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ProductionOrderID, m.ProductionOrderYear);
+                            art.Proc.loadReparto();
+                            foreach (var rp in art.Proc.RepartiProduttivi)
+                            {
+                                if (art.Reparto == rp.id)
+                                {
+                                    <option value="@rp.id" selected>@rp.name</option>
+                                }
+                                else
+                                {
+                                    <option value="@rp.id">@rp.name</option>
+                                }
+
+                            }
+                        }
+                    </select>
+                </td>
+                <td>
+                    <input type="hidden" id="txtDeliveryDate_@m.ProductionOrderID-@m.ProductionOrderYear" value="@m.ProductionOrderDeliveryDate.ToString("dd/MM/yyyy")" />
+                    <input type="text" id="txtEndProductionDate_@m.ProductionOrderID-@m.ProductionOrderYear" value="@m.ProductionOrderEndProductionDate.ToString("dd/MM/yyyy")" style="min-width:90px; max-width:90px;" />
+                </td>
+                <td>
+                    <input type="image" src="~/img/iconTimeline.jpg" class="imgPlan" name="imgPlan" id="imgPlan_@m.ProductionOrderID-@m.ProductionOrderYear" style="min-width:15px; max-width:20px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTPlan" />
+                </td>
+                <td>
+                    <input type="image" src="~/img/iconTimeline.jpg" class="imgReprogram" name="imgReprogram" id="imgReprogram_@m.ProductionOrderID-@m.ProductionOrderYear" style="min-width:15px; max-width:20px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTReprogram" />
+                </td>
+                <td>
+                    <input type="image" src="~/img/iconUndo.png" class="imgUndo" name="imgUndo" id="imgUndo_@m.ProductionOrderID-@m.ProductionOrderYear" style="min-width:15px; max-width:20px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTUndo" />
+                </td>
+                <td>
+                    <input type="image" ID="imgPrintBarcodeA_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgPrintBarcode" src="~/img/iconBarcode.png" style="min-width:10px; max-width:15px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintBarcode" /><br />
+                    <input type="image" ID="imgPrintBarcodeB_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgPrintBarcode" src="~/img/iconBarcode.png" style="min-width:10px; max-width:15px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintBarcode" />
+                </td>
+                <td>
+                    <input type="image" ID="imgPrintSingleBarcode_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgPrintSingleBarcode" src="~/img/iconBarcode.png" style="min-width:20px; max-width:30px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcode" />
+                </td>
+                <td>
+                    <input type="image" ID="imgPrintA3Barcode_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgPrintA3Barcode" src="~/img/iconA3.gif" style="min-width:20px; max-width:30px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblTTPrintSingleBarcodeA3" />
+                </td>
+                <td>
+                    <input type="image" id="imgManageTasks_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgManageTasks" src="~/img/iconTask.jpg" style="min-width:15px; max-width:20px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblManageTasks" />
+                </td>
+                <td>
+                    <input type="image" id="imgManageOperators_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgManageOperators" src="~/img/iconUser.png" style="min-width:15px; max-width:20px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblManageOperators" />
+                </td>
+                <td>
+                    <input type="image" id="imgCompleteProduct_@m.ProductionOrderID-@m.ProductionOrderYear" class="imgCompleteProduct" src="~/img/iconComplete2.png" style="min-width:15px; max-width:20px;" value="@m.ProductionOrderID.@m.ProductionOrderYear" title="@ResListOrderProduct.ListOrderProduct.lblCompleteProductBruteForce" />
+                </td>
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div id="iframeWI"></div>
+    <div id="lblModalInfo" />
+}
