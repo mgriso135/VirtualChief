@@ -199,8 +199,8 @@
                                                 $("#imgPrintBarcodeB_" + currProd[0] + "-" + currProd[1]).show();
                                                 $("#imgPrintSingleBarcode_" + currProd[0] + "-" + currProd[1]).show();
                                                 $("#imgPrintA3Barcode_" + currProd[0] + "-" + currProd[1]).show();
-                                                $("#imgSave_" + currProd[0] + "-" + currProd[1]).hide();
-                                                $("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
+                                                //$("#imgSave_" + currProd[0] + "-" + currProd[1]).hide();
+                                                //$("#txtDeliveryDate_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#txtQuantity_" + currProd[0] + "-" + currProd[1]).prop("disabled", true);
                                                 $("#imgUndo_" + currProd[0] + "-" + currProd[1]).show();
                                                 $("#imgReprogram_" + currProd[0] + "-" + currProd[1]).show();
@@ -602,7 +602,7 @@
                 $('.imgUndo').each(function () {
                     var id = this.id;
                     var prod = id.split('_');
-                    if ($("#status_" + prod[1]).val() != 'P') {
+                    if ($("#status_"+ prod[1]).val() != 'P') {
                         $(this).hide();
                     }
                 });
@@ -634,11 +634,14 @@
                     $('.imgSave').each(function () {
                         var id = this.id;
                         var prod = id.split('_');
-                        if ($("#status_" + prod[1]).val() != 'N') {
+                        if ($("#status_" + prod[1]).val() == 'F') {
                             $(this).hide();
                             $("#txtDeliveryDate_" + prod[1]).prop("disabled", true);
-                            $("#txtQuantity_" + prod[1]).prop("disabled", true);
-                    }
+                            
+            }
+            if ($("#status_" + prod[1]).val() != 'N') {
+                $("#txtQuantity_" + prod[1]).prop("disabled", true);
+            }
                     });
 
                     $('.imgManageOperators').each(function () {

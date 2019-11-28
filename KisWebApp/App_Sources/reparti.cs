@@ -922,7 +922,7 @@ namespace KIS.App_Code
             return rt;
         }
 
-        private ProductionPlan _PianoProduzione;
+   /*     private ProductionPlan _PianoProduzione;
         public ProductionPlan PianoProduzione
         {
             get { return this._PianoProduzione; }
@@ -931,7 +931,7 @@ namespace KIS.App_Code
         public void loadProductionPlan()
         {
             this._PianoProduzione = new ProductionPlan(this);
-        }
+        }*/
 
         public void loadOperatori()
         {

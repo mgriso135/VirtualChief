@@ -932,6 +932,159 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditDestinationURL.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Production\Controllers\ProductDetailController.cs" />
+    <Compile Include="Areas\Production\Controllers\ProductionScheduleController.cs" />
+    <Compile Include="Areas\Production\ProductionAreaRegistration.cs" />
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperatorNotes.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperatorNotes.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperatorNotes.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperatorNotes.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperatorNotes.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperatorNotes.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskParameters.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskParameters.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskParameters.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskParameters.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskParameters.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskParameters.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionSchedulePanel.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionSchedulePanel.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionSchedulePanel.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionSchedulePanel.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionSchedulePanel.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductionSchedulePanel.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Products\Controllers\FinishedProductsController.cs" />
     <Compile Include="Areas\Products\Controllers\ProductParametersCategoriesController.cs" />
     <Compile Include="Areas\Products\Controllers\ProductParametersController.cs" />
@@ -5679,6 +5832,13 @@
     <Content Include="Areas\Users\Views\Users\DisabledUsers.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\RescheduleTasksManually.cshtml" />
     <Content Include="Areas\Workplace\Views\WebGemba\TaskOperatorNotesPanel.cshtml" />
+    <Content Include="Areas\Production\Views\web.config" />
+    <Content Include="Areas\Production\Views\ProductionSchedule\Index.cshtml" />
+    <Content Include="Areas\Production\Views\ProductionSchedule\ProductionSchedulePanel.cshtml" />
+    <Content Include="Areas\Production\Views\ProductDetails\Index.cshtml" />
+    <Content Include="Areas\Production\Views\ProductDetails\ViewTaskParameters.cshtml" />
+    <Content Include="Areas\Production\Views\ProductDetails\ViewTaskOperatorNotes.cshtml" />
+    <Content Include="Areas\Production\Views\ProductDetails\ViewTaskOperationsDetails.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6373,6 +6533,156 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EditDestinationURL.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResPersonalArea</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.it.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.en.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.es.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.es-AR.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.en-US.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.es.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.it.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.en.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.en-US.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.es-AR.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.it.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskParameters.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.es.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskParameters.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.en.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskParameters.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.en-US.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskParameters.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.es-AR.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskParameters.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskParameters.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.en-US.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.es-AR.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.es.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.it.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.en.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.es.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductionSchedulePanel.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.en.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductionSchedulePanel.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.en-US.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductionSchedulePanel.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.es-AR.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductionSchedulePanel.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.it.resx">
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductionSchedulePanel.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\ProductionSchedulePanel.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductionSchedulePanel.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductionSchedule\App_LocalResources\Index.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionSchedule</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Products\Views\FinishedProducts\App_LocalResources\BillingDetails.en-US.resx">
       <CustomToolNamespace>ResFinishedProducts</CustomToolNamespace>
@@ -10920,6 +11230,8 @@
     <Folder Include="Areas\Home\Models\" />
     <Folder Include="Areas\Personal\Models\" />
     <Folder Include="Areas\Personal\Views\Shared\" />
+    <Folder Include="Areas\Production\Models\" />
+    <Folder Include="Areas\Production\Views\Shared\" />
     <Folder Include="Areas\Products\Models\" />
     <Folder Include="Areas\Products\Views\Shared\" />
     <Folder Include="Areas\Quality\App_LocalResources\" />

@@ -1,0 +1,44 @@
+﻿@model IEnumerable<KIS.App_Code.IntervalliDiLavoroEffettivi>
+
+
+@if (ViewBag.authR)
+{
+    if (Model != null && Model.Count() > 0)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHID</th>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHParamCompiler</th>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHParamDate</th>
+                            <th>@ResProductDetails.ViewTaskOperatorNotes.lblTHParamDescription</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model)
+                        {
+                            <tr>
+                                <td>@m.Username</td>
+                                <td>@m.DataInizio.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@m.DataFine.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@Math.Round(m.DurataIntervallo.TotalHours, 2)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResProductDetails.ViewTaskOperatorNotes.lblErrNoAuth
+        </div>
+    </div>
+}
+
+

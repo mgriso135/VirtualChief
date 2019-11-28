@@ -76,7 +76,7 @@
                 <tr id="row_@m.ProductionOrderID@m.ProductionOrderYear">
 
                     <td>
-                        <a href="~/Produzione/statoAvanzamentoArticolo.aspx?id=@m.ProductionOrderID&anno=@m.ProductionOrderYear" target="_blank">
+                        <a href="~/Production/ProductDetails?ProductID=@m.ProductionOrderID&ProductYear=@m.ProductionOrderYear" target="_blank">
                             <img src="~/img/iconView.png" style="max-width:30px; min-width:20px; min-height:20px;" />
                         </a>
                     </td>
@@ -106,25 +106,6 @@
                     <td>@m.ProductionOrderEndProductionDateReal.ToString("dd/MM/yyyy HH:mm:ss")</td>
                     <td><input type="image" class="imgExhumate" value="@m.ProductionOrderID;@m.ProductionOrderYear" src="~/img/iconExhume.png" style="max-width:30px; min-width:20px; min-height:20px;" alt="@ResProductionHistory.Index.lblExhumate" /></td>
 
-                    <!--
-                <td>@m.ProductDescription</td>
-                <td>@m.ProductionOrderDeliveryDate</td>
-                <td>@m.ProductionOrderEndProductionDate</td>
-
-                <td>@m.ProductionOrderKanbanCardID</td>
-                <td>@m.ProductionOrderPlanner</td>
-                <td>@m.ProductionOrderProductTypeID</td>
-                <td>@m.ProductionOrderProductID</td>
-                <td>@m.ProductionOrderProductTypeReview</td>
-
-
-
-                <td>@m.ProductTypeID</td>
-
-                <td>@m.ProductTypeDescription</td>
-                <td>@m.ProductTypeReview</td>
-                <td>@m.ProductTypeReviewDate.ToString("dd/MM/yyyy")</td>
-                <td>@m.ProductTypeEnabled</td>-->
                     @{
                         QuantityOrdered += m.ProductionOrderQuantityOrdered;
                         QuantityProduced += m.ProductionOrderQuantityProduced;

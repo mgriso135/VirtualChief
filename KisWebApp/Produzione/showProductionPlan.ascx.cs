@@ -16,8 +16,8 @@ namespace KIS.Processi
             if (repID != -1)
             {
                 Reparto rep = new Reparto(repID);
-                rep.loadProductionPlan();
-                rptProdList.DataSource = rep.PianoProduzione.ElencoCommesse;
+                //rep.loadProductionPlan();
+                //rptProdList.DataSource = rep.PianoProduzione.ElencoCommesse;
                 rptProdList.DataBind();
             }
         }
