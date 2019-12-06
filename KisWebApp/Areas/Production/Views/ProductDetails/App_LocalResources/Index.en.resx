@@ -142,7 +142,7 @@
     <value>Lead Time</value>
   </data>
   <data name="lblP" xml:space="preserve">
-    <value>Not planned</value>
+    <value>Pause</value>
   </data>
   <data name="lblNavProductionSchedule" xml:space="preserve">
     <value>Production schedule</value>

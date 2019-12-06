@@ -53,7 +53,19 @@
             });
 
             $("#frmCustomersList :checkbox").change(function () {
-                var badgeOrig = $(this).attr('id').split('_');
+                var origID = $(this).attr("id");
+                if (origID == "customerSelectAll") {
+                    if ($(this).is(":checked")) {
+                        checkAllCustomers();
+                        loadPanel();
+                    }
+                    else {
+                        uncheckAllCustomers();
+                        loadPanel();
+                    }
+                }
+                else {
+                var badgeOrig = origID.split('_');
                 var id = badgeOrig[1];
                 var name = $("#customerName_" + id).text();
                 if ($(this).is(":checked")) {
@@ -65,16 +77,48 @@
                     if (index >= 0) CustomersArr.splice(index, 1);
 
                     loadPanel();
+                    }
                 }
             });
 
+            function uncheckAllCustomers() {
+                $("#frmCustomersList :checkbox").each(function () {
+                    var badgeOrig = $(this).attr('id').split('_');
+                    var cst = badgeOrig[1];
+                    $(this).prop("checked", false);
+                });
+                CustomersArr = [];
+            }
+
+            function checkAllCustomers() {
+                $("#frmCustomersList :checkbox").each(function () {
+                    var badgeOrig = $(this).attr('id').split('_');
+                    var cst = badgeOrig[1];
+                    $(this).prop("checked", true);
+                    CustomersArr.push(cst);
+                });
+            }
+
             $("#frmProductsList :checkbox").each(function () {
-                var badgeOrig = $(this).attr('id').split('_');
-                var badgeOrig2 = badgeOrig[1].split(';');
-                var cst = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
-                TypeOfProductsArr.push(cst);
+                if ($(this).attr('id') != "productSelectAll") {
+                    var badgeOrig = $(this).attr('id').split('_');
+                    var badgeOrig2 = badgeOrig[1].split(';');
+                    var cst = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                    TypeOfProductsArr.push(cst);
+                }
             });
             $("#frmProductsList :checkbox").change(function () {
+                //productSelectAll
+                if ($(this).attr('id') == "productSelectAll") {
+                    if ($(this).is(":checked")) {
+                        checkAllProducts();
+                        loadPanel();
+                    }
+                    else {
+                        uncheckAllProducts();
+                        loadPanel();
+                    }
+                } else {
                 var badgeOrig = $(this).attr('id').split('_');
                 var badgeOrig2 = badgeOrig[1].split(';');
                 var id = badgeOrig[1];
@@ -94,8 +138,29 @@
                     }
                     if (index >= 0) TypeOfProductsArr.splice(index, 1);
                 }
-                loadPanel();
+                    loadPanel();
+                }
             });
+
+            function uncheckAllProducts() {
+                $("#frmProductsList :checkbox").each(function () {
+                    $(this).prop("checked", false);
+                });
+                TypeOfProductsArr = [];
+            }
+
+            function checkAllProducts() {
+                $("#frmProductsList :checkbox").each(function () {
+                    if ($(this).attr('id') != "productSelectAll") {
+                        var badgeOrig = $(this).attr('id').split('_');
+                        var badgeOrig2 = badgeOrig[1].split(';');
+                        var id = badgeOrig[1];
+                        var ids = [badgeOrig2[0], badgeOrig2[1], badgeOrig2[2]];
+                        TypeOfProductsArr.push(ids);
+                        $(this).prop("checked", true);
+                    }
+                    });
+            }
 
             $("#frmStatusList :checkbox").each(function () {
                 var badgeOrig = $(this).attr('id').split('_');
@@ -167,18 +232,18 @@
                         },
                     success: function (result) {
                         $("#ProductionSchedulePanel").html(result);
-                        $("#iconLoadPanel").fadeIn();
+                        $("#iconLoadPanel").fadeOut();
                         $("#ProductionSchedulePanel").fadeTo(0, 1);
                     },
                     error: function (result) {
                         alert("Error");
-                        $("#iconLoadPanel").fadeIn();
+                        $("#iconLoadPanel").fadeOut();
                         $("#HistoricPanel").fadeTo(0, 1);
 
                     },
                     warning: function (result) {
                         alert("Warning");
-                        $("#iconLoadPanel").fadeIn();
+                        $("#iconLoadPanel").fadeOut();
                         $("#HistoricPanel").fadeTo(0, 1);
                     }
                 });
@@ -214,8 +279,8 @@
                 </div>
             </div>
             <div class="span10">
-                <div id="ProductionSchedulePanel" />
                 <img src="~/img/iconLoading3.gif" style="min-width:20px; max-width:30px;" id="iconLoadPanel" />
+                <div id="ProductionSchedulePanel" />
             </div>
         </div>
     </div>
@@ -268,6 +333,7 @@
                     <h5 class="modal-title" id="btnModCustomers">Test</h5>
                 </div>
                 <div class="modal-body" id="frmCustomersList">
+                    <input type="checkbox" id="customerSelectAll" checked="checked" />@ResProductionHistory.Index.lblSelectAll<br />
                     @{
                         List<KIS.App_Code.Cliente> cstList = ViewBag.Customers;
                         foreach (var cst in cstList)
@@ -294,6 +360,7 @@
                     <h5 class="modal-title" id="btnModProducts">Test</h5>
                 </div>
                 <div class="modal-body" id="frmProductsList">
+                    <input type="checkbox" id="productSelectAll" checked="checked" />@ResProductionHistory.Index.lblSelectAll<br />
                     @{
                         List<KIS.App_Code.ProcessoVariante> TypeOfProductList = ViewBag.TypeOfProducts;
                         foreach (var prod in TypeOfProductList)

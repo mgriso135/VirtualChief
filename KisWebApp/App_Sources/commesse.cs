@@ -1410,6 +1410,15 @@ namespace KIS.App_Code
             }
         }
 
+        private TimeSpan _WorkingTimePlanned;
+            public TimeSpan WorkingTimePlanned
+        {
+            get
+            {
+                return this._WorkingTimePlanned;
+            }
+        }
+
         public Articolo(int idArticolo, int AnnoArticolo)
         {
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
@@ -1422,7 +1431,7 @@ namespace KIS.App_Code
             cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
             + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
             + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
-            + " commesse.ExternalID, endproductiondatereal "
+            + " commesse.ExternalID, endproductiondatereal, WorkingTimePlanned "
             + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) WHERE id = " + idArticolo.ToString()
             + " AND productionplan.anno = " + AnnoArticolo.ToString()
             + " ORDER BY productionplan.anno DESC";
@@ -1518,6 +1527,14 @@ namespace KIS.App_Code
                 {
                     this._EndProductionDateReal=rdr.GetDateTime(21);
                 }
+                if(!rdr.IsDBNull(22))
+                {
+                    this._WorkingTimePlanned = rdr.GetTimeSpan(22);
+                }
+                else
+                {
+                    this._WorkingTimePlanned = new TimeSpan(0, 0, 0);
+                }
             }
             else
             {
@@ -1555,7 +1572,7 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
                 + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
                 + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.id, productionplan.anno, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
-                + "commesse.ExternalID "
+                + "commesse.ExternalID, productionplan.WorkingTimePlanned "
                 + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) "
                 + " WHERE productionplan.kanbanCard LIKE '" + card.ekanban_string.ToString() + "' AND "
                 + " productionplan.kanbanCard IS NOT NULL";
@@ -1644,6 +1661,14 @@ namespace KIS.App_Code
                     else
                     {
                         this._Delay = new TimeSpan(0, 0, 0);
+                    }
+                    if (!rdr.IsDBNull(21))
+                    {
+                        this._WorkingTimePlanned = rdr.GetTimeSpan(21);
+                    }
+                    else
+                    {
+                        this._WorkingTimePlanned = new TimeSpan(0, 0, 0);
                     }
                     this._MeasurementUnitID = rdr.GetInt32(21);
                     this._CommessaExternalID = rdr.GetString(22);

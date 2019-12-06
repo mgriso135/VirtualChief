@@ -106,6 +106,15 @@ namespace ResProductionSchedule {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seleziona tutti.
+        /// </summary>
+        public static string lblSelectAll {
+            get {
+                return ResourceManager.GetString("lblSelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In esecuzione.
         /// </summary>
         public static string lblStatusI {

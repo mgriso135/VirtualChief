@@ -678,6 +678,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>@ResListOrderProduct.ListOrderProduct.lblProductID</th>
                             <th>@ResListOrderProduct.ListOrderProduct.lblProductName</th>
                             <th>@ResListOrderProduct.ListOrderProduct.lblQuantity</th>
@@ -686,12 +687,24 @@
                             <th>@ResListOrderProduct.ListOrderProduct.lblEndProductionDate</th>
                             <th></th>
                             <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>@ResListOrderProduct.ListOrderProduct.lblTHRealLabour</th>
+                            <th>@ResListOrderProduct.ListOrderProduct.lblTHProductivity</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var m in Model)
                         {
                         <tr id="trproduct_@m.ID-@m.Year">
+                            <td><a href="~/Production/ProductDetails?ProductID=@m.ID&ProductYear=@m.Year"><img src="~/img/iconView.png" style="min-width:20px; max-width:30px;" /></a></td>
                             <td>
                                 @m.ID/@m.Year
                                 <input type="hidden" class="status" id="status_@m.ID-@m.Year" value="@m.Status" />
@@ -718,7 +731,7 @@
                                     }
                                 </select>
                             </td>
-                            <td><input type="text" id="txtEndProductionDate_@m.ID-@m.Year" value="@m.DataPrevistaFineProduzione.ToString("dd/MM/yyyy")" /></td>
+                            <td><input type="text" id="txtEndProductionDate_@m.ID-@m.Year" value="@m.DataPrevistaFineProduzione.ToString("dd/MM/yyyy")" style="width:110px;" /></td>
                             <td>
                                 <input type="image" src="~/img/iconSave.jpg" class="imgSave" name="imgSave" id="imgSave_@m.ID-@m.Year" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblTTSave" />
                             </td>
@@ -753,6 +766,26 @@
                             <td>
                                 <input type="image" id="imgCompleteProduct_@m.ID-@m.Year" class="imgCompleteProduct" src="~/img/iconComplete2.png" style="min-width:20px; max-width:30px;" value="@m.ID.@m.Year" title="@ResListOrderProduct.ListOrderProduct.lblCompleteProductBruteForce" />
                             </td>
+                            @if (m.Status == 'F')
+                            {
+                                var productivity = m.Productivity;
+                                var productivityBgColor = "";
+                                if(productivity< 1)
+                                {
+                                    productivityBgColor = "#FF0000";
+                                }
+                                else
+                                {
+                                    productivityBgColor = "#00FF00";
+                                }
+                                <td>@Math.Round(m.WorkingTime.TotalHours, 2)</td>
+                                <td><div style="background-color: @productivityBgColor">@Math.Round(m.Productivity * 100, 2)%</div></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
                         </tr>
                         }
                     </tbody>

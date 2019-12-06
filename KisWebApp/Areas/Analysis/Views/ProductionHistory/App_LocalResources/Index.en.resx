@@ -204,4 +204,16 @@
   <data name="lblTHProductExternalID" xml:space="preserve">
     <value>Product code</value>
   </data>
+  <data name="lblSelectAll" xml:space="preserve">
+    <value>Select All</value>
+  </data>
+  <data name="lblShowProductionOrder" xml:space="preserve">
+    <value>Show production orders</value>
+  </data>
+  <data name="lblShowSalesOrders" xml:space="preserve">
+    <value>Show sales orders</value>
+  </data>
+  <data name="lblShowSalesOrProductionOrders" xml:space="preserve">
+    <value>View options</value>
+  </data>
 </root>

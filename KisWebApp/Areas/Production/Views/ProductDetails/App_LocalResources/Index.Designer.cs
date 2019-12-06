@@ -169,7 +169,7 @@ namespace ResProductDetails {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Non pianificato.
+        ///   Looks up a localized string similar to Pausa.
         /// </summary>
         public static string lblP {
             get {

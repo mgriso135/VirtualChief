@@ -249,4 +249,25 @@
   <data name="lblConfirmCompleteBruteForce" xml:space="preserve">
     <value>Attenzione: il prodotto verra' terminato forzatamente ed i suoi task non saranno piu' disponibili nel WebGemba. Vuoi continuare?</value>
   </data>
+  <data name="lblF" xml:space="preserve">
+    <value>Terminato</value>
+  </data>
+  <data name="lblI" xml:space="preserve">
+    <value>In esecuzione</value>
+  </data>
+  <data name="lblN" xml:space="preserve">
+    <value>Non pianificato</value>
+  </data>
+  <data name="lblP" xml:space="preserve">
+    <value>Non iniziato</value>
+  </data>
+  <data name="lblTHProductivity" xml:space="preserve">
+    <value>Produttività</value>
+  </data>
+  <data name="lblTHRealLabour" xml:space="preserve">
+    <value>Manodopera reale (ore)</value>
+  </data>
+  <data name="lblTHStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
 </root>

@@ -291,7 +291,14 @@
                             }
                             <td>@m.PostazioneName</td>
                             <td>@m.EarlyStart.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                            <td>@m.DataInizioTask.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            @if (m.Status != 'N')
+                            {
+                                <td>@m.DataInizioTask.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
                             <td>@m.LateFinish.ToString("dd/MM/yyyy HH:mm:ss")</td>
                             @if (m.Status == 'F')
                             {
@@ -363,9 +370,9 @@
                                     <td></td>
                                 }
                             }
-                            @if(m.Status != 'N')
-                            { 
-                            <td><input type="image" src="~/img/iconView.png" id="btnViewTaskDetail_@m.TaskProduzioneID" class="btnViewTaskDetail" value="@m.TaskProduzioneID" style="min-width,:20px; max-width: 25px;" title="@ResProductDetails.Index.lblViewTaskDetails" /></td>
+                            @if (m.Status != 'N')
+                            {
+                                <td><input type="image" src="~/img/iconView.png" id="btnViewTaskDetail_@m.TaskProduzioneID" class="btnViewTaskDetail" value="@m.TaskProduzioneID" style="min-width,:20px; max-width: 25px;" title="@ResProductDetails.Index.lblViewTaskDetails" /></td>
                             }
                             else
                             {

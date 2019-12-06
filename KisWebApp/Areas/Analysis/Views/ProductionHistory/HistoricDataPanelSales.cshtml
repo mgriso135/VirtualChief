@@ -1,0 +1,56 @@
+﻿@model IEnumerable<KIS.App_Sources.SalesOrderStruct>
+
+@if (Model != null && Model.Count() > 0)
+{
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+    
+
+        });
+    </script>
+    <table class="table table-hover table-striped table-condensed">
+        <thead>
+            <tr>
+                <th></th>
+                <th>@ResProductionHistory.Index.lblTHCustomerName</th>
+                <th>@ResProductionHistory.Index.lblTHCustomerCountry</th>
+                <th>@ResProductionHistory.Index.lblTHCustomerProvince</th>
+                <th>@ResProductionHistory.Index.lblTHSalesOrderID</th>
+                <th>@ResProductionHistory.HistoricDataPanelSales.lblTHSalesOrderDate</th>
+                <th>@ResProductionHistory.Index.lblTHSalesOrderNotes</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+ 
+
+                foreach (var m in Model)
+                {
+                    <tr id="row_@m.SalesOrderID@m.SalesOrderYear">
+
+                        <td>
+                            <a href="~/SalesOrders/SalesOrder/AddSalesOrder?OrderID=@m.SalesOrderID&OrderYear=@m.SalesOrderYear" target="_blank">
+                                <img src="~/img/iconView.png" style="max-width:30px; min-width:20px; min-height:20px;" />
+                            </a>
+                        </td>
+                        <td>@m.CustomerName</td>
+                        <td>@m.CustomerCountry</td>
+                        <td>@m.CustomerProvince</td>
+                        @if (m.SalesOrderExternalID.Length > 0)
+                        {
+                            <td>@m.SalesOrderExternalID</td>
+                        }
+                        else
+                        {
+                            <td>@m.SalesOrderID/@m.SalesOrderYear</td>
+                        }
+                            <td>@m.SalesOrderDate.ToString("dd/MM/yyyy")</td>
+                        <td>@m.SalesOrderNotes</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}

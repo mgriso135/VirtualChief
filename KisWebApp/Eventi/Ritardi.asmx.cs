@@ -34,7 +34,8 @@ namespace KIS.Eventi
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status <> 'F'  AND earlystart <= '"+DateTime.UtcNow.AddDays(1).ToString("yyyy-MM-dd")+"'"+" ORDER BY lateStart";
+            FusoOrario fuso = new FusoOrario();
+            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status <> 'F'  AND earlystart <= '"+TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") + "'" + " ORDER BY lateStart";
             MySqlDataReader rdr = cmd.ExecuteReader();
             List<int> tskRitardo = new List<int>();
             while (rdr.Read())
@@ -198,8 +199,8 @@ namespace KIS.Eventi
                     mMessage.Body = "<html><body><div>" + ResEventsDelay.Ritardi.lblDelaySentence +":<br/>"
                         + ResEventsDelay.Ritardi.lblDepartment + ": " + rp.name + "<br />"
                         + ResEventsDelay.Ritardi.lblWorkstations +": " + pst.name + "<br />"
-                        + ResEventsDelay.Ritardi.lblOrder + ": " + cm.ID.ToString() + "/" + cm.Year.ToString() + " "+ ResEventsDelay.Ritardi.lblForCustomer +" " + cm.Cliente + "<br />"
-                        + ResEventsDelay.Ritardi.lblProduct + ": " + art.ID.ToString() + "/" + art.Year.ToString() + " " + art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante + "<br />"
+                        + ResEventsDelay.Ritardi.lblOrder + ": " + cm.ID.ToString() + "/" + cm.Year.ToString() + " " + "("+cm.ExternalID+") " + ResEventsDelay.Ritardi.lblForCustomer +" " + cm.RagioneSocialeCliente + "<br />"
+                        + ResEventsDelay.Ritardi.lblProduct + ": " + art.ID.ToString() + "/" + art.Year.ToString() + " "+art.Proc.ExternalID+ " " + art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante + "<br />"
                         + ResEventsDelay.Ritardi.lblTask + ": " + tskList[i].Name + " (" + tskList[i].TaskProduzioneID.ToString()+")"
                         + "</div>"
                         + "<div>" + ResEventsDelay.Ritardi.lblGoToWorkstation + " <a href=\"" + baseURL
@@ -207,7 +208,7 @@ namespace KIS.Eventi
                              ResEventsDelay.Ritardi.lblClickHere
                              + "</a></div>"
                              + "<div>"+ResEventsDelay.Ritardi.lblGoToAndon+" <a href=\"" + baseURL
-                        + "/Produzione/AndonReparto.aspx?id=" + rp.id.ToString() + "\">" +
+                        + "/Andon/DepartmentAndon/Index?DepartmentID=" + rp.id.ToString() + "\">" +
                         ResEventsDelay.Ritardi.lblClickHere
                         +"</a></div>"
                         +"</body></html>";

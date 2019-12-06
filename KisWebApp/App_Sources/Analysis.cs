@@ -392,7 +392,8 @@ namespace KIS.App_Sources
 + " productionplan.WorkingTime AS RealWorkingTime, "
 + " productionplan.Delay AS RealDelay, "
 + " productionplan.EndProductionDateReal AS RealEndProductionDate, "
-+ " commesse.ExternalID AS SalesOrderExternalID "
++ " commesse.ExternalID AS SalesOrderExternalID, "
++ " productionplan.WorkingTimePlanned AS PlannedWorkingTime "
 + " FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) INNER JOIN"
  + " productionplan ON(commesse.anno =productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)"
  + " INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)"
@@ -611,6 +612,10 @@ namespace KIS.App_Sources
                 {
                     curr.SalesOrderExternalID = rdr.GetString(50);
                 }
+                if(!rdr.IsDBNull(51))
+                {
+                    curr.PlannedWorkingTime = rdr.GetTimeSpan(51);
+                }
                 this.AnalysisData.Add(curr);
             }
             conn.Close();
@@ -709,6 +714,7 @@ namespace KIS.App_Sources
         public int ProductionOrderQuantityOrdered;
         public int ProductionOrderQuantityProduced;
         public String ProductionOrderKanbanCardID;
+        public TimeSpan PlannedWorkingTime;
         public int ProductTypeID;
         public int ProductTypeReview;
         public DateTime ProductTypeReviewDate;
@@ -749,6 +755,27 @@ namespace KIS.App_Sources
         public String ProductTypeName;
     }
 
+    public struct SalesOrderStruct
+    {
+        public String CustomerID;
+        public String CustomerName;
+        public String CustomerVATNumber;
+        public String CustomerCodiceFiscale;
+        public String CustomerAddress;
+        public String CustomerCity;
+        public String CustomerProvince;
+        public String CustomerZipCode;
+        public String CustomerCountry;
+        public String CustomerPhoneNumber;
+        public String CustomerEMail;
+        public Boolean CustomerKanbanManaged;
+        public int SalesOrderID;
+        public int SalesOrderYear;
+        public String SalesOrderCustomer;
+        public DateTime SalesOrderDate;
+        public String SalesOrderNotes;
+        public String SalesOrderExternalID;
+    }
 
 
     // Tasks Analysis
@@ -1193,5 +1220,18 @@ namespace KIS.App_Sources
         public int TaskTypeID;
         public int WorkstationID;
         public int WotkstationName;
+    }
+
+    // KPIs structs
+    public struct DepartmentKPIsStruct
+        {
+        public int DepartmentID;
+        public String DepartmentName;
+        public Double Productivity;
+        public Double LeadTime;
+        public Double Delay;
+        public Double Quantities;
+        public int Week;
+        public int Year;
     }
 }

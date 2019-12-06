@@ -4898,7 +4898,8 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
                 try
-                {                    
+                {
+                    TimeSpan ProductPlannedLabor = new TimeSpan(0, 0, 0);
                     Articolo artcl = new Articolo(this.ArticoloID, this.ArticoloAnno);
                     
                     // Inserisco i task nel piano di produzione
@@ -4938,6 +4939,7 @@ namespace KIS.App_Code
                         cmd.CommandText = strSQL;
                         cmd.ExecuteNonQuery();
 
+                        ProductPlannedLabor = ProductPlannedLabor.Add(tcTotale);
 
                         // Array di corrispondenza id+revisione processo e taskproduzione
                         int[] idOLDNEW = new int[3];
@@ -4951,7 +4953,12 @@ namespace KIS.App_Code
 
                     
 
-                    cmd.CommandText = "UPDATE productionplan SET status = 'P' WHERE id = " + artcl.ID.ToString() + " AND anno = " + artcl.Year.ToString();
+                    cmd.CommandText = "UPDATE productionplan SET status = 'P', WorkingTimePlanned = '"                        
+                         + Math.Floor(ProductPlannedLabor.TotalHours).ToString() //Math.Floor(this.Processi[i].Tempo.Tempo.TotalHours).ToString()
+                            + ":" + ProductPlannedLabor.Minutes.ToString()//this.Processi[i].Tempo.Tempo.Minutes.ToString()
+                            + ":" + ProductPlannedLabor.Seconds.ToString()//this.Processi[i].Tempo.Tempo.Seconds.ToString()
+                       + "' WHERE id = " + artcl.ID.ToString() + " AND anno = " + artcl.Year.ToString();
+
                     cmd.ExecuteNonQuery();
 
                     log += cmd.CommandText;

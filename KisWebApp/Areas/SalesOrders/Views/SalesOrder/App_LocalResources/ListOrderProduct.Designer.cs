@@ -223,11 +223,29 @@ namespace ResListOrderProduct {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Terminato.
+        /// </summary>
+        public static string lblF {
+            get {
+                return ResourceManager.GetString("lblF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Errore generico..
         /// </summary>
         public static string lblGenericError {
             get {
                 return ResourceManager.GetString("lblGenericError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In esecuzione.
+        /// </summary>
+        public static string lblI {
+            get {
+                return ResourceManager.GetString("lblI", resourceCulture);
             }
         }
         
@@ -259,11 +277,29 @@ namespace ResListOrderProduct {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non pianificato.
+        /// </summary>
+        public static string lblN {
+            get {
+                return ResourceManager.GetString("lblN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ordine.
         /// </summary>
         public static string lblOrdine {
             get {
                 return ResourceManager.GetString("lblOrdine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Non iniziato.
+        /// </summary>
+        public static string lblP {
+            get {
+                return ResourceManager.GetString("lblP", resourceCulture);
             }
         }
         
@@ -372,6 +408,33 @@ namespace ResListOrderProduct {
         public static string lblQuantity {
             get {
                 return ResourceManager.GetString("lblQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Produttività.
+        /// </summary>
+        public static string lblTHProductivity {
+            get {
+                return ResourceManager.GetString("lblTHProductivity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manodopera reale (ore).
+        /// </summary>
+        public static string lblTHRealLabour {
+            get {
+                return ResourceManager.GetString("lblTHRealLabour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string lblTHStatus {
+            get {
+                return ResourceManager.GetString("lblTHStatus", resourceCulture);
             }
         }
         

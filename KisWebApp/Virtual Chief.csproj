@@ -507,6 +507,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GetGlobalKPIs.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetGlobalKPIs2.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetImprovementActionsKPIs.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -656,6 +661,31 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ProductPanel.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HistoricDataPanelSales.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HistoricDataPanelSales.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HistoricDataPanelSales.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HistoricDataPanelSales.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HistoricDataPanelSales.es.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -964,6 +994,36 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperationsDetails.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperationsDetails.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperationsDetails.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperationsDetails.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperationsDetails.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewTaskOperationsDetails.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -5839,6 +5899,8 @@
     <Content Include="Areas\Production\Views\ProductDetails\ViewTaskParameters.cshtml" />
     <Content Include="Areas\Production\Views\ProductDetails\ViewTaskOperatorNotes.cshtml" />
     <Content Include="Areas\Production\Views\ProductDetails\ViewTaskOperationsDetails.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProductionHistory\HistoricDataPanelSales.cshtml" />
+    <Content Include="Areas\Analysis\Views\GlobalKPIs\GetGlobalKPIs2.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6094,6 +6156,11 @@
     <Content Include="App_LocalResources\Site.Master.es-AR.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.en-US.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.es-AR.resx" />
+    <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.resx">
+      <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetGlobalKPIs2.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetImprovementActionsKPIs.it.resx">
       <CustomToolNamespace>ResGetGlobalKPIs</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -6273,6 +6340,31 @@
       <CustomToolNamespace>ResProductAnalysis</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.en.resx">
+      <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HistoricDataPanelSales.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.es.resx">
+      <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HistoricDataPanelSales.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.en-US.resx">
+      <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HistoricDataPanelSales.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.es-AR.resx">
+      <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HistoricDataPanelSales.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\HistoricDataPanelSales.resx">
+      <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>HistoricDataPanelSales.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\ProductionHistory\App_LocalResources\Index.es.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -6559,6 +6651,36 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.it.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperationsDetails.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.es.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperationsDetails.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.en.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperationsDetails.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.en-US.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperationsDetails.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.es-AR.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperationsDetails.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.resx">
+      <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewTaskOperatorNotes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.es.resx">
       <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -6584,10 +6706,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ViewTaskOperatorNotes.es-AR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperatorNotes.resx">
+    <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskOperationsDetails.resx">
       <CustomToolNamespace>ResProductDetails</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ViewTaskOperatorNotes.Designer.cs</LastGenOutput>
+      <LastGenOutput>ViewTaskOperationsDetails.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\ViewTaskParameters.it.resx">
       <CustomToolNamespace>ResProductDetails</CustomToolNamespace>

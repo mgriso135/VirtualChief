@@ -27,7 +27,7 @@
 
         $.ajax({
         
-                        url: "../Analysis/GlobalKPIs/GetGlobalKPIs",
+                        url: "../Analysis/GlobalKPIs/GetGlobalKPIs2",
                         type: 'GET',
                         dataType: "html",
             data: {
