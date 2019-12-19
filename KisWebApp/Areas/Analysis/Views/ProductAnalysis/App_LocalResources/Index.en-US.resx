@@ -207,4 +207,7 @@
   <data name="lblProductGroupingSummarize" xml:space="preserve">
     <value>Summarize all type of products</value>
   </data>
+  <data name="lblProductivity" xml:space="preserve">
+    <value>Productivity</value>
+  </data>
 </root>

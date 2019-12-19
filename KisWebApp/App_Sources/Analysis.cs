@@ -753,6 +753,7 @@ namespace KIS.App_Sources
         public int ProductTypeID;
         public String ProductName;
         public String ProductTypeName;
+        public Double Productivity;
     }
 
     public struct SalesOrderStruct
