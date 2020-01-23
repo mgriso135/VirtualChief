@@ -106,7 +106,7 @@ namespace ResProductionHistory {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data di termine produzione.
+        ///   Looks up a localized string similar to Data fine produzione.
         /// </summary>
         public static string lblEndProductionDate {
             get {
@@ -169,7 +169,7 @@ namespace ResProductionHistory {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Formato visualizzazione.
+        ///   Looks up a localized string similar to Visualizzazione.
         /// </summary>
         public static string lblShowSalesOrProductionOrders {
             get {
@@ -340,7 +340,7 @@ namespace ResProductionHistory {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tipi di prodotto.
+        ///   Looks up a localized string similar to Prodotti.
         /// </summary>
         public static string lblTypesOfProducts {
             get {

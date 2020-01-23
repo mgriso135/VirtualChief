@@ -5325,7 +5325,11 @@ namespace KIS.App_Code
                 this._TaskProduzioneID = rdr.GetInt32(1);
                 this._Data = rdr.GetDateTime(2);
                 this._Evento = rdr.GetChar(3);
+                this._Note = "";
+                if(!rdr.IsDBNull(4))
+                { 
                 this._Note = rdr.GetString(4);
+                }
             }
             else
             {
@@ -5733,6 +5737,7 @@ namespace KIS.App_Code
         public char TaskStatus;
         public int StartEventID;
         public int EndEventID;
+        public TimeSpan PlannedWorkingTime;
     }
 
     /* Usata da checkWorkload */

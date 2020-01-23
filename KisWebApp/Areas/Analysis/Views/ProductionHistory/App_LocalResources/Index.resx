@@ -130,7 +130,7 @@
     <value>Fine periodo</value>
   </data>
   <data name="lblEndProductionDate" xml:space="preserve">
-    <value>Data di termine produzione</value>
+    <value>Data fine produzione</value>
   </data>
   <data name="lblExhumate" xml:space="preserve">
     <value>Riesuma il prodotto</value>
@@ -187,7 +187,7 @@
     <value>Storico Produzione</value>
   </data>
   <data name="lblTypesOfProducts" xml:space="preserve">
-    <value>Tipi di prodotto</value>
+    <value>Prodotti</value>
   </data>
   <data name="lblUserNotAuthorized" xml:space="preserve">
     <value>Utente non autorizzato.</value>
@@ -214,6 +214,6 @@
     <value>Visualizza ordini di vendita</value>
   </data>
   <data name="lblShowSalesOrProductionOrders" xml:space="preserve">
-    <value>Formato visualizzazione</value>
+    <value>Visualizzazione</value>
   </data>
 </root>

@@ -868,7 +868,8 @@ namespace KIS.App_Sources
 + " tasksproduzione.Delay AS TaskDelay, "
 + " tasksproduzione.OrigTask AS TaskOriginalTaskID, "
 + " tasksproduzione.RevOrigTask AS TaskOriginalTaskRev, "
-+ " tasksproduzione.variante AS TaskOriginalTaskVar "
++ " tasksproduzione.variante AS TaskOriginalTaskVar, "
++ " tasksproduzione.tempoCiclo AS TaskPlannedWorkingTime "
 + " FROM anagraficaclienti INNER JOIN commesse ON(anagraficaclienti.codice = commesse.cliente) INNER JOIN"
 + " productionplan ON(commesse.anno = productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)"
 + " INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)"
@@ -1112,6 +1113,7 @@ namespace KIS.App_Sources
                 if (!rdr.IsDBNull(71)) { curr.TaskOriginalID = rdr.GetInt32(71); }
                 if (!rdr.IsDBNull(72)) { curr.TaskOriginalRev = rdr.GetInt32(72); }
                 if (!rdr.IsDBNull(73)) { curr.TaskOriginalVar = rdr.GetInt32(73); }
+                if (!rdr.IsDBNull(74)) { curr.TaskPlannedWorkingTime = rdr.GetTimeSpan(74); }
 
                 this.TaskHistoricData.Add(curr);
             }
@@ -1197,6 +1199,7 @@ namespace KIS.App_Sources
         public int TaskOriginalID;
         public int TaskOriginalRev;
         public int TaskOriginalVar;
+        public TimeSpan TaskPlannedWorkingTime;
     }
 
     public struct TaskProductionAnalysisResultStruct
@@ -1221,6 +1224,7 @@ namespace KIS.App_Sources
         public int TaskTypeID;
         public int WorkstationID;
         public int WotkstationName;
+        public Double Productivity;
     }
 
     // KPIs structs

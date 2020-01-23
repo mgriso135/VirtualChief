@@ -1,0 +1,20 @@
+﻿@if (ViewBag.authR)
+{
+    if (ViewBag.Occupation >= 0)
+    {
+<div>
+    @ResOperatorsAnalysis.GetOperatorOccupation.lblOccupation: <b>@ViewBag.Occupation%</b> <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="@ResOperatorsAnalysis.GetOperatorOccupation.lblOccupationExplanation" style="background: transparent; border:0px;margin:0px;padding:0px;">
+        <i class="material-icons">help</i>
+    </button>
+</div>
+    }
+    else
+    {
+        <div>Occupation: <b>-</b></div>
+    }
+
+}
+else
+{
+    <div>You're not authorized</div>
+}

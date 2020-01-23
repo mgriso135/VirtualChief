@@ -106,6 +106,15 @@ namespace ResGetGlobalKPIs2 {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La produttività viene misurata come il rapporto fra le ore di lavoro pianificate e le ore di lavoro realmente impiegate per realizzare ciascun prodotto..
+        /// </summary>
+        public static string lblProductivityExplanation {
+            get {
+                return ResourceManager.GetString("lblProductivityExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quantità.
         /// </summary>
         public static string lblQuantity {

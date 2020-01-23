@@ -35,7 +35,8 @@ namespace KIS.Analysis
                                 boxMain.Visible = true;
                                 if (!Page.IsPostBack)
                                 {
-                                    for (int i = 0; i < 24; i++)
+                            hdPostback.Value = "False";
+                            for (int i = 0; i < 24; i++)
                                     {
                                         hhStart.Items.Add(new ListItem(i.ToString(), i.ToString()));
                                         hhEnd.Items.Add(new ListItem(i.ToString(), i.ToString()));
@@ -235,6 +236,11 @@ namespace KIS.Analysis
                 var listProdottoTaskOrdinata = listProdotto.OrderByDescending(x => x.Tempo);
                 rptProdotto.DataSource = listProdottoTaskOrdinata;
                 rptProdotto.DataBind();
+
+                hdPostback.Value = "True";
+                hdUser.Value = usr.username;
+                hdStart.Value = dataInizio.ToString("yyyy-MM-dd HH:mm:ss");
+                hdEnd.Value = dataFine.ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
 

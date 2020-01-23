@@ -410,6 +410,7 @@ namespace KIS.Areas.Analysis.Controllers
                                             * 2 = Mean of unitary working hours per - period
                                             * 3 = Mean lead time
                                             * 4 = Sum of delays
+                                            * 5 = Average of Productivity
                                         */
                                         switch (graphType)
                                         {

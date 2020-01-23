@@ -1,15 +1,74 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="OperatoreTempoTasks.ascx.cs" Inherits="KIS.Analysis.OperatoreTempoTasks" %>
 <script type="text/javascript">
+    $(document).ready(function () { 
     $(function () {
         $("[id*=txtStart]").datepicker({ dateFormat: 'dd/mm/yy' })
     });
 
     $(function () {
         $("[id*=txtEnd]").datepicker({ dateFormat: 'dd/mm/yy' })
+        });
+
+        if ($("#<%=hdPostback.ClientID%>").val() == "True") {
+            var start = $("#<%=hdStart.ClientID%>").val();
+            var end = $("#<%=hdEnd.ClientID%>").val();
+            var user = $("#<%=hdUser.ClientID%>").val();
+                $.ajax({
+                        url: "../Analysis/OperatorsAnalysis/GetOperatorProductivity",
+                        type: 'POST',
+                        dataType: "html",
+                data: {
+                            user: user,
+                            start: start,
+                            end: end
+                        },
+                    success: function (result) {
+                        $("#imgLoadProductivity").fadeOut();
+                        $("#lblUserProductivity").html(result);
+                },
+                    error: function (result) {
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                    }
+            });
+
+             $.ajax({
+                        url: "../Analysis/OperatorsAnalysis/GetOperatorOccupation",
+                        type: 'POST',
+                        dataType: "html",
+                data: {
+                            user: user,
+                            start: start,
+                            end: end
+                        },
+                    success: function (result) {
+                        $("#lblUserOccupation").html(result);
+                        $("#imgLoadOccupation").fadeOut();
+                },
+                    error: function (result) {
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                    }
+                });
+
+        }
+        else {
+            $("#imgLoadOccupation").fadeOut();
+            $("#imgLoadProductivity").fadeOut();
+        }
+
     });
     </script> 
 
 <asp:Label runat="server" ID="lbl1" />
+<asp:HiddenField runat="server" ID="hdPostback" />
+<asp:HiddenField runat="server" ID="hdUser" />
+<asp:HiddenField runat="server" ID="hdStart" />
+<asp:HiddenField runat="server" ID="hdEnd" />
 
 <div class="row-fluid" runat="server" id="boxMain">
         <div class="span12">
@@ -54,6 +113,16 @@
 <asp:Label runat="server" ID="lblTempoTotaleAttivo" meta:resourcekey="lblTempoTotaleAttivo" />&nbsp;
 <asp:Label runat="server" ID="lblTotaleTempo" />
 
+            <div class="row-fluid">
+                <div class="span12">
+            <div id="lblUserProductivity" />
+                    <img src="../img/iconLoading3.gif" style="min-width: 15px; max-width:20px;" id="imgLoadProductivity" />
+                    </div></div>
+            <div class="row-fluid">
+                <div class="span12">
+            <div id="lblUserOccupation" />
+                    <img src="../img/iconLoading3.gif" style="min-width: 15px; max-width:20px;" id="imgLoadOccupation" />
+                    </div></div>
             <div class="accordion" id="accordion1" runat="server">
 
                 <!-- Tasks -->

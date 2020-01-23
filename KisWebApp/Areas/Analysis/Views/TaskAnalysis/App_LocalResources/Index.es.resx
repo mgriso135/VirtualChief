@@ -252,4 +252,7 @@
   <data name="lblChooseWorkstations" xml:space="preserve">
     <value>Seleccione las estaciones de trabajo</value>
   </data>
+  <data name="lblProductivity" xml:space="preserve">
+    <value>Productividad</value>
+  </data>
 </root>

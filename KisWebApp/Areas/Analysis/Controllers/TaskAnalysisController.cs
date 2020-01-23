@@ -64,9 +64,10 @@ namespace KIS.Areas.Analysis.Controllers
  * graphType:
  * 0 = Quantity-per-period
  * 1 = Sum of Working hours per-period
- * 2 = Mean of unitary working hours per-period
- * 3 = Mean lead time
+ * 2 = Average of unitary working hours per-period
+ * 3 = Average lead time
  * 4 = Sum of delays
+ * 5 = Average of Productivity
  */
         public ActionResult TaskDataPanel(DateTime startPeriod, DateTime endPeriod, String customers, String departments, String TypeOfProducts, int periodType, int graphType, String tasks, String workstations)
         {
@@ -225,7 +226,8 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.TaskRealWorkingTime,
                                 k.TaskRealDelay,
                                 k.TaskOriginalID,
-                                k.TaskName
+                                k.TaskName,
+                                k.TaskPlannedWorkingTime
                             })
                            .GroupBy(x => new {
                                x.Year,
@@ -248,6 +250,7 @@ namespace KIS.Areas.Analysis.Controllers
                                UnitaryWorkingTime = group.Average(k => (k.TaskRealWorkingTime.TotalHours / k.TaskQuantityProduced)),
                                LeadTime = group.Average(k => k.TaskRealLeadTime.TotalHours),
                                Delay = group.Sum(k => k.TaskRealDelay.TotalHours),
+                               Productivity = group.Sum(k=> k.TaskPlannedWorkingTime.TotalSeconds) / group.Sum(k=>k.TaskRealWorkingTime.TotalSeconds),
                            }).ToList();
 
                             foreach (var k in result)
@@ -266,6 +269,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.TaskTypeID = k.TaskID;
                                 currRes.TaskID = k.TaskID;
                             currRes.TaskName = k.TaskName;
+                            currRes.Productivity = k.Productivity * 100;
 
                                 res.Add(currRes);
                             }
@@ -291,16 +295,18 @@ namespace KIS.Areas.Analysis.Controllers
                                             * 1 = Sum of Working hours per-period
                                             * 2 = Mean of unitary working hours per - period
                                             * 3 = Mean lead time
-                                            * 4 = Sum of delays
+                                            * 4 = Average delays
+                                            * 5 = Average Productivity
                                         */
                                         switch (graphType)
                                         {
                                             case 0: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                             case 1: qtyCurr += currItm.WorkingTime.ToString().Replace(',', '.'); break;
-                                            case 2: qtyCurr += currItm.UnitaryWorkingTime.ToString().Replace(',', '.'); break;
-                                            case 3: qtyCurr += currItm.LeadTime.ToString().Replace(',', '.'); break;
-                                            case 4: qtyCurr += currItm.Delay.ToString().Replace(',', '.'); break;
-                                            default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
+                                            case 2: qtyCurr += (currItm.UnitaryWorkingTime).ToString().Replace(',', '.'); break;
+                                            case 3: qtyCurr += (currItm.LeadTime).ToString().Replace(',', '.'); break;
+                                            case 4: qtyCurr += (currItm.Delay).ToString().Replace(',', '.'); break;
+                                            case 5: qtyCurr += currItm.WorkingTime > 0.0 ? (currItm.Productivity).ToString().Replace(',', '.') : "0.0"; break;
+                                        default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                         }
 
                                     }
@@ -335,7 +341,8 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.TaskRealWorkingTime,
                                 k.TaskRealDelay,
                                 k.TaskOriginalID,
-                                k.TaskName
+                                k.TaskName,
+                                k.TaskPlannedWorkingTime,
                             })
                            .GroupBy(x => new {
                                x.Year,
@@ -353,7 +360,8 @@ namespace KIS.Areas.Analysis.Controllers
                                WorkingTime = group.Sum(k => k.TaskRealWorkingTime.TotalHours),
                                UnitaryWorkingTime = group.Average(k => (k.TaskRealWorkingTime.TotalHours / k.TaskQuantityProduced)),
                                LeadTime = group.Average(k => k.TaskRealLeadTime.TotalHours),
-                               Delay = group.Sum(k => k.TaskRealDelay.TotalHours)
+                               Delay = group.Sum(k => k.TaskRealDelay.TotalHours),
+                               Productivity = group.Sum(k => k.TaskPlannedWorkingTime.TotalSeconds) / group.Sum(k => k.TaskRealWorkingTime.TotalSeconds),
                            }).ToList();
 
                         ViewBag.log += "Group by: " + result.Count;
@@ -371,6 +379,7 @@ namespace KIS.Areas.Analysis.Controllers
                             currRes.TaskID = k.TaskID;
                             currRes.TaskTypeID = k.TaskID;
                             currRes.TaskName = k.TaskName;
+                            currRes.Productivity = k.Productivity * 100;
 
                                 res.Add(currRes);
                             }
@@ -405,7 +414,8 @@ namespace KIS.Areas.Analysis.Controllers
                                             case 2: qtyCurr += currItm.UnitaryWorkingTime.ToString().Replace(',', '.'); break;
                                             case 3: qtyCurr += currItm.LeadTime.ToString().Replace(',', '.'); break;
                                             case 4: qtyCurr += currItm.Delay.ToString().Replace(',', '.'); break;
-                                            default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
+                                            case 5: qtyCurr += currItm.WorkingTime > 0.0 ? currItm.Productivity.ToString().Replace(',', '.') : "0.0"; break;
+                                        default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                         }
                                     }
                                     catch
@@ -442,8 +452,9 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.TaskRealWorkingTime,
                                 k.TaskRealDelay,
                                 k.TaskOriginalID,
-                                k.TaskName
-                            })
+                                k.TaskName,
+                            k.TaskPlannedWorkingTime
+                        })
                             .GroupBy(x => new {
                                 x.Year,
                                 x.Month,
@@ -461,7 +472,8 @@ namespace KIS.Areas.Analysis.Controllers
                                 WorkingTime = group.Sum(k => k.TaskRealWorkingTime.TotalHours),
                                 UnitaryWorkingTime = group.Average(k => (k.TaskRealWorkingTime.TotalHours / k.TaskQuantityProduced)),
                                 LeadTime = group.Average(k => k.TaskRealLeadTime.TotalHours),
-                                Delay = group.Sum(k => k.TaskRealDelay.TotalHours)
+                                Delay = group.Sum(k => k.TaskRealDelay.TotalHours),
+                                Productivity = group.Sum(k=> k.TaskPlannedWorkingTime.TotalSeconds) / group.Sum(k=>k.TaskRealWorkingTime.TotalSeconds),
                             }).ToList();
 
 
@@ -483,6 +495,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.TaskName = k.TaskName;
                                 currRes.TaskTypeID = k.TaskID;
                             currRes.TaskName = k.TaskName;
+                            currRes.Productivity = k.Productivity * 100;
 
                             res.Add(currRes);
                             }
@@ -514,7 +527,8 @@ namespace KIS.Areas.Analysis.Controllers
                                             case 2: qtyCurr += currItm.UnitaryWorkingTime.ToString().Replace(',', '.'); break;
                                             case 3: qtyCurr += currItm.LeadTime.ToString().Replace(',', '.'); break;
                                             case 4: qtyCurr += currItm.Delay.ToString().Replace(',', '.'); break;
-                                            default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
+                                            case 5: qtyCurr += currItm.WorkingTime > 0.0 ? currItm.Productivity.ToString().Replace(',', '.') : "0.0"; break;
+                                        default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                         }
                                     }
                                     catch
