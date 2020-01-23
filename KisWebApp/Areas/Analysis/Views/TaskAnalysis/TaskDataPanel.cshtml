@@ -97,6 +97,7 @@
                 <th>@ResTaskAnalysis.TaskPanel.lblUnitaryWorkingTime</th>
                 <th>@ResTaskAnalysis.TaskPanel.lblMeanLeadTime</th>
                 <th>@ResTaskAnalysis.TaskPanel.lblDelays</th>
+                <th>@ResTaskAnalysis.Index.lblProductivity</th>
 
             </tr>
         </thead>
@@ -107,6 +108,7 @@
                 double UnitaryWorkingTime = 0.0;
                 double LeadTime = 0.0;
                 double Delay = 0.0;
+                double Productivity = 0.0;
 
                 foreach (var m in Model)
                 {
@@ -130,15 +132,17 @@
                         <td>@Math.Round(m.UnitaryWorkingTime, 2)</td>
                         <td>@Math.Round(m.LeadTime, 2)</td>
                         <td>@Math.Round(m.Delay, 2)</td>
+                        <td>@Math.Round(m.Productivity, 2)%</td>
 
                     </tr>
 
-                        Quantity += m.Quantity;
-                        WorkingTime += m.WorkingTime;
-                        UnitaryWorkingTime += m.UnitaryWorkingTime;
-                        LeadTime += m.LeadTime;
-                        Delay += m.Delay;
-                    }
+                    Quantity += m.Quantity;
+                    WorkingTime += m.WorkingTime;
+                    UnitaryWorkingTime += m.UnitaryWorkingTime;
+                    LeadTime += m.LeadTime;
+                    Delay += m.Delay;
+                    Productivity += m.Productivity;
+                }
                 }
             </tbody>
             <tfoot>
@@ -152,7 +156,8 @@
                     <td><b>@Math.Round(WorkingTime, 2)</b></td>
                     <td><b>@Math.Round(UnitaryWorkingTime / Model.Count(), 2)</b></td>
                     <td><b>@Math.Round(LeadTime / Model.Count(), 2)</b></td>
-                    <td><b>@Math.Round(Delay, 2)</b></td>
+                    <td><b>@Math.Round(Delay / Model.Count(), 2)</b></td>
+                    <td><b>@Math.Round(Productivity / Model.Count(), 2)%</b></td>
                 </tr>
             </tfoot>
         </table>

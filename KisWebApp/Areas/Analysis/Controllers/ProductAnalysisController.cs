@@ -146,6 +146,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.ProductionOrderQuantityProduced,
                                 k.RealLeadTime,
                                 k.RealWorkingTime,
+                                k.PlannedWorkingTime,
                                 k.RealDelay
                             })
                            .GroupBy(x => new { x.Year, x.Month, x.Day }, (key, group) => new
@@ -159,7 +160,8 @@ namespace KIS.Areas.Analysis.Controllers
                                WorkingTime = group.Sum(k => k.RealWorkingTime.TotalHours),
                                UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                                LeadTime = group.Average(k => k.RealLeadTime.TotalHours),
-                               Delay = group.Average(k => k.RealDelay.TotalHours)
+                               Delay = group.Average(k => k.RealDelay.TotalHours),
+                               Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
                            }).ToList();
 
                             foreach (var k in result)
@@ -175,6 +177,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.UnitaryWorkingTime = k.UnitaryWorkingTime;
                                 currRes.Week = k.Week;
                                 currRes.WorkingTime = k.WorkingTime;
+                                currRes.Productivity = k.Productivity;
 
                                 res.Add(currRes);
                             }
@@ -191,6 +194,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.ProductionOrderQuantityProduced,
                                 k.RealLeadTime,
                                 k.RealWorkingTime,
+                                k.PlannedWorkingTime,
                                 k.RealDelay
                             })
                            .GroupBy(x => new { x.Year, x.ProductionOrderEndProductionDateRealWeek }, (key, group) => new
@@ -203,7 +207,8 @@ namespace KIS.Areas.Analysis.Controllers
                                WorkingTime = group.Sum(k => k.RealWorkingTime.TotalHours),
                                UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                                LeadTime = group.Average(k => k.RealLeadTime.TotalHours),
-                               Delay = group.Average(k => k.RealDelay.TotalHours)
+                               Delay = group.Average(k => k.RealDelay.TotalHours),
+                               Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
                            }).ToList();
 
 
@@ -220,7 +225,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.UnitaryWorkingTime = k.UnitaryWorkingTime;
                                 currRes.Week = k.Week;
                                 currRes.WorkingTime = k.WorkingTime;
-
+                                currRes.Productivity = k.Productivity;
                                 res.Add(currRes);
                             }
 
@@ -235,7 +240,8 @@ namespace KIS.Areas.Analysis.Controllers
                             k.ProductionOrderQuantityProduced,
                             k.RealLeadTime,
                             k.RealWorkingTime,
-                            k.RealDelay })
+                                k.PlannedWorkingTime,
+                                k.RealDelay })
                             .GroupBy(x => new { x.Year, x.Month }, (key, group) => new
                             {
                                 Year = key.Year,
@@ -246,8 +252,9 @@ namespace KIS.Areas.Analysis.Controllers
                                 WorkingTime = group.Sum(k => k.RealWorkingTime.TotalHours),
                                 UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                                 LeadTime = group.Average(k=>k.RealLeadTime.TotalHours),                                
-                                Delay = group.Average(k=>k.RealDelay.TotalHours)
-                        }).ToList();
+                                Delay = group.Average(k=>k.RealDelay.TotalHours),
+                                Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
+                            }).ToList();
                         
 
                         
@@ -263,8 +270,8 @@ namespace KIS.Areas.Analysis.Controllers
                             currRes.UnitaryWorkingTime = k.UnitaryWorkingTime;
                             currRes.Week = k.Week;
                             currRes.WorkingTime = k.WorkingTime;
-
-                            res.Add(currRes);
+                                currRes.Productivity = k.Productivity;
+                                res.Add(currRes);
                         }
                             res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ToList();
                         }
@@ -320,6 +327,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.ProductionOrderEndProductionDateReal.Day,
                                 k.ProductionOrderQuantityProduced,
                                 k.RealLeadTime,
+                                k.PlannedWorkingTime,
                                 k.RealWorkingTime,
                                 k.RealDelay,
                                 k.ProductTypeID,
@@ -355,6 +363,7 @@ namespace KIS.Areas.Analysis.Controllers
                                UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                                LeadTime = group.Average(k => k.RealLeadTime.TotalHours),
                                Delay = group.Sum(k => k.RealDelay.TotalHours),
+                               Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
                            }).ToList();
 
                             foreach (var k in result)
@@ -375,7 +384,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.ProductReview = k.ProductTypeReview;
                                 currRes.ProductName = k.ProductName;
                                 currRes.ProductTypeName = k.ProductTypeName;
-
+                                currRes.Productivity = k.Productivity;
                                 res.Add(currRes);
                             }
 
@@ -401,6 +410,7 @@ namespace KIS.Areas.Analysis.Controllers
                                             * 2 = Mean of unitary working hours per - period
                                             * 3 = Mean lead time
                                             * 4 = Sum of delays
+                                            * 5 = Average of Productivity
                                         */
                                         switch (graphType)
                                         {
@@ -409,6 +419,7 @@ namespace KIS.Areas.Analysis.Controllers
                                             case 2:  qtyCurr += currItm.UnitaryWorkingTime.ToString().Replace(',', '.'); break;
                                             case 3: qtyCurr += currItm.LeadTime.ToString().Replace(',', '.'); break;
                                             case 4:  qtyCurr += currItm.Delay.ToString().Replace(',', '.');  break;
+                                            case 5: qtyCurr += currItm.Productivity.ToString().Replace(',', '.'); break;
                                             default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                         }
 
@@ -441,6 +452,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.ProductionOrderQuantityProduced,
                                 k.RealLeadTime,
                                 k.RealWorkingTime,
+                                k.PlannedWorkingTime,
                                 k.RealDelay,
                                 k.ProductTypeID,
                                 k.ProductTypeReview,
@@ -465,6 +477,7 @@ namespace KIS.Areas.Analysis.Controllers
                                UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                                LeadTime = group.Average(k => k.RealLeadTime.TotalHours),
                                Delay = group.Sum(k => k.RealDelay.TotalHours),
+                               Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
                            }).ToList();
 
 
@@ -486,7 +499,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.ProductReview = k.ProductTypeReview;
                                 currRes.ProductName = k.ProductName;
                                 currRes.ProductTypeName = k.ProductTypeName;
-
+                                currRes.Productivity = k.Productivity;
                                 res.Add(currRes);
                             }
                             res = res.OrderBy(z => z.Year).ThenBy(w => w.Week).ToList();
@@ -518,6 +531,7 @@ namespace KIS.Areas.Analysis.Controllers
                                             case 2: qtyCurr += currItm.UnitaryWorkingTime.ToString().Replace(',', '.'); break;
                                             case 3: qtyCurr += currItm.LeadTime.ToString().Replace(',', '.'); break;
                                             case 4: qtyCurr += currItm.Delay.ToString().Replace(',', '.'); break;
+                                            case 5: qtyCurr += currItm.Productivity.ToString().Replace(',', '.'); break;
                                             default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                         }
                                     }
@@ -549,6 +563,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.ProductionOrderQuantityProduced,
                                 k.RealLeadTime,
                                 k.RealWorkingTime,
+                                k.PlannedWorkingTime,
                                 k.RealDelay,
                                 k.ProductTypeID,
                                 k.ProductTypeReview,
@@ -577,7 +592,8 @@ namespace KIS.Areas.Analysis.Controllers
                                 WorkingTime = group.Sum(k => k.RealWorkingTime.TotalHours),
                                 UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                                 LeadTime = group.Average(k => k.RealLeadTime.TotalHours),
-                                Delay = group.Sum(k => k.RealDelay.TotalHours)
+                                Delay = group.Sum(k => k.RealDelay.TotalHours),
+                                Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
                             }).ToList();
 
 
@@ -599,7 +615,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.ProductReview = k.ProductTypeReview;
                                 currRes.ProductName = k.ProductName;
                                 currRes.ProductTypeName = k.ProductTypeName;
-
+                                currRes.Productivity = k.Productivity;
                                 res.Add(currRes);
                             }
                             res = res.OrderBy(z => z.Year).ThenBy(w => w.Month).ToList();
@@ -631,6 +647,7 @@ namespace KIS.Areas.Analysis.Controllers
                                             case 2: qtyCurr += currItm.UnitaryWorkingTime.ToString().Replace(',', '.'); break;
                                             case 3: qtyCurr += currItm.LeadTime.ToString().Replace(',', '.'); break;
                                             case 4: qtyCurr += currItm.Delay.ToString().Replace(',', '.'); break;
+                                            case 5: qtyCurr += currItm.Productivity.ToString().Replace(',', '.'); break;
                                             default: qtyCurr += currItm.Quantity.ToString().Replace(',', '.'); break;
                                         }
                                     }

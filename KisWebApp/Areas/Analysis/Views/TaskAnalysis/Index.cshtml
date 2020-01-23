@@ -175,17 +175,6 @@
             });
 
 
-            @{/*List<KIS.App_Code.processo> tskList2 = ViewBag.Tasks;
-                        var sortedTasks2 = tskList2.OrderBy(x => x.processName);
-                        foreach (var tsk in sortedTasks2)
-                        {
-                                       @Html.Raw("$('#badgeTasks').append('<span class=\"badge badge-info\" id=\"task_"
-                                      + tsk.processID+"\">" + Server.HtmlEncode(tsk.processName.ToString())
-                                      + "&nbsp;<input type=\"image\" src=\"../../img/iconClose.png\" style=\"height: 15px;\" class=\"deltask\" value=\"" + tsk.processID + "\" /></span>');");
-                                       @Html.Raw("TasksArr.push('" + tsk.processID + "');");
-                                       @Html.Raw("TasksNameArr.push('" + Server.HtmlEncode(tsk.processName) + "');");
-                                   }*/
-                       }
 
             $("#modalTasks").on('click', '.deltask', function () {
 
@@ -394,6 +383,9 @@
                 else if ($(this).val() == "4") {
                     graphType = 4;
                 }
+                else if ($(this).val() == "5") {
+                    graphType = 5;
+                }
                 else {
                     graphType = 0;
                 }
@@ -417,10 +409,18 @@
             loadPanel();
             $("#modalTypeOfProducts").modal('show');
             $("#modalTypeOfProducts").modal('hide');
-
             $("#modalDates").modal('show');
             $("#modalDates").modal('hide');
-            
+            $("#modalGroupBy").modal('show');
+            $("#modalGroupBy").modal('hide');
+            $("#modalTasks").modal('show');
+            $("#modalTasks").modal('hide');
+            $("#modalCustomers").modal('show');
+            $("#modalCustomers").modal('hide');
+            $("#modalWorkstations").modal('show');
+            $("#modalWorkstations").modal('hide');
+            $("#modalDepartments").modal('show');
+            $("#modalDepartments").modal('hide');
 
                });
     </script>
@@ -459,6 +459,7 @@
                     <input type="radio" name="GraphType" value="2" />@ResTaskAnalysis.Index.lblUnitaryWorkingTime
                     <input type="radio" name="GraphType" value="3" />@ResTaskAnalysis.Index.lblMeanLeadTime
                     <input type="radio" name="GraphType" value="4" />@ResTaskAnalysis.Index.lblDelays
+                    <input type="radio" name="GraphType" value="5" />@ResTaskAnalysis.Index.lblProductivity
                 </div>
                 <div id="HistoricPanel" />
             </div>

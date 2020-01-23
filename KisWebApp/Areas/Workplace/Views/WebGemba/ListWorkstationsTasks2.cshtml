@@ -679,26 +679,29 @@
             <tbody>
                 @{
                     List<KIS.App_Code.TaskProduzione> lstTasks = ViewBag.TasksInExecution;
-                    foreach (var m in lstTasks)
+                    if(lstTasks!=null)
                     {
-                        KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
-                        KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(art.Reparto);
-                        var bgcolor = "";
-                        DateTime EarlyStart = m.EarlyStart;
-                        DateTime LateStart = m.LateStart;
-                        DateTime Now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
-                        if (LateStart <= Now)
+                        foreach (var m in lstTasks)
                         {
-                            bgcolor = "#FF0000";
-                        }
-                        else if (EarlyStart <= Now)
-                        {
-                            bgcolor = "#FFFF00";
-                        }
-                        else
-                        {
-                            bgcolor = "#FFFFFF";
-                        }
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
+                            KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(art.Reparto);
+                            var bgcolor = "";
+                            DateTime EarlyStart = m.EarlyStart;
+                            DateTime LateStart = m.LateStart;
+                            DateTime Now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario);
+                            if (LateStart <= Now)
+                            {
+                                bgcolor = "#FF0000";
+                            }
+                            else if (EarlyStart <= Now)
+                            {
+                                bgcolor = "#FFFF00";
+                            }
+                            else
+                            {
+                                bgcolor = "#FFFFFF";
+                            }
+                        
                 <tr style="background-color: @bgcolor;" id="rowEx_@m.TaskProduzioneID">
                     <td>
                         <input type="image" class="btnPauseTask" id="btnPauseTask_@m.TaskProduzioneID"
@@ -767,6 +770,7 @@
                     </td>
                     <td style="visibility:hidden">@m.QuantitaProdotta/@m.QuantitaPrevista</td>
                 </tr>
+                        }
                     }
                 }
             </tbody>
@@ -805,7 +809,8 @@
                 </thead>
                 <tbody>
                     @{List<KIS.App_Code.TaskProduzione> lstTasksExecutable = ViewBag.TasksExecutable;
-
+                        if(lstTasksExecutable!=null)
+                        { 
                         foreach (var m in lstTasksExecutable)
                         {
                             KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
@@ -849,6 +854,7 @@
                             <td>@m.QuantitaProdotta/@m.QuantitaPrevista</td>
                         </tr>
                             }
+                        }
                         }
                 </tbody>
             </table>

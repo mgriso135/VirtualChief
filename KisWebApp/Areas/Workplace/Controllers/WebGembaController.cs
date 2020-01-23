@@ -1192,6 +1192,9 @@ namespace KIS.Areas.Workplace.Controllers
             ViewBag.workstationName = "";
             ViewBag.user = "";
 
+            ViewBag.TasksInExecution = new List<TaskProduzione>();
+            ViewBag.TasksExecutable = new List<TaskProduzione>();
+
             if (ViewBag.authX)
             {
                 Postazione p = new Postazione(WorkstationID);

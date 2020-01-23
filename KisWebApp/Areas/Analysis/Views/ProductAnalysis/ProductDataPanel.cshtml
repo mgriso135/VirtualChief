@@ -43,7 +43,7 @@
 
     if (groupProducts)
     {
-    <script type="text/javascript">
+<script type="text/javascript">
             google.charts.load('current', { 'packages': ['bar'] });
             google.charts.setOnLoadCallback(drawChartGroupProducts);
 
@@ -73,6 +73,8 @@
                             break;
                         case 4:
                             @Html.Raw("['" + ResProductAnalysis.ProductPanel.lblPeriod + "', '" + ResProductAnalysis.ProductPanel.lblDelays.ToString().Replace(',', '.') + "'],");
+                            break;
+                        case 5: @Html.Raw("['" + ResProductAnalysis.ProductPanel.lblPeriod + "', '" + ResProductAnalysis.Index.lblProductivity.ToString().Replace(',', '.') + "'],");
                             break;
                     }
 
@@ -108,6 +110,12 @@
                                 foreach (var row in Model) // Sum of Delays
                                 {
                                             @Html.Raw("['" + row.Day + "/" + row.Month + "/" + row.Year + "'" + ", " + row.Delay.ToString().Replace(',', '.') + "], ");
+                                }
+                                break;
+                                case 5:
+                                foreach (var row in Model) // Sum of Delays
+                                {
+                                            @Html.Raw("['" + row.Day + "/" + row.Month + "/" + row.Year + "'" + ", " + ((double)row.Productivity * 100).ToString().Replace(',', '.') + "], ");
                                 }
                                 break;
                         }
@@ -147,6 +155,12 @@
                                             @Html.Raw("['" + row.Week + "/" + row.Year + "'" + ", " + row.Delay.ToString().Replace(',', '.') + "], ");
                                 }
                                 break;
+                                case 5:
+                                foreach (var row in Model) // Sum of Delays
+                                {
+                                            @Html.Raw("['" + row.Week + "/" + row.Year + "'" + ", " + ((double)row.Productivity * 100).ToString().Replace(',', '.') + "], ");
+                                }
+                                break;
                         }
                     }
                     else if (periodType == 2)
@@ -183,6 +197,12 @@
                                             @Html.Raw("['" + row.Month + "/" + row.Year + "'" + ", " + row.Delay.ToString().Replace(',', '.') + "], ");
                                 }
                                 break;
+                                case 5:
+                                foreach (var row in Model) // Sum of Delays
+                                {
+                                            @Html.Raw("['" + row.Month + "/" + row.Year + "'" + ", " + ((double)row.Productivity * 100).ToString().Replace(',', '.') + "], ");
+                                }
+                                break;
                         }
 
                     }
@@ -203,7 +223,7 @@
 
                         chart.draw(data, google.charts.Bar.convertOptions(options));
                     }
-    </script>
+</script>
     }
     else
     {
@@ -265,6 +285,7 @@
                 <th>@ResProductAnalysis.ProductPanel.lblUnitaryWorkingTime</th>
                 <th>@ResProductAnalysis.ProductPanel.lblMeanLeadTime</th>
                 <th>@ResProductAnalysis.ProductPanel.lblDelays</th>
+                <th>@ResProductAnalysis.Index.lblProductivity</th>
 
             </tr>
         </thead>
@@ -275,6 +296,7 @@
                 double UnitaryWorkingTime = 0.0;
                 double LeadTime = 0.0;
                 double Delay = 0.0;
+                double Productivity = 0.0;
 
                 foreach (var m in Model)
                 {
@@ -283,15 +305,15 @@
                         {
                             <td>@m.Day/@m.Month/@m.Year</td>
                         }
-                        @if (periodType == 1)
+                    @if (periodType == 1)
                         {
                             <td>@m.Week/@m.Year</td>
                         }
-                        @if (periodType == 2)
+                    @if (periodType == 2)
                         {
                             <td>@m.Month/@m.Year</td>
                         }
-                        @if (!groupProducts)
+                    @if (!groupProducts)
                         {
                             <td>@m.ProductTypeName&nbsp;-&nbsp;@m.ProductName</td>
                         }
@@ -300,7 +322,7 @@
                         <td>@Math.Round(m.UnitaryWorkingTime, 2)</td>
                         <td>@Math.Round(m.LeadTime, 2)</td>
                         <td>@Math.Round(m.Delay, 2)</td>
-
+                        <td>@Math.Round(100*m.Productivity, 2)%</td>
                     </tr>
 
                     Quantity += m.Quantity;
@@ -308,6 +330,7 @@
                     UnitaryWorkingTime += m.UnitaryWorkingTime;
                     LeadTime += m.LeadTime;
                     Delay += m.Delay;
+                    Productivity += m.Productivity;
                 }
             }
         </tbody>
@@ -323,6 +346,7 @@
                 <td><b>@Math.Round(UnitaryWorkingTime / Model.Count(), 2)</b></td>
                 <td><b>@Math.Round(LeadTime / Model.Count(), 2)</b></td>
                 <td><b>@Math.Round(Delay / Model.Count(), 2)</b></td>
+                <td><b>@Math.Round(100*Productivity / Model.Count(), 2)%</b></td>
             </tr>
         </tfoot>
     </table>

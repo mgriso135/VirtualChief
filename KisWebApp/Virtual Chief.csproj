@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
+  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -64,10 +64,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="GenCode128, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -474,6 +474,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Analysis\AnalysisAreaRegistration.cs" />
     <Compile Include="Areas\Analysis\Controllers\GlobalKPIsController.cs" />
+    <Compile Include="Areas\Analysis\Controllers\OperatorsAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductionHistoryController.cs" />
     <Compile Include="Areas\Analysis\Controllers\TaskAnalysisController.cs" />
@@ -511,6 +512,31 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GetGlobalKPIs2.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetGlobalKPIs2.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetGlobalKPIs2.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetGlobalKPIs2.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetGlobalKPIs2.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetGlobalKPIs2.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetImprovementActionsKPIs.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -601,6 +627,16 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>GetWarningsKPIs.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\OperatorsAnalysis\App_LocalResources\GetOperatorOccupation.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetOperatorOccupation.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\OperatorsAnalysis\App_LocalResources\GetOperatorProductivity.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetOperatorProductivity.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Analysis\Views\ProductAnalysis\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -5824,16 +5860,6 @@
     <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
-    <Content Include="Scripts\bootstrap.bundle.js" />
-    <Content Include="Scripts\bootstrap.bundle.min.js" />
-    <Content Include="Scripts\esm\popper-utils.js" />
-    <Content Include="Scripts\esm\popper-utils.min.js" />
-    <Content Include="Scripts\esm\popper.js" />
-    <Content Include="Scripts\esm\popper.min.js" />
-    <Content Include="Scripts\esm\popper.min.js.map" />
-    <Content Include="Scripts\esm\popper.js.map" />
-    <Content Include="Scripts\esm\popper-utils.min.js.map" />
-    <Content Include="Scripts\esm\popper-utils.js.map" />
     <Content Include="Areas\Analysis\Views\web.config" />
     <Content Include="Areas\Analysis\Views\ProductionHistory\Index.cshtml" />
     <Content Include="Areas\Analysis\Views\ProductionHistory\HistoricDataPanel.cshtml" />
@@ -5856,16 +5882,6 @@
     <Content Include="Areas\Analysis\Views\GlobalKPIs\GetWarningsKPIs.cshtml" />
     <Content Include="Areas\Analysis\Views\GlobalKPIs\GetNonCompliancesKPIs.cshtml" />
     <Content Include="Areas\Analysis\Views\GlobalKPIs\GetImprovementActionsKPIs.cshtml" />
-    <Content Include="Scripts\bootstrap.min.js.map" />
-    <Content Include="Scripts\bootstrap.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
-    <Content Include="Scripts\bootstrap.bundle.js.map" />
-    <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Content\bootstrap.css.map" />
-    <Content Include="Content\bootstrap-reboot.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.css.map" />
-    <Content Include="Content\bootstrap-grid.min.css.map" />
-    <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="Areas\Config\Views\Config\SalesOrderImport3PartySystemActive.cshtml" />
     <Content Include="Areas\Workplace\Views\WebGemba\ListWorkstationsTasks2.cshtml" />
     <Content Include="Areas\Config\Views\MeasurementUnits\Index.cshtml" />
@@ -5901,6 +5917,31 @@
     <Content Include="Areas\Production\Views\ProductDetails\ViewTaskOperationsDetails.cshtml" />
     <Content Include="Areas\Analysis\Views\ProductionHistory\HistoricDataPanelSales.cshtml" />
     <Content Include="Areas\Analysis\Views\GlobalKPIs\GetGlobalKPIs2.cshtml" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\esm\popper-utils.js" />
+    <Content Include="Scripts\esm\popper-utils.min.js" />
+    <Content Include="Scripts\esm\popper.js" />
+    <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\index.js.flow" />
+    <Content Include="Scripts\esm\popper.min.js.map" />
+    <Content Include="Scripts\esm\popper.js.map" />
+    <Content Include="Scripts\esm\popper-utils.min.js.map" />
+    <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Scripts\bootstrap.min.js.map" />
+    <Content Include="Scripts\bootstrap.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.min.js.map" />
+    <Content Include="Scripts\bootstrap.bundle.js.map" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\bootstrap-reboot.css.map" />
+    <Content Include="Content\bootstrap-grid.min.css.map" />
+    <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorProductivity.cshtml" />
+    <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorOccupation.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -5912,10 +5953,8 @@
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jQuery.FileUpload\cors\jquery.postmessage-transport.js" />
     <Content Include="Scripts\jQuery.FileUpload\cors\jquery.xdr-transport.js" />
-    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-angular.js" />
     <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-audio.js" />
     <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-image.js" />
-    <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-jquery-ui.js" />
     <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-process.js" />
     <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-ui.js" />
     <Content Include="Scripts\jQuery.FileUpload\jquery.fileupload-validate.js" />
@@ -5937,6 +5976,69 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\src\index.js" />
+    <Content Include="Scripts\src\methods\defaults.js" />
+    <Content Include="Scripts\src\methods\destroy.js" />
+    <Content Include="Scripts\src\methods\disableEventListeners.js" />
+    <Content Include="Scripts\src\methods\enableEventListeners.js" />
+    <Content Include="Scripts\src\methods\placements.js" />
+    <Content Include="Scripts\src\methods\update.js" />
+    <Content Include="Scripts\src\modifiers\applyStyle.js" />
+    <Content Include="Scripts\src\modifiers\arrow.js" />
+    <Content Include="Scripts\src\modifiers\computeStyle.js" />
+    <Content Include="Scripts\src\modifiers\flip.js" />
+    <Content Include="Scripts\src\modifiers\hide.js" />
+    <Content Include="Scripts\src\modifiers\index.js" />
+    <Content Include="Scripts\src\modifiers\inner.js" />
+    <Content Include="Scripts\src\modifiers\keepTogether.js" />
+    <Content Include="Scripts\src\modifiers\offset.js" />
+    <Content Include="Scripts\src\modifiers\preventOverflow.js" />
+    <Content Include="Scripts\src\modifiers\shift.js" />
+    <Content Include="Scripts\src\utils\clockwise.js" />
+    <Content Include="Scripts\src\utils\computeAutoPlacement.js" />
+    <Content Include="Scripts\src\utils\debounce.js" />
+    <Content Include="Scripts\src\utils\find.js" />
+    <Content Include="Scripts\src\utils\findCommonOffsetParent.js" />
+    <Content Include="Scripts\src\utils\findIndex.js" />
+    <Content Include="Scripts\src\utils\getBordersSize.js" />
+    <Content Include="Scripts\src\utils\getBoundaries.js" />
+    <Content Include="Scripts\src\utils\getBoundingClientRect.js" />
+    <Content Include="Scripts\src\utils\getClientRect.js" />
+    <Content Include="Scripts\src\utils\getFixedPositionOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetParent.js" />
+    <Content Include="Scripts\src\utils\getOffsetRect.js" />
+    <Content Include="Scripts\src\utils\getOffsetRectRelativeToArbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getOppositePlacement.js" />
+    <Content Include="Scripts\src\utils\getOppositeVariation.js" />
+    <Content Include="Scripts\src\utils\getOuterSizes.js" />
+    <Content Include="Scripts\src\utils\getParentNode.js" />
+    <Content Include="Scripts\src\utils\getPopperOffsets.js" />
+    <Content Include="Scripts\src\utils\getReferenceNode.js" />
+    <Content Include="Scripts\src\utils\getReferenceOffsets.js" />
+    <Content Include="Scripts\src\utils\getRoot.js" />
+    <Content Include="Scripts\src\utils\getRoundedOffsets.js" />
+    <Content Include="Scripts\src\utils\getScroll.js" />
+    <Content Include="Scripts\src\utils\getScrollParent.js" />
+    <Content Include="Scripts\src\utils\getStyleComputedProperty.js" />
+    <Content Include="Scripts\src\utils\getSupportedPropertyName.js" />
+    <Content Include="Scripts\src\utils\getViewportOffsetRectRelativeToArtbitraryNode.js" />
+    <Content Include="Scripts\src\utils\getWindow.js" />
+    <Content Include="Scripts\src\utils\getWindowSizes.js" />
+    <Content Include="Scripts\src\utils\includeScroll.js" />
+    <Content Include="Scripts\src\utils\index.js" />
+    <Content Include="Scripts\src\utils\isBrowser.js" />
+    <Content Include="Scripts\src\utils\isFixed.js" />
+    <Content Include="Scripts\src\utils\isFunction.js" />
+    <Content Include="Scripts\src\utils\isIE.js" />
+    <Content Include="Scripts\src\utils\isModifierEnabled.js" />
+    <Content Include="Scripts\src\utils\isModifierRequired.js" />
+    <Content Include="Scripts\src\utils\isNumeric.js" />
+    <Content Include="Scripts\src\utils\isOffsetContainer.js" />
+    <Content Include="Scripts\src\utils\removeEventListeners.js" />
+    <Content Include="Scripts\src\utils\runModifiers.js" />
+    <Content Include="Scripts\src\utils\setAttributes.js" />
+    <Content Include="Scripts\src\utils\setStyles.js" />
+    <Content Include="Scripts\src\utils\setupEventListeners.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
     <Content Include="Scripts\umd\popper.js" />
@@ -6156,6 +6258,31 @@
     <Content Include="App_LocalResources\Site.Master.es-AR.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.en-US.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.es-AR.resx" />
+    <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.it.resx">
+      <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetGlobalKPIs2.it.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.es.resx">
+      <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetGlobalKPIs2.es.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.en.resx">
+      <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetGlobalKPIs2.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.en-US.resx">
+      <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetGlobalKPIs2.en-US.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.es-AR.resx">
+      <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetGlobalKPIs2.es-AR.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.resx">
       <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -6280,6 +6407,16 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GetGlobalKPIs.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResGetGlobalKPIs</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\OperatorsAnalysis\App_LocalResources\GetOperatorOccupation.resx">
+      <CustomToolNamespace>ResOperatorsAnalysis</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetOperatorOccupation.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\OperatorsAnalysis\App_LocalResources\GetOperatorProductivity.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetOperatorProductivity.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResOperatorsAnalysis</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\ProductAnalysis\App_LocalResources\ProductPanel.en-US.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -10978,6 +11115,7 @@
     <Content Include="Views\web.config" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
+    <Content Include="Scripts\umd\popper.js.flow" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
     <Content Include="Scripts\umd\popper-utils.js.map" />
     <Content Include="Scripts\README.md" />
@@ -12533,10 +12671,10 @@
       <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.targets'))" />
   </Target>
-  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
+  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

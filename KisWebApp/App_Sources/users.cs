@@ -1221,6 +1221,32 @@ namespace KIS.App_Code
 
         public List<String> Customers;
 
+        /* Returns the productivity of the operator.
+         * To load values, use methods
+         *      loadProductivity(int TaskID) --> Returns Productivity of the TaskID task
+         *      loadProductivity(DateTime start, DateTime end) --> Returns average Productivity of all tasks ended between start and end
+         */      
+        private Double _Productivity;
+        public Double Productivity
+        {
+            get
+            {
+                return this._Productivity;
+            }
+        }
+
+        /* Returns the occupation KPI of the operator, defined as the ratio between real working time (without considering superposition of tasks) and the shift planned hours
+         * To load the value, use LoadOccupation(DateTime start, DateTime end) method
+         */
+        private Double _Occupation;
+        public Double Occupation
+        {
+            get
+            {
+                return this._Occupation;
+            }
+        }
+
         public User(String usr, String pwd)
         {
             this._Language = "";
@@ -2367,8 +2393,9 @@ namespace KIS.App_Code
                                     curr.Intervallo = fine - inizio;
                                     curr.TaskID = ElencoTasksOperatore[i].TaskProduzioneID;
                                     curr.idPostazione = ElencoTasksOperatore[i].PostazioneID;
-                                    Postazione pst = new Postazione(ElencoTasksOperatore[i].PostazioneID);
-                                    curr.nomePostazione = pst.name;
+                                    //Postazione pst = new Postazione(ElencoTasksOperatore[i].PostazioneID);
+                                    TaskProduzione tsk = new TaskProduzione(ElencoTasksOperatore[i].TaskProduzioneID);
+                                    curr.nomePostazione = tsk.PostazioneName;
                                     curr.nomeTask = ElencoTasksOperatore[i].Name;
                                     curr.idProdotto = ElencoTasksOperatore[i].ArticoloID;
                                     curr.annoProdotto = ElencoTasksOperatore[i].ArticoloAnno;
@@ -2376,16 +2403,166 @@ namespace KIS.App_Code
                                     curr.idReparto = art.Reparto;
                                     curr.nomeProdotto = art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante;
                                     curr.ProductStatus = art.Status;
-                                    Cliente customer = new Cliente(art.Cliente);
-                                    curr.ragioneSocialeCliente = customer.RagioneSociale;
+                                    curr.ragioneSocialeCliente = art.RagioneSocialeCliente;
                                     curr.EndEventStatus = EventoF;
                                     curr.StartEventID = IDEventoI;
                                     curr.EndEventID = IDEventoF;
                                     curr.TaskStatus = ElencoTasksOperatore[i].Status;
+                                    curr.PlannedWorkingTime = tsk.TempoC;
                                     this._IntervalliDiLavoroOperatore.Add(curr);
                                 }
                             }
 
+                        }
+                        rdr.Close();
+                    }
+                }
+
+
+                // -- FINE FUNZIONE CARICO INTERVALLI
+
+
+
+                conn.Close();
+            }
+        }
+
+        public void loadIntervalliDiLavoroOperatore(int TaskID)
+        {
+            log = "";
+            this._IntervalliDiLavoroOperatore = new List<IntervalliDiLavoroEffettivi>();
+            if (this.username.Length > 0 && !String.IsNullOrEmpty(this.username))
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+
+                TaskProduzione currTask = new TaskProduzione(TaskID);
+                    if (currTask!=null && currTask.Status == 'F')
+                    {
+                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = "
+                            + currTask.TaskProduzioneID.ToString()
+                            + " AND user LIKE '" + this.username + "'"
+                             + " ORDER BY data";
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        while (rdr.Read())
+                        {
+                            log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                            DateTime inizio = rdr.GetDateTime(1);
+                            String usrI = rdr.GetString(0);
+                            Char EventoI = rdr.GetChar(2);
+                            int IDEventoI = rdr.GetInt32(3);
+                            if (rdr.Read())
+                            {
+                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                                String usrF = rdr.GetString(0);
+                                Char EventoF = rdr.GetChar(2);
+                                DateTime fine = rdr.GetDateTime(1);
+                                int IDEventoF = rdr.GetInt32(3);
+                                if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
+                                {
+                                    IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
+                                    curr.user = usrI;
+                                    curr.Inizio = inizio;
+                                    curr.Fine = fine;
+                                    curr.Intervallo = fine - inizio;
+                                    curr.TaskID = currTask.TaskProduzioneID;
+                                    curr.idPostazione = currTask.PostazioneID;
+                                    //Postazione pst = new Postazione(ElencoTasksOperatore[i].PostazioneID);
+                                    curr.nomePostazione = currTask.PostazioneName;
+                                    curr.nomeTask = currTask.Name;
+                                    curr.idProdotto = currTask.ArticoloID;
+                                    curr.annoProdotto = currTask.ArticoloAnno;
+                                    Articolo art = new Articolo(currTask.ArticoloID, currTask.ArticoloAnno);
+                                    curr.idReparto = art.Reparto;
+                                    curr.nomeProdotto = art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante;
+                                    curr.ProductStatus = art.Status;
+                                    curr.ragioneSocialeCliente = art.RagioneSocialeCliente;
+                                    curr.EndEventStatus = EventoF;
+                                    curr.StartEventID = IDEventoI;
+                                    curr.EndEventID = IDEventoF;
+                                    curr.TaskStatus = currTask.Status;
+                                    curr.PlannedWorkingTime = currTask.TempoC;
+                                    this._IntervalliDiLavoroOperatore.Add(curr);
+                                }
+                            }
+
+                        }
+                        rdr.Close();
+                    }
+                //}
+
+
+                // -- FINE FUNZIONE CARICO INTERVALLI
+
+
+
+                conn.Close();
+            }
+        }
+
+        public void loadIntervalliDiLavoroOperatore(List<int> TasksID)
+        {
+            log = "";
+            this._IntervalliDiLavoroOperatore = new List<IntervalliDiLavoroEffettivi>();
+            //List<TaskProduzione> ElencoTasksOperatore = new List<TaskProduzione>();
+            if (this.username.Length > 0 && !String.IsNullOrEmpty(this.username))
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                /*cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user='" + this.username
+                    + "' ORDER BY data";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    ElencoTasksOperatore.Add(new TaskProduzione(rdr.GetInt32(0)));
+                }
+                rdr.Close();*/
+
+                // -- FUNZIONE INTERVALLI
+
+                for (int i = 0; i < TasksID.Count; i++)
+                {
+                    TaskProduzione currTask = new TaskProduzione(TasksID[i]);
+                    if (currTask.Status == 'F')
+                    {
+                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = "
+                            + TasksID[i].ToString()
+                            + " AND user LIKE '" + this.username + "'"
+                             + " ORDER BY data";
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        while (rdr.Read())
+                        {
+                            log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                            DateTime inizio = rdr.GetDateTime(1);
+                            String usrI = rdr.GetString(0);
+                            Char EventoI = rdr.GetChar(2);
+                            if (rdr.Read())
+                            {
+                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                                String usrF = rdr.GetString(0);
+                                Char EventoF = rdr.GetChar(2);
+                                DateTime fine = rdr.GetDateTime(1);
+                                if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
+                                {
+                                    IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
+                                    curr.user = usrI;
+                                    curr.Inizio = inizio;
+                                    curr.Fine = fine;
+                                    curr.Intervallo = fine - inizio;
+                                    curr.TaskID = currTask.TaskProduzioneID;
+                                    curr.idPostazione = currTask.PostazioneID;
+                                    curr.nomePostazione = currTask.PostazioneName;
+                                    curr.nomeTask = currTask.Name;
+                                    curr.idProdotto = currTask.ArticoloID;
+                                    curr.annoProdotto = currTask.ArticoloAnno;
+                                    Articolo art = new Articolo(currTask.ArticoloID, currTask.ArticoloAnno);
+                                    curr.idReparto = art.Reparto;
+                                    curr.nomeProdotto = art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante;
+                                    this._IntervalliDiLavoroOperatore.Add(curr);
+                                }
+                            }
                         }
                         rdr.Close();
                     }
@@ -3024,6 +3201,220 @@ namespace KIS.App_Code
                 conn.Close();
             }
         }
+
+        /*  Returns Productivity of the currend user in the TaskID task
+         *  -1 if user did not work on the specific task
+         *  -2 if task does not exist or task not ended
+         *  Result is loaded in _Productivity variable
+         */
+        public void LoadProductivity(int TaskID)
+        {
+            this._Productivity = -1;
+            TaskProduzione tsk = new TaskProduzione(TaskID);
+            if(tsk!=null && tsk.TaskProduzioneID!=-1 && tsk.Status == 'F')
+            {
+                this.loadIntervalliDiLavoroOperatore(TaskID);
+                if(this.IntervalliDiLavoroOperatore!= null && this.IntervalliDiLavoroOperatore.Count > 0)
+                { 
+                    var RealWorkingTime = this.IntervalliDiLavoroOperatore.Sum(x => x.Intervallo.TotalSeconds);
+                    Double PlannedWorkingTime = tsk.TempoC.TotalSeconds / tsk.NumOperatori;
+                    this._Productivity = PlannedWorkingTime / RealWorkingTime;
+                }
+                else
+                {
+                    this._Productivity= -1;
+                }
+            }
+            else
+            {
+                this._Productivity = -2;
+            }
+        }
+       
+        /*  Returns average Productivity of all tasks ended between start and end
+         *  -1 if user did not work in the start-end timespan        
+         *  -3 if start >= end
+            Result is loaded in _Productivity variable
+            */
+        public void LoadProductivity(DateTime start, DateTime end)
+        {
+            if(start < end)
+            {
+                Double PlannedWorkingTime = 0.0;
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT DISTINCT(taskID), tempociclo, nOperatori FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON(tasksproduzione.taskID = registroeventitaskproduzione.task) "
+                    +" WHERE user LIKE '" + this.username + "'"
+                    +" AND endDateReal >= '" + start.ToString("yyyy-MM-dd HH:mm:ss")
+                    + "' AND endDateReal <= '"+end.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                List<int> taskIDs = new List<int>();
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    taskIDs.Add(rdr.GetInt32(0));
+                    if(!rdr.IsDBNull(1) && !rdr.IsDBNull(2))
+                    {
+                        TimeSpan tc = rdr.GetTimeSpan(1);
+                        int nop = rdr.GetInt32(2);
+                        if(nop>0)
+                        { 
+                            PlannedWorkingTime += tc.TotalSeconds / nop;
+                        }
+                    }
+                    
+                }
+                rdr.Close();
+                conn.Close();
+
+                if(taskIDs.Count > 0)
+                {
+                    this.loadIntervalliDiLavoroOperatore(taskIDs);
+                    if(this.IntervalliDiLavoroOperatore!=null && this.IntervalliDiLavoroOperatore.Count > 0)
+                    {
+                        var RealWorkingTime = this.IntervalliDiLavoroOperatore.Sum(x => x.Intervallo.TotalSeconds);
+                        if(RealWorkingTime > 0)
+                        { 
+                            this._Productivity = PlannedWorkingTime / RealWorkingTime;
+                        }
+                        else
+                        {
+                            this._Productivity = -1;
+                        }
+                    }
+                    else
+                    {
+                        this._Productivity = -1;
+                    }
+                }
+                else
+                {
+                    this._Productivity = -1;
+                }
+            }
+            else
+            {
+                this._Productivity = -3;
+            }
+        }
+
+        /* Returns ratio between real working time (without superposition of time) and shift hours
+         */
+         public void LoadOccupation(DateTime start, DateTime end)
+        {
+            this.log = "";
+            if(start <= end && this.username.Length > 0)
+            {
+                this._Occupation = 0.0;
+                /* loads operator real working timespans*/
+                this.loadIntervalliDiLavoroOperatore(start, end);
+                this.log = "this.IntervalliDiLavoroOperatore \n <br />";
+                
+                List<IntervalliDiLavoroEffettivi> filteredlist1 = this.IntervalliDiLavoroOperatore;
+
+                /* filter parallel tasks */
+                var filteredlist = filteredlist1.OrderBy(x => x.Inizio).ToList();
+                for (int i = 0; i < filteredlist.Count; i++)
+                {
+                    this.log += filteredlist[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + filteredlist[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " \n<br />";
+                }
+
+                for (int i = 0; i < filteredlist.Count -1;i++)
+                {
+                    if(filteredlist[i+1].Inizio <= filteredlist[i].Fine)
+                    {
+                        DateTime minstart = filteredlist[i].Inizio < filteredlist[i+1].Inizio ? filteredlist[i].Inizio : filteredlist[i + 1].Inizio;
+                        DateTime maxend = filteredlist[i].Fine > filteredlist[i + 1].Fine ? filteredlist[i].Fine : filteredlist[i + 1].Fine;
+                        IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
+                        curr.Inizio = minstart;
+                        curr.Fine = maxend;
+                        filteredlist.RemoveAt(i + 1);
+                        filteredlist.RemoveAt(i);
+                        filteredlist.Add(curr);
+                        filteredlist = filteredlist.OrderBy(x => x.Inizio).ToList();
+                        i = -1;
+                    }
+                    /*else if(filteredlist[i + 1].Inizio >= filteredlist[i].Inizio && filteredlist[i+1].Fine <= filteredlist[i].Inizio)
+                    {
+                        filteredlist.RemoveAt(i + 1);
+                        i = -1;
+                    }*/
+                }
+
+                /* calculate working time */
+                TimeSpan realworkingtime = new TimeSpan(0, 0, 0);
+                this.log += "filteredlist \n <br />";
+                for (int i = 0; i < filteredlist.Count; i++)
+                {
+                    this.log += filteredlist[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + filteredlist[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " \n<br />";
+                    realworkingtime = realworkingtime.Add(filteredlist[i].Fine - filteredlist[i].Inizio);
+                }
+
+                /* loads shifts and calculates planned time*/
+                // Find all the departments where the operator worked, laod shifts, merge timespans then calculate the sum
+                List<IntervalliDiLavoroEffettivi> plannedshifts1 = new List<IntervalliDiLavoroEffettivi>();
+                var deptList = this.IntervalliDiLavoroOperatore.GroupBy(x => x.idReparto).ToList();
+                for(int i = 0; i < deptList.Count; i++)
+                {
+                    Reparto rp = new Reparto(deptList[i].Key);
+                    rp.loadTurni();
+                    for(int j=0; j < rp.Turni.Count; j++)
+                    {
+                        rp.Turni[j].loadCalendario(start, end);
+                        foreach(var m in rp.Turni[j].CalendarioTrn.Intervalli)
+                        {
+                            IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
+                            curr.Inizio = m.Inizio;
+                            curr.Fine = m.Fine;
+                            plannedshifts1.Add(curr);
+                        }
+                    }
+                }
+
+                var plannedshifts = plannedshifts1.OrderBy(x => x.Inizio).ToList();
+                for(int i = 0; i <plannedshifts.Count-1; i++)
+                {
+                    if (plannedshifts[i + 1].Inizio <= plannedshifts[i].Fine)
+                    {
+                        DateTime minstart = plannedshifts[i].Inizio < plannedshifts[i + 1].Inizio ? plannedshifts[i].Inizio : plannedshifts[i + 1].Inizio;
+                        DateTime maxend = plannedshifts[i].Fine > plannedshifts[i + 1].Fine ? plannedshifts[i].Fine : plannedshifts[i + 1].Fine;
+                        IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
+                        curr.Inizio = minstart;
+                        curr.Fine = maxend;
+                        plannedshifts.RemoveAt(i + 1);
+                        plannedshifts.RemoveAt(i);
+                        plannedshifts.Add(curr);
+                        plannedshifts = plannedshifts.OrderBy(x => x.Inizio).ToList();
+                        i = -1;
+                    }
+                    else if (plannedshifts[i + 1].Inizio >= plannedshifts[i].Inizio && plannedshifts[i + 1].Fine <= plannedshifts[i].Inizio)
+                    {
+                        plannedshifts.RemoveAt(i + 1);
+                        i = -1;
+                    }
+                }
+
+                this.log += "Plannedshifts:";
+                TimeSpan plannedworkingtime = new TimeSpan(0, 0, 0);
+                for (int i = 0; i < plannedshifts.Count; i++)
+                {
+                    this.log += plannedshifts[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + plannedshifts[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " \n<br />";
+                    plannedworkingtime = plannedworkingtime.Add(plannedshifts[i].Fine - plannedshifts[i].Inizio);
+                }
+
+                /* calculate the ratio and loads in Occupation */
+                this._Occupation = realworkingtime.TotalSeconds / plannedworkingtime.TotalSeconds;
+
+
+                this.log += "Real Working time: " + realworkingtime.TotalSeconds + "<br />";
+                this.log += "Planned shifts time: " + plannedworkingtime.TotalSeconds;
+                }
+            else
+            {
+                this._Occupation = -1;
+            }
+        }
+
     }
 
     public class UserEmail

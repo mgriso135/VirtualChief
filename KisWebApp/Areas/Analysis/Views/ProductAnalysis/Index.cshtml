@@ -283,6 +283,10 @@
                        else if ($(this).val() == "4") {
                            graphType = 4;
                        }
+                       else if ($(this).val() == "5")
+                       {
+                           graphType = 5;
+                       }
                        else {
                            graphType = 0;
                        }
@@ -432,6 +436,7 @@
             <input type="radio" name="GraphType" value="2" />@ResProductAnalysis.ProductPanel.lblUnitaryWorkingTime
             <input type="radio" name="GraphType" value="3" />@ResProductAnalysis.ProductPanel.lblMeanLeadTime
             <input type="radio" name="GraphType" value="4" />@ResProductAnalysis.ProductPanel.lblDelays
+            <input type="radio" name="GraphType" value="5" />@ResProductAnalysis.Index.lblProductivity
         </div>
         <div id="HistoricPanel" />
     </div>

@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<KIS.App_Sources.DepartmentKPIsStruct>
 
-@if (Session["user"] != null && Model!=null && Model.Count()>=0)
+@if (Session["user"] != null && Model != null && Model.Count() >= 0)
 {
+
     <div class="row-fluid">
         <div class="span12"><h3>@ResGetGlobalKPIs.GetGlobalKPIs.lblTitle</h3></div>
     </div>
@@ -15,7 +16,12 @@
                     <tr>
                         <th style="text-align: center;"></th>
                         <th style="text-align: center;"></th>
-                        <th style="text-align: center;">@ResGetGlobalKPIs2.GetGlobalKPIs2.lblProductivity</th>
+                        <th style="text-align: center;">
+                            @ResGetGlobalKPIs2.GetGlobalKPIs2.lblProductivity&nbsp;
+                            <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="@ResGetGlobalKPIs2.GetGlobalKPIs2.lblProductivityExplanation" style="background: transparent; border:0px;margin:0px;padding:0px;">
+                                <i class="material-icons">help</i>
+                            </button>
+                        </th>
                         <th style="text-align: center;">@ResGetGlobalKPIs2.GetGlobalKPIs2.lblDelay</th>
                         <th style="text-align: center;">@ResGetGlobalKPIs2.GetGlobalKPIs2.lblLeadTime</th>
                         <th style="text-align: center;">@ResGetGlobalKPIs2.GetGlobalKPIs2.lblQuantity</th>
@@ -31,70 +37,70 @@
 
                         for (int i = 0; i < currList.Count; i += 2)
                         {
-                    <tr>
-                        <td style="vertical-align:middle;" rowspan="3"><b>@currList[i].DepartmentName</b></td>
-                        <td>@ResGetGlobalKPIs2.GetGlobalKPIs2.lblCurrentWeek</td>
-                        <td style="text-align: center;">@Math.Round(100 * currList[i+1].Productivity, 2)%</td>
-                        <td style="text-align: center;">@Math.Round(currList[i+1].Delay, 2)</td>
-                        <td style="text-align: center;">@Math.Round(currList[i+1].LeadTime, 2)</td>
-                        <td style="text-align: center;">@Math.Round(currList[i+1].Quantities, 2)</td>
-                    </tr>
-                    <tr>
-                        <td>@ResGetGlobalKPIs2.GetGlobalKPIs2.lblLastWeek</td>
-                        <td style="text-align: center;">@Math.Round(100 * currList[i].Productivity, 2)%</td>
-                        <td style="text-align: center;">@Math.Round(currList[i].Delay, 2)</td>
-                        <td style="text-align: center;">@Math.Round(currList[i].LeadTime, 2)</td>
-                        <td style="text-align: center;">@Math.Round(currList[i].Quantities, 2)</td>
-                    </tr>
-                    <tr>
-                        <td>@ResGetGlobalKPIs2.GetGlobalKPIs2.lblVariation</td>
-                        @if (currList[i].Productivity > 0)
-                        {
-                            var prodBgColor = (currList[i].Productivity < currList[i + 1].Productivity) ? "#FF0000" : "#00FF00";
-                            <td style="text-align: center;"><div style="background-color: @prodBgColor;font-size:18px;"><b>@Math.Round(100 * (currList[i + 1].Productivity - currList[i].Productivity) / currList[i].Productivity, 2)%</b></div></td>
-                        }
-                        else
-                        {
-                            <td style="text-align: center;"><div><b style="background-color: #FF0000;font-size:18px;">0%</b></div></td>
-                        }
+                            <tr>
+                                <td style="vertical-align:middle;" rowspan="3"><b>@currList[i].DepartmentName</b></td>
+                                <td>@ResGetGlobalKPIs2.GetGlobalKPIs2.lblCurrentWeek</td>
+                                <td style="text-align: center;">@Math.Round(100 * currList[i + 1].Productivity, 2)%</td>
+                                <td style="text-align: center;">@Math.Round(currList[i + 1].Delay, 2)</td>
+                                <td style="text-align: center;">@Math.Round(currList[i + 1].LeadTime, 2)</td>
+                                <td style="text-align: center;">@Math.Round(currList[i + 1].Quantities, 2)</td>
+                            </tr>
+                            <tr>
+                                <td>@ResGetGlobalKPIs2.GetGlobalKPIs2.lblLastWeek</td>
+                                <td style="text-align: center;">@Math.Round(100 * currList[i].Productivity, 2)%</td>
+                                <td style="text-align: center;">@Math.Round(currList[i].Delay, 2)</td>
+                                <td style="text-align: center;">@Math.Round(currList[i].LeadTime, 2)</td>
+                                <td style="text-align: center;">@Math.Round(currList[i].Quantities, 2)</td>
+                            </tr>
+                            <tr>
+                                <td>@ResGetGlobalKPIs2.GetGlobalKPIs2.lblVariation</td>
+                                @if (currList[i].Productivity > 0)
+                                {
+                                    var prodBgColor = (currList[i].Productivity < currList[i + 1].Productivity) ? "#00FF00" : "#FF0000";
+                                    <td style="text-align: center;"><div style="background-color: @prodBgColor;font-size:18px;"><b>@Math.Round(100 * (currList[i + 1].Productivity - currList[i].Productivity) / currList[i].Productivity, 2)%</b></div></td>
+                                }
+                                else
+                                {
+                                    <td style="text-align: center;"><div><b style="font-size:18px;">-</b></div></td>
+                                }
 
-                        @if (currList[i].Delay > 0)
-                        {
-                            var delayBgColor = (currList[i].Delay < currList[i + 1].Delay) ? "#FF0000" : "#00FF00";
-                            <td style="text-align: center;"><div><b style="background-color: @delayBgColor;font-size:18px;">@Math.Round(100 * (currList[i + 1].Delay - currList[i].Delay) / currList[i].Delay, 2)%</b></div></td>
-                        }
+                                @if (currList[i].Delay > 0)
+                                {
+                                    var delayBgColor = (currList[i].Delay <= currList[i + 1].Delay) ? "#FF0000" : "#00FF00";
+                                    <td style="text-align: center;"><div><b style="background-color: @delayBgColor;font-size:18px;">@Math.Round(100 * (currList[i + 1].Delay - currList[i].Delay) / currList[i].Delay, 2)%</b></div></td>
+                                }
 
-                        else
-                        {
-                            <td style="text-align: center;"><div><b style="background-color: #FF0000;font-size:18px;">0%</b></div></td>
-                        }
-                        @if (currList[i].LeadTime > 0)
-                        {
+                                else
+                                {
+                                    <td style="text-align: center;"><div><b style="font-size:18px;">-</b></div></td>
+                                }
+                                @if (currList[i].LeadTime > 0)
+                                {
 
-                            var ltBgColor = (currList[i].LeadTime < currList[i + 1].LeadTime) ? "#FF0000" : "#00FF00";
-                            <td style="text-align: center;"><div><b style="background-color: @ltBgColor;font-size:18px;">@Math.Round(100 * (currList[i + 1].LeadTime - currList[i].LeadTime) / currList[i].LeadTime, 2)%</b></div></td>
-                        }
+                                    var ltBgColor = (currList[i].LeadTime < currList[i + 1].LeadTime) ? "#FF0000" : "#00FF00";
+                                    <td style="text-align: center;"><div><b style="background-color: @ltBgColor;font-size:18px;">@Math.Round(100 * (currList[i + 1].LeadTime - currList[i].LeadTime) / currList[i].LeadTime, 2)%</b></div></td>
+                                }
 
-                        else
-                        {
-                            <td style="text-align: center;"><div><b style="background-color: #FF0000;font-size:18px;">0%</b></div></td>
-                        }
-                        @if (currList[i].Quantities > 0)
-                        {
+                                else
+                                {
+                                    <td style="text-align: center;"><div><b style="font-size:18px;">-</b></div></td>
+                                }
+                                @if (currList[i].Quantities > 0)
+                                {
 
-                            var qtyBgColor = (currList[i].Quantities > currList[i + 1].Quantities) ? "#FF0000" : "#00FF00";
-                            <td style="text-align: center;"><div><b style="background-color: @qtyBgColor;font-size:18px;">@Math.Round(100 * (currList[i + 1].Quantities - currList[i].Quantities) / currList[i].Quantities, 2)%</b></div></td>
-                        }
+                                    var qtyBgColor = (currList[i].Quantities > currList[i + 1].Quantities) ? "#FF0000" : "#00FF00";
+                                    <td style="text-align: center;"><div><b style="background-color: @qtyBgColor;font-size:18px;">@Math.Round(100 * (currList[i + 1].Quantities - currList[i].Quantities) / currList[i].Quantities, 2)%</b></div></td>
+                                }
 
-                        else
-                        {
-                            <td style="text-align: center;"><div><b style="background-color: #FF0000;font-size:18px;">0%</b></div></td>
+                                else
+                                {
+                                    <td style="text-align: center;"><div><b style="font-size:18px;">-</b></div></td>
+                                }
+                            </tr>
                         }
-                    </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 }

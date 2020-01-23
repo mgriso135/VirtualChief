@@ -1,0 +1,20 @@
+﻿@if (ViewBag.authR)
+{
+    if (ViewBag.Productivity >= 0)
+    {
+<div>
+    @ResOperatorsAnalysis.GetOperatorProductivity.lblProductivity: <b>@ViewBag.Productivity%</b> <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="bottom" title="@ResOperatorsAnalysis.GetOperatorProductivity.lblProductivityExplanation" style="background: transparent; border:0px;margin:0px;padding:0px;">
+        <i class="material-icons">help</i>
+    </button>
+</div>
+    }
+    else
+    {
+<div>@ResOperatorsAnalysis.GetOperatorProductivity.lblProductivity: <b>-</b></div>
+    }
+
+}
+else
+{
+    <div>You're not authorized</div>
+}
