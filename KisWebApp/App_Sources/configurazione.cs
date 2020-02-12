@@ -852,7 +852,7 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE "
-                + "Sezione LIKE 'CustomersController'"
+                + "Sezione LIKE 'EventsExportController'"
                 + " AND parametro LIKE 'EVENTSEXPORT-API-KEY'";
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))

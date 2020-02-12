@@ -22,13 +22,13 @@ namespace KIS.Controllers
 
         /* This methods exports only finished tasks data, where task real end date is between start and end */
         // GET api/<controller>
-        [System.Web.Mvc.HttpGet]
+        [System.Web.Http.HttpGet]
         public HttpResponseMessage ExportFinishedTasksEvents(DateTime start, DateTime end)
         {
             String cKey = "";
             try
             {
-                var arrCKey = Request.Headers.GetValues("SIAV-API-KEY");
+                var arrCKey = Request.Headers.GetValues("X-API-KEY");
                 cKey = arrCKey.FirstOrDefault();
             }
             catch
@@ -39,10 +39,12 @@ namespace KIS.Controllers
             String xKey = cfg.x_api_key;
             if (xKey.Length > 0 && xKey == cKey)
             {
-
-
+                // use TaskEventStruct in Analysis.cs
+                TaskEvents tskevs = new TaskEvents();
+                
+                return Request.CreateResponse(HttpStatusCode.OK, tskevs.TaskEventsData);
             }
-                return Request.CreateResponse(HttpStatusCode.Unauthorized);
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
 
