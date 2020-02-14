@@ -41,7 +41,7 @@ namespace KIS.Controllers
             {
                 // use TaskEventStruct in Analysis.cs
                 TaskEvents tskevs = new TaskEvents();
-                
+                tskevs.loadTaskEvents(start, end);
                 return Request.CreateResponse(HttpStatusCode.OK, tskevs.TaskEventsData);
             }
             return Request.CreateResponse(HttpStatusCode.Unauthorized);

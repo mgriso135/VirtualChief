@@ -2638,7 +2638,6 @@ namespace KIS.App_Code
                                 this.Intervalli.Add(curr);
                             }
                         }
-
                     }
                     conn.Close();
                 }

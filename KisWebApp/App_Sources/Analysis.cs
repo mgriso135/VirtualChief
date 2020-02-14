@@ -1437,7 +1437,7 @@ namespace KIS.App_Sources
                 + "INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione) "
                 + "INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origtask AND tempiciclo.revisione = tasksproduzione.revorigtask AND tasksproduzione.variante = tempiciclo.variante) "
                 + "INNER JOIN registroeventitaskproduzione ON (registroeventitaskproduzione.task = tasksproduzione.taskid) "
-                + " WHERE tasksproduzione.status = 'F' AND productionplan.status = 'F' AND processo.Name = 'Serramenti PVC' "
+                + " WHERE tasksproduzione.status = 'F' AND productionplan.status = 'F' "
                 + " AND productionplan.EndProductionDateReal IS NOT NULL AND productionplan.EndProductionDateReal >= '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "'"
                 + " AND productionplan.EndProductionDateReal <= '" + end.ToString("yyyy-MM-dd HH:mm:ss") + "'"
                 + " ORDER  BY productionplan.anno, productionplan.id asc, tasksproduzione.taskid, registroeventitaskproduzione.USER, registroeventitaskproduzione.data asc";

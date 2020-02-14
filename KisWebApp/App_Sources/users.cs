@@ -3334,11 +3334,6 @@ namespace KIS.App_Code
                         filteredlist = filteredlist.OrderBy(x => x.Inizio).ToList();
                         i = -1;
                     }
-                    /*else if(filteredlist[i + 1].Inizio >= filteredlist[i].Inizio && filteredlist[i+1].Fine <= filteredlist[i].Inizio)
-                    {
-                        filteredlist.RemoveAt(i + 1);
-                        i = -1;
-                    }*/
                 }
 
                 /* calculate working time */
