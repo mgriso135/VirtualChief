@@ -27,7 +27,7 @@ namespace VCProductionEventsExport_SIAV
 
             Console.WriteLine(resproc);
 
-            Console.ReadKey();
+            //Console.ReadKey();
 
             // Go to http://aka.ms/dotnet-get-started-console to continue learning how to build a console app! 
 
@@ -36,10 +36,10 @@ namespace VCProductionEventsExport_SIAV
 
         public static async Task<string> ExportEvents()
         {
-            DateTime start1 = DateTime.UtcNow.AddDays(-50);
+            DateTime start1 = DateTime.UtcNow.AddDays(-2);
             DateTime start2 = new DateTime(start1.Year, start1.Month, start1.Day, 0, 0, 0);
             //DateTime end1 = start1.AddDays(1);
-            DateTime end1 = DateTime.UtcNow.AddDays(+1);
+            DateTime end1 = DateTime.UtcNow;
 
             String QueryString = "?start=" + start2.ToString("yyyy-MM-dd") + "&end=" + end1.ToString("yyyy-MM-dd");
 
@@ -60,6 +60,7 @@ namespace VCProductionEventsExport_SIAV
         protected static string processevents(String jstr)
         {
             List<TaskEventStruct> filteredds = new List<TaskEventStruct>();
+            Console.WriteLine(jstr);
             var origds1 = JsonConvert.DeserializeObject<List<TaskEventStruct>>(jstr);
             var origds = origds1.OrderBy(x => x.TaskID).ThenBy(z=>z.TaskEventUser).ThenBy(y => y.TaskEventTime).ToList();
             String log = "";
@@ -377,7 +378,7 @@ namespace VCProductionEventsExport_SIAV
             String dbuser = ConfigurationManager.AppSettings["exportdbuser"];
             String dbpass = ConfigurationManager.AppSettings["exportdbpassword"];
             String dbtable = ConfigurationManager.AppSettings["exportdbtable"];
-            String sqlConn = "server=localhost; user id="+dbuser+"; password="+dbpass+"; database="+db+";pooling=true";
+            String sqlConn = "server=localhost; user id="+dbuser+"; password="+dbpass+"; database="+db+";pooling=true;SslMode=None";
             MySqlConnection conn = new MySqlConnection(sqlConn);
             conn.Open();
             DateTime exporttimestamp = DateTime.UtcNow;
@@ -565,7 +566,7 @@ namespace VCProductionEventsExport_SIAV
             }
             conn.Close();
 
-            System.IO.File.WriteAllText(@"C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\VCProductionEventsExport-SIAV\bin\Debug\sortlog.txt", log);
+        //    System.IO.File.WriteAllText(@"C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\VCProductionEventsExport-SIAV\bin\Debug\sortlog.txt", log);
             log += "Done!";
             return log;
         }
