@@ -20,10 +20,12 @@
         var orderYear = -1;
         @if(Model!=null)
         {
+            var txtNotes = "";
+            if(Model.Note!=null && Model.Note.Length > 0) { txtNotes = Model.Note.Trim(); }
             @Html.Raw("orderID = " + Model.ID +";");
             @Html.Raw("orderYear = " + Model.Year + ";");
             @Html.Raw("$('#txtExternalID').val('" + Model.ExternalID+"');");
-            @Html.Raw("$('#txtNotes').val('" + Model.Note+"');");
+            @Html.Raw("$('#txtNotes').val('" + Model.Note.Trim()+"');");
             @Html.Raw("$('#imgEditOrder').fadeIn();");
             @Html.Raw("$('#imgAddOrder').fadeOut();");
             @Html.Raw("$('#ddlCliente').fadeOut();");
@@ -32,7 +34,7 @@
             @Html.Raw("$('#lnkAddCustomer').fadeOut();");
             @Html.Raw("loadOrderDetailsPanel(orderID, orderYear);");
             @Html.Raw("$('#pnlAddOrderDetail').fadeIn();");
-            
+
 
         }
 

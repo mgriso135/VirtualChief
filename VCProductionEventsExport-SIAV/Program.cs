@@ -36,7 +36,7 @@ namespace VCProductionEventsExport_SIAV
 
         public static async Task<string> ExportEvents()
         {
-            DateTime start1 = DateTime.UtcNow.AddDays(-2);
+            DateTime start1 = DateTime.UtcNow.AddDays(-50);
             DateTime start2 = new DateTime(start1.Year, start1.Month, start1.Day, 0, 0, 0);
             //DateTime end1 = start1.AddDays(1);
             DateTime end1 = DateTime.UtcNow;
@@ -96,8 +96,9 @@ namespace VCProductionEventsExport_SIAV
                         if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF && taskI == taskF)
                         {
                             WorkingTimeSpan curr = new WorkingTimeSpan();
-                        curr.EventTypeI = EventoI;
-                        curr.EventTypeF = EventoF;
+
+                            curr.EventTypeI = EventoI;
+                            curr.EventTypeF = EventoF;
                             curr.user = usrI;
                             curr.Inizio = inizio;
                             curr.Fine = fine;
@@ -117,6 +118,92 @@ namespace VCProductionEventsExport_SIAV
                         curr.ProductionOrderEndProductionDate = origds[i].ProductionOrderEndProductionDate;
                         curr.TaskPlannedWorkingTime = origds[i].TaskPlannedWorkingTime;
                         curr.TaskPlannedCycleTime = origds[i].TaskPlannedCycleTime;
+                        curr.CustomerName = origds[i].CustomerName;
+                        curr.CustomerID = origds[i].CustomerID;
+                        curr.CustomerVATNumber = origds[i].CustomerVATNumber;
+                        curr.CustomerCodiceFiscale = origds[i].CustomerCodiceFiscale;
+                        curr.CustomerAddress = origds[i].CustomerAddress;
+                        curr.CustomerCity = origds[i].CustomerCity;
+                        curr.CustomerProvince = origds[i].CustomerProvince;
+                        curr.CustomerZipCode = origds[i].CustomerZipCode;
+                        curr.CustomerCountry = origds[i].CustomerCountry;
+                        curr.CustomerPhoneNumber = origds[i].CustomerPhoneNumber;
+                        curr.CustomerEMail = origds[i].CustomerEMail;
+                        curr.CustomerKanbanManaged = origds[i].CustomerKanbanManaged;
+                        curr.SalesOrderID = origds[i].SalesOrderID;
+                        curr.SalesOrderYear = origds[i].SalesOrderYear;
+                        curr.SalesOrderCustomer = origds[i].SalesOrderCustomer;
+                        curr.SalesOrderDate = origds[i].SalesOrderDate;
+                        curr.SalesOrderNotes = origds[i].SalesOrderNotes;
+                        curr.ProductionOrderID = origds[i].ProductionOrderID;
+                        curr.ProductionOrderYear = origds[i].ProductionOrderYear;
+                        curr.ProductionOrderProductTypeID = origds[i].ProductionOrderProductTypeID;
+                        curr.ProductionOrderProductTypeReview = origds[i].ProductionOrderProductTypeReview;
+                        curr.ProductionOrderProductID = origds[i].ProductionOrderProductID;
+                        curr.ProductionOrderSerialNumber = origds[i].ProductionOrderSerialNumber;
+                        curr.ProductionOrderStatus = origds[i].ProductionOrderStatus;
+                        curr.ProductionOrderDepartmentID = origds[i].ProductionOrderDepartmentID;
+                        curr.ProductionOrderStartTime = origds[i].ProductionOrderStartTime;
+                        curr.ProductionOrderDeliveryDate = origds[i].ProductionOrderDeliveryDate;
+                        curr.ProductionOrderEndProductionDate = origds[i].ProductionOrderEndProductionDate;
+                        curr.ProductionOrderPlanner = origds[i].ProductionOrderPlanner;
+                        curr.ProductionOrderQuantityOrdered = origds[i].ProductionOrderQuantityOrdered;
+                        curr.ProductionOrderQuantityProduced = origds[i].ProductionOrderQuantityProduced;
+                        curr.ProductionOrderKanbanCardID = origds[i].ProductionOrderKanbanCardID;
+                        curr.ProductTypeID = origds[i].ProductTypeID;
+                        curr.ProductTypeReview = origds[i].ProductTypeReview;
+                        curr.ProductTypeReviewDate = origds[i].ProductTypeReviewDate;
+                        curr.ProductTypeName = origds[i].ProductTypeName;
+                        curr.ProductTypeDescription = origds[i].ProductTypeDescription;
+                        curr.ProductTypeEnabled = origds[i].ProductTypeEnabled;
+                        curr.ProductID = origds[i].ProductID;
+                        curr.ProductName = origds[i].ProductName;
+                        curr.ProductDescription = origds[i].ProductDescription;
+                        curr.DepartmentID = origds[i].DepartmentID;
+                        curr.DepartmentName = origds[i].DepartmentName;
+                        curr.DepartmentDescription = origds[i].DepartmentDescription;
+                        curr.DepartmentTaktTime = origds[i].DepartmentTaktTime;
+                        curr.DepartmentTimeZone = origds[i].DepartmentTimeZone;
+                        curr.RealWorkingTime = origds[i].RealWorkingTime;
+                        curr.RealDelay = origds[i].RealDelay;
+                        curr.RealLeadTime = origds[i].RealLeadTime;
+                        curr.ProductionOrderEndProductionDateReal = origds[i].ProductionOrderEndProductionDateReal;
+                        curr.ProductionOrderEndProductionDateRealWeek = origds[i].ProductionOrderEndProductionDateRealWeek;
+                        curr.TaskID = origds[i].TaskID;
+                        curr.TaskName = origds[i].TaskName;
+                        curr.TaskDescription = origds[i].TaskDescription;
+                        curr.TaskEarlyStart = origds[i].TaskEarlyStart;
+                        curr.TaskLateStart = origds[i].TaskLateStart;
+                        curr.TaskEarlyFinish = origds[i].TaskEarlyFinish;
+                        curr.TaskLateFinish = origds[i].TaskLateFinish;
+                        curr.TaskStatus = origds[i].TaskStatus;
+                        curr.TaskNumOperators = origds[i].TaskNumOperators;
+                        curr.TaskQuantityOrdered = origds[i].TaskQuantityOrdered;
+                        curr.TaskQuantityProduced = origds[i].TaskQuantityProduced;
+                        curr.TaskPlannedSetupTime = origds[i].TaskPlannedSetupTime;
+                        curr.TaskPlannedCycleTime = origds[i].TaskPlannedCycleTime;
+                        curr.TaskPlannedUnloadTime = origds[i].TaskPlannedUnloadTime;
+                        curr.WorkstationID = origds[i].WorkstationID;
+                        curr.WorkstationName = origds[i].WorkstationName;
+                        curr.WorkstationDescription = origds[i].WorkstationDescription;
+                        curr.TaskRealEndDate = origds[i].TaskRealEndDate;
+                        curr.TaskRealEndDateWeek = origds[i].TaskRealEndDateWeek;
+                        curr.TaskRealLeadTime = origds[i].TaskRealLeadTime;
+                        curr.TaskRealWorkingTime = origds[i].TaskRealWorkingTime;
+                        curr.TaskRealDelay = origds[i].TaskRealDelay;
+                        curr.TaskOriginalID = origds[i].TaskOriginalID;
+                        curr.TaskOriginalRev = origds[i].TaskOriginalRev;
+                        curr.TaskOriginalVar = origds[i].TaskOriginalVar;
+                        curr.TaskPlannedWorkingTime = origds[i].TaskPlannedWorkingTime;
+                        curr.TaskEventID = origds[i].TaskEventID;
+                        curr.TaskEventUser = origds[i].TaskEventUser;
+                        curr.TaskEventTime = origds[i].TaskEventTime;
+                        curr.TaskEventType = origds[i].TaskEventType;
+                        curr.TaskEventNotes = origds[i].TaskEventNotes;
+
+
+
+
 
 
         tsList.Add(curr);
@@ -152,6 +239,101 @@ namespace VCProductionEventsExport_SIAV
                     int olderid = tslistOrd[i].Fine > tslistOrd[i + 1].Fine ? i : i + 1;
                     int earlierid = tslistOrd[i].Fine > tslistOrd[i + 1].Fine ? i+1 : i;
                     WorkingTimeSpan curr = new WorkingTimeSpan();
+
+
+
+                    curr.RagioneSocialeCliente = tslistOrd[i].CustomerName;
+                    curr.ProductionOrderDeliveryDate = tslistOrd[i].ProductionOrderDeliveryDate;
+                    curr.ProductionOrderEndProductionDate = tslistOrd[i].ProductionOrderEndProductionDate;
+                    curr.TaskPlannedWorkingTime = tslistOrd[i].TaskPlannedWorkingTime;
+                    curr.TaskPlannedCycleTime = tslistOrd[i].TaskPlannedCycleTime;
+                    curr.CustomerName = tslistOrd[i].CustomerName;
+                    curr.CustomerID = tslistOrd[i].CustomerID;
+                    curr.CustomerVATNumber = tslistOrd[i].CustomerVATNumber;
+                    curr.CustomerCodiceFiscale = tslistOrd[i].CustomerCodiceFiscale;
+                    curr.CustomerAddress = tslistOrd[i].CustomerAddress;
+                    curr.CustomerCity = tslistOrd[i].CustomerCity;
+                    curr.CustomerProvince = tslistOrd[i].CustomerProvince;
+                    curr.CustomerZipCode = tslistOrd[i].CustomerZipCode;
+                    curr.CustomerCountry = tslistOrd[i].CustomerCountry;
+                    curr.CustomerPhoneNumber = tslistOrd[i].CustomerPhoneNumber;
+                    curr.CustomerEMail = tslistOrd[i].CustomerEMail;
+                    curr.CustomerKanbanManaged = tslistOrd[i].CustomerKanbanManaged;
+                    curr.SalesOrderID = tslistOrd[i].SalesOrderID;
+                    curr.SalesOrderYear = tslistOrd[i].SalesOrderYear;
+                    curr.SalesOrderCustomer = tslistOrd[i].SalesOrderCustomer;
+                    curr.SalesOrderDate = tslistOrd[i].SalesOrderDate;
+                    curr.SalesOrderNotes = tslistOrd[i].SalesOrderNotes;
+                    curr.ProductionOrderID = tslistOrd[i].ProductionOrderID;
+                    curr.ProductionOrderYear = tslistOrd[i].ProductionOrderYear;
+                    curr.ProductionOrderProductTypeID = tslistOrd[i].ProductionOrderProductTypeID;
+                    curr.ProductionOrderProductTypeReview = tslistOrd[i].ProductionOrderProductTypeReview;
+                    curr.ProductionOrderProductID = tslistOrd[i].ProductionOrderProductID;
+                    curr.ProductionOrderSerialNumber = tslistOrd[i].ProductionOrderSerialNumber;
+                    curr.ProductionOrderStatus = tslistOrd[i].ProductionOrderStatus;
+                    curr.ProductionOrderDepartmentID = tslistOrd[i].ProductionOrderDepartmentID;
+                    curr.ProductionOrderStartTime = tslistOrd[i].ProductionOrderStartTime;
+                    curr.ProductionOrderDeliveryDate = tslistOrd[i].ProductionOrderDeliveryDate;
+                    curr.ProductionOrderEndProductionDate = tslistOrd[i].ProductionOrderEndProductionDate;
+                    curr.ProductionOrderPlanner = tslistOrd[i].ProductionOrderPlanner;
+                    curr.ProductionOrderQuantityOrdered = tslistOrd[i].ProductionOrderQuantityOrdered;
+                    curr.ProductionOrderQuantityProduced = tslistOrd[i].ProductionOrderQuantityProduced;
+                    curr.ProductionOrderKanbanCardID = tslistOrd[i].ProductionOrderKanbanCardID;
+                    curr.ProductTypeID = tslistOrd[i].ProductTypeID;
+                    curr.ProductTypeReview = tslistOrd[i].ProductTypeReview;
+                    curr.ProductTypeReviewDate = tslistOrd[i].ProductTypeReviewDate;
+                    curr.ProductTypeName = tslistOrd[i].ProductTypeName;
+                    curr.ProductTypeDescription = tslistOrd[i].ProductTypeDescription;
+                    curr.ProductTypeEnabled = tslistOrd[i].ProductTypeEnabled;
+                    curr.ProductID = tslistOrd[i].ProductID;
+                    curr.ProductName = tslistOrd[i].ProductName;
+                    curr.ProductDescription = tslistOrd[i].ProductDescription;
+                    curr.DepartmentID = tslistOrd[i].DepartmentID;
+                    curr.DepartmentName = tslistOrd[i].DepartmentName;
+                    curr.DepartmentDescription = tslistOrd[i].DepartmentDescription;
+                    curr.DepartmentTaktTime = tslistOrd[i].DepartmentTaktTime;
+                    curr.DepartmentTimeZone = tslistOrd[i].DepartmentTimeZone;
+                    curr.RealWorkingTime = tslistOrd[i].RealWorkingTime;
+                    curr.RealDelay = tslistOrd[i].RealDelay;
+                    curr.RealLeadTime = tslistOrd[i].RealLeadTime;
+                    curr.ProductionOrderEndProductionDateReal = tslistOrd[i].ProductionOrderEndProductionDateReal;
+                    curr.ProductionOrderEndProductionDateRealWeek = tslistOrd[i].ProductionOrderEndProductionDateRealWeek;
+                    curr.TaskID = tslistOrd[i].TaskID;
+                    curr.TaskName = tslistOrd[i].TaskName;
+                    curr.TaskDescription = tslistOrd[i].TaskDescription;
+                    curr.TaskEarlyStart = tslistOrd[i].TaskEarlyStart;
+                    curr.TaskLateStart = tslistOrd[i].TaskLateStart;
+                    curr.TaskEarlyFinish = tslistOrd[i].TaskEarlyFinish;
+                    curr.TaskLateFinish = tslistOrd[i].TaskLateFinish;
+                    curr.TaskStatus = tslistOrd[i].TaskStatus;
+                    curr.TaskNumOperators = tslistOrd[i].TaskNumOperators;
+                    curr.TaskQuantityOrdered = tslistOrd[i].TaskQuantityOrdered;
+                    curr.TaskQuantityProduced = tslistOrd[i].TaskQuantityProduced;
+                    curr.TaskPlannedSetupTime = tslistOrd[i].TaskPlannedSetupTime;
+                    curr.TaskPlannedCycleTime = tslistOrd[i].TaskPlannedCycleTime;
+                    curr.TaskPlannedUnloadTime = tslistOrd[i].TaskPlannedUnloadTime;
+                    curr.WorkstationID = tslistOrd[i].WorkstationID;
+                    curr.WorkstationName = tslistOrd[i].WorkstationName;
+                    curr.WorkstationDescription = tslistOrd[i].WorkstationDescription;
+                    curr.TaskRealEndDate = tslistOrd[i].TaskRealEndDate;
+                    curr.TaskRealEndDateWeek = tslistOrd[i].TaskRealEndDateWeek;
+                    curr.TaskRealLeadTime = tslistOrd[i].TaskRealLeadTime;
+                    curr.TaskRealWorkingTime = tslistOrd[i].TaskRealWorkingTime;
+                    curr.TaskRealDelay = tslistOrd[i].TaskRealDelay;
+                    curr.TaskOriginalID = tslistOrd[i].TaskOriginalID;
+                    curr.TaskOriginalRev = tslistOrd[i].TaskOriginalRev;
+                    curr.TaskOriginalVar = tslistOrd[i].TaskOriginalVar;
+                    curr.TaskPlannedWorkingTime = tslistOrd[i].TaskPlannedWorkingTime;
+                    curr.TaskEventID = tslistOrd[i].TaskEventID;
+                    curr.TaskEventUser = tslistOrd[i].TaskEventUser;
+                    curr.TaskEventTime = tslistOrd[i].TaskEventTime;
+                    curr.TaskEventType = tslistOrd[i].TaskEventType;
+                    curr.TaskEventNotes = tslistOrd[i].TaskEventNotes;
+
+
+
+
+
                     curr.Inizio = minstart;
                     curr.Fine = maxend;
                     curr.StartEventID = tslistOrd[earlierid].StartEventID;
@@ -167,6 +349,11 @@ namespace VCProductionEventsExport_SIAV
                     curr.TaskPlannedCycleTime = tslistOrd[i].TaskPlannedCycleTime;
                     curr.StartEventID = tslistOrd[i].StartEventID;
                     curr.EndEventID = tslistOrd[i].EndEventID;
+
+
+
+
+
                     tslistOrd.RemoveAt(i);
                     tslistOrd.RemoveAt(i);
                     tslistOrd.Add(curr);
@@ -191,83 +378,82 @@ namespace VCProductionEventsExport_SIAV
             {
                 TaskEventStruct ei = new TaskEventStruct();
                 TaskEventStruct ef = new TaskEventStruct();       
-                ei.CustomerID = "";
+                ei.CustomerID = tslistOrd[i].CustomerID;
                 ei.CustomerName = tslistOrd[i].RagioneSocialeCliente;
-                ei.CustomerVATNumber = "";
-                ei.CustomerCodiceFiscale = "";
-                ei.CustomerAddress = "";
-                ei.CustomerAddress = "";
-                ei.CustomerCity = "";
-                ei.CustomerProvince = "";
-                ei.CustomerZipCode = "";
-                ei.CustomerCountry = "";
-                ei.CustomerPhoneNumber = "";
-                ei.CustomerEMail = "";
-                ei.CustomerKanbanManaged = false;
-                ei.SalesOrderID = -1;
-                ei.SalesOrderYear = -1;
-                ei.SalesOrderCustomer = "";
-                ei.SalesOrderDate = new DateTime(1970, 1, 1, 0, 0, 0);
-                ei.SalesOrderNotes = "";
+                ei.CustomerVATNumber = tslistOrd[i].CustomerVATNumber;
+                ei.CustomerCodiceFiscale = tslistOrd[i].CustomerCodiceFiscale;
+                ei.CustomerAddress = tslistOrd[i].CustomerAddress;
+                ei.CustomerCity = tslistOrd[i].CustomerCity;
+                ei.CustomerProvince = tslistOrd[i].CustomerProvince;
+                ei.CustomerZipCode = tslistOrd[i].CustomerZipCode;
+                ei.CustomerCountry = tslistOrd[i].CustomerCountry;
+                ei.CustomerPhoneNumber = tslistOrd[i].CustomerPhoneNumber;
+                ei.CustomerEMail = tslistOrd[i].CustomerEMail;
+                ei.CustomerKanbanManaged = tslistOrd[i].CustomerKanbanManaged;
+                ei.SalesOrderID = tslistOrd[i].SalesOrderID;
+                ei.SalesOrderYear = tslistOrd[i].SalesOrderYear;
+                ei.SalesOrderCustomer = tslistOrd[i].SalesOrderCustomer;
+                ei.SalesOrderDate = tslistOrd[i].SalesOrderDate;
+                ei.SalesOrderNotes = tslistOrd[i].SalesOrderNotes;
                 ei.ProductionOrderID = tslistOrd[i].idProdotto;
                 ei.ProductionOrderYear = tslistOrd[i].annoProdotto;
-                ei.ProductionOrderProductTypeID = -1;
-                ei.ProductionOrderProductTypeReview = -1;
-                ei.ProductionOrderProductID = -1;
-                ei.ProductionOrderSerialNumber = "";
+                ei.ProductionOrderProductTypeID = tslistOrd[i].ProductionOrderProductTypeID;
+                ei.ProductionOrderProductTypeReview = tslistOrd[i].ProductionOrderProductTypeReview;
+                ei.ProductionOrderProductID = tslistOrd[i].ProductionOrderProductID;
+                ei.ProductionOrderSerialNumber = tslistOrd[i].ProductionOrderSerialNumber;
                 ei.ProductionOrderStatus = 'F';
                 ei.ProductionOrderDepartmentID = tslistOrd[i].idReparto;
-                ei.ProductionOrderStartTime=new DateTime(1970,1,1,0,0,0);
+                ei.ProductionOrderStartTime= tslistOrd[i].ProductionOrderStartTime;
                 ei.ProductionOrderDeliveryDate = tslistOrd[i].ProductionOrderDeliveryDate;
                 ei.ProductionOrderEndProductionDate = tslistOrd[i].ProductionOrderEndProductionDate;
-                ei.ProductionOrderPlanner = "";
-                ei.ProductionOrderQuantityOrdered = 0;
-                ei.ProductionOrderQuantityProduced = 0;
-                ei.ProductionOrderKanbanCardID = "";
-                ei.ProductTypeID = -1;
-                ei.ProductTypeReview = -1;
-                ei.ProductTypeReviewDate = new DateTime(1970, 1, 1, 0, 0, 0);
+                ei.ProductionOrderPlanner = tslistOrd[i].ProductionOrderPlanner;
+                ei.ProductionOrderQuantityOrdered = tslistOrd[i].ProductionOrderQuantityOrdered;
+                ei.ProductionOrderQuantityProduced = tslistOrd[i].ProductionOrderQuantityProduced;
+                ei.ProductionOrderKanbanCardID = tslistOrd[i].ProductionOrderKanbanCardID;
+                ei.ProductTypeID = tslistOrd[i].ProductTypeID;
+                ei.ProductTypeReview = tslistOrd[i].ProductTypeReview;
+                ei.ProductTypeReviewDate = tslistOrd[i].ProductTypeReviewDate;
                 ei.ProductTypeName = tslistOrd[i].NomeProdotto;
-                ei.ProductTypeDescription = "";
-                ei.ProductTypeEnabled = true;
-                ei.ProductID = -1;
-                ei.ProductName = tslistOrd[i].NomeProdotto;
-                ei.ProductDescription = "";
+                ei.ProductTypeDescription = tslistOrd[i].ProductTypeDescription;
+                ei.ProductTypeEnabled = tslistOrd[i].ProductTypeEnabled;
+                ei.ProductID = tslistOrd[i].ProductID;
+                ei.ProductName = tslistOrd[i].ProductName;
+                ei.ProductDescription = tslistOrd[i].ProductDescription;
                 ei.DepartmentID= tslistOrd[i].idReparto;
-                ei.DepartmentName = "";
-                ei.DepartmentDescription = "";
-                ei.DepartmentTaktTime = 0.0;
-                ei.DepartmentTimeZone = "";
-                ei.RealWorkingTime = new TimeSpan(0, 0, 0);
-                ei.RealDelay = new TimeSpan(0, 0, 0);
-                ei.RealLeadTime = new TimeSpan(0, 0, 0);
-                ei.ProductionOrderEndProductionDateReal = new DateTime(1970, 1, 1, 0, 0, 0);
-                ei.ProductionOrderEndProductionDateRealWeek = 0;
+                ei.DepartmentName = tslistOrd[i].DepartmentName;
+                ei.DepartmentDescription = tslistOrd[i].DepartmentDescription;
+                ei.DepartmentTaktTime = tslistOrd[i].DepartmentTaktTime;
+                ei.DepartmentTimeZone = tslistOrd[i].DepartmentTimeZone;
+                ei.RealWorkingTime = tslistOrd[i].RealWorkingTime;
+                ei.RealDelay = tslistOrd[i].RealDelay;
+                ei.RealLeadTime = tslistOrd[i].RealLeadTime;
+                ei.ProductionOrderEndProductionDateReal = tslistOrd[i].ProductionOrderEndProductionDateReal;
+                ei.ProductionOrderEndProductionDateRealWeek = tslistOrd[i].ProductionOrderEndProductionDateRealWeek;
                 ei.TaskID = tslistOrd[i].TaskID;
-                ei.TaskName = tslistOrd[i].nomeTask;
-                ei.TaskDescription = "";
-                ei.TaskEarlyStart = new DateTime(1970, 1, 1);
-                ei.TaskLateStart = new DateTime(1970, 1, 1);
-                ei.TaskEarlyFinish = new DateTime(1970, 1, 1);
-                ei.TaskLateFinish = new DateTime(1970, 1, 1);
+                ei.TaskName = tslistOrd[i].TaskName;
+                ei.TaskDescription = tslistOrd[i].TaskDescription;
+                ei.TaskEarlyStart = tslistOrd[i].TaskEarlyStart;
+                ei.TaskLateStart = tslistOrd[i].TaskLateStart;
+                ei.TaskEarlyFinish = tslistOrd[i].TaskEarlyFinish;
+                ei.TaskLateFinish = tslistOrd[i].TaskLateFinish;
                 ei.TaskStatus = tslistOrd[i].TaskStatus;
-                ei.TaskNumOperators = 0;
-                ei.TaskQuantityOrdered = 0;
-        ei.TaskQuantityProduced = 0;
-        ei.TaskPlannedSetupTime = new TimeSpan(0,0,0);
+                ei.TaskNumOperators = tslistOrd[i].TaskNumOperators;
+                ei.TaskQuantityOrdered = tslistOrd[i].TaskQuantityOrdered;
+        ei.TaskQuantityProduced = tslistOrd[i].TaskQuantityProduced;
+        ei.TaskPlannedSetupTime = tslistOrd[i].TaskPlannedSetupTime;
         ei.TaskPlannedCycleTime = tslistOrd[i].TaskPlannedCycleTime;
-        ei.TaskPlannedUnloadTime = new TimeSpan(0,0,0);
+        ei.TaskPlannedUnloadTime = tslistOrd[i].TaskPlannedUnloadTime;
         ei.WorkstationID=tslistOrd[i].idPostazione;
                 ei.WorkstationName = tslistOrd[i].nomePostazione;
-                ei.WorkstationDescription = "";
-                ei.TaskRealEndDate =new DateTime(1970,1,1);
-                ei.TaskRealEndDateWeek = 0;
-                ei.TaskRealLeadTime = new TimeSpan(0,0,0);
-                ei.TaskRealWorkingTime = new TimeSpan(0,0,0);
-                ei.TaskRealDelay=new TimeSpan(0,0,0);
-                ei.TaskOriginalID=0;
-                ei.TaskOriginalRev=0;
-                ei.TaskOriginalVar=0;
+                ei.WorkstationDescription = tslistOrd[i].WorkstationDescription;
+                ei.TaskRealEndDate = tslistOrd[i].TaskRealEndDate;
+                ei.TaskRealEndDateWeek = tslistOrd[i].TaskRealEndDateWeek;
+                ei.TaskRealLeadTime = tslistOrd[i].TaskRealLeadTime;
+                ei.TaskRealWorkingTime = tslistOrd[i].TaskRealWorkingTime;
+                ei.TaskRealDelay= tslistOrd[i].TaskRealDelay;
+                ei.TaskOriginalID= tslistOrd[i].TaskOriginalID;
+                ei.TaskOriginalRev= tslistOrd[i].TaskOriginalRev;
+                ei.TaskOriginalVar= tslistOrd[i].TaskOriginalVar;
         ei.TaskPlannedWorkingTime = tslistOrd[i].TaskPlannedWorkingTime;
         ei.TaskEventID = tslistOrd[i].StartEventID;
         ei.TaskEventUser = tslistOrd[i].user;
@@ -285,89 +471,88 @@ namespace VCProductionEventsExport_SIAV
 
         lstEvents.Add(ei);
 
-                ef.CustomerID = "";
+                ef.CustomerID = tslistOrd[i].CustomerID;
                 ef.CustomerName = tslistOrd[i].RagioneSocialeCliente;
-                ef.CustomerVATNumber = "";
-                ef.CustomerCodiceFiscale = "";
-                ef.CustomerAddress = "";
-                ef.CustomerAddress = "";
-                ef.CustomerCity = "";
-                ef.CustomerProvince = "";
-                ef.CustomerZipCode = "";
-                ef.CustomerCountry = "";
-                ef.CustomerPhoneNumber = "";
-                ef.CustomerEMail = "";
-                ef.CustomerKanbanManaged = false;
-                ef.SalesOrderID = -1;
-                ef.SalesOrderYear = -1;
-                ef.SalesOrderCustomer = "";
-                ef.SalesOrderDate = new DateTime(1970, 1, 1, 0, 0, 0);
-                ef.SalesOrderNotes = "";
+                ef.CustomerVATNumber = tslistOrd[i].CustomerVATNumber;
+                ef.CustomerCodiceFiscale = tslistOrd[i].CustomerCodiceFiscale;
+                ef.CustomerAddress = tslistOrd[i].CustomerAddress;
+                ef.CustomerCity = tslistOrd[i].CustomerCity;
+                ef.CustomerProvince = tslistOrd[i].CustomerProvince;
+                ef.CustomerZipCode = tslistOrd[i].CustomerZipCode;
+                ef.CustomerCountry = tslistOrd[i].CustomerCountry;
+                ef.CustomerPhoneNumber = tslistOrd[i].CustomerPhoneNumber;
+                ef.CustomerEMail = tslistOrd[i].CustomerEMail;
+                ef.CustomerKanbanManaged = tslistOrd[i].CustomerKanbanManaged;
+                ef.SalesOrderID = tslistOrd[i].SalesOrderID;
+                ef.SalesOrderYear = tslistOrd[i].SalesOrderYear;
+                ef.SalesOrderCustomer = tslistOrd[i].SalesOrderCustomer;
+                ef.SalesOrderDate = tslistOrd[i].SalesOrderDate;
+                ef.SalesOrderNotes = tslistOrd[i].SalesOrderNotes;
                 ef.ProductionOrderID = tslistOrd[i].idProdotto;
                 ef.ProductionOrderYear = tslistOrd[i].annoProdotto;
-                ef.ProductionOrderProductTypeID = -1;
-                ef.ProductionOrderProductTypeReview = -1;
-                ef.ProductionOrderProductID = -1;
-                ef.ProductionOrderSerialNumber = "";
-                ef.ProductionOrderStatus = 'F';
+                ef.ProductionOrderProductTypeID = tslistOrd[i].ProductionOrderProductTypeID;
+                ef.ProductionOrderProductTypeReview = tslistOrd[i].ProductionOrderProductTypeReview;
+                ef.ProductionOrderProductID = tslistOrd[i].ProductionOrderProductID;
+                ef.ProductionOrderSerialNumber = tslistOrd[i].ProductionOrderSerialNumber;
+                ef.ProductionOrderStatus = tslistOrd[i].ProductionOrderStatus;
                 ef.ProductionOrderDepartmentID = tslistOrd[i].idReparto;
                 ef.ProductionOrderStartTime = new DateTime(1970, 1, 1, 0, 0, 0);
                 ef.ProductionOrderDeliveryDate = tslistOrd[i].ProductionOrderDeliveryDate;
                 ef.ProductionOrderEndProductionDate = tslistOrd[i].ProductionOrderEndProductionDate;
-                ef.ProductionOrderPlanner = "";
-                ef.ProductionOrderQuantityOrdered = 0;
-                ef.ProductionOrderQuantityProduced = 0;
-                ef.ProductionOrderKanbanCardID = "";
-                ef.ProductTypeID = -1;
-                ef.ProductTypeReview = -1;
-                ef.ProductTypeReviewDate = new DateTime(1970, 1, 1, 0, 0, 0);
+                ef.ProductionOrderPlanner = tslistOrd[i].ProductionOrderPlanner;
+                ef.ProductionOrderQuantityOrdered = tslistOrd[i].ProductionOrderQuantityOrdered;
+                ef.ProductionOrderQuantityProduced = tslistOrd[i].ProductionOrderQuantityProduced;
+                ef.ProductionOrderKanbanCardID = tslistOrd[i].ProductionOrderKanbanCardID;
+                ef.ProductTypeID = tslistOrd[i].ProductTypeID;
+                ef.ProductTypeReview = tslistOrd[i].ProductTypeReview;
+                ef.ProductTypeReviewDate = tslistOrd[i].ProductTypeReviewDate;
                 ef.ProductTypeName = tslistOrd[i].NomeProdotto;
-                ef.ProductTypeDescription = "";
-                ef.ProductTypeEnabled = true;
-                ef.ProductID = -1;
+                ef.ProductTypeDescription = tslistOrd[i].ProductTypeDescription;
+                ef.ProductTypeEnabled = tslistOrd[i].ProductTypeEnabled;
+                ef.ProductID = tslistOrd[i].ProductID;
                 ef.ProductName = tslistOrd[i].NomeProdotto;
-                ef.ProductDescription = "";
+                ef.ProductDescription = tslistOrd[i].ProductDescription;
                 ef.DepartmentID = tslistOrd[i].idReparto;
-                ef.DepartmentName = "";
-                ef.DepartmentDescription = "";
-                ef.DepartmentTaktTime = 0.0;
-                ef.DepartmentTimeZone = "";
-                ef.RealWorkingTime = new TimeSpan(0, 0, 0);
-                ef.RealDelay = new TimeSpan(0, 0, 0);
-                ef.RealLeadTime = new TimeSpan(0, 0, 0);
-                ef.ProductionOrderEndProductionDateReal = new DateTime(1970, 1, 1, 0, 0, 0);
-                ef.ProductionOrderEndProductionDateRealWeek = 0;
+                ef.DepartmentName = tslistOrd[i].DepartmentName;
+                ef.DepartmentDescription = tslistOrd[i].DepartmentDescription;
+                ef.DepartmentTaktTime = tslistOrd[i].DepartmentTaktTime;
+                ef.DepartmentTimeZone = tslistOrd[i].DepartmentTimeZone;
+                ef.RealWorkingTime = tslistOrd[i].RealWorkingTime;
+                ef.RealDelay = tslistOrd[i].RealDelay;
+                ef.RealLeadTime = tslistOrd[i].RealLeadTime;
+                ef.ProductionOrderEndProductionDateReal = tslistOrd[i].ProductionOrderEndProductionDateReal;
+                ef.ProductionOrderEndProductionDateRealWeek = tslistOrd[i].ProductionOrderEndProductionDateRealWeek;
                 ef.TaskID = tslistOrd[i].TaskID;
-                ef.TaskName = tslistOrd[i].nomeTask;
-                ef.TaskDescription = "";
-                ef.TaskEarlyStart = new DateTime(1970, 1, 1);
-                ef.TaskLateStart = new DateTime(1970, 1, 1);
-                ef.TaskEarlyFinish = new DateTime(1970, 1, 1);
-                ef.TaskLateFinish = new DateTime(1970, 1, 1);
+                ef.TaskName = tslistOrd[i].TaskName;
+                ef.TaskDescription = tslistOrd[i].TaskDescription;
+                ef.TaskEarlyStart = tslistOrd[i].TaskEarlyStart;
+                ef.TaskLateStart = tslistOrd[i].TaskLateStart;
+                ef.TaskEarlyFinish = tslistOrd[i].TaskEarlyFinish;
+                ef.TaskLateFinish = tslistOrd[i].TaskLateFinish;
                 ef.TaskStatus = tslistOrd[i].TaskStatus;
-                ef.TaskNumOperators = 0;
-                ef.TaskQuantityOrdered = 0;
-                ef.TaskQuantityProduced = 0;
-                ef.TaskPlannedSetupTime = new TimeSpan(0, 0, 0);
+                ef.TaskNumOperators = tslistOrd[i].TaskNumOperators;
+                ef.TaskQuantityOrdered = tslistOrd[i].TaskQuantityOrdered;
+                ef.TaskQuantityProduced = tslistOrd[i].TaskQuantityProduced;
+                ef.TaskPlannedSetupTime = tslistOrd[i].TaskPlannedSetupTime;
                 ef.TaskPlannedCycleTime = tslistOrd[i].TaskPlannedCycleTime;
-                ef.TaskPlannedUnloadTime = new TimeSpan(0, 0, 0);
+                ef.TaskPlannedUnloadTime = tslistOrd[i].TaskPlannedUnloadTime;
                 ef.WorkstationID = tslistOrd[i].idPostazione;
                 ef.WorkstationName = tslistOrd[i].nomePostazione;
-                ef.WorkstationDescription = "";
-                ef.TaskRealEndDate = new DateTime(1970, 1, 1);
-                ef.TaskRealEndDateWeek = 0;
-                ef.TaskRealLeadTime = new TimeSpan(0, 0, 0);
-                ef.TaskRealWorkingTime = new TimeSpan(0, 0, 0);
-                ef.TaskRealDelay = new TimeSpan(0, 0, 0);
-                ef.TaskOriginalID = 0;
-                ef.TaskOriginalRev = 0;
-                ef.TaskOriginalVar = 0;
+                ef.WorkstationDescription = tslistOrd[i].WorkstationDescription;
+                ef.TaskRealEndDate = tslistOrd[i].TaskRealEndDate;
+                ef.TaskRealEndDateWeek = tslistOrd[i].TaskRealEndDateWeek;
+                ef.TaskRealLeadTime = tslistOrd[i].TaskRealLeadTime;
+                ef.TaskRealWorkingTime = tslistOrd[i].TaskRealWorkingTime;
+                ef.TaskRealDelay = tslistOrd[i].TaskRealDelay;
+                ef.TaskOriginalID = tslistOrd[i].TaskOriginalID;
+                ef.TaskOriginalRev = tslistOrd[i].TaskOriginalRev;
+                ef.TaskOriginalVar = tslistOrd[i].TaskOriginalVar;
                 ef.TaskPlannedWorkingTime = tslistOrd[i].TaskPlannedWorkingTime;
                 ef.TaskEventID = tslistOrd[i].EndEventID;
                 ef.TaskEventUser = tslistOrd[i].user;
                 ef.TaskEventTime = tslistOrd[i].Fine;
                 ef.TaskEventType = tslistOrd[i].EventTypeF; // I = start, P = pause, F = finish, W = warning
-                ef.TaskEventNotes = "";
+                ef.TaskEventNotes = tslistOrd[i].TaskEventNotes;
 
                 lstEvents.Add(ef);
             }
@@ -389,28 +574,6 @@ namespace VCProductionEventsExport_SIAV
                 cmd.Transaction = tr;
                 try
                 {
-                    /* cmd.CommandText = "INSERT INTO " + dbtable + "("
-                     
-                         + "RealDelay, RealLeadTime, ProductionOrderEndProductionDateReal, ProductionOrderEndProductionDateRealWeek, "
-                         + "TaskID, TaskName, TaskDescription, TaskEarlyStart, TaskLateStart, TaskEarlyFinish, TaskLateFinish, "
-                         + "TaskStatus, TaskNumOperators, TaskQuantityOrdered, TaskQuantityProduced, TaskPlannedSetupTime, TaskPlannedCycleTime, "
-                         + "TaskPlannedUnloadTime, WorkstationID, WorkstationName, WorkstationDescription, TaskRealEndDate, "
-                         + "TaskRealEndDateWeek, TaskRealLeadTime, TaskRealWorkingTime, TaskRealDelay, TaskOriginalID, TaskOriginalRev, "
-                         + "TaskOriginalVar, TaskPlannedWorkingTime, TaskEventID, TaskEventUser, TaskEventTime, TaskEventType, "
-                         + "TaskEventNotes"
-                         + ")"
-                         + " VALUES("
-                        
-                         + "@RealDelay, @RealLeadTime, @ProductionOrderEndProductionDateReal, @ProductionOrderEndProductionDateRealWeek, "
-                         + "@TaskID, @TaskName, @TaskDescription, @TaskEarlyStart, @TaskLateStart, @TaskEarlyFinish, @TaskLateFinish, "
-                         + "@TaskStatus, @TaskNumOperators, @TaskQuantityOrdered, @TaskQuantityProduced, @TaskPlannedSetupTime, @TaskPlannedCycleTime, "
-                         + "@TaskPlannedUnloadTime, @WorkstationID, @WorkstationName, @WorkstationDescription, @TaskRealEndDate, "
-                         + "@TaskRealEndDateWeek, @TaskRealLeadTime, @TaskRealWorkingTime, @TaskRealDelay, @TaskOriginalID, @TaskOriginalRev, "
-                         + "@TaskOriginalVar, @TaskPlannedWorkingTime, @TaskEventID, @TaskEventUser, @TaskEventTime, @TaskEventType, "
-                         + "@TaskEventNotes"
-                         + ")";*/
-
-                    //cmd.CommandText = "INSERT INTO " + dbtable + "(exportdate, TaskEventID) VALUES('"+exporttimestamp.ToString("yyyy-MM-dd HH:mm:ss") +"', " + m.TaskEventID+")";
 
                     cmd.CommandText = "INSERT INTO " + dbtable 
                         + "(exportdate, CustomerName, CustomerID, CustomerVATNumber, CustomerCodiceFiscale, CustomerAddress, CustomerCity, TaskEventID, "
@@ -663,7 +826,6 @@ namespace VCProductionEventsExport_SIAV
             public TimeSpan Intervallo;
             public DateTime Inizio;
             public DateTime Fine;
-            public int TaskID;
             public String nomeTask;
             public int idPostazione;
             public String nomePostazione;
@@ -674,18 +836,94 @@ namespace VCProductionEventsExport_SIAV
             public int idReparto;
             public char EventTypeI;
             public char EventTypeF;
-            public DateTime ProductionOrderDeliveryDate;
-            public DateTime ProductionOrderEndProductionDate;
-            public TimeSpan TaskPlannedWorkingTime;
-            public TimeSpan TaskPlannedCycleTime;
-
-
             public char EndEventStatus;
             public char ProductStatus;
-            public char TaskStatus;
             public int StartEventID;
             public int EndEventID;
             public TimeSpan PlannedWorkingTime;
+            public String CustomerID;
+            public String CustomerName;
+            public String CustomerVATNumber;
+            public String CustomerCodiceFiscale;
+            public String CustomerAddress;
+            public String CustomerCity;
+            public String CustomerProvince;
+            public String CustomerZipCode;
+            public String CustomerCountry;
+            public String CustomerPhoneNumber;
+            public String CustomerEMail;
+            public Boolean CustomerKanbanManaged;
+            public int SalesOrderID;
+            public int SalesOrderYear;
+            public String SalesOrderCustomer;
+            public DateTime SalesOrderDate;
+            public String SalesOrderNotes;
+            public int ProductionOrderID;
+            public int ProductionOrderYear;
+            public int ProductionOrderProductTypeID;
+            public int ProductionOrderProductTypeReview;
+            public int ProductionOrderProductID;
+            public String ProductionOrderSerialNumber;
+            public Char ProductionOrderStatus;
+            public int ProductionOrderDepartmentID;
+            public DateTime ProductionOrderStartTime;
+            public DateTime ProductionOrderDeliveryDate;
+            public DateTime ProductionOrderEndProductionDate;
+            public String ProductionOrderPlanner;
+            public int ProductionOrderQuantityOrdered;
+            public int ProductionOrderQuantityProduced;
+            public String ProductionOrderKanbanCardID;
+            public int ProductTypeID;
+            public int ProductTypeReview;
+            public DateTime ProductTypeReviewDate;
+            public String ProductTypeName;
+            public String ProductTypeDescription;
+            public Boolean ProductTypeEnabled;
+            public int ProductID;
+            public String ProductName;
+            public String ProductDescription;
+            public int DepartmentID;
+            public String DepartmentName;
+            public String DepartmentDescription;
+            public Double DepartmentTaktTime;
+            public String DepartmentTimeZone;
+            public TimeSpan RealWorkingTime;
+            public TimeSpan RealDelay;
+            public TimeSpan RealLeadTime;
+            public DateTime ProductionOrderEndProductionDateReal;
+            public int ProductionOrderEndProductionDateRealWeek;
+            public int TaskID;
+            public String TaskName;
+            public String TaskDescription;
+            public DateTime TaskEarlyStart;
+            public DateTime TaskLateStart;
+            public DateTime TaskEarlyFinish;
+            public DateTime TaskLateFinish;
+            public char TaskStatus;
+            public int TaskNumOperators;
+            public double TaskQuantityOrdered;
+            public double TaskQuantityProduced;
+            public TimeSpan TaskPlannedSetupTime;
+            public TimeSpan TaskPlannedCycleTime;
+            public TimeSpan TaskPlannedUnloadTime;
+            public int WorkstationID;
+            public String WorkstationName;
+            public String WorkstationDescription;
+            public DateTime TaskRealEndDate;
+            public int TaskRealEndDateWeek;
+            public TimeSpan TaskRealLeadTime;
+            public TimeSpan TaskRealWorkingTime;
+            public TimeSpan TaskRealDelay;
+            public int TaskOriginalID;
+            public int TaskOriginalRev;
+            public int TaskOriginalVar;
+            public TimeSpan TaskPlannedWorkingTime;
+            public int TaskEventID;
+            public String TaskEventUser;
+            public DateTime TaskEventTime;
+            public char TaskEventType; // I = start, P = pause, F = finish, W = warning
+            public String TaskEventNotes;
+
         }
     }
 }

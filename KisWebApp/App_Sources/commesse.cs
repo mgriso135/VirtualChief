@@ -306,6 +306,7 @@ namespace KIS.App_Code
             this._Confirmed = false;
             this._ConfirmedBy = null;
             this._ConfirmationDate = new DateTime(1970, 1, 1);
+            this._Note = "";
             this._Articoli = new List<Articolo>();
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
@@ -320,7 +321,10 @@ namespace KIS.App_Code
                 this._ID = idCommessa;
                 this._Cliente = rdr.GetString(0);
                 this._DataInserimento = DateTime.SpecifyKind(rdr.GetDateTime(1), DateTimeKind.Utc);
+                if(!rdr.IsDBNull(2))
+                { 
                 this._Note = rdr.GetString(2);
+                }
                 if (!rdr.IsDBNull(3))
                 {
                     this._Confirmed = rdr.GetBoolean(3);
