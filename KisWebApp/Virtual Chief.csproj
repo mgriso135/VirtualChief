@@ -3786,6 +3786,7 @@
       <DependentUpon>WorkstationKPI.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Workplace\WorkplaceAreaRegistration.cs" />
+    <Compile Include="Controllers\EventsExportController.cs" />
     <Compile Include="Controllers\RemoteSalesOrderController.cs" />
     <Compile Include="Controllers\ThirdPartySalesOrdersController.cs" />
     <Compile Include="Eventi\App_LocalResources\QualityModuleEvents.Designer.cs">
@@ -11515,6 +11516,7 @@
     <Folder Include="temp\" />
     <Folder Include="Views\DelaysAlarm\" />
     <Folder Include="Views\DelaysEvent\" />
+    <Folder Include="Views\EventsExport\" />
     <Folder Include="Views\RemoteSalesOrder\" />
   </ItemGroup>
   <ItemGroup>

@@ -550,7 +550,15 @@
                     $(this).hide();
                 }
             });
+            
 
+            $('.imgCompleteProduct').each(function () {
+                var id = this.id;
+                var prod = id.split('_');
+                if ($("#status_" + prod[1]).val() == 'N') {
+                    $(this).hide();
+                }
+            });
         });
     </script>
     <table class="table table-hover table-striped table-condensed" style="width:100%">

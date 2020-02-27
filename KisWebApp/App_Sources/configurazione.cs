@@ -827,6 +827,48 @@ namespace KIS.App_Code
         }
     }
 
+
+    public class EventsExportControllerConfig : ConfigurationSection
+    {
+        public String x_api_key;
+
+        [ConfigurationProperty("baseUrl", IsRequired = true)]
+        public String BaseUrl
+        {
+            get
+            {
+                return (this["baseUrl"]).ToString();
+            }
+            set
+            {
+                this["baseUrl"] = value;
+            }
+        }
+
+        public EventsExportControllerConfig()
+        {
+            this.x_api_key = "";
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE "
+                + "Sezione LIKE 'EventsExportController'"
+                + " AND parametro LIKE 'EVENTSEXPORT-API-KEY'";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this.x_api_key = rdr.GetString(0);
+            }
+            else
+            {
+                this.x_api_key = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+    }
+
+
     public class configBaseOrderStatusReport
     {
         public String log;
