@@ -36,10 +36,10 @@ namespace VCProductionEventsExport_SIAV
 
         public static async Task<string> ExportEvents()
         {
-            DateTime start1 = DateTime.UtcNow.AddDays(-50);
-            DateTime start2 = new DateTime(start1.Year, start1.Month, start1.Day, 0, 0, 0);
+            //DateTime start1 = DateTime.UtcNow.AddDays(-2);
+            DateTime start2 = DateTime.UtcNow.AddDays(-2);
             //DateTime end1 = start1.AddDays(1);
-            DateTime end1 = DateTime.UtcNow;
+            DateTime end1 = DateTime.UtcNow.AddDays(-1);
 
             String QueryString = "?start=" + start2.ToString("yyyy-MM-dd") + "&end=" + end1.ToString("yyyy-MM-dd");
 
