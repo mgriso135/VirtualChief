@@ -130,6 +130,41 @@
                 $("#iframeWI").on("click", "#imgClosePdf", function () {
                     $("#iframeWI").fadeOut();
                 });
+
+                $("#tblTasks").on("click", ".btnExhumateTask", function () {
+                    var btn = $(this);
+                    var task = $(this).val();
+                    if ($.isNumeric(task) && task >= 0) {
+                        $.ajax({
+                            url: "@Url.Action("ExhumateTask", "ProductDetails")",
+                            type: 'POST',
+                            data: {
+                                TaskID: task
+                            },
+                            success: function (data) {
+                                if (data == "True") {
+                                    location.reload(true);
+                                }
+                                else {
+                                    alert("@ResProductDetails.Index.lblExhumateError");
+                                    $(this).fadeIn();
+                                }
+                            },
+                            statusCode: {
+                                404: function (content) { alert('cannot find resource'); },
+                                500: function (content) { alert('internal server error'); }
+                            },
+                            error: function (data) {
+                                alert("Error");
+                            }
+
+
+                        });
+                    }
+                    else {
+                        alert("Error");
+                    }
+                });
             });
         </script>
 
@@ -256,6 +291,7 @@
                             <th>@ResProductDetails.Index.lblTHTaskParameters</th>
                             <th>@ResProductDetails.Index.lblTHTaskOperatorNotes</th>
                             <th>@ResProductDetails.Index.lblOperationsDetails</th>
+                            <th>@ResProductDetails.Index.lblTHExhumateTask</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -373,6 +409,14 @@
                             @if (m.Status != 'N')
                             {
                                 <td><input type="image" src="~/img/iconView.png" id="btnViewTaskDetail_@m.TaskProduzioneID" class="btnViewTaskDetail" value="@m.TaskProduzioneID" style="min-width,:20px; max-width: 25px;" title="@ResProductDetails.Index.lblViewTaskDetails" /></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                            @if (m.Status == 'F')
+                            {
+                                <td><input type="image" src="~/img/iconExhume.png" id="btnExhumateTask_@m.TaskProduzioneID" class="btnExhumateTask" value="@m.TaskProduzioneID" style="min-width,:20px; max-width: 25px;" title="@ResProductDetails.Index.lblExhumateTaskTitle" /></td>
                             }
                             else
                             {

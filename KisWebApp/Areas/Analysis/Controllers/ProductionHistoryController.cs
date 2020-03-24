@@ -315,48 +315,7 @@ namespace KIS.Areas.Analysis.Controllers
             return ret;
         }
 
-        public Boolean ExhumateTask(int TaskID)
-        {
-            // Register user action
-            String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null)
-            {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Analysis/ProductionHistory/ExhumateTask", "TaskID=" + TaskID, ipAddr);
-            }
-            else
-            {
-                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Analysis/ProductionHistory/ExhumateTask", "TaskID = " + TaskID, ipAddr);
-            }
-
-            Boolean ret = false;
-            List<String[]> elencoPermessi = new List<String[]>();
-            String[] prmUser = new String[2];
-            prmUser[0] = "TaskProduzione Riesuma";
-            prmUser[1] = "X";
-            elencoPermessi.Add(prmUser);
-            bool ckUser = false;
-            if (Session["user"] != null)
-            {
-                User curr = (User)Session["user"];
-                ckUser = curr.ValidatePermessi(elencoPermessi);
-            }
-
-            if (ckUser == true)
-            {
-                TaskProduzione tskProd = new TaskProduzione(TaskID);
-                if (tskProd.Status == 'F')
-                {
-                    Boolean rt = tskProd.Riesuma();
-                }
-            }
-            else
-            {
-                ret = false;
-            }
-
-            return ret;
-        }
+        
 
     }
 }

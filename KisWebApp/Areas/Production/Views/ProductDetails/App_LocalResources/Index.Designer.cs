@@ -106,6 +106,24 @@ namespace ResProductDetails {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Si è verificato un errore..
+        /// </summary>
+        public static string lblExhumateError {
+            get {
+                return ResourceManager.GetString("lblExhumateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Riapre il task per permettere agli operatori di continuare a lavorare, senza perdere le registrazioni dei tempi precedenti.
+        /// </summary>
+        public static string lblExhumateTaskTitle {
+            get {
+                return ResourceManager.GetString("lblExhumateTaskTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Terminato.
         /// </summary>
         public static string lblF {
@@ -228,6 +246,15 @@ namespace ResProductDetails {
         public static string lblTHDepartment {
             get {
                 return ResourceManager.GetString("lblTHDepartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Riesuma task.
+        /// </summary>
+        public static string lblTHExhumateTask {
+            get {
+                return ResourceManager.GetString("lblTHExhumateTask", resourceCulture);
             }
         }
         

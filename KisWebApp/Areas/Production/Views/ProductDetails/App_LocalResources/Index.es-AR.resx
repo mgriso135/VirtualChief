@@ -243,4 +243,13 @@
   <data name="lblWorkingTimeReal" xml:space="preserve">
     <value>Mano de obra real (horas)</value>
   </data>
+  <data name="lblExhumateError" xml:space="preserve">
+    <value>Ha ocurrido un error.</value>
+  </data>
+  <data name="lblExhumateTaskTitle" xml:space="preserve">
+    <value>Vuelva a abrir la tarea para permitir que los operadores continúen trabajando, sin perder los registros de tiempos anteriores.</value>
+  </data>
+  <data name="lblTHExhumateTask" xml:space="preserve">
+    <value>Re-abir tarea</value>
+  </data>
 </root>
