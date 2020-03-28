@@ -111,12 +111,12 @@ namespace VCProductionEventsExport_SIAV
                             curr.annoProdotto = origds[i].ProductionOrderYear;
                             curr.idReparto = origds[i].DepartmentID;
                             curr.NomeProdotto = origds[i].ProductTypeName + " - " + origds[i].ProductName;
-                        curr.StartEventID = origds[i].TaskEventID;
-                        curr.EndEventID = origds[i + 1].TaskEventID;
-                        curr.RagioneSocialeCliente = origds[i].CustomerName;
-                        curr.ProductionOrderDeliveryDate = origds[i].ProductionOrderDeliveryDate;
-                        curr.ProductionOrderEndProductionDate = origds[i].ProductionOrderEndProductionDate;
-                        curr.TaskPlannedWorkingTime = origds[i].TaskPlannedWorkingTime;
+                            curr.StartEventID = origds[i].TaskEventID;
+                            curr.EndEventID = origds[i + 1].TaskEventID;
+                            curr.RagioneSocialeCliente = origds[i].CustomerName;
+                            curr.ProductionOrderDeliveryDate = origds[i].ProductionOrderDeliveryDate;
+                            curr.ProductionOrderEndProductionDate = origds[i].ProductionOrderEndProductionDate;
+                            curr.TaskPlannedWorkingTime = origds[i].TaskPlannedWorkingTime;
                         curr.TaskPlannedCycleTime = origds[i].TaskPlannedCycleTime;
                         curr.CustomerName = origds[i].CustomerName;
                         curr.CustomerID = origds[i].CustomerID;
@@ -456,15 +456,17 @@ namespace VCProductionEventsExport_SIAV
                 ei.TaskOriginalVar= tslistOrd[i].TaskOriginalVar;
         ei.TaskPlannedWorkingTime = tslistOrd[i].TaskPlannedWorkingTime;
         ei.TaskEventID = tslistOrd[i].StartEventID;
-        ei.TaskEventUser = tslistOrd[i].user;
         ei.TaskEventTime = tslistOrd[i].Inizio;
         ei.TaskEventType = tslistOrd[i].EventTypeI; // I = start, P = pause, F = finish, W = warning
-                if (i > 0 && tslistOrd[i - 1].TaskID == tslistOrd[i].TaskID && tslistOrd[i].EventTypeI=='I' && tslistOrd[i - 1].user == tslistOrd[i].user)
+                if (i > 0 && tslistOrd[i - 1].TaskID == tslistOrd[i].TaskID && tslistOrd[i].EventTypeI=='I')// && tslistOrd[i - 1].user == tslistOrd[i].user)
                 {
+                    ei.TaskEventUser = tslistOrd[i - 1].user;
                     ei.TaskEventType = 'R';
+                    tslistOrd[i].user = tslistOrd[i - 1].user;
                 }
                 else
                 {
+                    ei.TaskEventUser = tslistOrd[i].user;
                     ei.TaskEventType = 'I';
                 }
                 ei.TaskEventNotes="";
@@ -551,7 +553,7 @@ namespace VCProductionEventsExport_SIAV
                 ef.TaskEventID = tslistOrd[i].EndEventID;
                 ef.TaskEventUser = tslistOrd[i].user;
                 ef.TaskEventTime = tslistOrd[i].Fine;
-                ef.TaskEventType = tslistOrd[i].EventTypeF; // I = start, P = pause, F = finish, W = warning
+                ef.TaskEventType = tslistOrd[i].EventTypeF; // I = start, P = pause, F = finish, W = warning; R = resume
                 ef.TaskEventNotes = tslistOrd[i].TaskEventNotes;
 
                 lstEvents.Add(ef);
@@ -563,7 +565,7 @@ namespace VCProductionEventsExport_SIAV
             String dbuser = ConfigurationManager.AppSettings["exportdbuser"];
             String dbpass = ConfigurationManager.AppSettings["exportdbpassword"];
             String dbtable = ConfigurationManager.AppSettings["exportdbtable"];
-            String sqlConn = "server=localhost; user id="+dbuser+"; password="+dbpass+"; database="+db+";pooling=true;SslMode=None";
+            String sqlConn = "server=localhost; user id=" + dbuser + "; password=" + dbpass + "; database=" + db + ";pooling=true;SslMode=None";
             MySqlConnection conn = new MySqlConnection(sqlConn);
             conn.Open();
             DateTime exporttimestamp = DateTime.UtcNow;
@@ -734,7 +736,7 @@ namespace VCProductionEventsExport_SIAV
             return log;
         }
 
-        public struct TaskEventStruct
+        public class TaskEventStruct
         {
             public String CustomerID;
             public String CustomerName;
@@ -820,7 +822,7 @@ namespace VCProductionEventsExport_SIAV
             public String TaskEventNotes;
         }
 
-        public struct WorkingTimeSpan
+        public class WorkingTimeSpan
         {
             public String user;
             public TimeSpan Intervallo;
