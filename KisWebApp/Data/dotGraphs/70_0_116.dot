@@ -1,0 +1,14 @@
+digraph G {
+  size="6"; 
+E0 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="Rilievo - Documentazione\n temp eff 00:00:00:00 \n elapsed 00:00:00:00 \n"];
+E1 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="Ufficio Acquisti\n temp eff 00:00:00:00 \n elapsed 00:00:00:00 \n"];
+E6 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="Ufficio Programmazione Produzione\n temp eff 00:00:00:00 \n elapsed 00:00:00:00 \n"];
+E7 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="Ufficio Tecnico. Sviluppo Ordine\n temp eff 00:00:00:00 \n elapsed 00:00:00:00 \n"];
+E8 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="Rilievo in Cantiere\n temp eff 00:00:00:00 \n elapsed 00:00:00:00 \n"];
+E10 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="Rilievo - Contatto\n temp eff 00:00:00:00 \n elapsed 00:00:00:00 \n"];
+E10 -> E8 [fontsize=7, label="00:00:00:01 gg:HH:mm:ss"];
+E0 -> E7 [fontsize=7, label="00:00:00:01 gg:HH:mm:ss"];
+E8 -> E0 [fontsize=7, label="00:00:00:01 gg:HH:mm:ss"];
+E7 -> E1 [fontsize=7, label="00:00:00:01 gg:HH:mm:ss"];
+E1 -> E6 [fontsize=7, label="00:00:00:02 gg:HH:mm:ss"];
+}

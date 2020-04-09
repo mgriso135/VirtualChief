@@ -1,0 +1,6 @@
+digraph G {
+  size="6"; 
+E0 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="CNC PERTICI\n temp eff 00:08:05:16 \n elapsed 00:04:55:18 \n"];
+E2 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="CNC THORWESTEN - GRAF\n temp eff 00:06:36:22 \n elapsed 00:05:01:34 \n"];
+E0 -> E2 [fontsize=7, label="00:00:23:51 gg:HH:mm:ss"];
+}

@@ -1,0 +1,98 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.authR)
+{
+
+    <link rel="stylesheet" href="~/Content/octicons.css" />
+
+    <style>
+        #graph {
+            /* Just an example */
+            height: 800px;
+            width: 600px;
+        }
+
+            #graph svg {
+                height: 100%;
+                width: auto;
+            }
+    </style>
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="http://viz-js.com/bower_components/viz.js/viz-lite.js"></script>
+    <script src="https://github.com/magjac/d3-graphviz/releases/download/v0.1.2/d3-graphviz.min.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#imgLinkProductToOrderLoad").fadeOut();
+
+
+            $("#imgViewProcess").click(function () {
+                var g = $('#ddlProducts').val();
+                var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
+                //alert(id);
+                if (id != null && id.length > 0) {
+                    var arr = id.split('/');
+                    if (arr.length == 3) {
+                        $("#imgLinkProductToOrderLoad").fadeIn();
+                        render(arr[0] + "_" + arr[1] + "_" + arr[2] + ".dot");
+                    }
+                    else {
+                        alert("Split error");
+                    }
+                }
+                else {
+                    alert("Please select a product");
+                }
+            });
+
+            function render(product) {
+                $("#graph").html('');
+                /*$.get("../Data/dotGraphs/" + product, function (data) {
+                    d3.select("#graph").graphviz().renderDot(data);
+                });*/
+
+                $.get("../Data/dotGraphs/" + product)
+                    .done(function (data) {
+                        d3.select("#graph").graphviz().renderDot(data);
+                    }).fail(function () {
+                        alert("Process diagram not found");
+                    })
+
+                $("#imgLinkProductToOrderLoad").fadeOut();
+            }
+        });
+    </script>
+
+    <div class="row-fluid">
+        <div class="span12">
+            <input list="ddlProductsList" id="ddlProducts">
+            <datalist id="ddlProductsList">
+                @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                    var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
+                    foreach (var prd in sortedProducts)
+                    {
+                        <option data-id="@prd.IDCombinato2" value="@prd.process.processName - @prd.variant.nomeVariante"></option>
+                    }
+                }
+            </datalist>
+            <input type="image" src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLinkProductToOrderLoad" />
+            <button type="button" id="imgViewProcess" class="btn btn-default" aria-label="See the graph">
+                <span class="octicon octicon-search"></span>
+            </button>
+
+            <div id="graph" style="text-align: center;"></div>
+            </div>
+        </div>
+            }
+            else
+            {
+            <div class="row-fluid">
+                <div class="span12">
+                    User not authorized.
+                </div>
+            </div>
+            }

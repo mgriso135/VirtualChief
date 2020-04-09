@@ -475,6 +475,7 @@
     <Compile Include="Areas\Analysis\AnalysisAreaRegistration.cs" />
     <Compile Include="Areas\Analysis\Controllers\GlobalKPIsController.cs" />
     <Compile Include="Areas\Analysis\Controllers\OperatorsAnalysisController.cs" />
+    <Compile Include="Areas\Analysis\Controllers\ProcessMiningController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductionHistoryController.cs" />
     <Compile Include="Areas\Analysis\Controllers\TaskAnalysisController.cs" />
@@ -5483,6 +5484,7 @@
     <Content Include="Content\bootstrap-reboot.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonts\octicons.svg" />
     <Content Include="Content\Free-file-icons\16px\aac.png" />
     <Content Include="Content\Free-file-icons\16px\ai.png" />
     <Content Include="Content\Free-file-icons\16px\aiff.png" />
@@ -5742,6 +5744,7 @@
     <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload.css" />
     <Content Include="Content\jQuery.FileUpload\img\loading.gif" />
     <Content Include="Content\jQuery.FileUpload\img\progressbar.gif" />
+    <Content Include="Content\octicons.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -5943,6 +5946,10 @@
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorProductivity.cshtml" />
     <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorOccupation.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProcessMining\Index.cshtml" />
+    <Content Include="Content\fonts\octicons.woff" />
+    <Content Include="Content\fonts\octicons.ttf" />
+    <Content Include="Content\fonts\octicons.eot" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
