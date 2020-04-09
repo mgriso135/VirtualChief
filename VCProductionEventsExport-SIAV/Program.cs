@@ -8,6 +8,7 @@ using System.Configuration;
 using Newtonsoft.Json;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using System.IO;
 
 namespace VCProductionEventsExport_SIAV
 {
@@ -239,9 +240,6 @@ namespace VCProductionEventsExport_SIAV
                     int olderid = tslistOrd[i].Fine > tslistOrd[i + 1].Fine ? i : i + 1;
                     int earlierid = tslistOrd[i].Fine > tslistOrd[i + 1].Fine ? i+1 : i;
                     WorkingTimeSpan curr = new WorkingTimeSpan();
-
-
-
                     curr.RagioneSocialeCliente = tslistOrd[i].CustomerName;
                     curr.ProductionOrderDeliveryDate = tslistOrd[i].ProductionOrderDeliveryDate;
                     curr.ProductionOrderEndProductionDate = tslistOrd[i].ProductionOrderEndProductionDate;
@@ -330,10 +328,6 @@ namespace VCProductionEventsExport_SIAV
                     curr.TaskEventType = tslistOrd[i].TaskEventType;
                     curr.TaskEventNotes = tslistOrd[i].TaskEventNotes;
 
-
-
-
-
                     curr.Inizio = minstart;
                     curr.Fine = maxend;
                     curr.StartEventID = tslistOrd[earlierid].StartEventID;
@@ -350,10 +344,6 @@ namespace VCProductionEventsExport_SIAV
                     curr.StartEventID = tslistOrd[i].StartEventID;
                     curr.EndEventID = tslistOrd[i].EndEventID;
 
-
-
-
-
                     tslistOrd.RemoveAt(i);
                     tslistOrd.RemoveAt(i);
                     tslistOrd.Add(curr);
@@ -364,12 +354,42 @@ namespace VCProductionEventsExport_SIAV
 
             tslistOrd = tsList.OrderBy(y => y.TaskID).ThenBy(x => x.Inizio).ToList();
 
+
+            String log1 = "";
             for (int i = 0; i < tslistOrd.Count; i++)
             {
-                log += tslistOrd[i].TaskID + "\t" + tslistOrd[i].user + "\t" + tslistOrd[i].EventTypeI
+                log1 += tslistOrd[i].TaskID + "\t" + tslistOrd[i].user + "\t" + tslistOrd[i].EventTypeI
+                    + "\t" + tslistOrd[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + "\t" + tslistOrd[i].EventTypeF + "\t"
+                    + tslistOrd[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "\n";
+                //Check if task finished
+                bool checkiffinished = false;
+                for (int c = i; c > 0 && tslistOrd[c].TaskID == tslistOrd[c - 1].TaskID; c--)
+                {
+                    if(tslistOrd[c-1].EventTypeF=='F')
+                    {
+                        checkiffinished = true;
+                    }
+                }
+
+                if(checkiffinished)
+                {
+                    tslistOrd.RemoveAt(i);
+                    i--;
+                }
+            }
+/*            var path = @"C:\users\mgris\desktop\log.txt";
+            File.WriteAllText(path, log1);
+
+            String log2 = "";
+            for (int i = 0; i < tslistOrd.Count; i++)
+            {
+                log2 += tslistOrd[i].TaskID + "\t" + tslistOrd[i].user + "\t" + tslistOrd[i].EventTypeI
                     + "\t" + tslistOrd[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + "\t" + tslistOrd[i].EventTypeF + "\t"
                     + tslistOrd[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "\n";
             }
+            var path2 = @"C:\users\mgris\desktop\log2.txt";
+            File.WriteAllText(path2, log2);*/
+
 
             // Transform tslistOrd list in events
             Console.WriteLine("Transforming list in events...\n");
@@ -458,7 +478,10 @@ namespace VCProductionEventsExport_SIAV
         ei.TaskEventID = tslistOrd[i].StartEventID;
         ei.TaskEventTime = tslistOrd[i].Inizio;
         ei.TaskEventType = tslistOrd[i].EventTypeI; // I = start, P = pause, F = finish, W = warning
-                if (i > 0 && tslistOrd[i - 1].TaskID == tslistOrd[i].TaskID && tslistOrd[i].EventTypeI=='I')// && tslistOrd[i - 1].user == tslistOrd[i].user)
+                if (i > 0 && tslistOrd[i - 1].TaskID == tslistOrd[i].TaskID 
+                    && tslistOrd[i].EventTypeI == 'I' 
+                    //&& tslistOrd[i - 1].EventTypeF == 'P'
+                    ) 
                 {
                     ei.TaskEventUser = tslistOrd[i - 1].user;
                     ei.TaskEventType = 'R';
@@ -565,7 +588,7 @@ namespace VCProductionEventsExport_SIAV
             String dbuser = ConfigurationManager.AppSettings["exportdbuser"];
             String dbpass = ConfigurationManager.AppSettings["exportdbpassword"];
             String dbtable = ConfigurationManager.AppSettings["exportdbtable"];
-            String sqlConn = "server=localhost; user id=" + dbuser + "; password=" + dbpass + "; database=" + db + ";pooling=true;SslMode=None";
+            String sqlConn = "server=localhost; user id=" + dbuser + "; password=" + dbpass + "; database=" + db + ";pooling=true;SslMode=none;";
             MySqlConnection conn = new MySqlConnection(sqlConn);
             conn.Open();
             DateTime exporttimestamp = DateTime.UtcNow;

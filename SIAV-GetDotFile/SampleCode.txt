@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <script src="//d3js.org/d3.v4.min.js"></script>
+    <script src="http://viz-js.com/bower_components/viz.js/viz-lite.js"></script>
+    <script src="https://github.com/magjac/d3-graphviz/releases/download/v0.1.2/d3-graphviz.min.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            function getToken() {
+                var tok = "";
+                return $.ajax({
+                    url: "https://tstdemocpm.siav.net:9443/login",
+                    type: "POST",
+                    async: false,
+                    data: {
+                        "username": "kaizenkey",
+                        "password": "kk"
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        $("#retstring").html(JSON.stringify(data));
+                        tok = data.access_token;
+                        alert("Token: " + tok);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                }).responseText;;
+            }
+
+
+            function render() {
+                $.get('../longato.dot', function (data) {
+                    d3.select("#graph").graphviz().renderDot(data);
+                });
+            }
+
+            function askForDot() {
+
+                var accesstoken = getToken();
+                alert("Tok2: " + JSON.parse(accesstoken).access_token);
+                $.ajax({
+                    url: "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=Serramenti%20PVC",
+                    type: "GET",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader('Authorization', 'Bearer ' + JSON.parse(accesstoken).access_token);
+                    },
+                    success: function (data, textStatus, jqXHR) {
+                        d3.select("#graph").graphviz().renderDot(data.toString());
+
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+            }
+
+
+            askForDot();
+
+        });
+    </script>
+</head>
+<body>
+    <div id="retstring"></div><p></p>
+    <div id="graph" style="text-align: center;width:1000px;height:800px"></div>
+    <div id="dottext"></div>
+
+</body>
+</html>

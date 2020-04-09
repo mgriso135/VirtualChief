@@ -25,7 +25,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCAlarmsEvents", "VCAlarmsE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThirdPartySalesOrders_Finestra3000", "ThirdPartySalesOrders_Finestra3000\ThirdPartySalesOrders_Finestra3000.csproj", "{5201BBCF-8BD6-40AC-8583-45A038CE44E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCProductionEventsExport-SIAV", "VCProductionEventsExport-SIAV\VCProductionEventsExport-SIAV.csproj", "{9A4DE3B3-9EA1-4F32-816A-BE30855A21FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIAV-VCProductionEventsExport", "VCProductionEventsExport-SIAV\SIAV-VCProductionEventsExport.csproj", "{9A4DE3B3-9EA1-4F32-816A-BE30855A21FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SIAV-GetDotFile", "SIAV-GetDotFile\SIAV-GetDotFile.csproj", "{17E076BE-BD02-408A-9930-9D1735ECDC57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,18 +109,20 @@ Global
 		{9A4DE3B3-9EA1-4F32-816A-BE30855A21FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A4DE3B3-9EA1-4F32-816A-BE30855A21FB}.Release|Default.ActiveCfg = Release|Any CPU
 		{9A4DE3B3-9EA1-4F32-816A-BE30855A21FB}.Release|Default.Build.0 = Release|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Debug|Default.ActiveCfg = Debug|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Debug|Default.Build.0 = Debug|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Release|Default.ActiveCfg = Release|Any CPU
+		{17E076BE-BD02-408A-9930-9D1735ECDC57}.Release|Default.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {26FE7F19-22BD-4D67-80C2-46AE6C058859}
-	EndGlobalSection
-	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Any CPU = Debug|Any CPU
-		Debug|Default = Debug|Default
-		Release|Any CPU = Release|Any CPU
-		Release|Default = Release|Default
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
