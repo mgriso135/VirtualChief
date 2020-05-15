@@ -39,6 +39,7 @@
                     if (arr.length == 3) {
                         $("#imgLinkProductToOrderLoad").fadeIn();
                         render(arr[0] + "_" + arr[1] + "_" + arr[2] + ".dot");
+                        renderFreqGraph(arr[0] + "_" + arr[1] + "_" + arr[2] + "_FREQUENCY.dot");
                     }
                     else {
                         alert("Split error");
@@ -50,17 +51,39 @@
             });
 
             function render(product) {
-                $("#graph").html('');
-                /*$.get("../Data/dotGraphs/" + product, function (data) {
-                    d3.select("#graph").graphviz().renderDot(data);
-                });*/
 
-                $.get("../Data/dotGraphs/" + product)
+                $("#graph").html('');
+
+                $.get("../../Data/dotGraphs/" + product)
                     .done(function (data) {
                         d3.select("#graph").graphviz().renderDot(data);
                     }).fail(function () {
-                        alert("Process diagram not found");
-                    })
+                        $.get("../../Data/dotGraphs/" + product)
+                            .done(function (data) {
+                                d3.select("#graph").graphviz().renderDot(data);
+                            }).fail(function () {
+                                alert("Process diagram not found");
+                            });
+                    });
+
+                $("#imgLinkProductToOrderLoad").fadeOut();
+            }
+
+            function renderFreqGraph(product) {
+
+                $("#freqGraph").html('');
+
+                $.get("../../Data/dotGraphs/" + product)
+                    .done(function (data) {
+                        d3.select("#freqGraph").graphviz().renderDot(data);
+                    }).fail(function () {
+                        $.get("../../Data/dotGraphs/" + product)
+                            .done(function (data) {
+                                d3.select("#freqGraph").graphviz().renderDot(data);
+                            }).fail(function () {
+                                alert("Process diagram not found");
+                            });
+                    });
 
                 $("#imgLinkProductToOrderLoad").fadeOut();
             }
@@ -84,15 +107,16 @@
                 <span class="octicon octicon-search"></span>
             </button>
 
-            <div id="graph" style="text-align: center;"></div>
-            </div>
+            <div id="graph" style="text-align: center;width:100%"></div>
+            <div id="freqGraph" style="text-align: center;"></div>
         </div>
-            }
-            else
-            {
-            <div class="row-fluid">
-                <div class="span12">
-                    User not authorized.
-                </div>
-            </div>
-            }
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            User not authorized.
+        </div>
+    </div>
+}

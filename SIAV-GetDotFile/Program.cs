@@ -30,6 +30,10 @@ namespace SIAV_GetDotFile
                     var dotFile = getDotData(m.ToString(), token).Result;
                     Console.Write(dotFile.ToString());
                     File.WriteAllText(basepath + m.ToString() + ".dot", dotFile.ToString());
+
+                    var frequencyGraph = getFrequencyGraph(m.ToString(), token).Result;
+                    Console.Write(frequencyGraph.ToString());
+                    File.WriteAllText(basepath + m.ToString() + "_FREQUENCY.dot", frequencyGraph.ToString());
                 }
             }
             else
@@ -74,7 +78,7 @@ namespace SIAV_GetDotFile
             }
 
         }
-
+        
         public static async Task<string> getDotData(String processID, String token)
         {
             // Add the certificate
@@ -82,21 +86,54 @@ namespace SIAV_GetDotFile
             X509Certificate2 cert = GetMyCert();
             if (cert != null)
             {
-                Console.WriteLine("Go!");
+                Console.WriteLine("Go Get Performance Chart!");
                 handler.ClientCertificates.Add(cert);
 
                 HttpClient client = new HttpClient(handler);
-                //Uri u = new Uri("https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString());
-                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();
                 var payload = "{\"username\": \"kaizenkey\",\"password\": \"kk\"}";
                 var c = new StringContent(payload, Encoding.UTF8, "application/json");
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                client.DefaultRequestHeaders.Add("username", "kaizenkey");
+                client.DefaultRequestHeaders.Add("password", "kk");
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
+
+                // Gets normal graph
+                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();
                 Console.WriteLine(u.ToString());
+                using (var result = await client.GetAsync(u))
+                {
+                    Console.WriteLine("IsSuccessStatusCode: " + result.StatusCode + " " + result.IsSuccessStatusCode);
+                    string content = await result.Content.ReadAsStringAsync();
+                    Console.WriteLine("Content in getFrequencyGraph: " + content);
+                    return content;
+                };
+            }
+
+            return "";
+        }
+
+        public static async Task<string> getFrequencyGraph(String processID, String token)
+        {
+            // Add the certificate
+            WebRequestHandler handler = new WebRequestHandler();
+            X509Certificate2 cert = GetMyCert();
+            if (cert != null)
+            {
+                Console.WriteLine("Go Get Frequency Chart!");
+                handler.ClientCertificates.Add(cert);
+
+                HttpClient client = new HttpClient(handler);
+                var payload = "{\"username\": \"kaizenkey\",\"password\": \"kk\"}";
+                var c = new StringContent(payload, Encoding.UTF8, "application/json");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 client.DefaultRequestHeaders.Add("username", "kaizenkey");
                 client.DefaultRequestHeaders.Add("password", "kk");
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
+                // Gets normal graph
+                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotFrequenceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();
+                Console.WriteLine(u.ToString());
                 using (var result = await client.GetAsync(u))
                 {
                     Console.WriteLine("IsSuccessStatusCode: " + result.StatusCode + " " + result.IsSuccessStatusCode);
@@ -108,7 +145,6 @@ namespace SIAV_GetDotFile
 
             return "";
         }
-
 
         protected static X509Certificate2 GetMyCert()
         {

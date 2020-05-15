@@ -1,11 +1,1 @@
-digraph G {
-  size="6"; 
-E0 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="SPECIALI\n temp eff 00:09:14:25 \n elapsed 00:09:10:32 \n"];
-E1 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="VETRI\n temp eff 00:02:40:13 \n elapsed 00:02:40:22 \n"];
-E2 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="CNC PERTICI\n temp eff 00:18:28:57 \n elapsed 00:18:31:17 \n\n AND "];
-E4 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="lightgoldenrod", label="CNC THORWESTEN - GRAF\n temp eff 00:11:32:13 \n elapsed 00:11:09:54 \n"];
-E4 -> E1 [fontsize=7, label="00:00:01:07 gg:HH:mm:ss"];
-E2 -> E0 [fontsize=7, label="00:00:06:03 gg:HH:mm:ss"];
-E2 -> E4 [fontsize=7, label="00:00:00:04 gg:HH:mm:ss"];
-E0 -> E1 [fontsize=7, label="00:00:12:30 gg:HH:mm:ss"];
-}
+{"message":"Internal Server Error: Could not find file"}
