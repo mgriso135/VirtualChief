@@ -159,6 +159,9 @@
   <data name="lblAddReparti" xml:space="preserve">
     <value>Add a department</value>
   </data>
+  <data name="lblAutoPauseTasks" xml:space="preserve">
+    <value>Automatic pause of tasks at the end of the shift</value>
+  </data>
   <data name="lblCfgReparto" xml:space="preserve">
     <value>Department's configuration</value>
   </data>

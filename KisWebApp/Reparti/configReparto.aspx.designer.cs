@@ -265,6 +265,15 @@ namespace KIS.configReparto {
         protected global::KIS.Reparti.configAvvioTasks frmAvvioTask;
         
         /// <summary>
+        /// lblAutoPauseTasks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lblAutoPauseTasks;
+        
+        /// <summary>
         /// lblAccKBBox control.
         /// </summary>
         /// <remarks>

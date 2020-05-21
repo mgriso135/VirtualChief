@@ -99,5 +99,82 @@ namespace KIS.Areas.Departments.Controllers
             }
                 return ret;
         }*/
+
+        public ActionResult GetAutoPauseTaskConfig(int DepartmentID)
+        {
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Reparto AutoPauseTaskConfig";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                ViewBag.AutoPauseConfig = true;
+                ViewBag.deptID = -1;
+                Reparto rp = new Reparto(DepartmentID);
+                if(rp!=null && rp.id!=-1)
+                {
+                    ViewBag.deptID = rp.id;
+                    ViewBag.AutoPauseConfig = rp.AutoPauseTasksOutsideWorkShifts;
+                    return View();
+                }
+            }
+                return View();
+        }
+
+        /*Returns:
+        * 0 if generic error
+        * 1 if all is ok
+        * 2 if user not allowed
+        * 3 if department not found
+         */
+        public int SetAutoPauseTaskConfig(int DepartmentID, Boolean Flag)
+        {
+            int ret = 0;
+            ViewBag.authW = false;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Reparto AutoPauseTaskConfig";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                Reparto dept = new Reparto(DepartmentID);
+                if(dept!=null && dept.id!=-1)
+                {
+                    if(!Flag)
+                    {
+                        dept.AutoPauseTasksOutsideWorkShifts = false;
+                    }
+                    else
+                    {
+                        dept.AutoPauseTasksOutsideWorkShifts = true;
+                    }
+                    ret = 1;
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+                return ret;
+        }
     }
 }

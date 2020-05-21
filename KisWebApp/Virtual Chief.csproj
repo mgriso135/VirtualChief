@@ -960,6 +960,11 @@
     </Compile>
     <Compile Include="Areas\Departments\Controllers\DepartmentsConfigController.cs" />
     <Compile Include="Areas\Departments\DepartmentsAreaRegistration.cs" />
+    <Compile Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\GetAutoPauseTaskConfig.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>GetAutoPauseTaskConfig.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
     <Compile Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.Designer.cs">
@@ -3787,6 +3792,7 @@
       <DependentUpon>WorkstationKPI.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Workplace\WorkplaceAreaRegistration.cs" />
+    <Compile Include="Controllers\AutoPauseTasksController.cs" />
     <Compile Include="Controllers\EventsExportController.cs" />
     <Compile Include="Controllers\RemoteSalesOrderController.cs" />
     <Compile Include="Controllers\ThirdPartySalesOrdersController.cs" />
@@ -5950,6 +5956,7 @@
     <Content Include="Content\fonts\octicons.woff" />
     <Content Include="Content\fonts\octicons.ttf" />
     <Content Include="Content\fonts\octicons.eot" />
+    <Content Include="Areas\Departments\Views\DepartmentsConfig\GetAutoPauseTaskConfig.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6735,6 +6742,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>addCustomerContact.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResCustomer</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\GetAutoPauseTaskConfig.resx">
+      <CustomToolNamespace>resDepartmentConfig</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>GetAutoPauseTaskConfig.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -11493,7 +11505,6 @@
     <Folder Include="Areas\Customers\Models\" />
     <Folder Include="Areas\Customers\Views\Shared\" />
     <Folder Include="Areas\Departments\Models\" />
-    <Folder Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\" />
     <Folder Include="Areas\Departments\Views\Shared\" />
     <Folder Include="Areas\Home\Models\" />
     <Folder Include="Areas\Personal\Models\" />
@@ -11521,6 +11532,7 @@
     <Folder Include="Data\Users\" />
     <Folder Include="Styles\assets\ico\" />
     <Folder Include="temp\" />
+    <Folder Include="Views\AutoPauseTasks\" />
     <Folder Include="Views\DelaysAlarm\" />
     <Folder Include="Views\DelaysEvent\" />
     <Folder Include="Views\EventsExport\" />

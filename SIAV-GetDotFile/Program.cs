@@ -98,7 +98,8 @@ namespace SIAV_GetDotFile
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph
-                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();
+                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString()
+                    +"&statisticFunction=MEAN";
                 Console.WriteLine(u.ToString());
                 using (var result = await client.GetAsync(u))
                 {

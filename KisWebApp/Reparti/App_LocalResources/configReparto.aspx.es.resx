@@ -159,6 +159,9 @@
   <data name="lblAddReparti" xml:space="preserve">
     <value>Añadir un departamento</value>
   </data>
+  <data name="lblAutoPauseTasks" xml:space="preserve">
+    <value>Pausa automática de tareas al final del turno</value>
+  </data>
   <data name="lblCfgReparto" xml:space="preserve">
     <value>Configuracción de departamento</value>
   </data>

@@ -117,61 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblAccAlarmaDemora" xml:space="preserve">
-    <value>Alarma de demoras</value>
+  <data name="lblActive" xml:space="preserve">
+    <value>Pausa automatica attiva</value>
   </data>
-  <data name="lblAccAlarmaProblema" xml:space="preserve">
-    <value>Alarma de problemas</value>
+  <data name="lblDeptNotFound" xml:space="preserve">
+    <value>Department not found</value>
   </data>
-  <data name="lblAccAllowOperatorNotes" xml:space="preserve">
-    <value>Habilitar notas de operador en WebGemba</value>
+  <data name="lblDisabled" xml:space="preserve">
+    <value>Pausa automatica disattivata</value>
   </data>
-  <data name="lblAccAndonRep" xml:space="preserve">
-    <value>Andon de departamento</value>
-  </data>
-  <data name="lblAccAnticipoMinimo" xml:space="preserve">
-    <value>Anticipo minimo</value>
-  </data>
-  <data name="lblAccAvvioTasks" xml:space="preserve">
-    <value>Manera de ejecutar las tareas</value>
-  </data>
-  <data name="lblAccCalcoloTC" xml:space="preserve">
-    <value>Manera de calcular el tiempo de trabajo</value>
-  </data>
-  <data name="lblAccFusoOrario" xml:space="preserve">
-    <value>Zona horarias</value>
-  </data>
-  <data name="lblAccKBBox" xml:space="preserve">
-    <value>Gestión de KanbanBox by Sintesia</value>
-  </data>
-  <data name="lblAccOpReparto" xml:space="preserve">
-    <value>Operadores de departamento</value>
-  </data>
-  <data name="lblAccScrolling" xml:space="preserve">
-    <value>Scrolling</value>
-  </data>
-  <data name="lblAccTaktTime" xml:space="preserve">
-    <value>Takt Time</value>
-  </data>
-  <data name="lblAccTurniLavoro" xml:space="preserve">
-    <value>Turnos de trabajo</value>
-  </data>
-  <data name="lblAddReparti" xml:space="preserve">
-    <value>Añadir un departamento</value>
-  </data>
-  <data name="lblAutoPauseTasks" xml:space="preserve">
-    <value>Pausa automática de tareas al final del turno</value>
-  </data>
-  <data name="lblCfgReparto" xml:space="preserve">
-    <value>Configuracción de departamento</value>
-  </data>
-  <data name="lblErrorRepNotFound" xml:space="preserve">
-    <value>Departamento no encontrado.</value>
-  </data>
-  <data name="lblNavManageReparti" xml:space="preserve">
-    <value>Gestión de departamentos</value>
-  </data>
-  <data name="lblPlanTasks" xml:space="preserve">
-    <value>Manera de programar las tareas en la producción</value>
+  <data name="lblUserNotAuthorized" xml:space="preserve">
+    <value>Utente non autorizzato</value>
   </data>
 </root>

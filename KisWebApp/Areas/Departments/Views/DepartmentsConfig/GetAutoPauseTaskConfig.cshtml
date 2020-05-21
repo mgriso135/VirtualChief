@@ -1,0 +1,71 @@
+﻿
+
+@{
+    Layout = null;
+}
+
+
+@if (ViewBag.authW)
+{
+    <script>
+        $(document).ready(function () {
+            $("#imgSaveAutoPauseConfig").fadeOut();
+            $('input[type=radio][name=AutoPauseConfig]').change(function () {
+                $("#imgSaveAutoPauseConfig").fadeIn();
+                var autopause = false;
+                if (this.value == "1") {
+                    autopause = true;
+                }
+                $.ajax({
+                    url: "@Url.Action("SetAutoPauseTaskConfig", "DepartmentsConfig")",
+                    type: 'POST',
+                    data: {
+                        DepartmentID: @ViewBag.deptID,
+                        Flag: autopause
+                    },
+                    success: function (result) {
+                        $("#imgSaveAutoPauseConfig").fadeOut();
+                    },
+                    error: function (result) { $("#imgSaveAutoPauseConfig").fadeOut(); alert("Error " + result); },
+                    warning: function (result) { $("#imgSaveAutoPauseConfig").fadeOut(); alert("Warning " + result); },
+                });
+            });
+        });
+    </script>
+    if (ViewBag.deptID != -1)
+    {
+        var str0 = "";
+        var str1 = "";
+        if(ViewBag.AutoPauseConfig)
+        {
+            str1 = " CHECKED";
+        }
+        else
+        {
+            str0 = " CHECKED";
+        }
+        <div class="row-fluid">
+            <div class="span12">
+                <input type="radio" name="AutoPauseConfig" value="0" id="AutoPauseConfig0" @str0 />@resDepartmentConfig.GetAutoPauseTaskConfig.lblDisabled<br />
+                <input type="radio" name="AutoPauseConfig" value="1" id="AutoPauseConfig1" @str1  />@resDepartmentConfig.GetAutoPauseTaskConfig.lblActive<br />
+                <img src="~/img/iconLoading.gif" style="min-width:20px; max-width:20px;" id="imgSaveAutoPauseConfig" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @resDepartmentConfig.GetAutoPauseTaskConfig.lblDeptNotFound
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @resDepartmentConfig.GetAutoPauseTaskConfig.lblUserNotAuthorized
+        </div>
+    </div>
+}
