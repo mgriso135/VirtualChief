@@ -159,6 +159,9 @@
   <data name="lblAddReparti" xml:space="preserve">
     <value>Aggiungi un reparto</value>
   </data>
+  <data name="lblAutoPauseTasks" xml:space="preserve">
+    <value>Pausa automatica dei tasks al termine del turno</value>
+  </data>
   <data name="lblCfgReparto" xml:space="preserve">
     <value>Configurazione del reparto</value>
   </data>

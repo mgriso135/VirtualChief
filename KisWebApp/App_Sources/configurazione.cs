@@ -827,7 +827,6 @@ namespace KIS.App_Code
         }
     }
 
-
     public class EventsExportControllerConfig : ConfigurationSection
     {
         public String x_api_key;
@@ -867,7 +866,6 @@ namespace KIS.App_Code
             conn.Close();
         }
     }
-
 
     public class configBaseOrderStatusReport
     {

@@ -463,6 +463,88 @@ namespace KIS.App_Code
             }
         }
 
+        /* This parameter returns
+         * true if tasks will be automatically auto-paused outside work shifts (Enables AutoPauseTasks Controller)
+         * false otherwise
+         */
+        public Boolean AutoPauseTasksOutsideWorkShifts
+        {
+            get
+            {
+                Boolean ret = true;
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                    + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'AutoPauseTasks'";
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    String valore = rdr.GetString(0);
+                    if (valore =="False")
+                    {
+                        ret = false;
+                    }
+                }
+                rdr.Close();
+
+                conn.Close();
+                return ret;
+            }
+
+            set
+            {
+                if (this.id != -1)
+                {
+                    // Verifico che sia presente la configurazione
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'AutoPauseTasks'";
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    bool add = false;
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        add = false;
+                    }
+                    else
+                    {
+                        add = true;
+                    }
+                    rdr.Close();
+
+                    cmd.Transaction = tr;
+                    if (add == true)
+                    {
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                            + this.id.ToString() + ", 'AutoPauseTasks', '" + value.ToString() + "')";
+                    }
+                    else
+                    {
+                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                        " AND parametro LIKE 'AutoPauseTasks'";
+                    }
+
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+
+                    rdr.Close();
+                }
+            }
+        }
+
+
         public Reparto()
         {
             this._id = -1;

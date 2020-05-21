@@ -650,7 +650,7 @@ namespace KIS.App_Code
                             found = true;
                         }
                     }
-                    // Se non l'ho trovato, aggiungo a lista utenti inattivi
+                    // Se non l'ho trovato, aggiungo a lista utenti attivi
                     if (found == false)
                     {
                         this._UtentiAttivi.Add(this.Eventi[i].User);
@@ -5222,6 +5222,23 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE '" + status + "' ";
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                this._Tasks.Add(new TaskProduzione(rdr.GetInt32(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public ElencoTaskProduzione(Reparto dept, char status)
+        {
+            this._Tasks = new List<TaskProduzione>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE reparto = "+ dept.id +" AND status LIKE '" + status + "' ";
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())

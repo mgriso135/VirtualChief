@@ -63,8 +63,31 @@
                 }
             }
 
+            //frmAutoPauseTasks
+            function loadAutoPauseTasksConfig() {
+                var deptID = parseInt($("#<%=DepartmentID.ClientID%>").val());
+                if (deptID != -1) {
+                $("#imgAutoPauseTasks").fadeIn();
+                    $.ajax({
+                        url: "../Departments/DepartmentsConfig/GetAutoPauseTaskConfig",
+                        type: 'GET',
+                        data: {
+                            DepartmentID: deptID
+                        },
+                    dataType: 'html' ,
+                        success: function (result) {
+                        $("#imgAutoPauseTasks").fadeOut();
+                        $('#frmAutoPauseTasks').html(result);
+                    },
+                    error: function(result){ $("#imgAutoPauseTasks").fadeOut();alert("Error loadAutoPauseTasksConfig " + result);},
+                    warning: function(result){$("#imgAutoPauseTasks").fadeOut();alert("Warning loadAutoPauseTasksConfig " + result);},
+                    });
+                }
+            }
+
             loadScrollTypeView();
             loadDepartmentAndonConfig();
+            loadAutoPauseTasksConfig();
         });
     </script>
 
@@ -205,6 +228,21 @@
         <config:avvioTasks runat="server" id="frmAvvioTask" />
           
 
+      </div>
+    </div>
+    </div>
+
+                <!-- Auto Pause Tasks -->
+        <div class="accordion-group">
+            <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseAutoPauseTasks">
+          <asp:Literal runat="server" ID="lblAutoPauseTasks" Text="<%$Resources:lblAutoPauseTasks %>" />
+      </a>
+    </div>
+            <div id="collapseAutoPauseTasks" class="accordion-body collapse">
+      <div class="accordion-inner">
+         <img src="../img/iconLoading.gif" id="imgAutoPauseTasks" style="min-width:20px; max-width:20px;" />
+        <div id="frmAutoPauseTasks"></div>
       </div>
     </div>
     </div>
