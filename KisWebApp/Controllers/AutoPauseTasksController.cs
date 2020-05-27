@@ -8,6 +8,7 @@ using System.Net.Http;
 using KIS.App_Sources;
 using KIS.App_Code;
 using System.Net;
+using System.IO;
 
 namespace KIS.Controllers
 {
@@ -41,17 +42,17 @@ namespace KIS.Controllers
                 ElencoReparti deptLst = new ElencoReparti();
                 foreach (var dept in deptLst.elenco)
                 {
-                    log += "Department " + dept.name + "<br/>";
+                    log += "Department " + dept.name + "\n";
                     if(dept.AutoPauseTasksOutsideWorkShifts)
                     {
-                        log += "AutoPauseTasksOutsideWorkShifts " + dept.AutoPauseTasksOutsideWorkShifts + "<br />";
+                        log += "AutoPauseTasksOutsideWorkShifts " + dept.AutoPauseTasksOutsideWorkShifts + "\n";
                         dept.loadCalendario(DateTime.UtcNow.AddDays(-2), DateTime.UtcNow.AddDays(2));
                         Boolean outsideShift = false;
                         DateTime actual = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, dept.tzFusoOrario);
-                        log += "actual " + actual.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
+                        log += "actual " + actual.ToString("dd/MM/yyyy HH:mm:ss") + "\n";
                         if(dept.CalendarioRep!=null && dept.CalendarioRep.Intervalli!=null && dept.CalendarioRep.Intervalli.Count>0)
                         {
-                            log += "dept.CalendarioRep.Intervalli.Count " + dept.CalendarioRep.Intervalli.Count + "<br />";
+                            log += "dept.CalendarioRep.Intervalli.Count " + dept.CalendarioRep.Intervalli.Count + "\n";
                             if (actual < dept.CalendarioRep.Intervalli[0].Inizio)
                             {
                                 log += "First if";
@@ -70,10 +71,10 @@ namespace KIS.Controllers
                                     //if(i < dept.CalendarioRep.Intervalli.Count -1)
                                     {
                                         log += "Current shift: " + dept.CalendarioRep.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss")
-                                            + " - " + dept.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";
+                                            + " - " + dept.CalendarioRep.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "\n";
                                         if (dept.CalendarioRep.Intervalli[i].Fine < actual && actual < dept.CalendarioRep.Intervalli[i+1].Inizio)
                                         {
-                                            log += "TRUEEEEEEE<br />";
+                                            log += "TRUEEEEEEE\n";
                                             outsideShift = true;
                                         }
                                     }
@@ -89,7 +90,7 @@ namespace KIS.Controllers
                             var lstOpenTasks = new ElencoTaskProduzione(dept, 'I');
                             foreach(var openTask in lstOpenTasks.Tasks)
                             {
-                                log += "Task " + openTask.Name + " " + openTask.TaskProduzioneID.ToString() + "<br />";
+                                log += "Task " + openTask.Name + " " + openTask.TaskProduzioneID.ToString() + "\n";
                                 openTask.loadUtentiAttivi();
                                 foreach(var usr in openTask.UtentiAttivi)
                                 {
@@ -98,12 +99,27 @@ namespace KIS.Controllers
                                     if(curr!=null)
                                     { 
                                         Boolean ret = openTask.Pause(curr);
-                                        log += "Paused " + ret.ToString() + "<br />";
+                                        log += "Paused " + ret.ToString() + "\n";
                                     }
                                 }
                             }
                         }
                     }
+                }
+
+                // Writes log to file
+                string path = @"c:\temp\AutoPauseLog.txt";
+                if (!File.Exists(path))
+                {
+                    // Create a file to write to.
+                    using (StreamWriter sw = File.CreateText(path))
+                    {
+                        sw.WriteLine(log);
+                    }
+                }
+                using (StreamWriter sw = File.AppendText(path))
+                {
+                    sw.WriteLine(log);
                 }
 
                 return Request.CreateResponse(HttpStatusCode.OK, log);

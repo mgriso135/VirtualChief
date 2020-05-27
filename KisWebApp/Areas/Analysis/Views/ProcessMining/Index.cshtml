@@ -20,6 +20,17 @@
                 height: 100%;
                 width: auto;
             }
+
+        .graph {
+            /* Just an example */
+            height: 100%;
+            width: 100%;
+        }
+
+           .graph svg {
+                height: 100%;
+                width: 100%;
+            }
     </style>
     <script src="//d3js.org/d3.v4.min.js"></script>
     <script src="http://viz-js.com/bower_components/viz.js/viz-lite.js"></script>
@@ -28,9 +39,17 @@
     <script>
         $(document).ready(function () {
             $("#imgLinkProductToOrderLoad").fadeOut();
-
+            $("#averagePanel").fadeOut();
+            $("#medianPanel").fadeOut();
+            $("#totalPanel").fadeOut();
+            $("#frequencyPanel").fadeOut();
 
             $("#imgViewProcess").click(function () {
+                $("#averagePanel").fadeOut();
+                $("#medianPanel").fadeOut();
+                $("#totalPanel").fadeOut();
+                $("#frequencyPanel").fadeOut();
+
                 var g = $('#ddlProducts').val();
                 var id = $("#ddlProductsList option[value='" + g + "']").attr('data-id');
                 //alert(id);
@@ -38,48 +57,57 @@
                     var arr = id.split('/');
                     if (arr.length == 3) {
                         $("#imgLinkProductToOrderLoad").fadeIn();
-                        render(arr[0] + "_" + arr[1] + "_" + arr[2] + ".dot");
-                        renderFreqGraph(arr[0] + "_" + arr[1] + "_" + arr[2] + "_FREQUENCY.dot");
+                        var prodname = arr[0] + "_" + arr[1] + "_" + arr[2];
+
+                        var graphchose = $("#chkGraphAverage").prop("checked") ||
+                            $("#chkGraphMedian").prop("checked") ||
+                            $("#chkGraphTotal").prop("checked") ||
+                            $("#chkGraphFrequency").prop("checked");
+
+                        if (!graphchose) {
+                            alert("Please choose at least one graph type");
+                        }
+
+                        if ($("#chkGraphAverage").prop("checked") == true) {
+                            $("#averageGraph").html('');
+                            render(prodname + "_MEAN.dot", "averageGraph");
+                            $("#averagePanel").fadeIn();
+                        }
+                        if ($("#chkGraphMedian").prop("checked") == true) {
+                            $("#medianGraph").html('');
+                            render(prodname + "_MEDIAN.dot", "medianGraph");
+                            $("#medianPanel").fadeIn();
+                        }
+                        if ($("#chkGraphTotal").prop("checked") == true) {
+                            $("#totalGraph").html('');
+                            render(prodname + "_TOTAL.dot", "totalGraph");
+                            $("#totalPanel").fadeIn();
+                        }
+                        if ($("#chkGraphFrequency").prop("checked") == true) {
+                            $("#freqGraph").html('');
+                            render(prodname + "_FREQUENCY.dot", "freqGraph");
+                            $("#frequencyPanel").fadeIn();
+                        }
+
                     }
                     else {
                         alert("Split error");
                     }
                 }
                 else {
-                    alert("Please select a product");
+                    alert("@ResProcessMining.Index.lblErrorSelectProduct");
                 }
             });
 
-            function render(product) {
-
-                $("#graph").html('');
+            function render(product, container) {
 
                 $.get("../../Data/dotGraphs/" + product)
                     .done(function (data) {
-                        d3.select("#graph").graphviz().renderDot(data);
+                        d3.select("#"+container).graphviz().renderDot(data);
                     }).fail(function () {
                         $.get("../../Data/dotGraphs/" + product)
                             .done(function (data) {
-                                d3.select("#graph").graphviz().renderDot(data);
-                            }).fail(function () {
-                                alert("Process diagram not found");
-                            });
-                    });
-
-                $("#imgLinkProductToOrderLoad").fadeOut();
-            }
-
-            function renderFreqGraph(product) {
-
-                $("#freqGraph").html('');
-
-                $.get("../../Data/dotGraphs/" + product)
-                    .done(function (data) {
-                        d3.select("#freqGraph").graphviz().renderDot(data);
-                    }).fail(function () {
-                        $.get("../../Data/dotGraphs/" + product)
-                            .done(function (data) {
-                                d3.select("#freqGraph").graphviz().renderDot(data);
+                                d3.select("#" + container).graphviz().renderDot(data);
                             }).fail(function () {
                                 alert("Process diagram not found");
                             });
@@ -92,6 +120,7 @@
 
     <div class="row-fluid">
         <div class="span12">
+            @ResProcessMining.Index.lblChooseProduct
             <input list="ddlProductsList" id="ddlProducts">
             <datalist id="ddlProductsList">
                 @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
@@ -101,14 +130,45 @@
                         <option data-id="@prd.IDCombinato2" value="@prd.process.processName - @prd.variant.nomeVariante"></option>
                     }
                 }
-            </datalist>
+            </datalist><br />
+            <input type="checkbox" id="chkGraphAverage" />@ResProcessMining.Index.lblAverageCT
+            <input type="checkbox" id="chkGraphMedian" />@ResProcessMining.Index.lblMedianCT
+            <input type="checkbox" id="chkGraphTotal" />@ResProcessMining.Index.lblTotalCT
+            <input type="checkbox" id="chkGraphFrequency" />@ResProcessMining.Index.lblFrequency
+            <br />
             <input type="image" src="~/img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLinkProductToOrderLoad" />
             <button type="button" id="imgViewProcess" class="btn btn-default" aria-label="See the graph">
                 <span class="octicon octicon-search"></span>
             </button>
 
-            <div id="graph" style="text-align: center;width:100%"></div>
-            <div id="freqGraph" style="text-align: center;"></div>
+
+        </div>
+    </div>
+    <div></div>
+    
+    <div class="row-fluid" id="averagePanel">
+        <div class="span12">
+            <h3>@ResProcessMining.Index.lblTitleAvgTC</h3>
+            <div class="graph" id="averageGraph"></div>
+        </div>
+    </div>
+        
+    <div class="row-fluid" id="medianPanel">
+        <div class="span12">
+            <h3>@ResProcessMining.Index.lblTitleMedianTC</h3>
+            <div id="medianGraph" class="graph"></div>
+        </div>
+    </div>
+    <div class="row-fluid" id="totalPanel">
+        <div class="span12">
+            <h3>@ResProcessMining.Index.lblTitleTotalTC</h3>
+            <div id="totalGraph" class="graph"></div>
+        </div>
+    </div>
+    <div class="row-fluid" id="frequencyPanel">
+        <div class="span12">
+            <h3>@ResProcessMining.Index.lblTitleFrequency</h3>
+            <div id="freqGraph" class="graph"></div>
         </div>
     </div>
 }

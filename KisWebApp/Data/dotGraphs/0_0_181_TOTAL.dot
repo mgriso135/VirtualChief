@@ -1,0 +1,8 @@
+digraph G {
+  size="6"; 
+  outputorder=edgesfirst; 
+  edge[headclip=true, tailclip=false]; 
+E0 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/4" fontcolor=white, label="CNC PERTICI\n overall time  2h  48m  50s  \n actual time  1h  33m  59s  \n"];
+E2 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/1", label="CNC THORWESTEN - GRAF\n overall time   4m  17s  \n actual time   4m  17s  \n"];
+E0 -> E2 [fontsize=7, penwidth= 3  , label="     13d  18h  14m  "];
+}

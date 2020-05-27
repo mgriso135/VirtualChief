@@ -1,5 +1,6 @@
 ﻿/* Copyright © 2013 Matteo Griso -  Tutti i diritti riservati */
 /* Copyright © 2017 Matteo Griso -  Tutti i diritti riservati */
+/* Copyright © 2020 Matteo Griso -  Tutti i diritti riservati */
 
 using System;
 using System.Collections.Generic;

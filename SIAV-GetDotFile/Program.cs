@@ -25,11 +25,20 @@ namespace SIAV_GetDotFile
                 var basepath = ConfigurationManager.AppSettings["basepath"];
                 Console.WriteLine(ConfigurationManager.AppSettings["products"]);
                 var arrPids = (ConfigurationManager.AppSettings["products"]).ToString().Split(';');
-                foreach(var m in arrPids)
+
+                List<String> metrics = new List<string>();
+                metrics.Add("MEAN");
+                metrics.Add("TOTAL");
+                metrics.Add("MEDIAN");
+
+                foreach (var m in arrPids)
                 { 
-                    var dotFile = getDotData(m.ToString(), token).Result;
-                    Console.Write(dotFile.ToString());
-                    File.WriteAllText(basepath + m.ToString() + ".dot", dotFile.ToString());
+                    foreach(var metric in metrics)
+                    { 
+                        var dotFile = getDotData(m.ToString(), metric, token).Result;
+                        Console.Write(dotFile.ToString());
+                        File.WriteAllText(basepath + m.ToString() + "_" + metric + ".dot", dotFile.ToString());
+                    }
 
                     var frequencyGraph = getFrequencyGraph(m.ToString(), token).Result;
                     Console.Write(frequencyGraph.ToString());
@@ -79,7 +88,7 @@ namespace SIAV_GetDotFile
 
         }
         
-        public static async Task<string> getDotData(String processID, String token)
+        public static async Task<string> getDotData(String processID, String metric, String token)
         {
             // Add the certificate
             WebRequestHandler handler = new WebRequestHandler();
@@ -98,8 +107,10 @@ namespace SIAV_GetDotFile
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph
-                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString()
-                    +"&statisticFunction=MEAN";
+               /*String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString()
+                    +"&statisticFunction="+metric;*/
+               String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPidFiltered?customer=kaizenkey&PID=" + processID.ToString()
+                    + "&statisticFunction=" + metric;
                 Console.WriteLine(u.ToString());
                 using (var result = await client.GetAsync(u))
                 {
@@ -133,7 +144,8 @@ namespace SIAV_GetDotFile
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph
-                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotFrequenceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();
+                //String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotFrequenceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();
+                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotFrequenceFromCustomerAndPidFiltered?customer=kaizenkey&PID=" + processID.ToString();
                 Console.WriteLine(u.ToString());
                 using (var result = await client.GetAsync(u))
                 {

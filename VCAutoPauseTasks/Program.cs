@@ -15,7 +15,6 @@ namespace VCAutoPauseTasks
             Console.WriteLine("AutoPauseTasks...\n");
             var ret = AutoPauseTasks();
             Console.WriteLine(ret.Result);
-            Console.ReadLine();
         }
 
         public static async Task<string> AutoPauseTasks()

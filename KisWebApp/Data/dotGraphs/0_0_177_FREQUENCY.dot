@@ -1,0 +1,14 @@
+digraph G {
+  size="6"; 
+  outputorder=edgesfirst; 
+  edge[headclip=true, tailclip=false]; 
+E3 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/blues4/4" fontcolor=white, label="CNC PERTICI \nfrequency 26"];
+E1 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/blues4/4" fontcolor=white, label="ANTE \nfrequency 26"];
+E5 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/blues4/4" fontcolor=white, label="CNC THORWESTEN - GRAF \nfrequency 26"];
+E9 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/blues4/4" fontcolor=white, label="TELAI \nfrequency 26"];
+E2 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/blues4/4" fontcolor=white, label="VETRI \nfrequency 26"];
+E5 -> E2 [fontsize=7, penwidth= 2  , label="    8"];
+E1 -> E2 [fontsize=7, penwidth= 2  , label="    9"];
+E9 -> E2 [fontsize=7, penwidth= 3  , label="    23"];
+E3 -> E9 [fontsize=7, penwidth= 2  , label="    10"];
+}

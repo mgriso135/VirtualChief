@@ -1,0 +1,14 @@
+digraph G {
+  size="6"; 
+  outputorder=edgesfirst; 
+  edge[headclip=true, tailclip=false]; 
+E3 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/1", label="CNC PERTICI\n overall time  3h  19m  1s  \n actual time  1h  26m  20s  \n"];
+E1 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/3", label="ANTE\n overall time 1d  6h  13m  36s  \n actual time  2h  50m  57s  \n"];
+E5 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/2", label="CNC THORWESTEN - GRAF\n overall time  12h  30m  25s  \n actual time  3h  3m  3s  \n"];
+E9 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/2", label="TELAI\n overall time  23h  8m  19s  \n actual time  5h  43m  13s  \n"];
+E2 [shape=box, style="filled, rounded", width=2, fontsize=7, fillcolor="/reds4/4" fontcolor=white, label="VETRI\n overall time 1d  23h  27m  25s  \n actual time   57m  12s  \n"];
+E5 -> E2 [fontsize=7, penwidth= 3  , label="     6d  21h  55m  16s "];
+E1 -> E2 [fontsize=7, penwidth= 3  , label="     8d  8h  17m  31s "];
+E9 -> E2 [fontsize=7, penwidth= 3  , label="     7d  5h  15m  41s "];
+E3 -> E9 [fontsize=7, penwidth= 1  , label="     1d  10h  54m  5s "];
+}
