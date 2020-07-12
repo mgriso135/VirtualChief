@@ -1330,6 +1330,8 @@ namespace KIS.App_Sources
 
     public class TaskEvents
     {
+        public String log;
+
         public List<TaskEventStruct> TaskEventsData;
 
         public TaskEvents()
@@ -1683,6 +1685,111 @@ namespace KIS.App_Sources
             }
 
 
+            conn.Close();
+        }
+
+        public void ExportTimeSpans(Boolean AllEvents)
+        {
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            /*int maxstartev = 0;
+            cmd.CommandText = "SELECT MAX(starteventid) FROM taskstimespans";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if(rdr.Read() && !rdr.IsDBNull(0))
+            {
+                maxstartev = rdr.GetInt32(0);
+            }
+            rdr.Close();*/
+            int timespanid = 0;
+            cmd.CommandText = "SELECT MAX(id) FROM taskstimespans";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                timespanid = rdr.GetInt32(0)+1;
+            }
+            rdr.Close();
+            cmd.CommandText = "SELECT user, data, evento, id, task FROM registroeventitaskproduzione";
+            if(!AllEvents)
+            {
+                cmd.CommandText += " WHERE data > '" + DateTime.UtcNow.AddMonths(-6).ToString("yyyy-MM-dd HH:mm:ss") + "'";
+            }
+            cmd.CommandText += " ORDER BY task, user, data";
+            rdr = cmd.ExecuteReader();
+
+            while (rdr.Read())
+            {
+                log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                DateTime inizio = rdr.GetDateTime(1);
+                String usrI = rdr.GetString(0);
+                Char EventoI = rdr.GetChar(2);
+                int IDEventoI = rdr.GetInt32(3);
+                int taskIdI = rdr.GetInt32(4);
+                if (rdr.Read())
+                {
+                    log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                    String usrF = rdr.GetString(0);
+                    Char EventoF = rdr.GetChar(2);
+                    DateTime fine = rdr.GetDateTime(1);
+                    int IDEventoF = rdr.GetInt32(3);
+                    int taskIdF = rdr.GetInt32(4);
+                    if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF && taskIdI == taskIdF)
+                    {
+                        // Checks if start and end events are already in the table
+                        int tsid = -1;
+                        MySqlConnection conn2 = (new Dati.Dati()).mycon();
+                        conn2.Open();
+                        MySqlCommand cmd2 = conn2.CreateCommand();
+                        cmd2.CommandText= "SELECT id FROM taskstimespans WHERE starteventid=@evi OR starteventid=@evf OR endeventid=@evi OR endeventid=@evf";
+                        cmd2.Parameters.AddWithValue("@evi", IDEventoI);
+                        cmd2.Parameters.AddWithValue("@evf", IDEventoF);
+                        MySqlDataReader rdr2 = cmd2.ExecuteReader();
+                        if(rdr2.Read() && !rdr.IsDBNull(0))
+                        {
+                            tsid = rdr2.GetInt32(0);
+                        }
+                        rdr2.Close();
+                        
+
+                        // If events were not already exported, write them in the taskstimespans table
+                        if(tsid == -1)
+                        {
+                            MySqlCommand cmd3 = conn2.CreateCommand();
+                            cmd3.CommandText = "INSERT INTO taskstimespans(id, userid, taskid, starteventid, starteventdate, starteventtype," +
+                                "endeventid, endeventdate, endeventtype, duration_sec)" +
+                                " VALUES(@timespanid, @user, @task, @eviID, @eviDate, @eviType, @evfID, @evfDate, @evfType, @duration)";
+                            cmd3.Parameters.AddWithValue("@timespanid", timespanid);
+                            cmd3.Parameters.AddWithValue("@user", usrF);
+                            cmd3.Parameters.AddWithValue("@task", taskIdF);
+                            cmd3.Parameters.AddWithValue("@eviID", IDEventoI);
+                            cmd3.Parameters.AddWithValue("@eviDate", inizio.ToString("yyyy-MM-dd HH:mm:ss"));
+                            cmd3.Parameters.AddWithValue("@eviType", EventoI);
+                            cmd3.Parameters.AddWithValue("@evfID", IDEventoF);
+                            cmd3.Parameters.AddWithValue("@evfDate", fine.ToString("yyyy-MM-dd HH:mm:ss"));
+                            cmd3.Parameters.AddWithValue("@evfType", EventoF);
+                            TimeSpan duration = fine - inizio;
+                            cmd3.Parameters.AddWithValue("@duration", Math.Floor(duration.TotalSeconds));
+                            MySqlTransaction tr = conn2.BeginTransaction();
+                            cmd3.Transaction = tr;
+                            try
+                            {
+                                cmd3.ExecuteNonQuery();
+                                tr.Commit();
+                                timespanid++;
+                            }
+                            catch(Exception ex)
+                            {
+                                log = ex.Message;
+                                tr.Rollback();
+                            }
+                        }
+                        conn2.Close();
+
+                    }
+                }
+
+            }
+            rdr.Close();
             conn.Close();
         }
     }

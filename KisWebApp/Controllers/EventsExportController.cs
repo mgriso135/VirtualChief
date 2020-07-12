@@ -47,6 +47,30 @@ namespace KIS.Controllers
             return Request.CreateResponse(HttpStatusCode.Unauthorized);
         }
 
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage TransformEventsToTimeSpansAndExport(Boolean AllEvents)
+        {
+            String cKey = "";
+            try
+            {
+                var arrCKey = Request.Headers.GetValues("X-API-KEY");
+                cKey = arrCKey.FirstOrDefault();
+            }
+            catch
+            {
+                cKey = "";
+            }
+            EventsExportControllerConfig cfg = new EventsExportControllerConfig();
+            String xKey = cfg.x_api_key;
+            if (xKey.Length > 0 && xKey == cKey)
+            {
+                // use TaskEventStruct in Analysis.cs
+                TaskEvents tskevs = new TaskEvents();
+                tskevs.ExportTimeSpans(AllEvents);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            return Request.CreateResponse(HttpStatusCode.Unauthorized);
+        }
 
     }
 }
