@@ -616,6 +616,16 @@ namespace KIS.App_Sources
                 {
                     curr.PlannedWorkingTime = rdr.GetTimeSpan(51);
                 }
+
+                if(curr.ProductionOrderStatus == 'F' && curr.RealWorkingTime.TotalHours > 0.75)
+                {
+                    curr.Productivity = curr.PlannedWorkingTime.TotalHours / curr.RealWorkingTime.TotalHours;
+                }
+                else
+                {
+                    curr.Productivity = 0.0;
+                }
+
                 this.AnalysisData.Add(curr);
             }
             conn.Close();
@@ -734,6 +744,7 @@ namespace KIS.App_Sources
         public TimeSpan RealLeadTime;
         public DateTime ProductionOrderEndProductionDateReal;
         public int ProductionOrderEndProductionDateRealWeek;
+        public double Productivity;
     }
 
     public struct ProductionAnalysisResultStruct

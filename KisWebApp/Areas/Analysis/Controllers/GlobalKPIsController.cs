@@ -595,7 +595,9 @@ namespace KIS.Areas.Analysis.Controllers
                         k.RealLeadTime,
                         k.PlannedWorkingTime,
                         k.RealWorkingTime,
-                        k.RealDelay
+                        k.RealDelay,
+                        k.Productivity
+                        //k.PlannedWorkingTime.TotalSeconds / k.RealWorkingTime.TotalSeconds,
                     })
                    .GroupBy(x => new { x.DepartmentID, x.DepartmentName, x.Year, x.ProductionOrderEndProductionDateRealWeek }, (key, group) => new
                    {
@@ -610,7 +612,8 @@ namespace KIS.Areas.Analysis.Controllers
                        UnitaryWorkingTime = group.Average(k => (k.RealWorkingTime.TotalHours / k.ProductionOrderQuantityProduced)),
                        LeadTime = group.Average(k => k.RealLeadTime.TotalHours),
                        Delay = group.Average(k => k.RealDelay.TotalHours),
-                       Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
+                       //Productivity = group.Sum(k => k.PlannedWorkingTime.TotalSeconds) / group.Sum(k => k.RealWorkingTime.TotalSeconds)
+                       Productivity = group.Average(k=>k.Productivity)
                    })
                    .OrderBy(f=>f.DepartmentID).ThenBy(g=>g.Year).ThenBy(h=>h.Week)
                    .ToList();
