@@ -82,7 +82,7 @@ namespace VCProductionEventsExport_SIAV
                     String usrI = origds[i].TaskEventUser;
                     Char EventoI = origds[i].TaskEventType;
                 int taskI = origds[i].TaskID;
-                    if (i < origds.Count - 1)
+                    if (origds[i].TaskEventType== 'I' && i < origds.Count - 1)
                     {
                         int taskF = origds[i +1].TaskID;
                         log += "2-Evento: "

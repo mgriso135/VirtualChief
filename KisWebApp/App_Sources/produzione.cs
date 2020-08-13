@@ -1723,22 +1723,25 @@ namespace KIS.App_Code
                             DateTime inizio = rdr.GetDateTime(1);
                             String usrI = rdr.GetString(0);
                             Char EventoI = rdr.GetChar(2);
-                            if (rdr.Read())
+                            if (EventoI == 'I')
                             {
-                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                String usrF = rdr.GetString(0);
-                                Char EventoF = rdr.GetChar(2);
-                                DateTime fine = rdr.GetDateTime(1);
-                                if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
+                                if (rdr.Read())
                                 {
+                                    log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
+                                    String usrF = rdr.GetString(0);
+                                    Char EventoF = rdr.GetChar(2);
+                                    DateTime fine = rdr.GetDateTime(1);
+                                    if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
+                                    {
 
-                                    tc += (fine - inizio);
-                                    log += (fine - inizio).ToString();
-                                    log += tc.ToString() + "--> OK<br/><br/>";
-                                }
-                                else // RAMO AGGIUNTO PER EVITARE CHE SE CI SONO FASI IN STATO "I", QUESTE PORTINO IL CONTO A 0
-                                {
-                                    rdr.Read();
+                                        tc += (fine - inizio);
+                                        log += (fine - inizio).ToString();
+                                        log += tc.ToString() + "--> OK<br/><br/>";
+                                    }
+                                    else // RAMO AGGIUNTO PER EVITARE CHE SE CI SONO FASI IN STATO "I", QUESTE PORTINO IL CONTO A 0
+                                    {
+                                        rdr.Read();
+                                    }
                                 }
                             }
                         }
