@@ -476,6 +476,7 @@
     <Compile Include="Areas\Analysis\Controllers\ProcessMiningController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductionHistoryController.cs" />
+    <Compile Include="Areas\Analysis\Controllers\ProductionWorkloadController.cs" />
     <Compile Include="Areas\Analysis\Controllers\TaskAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -756,6 +757,66 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Analysis\Views\TaskAnalysis\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -5118,13 +5179,6 @@
     <Compile Include="Produzione\listCommesseStatoN.ascx.designer.cs">
       <DependentUpon>listCommesseStatoN.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Produzione\listProcessi_OLD.ascx.cs">
-      <DependentUpon>listProcessi_OLD.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Produzione\listProcessi_OLD.ascx.designer.cs">
-      <DependentUpon>listProcessi_OLD.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Produzione\ListRepartiAndon.ascx.cs">
       <DependentUpon>ListRepartiAndon.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5960,6 +6014,8 @@
     <Content Include="Content\fonts\octicons.ttf" />
     <Content Include="Content\fonts\octicons.eot" />
     <Content Include="Areas\Departments\Views\DepartmentsConfig\GetAutoPauseTaskConfig.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProductionWorkload\Index.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProductionWorkload\ProductDataPanel.cshtml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -6558,6 +6614,66 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
       <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\TaskAnalysis\App_LocalResources\Index.en-US.resx">
       <CustomToolNamespace>ResTaskAnalysis</CustomToolNamespace>
@@ -10338,7 +10454,6 @@
     <Content Include="Produzione\listArticoliINP.ascx" />
     <Content Include="Produzione\listArticoliTerminati.ascx" />
     <Content Include="Produzione\listCommesseStatoN.ascx" />
-    <Content Include="Produzione\listProcessi_OLD.ascx" />
     <Content Include="Produzione\ListRepartiAndon.ascx" />
     <Content Include="Produzione\listWarningAperti.ascx" />
     <Content Include="Produzione\listWarningApertiReparto.ascx" />
