@@ -120,7 +120,6 @@
                             + "_" + TypeOfProductsArr[i][2]
                             + ";";
                     }
-                    //alert(customersStr);
 
                     $.ajax({
                         url: "@Url.Action("ProductDataPanel", "ProductionWorkload")",
@@ -139,13 +138,79 @@
                         success: function (result) {
                             console.log(result);
                             var res = JSON.parse(result);
-                            for (var i = 0; i < res.length; i++) {
-                                console.log(res[i].DepartmentName);
+                            var res2 = [];
+                            if (res.length > 0) {
+
+                                if (groupByPeriod == 0) {
+                                    // None
+                                    var header = [];
+                                    header[0] = "";
+                                    for (var i = 0; i < res[0].EntityWorkload.length; i++) {
+                                        header[i+1] = res[0].EntityWorkload[i].EntityName;
+                                    }
+                                    res2.push(header);
+
+                                    var curr = [];
+                                    curr[0] = "0";
+                                    for (var j = 1; j < header.length; j++) {
+                                        var found = 0;
+                                        for (var k = 0; k < res[0].EntityWorkload.length && found == 0; k++) {
+                                            if (res[0].EntityWorkload[k].EntityName == header[j]) {
+                                                curr[j] = res[0].EntityWorkload[k].Workload;
+                                                found = 1;
+                                            }
+                                        }
+                                    }
+                                    res2.push(curr);
+                                }
+                                else if (groupByPeriod == 1) {
+                                    // Weekly
+                                    var header = [];
+                                    header[0] = "date";
+                                    for (var i = 0; i < res[0].EntityWorkload.length; i++) {
+                                        header[i + 1] = res[0].EntityWorkload[i].EntityName;
+                                    }
+
+                                    res2.push(header);
+
+                                    for (var i = 0; i < res.length; i++) {
+                                        var curr = [];
+                                        curr[0] = res[i].DateStr;
+                                        for (var j = 1; j < header.length; j++) {
+                                            var found = 0;
+                                            for (var k = 0; k < res[i].EntityWorkload.length && found == 0; k++) {
+                                                if (res[i].EntityWorkload[k].EntityName == header[j]) {
+                                                    curr[j] = res[i].EntityWorkload[k].Workload;
+                                                    found = 1;
+                                                }
+                                            }
+                                        }
+                                        res2.push(curr);
+                                    }
+                                }
+                                else if (groupByPeriod == 2) {
+                                    // Monthly
+
+                                }
+                                else if (groupByPeriod == 3) {
+                                    // DAily
+                                }
+
+
+                                for (var i = 0; i < res2.length; i++) {
+                                    console.log(res2[i]);
+                                }
+                                console.log("res2: " + res2);
+                                // console.log("res2: " + JSON.stringify(res2));
+                                drawGoogleChart(res2);
+                                //$("#HistoricPanel").html(result);
+                                $("#HistoricPanel").fadeTo(0, 1);
+                                $("#txtEndDateStart").prop("disabled", false);
+                                $("#txtEndDateEnd").prop("disabled", false);
                             }
-                        $("#HistoricPanel").html(result);
-                        $("#HistoricPanel").fadeTo(0, 1);
-                        $("#txtEndDateStart").prop("disabled", false);
-                        $("#txtEndDateEnd").prop("disabled", false);
+                            else {
+                                console.log("No data!");
+                            }
                     },
                     error: function (result) {
                         alert("Error");
@@ -162,7 +227,36 @@
                         //$("#frmListWorkstations").html("Warning");
                     }
                 });
-                }
+                   }
+
+
+                       google.charts.load('current', { 'packages': ['bar'] });
+                   google.charts.setOnLoadCallback(drawGoogleChart);
+
+            function drawGoogleChart(graphData) {
+                /*var data = new google.visualization.DataTable();/* google.visualization.arrayToDataTable([
+                    ['Year', 'Sales', 'Expenses', 'Profit'],
+                    ['2014', 1000, 400, 200],
+                    ['2015', 1170, 460, 250],
+                    ['2016', 660, 1120, 300],
+                    ['2017', 1030, 540, 350]
+                ]);*/
+
+                //console.log(JSON.stringify(graphData));
+
+                var data = google.visualization.arrayToDataTable(graphData);
+
+                            var options = {
+                    chart: {
+                                title: '@ResProductionWorkload.ProductPanel.lblChartTitle',
+                        subtitle: '@ResProductionWorkload.ProductPanel.lblChartSubTitle' + ' 1/1/1970:  - 31/12/2099',
+                    },
+                    bars: 'vertical' // Required for Material Bar Charts.
+                };
+
+                        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+                        chart.draw(data, google.charts.Bar.convertOptions(options));
+                    }
 
 
                 //$("#frmCustomersList").hide();
@@ -465,6 +559,7 @@
     </div>
     <div class="span9">
         <div id="HistoricPanel" />
+        <div id="barchart_material" style="width: 900px; height: 500px;"></div>
     </div>
     </div>
     </div>

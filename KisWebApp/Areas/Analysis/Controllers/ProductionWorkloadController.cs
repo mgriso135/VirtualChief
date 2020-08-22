@@ -165,7 +165,7 @@ namespace KIS.Areas.Analysis.Controllers
 
                     if (DepartmentsOrWorkstations == "Departments")
                     {
-                        List<TaskProductionAnalysisResultStruct> res = new List<TaskProductionAnalysisResultStruct>();
+                        List<WorkloadAnalysisStruct> res = new List<WorkloadAnalysisStruct>();
                         if (periodType == 0)
                         {
                             // Daily
@@ -173,30 +173,30 @@ namespace KIS.Areas.Analysis.Controllers
                             {
                                 k.DepartmentID,
                                 k.DepartmentName,
-                                k.TaskPlannedCycleTime
+                                k.TaskPlannedWorkingTime
                             })
                            .GroupBy(x => new { x.DepartmentID }, (key, group) => new
                            {
                                DepartmentID = key.DepartmentID,
-                               DepartmentName = group.Select(k => k.DepartmentName).ToString(),
-                               PlannedWorkingTime = group.Sum(k => k.TaskPlannedCycleTime.TotalHours)
-                           }).ToList();
+                               DepartmentName = group.Select(k => k.DepartmentName).First().ToString(),
+                               PlannedWorkingTime = group.Sum(k => k.TaskPlannedWorkingTime.TotalHours)
+                           })
+                           .OrderBy(g=>g.DepartmentName)
+                           .ToList();
 
-                            foreach (var k in result)
+                            WorkloadAnalysisStruct wld = new WorkloadAnalysisStruct();
+                            wld.EntityWorkload = new List<entityWorkload>();
+                            wld.DateStr = "";
+                            foreach (var row in result)
                             {
-                                TaskProductionAnalysisResultStruct currRes = new TaskProductionAnalysisResultStruct();
-                                currRes.Day = 0;
-                                currRes.Delay = 0;
-                                currRes.LeadTime = 0;
-                                currRes.Month = 0;
-                                currRes.ProductID = 0;
-                                currRes.DepartmentID = k.DepartmentID;
-                                currRes.DepartmentName = k.DepartmentName;
-                                currRes.WorkingTime = k.PlannedWorkingTime;
-                                res.Add(currRes);
+                                entityWorkload dpts = new entityWorkload();
+                                dpts.EntityID = row.DepartmentID;
+                                dpts.EntityName = row.DepartmentName;
+                                dpts.Workload = row.PlannedWorkingTime;
+                                wld.EntityWorkload.Add(dpts);
                             }
-
-                            res = res.OrderBy(x => x.DepartmentName).ToList();
+                            res.Add(wld);
+    
                         }
                         else if (periodType == 1)
                         {
@@ -208,7 +208,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.TaskLateFinish.Year,
                                 k.TaskLateFinish.Month,
                                 k.TaskLateFinishWeek,
-                                k.TaskPlannedCycleTime
+                                k.TaskPlannedWorkingTime
                             })
                            .GroupBy(x => new { x.DepartmentID, x.Year, x.TaskLateFinishWeek }, (key, group) => new
                            {
@@ -218,7 +218,7 @@ namespace KIS.Areas.Analysis.Controllers
                                Month = DateTime.UtcNow.Month,
                                DateStr = key.TaskLateFinishWeek + "/" + key.Year,
                                Week = key.TaskLateFinishWeek,
-                               PlannedWorkingTime = group.Sum(x => x.TaskPlannedCycleTime.TotalHours)
+                               PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours)
                            }).ToList();
 
                             var periods = result
@@ -227,7 +227,7 @@ namespace KIS.Areas.Analysis.Controllers
 
                             var depts = result.Select(e => new { e.DepartmentID, e.DepartmentName}).Distinct();
 
-                            foreach (var k in result)
+                            /*foreach (var k in result)
                             {
                                 TaskProductionAnalysisResultStruct currRes = new TaskProductionAnalysisResultStruct();
                                 currRes.DepartmentID = k.DepartmentID;
@@ -237,8 +237,40 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.Year = k.Year;
                                 currRes.WorkingTime = k.PlannedWorkingTime;
                                 res.Add(currRes);
+                            }*/
+
+                            foreach(var dt in periods)
+                            {
+                                var prds = result.Where(x => x.DateStr == dt).ToList();
+                                WorkloadAnalysisStruct currWlds = new WorkloadAnalysisStruct();
+                                currWlds.EntityWorkload = new List<entityWorkload>();
+                                currWlds.DateStr = prds[0].DateStr;
+                                currWlds.Week = prds[0].Week;
+                                currWlds.Year = prds[0].Year;
+                                //foreach (var itm in prds)
+                                //{
+                                    foreach(var dept in depts)
+                                    {
+                                        entityWorkload dptWld = new entityWorkload();
+                                        dptWld.EntityID = dept.DepartmentID;
+                                        dptWld.EntityName = dept.DepartmentName;
+                                        dptWld.Workload = 0.0;
+                                        try
+                                        {
+                                            var entWld = prds.Where(z => z.DepartmentID == dept.DepartmentID).First();
+                                        dptWld.Workload = entWld.PlannedWorkingTime;
+                                        }
+                                        catch
+                                        {
+                                        dptWld.Workload = 0.0;
+                                    }
+                                    currWlds.EntityWorkload.Add(dptWld);
+                                    }
+                                //}
+                                res.Add(currWlds);
                             }
-                            res = res.OrderBy(x => x.Year).ThenBy(y => y.Week).ThenBy(z => z.DepartmentName).ToList();
+                            //res = res.OrderBy(x => x.Year).ThenBy(y => y.Week).ThenBy(z => z.DepartmentName).ToList();
+                            res = res.OrderBy(g => g.Year).ThenBy(h => h.Week).ToList();
                         }
                         else if (periodType == 2)
                         {
@@ -249,7 +281,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.DepartmentName,
                                 k.TaskLateFinish.Year,
                                 k.TaskLateFinish.Month,
-                                k.TaskPlannedCycleTime
+                                k.TaskPlannedWorkingTime
                             })
                             .GroupBy(x => new { x.DepartmentID, x.Year, x.Month }, (key, group) => new
                             {
@@ -258,7 +290,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 Year = key.Year,
                                 Month = DateTime.UtcNow.Month,
                                 RealEndDate = DateTime.UtcNow,
-                                PlannedWorkingTime = group.Sum(x => x.TaskPlannedCycleTime.TotalHours)
+                                PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours)
                             }).ToList();
 
 
@@ -271,9 +303,9 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.Month = k.Month;
                                 currRes.Year = k.Year;
                                 currRes.WorkingTime = k.PlannedWorkingTime;
-                                res.Add(currRes);
+                               // res.Add(currRes);
                             }
-                            res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ThenBy(z => z.DepartmentName).ToList();
+                           // res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ThenBy(z => z.DepartmentName).ToList();
                         }
                         else if (periodType == 3) // Daily
                         {
@@ -285,7 +317,7 @@ namespace KIS.Areas.Analysis.Controllers
                                 k.TaskLateFinish.Year,
                                 k.TaskLateFinish.Month,
                                 k.TaskLateFinish.Day,
-                                k.TaskPlannedCycleTime
+                                k.TaskPlannedWorkingTime
                             })
                            .GroupBy(x => new { x.DepartmentID, x.Year, x.Month, x.Day }, (key, group) => new
                            {
@@ -296,7 +328,7 @@ namespace KIS.Areas.Analysis.Controllers
                                RealEndDate = DateTime.UtcNow,
                                Week = 0,
                                Day = key.Day,
-                               PlannedWorkingTime = group.Sum(x => x.TaskPlannedCycleTime.TotalHours)
+                               PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours)
                            }).ToList();
 
                             foreach (var k in result)
@@ -308,10 +340,10 @@ namespace KIS.Areas.Analysis.Controllers
                                 currRes.Year = k.Year;
                                 currRes.Day = k.Day;
                                 currRes.WorkingTime = k.PlannedWorkingTime;
-                                res.Add(currRes);
+                                //res.Add(currRes);
                             }
 
-                            res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ThenBy(z => z.Day).ThenBy(r => r.DepartmentName).ToList();
+                           // res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ThenBy(z => z.Day).ThenBy(r => r.DepartmentName).ToList();
                         }
 
                         ViewBag.content = JsonConvert.SerializeObject(res);

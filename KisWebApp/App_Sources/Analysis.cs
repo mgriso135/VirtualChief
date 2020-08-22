@@ -2155,10 +2155,8 @@ namespace KIS.App_Sources
 
     public struct entityWorkload
     {
-        public int DepartmentID;
-        public String DepartmentName;
-        public int WorkstationID;
-        public String WorkstationName;
+        public int EntityID;
+        public String EntityName;
         public double Workload; // hours
     }
 }
