@@ -184,7 +184,7 @@
     <value>Número de serie</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
-    <value>Análisis de producción</value>
+    <value>Anàlisis carga de trabajo</value>
   </data>
   <data name="lblTypesOfProducts" xml:space="preserve">
     <value>Tipos de productos</value>

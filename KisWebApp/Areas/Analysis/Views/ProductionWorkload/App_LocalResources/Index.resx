@@ -132,9 +132,6 @@
   <data name="lblEndProductionDate" xml:space="preserve">
     <value>Intervallo date</value>
   </data>
-  <data name="lblExhumate" xml:space="preserve">
-    <value>Riesuma il prodotto</value>
-  </data>
   <data name="lblFilterSelection" xml:space="preserve">
     <value>Filtra la selezione</value>
   </data>
@@ -184,7 +181,7 @@
     <value>Numero di serie</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
-    <value>Analisi produzione</value>
+    <value>Analisi carico di lavoro reparti e postazioni</value>
   </data>
   <data name="lblTypesOfProducts" xml:space="preserve">
     <value>Tipi di prodotto</value>

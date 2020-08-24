@@ -142,15 +142,6 @@ namespace ResProductionWorkload {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Riesuma il prodotto.
-        /// </summary>
-        public static string lblExhumate {
-            get {
-                return ResourceManager.GetString("lblExhumate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Filtra la selezione.
         /// </summary>
         public static string lblFilterSelection {
@@ -358,7 +349,7 @@ namespace ResProductionWorkload {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Analisi produzione.
+        ///   Looks up a localized string similar to Analisi carico di lavoro reparti e postazioni.
         /// </summary>
         public static string lblTitle {
             get {

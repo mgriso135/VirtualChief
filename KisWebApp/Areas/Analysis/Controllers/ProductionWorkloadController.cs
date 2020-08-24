@@ -163,9 +163,9 @@ namespace KIS.Areas.Analysis.Controllers
                     }
                     curr = curr.Where(p => workstationsFilter.Any(l => p.WorkstationID == l)).ToList();
 
+                    List<WorkloadAnalysisStruct> res = new List<WorkloadAnalysisStruct>();
                     if (DepartmentsOrWorkstations == "Departments")
                     {
-                        List<WorkloadAnalysisStruct> res = new List<WorkloadAnalysisStruct>();
                         if (periodType == 0)
                         {
                             // Daily
@@ -227,18 +227,6 @@ namespace KIS.Areas.Analysis.Controllers
 
                             var depts = result.Select(e => new { e.DepartmentID, e.DepartmentName}).Distinct();
 
-                            /*foreach (var k in result)
-                            {
-                                TaskProductionAnalysisResultStruct currRes = new TaskProductionAnalysisResultStruct();
-                                currRes.DepartmentID = k.DepartmentID;
-                                currRes.DepartmentName = k.DepartmentName;
-                                currRes.Week = k.Week;
-                                currRes.Month = k.Month;
-                                currRes.Year = k.Year;
-                                currRes.WorkingTime = k.PlannedWorkingTime;
-                                res.Add(currRes);
-                            }*/
-
                             foreach(var dt in periods)
                             {
                                 var prds = result.Where(x => x.DateStr == dt).ToList();
@@ -247,8 +235,6 @@ namespace KIS.Areas.Analysis.Controllers
                                 currWlds.DateStr = prds[0].DateStr;
                                 currWlds.Week = prds[0].Week;
                                 currWlds.Year = prds[0].Year;
-                                //foreach (var itm in prds)
-                                //{
                                     foreach(var dept in depts)
                                     {
                                         entityWorkload dptWld = new entityWorkload();
@@ -266,10 +252,8 @@ namespace KIS.Areas.Analysis.Controllers
                                     }
                                     currWlds.EntityWorkload.Add(dptWld);
                                     }
-                                //}
                                 res.Add(currWlds);
                             }
-                            //res = res.OrderBy(x => x.Year).ThenBy(y => y.Week).ThenBy(z => z.DepartmentName).ToList();
                             res = res.OrderBy(g => g.Year).ThenBy(h => h.Week).ToList();
                         }
                         else if (periodType == 2)
@@ -286,26 +270,49 @@ namespace KIS.Areas.Analysis.Controllers
                             .GroupBy(x => new { x.DepartmentID, x.Year, x.Month }, (key, group) => new
                             {
                                 DepartmentID = key.DepartmentID,
-                                DepartmentName = group.Select(x => x.DepartmentName).ToString(),
+                                DepartmentName = group.Select(x => x.DepartmentName).First().ToString(),
                                 Year = key.Year,
                                 Month = DateTime.UtcNow.Month,
-                                RealEndDate = DateTime.UtcNow,
+                                DateStr = key.Month + "/" + key.Year,
+                                date = new DateTime(key.Year, key.Month, 1),
                                 PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours)
                             }).ToList();
 
+                            var periods = result
+                               .Select(element => element.DateStr)
+                               .Distinct();
 
+                            var depts = result.Select(e => new { e.DepartmentID, e.DepartmentName }).Distinct();
 
-                            foreach (var k in result)
+                            foreach (var dt in periods)
                             {
-                                TaskProductionAnalysisResultStruct currRes = new TaskProductionAnalysisResultStruct();
-                                currRes.DepartmentID = k.DepartmentID;
-                                currRes.DepartmentName = k.DepartmentName;
-                                currRes.Month = k.Month;
-                                currRes.Year = k.Year;
-                                currRes.WorkingTime = k.PlannedWorkingTime;
-                               // res.Add(currRes);
+                                var prds = result.Where(x => x.DateStr == dt).ToList();
+                                WorkloadAnalysisStruct currWlds = new WorkloadAnalysisStruct();
+                                currWlds.EntityWorkload = new List<entityWorkload>();
+                                currWlds.Date = new DateTime(prds[0].Year, prds[0].Month, 1);
+                                currWlds.DateStr = prds[0].date.ToString("yyyy-MM-dd");
+                                currWlds.Month = prds[0].Month;
+                                currWlds.Year = prds[0].Year;
+                                foreach (var dept in depts)
+                                {
+                                    entityWorkload dptWld = new entityWorkload();
+                                    dptWld.EntityID = dept.DepartmentID;
+                                    dptWld.EntityName = dept.DepartmentName;
+                                    dptWld.Workload = 0.0;
+                                    try
+                                    {
+                                        var entWld = prds.Where(z => z.DepartmentID == dept.DepartmentID).First();
+                                        dptWld.Workload = entWld.PlannedWorkingTime;
+                                    }
+                                    catch
+                                    {
+                                        dptWld.Workload = 0.0;
+                                    }
+                                    currWlds.EntityWorkload.Add(dptWld);
+                                }
+                                res.Add(currWlds);
                             }
-                           // res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ThenBy(z => z.DepartmentName).ToList();
+                            res = res.OrderBy(g => g.Year).ThenBy(h => h.Month).ToList();
                         }
                         else if (periodType == 3) // Daily
                         {
@@ -322,35 +329,272 @@ namespace KIS.Areas.Analysis.Controllers
                            .GroupBy(x => new { x.DepartmentID, x.Year, x.Month, x.Day }, (key, group) => new
                            {
                                DepartmentID = key.DepartmentID,
-                               DepartmentName = group.Select(x => x.DepartmentName).ToString(),
+                               DepartmentName = group.Select(x => x.DepartmentName).First().ToString(),
                                Year = key.Year,
                                Month = key.Month,
                                RealEndDate = DateTime.UtcNow,
                                Week = 0,
                                Day = key.Day,
+                               PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours),
+                               DateStr = key.Year + "-" + key.Month + "-" + key.Day
+                           }).ToList();
+
+                            var periods = result
+                               .Select(element => element.DateStr)
+                               .Distinct();
+
+                            var depts = result.Select(e => new { e.DepartmentID, e.DepartmentName }).Distinct();
+
+                            foreach (var dt in periods)
+                            {
+                                var prds = result.Where(x => x.DateStr == dt).ToList();
+                                WorkloadAnalysisStruct currWlds = new WorkloadAnalysisStruct();
+                                currWlds.EntityWorkload = new List<entityWorkload>();
+                                currWlds.Date = new DateTime(prds[0].Year, prds[0].Month, prds[0].Day);
+                                currWlds.DateStr = prds[0].DateStr;
+                                currWlds.Month = prds[0].Month;
+                                currWlds.Year = prds[0].Year;
+                                foreach (var dept in depts)
+                                {
+                                    entityWorkload dptWld = new entityWorkload();
+                                    dptWld.EntityID = dept.DepartmentID;
+                                    dptWld.EntityName = dept.DepartmentName;
+                                    dptWld.Workload = 0.0;
+                                    try
+                                    {
+                                        var entWld = prds.Where(z => z.DepartmentID == dept.DepartmentID).First();
+                                        dptWld.Workload = entWld.PlannedWorkingTime;
+                                    }
+                                    catch
+                                    {
+                                        dptWld.Workload = 0.0;
+                                    }
+                                    currWlds.EntityWorkload.Add(dptWld);
+                                }
+                                res.Add(currWlds);
+                            }
+                            res = res.OrderBy(g => g.Date).ToList();
+                        }
+                        
+
+                    }
+                    else // Visualization by Workstation
+                    {
+                        if (periodType == 0)
+                        {
+                            // Daily
+                            var result = curr.Select(k => new
+                            {
+                                k.WorkstationID,
+                                k.WorkstationName,
+                                k.TaskPlannedWorkingTime
+                            })
+                           .GroupBy(x => new { x.WorkstationID }, (key, group) => new
+                           {
+                               WorkstationID = key.WorkstationID,
+                               WorkstationName = group.Select(k => k.WorkstationName).First().ToString(),
+                               PlannedWorkingTime = group.Sum(k => k.TaskPlannedWorkingTime.TotalHours)
+                           })
+                           .OrderBy(g => g.WorkstationName)
+                           .ToList();
+
+                            WorkloadAnalysisStruct wld = new WorkloadAnalysisStruct();
+                            wld.EntityWorkload = new List<entityWorkload>();
+                            wld.DateStr = "";
+                            foreach (var row in result)
+                            {
+                                entityWorkload dpts = new entityWorkload();
+                                dpts.EntityID = row.WorkstationID;
+                                dpts.EntityName = row.WorkstationName;
+                                dpts.Workload = row.PlannedWorkingTime;
+                                wld.EntityWorkload.Add(dpts);
+                            }
+                            res.Add(wld);
+
+                        }
+                        else if (periodType == 1)
+                        {
+                            // Week
+                            var result = curr.Select(k => new
+                            {
+                                k.WorkstationID,
+                                k.WorkstationName,
+                                k.TaskLateFinish.Year,
+                                k.TaskLateFinish.Month,
+                                k.TaskLateFinishWeek,
+                                k.TaskPlannedWorkingTime
+                            })
+                           .GroupBy(x => new { x.WorkstationID, x.Year, x.TaskLateFinishWeek }, (key, group) => new
+                           {
+                               WorkstationID = key.WorkstationID,
+                               WorkstationName = group.Select(x => x.WorkstationName).First().ToString(),
+                               Year = key.Year,
+                               Month = DateTime.UtcNow.Month,
+                               DateStr = key.TaskLateFinishWeek + "/" + key.Year,
+                               Week = key.TaskLateFinishWeek,
                                PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours)
                            }).ToList();
 
-                            foreach (var k in result)
+                            var periods = result
+                               .Select(element => element.DateStr)
+                               .Distinct();
+
+                            var depts = result.Select(e => new { e.WorkstationID, e.WorkstationName }).Distinct();
+
+                            foreach (var dt in periods)
                             {
-                                TaskProductionAnalysisResultStruct currRes = new TaskProductionAnalysisResultStruct();
-                                currRes.DepartmentID = k.DepartmentID;
-                                currRes.DepartmentName = k.DepartmentName;
-                                currRes.Month = k.Month;
-                                currRes.Year = k.Year;
-                                currRes.Day = k.Day;
-                                currRes.WorkingTime = k.PlannedWorkingTime;
-                                //res.Add(currRes);
+                                var prds = result.Where(x => x.DateStr == dt).ToList();
+                                WorkloadAnalysisStruct currWlds = new WorkloadAnalysisStruct();
+                                currWlds.EntityWorkload = new List<entityWorkload>();
+                                currWlds.DateStr = prds[0].DateStr;
+                                currWlds.Week = prds[0].Week;
+                                currWlds.Year = prds[0].Year;
+                                foreach (var dept in depts)
+                                {
+                                    entityWorkload dptWld = new entityWorkload();
+                                    dptWld.EntityID = dept.WorkstationID;
+                                    dptWld.EntityName = dept.WorkstationName;
+                                    dptWld.Workload = 0.0;
+                                    try
+                                    {
+                                        var entWld = prds.Where(z => z.WorkstationID == dept.WorkstationID).First();
+                                        dptWld.Workload = entWld.PlannedWorkingTime;
+                                    }
+                                    catch
+                                    {
+                                        dptWld.Workload = 0.0;
+                                    }
+                                    currWlds.EntityWorkload.Add(dptWld);
+                                }
+                                res.Add(currWlds);
                             }
-
-                           // res = res.OrderBy(x => x.Year).ThenBy(y => y.Month).ThenBy(z => z.Day).ThenBy(r => r.DepartmentName).ToList();
+                            res = res.OrderBy(g => g.Year).ThenBy(h => h.Week).ToList();
                         }
+                        else if (periodType == 2)
+                        {
+                            // Month
+                            var result = curr.Select(k => new
+                            {
+                                k.WorkstationID,
+                                k.WorkstationName,
+                                k.TaskLateFinish.Year,
+                                k.TaskLateFinish.Month,
+                                k.TaskPlannedWorkingTime
+                            })
+                            .GroupBy(x => new { x.WorkstationID, x.Year, x.Month }, (key, group) => new
+                            {
+                                WorkstationID = key.WorkstationID,
+                                WorkstationName = group.Select(x => x.WorkstationName).First().ToString(),
+                                Year = key.Year,
+                                Month = DateTime.UtcNow.Month,
+                                DateStr = key.Month + "/" + key.Year,
+                                date = new DateTime(key.Year, key.Month, 1),
+                                PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours)
+                            }).ToList();
 
-                        ViewBag.content = JsonConvert.SerializeObject(res);
-                        return Json(res);
+                            var periods = result
+                               .Select(element => element.DateStr)
+                               .Distinct();
 
+                            var depts = result.Select(e => new { e.WorkstationID, e.WorkstationName }).Distinct();
+
+                            foreach (var dt in periods)
+                            {
+                                var prds = result.Where(x => x.DateStr == dt).ToList();
+                                WorkloadAnalysisStruct currWlds = new WorkloadAnalysisStruct();
+                                currWlds.EntityWorkload = new List<entityWorkload>();
+                                currWlds.Date = new DateTime(prds[0].Year, prds[0].Month, 1);
+                                currWlds.DateStr = prds[0].date.ToString("yyyy-MM-dd");
+                                currWlds.Month = prds[0].Month;
+                                currWlds.Year = prds[0].Year;
+                                foreach (var dept in depts)
+                                {
+                                    entityWorkload dptWld = new entityWorkload();
+                                    dptWld.EntityID = dept.WorkstationID;
+                                    dptWld.EntityName = dept.WorkstationName;
+                                    dptWld.Workload = 0.0;
+                                    try
+                                    {
+                                        var entWld = prds.Where(z => z.WorkstationID == dept.WorkstationID).First();
+                                        dptWld.Workload = entWld.PlannedWorkingTime;
+                                    }
+                                    catch
+                                    {
+                                        dptWld.Workload = 0.0;
+                                    }
+                                    currWlds.EntityWorkload.Add(dptWld);
+                                }
+                                res.Add(currWlds);
+                            }
+                            res = res.OrderBy(g => g.Year).ThenBy(h => h.Month).ToList();
+                        }
+                        else if (periodType == 3) // Daily
+                        {
+                            // Daily
+                            var result = curr.Select(k => new
+                            {
+                                k.WorkstationID,
+                                k.WorkstationName,
+                                k.TaskLateFinish.Year,
+                                k.TaskLateFinish.Month,
+                                k.TaskLateFinish.Day,
+                                k.TaskPlannedWorkingTime
+                            })
+                           .GroupBy(x => new { x.WorkstationID, x.Year, x.Month, x.Day }, (key, group) => new
+                           {
+                               WorkstationID = key.WorkstationID,
+                               WorkstationName = group.Select(x => x.WorkstationName).First().ToString(),
+                               Year = key.Year,
+                               Month = key.Month,
+                               RealEndDate = DateTime.UtcNow,
+                               Week = 0,
+                               Day = key.Day,
+                               PlannedWorkingTime = group.Sum(x => x.TaskPlannedWorkingTime.TotalHours),
+                               DateStr = key.Year + "-" + key.Month + "-" + key.Day
+                           }).ToList();
+
+                            var periods = result
+                               .Select(element => element.DateStr)
+                               .Distinct();
+
+                            var depts = result.Select(e => new { e.WorkstationID, e.WorkstationName }).Distinct();
+
+                            foreach (var dt in periods)
+                            {
+                                var prds = result.Where(x => x.DateStr == dt).ToList();
+                                WorkloadAnalysisStruct currWlds = new WorkloadAnalysisStruct();
+                                currWlds.EntityWorkload = new List<entityWorkload>();
+                                currWlds.Date = new DateTime(prds[0].Year, prds[0].Month, prds[0].Day);
+                                currWlds.DateStr = prds[0].DateStr;
+                                currWlds.Month = prds[0].Month;
+                                currWlds.Year = prds[0].Year;
+                                foreach (var dept in depts)
+                                {
+                                    entityWorkload dptWld = new entityWorkload();
+                                    dptWld.EntityID = dept.WorkstationID;
+                                    dptWld.EntityName = dept.WorkstationName;
+                                    dptWld.Workload = 0.0;
+                                    try
+                                    {
+                                        var entWld = prds.Where(z => z.WorkstationID == dept.WorkstationID).First();
+                                        dptWld.Workload = entWld.PlannedWorkingTime;
+                                    }
+                                    catch
+                                    {
+                                        dptWld.Workload = 0.0;
+                                    }
+                                    currWlds.EntityWorkload.Add(dptWld);
+                                }
+                                res.Add(currWlds);
+                            }
+                            res = res.OrderBy(g => g.Date).ToList();
+                        }
                     }
+
+                    return Json(res);
+
                 }
+
                 
             }
             return Json("");

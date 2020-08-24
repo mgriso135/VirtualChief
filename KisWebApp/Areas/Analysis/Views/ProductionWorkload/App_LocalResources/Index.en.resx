@@ -184,7 +184,7 @@
     <value>Serial number</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
-    <value>Production analysis</value>
+    <value>Production workload analysis - departments and workstations</value>
   </data>
   <data name="lblTypesOfProducts" xml:space="preserve">
     <value>Types of products</value>

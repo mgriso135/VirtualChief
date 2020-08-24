@@ -136,32 +136,24 @@
                             workstations: workstationsStr
                         },
                         success: function (result) {
-                            console.log(result);
+                            console.log(groupByPeriod + "\n"+result);
                             var res = JSON.parse(result);
                             var res2 = [];
                             if (res.length > 0) {
 
                                 if (groupByPeriod == 0) {
-                                    // None
-                                    var header = [];
-                                    header[0] = "";
-                                    for (var i = 0; i < res[0].EntityWorkload.length; i++) {
-                                        header[i+1] = res[0].EntityWorkload[i].EntityName;
-                                    }
-                                    res2.push(header);
+                                    // None. It only shows 1 vertical bar for each department
 
                                     var curr = [];
-                                    curr[0] = "0";
-                                    for (var j = 1; j < header.length; j++) {
-                                        var found = 0;
-                                        for (var k = 0; k < res[0].EntityWorkload.length && found == 0; k++) {
-                                            if (res[0].EntityWorkload[k].EntityName == header[j]) {
-                                                curr[j] = res[0].EntityWorkload[k].Workload;
-                                                found = 1;
-                                            }
-                                        }
-                                    }
+                                    curr[0] = "Reparto";
+                                    curr[1] = "Workload (hours)";
                                     res2.push(curr);
+                                    for (var k = 0; k < res[0].EntityWorkload.length; k++) {
+                                        curr = [];
+                                        curr[0] = res[0].EntityWorkload[k].EntityName;
+                                        curr[1] = res[0].EntityWorkload[k].Workload;
+                                        res2.push(curr);
+                                    }
                                 }
                                 else if (groupByPeriod == 1) {
                                     // Weekly
@@ -190,23 +182,86 @@
                                 }
                                 else if (groupByPeriod == 2) {
                                     // Monthly
+                                    var header = [];
+                                    header[0] = "date";
+                                    for (var i = 0; i < res[0].EntityWorkload.length; i++) {
+                                        header[i + 1] = res[0].EntityWorkload[i].EntityName;
+                                    }
+                                    console.log("Header: " + header);
+                                    res2.push(header);
+
+                                    for (var i = 0; i < res.length; i++) {
+                                        var curr = [];
+                                        console.log(moment(res[i].DateStr, "YYYY-MM-DD") + "\n");
+                                        curr[0] = moment(res[i].DateStr, "YYYY-MM-DD").format("MM/YYYY");
+                                        for (var j = 1; j < header.length; j++) {
+                                            var found = 0;
+                                            for (var k = 0; k < res[i].EntityWorkload.length && found == 0; k++) {
+                                                if (res[i].EntityWorkload[k].EntityName == header[j]) {
+                                                    curr[j] = res[i].EntityWorkload[k].Workload;
+                                                    found = 1;
+                                                }
+                                            }
+                                        }
+                                        res2.push(curr);
+                                    }
 
                                 }
                                 else if (groupByPeriod == 3) {
-                                    // DAily
+                                    // Daily
+                                    var header = [];
+                                    header[0] = "date";
+                                    for (var i = 0; i < res[0].EntityWorkload.length; i++) {
+                                        header[i + 1] = res[0].EntityWorkload[i].EntityName;
+                                    }
+                                    console.log("Header: " + header);
+                                    res2.push(header);
+
+                                    for (var i = 0; i < res.length; i++) {
+                                        var curr = [];
+                                        console.log(moment(res[i].DateStr, "YYYY-MM-DD") + "\n");
+                                        curr[0] = moment(res[i].DateStr, "YYYY-MM-DD").format("DD/MM/YYYY");
+                                        for (var j = 1; j < header.length; j++) {
+                                            var found = 0;
+                                            for (var k = 0; k < res[i].EntityWorkload.length && found == 0; k++) {
+                                                if (res[i].EntityWorkload[k].EntityName == header[j]) {
+                                                    curr[j] = res[i].EntityWorkload[k].Workload;
+                                                    found = 1;
+                                                }
+                                            }
+                                        }
+                                        res2.push(curr);
+                                    }
                                 }
 
+                                $("#HistoricPanel").html("");
+                                if (res2.length > 0) {
+                                    var tblResults = "<table class='table table-striped table-hover'>";
+                                    tblResults += "<tr>";
+                                    for (var j = 0; j < res2[0].length; j++) {
+                                        tblResults += "<th>" + res2[0][j] + "</th>";
+                                    }
+                                    tblResults += "</tr>";
 
-                                for (var i = 0; i < res2.length; i++) {
+                                    for (var i = 1; i < res2.length; i++) {
                                     console.log(res2[i]);
+
+                                        tblResults += "<tr>";
+                                        tblResults += "<td>" + res2[i][0] + "</td>";
+                                    for (var j = 1; j < res2[i].length; j++) {
+                                        tblResults += "<td>" + Math.round(parseFloat(res2[i][j])*100, 2)/100 + "</td>";
+                                    }
+                                    tblResults += "</tr>";
+                                }
+                                tblResults += "</table>";
+                                    $("#HistoricPanel").html(tblResults);
                                 }
                                 console.log("res2: " + res2);
-                                // console.log("res2: " + JSON.stringify(res2));
-                                drawGoogleChart(res2);
-                                //$("#HistoricPanel").html(result);
+                                
                                 $("#HistoricPanel").fadeTo(0, 1);
                                 $("#txtEndDateStart").prop("disabled", false);
                                 $("#txtEndDateEnd").prop("disabled", false);
+                                drawGoogleChart(res2);
                             }
                             else {
                                 console.log("No data!");
@@ -257,17 +312,6 @@
                         var chart = new google.charts.Bar(document.getElementById('barchart_material'));
                         chart.draw(data, google.charts.Bar.convertOptions(options));
                     }
-
-
-                //$("#frmCustomersList").hide();
-                /*$("#btnShowCustomerPanel").click(function () {
-                    if ($("#frmCustomersList").is(':visible')) {
-                        $("#frmCustomersList").fadeOut();
-                    }
-                    else {
-                        $("#frmCustomersList").fadeIn();
-                    }
-                });*/
 
                    $("#collapseCustomers :checkbox").each(function () {
                        var badgeOrig = $(this).attr('id').split('_');
@@ -385,8 +429,11 @@
                        else if ($(this).val() == "1") {
                            groupByPeriod = 1;
                        }
-                       else {
+                       else if ($(this).val() == "2") {
                            groupByPeriod = 2;
+                       }
+                       else {
+                           groupByPeriod = 3;
                        }
                        loadPanel();
                    });
@@ -558,8 +605,9 @@
     </div>
     </div>
     <div class="span9">
-        <div id="HistoricPanel" />
+
         <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+        <div id="HistoricPanel"></div>
     </div>
     </div>
     </div>
