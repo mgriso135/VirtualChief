@@ -88,6 +88,24 @@ namespace ResProductionWorkload {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Periodo di riferimento.
+        /// </summary>
+        public static string lblChartSubTitle {
+            get {
+                return ResourceManager.GetString("lblChartSubTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carico di lavoro.
+        /// </summary>
+        public static string lblChartTitle {
+            get {
+                return ResourceManager.GetString("lblChartTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Per effettuare il login con un utente abilitato clicca qui.
         /// </summary>
         public static string lblClickHere {

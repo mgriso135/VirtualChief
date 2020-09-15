@@ -234,4 +234,10 @@
   <data name="lblWorkstations" xml:space="preserve">
     <value>Estaciones de trabajo</value>
   </data>
+  <data name="lblChartSubTitle" xml:space="preserve">
+    <value>Fechas de análisis</value>
+  </data>
+  <data name="lblChartTitle" xml:space="preserve">
+    <value>Carga de trabajo</value>
+  </data>
 </root>
