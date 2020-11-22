@@ -39,10 +39,12 @@
                         $("#KPIPanel").html(result);
                     },
                     error: function (result) {
-                        alert("Error");
+                        alert("Error " + result);
+                        console.log(result);
                     },
                     warning: function (result) {
                         alert("Warning");
+                        console.log(result);
                     }
             });
         }
