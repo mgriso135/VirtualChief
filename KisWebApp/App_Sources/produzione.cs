@@ -4907,7 +4907,8 @@ namespace KIS.App_Code
                     // Inserisco i task nel piano di produzione
                     for (int i = 0; i < this.Processi.Count; i++)
                     {
-                        TimeSpan tcTotale = this.Processi[i].Tempo.TempoSetup + TimeSpan.FromTicks(this.Quantita * this.Processi[i].Tempo.Tempo.Ticks);
+                        TimeSpan tcTotale = this.Processi[i].Tempo.TempoSetup + TimeSpan.FromTicks(this.Quantita * this.Processi[i].Tempo.Tempo.Ticks)
+                            + this.Processi[i].Tempo.TempoUnload;
                         // Inserisco il task
                         String strSQL = "INSERT INTO tasksproduzione(taskID, name, description, earlyStart, LateStart, "
                             + "earlyFinish, LateFinish, origTask, revOrigTask, variante, reparto, postazione, status, idcommessa, "

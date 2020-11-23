@@ -1106,7 +1106,338 @@ namespace KIS.App_Sources
                 if (!rdr.IsDBNull(53)) { curr.TaskEarlyStart = rdr.GetDateTime(53); }
                 if (!rdr.IsDBNull(54)) { curr.TaskLateStart = rdr.GetDateTime(54); }
                 if (!rdr.IsDBNull(55)) { curr.TaskEarlyFinish = rdr.GetDateTime(55); }
-                if (!rdr.IsDBNull(56)) { curr.TaskLateFinish = rdr.GetDateTime(56); }
+                if (!rdr.IsDBNull(56)) { curr.TaskLateFinish = rdr.GetDateTime(56); curr.TaskLateFinishWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskLateFinish); }
+                if (!rdr.IsDBNull(57)) { curr.TaskStatus = rdr.GetChar(57); }
+                if (!rdr.IsDBNull(58)) { curr.TaskNumOperators = rdr.GetInt32(58); }
+                if (!rdr.IsDBNull(59)) { curr.TaskQuantityOrdered = rdr.GetDouble(59); }
+                if (!rdr.IsDBNull(60)) { curr.TaskQuantityProduced = rdr.GetDouble(60); }
+                if (!rdr.IsDBNull(61)) { curr.TaskPlannedSetupTime = rdr.GetTimeSpan(61); }
+                if (!rdr.IsDBNull(62)) { curr.TaskPlannedCycleTime = rdr.GetTimeSpan(62); }
+                if (!rdr.IsDBNull(63)) { curr.TaskPlannedUnloadTime = rdr.GetTimeSpan(63); }
+                if (!rdr.IsDBNull(64)) { curr.WorkstationID = rdr.GetInt32(64); }
+                if (!rdr.IsDBNull(65)) { curr.WorkstationName = rdr.GetString(65); }
+                if (!rdr.IsDBNull(66)) { curr.WorkstationDescription = rdr.GetString(66); }
+                if (!rdr.IsDBNull(67)) { curr.TaskRealEndDate = rdr.GetDateTime(67); curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
+                if (!rdr.IsDBNull(68)) { curr.TaskRealLeadTime = rdr.GetTimeSpan(68); }
+                if (!rdr.IsDBNull(69)) { curr.TaskRealWorkingTime = rdr.GetTimeSpan(69); }
+                if (!rdr.IsDBNull(70)) { curr.TaskRealDelay = rdr.GetTimeSpan(70); }
+                if (!rdr.IsDBNull(71)) { curr.TaskOriginalID = rdr.GetInt32(71); }
+                if (!rdr.IsDBNull(72)) { curr.TaskOriginalRev = rdr.GetInt32(72); }
+                if (!rdr.IsDBNull(73)) { curr.TaskOriginalVar = rdr.GetInt32(73); }
+                if (!rdr.IsDBNull(74)) { curr.TaskPlannedWorkingTime = rdr.GetTimeSpan(74); }
+
+                this.TaskHistoricData.Add(curr);
+            }
+            conn.Close();
+        }
+
+        public void loadTasksProductionWorkload()
+        {
+            this.TaskHistoricData = new List<TaskProductionHistoryStruct>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
+                + "anagraficaclienti.ragsociale AS CustomerName,"
+                + "anagraficaclienti.partitaiva AS CustomerVATNumber,"
+                + "anagraficaclienti.codfiscale AS CustomerCodiceFiscale, "
+                + "anagraficaclienti.indirizzo AS CustomerAddress, "
+                + "anagraficaclienti.citta AS CustomerCity,"
+                + "anagraficaclienti.provincia AS CustomerProvince,"
+                + "anagraficaclienti.CAP AS CustomerZipCode,"
+                + "anagraficaclienti.stato AS CustomerCountry,"
+                + "anagraficaclienti.telefono AS CustomerPhoneNumber,"
+                + "anagraficaclienti.email AS CustomerEMail,"
+                + "anagraficaclienti.kanbanmanaged AS CustomerKanbanManaged,"
+                + "commesse.idcommesse AS SalesOrderID,"
+                + "commesse.anno AS SalesOrderYear,"
+                + "commesse.cliente AS SalesOrderCustomer,"
+                + "commesse.dataInserimento AS SalesOrderDate,"
+                + "commesse.note AS SalesOrderNotes,"
+                + "productionplan.id AS ProductionOrderID,"
+                + "productionplan.anno AS ProductionOrderYear,"
+                + "productionplan.processo AS ProductionOrderProductTypeID,"
+                + "productionplan.revisione AS ProductionOrderProductTypeReview,"
+                + "productionplan.variante AS ProductionOrderProductID,"
+                + "productionplan.matricola AS ProductionOrderSerialNumber,"
+                + "productionplan.status AS ProductionOrderStatus,"
+                + "productionplan.reparto AS ProductionOrderDepartmentID,"
+                + "productionplan.startTime AS ProductionOrderStartTime,"
+                + "productionplan.dataConsegnaPrevista AS ProductionOrderDeliveryDate,"
+                + "productionplan.dataPrevistaFineProduzione AS ProductionOrderEndProductionDate,"
+                + "productionplan.planner AS ProductionOrderPlanner,"
+                + "productionplan.quantita AS ProductionOrderQuantityOrdered,"
+                + "productionplan.quantitaProdotta AS ProductionOrderQuantityProduced,"
+                + "productionplan.kanbanCard AS ProductionOrderKanbanCardID,"
+                + "processo.processID AS ProductTypeID,"
+                + "processo.revisione AS ProductTypeReview,"
+                + "processo.dataRevisione AS ProductTypeReviewDate,"
+                + "processo.Name AS ProductTypeName,"
+                + "processo.description AS ProductTypeDescription,"
+                + "processo.attivo AS ProductTypeEnabled,"
+                + "varianti.idvariante AS ProductID,"
+                + "varianti.nomeVariante AS ProductName,"
+                + "varianti.descVariante AS ProductDescription,"
+                + "reparti.idreparto AS DepartmentID,"
+                + "reparti.nome AS DepartmentName,"
+                + "reparti.descrizione AS DepartmentDescription,"
+                + "reparti.cadenza AS DepartmentTaktTime,"
+                + "reparti.timezone AS DepartmentTimeZone,"
+                + " productionplan.LeadTime AS ProductRealLeadTime,"
+                + " productionplan.WorkingTime AS ProductRealWorkingTime, "
+                + " productionplan.Delay AS ProductRealDelay,"
+                + " productionplan.EndProductionDateReal AS ProductRealEndProductionDate,"
+                + "tasksproduzione.TaskiD AS TaskID,"
+                + "tasksproduzione.name AS TaskName,"
+                + "tasksproduzione.description AS TaskDescription,"
+                + "tasksproduzione.earlyStart As TaskEarlyStart,"
+                + "tasksproduzione.lateStart AS TaskLateStart,"
+                + "tasksproduzione.earlyFinish AS TaskEarlyFinish,"
+                + "tasksproduzione.lateFinish AS TaskLateFinish,"
+                + "tasksproduzione.status AS TaskStatus,"
+                + "tasksproduzione.nOperatori AS TaskNumOperators,"
+                + "tasksproduzione.qtaPrevista AS TaskQuantityOrdered,"
+                + "tasksproduzione.qtaProdotta AS TaskQuantityProduced,"
+                + "tempiciclo.setup AS TaskSetupTimePlanned,"
+                + "tempiciclo.tempo AS TaskCycleTimePlanned,"
+                + "tempiciclo.tunload AS TaskUnloadTimePlanned,"
+                + "postazioni.idpostazioni AS WorkstationID,"
+                + "postazioni.name AS WorkstationName,"
+                + "postazioni.description AS WorkstationDescription,"
+                + "tasksproduzione.endDateReal as TaskEndDateReal,"
+                + "tasksproduzione.LeadTime AS TaskLeadTime,"
+                + "tasksproduzione.WorkingTime AS TaskWorkingTime,"
+                + " tasksproduzione.Delay AS TaskDelay, "
+                + " tasksproduzione.OrigTask AS TaskOriginalTaskID, "
+                + " tasksproduzione.RevOrigTask AS TaskOriginalTaskRev, "
+                + " tasksproduzione.variante AS TaskOriginalTaskVar, "
+                + " tasksproduzione.tempoCiclo AS TaskPlannedWorkingTime "
+                + " FROM anagraficaclienti INNER JOIN commesse ON(anagraficaclienti.codice = commesse.cliente) INNER JOIN"
+                + " productionplan ON(commesse.anno = productionplan.annoCommessa AND commesse.idcommesse = productionplan.commessa)"
+                + " INNER JOIN reparti ON(reparti.idreparto = productionplan.reparto)"
+                + " INNER JOIN varianti ON(varianti.idvariante = productionplan.variante)"
+                + " INNER JOIN processo ON(processo.ProcessID = productionplan.processo AND processo.revisione = productionplan.revisione)"
+                + " INNER JOIN tasksproduzione ON(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
+                 + " inner join processo AS TaskProcess ON(TaskProcess.processID = tasksproduzione.origTask AND TaskProcess.revisione = TasksProduzione.revOrigTask)"
+                + " INNER JOIN varianti AS TaskVariant ON(taskvariant.idvariante = tasksproduzione.variante)"
+                 + "INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)"
+                + " INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)"
+                 + " WHERE tasksproduzione.status <> 'F' order by productionplan.anno, productionplan.id, tasksproduzione.taskid;";
+
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                TaskProductionHistoryStruct curr = new TaskProductionHistoryStruct();
+                curr.DepartmentID = rdr.GetInt32(41);
+                KIS.App_Code.Reparto rp = new App_Code.Reparto(curr.DepartmentID);
+                if (!rdr.IsDBNull(0))
+                {
+                    curr.CustomerID = rdr.GetString(0);
+                }
+                if (!rdr.IsDBNull(1))
+                {
+                    curr.CustomerName = rdr.GetString(1);
+                }
+                if (!rdr.IsDBNull(2))
+                {
+                    curr.CustomerVATNumber = rdr.GetString(2);
+                }
+                if (!rdr.IsDBNull(3))
+                {
+                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                }
+                if (!rdr.IsDBNull(4))
+                {
+                    curr.CustomerAddress = rdr.GetString(4);
+                }
+                if (!rdr.IsDBNull(5))
+                {
+                    curr.CustomerCity = rdr.GetString(5);
+                }
+                if (!rdr.IsDBNull(6))
+                {
+                    curr.CustomerProvince = rdr.GetString(6);
+                }
+                if (!rdr.IsDBNull(7))
+                {
+                    curr.CustomerZipCode = rdr.GetString(7);
+                }
+                if (!rdr.IsDBNull(8))
+                {
+                    curr.CustomerCountry = rdr.GetString(8);
+                }
+                if (!rdr.IsDBNull(9))
+                {
+                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                }
+                if (!rdr.IsDBNull(10))
+                {
+                    curr.CustomerEMail = rdr.GetString(10);
+                }
+                if (!rdr.IsDBNull(11))
+                {
+                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                }
+                if (!rdr.IsDBNull(12))
+                {
+                    curr.SalesOrderID = rdr.GetInt32(12);
+                }
+                if (!rdr.IsDBNull(13))
+                {
+                    curr.SalesOrderYear = rdr.GetInt32(13);
+                }
+                if (!rdr.IsDBNull(14))
+                {
+                    curr.SalesOrderCustomer = rdr.GetString(14);
+                }
+                if (!rdr.IsDBNull(15))
+                {
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                }
+                if (!rdr.IsDBNull(16))
+                {
+                    curr.SalesOrderNotes = rdr.GetString(16);
+                }
+                if (!rdr.IsDBNull(17))
+                {
+                    curr.ProductionOrderID = rdr.GetInt32(17);
+                }
+                if (!rdr.IsDBNull(18))
+                {
+                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                }
+                if (!rdr.IsDBNull(19))
+                {
+                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                }
+                if (!rdr.IsDBNull(20))
+                {
+                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                }
+                if (!rdr.IsDBNull(21))
+                {
+                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                }
+                if (!rdr.IsDBNull(22))
+                {
+                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                }
+                if (!rdr.IsDBNull(23))
+                {
+                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                }
+                if (!rdr.IsDBNull(24))
+                {
+                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                }
+                if (!rdr.IsDBNull(25))
+                {
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                }
+                if (!rdr.IsDBNull(26))
+                {
+                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                }
+                if (!rdr.IsDBNull(27))
+                {
+                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                }
+                if (!rdr.IsDBNull(28))
+                {
+                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                }
+                if (!rdr.IsDBNull(29))
+                {
+                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                }
+                if (!rdr.IsDBNull(30))
+                {
+                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                }
+                if (!rdr.IsDBNull(31))
+                {
+                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                }
+                if (!rdr.IsDBNull(32))
+                {
+                    curr.ProductTypeID = rdr.GetInt32(32);
+                }
+                if (!rdr.IsDBNull(33))
+                {
+                    curr.ProductTypeReview = rdr.GetInt32(33);
+                }
+                if (!rdr.IsDBNull(34))
+                {
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                }
+                if (!rdr.IsDBNull(35))
+                {
+                    curr.ProductTypeName = rdr.GetString(35);
+                }
+                if (!rdr.IsDBNull(36))
+                {
+                    curr.ProductTypeDescription = rdr.GetString(36);
+                }
+                if (!rdr.IsDBNull(37))
+                {
+                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                }
+                if (!rdr.IsDBNull(38))
+                {
+                    curr.ProductID = rdr.GetInt32(38);
+                }
+                if (!rdr.IsDBNull(39))
+                {
+                    curr.ProductName = rdr.GetString(39);
+                }
+                if (!rdr.IsDBNull(40))
+                {
+                    curr.ProductDescription = rdr.GetString(40);
+                }
+                if (!rdr.IsDBNull(41))
+                {
+                    curr.DepartmentID = rdr.GetInt32(41);
+                }
+                if (!rdr.IsDBNull(42))
+                {
+                    curr.DepartmentName = rdr.GetString(42);
+                }
+                if (!rdr.IsDBNull(43))
+                {
+                    curr.DepartmentDescription = rdr.GetString(43);
+                }
+                if (!rdr.IsDBNull(44))
+                {
+                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                }
+                if (!rdr.IsDBNull(45))
+                {
+                    curr.DepartmentTimeZone = rdr.GetString(45);
+                }
+                if (!rdr.IsDBNull(46))
+                {
+                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                }
+                if (!rdr.IsDBNull(47))
+                {
+                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                }
+                if (!rdr.IsDBNull(48))
+                {
+                    curr.RealDelay = rdr.GetTimeSpan(48);
+                }
+                if (!rdr.IsDBNull(49))
+                {
+                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
+                }
+                if (!rdr.IsDBNull(50)) { curr.TaskID = rdr.GetInt32(50); }
+                if (!rdr.IsDBNull(51)) { curr.TaskName = rdr.GetString(51); }
+                if (!rdr.IsDBNull(52)) { curr.TaskDescription = rdr.GetString(52); }
+                if (!rdr.IsDBNull(53)) { curr.TaskEarlyStart = rdr.GetDateTime(53); }
+                if (!rdr.IsDBNull(54)) { curr.TaskLateStart = rdr.GetDateTime(54); }
+                if (!rdr.IsDBNull(55)) { curr.TaskEarlyFinish = rdr.GetDateTime(55); }
+                if (!rdr.IsDBNull(56)) { curr.TaskLateFinish = rdr.GetDateTime(56); curr.TaskLateFinishWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskLateFinish); }
                 if (!rdr.IsDBNull(57)) { curr.TaskStatus = rdr.GetChar(57); }
                 if (!rdr.IsDBNull(58)) { curr.TaskNumOperators = rdr.GetInt32(58); }
                 if (!rdr.IsDBNull(59)) { curr.TaskQuantityOrdered = rdr.GetDouble(59); }
@@ -1192,6 +1523,7 @@ namespace KIS.App_Sources
         public DateTime TaskLateStart;
         public DateTime TaskEarlyFinish;
         public DateTime TaskLateFinish;
+        public int TaskLateFinishWeek;
         public char TaskStatus;
         public int TaskNumOperators;
         public double TaskQuantityOrdered;
@@ -1228,6 +1560,8 @@ namespace KIS.App_Sources
         public int ProductID;
         public int ProductReview;
         public int ProductTypeID;
+        public int DepartmentID;
+        public String DepartmentName;
         public String ProductName;
         public String ProductTypeName;
         public int TaskID;
@@ -1806,5 +2140,23 @@ namespace KIS.App_Sources
             rdr.Close();
             conn.Close();
         }
+    }
+
+    public struct WorkloadAnalysisStruct
+    {
+        public DateTime Date;
+        public String DateStr;
+        public int Year;
+        public int Month;
+        public int Week;
+        public int Day;
+        public List<entityWorkload> EntityWorkload;
+    }
+
+    public struct entityWorkload
+    {
+        public int EntityID;
+        public String EntityName;
+        public double Workload; // hours
     }
 }

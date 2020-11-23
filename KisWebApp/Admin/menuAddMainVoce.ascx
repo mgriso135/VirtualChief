@@ -1,4 +1,6 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="menuAddMainVoce.ascx.cs" Inherits="KIS.Admin.menuAddMainVoce" %>
+
+
 <asp:ImageButton runat="server" ID="imgShowFormAddMainMenu" ImageUrl="~/img/iconAdd2.png" OnClick="imgShowFormAddMainMenu_Click" Height="50px" ToolTip="Aggiungi una voce di menu principale" />
 <table runat="server" id="tblFormAdd" visible="false" class="table table-bordered">
     <tr>

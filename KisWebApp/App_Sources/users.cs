@@ -43,12 +43,14 @@ namespace KIS.App_Code
             {
                 if (this._ID != -1 && value.Length > 0)
                 {
-                    String strSQL = "UPDATE groupss SET nomeGruppo = '" + value + "' WHERE id = " + this.ID.ToString();
+                    String strSQL = "UPDATE groupss SET nomeGruppo = @GroupName WHERE id = @ID";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction trn = conn.BeginTransaction();
 
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@GroupName", value);
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     cmd.Transaction = trn;
                     try
                     {

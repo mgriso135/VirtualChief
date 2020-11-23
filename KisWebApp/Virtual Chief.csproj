@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" />
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -15,7 +15,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KIS</RootNamespace>
     <AssemblyName>Kaizen Indicator System</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <UseIISExpress>false</UseIISExpress>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -56,18 +56,18 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxControlToolkit, Version=19.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
-      <HintPath>..\packages\AjaxControlToolkit.19.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+    <Reference Include="AjaxControlToolkit, Version=20.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <HintPath>..\packages\AjaxControlToolkit.20.1.0\lib\net40\AjaxControlToolkit.dll</HintPath>
     </Reference>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.4.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="GenCode128, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -86,8 +86,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\itextsharp.xtra.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=4.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.4.9.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=4.12.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.12.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -476,6 +476,7 @@
     <Compile Include="Areas\Analysis\Controllers\ProcessMiningController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Controllers\ProductionHistoryController.cs" />
+    <Compile Include="Areas\Analysis\Controllers\ProductionWorkloadController.cs" />
     <Compile Include="Areas\Analysis\Controllers\TaskAnalysisController.cs" />
     <Compile Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -756,6 +757,66 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.it.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en-US.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.en-US.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.en.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es-AR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.es-AR.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.es.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ProductPanel.it.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Analysis\Views\TaskAnalysis\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -5118,13 +5179,6 @@
     <Compile Include="Produzione\listCommesseStatoN.ascx.designer.cs">
       <DependentUpon>listCommesseStatoN.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Produzione\listProcessi_OLD.ascx.cs">
-      <DependentUpon>listProcessi_OLD.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Produzione\listProcessi_OLD.ascx.designer.cs">
-      <DependentUpon>listProcessi_OLD.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Produzione\ListRepartiAndon.ascx.cs">
       <DependentUpon>ListRepartiAndon.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -5930,6 +5984,15 @@
     <Content Include="Areas\Production\Views\ProductDetails\ViewTaskOperationsDetails.cshtml" />
     <Content Include="Areas\Analysis\Views\ProductionHistory\HistoricDataPanelSales.cshtml" />
     <Content Include="Areas\Analysis\Views\GlobalKPIs\GetGlobalKPIs2.cshtml" />
+    <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorProductivity.cshtml" />
+    <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorOccupation.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProcessMining\Index.cshtml" />
+    <Content Include="Content\fonts\octicons.woff" />
+    <Content Include="Content\fonts\octicons.ttf" />
+    <Content Include="Content\fonts\octicons.eot" />
+    <Content Include="Areas\Departments\Views\DepartmentsConfig\GetAutoPauseTaskConfig.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProductionWorkload\Index.cshtml" />
+    <Content Include="Areas\Analysis\Views\ProductionWorkload\ProductDataPanel.cshtml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -5953,20 +6016,11 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorProductivity.cshtml" />
-    <Content Include="Areas\Analysis\Views\OperatorsAnalysis\GetOperatorOccupation.cshtml" />
-    <Content Include="Areas\Analysis\Views\ProcessMining\Index.cshtml" />
-    <Content Include="Content\fonts\octicons.woff" />
-    <Content Include="Content\fonts\octicons.ttf" />
-    <Content Include="Content\fonts\octicons.eot" />
-    <Content Include="Areas\Departments\Views\DepartmentsConfig\GetAutoPauseTaskConfig.cshtml" />
-    <None Include="Scripts\jquery-3.4.1.intellisense.js" />
-    <Content Include="Scripts\jquery-3.4.1.js" />
-    <Content Include="Scripts\jquery-3.4.1.min.js" />
-    <Content Include="Scripts\jquery-3.4.1.slim.js" />
-    <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
-    <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
-    <Content Include="Scripts\jquery-3.4.1.min.map" />
+    <None Include="Scripts\jquery-3.5.1.intellisense.js" />
+    <Content Include="Scripts\jquery-3.5.1.js" />
+    <Content Include="Scripts\jquery-3.5.1.min.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.js" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jQuery.FileUpload\cors\jquery.postmessage-transport.js" />
@@ -6558,6 +6612,66 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <CustomToolNamespace>ResProductionHistory</CustomToolNamespace>
       <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\Index.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en-US.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.en-US.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.en.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.en.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es-AR.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.es-AR.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.es.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.es.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.it.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.it.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Analysis\Views\ProductionWorkload\App_LocalResources\ProductPanel.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ProductPanel.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResProductionWorkload</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\TaskAnalysis\App_LocalResources\Index.en-US.resx">
       <CustomToolNamespace>ResTaskAnalysis</CustomToolNamespace>
@@ -10338,7 +10452,6 @@
     <Content Include="Produzione\listArticoliINP.ascx" />
     <Content Include="Produzione\listArticoliTerminati.ascx" />
     <Content Include="Produzione\listCommesseStatoN.ascx" />
-    <Content Include="Produzione\listProcessi_OLD.ascx" />
     <Content Include="Produzione\ListRepartiAndon.ascx" />
     <Content Include="Produzione\listWarningAperti.ascx" />
     <Content Include="Produzione\listWarningApertiReparto.ascx" />
@@ -10359,7 +10472,6 @@
     <Content Include="Reparti\configModoCalcoloTC.ascx" />
     <Content Include="Reparti\processoWorkLoad.ascx" />
     <Content Include="Reparti\listRepartoUtenti.ascx" />
-    <Content Include="Scripts\jquery-1.7.2.min.js" />
     <Content Include="Scripts\jquery-ui-1.8.23.custom.min.js" />
     <Content Include="Scripts\jquery.eventsource.js" />
     <Content Include="Scripts\jquery.svg.js" />
@@ -11144,6 +11256,10 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Utenti\Index.cshtml" />
     <Content Include="Views\web.config" />
+    <Content Include="Scripts\jquery-3.5.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.5.1.min.map" />
+    <Content Include="Scripts\moment.min.js.map" />
+    <Content Include="Scripts\moment-with-locales.min.js.map" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper.js.flow" />
@@ -12703,10 +12819,10 @@
       <ErrorText>Questo progetto fa riferimento a uno o più pacchetti NuGet che non sono presenti in questo computer. Usare lo strumento di ripristino dei pacchetti NuGet per scaricarli. Per altre informazioni, vedere http://go.microsoft.com/fwlink/?LinkID=322105. Il file mancante è {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.props'))" />
-    <Error Condition="!Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.0\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
   </Target>
-  <Import Project="..\packages\EntityFramework.6.4.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.0\build\EntityFramework.targets')" />
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

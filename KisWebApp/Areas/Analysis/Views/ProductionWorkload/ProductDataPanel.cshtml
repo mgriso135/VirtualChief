@@ -1,0 +1,105 @@
+﻿
+@if (ViewBag.authR )//&& Model.Count() > 0)
+{
+    int periodType = 0;
+    try
+    {
+        periodType = Int32.Parse(ViewBag.periodType.ToString());
+    }
+    catch
+    {
+        periodType = 0;
+    }
+
+    Boolean groupProducts = true;
+    try
+    {
+        groupProducts = (Boolean)ViewBag.groupProducts;
+    }
+    catch
+    {
+        groupProducts = false;
+    }
+    DateTime startPeriod = new DateTime(1970, 1, 1);
+    DateTime endPeriod = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+    try
+    {
+        startPeriod = (DateTime)ViewBag.startPeriod;
+        endPeriod = (DateTime)ViewBag.endPeriod;
+    }
+    catch
+    {
+
+    }
+
+    if (ViewBag.DepartmentsOrWorkstations == "Departments")
+    {
+<script type="text/javascript">
+    console.log("@Newtonsoft.Json.JsonConvert.DeserializeObject(ViewBag.content)");
+
+    google.charts.load('current', { 'packages': ['bar'] });
+            google.charts.setOnLoadCallback(drawChartGroupProducts);
+
+            function drawChartGroupProducts() {
+                /*var data = new google.visualization.DataTable();/* google.visualization.arrayToDataTable([
+                    ['Year', 'Sales', 'Expenses', 'Profit'],
+                    ['2014', 1000, 400, 200],
+                    ['2015', 1170, 460, 250],
+                    ['2016', 660, 1120, 300],
+                    ['2017', 1030, 540, 350]
+                ]);*/
+
+                var data = google.visualization.arrayToDataTable(JSON.parse("@ViewBag.content"));
+
+                            var options = {
+                    chart: {
+                                title: '@ResProductionWorkload.ProductPanel.lblChartTitle',
+                        subtitle: '@ResProductionWorkload.ProductPanel.lblChartSubTitle' + ': @startPeriod.ToString("dd/MM/yyyy") - @endPeriod.ToString("dd/MM/yyyy")',
+                    },
+                    bars: 'vertical' // Required for Material Bar Charts.
+                };
+
+                        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+                        chart.draw(data, google.charts.Bar.convertOptions(options));
+                    }
+</script>
+    }
+    else
+    {
+        <div></div>
+        <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['line'] });
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+
+                var data = new google.visualization.DataTable();
+                 @Html.Raw(ViewBag.ProductsFilter);
+
+
+                var options = {
+                    chart: {
+                            title: '@ResProductionWorkload.ProductPanel.lblChartTitle',
+                        subtitle: '@ResProductionWorkload.ProductPanel.lblChartSubTitle' + ': @startPeriod.ToString("dd/MM/yyyy") - @endPeriod.ToString("dd/MM/yyyy")',
+
+                        },
+                    //width: 500,
+                    height: 500,
+                    legend: { position: "bottom", alignment: 'start' }
+                    };
+
+                    var chart = new google.charts.Line(document.getElementById('barchart_material'));
+
+                    chart.draw(data, google.charts.Line.convertOptions(options));
+                }
+        </script>
+    }
+
+
+    <div id="barchart_material" style="width: 900px; height: 500px;"></div>
+
+
+
+    
+}
