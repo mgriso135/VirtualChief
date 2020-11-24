@@ -75,12 +75,14 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && value.Length > 0)
                 {
-                    String strSQL = "UPDATE groupss SET descrizione = '" + value + "' WHERE id = " + this.ID.ToString();
+                    String strSQL = "UPDATE groupss SET descrizione = @desc WHERE id = @ID";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction trn = conn.BeginTransaction();
 
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@desc", value);
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     cmd.Transaction = trn;
                     try
                     {
@@ -106,10 +108,11 @@ namespace KIS.App_Code
 
         public Group(int groupID)
         {
-            String strSQL = "SELECT * FROM groupss WHERE id = " + groupID.ToString();
+            String strSQL = "SELECT * FROM groupss WHERE id = @ID";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@ID", this.ID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             rdr.Read();
             this._Permessi = new GruppoPermessi(groupID);
@@ -134,7 +137,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, nomegruppo, descrizione FROM groupss WHERE nomeGruppo = '" + GroupName + "'";
+            cmd.CommandText = "SELECT id, nomegruppo, descrizione FROM groupss WHERE nomeGruppo = @GroupName";
+            cmd.Parameters.AddWithValue("@GroupName", GroupName);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -166,7 +170,8 @@ namespace KIS.App_Code
 
                 try
                 {
-                    cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = " + this.ID.ToString();
+                    cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     cmd.ExecuteNonQuery();
                     cmd.CommandText = "DELETE FROM groupss WHERE id = " + this.ID.ToString();
                     cmd.ExecuteNonQuery();
@@ -198,8 +203,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idVoce FROM menugruppi WHERE gruppo = " + this.ID.ToString()
+                cmd.CommandText = "SELECT idVoce FROM menugruppi WHERE gruppo = @ID"
                     + " ORDER BY ordinamento";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -222,7 +228,10 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 this.loadMenu();
                 int maxOrd = this.VociDiMenu.Count+1;
-                cmd.CommandText = "INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(" + this.ID.ToString() + ", " + vm.ID.ToString() + ", " + maxOrd.ToString() + ")";
+                cmd.CommandText = "INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(@ID, @vmid, @maxOrd)";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
+                cmd.Parameters.AddWithValue("@vmid", vm.ID);
+                cmd.Parameters.AddWithValue("@maxOrd", maxOrd);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -249,7 +258,9 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM menugruppi WHERE gruppo = " + this.ID.ToString() + " AND idVoce = " + vm.ID.ToString();
+                cmd.CommandText = "DELETE FROM menugruppi WHERE gruppo = @ID AND idVoce = @vmid";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
+                cmd.Parameters.AddWithValue("@vmid", vm.ID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -308,13 +319,20 @@ namespace KIS.App_Code
                             cmd.Transaction = tr;
                             try
                             {
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = " + (indVM - 1).ToString()
-                                    + " WHERE gruppo = " + this.ID.ToString()
-                                    + " AND idVoce = " + this.VociDiMenu[indVM].ID.ToString();
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento"
+                                    + " WHERE gruppo = @ID"
+                                    + " AND idVoce = @idVoce";
+                                cmd.Parameters.AddWithValue("@ordinamento", (indVM - 1));
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM].ID);
+
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = " + indVM.ToString()
-                                    + " WHERE gruppo = " + this.ID.ToString()
-                                    + " AND idVoce = " + this.VociDiMenu[indVM - 1].ID.ToString();
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento" 
+                                    + " WHERE gruppo = @ID "
+                                    + " AND idVoce = @idVoce";
+                                cmd.Parameters.AddWithValue("@ordinamento", indVM);
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM - 1].ID);
                                 cmd.ExecuteNonQuery();
                                 tr.Commit();
                                 ret = true;
@@ -341,13 +359,19 @@ namespace KIS.App_Code
                             cmd.Transaction = tr;
                             try
                             {
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = " + (indVM + 1).ToString()
-                                    + " WHERE gruppo = " + this.ID.ToString()
-                                    + " AND idVoce = " + this.VociDiMenu[indVM].ID.ToString();
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento"
+                                    + " WHERE gruppo = @ID"
+                                    + " AND idVoce = @idVoce";
+                                cmd.Parameters.AddWithValue("@ordinamento", (indVM + 1));
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM].ID);
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = " + indVM.ToString()
-                                    + " WHERE gruppo = " + this.ID.ToString()
-                                    + " AND idVoce = " + this.VociDiMenu[indVM + 1].ID.ToString();
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento"
+                                    + " WHERE gruppo = @ID" 
+                                    + " AND idVoce = @idVoce";
+                                cmd.Parameters.AddWithValue("@ordinamento", indVM);
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM].ID);
                                 cmd.ExecuteNonQuery();
                                 tr.Commit();
                                 ret = true;
@@ -387,7 +411,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT user FROM groupusers WHERE groupID = " + this.ID.ToString();
+                cmd.CommandText = "SELECT user FROM groupusers WHERE groupID = @ID";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -409,7 +434,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Ritardo' "
-                        + "AND idGruppo = '" + this.ID.ToString() + "'";
+                        + "AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
