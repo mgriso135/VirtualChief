@@ -459,7 +459,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = " + this.ID.ToString();
+                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -486,7 +487,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = " + this.ID.ToString();
+                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -513,7 +515,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Warning' "
-                        + "AND idGruppo = '" + this.ID.ToString() + "'";
+                        + "AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -537,7 +540,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
-                        + "TipoEvento LIKE 'Warning' AND idGruppo = " + this.ID.ToString();
+                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -564,7 +568,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
-                        + "TipoEvento LIKE 'Warning' AND idGruppo = " + this.ID.ToString();
+                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -624,8 +629,10 @@ namespace KIS.App_Code
 
             MySqlTransaction trn = conn.BeginTransaction();
             cmd.Transaction = trn;
-            cmd.CommandText = "INSERT INTO groupss(id, nomeGruppo, descrizione) VALUES(" + maxID.ToString() + ", '" + 
-                nomeG + "', '" + descG + "')";
+            cmd.CommandText = "INSERT INTO groupss(id, nomeGruppo, descrizione) VALUES(@ID, @NAME, @DESC)";
+            cmd.Parameters.AddWithValue("@ID", maxID);
+            cmd.Parameters.AddWithValue("@NAME", nomeG);
+            cmd.Parameters.AddWithValue("@DESC", descG);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -692,8 +699,10 @@ namespace KIS.App_Code
                     // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
                     bool recExists;
 
-                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = " + this.GroupID.ToString() +
-                        " AND idpermesso = " + this.IdPermesso.ToString();
+                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup"+
+                        " AND idpermesso = @IDPermesso";
+                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.GroupID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
                     {
@@ -709,13 +718,18 @@ namespace KIS.App_Code
 
                     if (recExists)
                     {
-                        cmd.CommandText = "UPDATE gruppipermessi SET r = " + value.ToString() + " WHERE idGroup = " + this.GroupID.ToString()
-                            + " AND idpermesso = " + this.IdPermesso.ToString();
+                        cmd.CommandText = "UPDATE gruppipermessi SET r = @r WHERE idGroup = @IDGroup"
+                            + " AND idpermesso = @IDPermesso";
+                        cmd.Parameters.AddWithValue("@r", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     else
                     {
-                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(" + this.GroupID.ToString()
-                            + ", " + this.IdPermesso.ToString() + ", " + value.ToString() + ", false, false)";
+                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, @r, false, false)";
+                        cmd.Parameters.AddWithValue("@r", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
 
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -749,8 +763,10 @@ namespace KIS.App_Code
                     // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
                     bool recExists;
 
-                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = " + this.GroupID.ToString() +
-                        " AND idpermesso = " + this.IdPermesso.ToString();
+                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" + 
+                        " AND idpermesso = @IDPermesso";
+                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
                     {
@@ -764,13 +780,17 @@ namespace KIS.App_Code
 
                     if (recExists)
                     {
-                        cmd.CommandText = "UPDATE gruppipermessi SET w = " + value.ToString() + " WHERE idGroup = " + this.GroupID.ToString()
-                            + " AND idpermesso = " + this.IdPermesso.ToString();                        
+                        cmd.CommandText = "UPDATE gruppipermessi SET w = @w WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
+                        cmd.Parameters.AddWithValue("@w", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     else
                     {
-                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(" + this.GroupID.ToString()
-                            + ", " + this.IdPermesso.ToString() + ", false, " + value.ToString() + ", false)";
+                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, @w, false)";
+                        cmd.Parameters.AddWithValue("@w", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
 
                     }
 
@@ -805,8 +825,9 @@ namespace KIS.App_Code
                     // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
                     bool recExists;
 
-                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = " + this.GroupID.ToString() +
-                        " AND idpermesso = " + this.IdPermesso.ToString();
+                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
+                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
                     {
@@ -820,13 +841,17 @@ namespace KIS.App_Code
 
                     if (recExists)
                     {
-                        cmd.CommandText = "UPDATE gruppipermessi SET x = " + value.ToString() + " WHERE idGroup = " + this.GroupID.ToString()
-     + " AND idpermesso = " + this.IdPermesso.ToString();
+                        cmd.CommandText = "UPDATE gruppipermessi SET x = @x WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
+                        cmd.Parameters.AddWithValue("@x", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     else
                     {
-                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(" + this.GroupID.ToString()
-                            + ", " + this.IdPermesso.ToString() + ", false, false, " + value.ToString() + ")";
+                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, false, @x)";
+                        cmd.Parameters.AddWithValue("@x", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
