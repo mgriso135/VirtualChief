@@ -112,7 +112,7 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@ID", this.ID);
+            cmd.Parameters.AddWithValue("@ID", groupID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             rdr.Read();
             this._Permessi = new GruppoPermessi(groupID);
@@ -319,20 +319,20 @@ namespace KIS.App_Code
                             cmd.Transaction = tr;
                             try
                             {
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento"
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento1"
                                     + " WHERE gruppo = @ID"
-                                    + " AND idVoce = @idVoce";
-                                cmd.Parameters.AddWithValue("@ordinamento", (indVM - 1));
+                                    + " AND idVoce = @idVoce1";
+                                cmd.Parameters.AddWithValue("@ordinamento1", (indVM - 1));
                                 cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM].ID);
+                                cmd.Parameters.AddWithValue("@idVoce1", this.VociDiMenu[indVM].ID);
 
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento" 
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento2" 
                                     + " WHERE gruppo = @ID "
-                                    + " AND idVoce = @idVoce";
-                                cmd.Parameters.AddWithValue("@ordinamento", indVM);
+                                    + " AND idVoce = @idVoce2";
+                                cmd.Parameters.AddWithValue("@ordinamento2", indVM);
                                 cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM - 1].ID);
+                                cmd.Parameters.AddWithValue("@idVoce2", this.VociDiMenu[indVM - 1].ID);
                                 cmd.ExecuteNonQuery();
                                 tr.Commit();
                                 ret = true;
@@ -359,19 +359,19 @@ namespace KIS.App_Code
                             cmd.Transaction = tr;
                             try
                             {
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento"
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento1"
                                     + " WHERE gruppo = @ID"
-                                    + " AND idVoce = @idVoce";
-                                cmd.Parameters.AddWithValue("@ordinamento", (indVM + 1));
+                                    + " AND idVoce = @idVoce1";
+                                cmd.Parameters.AddWithValue("@ordinamento1", (indVM + 1));
                                 cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM].ID);
+                                cmd.Parameters.AddWithValue("@idVoce1", this.VociDiMenu[indVM].ID);
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento"
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento2"
                                     + " WHERE gruppo = @ID" 
-                                    + " AND idVoce = @idVoce";
-                                cmd.Parameters.AddWithValue("@ordinamento", indVM);
+                                    + " AND idVoce = @idVoce2";
+                                cmd.Parameters.AddWithValue("@ordinamento2", indVM);
                                 cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce", this.VociDiMenu[indVM].ID);
+                                cmd.Parameters.AddWithValue("@idVoce2", this.VociDiMenu[indVM + 1].ID);
                                 cmd.ExecuteNonQuery();
                                 tr.Commit();
                                 ret = true;
@@ -702,7 +702,7 @@ namespace KIS.App_Code
                     cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup"+
                         " AND idpermesso = @IDPermesso";
                     cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                    cmd.Parameters.AddWithValue("@IDPermesso", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
                     {
@@ -720,17 +720,13 @@ namespace KIS.App_Code
                     {
                         cmd.CommandText = "UPDATE gruppipermessi SET r = @r WHERE idGroup = @IDGroup"
                             + " AND idpermesso = @IDPermesso";
-                        cmd.Parameters.AddWithValue("@r", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        
                     }
                     else
                     {
                         cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, @r, false, false)";
-                        cmd.Parameters.AddWithValue("@r", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
+                    cmd.Parameters.AddWithValue("@r", value);
 
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
@@ -878,7 +874,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id FROM groupss WHERE id = " + grp.ToString();
+                cmd.CommandText = "SELECT id FROM groupss WHERE id = @ID";
+                cmd.Parameters.AddWithValue("@ID", grp);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -898,7 +895,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT r, w, x FROM gruppipermessi WHERE idgroup = " + grp.ToString() + " AND idpermesso = " + Permes.ID.ToString();
+                cmd.CommandText = "SELECT r, w, x FROM gruppipermessi WHERE idgroup = @GroupID AND idpermesso = @PermesID";
+                cmd.Parameters.AddWithValue("@GroupID", grp);
+                cmd.Parameters.AddWithValue("@PermesID", Permes.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -945,7 +944,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM groupss WHERE id = " + grp.ToString();
+            cmd.CommandText = "SELECT ID FROM groupss WHERE id = @GroupID";
+            cmd.Parameters.AddWithValue("@GroupID", grp);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -1023,7 +1023,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT DISTINCT(users.userID) FROM users INNER JOIN groupusers ON (users.userid = groupusers.user) "
             + " INNER JOIN gruppipermessi ON (groupusers.groupid = gruppipermessi.idgroup) INNER JOIN permessi ON "
-            +" (gruppipermessi.idpermesso = permessi.idpermesso) WHERE verified = true AND enabled = true AND permessi.idpermesso = " + prm.ID.ToString();
+            + " (gruppipermessi.idpermesso = permessi.idpermesso) WHERE verified = true AND enabled = true AND permessi.idpermesso = @idpermesso";
+            cmd.Parameters.AddWithValue("@idpermesso", prm.ID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1061,11 +1062,13 @@ namespace KIS.App_Code
             {
                 if(value.Length > 0)
                 {
-                    String strSQL = "UPDATE users SET nome='" + value + "' WHERE userID LIKE '" + this.username + "'";
+                    String strSQL = "UPDATE users SET nome=@name WHERE userID LIKE @username";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@name", value);
+                    cmd.Parameters.AddWithValue("@username", this.username);
                     cmd.Transaction = tr;
                     try
                     {
@@ -1091,11 +1094,13 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0)
                 {
-                    String strSQL = "UPDATE users SET cognome='" + value + "' WHERE userID LIKE '" + this.username + "'";
+                    String strSQL = "UPDATE users SET cognome=@lastname WHERE userID LIKE @username";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@lastname", value);
+                    cmd.Parameters.AddWithValue("@username", this.username);
                     cmd.Transaction = tr;
                     try
                     {
@@ -1137,12 +1142,12 @@ namespace KIS.App_Code
                 {
                     DateTime lastL = new DateTime(value.Ticks, DateTimeKind.Local);
                     FusoOrario fuso = new FusoOrario();
-                    string strSQL = "UPDATE users SET lastLogin = '" 
-                        + TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") 
-                        + "' WHERE userID LIKE '" + this.username + "'";
+                    string strSQL = "UPDATE users SET lastLogin = @lastlogin WHERE userID LIKE @username";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@lastlogin", TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@username", this.username);
                     cmd.ExecuteNonQuery();
                     conn.Close();
                 }
@@ -1162,12 +1167,13 @@ namespace KIS.App_Code
             set {
                 if(value.Length <=5)
                 { 
-                string strSQL = "UPDATE users SET language = '"
-                    + value + "' WHERE userID LIKE '" + this.username + "'";
+                string strSQL = "UPDATE users SET language = @language WHERE userID LIKE @userid";
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@language", value);
+                    cmd.Parameters.AddWithValue("@userid", this.username);
                     cmd.Transaction = tr;
                     try
                     {
@@ -1197,12 +1203,13 @@ namespace KIS.App_Code
             {
                 if (value.Length <= 255)
                 {
-                    string strSQL = "UPDATE users SET destinationURL = '"
-                        + value + "' WHERE userID LIKE '" + this.username + "'";
+                    string strSQL = "UPDATE users SET destinationURL = @destinationURL WHERE userID LIKE @userID";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@destinationURL", value);
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     cmd.Transaction = tr;
                     try
                     {
@@ -1246,12 +1253,13 @@ namespace KIS.App_Code
             {
                 if(this.username.Length > 0)
                 { 
-                    string strSQL = "UPDATE users SET enabled = "
-                        + value + " WHERE userID LIKE '" + this.username + "'";
+                    string strSQL = "UPDATE users SET enabled = @enabled WHERE userID LIKE @userID";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@enabled", value);
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     cmd.Transaction = tr;
                     try
                     {
@@ -1308,10 +1316,12 @@ namespace KIS.App_Code
             this._DestinationURL = "";
             this.Customers = new List<String>();
             String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL, enabled "
-                +" FROM users WHERE enabled=true AND verified = true AND userID LIKE '" + usr + "' AND password = MD5('" + pwd + "')";
+                +" FROM users WHERE enabled=true AND verified = true AND userID LIKE @user AND password = MD5(@pwd)";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@user", usr);
+            cmd.Parameters.AddWithValue("@pwd", pwd);
             MySqlDataReader rdr1 = cmd.ExecuteReader();
             if (rdr1.Read() && !rdr1.IsDBNull(0))
             {
@@ -1362,10 +1372,11 @@ namespace KIS.App_Code
             this._authenticated = false;
             this._DestinationURL = "";
             String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL, enabled "
-                + " FROM users WHERE enabled=true AND userID LIKE '" + usr + "'";
+                + " FROM users WHERE enabled=true AND userID LIKE @userID";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@userID", usr);
             MySqlDataReader rdr1 = cmd.ExecuteReader();
             if (rdr1.Read() && !rdr1.IsDBNull(0))
             {
@@ -1411,10 +1422,11 @@ namespace KIS.App_Code
             this._authenticated = false;
             this._DestinationURL = "";
             String strSQL = "SELECT userID, nome, cognome, tipoUtente, lastLogin, ID, language, creationdate, destinationURL, enabled "
-                + " FROM users WHERE enabled=true AND ID = " + IDn.ToString();
+                + " FROM users WHERE enabled=true AND ID = @ID";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@ID", IDn);
             MySqlDataReader rdr1 = cmd.ExecuteReader();
             if (rdr1.Read() && !rdr1.IsDBNull(0))
             {
@@ -1478,10 +1490,11 @@ namespace KIS.App_Code
         {
             String checksum = DateTime.UtcNow.Ticks.ToString();
             String rt = "0";
-            String strSQL = "SELECT * FROM users WHERE userID LIKE '" + usr + "'";
+            String strSQL = "SELECT * FROM users WHERE userID LIKE @usr";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@usr", usr);
             MySqlDataReader rdr1 = cmd.ExecuteReader();
             rdr1.Read();
             if (rdr1.HasRows)
@@ -1506,17 +1519,22 @@ namespace KIS.App_Code
                 try
                 {
                     strSQL = "INSERT INTO users(userID, password, nome, cognome, tipoUtente, lastLogin, ID, language, "
-                        + "verified, checksum, creationdate, enabled) VALUES('"
-                        + usr + "', MD5('" + pwd + "'), '" + nome + "', '" + cognome + "', '" + typeOf + "', '"
-                        + DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss") + "',"
-                        + maxID.ToString()
-                        +", '" + idioma.ToString() + "', "
-                        + skipVerify.ToString() + ", "
-                        + "'" + checksum + "', "
-                        + "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "', "
-                        +"@enabled"
+                        + "verified, checksum, creationdate, enabled) VALUES(@userID, MD5(@password), @nome, @cognome, @tipoUtente, @lastLogin,"
+                        + "@ID, @language, @verified, @checksum, "
+                        + "@creationdate, @enabled"
                         + ")";
                     cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@userID", usr);
+                    cmd.Parameters.AddWithValue("@password", pwd);
+                    cmd.Parameters.AddWithValue("@nome", nome);
+                    cmd.Parameters.AddWithValue("@cognome", cognome);
+                    cmd.Parameters.AddWithValue("@tipoUtente", typeOf);
+                    cmd.Parameters.AddWithValue("@lastLogin", DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
+                    cmd.Parameters.AddWithValue("@ID", maxID);
+                    cmd.Parameters.AddWithValue("@language", idioma);
+                    cmd.Parameters.AddWithValue("@verified", skipVerify);
+                    cmd.Parameters.AddWithValue("@checksum", checksum);
+                    cmd.Parameters.AddWithValue("@creationdate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                     cmd.Parameters.AddWithValue("@enabled", true);
                     cmd.ExecuteNonQuery();
 
@@ -1551,8 +1569,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupID FROM groupusers INNER JOIN groupss ON (groupusers.groupID = groupss.ID) WHERE groupusers.user = '" +
-                    this.username + "' ORDER BY groupss.nomeGruppo";
+                cmd.CommandText = "SELECT groupID FROM groupusers INNER JOIN groupss ON (groupusers.groupID = groupss.ID) WHERE groupusers.user = @user " +
+                    " ORDER BY groupss.nomeGruppo";
+                cmd.Parameters.AddWithValue("@user", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -1590,7 +1609,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "INSERT INTO groupusers(groupID, user) VALUES("+grp.ID.ToString()+", '" + this.username + "')";
+                    cmd.CommandText = "INSERT INTO groupusers(groupID, user) VALUES(@GroupID, @userID)";
+                    cmd.Parameters.AddWithValue("@GroupID", grp.ID);
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
 
@@ -1622,7 +1643,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM groupusers WHERE groupID = " + grp.ID.ToString() + " AND user = '" + this.username + "'";
+                cmd.CommandText = "DELETE FROM groupusers WHERE groupID = @GroupID AND user = @userID";
+                cmd.Parameters.AddWithValue("@GroupID", grp.ID);
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -1652,7 +1675,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT postazione FROM registrooperatoripostazioni WHERE logout IS null AND username = '" + this.username + "'";
+            cmd.CommandText = "SELECT postazione FROM registrooperatoripostazioni WHERE logout IS null AND username = @username";
+            cmd.Parameters.AddWithValue("@username", this.username);
             MySqlDataReader rdr = cmd.ExecuteReader();
             this._PostazioniAttive = new List<Postazione>();
             while (rdr.Read())
@@ -1687,7 +1711,11 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
                     cmd.CommandText = "INSERT INTO registrooperatoripostazioni(username, postazione, login, logout) VALUES("
-                        + "'"+this.username+"', "+p.id.ToString()+", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', null)";
+                        + "@username, @postazione, @login, @logout)";
+                    cmd.Parameters.AddWithValue("@username", this.username);
+                    cmd.Parameters.AddWithValue("@postazione", p.id);
+                    cmd.Parameters.AddWithValue("@login", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@logout", null);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1728,7 +1756,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
                 cmd.CommandText = "UPDATE registrooperatoripostazioni SET logout='" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "'"
-                    + " WHERE logout IS null AND username = '" + this.username + "' AND postazione = " + p.id.ToString();
+                    + " WHERE logout IS null AND username = @username AND postazione = @postazione";
+                cmd.Parameters.AddWithValue("@logout", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@username", this.username);
+                cmd.Parameters.AddWithValue("@postazione", p.id);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1767,7 +1798,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
                 + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' "
-                + " AND registroeventitaskproduzione.user = '" + this.username + "' ORDER BY registroeventitaskproduzione.data DESC";
+                + " AND registroeventitaskproduzione.user = @user ORDER BY registroeventitaskproduzione.data DESC";
+            cmd.Parameters.AddWithValue("@user", this.username);
             MySqlDataReader rdr = cmd.ExecuteReader();
             List<int> DaNonInserire = new List<int>();
             while (rdr.Read())
@@ -1872,7 +1904,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT email FROM useremail WHERE userID LIKE '" + this.username + "' ORDER BY note";
+                cmd.CommandText = "SELECT email FROM useremail WHERE userID LIKE @userID ORDER BY note";
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -1903,8 +1936,11 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO useremail(userid, email, forAlarm, note) VALUES("
-                    + "'" + this.username + "', '" + mailAddr.Address + "', " + forAlarm.ToString()
-                    + ", '" + note + "')";
+                    + "@userID, @email, @forAlarm, @note)";
+                cmd.Parameters.AddWithValue("@userID", this.username);
+                cmd.Parameters.AddWithValue("@email", mailAddr.Address);
+                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
+                cmd.Parameters.AddWithValue("@note", note);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1931,7 +1967,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT phoneNumber FROM userphonenumbers WHERE userID LIKE '" + this.username + "' ORDER BY note";
+                cmd.CommandText = "SELECT phoneNumber FROM userphonenumbers WHERE userID LIKE @userID ORDER BY note";
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -1962,8 +1999,11 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO userphoneNumbers(userid, phoneNumber, forAlarm, note) VALUES("
-                    + "'" + this.username + "', '" + phone + "', " + forAlarm.ToString()
-                    + ", '" + note + "')";
+                    + "@userid, @phoneNumber, @forAlarm, @note)";
+                cmd.Parameters.AddWithValue("@userid", this.username);
+                cmd.Parameters.AddWithValue("@phoneNumber", phone);
+                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
+                cmd.Parameters.AddWithValue("@note", note);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1991,7 +2031,9 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE users SET password = MD5('" + newPass + "') WHERE userID = '" + this.username + "'";
+                cmd.CommandText = "UPDATE users SET password = MD5(@newPass) WHERE userID = @userID";
+                cmd.Parameters.AddWithValue("@newPass", newPass);
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 cmd.Transaction = tr;
                 try
                 {
@@ -2019,7 +2061,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT repartoID FROM eventorepartoutenti WHERE TipoEvento LIKE 'Ritardo' "
-                        + "AND userID = '" + this.username.ToString() + "'";
+                        + "AND userID = @userID";
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2065,7 +2108,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessautenti WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND userID = '" + this.username + "'";
+                        + "TipoEvento LIKE 'Ritardo' AND userID = @userID";
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2113,7 +2157,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT articoloID, ArticoloAnno FROM eventoarticoloutenti WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND userID = '" + this.username + "'";
+                        + "TipoEvento LIKE 'Ritardo' AND userID = @userID";
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2162,7 +2207,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT repartoID FROM eventorepartoutenti WHERE TipoEvento LIKE 'Warning' "
-                        + "AND userID = '" + this.username.ToString() + "'";
+                        + "AND userID = @userID";
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2208,7 +2254,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessautenti WHERE "
-                        + "TipoEvento LIKE 'Warning' AND userID = '" + this.username + "'";
+                        + "TipoEvento LIKE 'Warning' AND userID = @userID";
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2256,7 +2303,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT articoloID, ArticoloAnno FROM eventoarticoloutenti WHERE "
-                        + "TipoEvento LIKE 'Warning' AND userID = '" + this.username + "'";
+                        + "TipoEvento LIKE 'Warning' AND userID = @userID";
+                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2325,8 +2373,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user='" + this.username
-                    + "' ORDER BY data";
+                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@userID"
+                    + " ORDER BY data";
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -2340,10 +2389,11 @@ namespace KIS.App_Code
                 {
                     if (ElencoTasksOperatore[i].Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " 
-                            + ElencoTasksOperatore[i].TaskProduzioneID.ToString()
-                            + " AND user LIKE '" + this.username + "'"
+                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND user LIKE @userID"
                              + " ORDER BY data";
+                        cmd.Parameters.AddWithValue("@task", ElencoTasksOperatore[i].TaskProduzioneID);
+                        cmd.Parameters.AddWithValue("@userID", this.username);
                         rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
@@ -2402,9 +2452,11 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user='" + this.username + "' "
-                    + " AND data >= '"+ start.ToString("yyyy/MM/dd") + "'"
-                    + " AND data <= '"+ end.AddDays(1).ToString("yyyy/MM/dd").ToString() + "'"
+                    + " AND data >= @start AND data <= @end"
                     + " ORDER BY data";
+                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
+                cmd.Parameters.AddWithValue("@end", end.AddDays(1).ToString("yyyy/MM/dd"));
+
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -2418,10 +2470,10 @@ namespace KIS.App_Code
                 {
                     if (ElencoTasksOperatore[i].Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = "
-                            + ElencoTasksOperatore[i].TaskProduzioneID.ToString()
-                            + " AND user LIKE '" + this.username + "'"
-                             + " ORDER BY data";
+                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND user LIKE @user ORDER BY data";
+                        cmd.Parameters.AddWithValue("@task", ElencoTasksOperatore[i].TaskProduzioneID);
+                        cmd.Parameters.AddWithValue("@user", this.username);
                         rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
@@ -2493,11 +2545,12 @@ namespace KIS.App_Code
                 TaskProduzione currTask = new TaskProduzione(TaskID);
                     if (currTask!=null && currTask.Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = "
-                            + currTask.TaskProduzioneID.ToString()
-                            + " AND user LIKE '" + this.username + "'"
+                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND user LIKE @user"
                              + " ORDER BY data";
-                        MySqlDataReader rdr = cmd.ExecuteReader();
+                    cmd.Parameters.AddWithValue("@task", currTask.TaskProduzioneID);
+                    cmd.Parameters.AddWithValue("@user", this.username);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
                             log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
@@ -2580,10 +2633,11 @@ namespace KIS.App_Code
                     TaskProduzione currTask = new TaskProduzione(TasksID[i]);
                     if (currTask.Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = "
-                            + TasksID[i].ToString()
-                            + " AND user LIKE '" + this.username + "'"
+                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND user LIKE @user"
                              + " ORDER BY data";
+                        cmd.Parameters.AddWithValue("@task", TasksID[i]);
+                        cmd.Parameters.AddWithValue("@user", this.username);
                         MySqlDataReader rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
@@ -2640,10 +2694,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user='" + this.username + "' "
-                    + " AND data >= '" + start.ToString("yyyy/MM/dd") + "'"
-                    + " AND data <= '" + end.ToString("yyyy/MM/dd") + "'"
+                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@user "
+                    + " AND data >= @start"
+                    + " AND data <= @end"
                     + " ORDER BY data";
+                cmd.Parameters.AddWithValue("@user", this.username);
+                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
+                cmd.Parameters.AddWithValue("@end", end.ToString("yyyy/MM/dd"));
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -2657,11 +2714,12 @@ namespace KIS.App_Code
                 {
                     //if (ElencoTasksOperatore[i].Status == 'F')
                     //{
-                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = "
-                            + ElencoTasksOperatore[i].TaskProduzioneID.ToString()
-                            + " AND user LIKE '" + this.username + "'"
+                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND user LIKE @user"
                              + " ORDER BY data";
-                        rdr = cmd.ExecuteReader();
+                    cmd.Parameters.AddWithValue("@task", ElencoTasksOperatore[i].TaskProduzioneID);
+                    cmd.Parameters.AddWithValue("@user", this.username);
+                    rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
                             DateTime inizio = rdr.GetDateTime(1);
@@ -2736,7 +2794,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             DateTime startD = new DateTime(2999, 1, 1);
             DateTime endD = new DateTime(1970, 1, 1);
-            cmd.CommandText = "SELECT data, task FROM registroeventitaskproduzione WHERE id = " + StartEventID.ToString();
+            cmd.CommandText = "SELECT data, task FROM registroeventitaskproduzione WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", StartEventID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             int taskID = -1;
             if(rdr.Read() && !rdr.IsDBNull(0))
@@ -2745,7 +2804,8 @@ namespace KIS.App_Code
                 taskID = rdr.GetInt32(1);
             }
             rdr.Close();
-            cmd.CommandText = "SELECT data FROM registroeventitaskproduzione WHERE id = " + EndEventID.ToString();
+            cmd.CommandText = "SELECT data FROM registroeventitaskproduzione WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", EndEventID);
             rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -2805,7 +2865,9 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 try
                 { 
-                    cmd.CommandText = "DELETE FROM registroeventitaskproduzione WHERE id = " + StartEventID.ToString() + " OR id = " + EndEventID.ToString();
+                    cmd.CommandText = "DELETE FROM registroeventitaskproduzione WHERE id = @startEVid OR id = @endEVid";
+                    cmd.Parameters.AddWithValue("@startEVid", StartEventID);
+                    cmd.Parameters.AddWithValue("@endEVid", EndEventID);
                     this.log += cmd.CommandText + " ";
                     cmd.ExecuteNonQuery();
                     tr.Commit();
@@ -2993,7 +3055,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE users SET password = MD5('" + newPass + "') WHERE userID LIKE '" + this.username + "'";
+                cmd.CommandText = "UPDATE users SET password = MD5(@newPass) WHERE userID LIKE @userID";
+                cmd.Parameters.AddWithValue("@newPass", newPass);
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 try
                 {
                     log = cmd.CommandText;
@@ -3030,7 +3094,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id, anno FROM productionplan where status <> 'I' AND status <> 'F' "
-                    + " AND planner LIKE '" + this.username + "' ORDER BY dataPrevistaFineProduzione";
+                    + " AND planner LIKE @planner ORDER BY dataPrevistaFineProduzione";
+                cmd.Parameters.AddWithValue("@planner", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
                 while (rdr.Read())
@@ -3081,8 +3146,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO homeboxesuser(idHomeBox, user, ordine) VALUES("
-                    + box.ID.ToString() + ", '" + this.username + "', " + ordine.ToString() + ")";
+                cmd.CommandText = "INSERT INTO homeboxesuser(idHomeBox, user, ordine) VALUES(@idHomeBox, @user, @ordine)";
+                cmd.Parameters.AddWithValue("@idHomeBox", box.ID);
+                cmd.Parameters.AddWithValue("@user", this.username);
+                cmd.Parameters.AddWithValue("@ordine", ordine);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3110,8 +3177,9 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM homeboxesuser WHERE idHomeBox = " + box.ID.ToString()
-                    + " AND user ='"+this.username+"'";
+                cmd.CommandText = "DELETE FROM homeboxesuser WHERE idHomeBox = @idHomeBox AND user = @user";
+                cmd.Parameters.AddWithValue("@idHomeBox", box.ID);
+                cmd.Parameters.AddWithValue("@user", this.username);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3138,7 +3206,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT cliente FROM contatticlienti INNER JOIN users ON"
-                    +"(contatticlienti.user = users.userID) WHERE userID='" + this.username + "'";
+                    +"(contatticlienti.user = users.userID) WHERE userID=@user";
+                cmd.Parameters.AddWithValue("@user", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -3155,7 +3224,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT checksum FROM users WHERE userID = '" + username + "'";
+            cmd.CommandText = "SELECT checksum FROM users WHERE userID = @user";
+            cmd.Parameters.AddWithValue("@user", this.username);
             MySqlDataReader rdr = cmd.ExecuteReader();
             String chk = "";
             if(rdr.Read() && !rdr.IsDBNull(0))
@@ -3165,7 +3235,8 @@ namespace KIS.App_Code
             rdr.Close();
             if(chk.Length > 0 && chk == checksum)
             {
-                cmd.CommandText = "UPDATE users SET verified = true WHERE userID = '" + username + "'";
+                cmd.CommandText = "UPDATE users SET verified = true WHERE userID = @user";
+                cmd.Parameters.AddWithValue("@user", username);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -3190,7 +3261,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM users WHERE userID = '" + username + "'";
+            cmd.CommandText = "SELECT * FROM users WHERE userID = @user";
+            cmd.Parameters.AddWithValue("@user", username);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -3298,9 +3370,12 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT DISTINCT(taskID), tempociclo, nOperatori FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON(tasksproduzione.taskID = registroeventitaskproduzione.task) "
-                    +" WHERE user LIKE '" + this.username + "'"
-                    +" AND endDateReal >= '" + start.ToString("yyyy-MM-dd HH:mm:ss")
-                    + "' AND endDateReal <= '"+end.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                    +" WHERE user LIKE @user AND endDateReal >= @start AND endDateReal <= @end";
+
+                cmd.Parameters.AddWithValue("@user", this.username);
+                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@end", end.ToString("yyyy-MM-dd HH:mm:ss"));
+
                 List<int> taskIDs = new List<int>();
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
@@ -3495,8 +3570,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE useremail SET forAlarm = " + value + " WHERE userID LIKE '" + this.UserID + "'"
-                    + " AND email LIKE '" + this.Email + "'";
+                cmd.CommandText = "UPDATE useremail SET forAlarm=@forAlarm WHERE userID LIKE @userID AND email LIKE @email";
+                cmd.Parameters.AddWithValue("@forAlarm", value);
+                cmd.Parameters.AddWithValue("@userID", this.UserID);
+                cmd.Parameters.AddWithValue("@email", this.Email);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3524,8 +3601,11 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE useremail SET note = '" + value + "' WHERE userID LIKE '" + this.UserID + "'"
-                        + " AND email LIKE '" + this.Email + "'";
+                    cmd.CommandText = "UPDATE useremail SET note = @note WHERE userID LIKE @userID"
+                        + " AND email LIKE @email";
+                    cmd.Parameters.AddWithValue("@note", value);
+                    cmd.Parameters.AddWithValue("@userID", this.UserID);
+                    cmd.Parameters.AddWithValue("@email", this.Email);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -3546,8 +3626,9 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID, email, forAlarm, Note FROM useremail WHERE userID LIKE '" + usr + "' "
-                + " AND email LIKE '" + email + "'";
+            cmd.CommandText = "SELECT userID, email, forAlarm, Note FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
+            cmd.Parameters.AddWithValue("@usr", usr);
+            cmd.Parameters.AddWithValue("@email", email);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -3577,8 +3658,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM useremail WHERE userID LIKE '" + this.UserID
-                    + "' AND email LIKE '" + this.Email + "'";
+                cmd.CommandText = "DELETE FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
+                cmd.Parameters.AddWithValue("@usr", this.UserID);
+                cmd.Parameters.AddWithValue("@email", this.Email);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3627,8 +3709,11 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE userphonenumbers SET forAlarm = " + value + " WHERE userID LIKE '" + this.UserID + "'"
-                    + " AND phoneNumber LIKE '" + this.PhoneNumber + "'";
+                cmd.CommandText = "UPDATE userphonenumbers SET forAlarm=@forAlarm WHERE userID LIKE @usr"
+                    + " AND phoneNumber LIKE @phone";
+                cmd.Parameters.AddWithValue("@forAlarm", value);
+                cmd.Parameters.AddWithValue("@usr", this.UserID);
+                cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3656,8 +3741,10 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE userphonenumbers SET note = '" + value + "' WHERE userID LIKE '" + this.UserID + "'"
-                        + " AND phoneNumber LIKE '" + this.PhoneNumber + "'";
+                    cmd.CommandText = "UPDATE userphonenumbers SET note=@note WHERE userID LIKE @usr AND phoneNumber LIKE @phone";
+                    cmd.Parameters.AddWithValue("@note", value);
+                    cmd.Parameters.AddWithValue("@usr", this.UserID);
+                    cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -3678,8 +3765,10 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID, PhoneNumber, forAlarm, Note FROM userphonenumbers WHERE userID LIKE '" + usr + "' "
-                + " AND PhoneNumber LIKE '" + phone + "'";
+            cmd.CommandText = "SELECT userID, PhoneNumber, forAlarm, Note FROM userphonenumbers WHERE userID LIKE @usr "
+                + " AND PhoneNumber LIKE @phone";
+            cmd.Parameters.AddWithValue("@usr", usr);
+            cmd.Parameters.AddWithValue("@phone", phone);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -3709,8 +3798,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM userphonenumbers WHERE userID LIKE '" + this.UserID
-                    + "' AND phonenumber LIKE '" + this.PhoneNumber + "'";
+                cmd.CommandText = "DELETE FROM userphonenumbers WHERE userID LIKE @userID AND phonenumber LIKE @phonenumber";
+                cmd.Parameters.AddWithValue("@userID", this.UserID);
+                cmd.Parameters.AddWithValue("@phonenumber", this.PhoneNumber);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3760,12 +3850,13 @@ namespace KIS.App_Code
             {
                 if (this.username.Length > 0)
                 {
-                    string strSQL = "UPDATE users SET enabled = "
-                        + value + " WHERE userID LIKE '" + this.username + "'";
+                    string strSQL = "UPDATE users SET enabled = @enabled WHERE userID LIKE @userid";
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@enabled", value);
+                    cmd.Parameters.AddWithValue("@userid", this.username);
                     cmd.Transaction = tr;
                     try
                     {
@@ -3788,10 +3879,11 @@ namespace KIS.App_Code
         {
 
             String strSQL = "SELECT userID, nome, cognome, enabled "
-                + " FROM users WHERE enabled=false AND userID LIKE '" + username + "'";
+                + " FROM users WHERE enabled=false AND userID LIKE @userid";
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@userid", username);
             MySqlDataReader rdr1 = cmd.ExecuteReader();
             if (rdr1.Read() && !rdr1.IsDBNull(0))
             {
