@@ -919,7 +919,7 @@ namespace KIS.App_Code
                     catch (Exception ex)
                     {
                         rt = false;
-                        //log += ex.Message;
+                        log += ex.Message;
                         tr.Rollback();
                     }
                 }
