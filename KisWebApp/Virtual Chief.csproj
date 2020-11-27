@@ -659,6 +659,7 @@
     <Compile Include="App_Sources\WorkInstructions.cs" />
     <Compile Include="App_Start\Routeconfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\AccountsMgm\AccountsMgmAreaRegistration.cs" />
     <Compile Include="Areas\Analysis\AnalysisAreaRegistration.cs" />
     <Compile Include="Areas\Analysis\Controllers\GlobalKPIsController.cs" />
     <Compile Include="Areas\Analysis\Controllers\OperatorsAnalysisController.cs" />
@@ -6213,6 +6214,7 @@
     <Content Include="Areas\Auth0Test\Views\web.config" />
     <Content Include="Areas\Auth0Test\Views\Account\Tokens.cshtml" />
     <Content Include="Areas\Auth0Test\Views\Account\Claims.cshtml" />
+    <Content Include="Areas\AccountsMgm\Views\web.config" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -11819,6 +11821,9 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="App_GlobalResources\" />
+    <Folder Include="Areas\AccountsMgm\Controllers\" />
+    <Folder Include="Areas\AccountsMgm\Data\" />
+    <Folder Include="Areas\AccountsMgm\Views\Shared\" />
     <Folder Include="Areas\Analysis\Models\" />
     <Folder Include="Areas\Analysis\Views\Shared\" />
     <Folder Include="Areas\Andon\Models\" />
