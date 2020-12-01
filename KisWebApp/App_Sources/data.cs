@@ -5,7 +5,6 @@ using System;
 using System.Globalization;
 using MySql.Data.MySqlClient;
 
-
 /// <summary>
 /// Descrizione di riepilogo per Class1
 /// </summary>
@@ -24,13 +23,23 @@ namespace Dati
         public string GetConnectionString()
         {
             string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString);
-            //string connStr = String.Format("server={0};user id={1}; password={2};database=sitecal; pooling=false", "127.0.0.1", "SITECAL", "sitecalKIS");
             return connStr;
         }
 
         public MySql.Data.MySqlClient.MySqlConnection mycon()
         {
             return new MySqlConnection(GetConnectionString());
+        }
+
+        public String GetMainConnectionString()
+        {
+            string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["vcmain"].ConnectionString);
+            return connStr;
+        }
+
+        public MySql.Data.MySqlClient.MySqlConnection VCMainConn()
+        {
+            return new MySqlConnection(GetMainConnectionString());
         }
     }
 

@@ -28,12 +28,19 @@ namespace KIS.Areas.Auth0Test.Controllers
         {
             HttpContext.GetOwinContext().Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             HttpContext.GetOwinContext().Authentication.SignOut("Auth0");
+            Session.Abandon();
         }
 
         [Authorize]
         public ActionResult Tokens()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
+            //((ClaimsIdentity)User.Identity).AddClaim(new Claim("DB", "DIOBOY"));
+
+
+            // HttpContext.GetOwinContext().Set<>      <-- TEST THIS!!!
+
+
 
             ViewBag.AccessToken = claimsIdentity?.FindFirst(c => c.Type == "access_token")?.Value;
             ViewBag.IdToken = claimsIdentity?.FindFirst(c => c.Type == "id_token")?.Value;
