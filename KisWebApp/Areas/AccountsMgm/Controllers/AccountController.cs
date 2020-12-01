@@ -4,7 +4,7 @@ using System.Web.Mvc;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 
-namespace KIS.Areas.Auth0Test.Controllers
+namespace KIS.Areas.AccountsMgm.Controllers
 {
     public class AccountController : Controller
     {
@@ -35,13 +35,6 @@ namespace KIS.Areas.Auth0Test.Controllers
         public ActionResult Tokens()
         {
             var claimsIdentity = User.Identity as ClaimsIdentity;
-            //((ClaimsIdentity)User.Identity).AddClaim(new Claim("DB", "DIOBOY"));
-
-
-            // HttpContext.GetOwinContext().Set<>      <-- TEST THIS!!!
-
-
-
             ViewBag.AccessToken = claimsIdentity?.FindFirst(c => c.Type == "access_token")?.Value;
             ViewBag.IdToken = claimsIdentity?.FindFirst(c => c.Type == "id_token")?.Value;
 
@@ -51,6 +44,22 @@ namespace KIS.Areas.Auth0Test.Controllers
         [Authorize]
         public ActionResult Claims()
         {
+            return View();
+        }
+
+        /* Cases:
+         * 1) User belongs to 1 workspace: go to that workspace
+         * 2) User belongs to n > 1 workspaces: ask what workspace to use
+         * 3) User e-mail has an invitation to an existing workspace
+         * 4) User e-mail has nothing: propose to create a new workspace
+         */
+
+        [Authorize]
+        public ActionResult AfterLogin()
+        {
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            ViewBag.AccessToken = claimsIdentity?.FindFirst(c => c.Type == "access_token")?.Value;
+            ViewBag.IdToken = claimsIdentity?.FindFirst(c => c.Type == "id_token")?.Value;
             return View();
         }
     }
