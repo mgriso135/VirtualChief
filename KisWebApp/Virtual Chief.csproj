@@ -649,6 +649,7 @@
     <Compile Include="Andon\AndonRepartoViewFields.ascx.designer.cs">
       <DependentUpon>AndonRepartoViewFields.ascx</DependentUpon>
     </Compile>
+    <Compile Include="App_Sources\Account.cs" />
     <Compile Include="App_Sources\Analysis.cs" />
     <Compile Include="App_Sources\FilesHelper.cs" />
     <Compile Include="App_Sources\FilesViewModel.cs" />
@@ -11824,6 +11825,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="App_GlobalResources\" />
     <Folder Include="Areas\AccountsMgm\Data\" />
+    <Folder Include="Areas\AccountsMgm\Views\Account\App_LocalResources\" />
     <Folder Include="Areas\AccountsMgm\Views\Shared\" />
     <Folder Include="Areas\Analysis\Models\" />
     <Folder Include="Areas\Analysis\Views\Shared\" />

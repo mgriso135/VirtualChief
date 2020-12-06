@@ -11,7 +11,14 @@
     <title>AfterLogin</title>
 </head>
 <body>
-    <div> 
+    <div>
+        @ViewBag.log
+        <br />
+        <br />
+        @ObjectInfo.Print(User)
+        <br />
+        <br />
+        @ObjectInfo.Print(User.Identity)
     </div>
 </body>
 </html>
