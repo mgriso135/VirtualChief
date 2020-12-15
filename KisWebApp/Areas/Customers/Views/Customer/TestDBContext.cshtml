@@ -1,0 +1,31 @@
+﻿@model  IEnumerable<KIS.App_DB.Test>
+
+@{
+    
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TestDBContext</title>
+</head>
+<body>
+    <div>
+        <table>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        </tr>
+                        }
+                </table>
+            </div>
+</body>
+</html>

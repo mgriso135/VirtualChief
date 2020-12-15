@@ -1,4 +1,5 @@
-﻿
+﻿@model string;
+
 @{
     Layout = null;
 }
@@ -19,6 +20,11 @@
         <br />
         <br />
         @ObjectInfo.Print(User.Identity)
+
     </div>
+@if(Model.Length > 0)
+{
+    Response.Redirect(Model);
+}
 </body>
 </html>
