@@ -61,6 +61,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
         [Authorize]
         public ActionResult AfterLogin()
         {
+            String redirectUrl = "";
             ViewBag.log = "";
             var claimsIdentity = User.Identity as ClaimsIdentity;
             ViewBag.AccessToken = claimsIdentity?.FindFirst(c => c.Type == "access_token")?.Value;
@@ -83,6 +84,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             string nonce = claimsIdentity?.FindFirst(c => c.Type == "nonce")?.Value;
             string access_token = claimsIdentity?.FindFirst(c => c.Type == "access_token")?.Value;
             string refresh_token = claimsIdentity?.FindFirst(c => c.Type.Contains("refresh_token"))?.Value;
+            Boolean mail_verified = claimsIdentity?.FindFirst(c => c.Type.Contains("email_verified"))?.Value == "true" ? true : false;
             //DateTime created_at = DateTime.UtcNow;
             ViewBag.log += "usrId = " + usrId + " <br />";
             UserAccount curr = new UserAccount(usrId);
@@ -92,8 +94,49 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 UserAccounts lst = new UserAccounts();
                 int added_user = lst.Add(usrId, email, firstname, lastname, nickname, picture_url, locale, update_at, iss, nonce, idtoken, access_token, refresh_token);
                 ViewBag.log += "Added user: " + added_user;
+
+                if(added_user == 1)
+                {
+                    ViewBag.log += "mail_verified1 " + mail_verified + "    ";
+                    if (mail_verified)
+                    {
+                        ViewBag.log += "Redirecting1...";
+                        // Then go to add a new workspace
+                        redirectUrl = "AddWorkspaceForm";
+                    }
+                    else
+                    {
+                        // Please, verify e-mail...
+                    }
+                }
+                else
+                {
+                    ViewBag.log += "Error while adding user";
+                }
+            }
+            else
+            {
+                // if e-mail is verified
+                ViewBag.log += "mail_verified2 " + mail_verified + "    ";
+                if(mail_verified)
+                {
+                    ViewBag.log += "Redirecting2...";
+                    redirectUrl = "AddWorkspaceForm";
+                }
+                else
+                {
+                    ViewBag.log += "Please verify e-mail...";
+                }
             }
 
+            return View(redirectUrl);
+        }
+
+        [Authorize]
+        public ActionResult AddWorkspaceForm()
+        {
+            ViewBag.log = "";
+            var claimsIdentity = User.Identity as ClaimsIdentity;
             return View();
         }
     }

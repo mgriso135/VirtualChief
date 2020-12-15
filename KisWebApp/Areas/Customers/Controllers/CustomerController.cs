@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using KIS.App_Code;
 using KIS.App_Sources;
 using System.Net.Mail;
+using KIS.App_DB;
+using System.Configuration;
 
 namespace KIS.Areas.Customers.Controllers
 {
@@ -115,5 +117,14 @@ namespace KIS.Areas.Customers.Controllers
                 }
             return ret;
         }
+
+        private VCContext db = new VCContext("masterDB"/*ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString*/);
+        // GET: Test/CustomerTest
+        public ActionResult TestDBContext()
+        {
+            ViewBag.anagcli = db.Test.ToList();
+            return View(db.Test.ToList());
+        }
+
     }
 }

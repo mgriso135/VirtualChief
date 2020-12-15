@@ -6,6 +6,7 @@ using System.Net.Mail;
 using MySql.Data;
 using MySql.Data.MySqlClient;
 
+
 namespace KIS.App_Sources
 {
     public class UserAccount
@@ -106,10 +107,10 @@ namespace KIS.App_Sources
                 this._userId = rdr.GetString(1);
                 this._email = new MailAddress(rdr.GetString(2));
                 this._firstname = rdr.GetString(3);
-                this._lastname = rdr.GetString(4);
+                this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
                 this._nickname = rdr.GetString(5);
                 this._pictureUrl = rdr.GetString(6);
-                this._locale = rdr.GetString(7);
+                this._locale = rdr.IsDBNull(7) ? "en" : rdr.GetString(7);
                 this._updatedAt = rdr.GetDateTime(8);
                 this._iss = rdr.GetString(9);
                 this._nonce = rdr.GetString(10);
@@ -117,6 +118,7 @@ namespace KIS.App_Sources
                 this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
                 this._created_at = rdr.GetDateTime(13);
             }
+            rdr.Close();
             conn.Close();
         }
     }
@@ -204,6 +206,74 @@ namespace KIS.App_Sources
                 ret = 0;
             }
             return ret;
+        }
+    }
+
+    public class Workspace
+    {
+        private int _id;
+        public int id
+        {
+            get
+            {
+                return this._id;
+            }
+        }
+
+        private String _Name;
+        public String Name { get { return this._Name; } }
+        private DateTime _creationDate;
+        public DateTime CreationDate { get { return this._creationDate; } }
+
+        private String _Creator;
+        public String Creator { get { return this._Creator; } }
+        private Boolean _enabled;
+        public Boolean Enabled { get { return this._enabled; } }
+        private DateTime _enabledDate;
+        public DateTime enabledDate { get { return this._enabledDate; } }
+
+        public Workspace(int wsid)
+        {
+            this._id = -1;
+            this._Name = "";
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, name, creationdate, creator, enabled, enableddate FROM workspaces WHERE id=@id";
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                this._id = rdr.GetInt32(0);
+                this._Name = rdr.GetString(1);
+                this._creationDate = rdr.GetDateTime(2);
+                this._Creator = rdr.GetString(3);
+                this._enabled = rdr.GetBoolean(4);
+                this._enabledDate = rdr.GetDateTime(5);
+            }
+            rdr.Close();
+            conn.Close();
+        }
+    }
+
+    public class Workspaces
+    {
+        public List<Workspace> workspaces;
+
+        public void loadWorkspaces()
+        {
+            this.workspaces = new List<Workspace>();
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id FROM workspaces ORDER BY name";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                this.workspaces.Add(new Workspace(rdr.GetInt32(0)));
+            }
+            rdr.Close();
+            conn.Close();
         }
     }
 }

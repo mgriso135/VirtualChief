@@ -11,6 +11,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OpenIdConnect;
 using MvcApplication.Support;
 using Owin;
+using System.Security.Principal;
 
 [assembly: OwinStartup(typeof(KIS.App_Sources.Startup))]
 
@@ -66,6 +67,27 @@ namespace KIS.App_Sources
                     {
                         notification.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", notification.ProtocolMessage.IdToken));
                         notification.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", notification.ProtocolMessage.AccessToken));
+                        
+                        String usrID = "";
+                        foreach(var clm in notification.AuthenticationTicket.Identity.Claims)
+                        {
+                            if(clm.Type.Contains("nameidentifier"))
+                            {
+                                usrID = clm.Value;
+                            }
+                        }
+                        String workspace = "";
+                        if(usrID.Length > 0)
+                        {
+                            UserAccount curr = new UserAccount(usrID);
+                            if(curr.id!=-1)
+                            {
+                                workspace = "123prova";
+                            }
+
+
+                        }
+                        notification.AuthenticationTicket.Identity.AddClaim(new Claim("workspace", workspace));
 
                         return Task.FromResult(0);
                     },
@@ -78,6 +100,7 @@ namespace KIS.App_Sources
                             // 
                             // Set the audience query parameter to the API identifier to ensure the returned Access Tokens can be used
                             // to call protected endpoints on the corresponding API.
+                            
                             notification.ProtocolMessage.SetParameter("audience", auth0Audience);
                         }
                         else if (notification.ProtocolMessage.RequestType == OpenIdConnectRequestType.Logout)
@@ -103,6 +126,8 @@ namespace KIS.App_Sources
                     }
                 }
             });
+
+            
         }
     }
 }

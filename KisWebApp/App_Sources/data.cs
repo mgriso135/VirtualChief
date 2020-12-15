@@ -3,7 +3,18 @@
 
 using System;
 using System.Globalization;
+using System.Security.Claims;
 using MySql.Data.MySqlClient;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using System.Security.Claims;
+using System.Web;
+using System.Web.Mvc;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
+using KIS.App_Sources;
+using System.Net.Mail;
+using System;
 
 /// <summary>
 /// Descrizione di riepilogo per Class1
@@ -22,6 +33,11 @@ namespace Dati
 
         public string GetConnectionString()
         {
+            var ctx = HttpContext.Current.GetOwinContext();
+            ClaimsPrincipal user = ctx.Authentication.User;
+            var claimsIdentity = user.Identity as ClaimsIdentity;
+            String workspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace"))?.Value;
+
             string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString);
             return connStr;
         }
