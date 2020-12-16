@@ -26,6 +26,19 @@
                 console.log("Ws name: " + $("#wsname").val());
                 if ($("#frmws")[0].checkValidity()) {
                     console.log("Ok");
+
+                    $.ajax({
+                        url: "@Url.Action("AddWorkspace", "Account")",
+                        type: 'POST',
+                        data: {
+                            ws_name: $("#wsname").val(),
+                        },
+                        success: function (result) {
+                            console.log(result);
+                        },
+                        error: function (result) { alert("Error " + result); },
+                        warning: function (result) { alert("Warning " + result); },
+                    });
                 }
                 else {
                     console.log("Form invalid");

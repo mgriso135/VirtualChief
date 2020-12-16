@@ -11,6 +11,8 @@ namespace KIS.App_Sources
 {
     public class UserAccount
     {
+        public String log;
+
         private int _id;
         public int id
         {
@@ -94,6 +96,7 @@ namespace KIS.App_Sources
         {
             this._id = -1;
             this._userId = "";
+            this._Workspaces = new List<Workspace>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
@@ -120,6 +123,152 @@ namespace KIS.App_Sources
             }
             rdr.Close();
             conn.Close();
+        }
+
+        private List<Workspace> _Workspaces;
+        public List<Workspace> workspaces
+        {
+            get { return this._Workspaces; }
+        }
+
+        private Workspace _DefaultWorkspace;
+        public Workspace DefaultWorkspace
+        {
+            get { return this._DefaultWorkspace; }
+        }
+
+        public void loadWorkspaces()
+        {
+            this._Workspaces = new List<Workspace>();
+            if(this.userId.Length > 1)
+            { 
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
+                    + " WHERE useraccountworkspaces.userid = @userId"
+                    + "ORDER BY name";
+                cmd.Parameters.AddWithValue("@userId", this.userId);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this.workspaces.Add(new Workspace(rdr.GetInt32(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if added successfully
+         * 2 if name incorrect
+         * 3 if user not found
+         * 4 error while adding workspace
+         * 5 if error while linking new workspace to the useraccount
+         */
+        public int addWorkspace(String name)
+        {
+            int ret = 0;
+            if (name.Length > 0 && name.Length < 255)
+            {
+                if (this.userId.Length > 1)
+                {
+                    Boolean defaultWS = true;
+                    this.loadDefaultWorkspace();
+                    if(this.DefaultWorkspace != null && this.DefaultWorkspace.id !=-1)
+                    {
+                        defaultWS = false;
+                    }
+
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "INSERT INTO workspaces(name, creator, enabled, enableddate) VALUES(@wsname, @wscreator, @enabled, @enableddate)";
+                    cmd.Parameters.AddWithValue("@wsname", name);
+                    cmd.Parameters.AddWithValue("@wscreator", this.userId);
+                    cmd.Parameters.AddWithValue("@enabled", true);
+                    cmd.Parameters.AddWithValue("@enableddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    try
+                    { 
+                        cmd.ExecuteNonQuery();
+                    }
+                    catch(Exception ex)
+                    {
+                        this.log = ex.Message;
+                        tr.Rollback();
+                        ret = 4;
+                    }
+
+                    cmd.CommandText = "SELECT MAX(id) FROM workspaces WHERE creator=@userid2 ORDER BY creationdate DESC";
+                    cmd.Parameters.AddWithValue("@userid2", this.userId);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    int wsid = -1;
+                    if(rdr.Read() && !rdr.IsDBNull(0)) { wsid = rdr.GetInt32(0); }
+                    rdr.Close();
+                    if(wsid!=-1)
+                    {
+                        cmd.CommandText = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_at, invitation_accepted, invitation_accepted_at, default_ws) "
+                            + " VALUES(@userid3, @workspaceid, @invite_sent, @invite_sent_at, @invitation_accepted, @invitation_accepted_at, @default)";
+                        cmd.Parameters.AddWithValue("@userid3", this.id);
+                        cmd.Parameters.AddWithValue("@workspaceid", wsid);
+                        cmd.Parameters.AddWithValue("@invite_sent", null);
+                        cmd.Parameters.AddWithValue("@invite_sent_at", null);
+                        cmd.Parameters.AddWithValue("@invitation_accepted", false);
+                        cmd.Parameters.AddWithValue("@invitation_accepted_at", null);
+                        cmd.Parameters.AddWithValue("@default", defaultWS);
+
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            tr.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
+                            tr.Rollback();
+                            ret = 5;
+                        }
+                    }
+
+                    conn.Close();
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+
+        public void loadDefaultWorkspace()
+        {
+            this._DefaultWorkspace = null;
+            if (this.userId.Length > 1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
+                    + " WHERE useraccountworkspaces.userid = @userId AND default_ws=@defaultws"
+                    + " ORDER BY name";
+                cmd.Parameters.AddWithValue("@userId", this.userId);
+                cmd.Parameters.AddWithValue("@defaultws", true);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read())
+                {
+                    this._DefaultWorkspace = new Workspace(rdr.GetInt32(0));
+                }
+                rdr.Close();
+                conn.Close();
+            }
         }
     }
 
@@ -240,7 +389,7 @@ namespace KIS.App_Sources
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, name, creationdate, creator, enabled, enableddate FROM workspaces WHERE id=@id";
-            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@id", wsid);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read())
             {

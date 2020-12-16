@@ -33,12 +33,20 @@ namespace Dati
 
         public string GetConnectionString()
         {
-            var ctx = HttpContext.Current.GetOwinContext();
-            ClaimsPrincipal user = ctx.Authentication.User;
-            var claimsIdentity = user.Identity as ClaimsIdentity;
-            String workspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace"))?.Value;
-
+            String activeWorkspace = "";
+            if (HttpContext.Current !=null && HttpContext.Current.Session!=null && HttpContext.Current.Session["ActiveWorkspace"]!=null)
+            { 
+                activeWorkspace = HttpContext.Current.Session["ActiveWorkspace"]?.ToString();
+            }
+            if (activeWorkspace.Length == 0)
+            { 
+                var ctx = HttpContext.Current.GetOwinContext(); 
+                ClaimsPrincipal user = ctx.Authentication.User;
+                var claimsIdentity = user.Identity as ClaimsIdentity;
+                activeWorkspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace"))?.Value;
+            }
             string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString);
+            connStr = connStr.Replace("database=", "database=" + activeWorkspace);
             return connStr;
         }
 

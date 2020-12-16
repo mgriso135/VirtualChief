@@ -99,7 +99,7 @@ namespace KIS.App_Code
             get
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT groupss.id, groupusers.user FROM groupss INNER JOIN groupusers ON("
@@ -283,7 +283,7 @@ namespace KIS.App_Code
             get
             {
                 String ret = "en";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
