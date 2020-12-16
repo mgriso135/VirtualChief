@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using KIS.App_Sources;
 using System.Net.Mail;
 using System;
+using System.Linq;
 
 namespace KIS.Areas.AccountsMgm.Controllers
 {
@@ -18,10 +19,15 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
         public ActionResult Login(string returnUrl)
         {
-            HttpContext.GetOwinContext().Authentication.Challenge(new AuthenticationProperties
+            AuthenticationProperties properties = new AuthenticationProperties();
+            properties.Dictionary.Add("Workspace", "Ciccio");
+            properties.RedirectUri = returnUrl ?? Url.Action("Index", "Home");
+
+            HttpContext.GetOwinContext().Authentication.Challenge(properties
+                /*new AuthenticationProperties
             {
                 RedirectUri = returnUrl ?? Url.Action("Index", "Home")
-            },
+            }*/,
                 "Auth0");
             return new HttpUnauthorizedResult();
         }
@@ -107,6 +113,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
                     else
                     {
                         // Please, verify e-mail...
+                        redirectUrl = "VerifyEmail";
                     }
                 }
                 else
@@ -126,6 +133,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 else
                 {
                     ViewBag.log += "Please verify e-mail...";
+                    redirectUrl = "VerifyEmail";
                 }
             }
 
@@ -139,5 +147,50 @@ namespace KIS.Areas.AccountsMgm.Controllers
             var claimsIdentity = User.Identity as ClaimsIdentity;
             return View();
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if everything's ok
+         * 20 if user not found or mail not verified
+         * 21 if name invalid or name already exists
+         */
+        [Authorize]
+        public int AddWorkspace(String ws_name)
+        {
+            int ret = 0;
+            var claimsIdentity = User.Identity as ClaimsIdentity;
+            string usrId = claimsIdentity?.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
+            UserAccount usr = new UserAccount(usrId);
+            Boolean mail_verified = claimsIdentity?.FindFirst(c => c.Type.Contains("email_verified"))?.Value == "true" ? true : false;
+            if (usr.id!=-1 && mail_verified)
+            {
+                Workspaces lst_ws = new Workspaces();
+                lst_ws.loadWorkspaces();
+                bool alreadyexists = lst_ws.workspaces.FirstOrDefault(x => x.Name.ToLower() == ws_name.ToLower()) == null ? false : true;
+                if (ws_name.Length > 0 && ws_name.Length < 255 && ws_name.All(Char.IsLetter) && !alreadyexists)
+                { 
+                    ret = usr.addWorkspace(ws_name);
+                }
+                else
+                {
+                    ret = 21;
+                }
+            }
+            else
+            {
+                ret = 20;
+            }
+            return ret;
+        }
+
+        [Authorize]
+        public ActionResult VerifyEmail()
+        {
+            HttpContext.GetOwinContext().Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
+            HttpContext.GetOwinContext().Authentication.SignOut("Auth0");
+            Session.Abandon();
+            return View();
+        }
     }
+
 }

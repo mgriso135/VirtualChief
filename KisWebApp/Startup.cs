@@ -65,6 +65,7 @@ namespace KIS.App_Sources
                 {
                     SecurityTokenValidated = notification =>
                     {
+                        
                         notification.AuthenticationTicket.Identity.AddClaim(new Claim("id_token", notification.ProtocolMessage.IdToken));
                         notification.AuthenticationTicket.Identity.AddClaim(new Claim("access_token", notification.ProtocolMessage.AccessToken));
                         
@@ -86,6 +87,15 @@ namespace KIS.App_Sources
                             }
 
 
+                        }
+                        string workspace2 = "NOT FOUND " + notification.AuthenticationTicket.Properties.Dictionary.Count + "; ";
+                        foreach(var m in notification.AuthenticationTicket.Properties.Dictionary)
+                        {
+                            workspace2 += m.Key + "=" + m.Value + "; ";
+                            if(m.Key == "Workspace")
+                            {
+                                workspace2 = m.Value;
+                            }
                         }
                         notification.AuthenticationTicket.Identity.AddClaim(new Claim("workspace", workspace));
 
