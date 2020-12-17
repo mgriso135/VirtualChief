@@ -65,6 +65,51 @@ namespace Dati
         {
             return new MySqlConnection(GetMainConnectionString());
         }
+        public int getActiveWorkspaceId()
+        {
+            int activeWorkspace = -1;
+            if (HttpContext.Current != null && HttpContext.Current.Session != null && HttpContext.Current.Session["ActiveWorkspace"] != null)
+            {
+                activeWorkspace = Int32.Parse(HttpContext.Current.Session["ActiveWorkspace_Id"]?.ToString());
+            }
+            if (activeWorkspace == -1)
+            {
+                var ctx = HttpContext.Current.GetOwinContext();
+                ClaimsPrincipal user = ctx.Authentication.User;
+                var claimsIdentity = user.Identity as ClaimsIdentity;
+                String sactiveWorkspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace_id"))?.Value;
+                if(sactiveWorkspace!= null && sactiveWorkspace.Length > 0)
+                { 
+                    activeWorkspace = Int32.Parse(sactiveWorkspace);
+                }
+                else
+                {
+                    activeWorkspace = -1;
+                }
+            }
+            return activeWorkspace;
+        }
+
+        public String getActiveWorkspaceName()
+        {
+            String activeWorkspace = "";
+            if (HttpContext.Current != null && HttpContext.Current.Session != null && HttpContext.Current.Session["ActiveWorkspace"] != null && HttpContext.Current.Session["ActiveWorkspace_Id"] != null)
+            {
+                activeWorkspace = HttpContext.Current.Session["ActiveWorkspace"]?.ToString();
+            }
+            if (activeWorkspace.Length == 0)
+            {
+                var ctx = HttpContext.Current.GetOwinContext();
+                ClaimsPrincipal user = ctx.Authentication.User;
+                var claimsIdentity = user.Identity as ClaimsIdentity;
+                activeWorkspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace"))?.Value;
+                if(activeWorkspace == null || activeWorkspace.Length == 0)
+                {
+                    activeWorkspace = "";
+                }
+            }
+            return activeWorkspace;
+        }
     }
 
     public static class Utilities

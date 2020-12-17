@@ -146,9 +146,9 @@ namespace KIS.App_Sources
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
-                    + " WHERE useraccountworkspaces.userid = @userId"
-                    + "ORDER BY name";
-                cmd.Parameters.AddWithValue("@userId", this.userId);
+                    + " WHERE useraccountworkspaces.userid = @userId "
+                    + " ORDER BY name";
+                cmd.Parameters.AddWithValue("@userId", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -162,11 +162,11 @@ namespace KIS.App_Sources
 
         /* Returns:
          * 0 if generic error
-         * 1 if added successfully
-         * 2 if name incorrect
-         * 3 if user not found
-         * 4 error while adding workspace
-         * 5 if error while linking new workspace to the useraccount
+         * workspace_id if added successfully
+         * -2 if name incorrect
+         * -3 if user not found
+         * -4 error while adding workspace
+         * -5 if error while linking new workspace to the useraccount
          */
         public int addWorkspace(String name)
         {
@@ -200,7 +200,7 @@ namespace KIS.App_Sources
                     {
                         this.log = ex.Message;
                         tr.Rollback();
-                        ret = 4;
+                        ret = -4;
                     }
 
                     cmd.CommandText = "SELECT MAX(id) FROM workspaces WHERE creator=@userid2 ORDER BY creationdate DESC";
@@ -224,13 +224,14 @@ namespace KIS.App_Sources
                         try
                         {
                             cmd.ExecuteNonQuery();
+                            ret = wsid;
                             tr.Commit();
                         }
                         catch (Exception ex)
                         {
                             this.log = ex.Message;
                             tr.Rollback();
-                            ret = 5;
+                            ret = -5;
                         }
                     }
 
@@ -238,12 +239,12 @@ namespace KIS.App_Sources
                 }
                 else
                 {
-                    ret = 3;
+                    ret = -3;
                 }
             }
             else
             {
-                ret = 2;
+                ret = -2;
             }
             return ret;
         }

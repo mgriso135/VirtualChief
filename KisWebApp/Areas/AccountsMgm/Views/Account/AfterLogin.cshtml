@@ -24,7 +24,9 @@
     </div>
 @if(Model.Length > 0)
 {
-    Response.Redirect(Model);
+    <script>
+        window.document.location = "@Model";
+    </script>
 }
 </body>
 </html>
