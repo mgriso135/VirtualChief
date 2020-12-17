@@ -117,10 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblLoginAgainLink" xml:space="preserve">
+    <value>click here to login</value>
+  </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Verify your e-mail address</value>
   </data>
   <data name="lblVerifyEmailDesc" xml:space="preserve">
-    <value>Please, check your e-mail and verify your e-mail address.</value>
+    <value>Please, check your e-mail and verify your e-mail address. Once your e-mail is verified</value>
   </data>
 </root>

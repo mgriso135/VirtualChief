@@ -78,12 +78,30 @@ namespace KIS.App_Sources
                             }
                         }
                         String workspace = "";
+                        int workspace_id = -1;
                         if(usrID.Length > 0)
                         {
                             UserAccount curr = new UserAccount(usrID);
                             if(curr.id!=-1)
                             {
-                                workspace = "123prova";
+                                curr.loadDefaultWorkspace();
+                                curr.loadWorkspaces();
+                                if(curr.DefaultWorkspace!=null)
+                                {
+                                    workspace = curr.DefaultWorkspace.Name;
+                                    workspace_id = curr.DefaultWorkspace.id;
+                                }
+                                else if(curr.workspaces.Count > 0)
+                                {
+                                    workspace = curr.workspaces[0].Name;
+                                    workspace_id = curr.workspaces[0].id;
+                                }
+                                else
+                                {
+                                    workspace = "";
+                                    workspace_id = -1;
+                                }
+
                             }
 
 
@@ -98,6 +116,7 @@ namespace KIS.App_Sources
                             }
                         }
                         notification.AuthenticationTicket.Identity.AddClaim(new Claim("workspace", workspace));
+                        notification.AuthenticationTicket.Identity.AddClaim(new Claim("workspace_id", workspace_id.ToString()));
 
                         return Task.FromResult(0);
                     },

@@ -20,8 +20,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
         public ActionResult Login(string returnUrl)
         {
             AuthenticationProperties properties = new AuthenticationProperties();
-            properties.Dictionary.Add("Workspace", "Ciccio");
-            properties.RedirectUri = returnUrl ?? Url.Action("Index", "Home");
+            properties.RedirectUri = returnUrl ?? Url.Action("AfterLogin", "Account");
 
             HttpContext.GetOwinContext().Authentication.Challenge(properties
                 /*new AuthenticationProperties
@@ -127,16 +126,34 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 ViewBag.log += "mail_verified2 " + mail_verified + "    ";
                 if(mail_verified)
                 {
-                    ViewBag.log += "Redirecting2...";
-                    redirectUrl = "AddWorkspaceForm";
+                    curr.loadWorkspaces();
+                    curr.loadDefaultWorkspace();
+                    if(curr.DefaultWorkspace != null)
+                    {
+                        Session["ActiveWorkspace"] = curr.DefaultWorkspace.Name;
+                        Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
+                        redirectUrl = "~/HomePage/Default.aspx";
+                    }
+                    else if(curr.workspaces.Count > 0)
+                    {
+                        Session["ActiveWorkspace"] = curr.workspaces[0].Name;
+                        Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
+                        redirectUrl = "~/HomePage/Default.aspx";
+                    }
+                    else
+                    {                        
+                        redirectUrl = "AddWorkspaceForm";
+                    }
+                    
                 }
                 else
                 {
-                    ViewBag.log += "Please verify e-mail...";
+                    
                     redirectUrl = "VerifyEmail";
+                    ViewBag.log = redirectUrl;
                 }
             }
-
+            ViewBag.log = redirectUrl;
             return View(redirectUrl);
         }
 
@@ -151,8 +168,8 @@ namespace KIS.Areas.AccountsMgm.Controllers
         /* Returns:
          * 0 if generic error
          * 1 if everything's ok
-         * 20 if user not found or mail not verified
-         * 21 if name invalid or name already exists
+         * -20 if user not found or mail not verified
+         * -21 if name invalid or name already exists
          */
         [Authorize]
         public int AddWorkspace(String ws_name)
@@ -170,15 +187,21 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 if (ws_name.Length > 0 && ws_name.Length < 255 && ws_name.All(Char.IsLetter) && !alreadyexists)
                 { 
                     ret = usr.addWorkspace(ws_name);
+                    if(ret > 0)
+                    {
+                        Session["ActiveWorkspace"] = ws_name;
+                        Session["ActiveWorkspace_Id"] = ret;
+                    }
                 }
+
                 else
                 {
-                    ret = 21;
+                    ret = -21;
                 }
             }
             else
             {
-                ret = 20;
+                ret = -20;
             }
             return ret;
         }

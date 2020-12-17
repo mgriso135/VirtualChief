@@ -11,6 +11,17 @@ namespace KIS.App_Code
 {
     public class KISConfig
     {
+        public int workspace_id;
+
+        public KISConfig()
+        {
+
+        }
+        public KISConfig(int workspace)
+        {
+            workspace_id = workspace;
+        }
+
         public Boolean WizLogoCompleted
         {
             get
@@ -99,22 +110,26 @@ namespace KIS.App_Code
             get
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupss.id, groupusers.user FROM groupss INNER JOIN groupusers ON("
-                    + "groupss.id = groupusers.groupid) WHERE nomegruppo LIKE 'Admin'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    ret = true;
+                if(this.workspace_id != -1)
+                { 
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT groupss.id, groupusers.useraccountid FROM groupss INNER JOIN groupusers ON("
+                        + "groupss.id = groupusers.groupid) WHERE name LIKE 'Admin' AND workspaceid=@wsid";
+                    cmd.Parameters.AddWithValue("@wsid", this.workspace_id);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        ret = true;
+                    }
+                    else
+                    {
+                        ret = false;
+                    }
+                    rdr.Close();
+                    conn.Close();
                 }
-                else
-                {
-                    ret = false;
-                }
-                rdr.Close();
-                conn.Close();
                 return ret;
             }
         }

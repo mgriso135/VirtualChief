@@ -61,6 +61,15 @@ namespace ResAccountMgm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to click here to login.
+        /// </summary>
+        public static string lblLoginAgainLink {
+            get {
+                return ResourceManager.GetString("lblLoginAgainLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Verify your e-mail address.
         /// </summary>
         public static string lblTitle {
@@ -70,7 +79,7 @@ namespace ResAccountMgm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please, check your e-mail and verify your e-mail address..
+        ///   Looks up a localized string similar to Please, check your e-mail and verify your e-mail address. Once your e-mail is verified.
         /// </summary>
         public static string lblVerifyEmailDesc {
             get {
