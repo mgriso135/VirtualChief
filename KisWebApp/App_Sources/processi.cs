@@ -4143,18 +4143,6 @@ namespace KIS.App_Code
         public List<TaskWorkInstruction> WorkInstructions;
         public List<TaskWorkInstruction> WorkInstructionsArchive;
 
-        public TaskVariante(processo prc, variante vr)
-        {
-            this.Parameters = new List<ModelTaskParameter>();
-            this.WorkInstructions = new List<TaskWorkInstruction>();
-            this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
-            this._DefaultOperators = new List<User>();
-            this._Task = prc;
-                this._variant = vr;
-                prc.loadFigli(vr);
-                this.loadPostazioni();
-        }
-
         private TempiCiclo _Tempi;
         public TempiCiclo Tempi
         {
@@ -4162,6 +4150,22 @@ namespace KIS.App_Code
         }
 
         public List<ModelTaskParameter> Parameters;
+
+        public List<Microsteps> microsteps;
+
+        public TaskVariante(processo prc, variante vr)
+        {
+            this.Parameters = new List<ModelTaskParameter>();
+            this.WorkInstructions = new List<TaskWorkInstruction>();
+            this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
+            this._DefaultOperators = new List<User>();
+            this._Task = prc;
+            this.microsteps = new List<Microsteps>();
+                this._variant = vr;
+                prc.loadFigli(vr);
+                this.loadPostazioni();
+        }
+      
 
         public bool loadTempiCiclo()
         {
@@ -4593,6 +4597,32 @@ namespace KIS.App_Code
                     conn.Close();
                 }
             return ret;
+        }
+
+        public void loadTaskMicrosteps()
+        {
+            this.microsteps = new List<Microsteps>();
+            if (this.Task != null && this.variant != null && this.Task.processID!=-1 && this.Task.revisione!=-1 && this.variant.idVariante!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT id, review, name, description, creation_date FROM microsteps WHERE "
+                    + "id=@id AND review=@review";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@review", rev);
+
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read())
+                {
+                    this._id = rdr.GetInt32(0);
+                    this._review = rdr.GetInt32(1);
+                    this._name = rdr.GetString(2);
+                    this._description = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
+                    this._CreationDate = rdr.GetDateTime(4);
+                }
+                rdr.Close();
+            }
         }
     }
 
@@ -5723,7 +5753,7 @@ namespace KIS.App_Code
         }
     }
 
-    public class Microsteps
+    public class Microstep
     {
         private int _id;
         public int id
@@ -5747,5 +5777,154 @@ namespace KIS.App_Code
             get { return this._description; }
         }
 
+        private DateTime _CreationDate;
+        public DateTime CreationDate
+        {
+            get { return this._CreationDate; }
+        }
+
+        public Microsteps(int id, int rev)
+        {
+            this._CreationDate = new DateTime(1970, 1, 1);
+            this._id = -1;
+            this._review = -1;
+            this._name = "";
+            this._description = "";
+
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, review, name, description, creation_date FROM microsteps WHERE "
+                + "id=@id AND review=@review";
+            cmd.Parameters.AddWithValue("@id", id);
+            cmd.Parameters.AddWithValue("@review", rev);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                this._id = rdr.GetInt32(0);
+                this._review = rdr.GetInt32(1);
+                this._name = rdr.GetString(2);
+                this._description = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
+                this._CreationDate = rdr.GetDateTime(4);
+            }
+            rdr.Close();
+
+            conn.Close();
+        }
+    }
+
+    public class TaskMicrostep
+    {
+        private int _TaskId;
+        public int TaskId
+        {
+            get { return this._TaskId; }
+        }
+
+        private int _TaskRev;
+        public int TaskRev
+        {
+            get { return this._TaskRev; }
+        }
+
+        private int _VariantId;
+        public int VariantId
+        {
+            get { return this._VariantId; }
+        }
+
+        private int _MicrostepId;
+        public int MicrostepId
+        {
+            get { return this._MicrostepId; }
+        }
+
+        private int _MicrostepReview;
+        public int MicrostepReview
+        { get { return this._MicrostepReview; } }
+
+        private String _MicrostepName;
+        public String MicrostepName
+        {
+            get { return this._MicrostepName; }
+        }
+
+        private String _MicrostepDescription;
+        public String MicrostepDescription
+        {
+            get { return this._MicrostepDescription; }
+        }
+
+        private DateTime _CreationDate;
+        public DateTime CreationDate
+        {
+            get { return this._CreationDate; }
+        }
+
+        // Hours
+        private int _CycleTime;
+        public int CycleTime { get { return this._CycleTime; } }
+
+        /* Returns:
+         * V Value
+         * W evident Waste
+         * H Hidden waste
+         */
+        private Char _ValueOrWaste;
+        public Char ValueOrWaste {  get { return this._ValueOrWaste; } }
+
+        private int _Sequence;
+        public int Sequence { get { return this._Sequence; } }
+
+        public TaskMicrostep(int taskID, int taskRev, int variantID, int microstepID, int microstepRev)
+        {
+            this._CreationDate = new DateTime(1970, 1, 1);
+            this._TaskId = -1;
+            this._TaskRev = -1;
+            this._VariantId = -1;
+            this._MicrostepId = -1;
+            this._MicrostepReview = -1;
+            this._MicrostepName = "";
+            this._MicrostepDescription = "";
+            this._Sequence = -1;
+            this._CycleTime = 0;
+            this._ValueOrWaste = '';
+
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT microsteps.id, microsteps.review, microsteps.name, microsteps.description, microsteps.creation_date, "
+                + "task_microsteps.taskid, task_microsteps.taskrev, task_microsteps.variantid, task_microsteps.sequence, task_microsteps.cycletime, task_microsteps.value_or_waste "
+                + " FROM microsteps "
+                + " INNER JOIN task_microsteps ON (microsteps.id = task_microsteps.microstep_id AND microsteps.review = task_microsteps.microstep_rev)"
+                + " WHERE "
+                + "microsteps.id=@id AND microsteps.review=@review"
+                + " AND task_microsteps.taskid=@taskid AND task_microsteps.taskrev=@taskrev AND task_microsteps.variantid=@variantid";
+            cmd.Parameters.AddWithValue("@id", microstepID);
+            cmd.Parameters.AddWithValue("@review", microstepRev);
+            cmd.Parameters.AddWithValue("@taskid", taskID);
+            cmd.Parameters.AddWithValue("@taskrev", TaskRev);
+            cmd.Parameters.AddWithValue("@variantid", variantID);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                this._MicrostepId = rdr.GetInt32(0);
+                this._MicrostepReview = rdr.GetInt32(1);
+                this._MicrostepName = rdr.GetString(2);
+                this._MicrostepDescription = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
+                this._CreationDate = rdr.GetDateTime(4);
+                this._TaskId = rdr.GetInt32(5);
+                this._TaskRev = rdr.GetInt32(6);
+                this._VariantId = rdr.GetInt32(7);
+                this._Sequence = rdr.GetInt32(8);
+                this._CycleTime = rdr.GetInt32(9);
+                this._ValueOrWaste = rdr.GetChar(10);
+            }
+            rdr.Close();
+
+            conn.Close();
+        }
     }
 }
