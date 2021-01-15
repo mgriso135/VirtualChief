@@ -5722,4 +5722,30 @@ namespace KIS.App_Code
             return ret;
         }
     }
+
+    public class Microsteps
+    {
+        private int _id;
+        public int id
+        {
+            get { return this._id;  }
+        }
+
+        private int _review;
+        public int review
+        { get { return this._review; } }
+
+        private String _name;
+        public String name
+        {
+            get { return this._name; }
+        }
+
+        private String _description;
+        public String description
+        {
+            get { return this._description; }
+        }
+
+    }
 }
