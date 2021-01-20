@@ -4151,7 +4151,7 @@ namespace KIS.App_Code
 
         public List<ModelTaskParameter> Parameters;
 
-        public List<Microsteps> microsteps;
+        public List<TaskMicrostep> microsteps;
 
         public TaskVariante(processo prc, variante vr)
         {
@@ -4160,7 +4160,7 @@ namespace KIS.App_Code
             this.WorkInstructionsArchive = new List<TaskWorkInstruction>();
             this._DefaultOperators = new List<User>();
             this._Task = prc;
-            this.microsteps = new List<Microsteps>();
+            this.microsteps = new List<TaskMicrostep>();
                 this._variant = vr;
                 prc.loadFigli(vr);
                 this.loadPostazioni();
@@ -4601,28 +4601,79 @@ namespace KIS.App_Code
 
         public void loadTaskMicrosteps()
         {
-            this.microsteps = new List<Microsteps>();
+            this.microsteps = new List<TaskMicrostep>();
             if (this.Task != null && this.variant != null && this.Task.processID!=-1 && this.Task.revisione!=-1 && this.variant.idVariante!=-1)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, review, name, description, creation_date FROM microsteps WHERE "
-                    + "id=@id AND review=@review";
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.Parameters.AddWithValue("@review", rev);
+                cmd.CommandText = "SELECT microstepid, microsteprev FROM task_microsteps WHERE "
+                    + "taskid=@id AND taskrev=@review AND variantid=@variantid "
+                    + " ORDER BY sequence";
+                cmd.Parameters.AddWithValue("@taskid", this.Task.processID);
+                cmd.Parameters.AddWithValue("@taskrev", this.Task.revisione);
+                cmd.Parameters.AddWithValue("@variantid", this.variant.idVariante);
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read())
                 {
-                    this._id = rdr.GetInt32(0);
-                    this._review = rdr.GetInt32(1);
-                    this._name = rdr.GetString(2);
-                    this._description = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                    this._CreationDate = rdr.GetDateTime(4);
+                    this.microsteps.Add(new TaskMicrostep(this.Task.processID, this.Task.revisione, this.variant.idVariante, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
+                conn.Close();
             }
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if microstep correctly added
+         */
+        public int addMicrostep(String name, String description, int sequence, int cycletime /* hours */, Boolean value_or_waste)
+        {
+            int ret = 0;
+            if (this.Task != null && this.variant != null && this.Task.processID != -1 && this.Task.revisione != -1 && this.variant.idVariante != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+                try
+                {
+                    
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.Transaction = tr;
+                    // Add microstep
+                    cmd.CommandText = "INSERT INTO microsteps(name, description) VALUES(@name, @desc)";
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@desc", description);
+                    cmd.ExecuteNonQuery();
+                    // Retrieve the ID with LAST_INSERT_ID()
+                    cmd.CommandText = "SELECT LAST_INSERT_ID()";
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    int microstepid = rdr.GetInt32(0);
+
+                    // Link microstep to the Task
+                    cmd.CommandText = "INSERT INTO task_microsteps(taskid, taskrev, variantid, microstep_id, microstep_rev, sequence, cycletime, value_or_waste) " 
+                        + " VALUES(@taskid, @taskrev, @variantid, @microstep_id, @microstep_rev, @sequence, @cycletime, @value_or_waste)";
+                    cmd.Parameters.AddWithValue("@taskid", this.Task.processID);
+                    cmd.Parameters.AddWithValue("@taskrev", this.Task.revisione);
+                    cmd.Parameters.AddWithValue("@variantid", this.variant.idVariante);
+                    cmd.Parameters.AddWithValue("@microstep_id", microstepid);
+                    cmd.Parameters.AddWithValue("@microstep_rev", 0);
+                    cmd.Parameters.AddWithValue("@sequence", sequence);
+                    cmd.Parameters.AddWithValue("@cycletime", cycletime);
+                    cmd.Parameters.AddWithValue("@value_or_waste", value_or_waste);
+                    cmd.ExecuteNonQuery();
+
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    this.log = ex.Message;
+                    tr.Rollback();
+                }
+
+            }
+            return ret;
         }
     }
 
@@ -5783,7 +5834,7 @@ namespace KIS.App_Code
             get { return this._CreationDate; }
         }
 
-        public Microsteps(int id, int rev)
+        public Microstep(int id, int rev)
         {
             this._CreationDate = new DateTime(1970, 1, 1);
             this._id = -1;
@@ -5889,7 +5940,7 @@ namespace KIS.App_Code
             this._MicrostepDescription = "";
             this._Sequence = -1;
             this._CycleTime = 0;
-            this._ValueOrWaste = '';
+            this._ValueOrWaste = '\0';
 
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();

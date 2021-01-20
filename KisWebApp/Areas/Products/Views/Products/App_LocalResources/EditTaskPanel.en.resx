@@ -198,4 +198,28 @@
   <data name="lblDefaultOperators" xml:space="preserve">
     <value>Operators assigned to tasks by default</value>
   </data>
+  <data name="lblMicrosteps" xml:space="preserve">
+    <value>Microsteps</value>
+  </data>
+  <data name="lblAddMicrostepCycleTime" xml:space="preserve">
+    <value>Cycle Time (sec)</value>
+  </data>
+  <data name="lblAddMicrostepDescription" xml:space="preserve">
+    <value>Description</value>
+  </data>
+  <data name="lblAddMicrostepName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWaste" xml:space="preserve">
+    <value>Value or Waste</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWasteH" xml:space="preserve">
+    <value>Hidden waste</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWasteV" xml:space="preserve">
+    <value>Value</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWasteW" xml:space="preserve">
+    <value>Evident waste</value>
+  </data>
 </root>

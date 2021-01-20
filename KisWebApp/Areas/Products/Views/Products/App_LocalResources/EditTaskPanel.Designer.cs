@@ -19,7 +19,7 @@ namespace ResProducts {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class EditTaskPanel {
@@ -57,6 +57,69 @@ namespace ResProducts {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tempo ciclo (sec).
+        /// </summary>
+        public static string lblAddMicrostepCycleTime {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepCycleTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descrizione.
+        /// </summary>
+        public static string lblAddMicrostepDescription {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nome.
+        /// </summary>
+        public static string lblAddMicrostepName {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Valore o spreco.
+        /// </summary>
+        public static string lblAddMicrostepValueOrWaste {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepValueOrWaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spreco occulto.
+        /// </summary>
+        public static string lblAddMicrostepValueOrWasteH {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepValueOrWasteH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Valore.
+        /// </summary>
+        public static string lblAddMicrostepValueOrWasteV {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepValueOrWasteV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spreco evidente.
+        /// </summary>
+        public static string lblAddMicrostepValueOrWasteW {
+            get {
+                return ResourceManager.GetString("lblAddMicrostepValueOrWasteW", resourceCulture);
             }
         }
         
@@ -138,6 +201,15 @@ namespace ResProducts {
         public static string lblDetailEditTaskError {
             get {
                 return ResourceManager.GetString("lblDetailEditTaskError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Microfasi.
+        /// </summary>
+        public static string lblMicrosteps {
+            get {
+                return ResourceManager.GetString("lblMicrosteps", resourceCulture);
             }
         }
         
