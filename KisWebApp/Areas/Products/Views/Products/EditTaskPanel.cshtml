@@ -24,6 +24,7 @@
         $('#imgLoadWorkInstructions').fadeOut();
         $('#imgLoadDefaultOperators').fadeOut();
         $("#frmAddDefaultOperator").fadeOut();
+        $("#frmAddMicrostep").fadeOut();
         //loadTaskManuals();
 
         $('#btnUndoTaskDetails').click(function () {
@@ -78,7 +79,6 @@
             });
             return false;
         });
-
 
         $('#btnResetCycleTime').click(function () {
             $('#txtCTHours').val('0');
@@ -191,7 +191,6 @@
             });
         }
 
-
         $('#showAddCycleTime').click(function () {
             if ($('#trCT1').is(':visible')) {
                 $('#trCT1').fadeOut();
@@ -209,7 +208,6 @@
                 $('#trCT5').fadeIn();
             }
         });
-
 
         $('#showAddTaskParams').click(function () {
             if ($('#trPAR1').is(':visible')) {
@@ -230,7 +228,6 @@
                 $('#trPAR6').fadeIn();
             }
         });
-
 
         function loadTaskParameters() {
             var TaskID = parseInt(@ViewBag.TaskID);
@@ -524,6 +521,34 @@
             });
         }
 
+        function loadMicrosteps()
+        {
+            $('#imgLoadMicrosteps').fadeIn();
+            $.ajax({
+                url: "@Url.Action("TaskMicrostepsList", "Products")",
+                type: 'GET',
+                dataType: 'html',
+                data:{
+                    TaskID: @ViewBag.TaskID,
+                    TaskRev: @ViewBag.TaskRev,
+                    variantID: @ViewBag.VariantID,
+                },
+                success: function (result) {
+                    alert(result);
+                    $('#frmMicrosteps').html(result);
+                    $('#imgLoadMicrosteps').fadeOut();
+                },
+                error: function (result) {
+                    alert("Error");
+                    $('#imgLoadMicrosteps').fadeOut();
+                },
+                warning: function (result) {
+                    alert("Warning");
+                    $('#imgLoadDefaultOperators').fadeOut();
+                }
+            });
+        }
+
         $("#showAddDefaultOperator").click(function () {
             if ($('#frmAddDefaultOperator').is(':visible')) {
                 $("#frmAddDefaultOperator").fadeOut();
@@ -550,7 +575,6 @@
                     if (result == 1) {
                         loadDefaultOperators();
                         $("#frmAddDefaultOperator").fadeOut();
-                        //$('#defaultOperator option[value=]').attr('selected', 'selected');
                     }
                     else {
                         alert("Error while adding a new operator");
@@ -577,8 +601,73 @@
             }
         });
 
-    });
+        $("#imgSaveMicrostep").click(function () {
+            // var usr = $("#defaultOperator").val();
+            var name = $('<div/>').text($('#addMicrostepName').val()).html();
+            var description = $('<div/>').text($('#addMicrostepDescription').val()).html();
+            var cycletime = $("#addMicrostepCycleTime").val();
+            var valueorwaste = $("#addMicrostepValueOrWaste").val();
+            var w_error = 0;
 
+            if (name.length >= 255) {
+                w_error = 1;
+                alert("Name length too long");
+            }
+
+            if (description.length >= 255) {
+                w_error = 1;
+                alert("Description length too long");
+            }
+
+            if (cycletime < 0) {
+                w_error = 1;
+                alert("Invalid Cycle Time");
+            }
+
+            if (!(valueorwaste == 'W' || valueorwaste == 'H' || valueorwaste == 'V')) {
+                w_error = 1;
+                alert("Invalid Value Or Waste parameter");
+            }
+
+            if (w_error == 0) {
+
+            $.ajax({
+                    url: "@Url.Action("AddTaskMicrostep", "Products")",
+                    type: 'GET',
+                    dataType: 'html',
+                    data: {
+                        TaskID: @ViewBag.TaskID,
+                        TaskRev: @ViewBag.TaskRev,
+                        variantID: @ViewBag.VariantID,
+                        MicrostepName: name,
+                        MicrostepDescription: description,
+                        MicrostepCycleTime: cycletime,
+                        ValueOrWaste: valueorwaste
+                    },
+                success: function (result) {
+                    alert(result);
+                    if (result == 1) {
+                        loadMicrosteps();
+                        //$("#frmAddMicrostep").fadeOut();
+                    }
+                    else {
+                        alert("Error while adding the microstep");
+                    }
+                    },
+                    error: function (result) {
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                    }
+            });
+            }
+
+        });
+
+        loadMicrosteps();
+
+    });
 </script>
 
 @if (ViewBag.authW)
@@ -612,7 +701,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td style="text-align: center;" colspan="2">
+                    <td style="text-align: center;" colspan="2" nowrap>
                         <h5>@ResProducts.EditTaskPanel.lblTitleCycleTimes&nbsp;<img src="~/img/iconAdd2.png" style="min-width:15px; max-width:30px; cursor:pointer;" id="showAddCycleTime" /></h5>
                     </td>
                 </tr>
@@ -622,11 +711,13 @@
                 </tr>
                 <tr id="trCT2">
                     <td>@ResProducts.EditTaskPanel.lblCTSetupTime</td>
-                    <td>HH:<input type="number" id="txtSTHours" min="0" style="min-width:20px;max-width:40px;" value="0" />mm:<input type="number" id="txtSTMinutes" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />ss:<input type="number" id="txtSTSeconds" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" /></td>
+                    <td nowrap>
+                        HH:<input type="number" id="txtSTHours" min="0" style="min-width:20px;max-width:40px;" value="0" />mm:<input type="number" id="txtSTMinutes" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />ss:<input type="number" id="txtSTSeconds" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />
+                    </td>
                 </tr>
                 <tr id="trCT3">
                     <td>@ResProducts.EditTaskPanel.lblCTCycleTime</td>
-                    <td>HH:<input type="number" id="txtCTHours" min="0" style="min-width:20px;max-width:40px;" value="0" />mm:<input type="number" id="txtCTMinutes" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />ss:<input type="number" id="txtCTSeconds" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" /></td>
+                    <td nowrap>HH:<input type="number" id="txtCTHours" min="0" style="min-width:20px;max-width:40px;" value="0" />mm:<input type="number" id="txtCTMinutes" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" />ss:<input type="number" id="txtCTSeconds" min="0" max="59" style="min-width:20px;max-width:40px;" value="0" /></td>
                 </tr>
                 <tr id="trCT4">
                     <td>@ResProducts.EditTaskPanel.lblDefault</td>

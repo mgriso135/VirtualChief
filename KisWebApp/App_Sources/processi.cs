@@ -4607,15 +4607,15 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT microstepid, microsteprev FROM task_microsteps WHERE "
-                    + "taskid=@id AND taskrev=@review AND variantid=@variantid "
+                cmd.CommandText = "SELECT microstep_id, microstep_rev FROM task_microsteps WHERE "
+                    + "taskid=@taskid AND taskrev=@taskrev AND variantid=@variantid "
                     + " ORDER BY sequence";
                 cmd.Parameters.AddWithValue("@taskid", this.Task.processID);
                 cmd.Parameters.AddWithValue("@taskrev", this.Task.revisione);
                 cmd.Parameters.AddWithValue("@variantid", this.variant.idVariante);
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                while (rdr.Read())
                 {
                     this.microsteps.Add(new TaskMicrostep(this.Task.processID, this.Task.revisione, this.variant.idVariante, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
@@ -4627,51 +4627,70 @@ namespace KIS.App_Code
         /* Returns:
          * 0 if generic error
          * 1 if microstep correctly added
+         * 2 if input is not valid
+         * 3 if Task does not exist
+         * 4 if error while adding data to database
          */
-        public int addMicrostep(String name, String description, int sequence, int cycletime /* hours */, Boolean value_or_waste)
+        public int addMicrostep(String name, String description, int sequence, int cycletime /* seconds */, Char value_or_waste)
         {
             int ret = 0;
             if (this.Task != null && this.variant != null && this.Task.processID != -1 && this.Task.revisione != -1 && this.variant.idVariante != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                try
+                if (name.Length < 255 &&
+                    (value_or_waste == 'V' || value_or_waste == 'W' || value_or_waste == 'H'))
                 {
-                    
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    // Add microstep
-                    cmd.CommandText = "INSERT INTO microsteps(name, description) VALUES(@name, @desc)";
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@desc", description);
-                    cmd.ExecuteNonQuery();
-                    // Retrieve the ID with LAST_INSERT_ID()
-                    cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    int microstepid = rdr.GetInt32(0);
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    try
+                    {
 
-                    // Link microstep to the Task
-                    cmd.CommandText = "INSERT INTO task_microsteps(taskid, taskrev, variantid, microstep_id, microstep_rev, sequence, cycletime, value_or_waste) " 
-                        + " VALUES(@taskid, @taskrev, @variantid, @microstep_id, @microstep_rev, @sequence, @cycletime, @value_or_waste)";
-                    cmd.Parameters.AddWithValue("@taskid", this.Task.processID);
-                    cmd.Parameters.AddWithValue("@taskrev", this.Task.revisione);
-                    cmd.Parameters.AddWithValue("@variantid", this.variant.idVariante);
-                    cmd.Parameters.AddWithValue("@microstep_id", microstepid);
-                    cmd.Parameters.AddWithValue("@microstep_rev", 0);
-                    cmd.Parameters.AddWithValue("@sequence", sequence);
-                    cmd.Parameters.AddWithValue("@cycletime", cycletime);
-                    cmd.Parameters.AddWithValue("@value_or_waste", value_or_waste);
-                    cmd.ExecuteNonQuery();
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.Transaction = tr;
+                        // Add microstep
+                        cmd.CommandText = "INSERT INTO microsteps(name, description) VALUES(@name, @desc)";
+                        cmd.Parameters.AddWithValue("@name", name);
+                        cmd.Parameters.AddWithValue("@desc", description);
+                        cmd.ExecuteNonQuery();
+                        // Retrieve the ID with LAST_INSERT_ID()
+                        cmd.CommandText = "SELECT LAST_INSERT_ID()";
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        rdr.Read();
+                        int microstepid = rdr.GetInt32(0);
+                        rdr.Close();
 
-                    tr.Commit();
+                        // Link microstep to the Task
+                        cmd.CommandText = "INSERT INTO task_microsteps(taskid, taskrev, variantid, microstep_id, microstep_rev, sequence, cycletime, value_or_waste) "
+                            + " VALUES(@taskid, @taskrev, @variantid, @microstep_id, @microstep_rev, @sequence, @cycletime, @value_or_waste)";
+                        cmd.Parameters.AddWithValue("@taskid", this.Task.processID);
+                        cmd.Parameters.AddWithValue("@taskrev", this.Task.revisione);
+                        cmd.Parameters.AddWithValue("@variantid", this.variant.idVariante);
+                        cmd.Parameters.AddWithValue("@microstep_id", microstepid);
+                        cmd.Parameters.AddWithValue("@microstep_rev", 0);
+                        cmd.Parameters.AddWithValue("@sequence", sequence);
+                        cmd.Parameters.AddWithValue("@cycletime", cycletime);
+                        cmd.Parameters.AddWithValue("@value_or_waste", value_or_waste);
+                        cmd.ExecuteNonQuery();
+
+                        ret = 1;
+
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = 4;
+                        this.log = ex.Message;
+                        tr.Rollback();
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    this.log = ex.Message;
-                    tr.Rollback();
+                    ret = 2;
                 }
-
+            }
+            else
+            {
+                ret = 3;
             }
             return ret;
         }

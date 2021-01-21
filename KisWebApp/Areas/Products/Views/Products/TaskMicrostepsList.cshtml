@@ -1,0 +1,26 @@
+﻿@model IEnumerable<KIS.App_Code.TaskMicrostep>
+<div>@Model.Count()</div>
+@if (ViewBag.authW)
+{
+    if(Model!=null && Model.Count() > 0)
+    {
+    <div class="row-fluid">
+        <div class="span12">
+            @foreach (var m in Model)
+            {
+                <div>@m.MicrostepId</div>
+                <div>@m.MicrostepName</div>
+                <div>@m.MicrostepDescription</div>
+            }
+        </div>
+    </div>
+    }
+}
+else
+{
+<div class="row-fluid">
+<div>
+    @ResProducts.TaskMicrostepsList.lblNotAuthorized
+</div>
+</div>
+}
