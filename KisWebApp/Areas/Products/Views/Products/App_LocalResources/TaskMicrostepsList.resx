@@ -117,7 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="lblNoMicrosteps" xml:space="preserve">
+    <value>Nessuna microfase registrata</value>
+  </data>
   <data name="lblNotAuthorized" xml:space="preserve">
     <value>Non hai i permessi necessari.</value>
+  </data>
+  <data name="lblSeconds" xml:space="preserve">
+    <value>sec</value>
+  </data>
+  <data name="lblValueOrWasteH" xml:space="preserve">
+    <value>Spreco occulto</value>
+  </data>
+  <data name="lblValueOrWasteV" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="lblValueOrWasteW" xml:space="preserve">
+    <value>Spreco evidente</value>
   </data>
 </root>

@@ -5974,7 +5974,7 @@ namespace KIS.App_Code
             cmd.Parameters.AddWithValue("@id", microstepID);
             cmd.Parameters.AddWithValue("@review", microstepRev);
             cmd.Parameters.AddWithValue("@taskid", taskID);
-            cmd.Parameters.AddWithValue("@taskrev", TaskRev);
+            cmd.Parameters.AddWithValue("@taskrev", taskRev);
             cmd.Parameters.AddWithValue("@variantid", variantID);
 
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -5991,6 +5991,10 @@ namespace KIS.App_Code
                 this._Sequence = rdr.GetInt32(8);
                 this._CycleTime = rdr.GetInt32(9);
                 this._ValueOrWaste = rdr.GetChar(10);
+            }
+            else
+            {
+                
             }
             rdr.Close();
 

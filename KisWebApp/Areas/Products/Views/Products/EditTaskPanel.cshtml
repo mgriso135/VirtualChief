@@ -534,7 +534,6 @@
                     variantID: @ViewBag.VariantID,
                 },
                 success: function (result) {
-                    alert(result);
                     $('#frmMicrosteps').html(result);
                     $('#imgLoadMicrosteps').fadeOut();
                 },
@@ -645,10 +644,11 @@
                         ValueOrWaste: valueorwaste
                     },
                 success: function (result) {
-                    alert(result);
                     if (result == 1) {
+                        $('#addMicrostepName').val('');
+                        $('#addMicrostepDescription').val('');
+                        $("#addMicrostepCycleTime").val(0);
                         loadMicrosteps();
-                        //$("#frmAddMicrostep").fadeOut();
                     }
                     else {
                         alert("Error while adding the microstep");

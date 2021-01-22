@@ -951,7 +951,10 @@ namespace KIS.Areas.Products.Controllers
                 if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
                     tskVar.variant != null && tskVar.variant.idVariante != -1)
                 {
-                    ret = tskVar.addMicrostep(MicrostepName, MicrostepDescription, 0, MicrostepCycleTime, ValueOrWaste);
+                    tskVar.loadTaskMicrosteps();
+                    int seq = tskVar.microsteps.Count >= 1 ? (tskVar.microsteps.Count + 1) : 1;
+
+                    ret = tskVar.addMicrostep(MicrostepName, MicrostepDescription, seq, MicrostepCycleTime, ValueOrWaste);
                 }
             }
             else

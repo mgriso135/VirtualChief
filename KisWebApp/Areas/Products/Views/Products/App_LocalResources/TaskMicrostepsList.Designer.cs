@@ -61,11 +61,56 @@ namespace ResProducts {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nessuna microfase registrata.
+        /// </summary>
+        public static string lblNoMicrosteps {
+            get {
+                return ResourceManager.GetString("lblNoMicrosteps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Non hai i permessi necessari..
         /// </summary>
         public static string lblNotAuthorized {
             get {
                 return ResourceManager.GetString("lblNotAuthorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to sec.
+        /// </summary>
+        public static string lblSeconds {
+            get {
+                return ResourceManager.GetString("lblSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spreco occulto.
+        /// </summary>
+        public static string lblValueOrWasteH {
+            get {
+                return ResourceManager.GetString("lblValueOrWasteH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Valore.
+        /// </summary>
+        public static string lblValueOrWasteV {
+            get {
+                return ResourceManager.GetString("lblValueOrWasteV", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spreco evidente.
+        /// </summary>
+        public static string lblValueOrWasteW {
+            get {
+                return ResourceManager.GetString("lblValueOrWasteW", resourceCulture);
             }
         }
     }

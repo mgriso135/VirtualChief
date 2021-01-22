@@ -1,26 +1,154 @@
 ﻿@model IEnumerable<KIS.App_Code.TaskMicrostep>
-<div>@Model.Count()</div>
 @if (ViewBag.authW)
 {
-    if(Model!=null && Model.Count() > 0)
+
+
+    if (Model != null && Model.Count() > 0)
     {
-    <div class="row-fluid">
-        <div class="span12">
-            @foreach (var m in Model)
-            {
-                <div>@m.MicrostepId</div>
-                <div>@m.MicrostepName</div>
-                <div>@m.MicrostepDescription</div>
+        <style>
+            body.dragging, body.dragging * {
+                cursor: move !important;
             }
+
+            .sorted_table tr {
+                cursor: pointer;
+            }
+                /* line 96, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                .sorted_table tr.placeholder {
+                    display: block;
+                    background: red;
+                    position: relative;
+                    margin: 0;
+                    padding: 0;
+                    border: none;
+                }
+                    /* line 103, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                    .sorted_table tr.placeholder:before {
+                        content: "";
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        border: 5px solid transparent;
+                        border-left-color: red;
+                        margin-top: -5px;
+                        left: -5px;
+                        border-right: none;
+                    }
+
+            /* line 114, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+            .sorted_head th {
+                cursor: pointer;
+            }
+                /* line 116, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                .sorted_head th.placeholder {
+                    display: block;
+                    background: red;
+                    position: relative;
+                    width: 0;
+                    height: 0;
+                    margin: 0;
+                    padding: 0;
+                }
+                    /* line 124, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                    .sorted_head th.placeholder:before {
+                        content: "";
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        border: 5px solid transparent;
+                        border-top-color: red;
+                        top: -6px;
+                        margin-left: -5px;
+                        border-bottom: none;
+                    }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js" integrity="sha512-9pm50HHbDIEyz2RV/g2tn1ZbBdiTlgV7FwcQhIhvykX6qbQitydd6rF19iLmOqmJVUYq90VL2HiIUHjUMQA5fw==" crossorigin="anonymous"></script>
+        <script>
+            
+
+            $(document).ready(function () { 
+
+                // https://johnny.github.io/jquery-sortable/
+
+            // Sortable rows
+            $('.sorted_table').sortable({
+                containerSelector: 'table',
+                itemPath: '> tbody',
+                itemSelector: 'tr',
+                placeholder: '<tr class="placeholder"/>',
+
+                /*onDrag: function ($item, position, _super, event) {
+                    $item.css(position)
+                },*/
+                /*onDragStart: function ($item, container, _super) {
+                    oldIndex = $item.index();
+                    $item.css({
+                        height: $item.outerHeight(),
+                        width: $item.outerWidth()
+                    })
+                    $item.addClass(container.group.options.draggedClass)
+                    $("body").addClass(container.group.options.bodyClass)
+                },*/
+                onDrop: function ($item, container, _super, event) {
+                    $item.removeClass(container.group.options.draggedClass).removeAttr("style")
+                    $("body").removeClass(container.group.options.bodyClass)
+                    var newIndex = $item.index();
+                    console.log($item.attr("id") + " " + newIndex);
+                
+                }
+
+            });
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-hover sorted_table">
+                    <thead class="sorted_head">
+                        <tr>
+                            <th>a</th>
+                            <th>b</th>
+                            <th>c</th>
+                        </tr>
+                    </thead>
+                    <tbody class="sorted_body">
+                        @foreach (var m in Model)
+                        {
+                            String vorw = "";
+                            switch (m.ValueOrWaste)
+                            {
+                                case 'V': vorw = ResProducts.TaskMicrostepsList.lblValueOrWasteV; break;
+                                case 'W': vorw = ResProducts.TaskMicrostepsList.lblValueOrWasteW; break;
+                                case 'H': vorw = ResProducts.TaskMicrostepsList.lblValueOrWasteH; break;
+                                default: vorw = ""; break;
+                            }
+                            <tr id="@m.MicrostepId.ToString()_@m.MicrostepReview.ToString()">
+                                <td>@m.MicrostepName</td>
+                                <td>@m.MicrostepDescription</td>
+                                <td>@m.CycleTime @ResProducts.TaskMicrostepsList.lblSeconds</td>
+                                <td nowrap>@vorw</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div>
+                @ResProducts.TaskMicrostepsList.lblNoMicrosteps
+            </div>
+        </div>
     }
 }
 else
 {
-<div class="row-fluid">
-<div>
-    @ResProducts.TaskMicrostepsList.lblNotAuthorized
-</div>
-</div>
+    <div class="row-fluid">
+        <div>
+            @ResProducts.TaskMicrostepsList.lblNotAuthorized
+        </div>
+    </div>
 }
