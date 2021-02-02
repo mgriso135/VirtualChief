@@ -61,6 +61,42 @@ namespace ResProducts {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tempo.
+        /// </summary>
+        public static string lblMicrostepCycleTime {
+            get {
+                return ResourceManager.GetString("lblMicrostepCycleTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descrizione.
+        /// </summary>
+        public static string lblMicrostepDescription {
+            get {
+                return ResourceManager.GetString("lblMicrostepDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nome.
+        /// </summary>
+        public static string lblMicrostepName {
+            get {
+                return ResourceManager.GetString("lblMicrostepName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Valore/Spreco.
+        /// </summary>
+        public static string lblMicrostepValueOrWaste {
+            get {
+                return ResourceManager.GetString("lblMicrostepValueOrWaste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nessuna microfase registrata.
         /// </summary>
         public static string lblNoMicrosteps {

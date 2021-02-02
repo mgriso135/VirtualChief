@@ -117,34 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblMicrostepCycleTime" xml:space="preserve">
-    <value>Tempo</value>
+  <data name="lblAddMU" xml:space="preserve">
+    <value>Aggiungi un task</value>
   </data>
-  <data name="lblMicrostepDescription" xml:space="preserve">
+  <data name="lblDataInputError" xml:space="preserve">
+    <value>Errore nei dati in input. Controlla nome e descrizione del task.</value>
+  </data>
+  <data name="lblDeleteError" xml:space="preserve">
+    <value>Attenzione: è avvenuto un errore durante la cancellazione.</value>
+  </data>
+  <data name="lblEnabledChecked" xml:space="preserve">
+    <value>Attivo</value>
+  </data>
+  <data name="lblEnabledUnchecked" xml:space="preserve">
+    <value>Inattivo</value>
+  </data>
+  <data name="lblGenericError" xml:space="preserve">
+    <value>Errore generico</value>
+  </data>
+  <data name="lblTHCreationDate" xml:space="preserve">
+    <value>Data di creazione</value>
+  </data>
+  <data name="lblTHDescription" xml:space="preserve">
     <value>Descrizione</value>
   </data>
-  <data name="lblMicrostepName" xml:space="preserve">
+  <data name="lblTHEnabled" xml:space="preserve">
+    <value>Attivo</value>
+  </data>
+  <data name="lblTHID" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="lblTHName" xml:space="preserve">
     <value>Nome</value>
   </data>
-  <data name="lblMicrostepValueOrWaste" xml:space="preserve">
-    <value>Valore/Spreco</value>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Gestione Tasks Non Produttivi</value>
   </data>
-  <data name="lblNoMicrosteps" xml:space="preserve">
-    <value>Nessuna microfase registrata</value>
+  <data name="lblUnauthorized" xml:space="preserve">
+    <value>Errore: utente non autorizzato.</value>
   </data>
-  <data name="lblNotAuthorized" xml:space="preserve">
-    <value>Non hai i permessi necessari.</value>
-  </data>
-  <data name="lblSeconds" xml:space="preserve">
-    <value>sec</value>
-  </data>
-  <data name="lblValueOrWasteH" xml:space="preserve">
-    <value>Spreco occulto</value>
-  </data>
-  <data name="lblValueOrWasteV" xml:space="preserve">
-    <value>Valore</value>
-  </data>
-  <data name="lblValueOrWasteW" xml:space="preserve">
-    <value>Spreco evidente</value>
+  <data name="lnkLoadAllStatus" xml:space="preserve">
+    <value>Visualizza anche i task inattivi</value>
   </data>
 </root>

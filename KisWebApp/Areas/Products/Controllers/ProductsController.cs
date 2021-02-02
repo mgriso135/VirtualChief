@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using KIS.App_Code;
+using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace KIS.Areas.Products.Controllers
 {
@@ -962,6 +963,114 @@ namespace KIS.Areas.Products.Controllers
                 ret = 2;
             }
             return ret;
+        }
+
+        /* Returns:
+        * 0 if generic error
+        * 1 if everything is ok
+        * 2 if ...
+        * 3 if error while adding the microstep
+        * 4 if user not authorized
+        */
+        public int DeleteTaskMicrostep(int TaskID, int TaskRev, int variantID, int MicrostepId, int MicrostepReview)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+
+                    ret = tskVar.deleteMicrostep(MicrostepId, MicrostepReview);
+                }
+            }
+            else
+            {
+                ret = 4;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if change successful
+         * 4 if user not authorized
+         */
+        public int TaskMicrostepChangeSequence(string jsonMicrosteps)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (authW)
+            {
+                JsonTaskMicrosteps msteps = JsonConvert.DeserializeObject<JsonTaskMicrosteps>(jsonMicrosteps);
+
+                TaskVariante tskVar = new TaskVariante(new processo(msteps.TaskID, msteps.TaskRev), new variante(msteps.variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    tskVar.loadTaskMicrosteps();
+                    foreach (var itm in msteps.microsteps)
+                    {
+                        TaskMicrostep curr = tskVar.microsteps.FirstOrDefault(x => x.MicrostepId == itm.microstepid && x.MicrostepReview == itm.microsteprev);
+                        if(curr!=null && itm.sequence > 0 && itm.sequence < msteps.microsteps.Count + 20)
+                        {
+                            curr.Sequence = itm.sequence;
+                        }
+                    }
+                    
+                    ret = 1;
+                }
+            }
+            else
+            {
+                ret = 4;
+            }
+            return ret;
+        }
+
+        public class JsonTaskMicrosteps
+        {
+            public int TaskID { get; set; }
+            public int TaskRev { get; set; }
+            public int variantID { get; set; }
+            public List<JsonMicrostep> microsteps { get; set; }
+        }
+
+        public class JsonMicrostep
+        {
+            public int microstepid { get; set; }
+            public int microsteprev { get; set; }
+            public int sequence { get; set; }
         }
     }
 }

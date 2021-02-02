@@ -1,0 +1,202 @@
+﻿@model IEnumerable<KIS.App_Sources.FreeTimeMeasurement>
+
+@{
+    ViewBag.Title = ResFreeMeasurements.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResFreeMeasurements.Index.lblTitle</h3>
+
+@if (ViewBag.authR)
+{
+    if (ViewBag.authW)
+    {
+        <script>
+            $(document).ready(function () {
+
+                $(function () {
+                    $("[id*=txtAddPlanned]").datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        showWeek: true,
+                        firstDay: 1,
+                        minDate: 'today'
+                    });
+                });
+
+                $("#btnShowAddForm").click(function () {
+                    if ($('#frmAddMeasurement').is(':visible')) {
+                        $("#frmAddMeasurement").hide();
+                    }
+                    else {
+                        $("#frmAddMeasurement").show();
+                    }
+                    
+                });
+
+                $("#tblAddMeasurement").on("click", "#btnAddFreeMeasurement",  function () {
+                    console.log("Adding measurement...");
+                    if ($("#frmAddFreeMeasurement")[0].checkValidity()) {
+
+                        var name = $('<div/>').text($('#txtAddName').val()).html().substring(0, 255);;
+                        var description = $('<div/>').text($('#txtAddDesc').val()).html();
+                        var iprod = $("#frmAddProduct").val();
+                        var sproductid = $("#ddlProductsList option[value='" + iprod + "']").attr('data-id');
+                        console.log(sproductid);
+                        var aproductid = sproductid.split('/');
+                        var idept = $("#frmAddDepartment").val();
+                        var sdept = $("#ddlDepartments option[value='" + idept + "']").attr('data-id');
+                        var dept = parseInt(sdept);
+                        console.log($("#txtAddQuantity").val());
+                        var quantity = parseFloat($("#txtAddQuantity").val());
+                        console.log(quantity);
+                        var measUnit = $("#ddlAddMU").val();
+                        var astartdate = $("#txtAddPlannedStart").val().split('/');
+                        var aenddate = $("#txtAddPlannedEnd").val().split('/');
+                        console.log($("#txtAddPlannedEnd").val() + " " + Date.parse($("#txtAddPlannedEnd").val()));
+                        if (aproductid.length == 3 && sdept.length > 0 && dept >= 0 && quantity >= 0 && astartdate.length == 3 && aenddate.length == 3 && Date.parse($("#txtAddPlannedStart").val()) && Date.parse($("#txtAddPlannedEnd").val())
+                        ) {
+
+                        }
+                        else {
+                            alert("Error in input data");
+                        }
+                    }
+                    else {
+                        $("#frmAddFreeMeasurement")[0].reportValidity();
+                    }
+                });
+            });
+        </script>
+        // Add form
+        <div class="row-fluid">
+            <div class="span12" id="btnShowAddForm" style="cursor:pointer;">
+                <h5><span class="material-icons">addchart</span>@ResFreeMeasurements.Index.lblAddNewMeasurement</h5>
+            </div>
+        </div>
+
+        <div id="frmAddMeasurement" class="row-fluid" style="display: none;">
+            <div class="span12">
+                <form id="frmAddFreeMeasurement">
+                    <table class="table table-hover" id="tblAddMeasurement">
+                        <tbody>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddName</td>
+                                <td><input type="text" id="txtAddName" placeholder="@ResFreeMeasurements.Index.lblAddName" class="form-text" required /></td>
+                                <td>@ResFreeMeasurements.Index.lblAddDescription</td>
+                                <td><textarea id="txtAddDesc" placeholder="@ResFreeMeasurements.Index.lblAddDescription" class="form-text"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddProduct</td>
+                                <td>
+                                    <input list="ddlProductsList" id="frmAddProduct" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddProduct" required>
+                                    <datalist id="ddlProductsList">
+                                        @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                                            var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
+                                            foreach (var prd in sortedProducts)
+                                            {
+                                                <option data-id="@prd.IDCombinato2" value="@prd.process.processName - @prd.variant.nomeVariante"></option>
+                                            }
+                                        }
+                                    </datalist>
+                                </td>
+                                <td>@ResFreeMeasurements.Index.lblAddDepartment</td>
+                                <td>
+                                    <input list="ddlDepartments" id="frmAddDepartment" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddDepartment" required>
+                                    <datalist id="ddlDepartments">
+                                        @{KIS.App_Code.ElencoReparti elRep = new KIS.App_Code.ElencoReparti();
+                                            var sortedDepartments = elRep.elenco.OrderBy(x => x.name);
+                                            foreach (var dept in sortedDepartments)
+                                            {
+                                                <option data-id="@dept.id" value="@dept.name"></option>
+                                            }
+                                        }
+                                    </datalist>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddQuantity</td>
+                                <td>
+                                    <input type="number" step=".01" value="1" placeholder="@ResFreeMeasurements.Index.lblAddQuantity" id="txtAddQuantity" class="form-text" min="0.01" style="width:120px;" required />
+                                    <select id="ddlAddMU" style="width:80px;">
+                                        @{
+                                            KIS.App_Code.MeasurementUnits muList = new KIS.App_Code.MeasurementUnits();
+                                            muList.loadMeasurementUnits();
+                                            var muListOrd = muList.UnitsList.OrderByDescending(x => x.IsDefault).ThenBy(y => y.Type);
+                                            foreach (var mu in muListOrd)
+                                            {
+                                                <option id="@mu.Type">@mu.Type</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>@ResFreeMeasurements.Index.lblAddSerialNumber</td>
+                                <td><input type="text" id="txtAddDesc" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddSerialNumber"  /></td>
+                            </tr>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddDatePlanned_Start</td>
+                                <td><input type="text" class="form-text" id="txtAddPlannedStart" /></td>
+                                <td>@ResFreeMeasurements.Index.lblAddDatePlanned_End</td>
+                                <td><input type="text" class="form-text" id="txtAddPlannedEnd" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">@ResFreeMeasurements.Index.lblAllowCustomTasks</td>
+                                <td colspan="2"><input type="checkbox" id="frmAddAllowCustomTasks" checked /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">@ResFreeMeasurements.Index.lblAllowRiexecuteTasks</td>
+                                <td colspan="2"><input type="checkbox" id="frmAddAllowCustomTasks" checked /></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="text-align:center;"><span class="material-icons" id="btnAddFreeMeasurement" style="cursor:pointer;">save</span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+    }
+
+    <div class="row-fluid">
+        <div class="span12">
+            <select id="frmStatus">
+                <option value="O">@ResFreeMeasurements.Index.lblFilterO</option>
+                <option value="N">@ResFreeMeasurements.Index.lblFilterN</option>
+                <option value="I">@ResFreeMeasurements.Index.lblFilterI</option>
+                <option value="F">@ResFreeMeasurements.Index.lblFilterF</option>
+            </select>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>@m.id</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">@ResFreeMeasurements.Index.lblUserNotAuthorized</div>
+    </div>
+}
+

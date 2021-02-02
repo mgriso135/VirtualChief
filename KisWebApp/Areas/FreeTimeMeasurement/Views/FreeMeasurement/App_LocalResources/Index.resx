@@ -117,34 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblMicrostepCycleTime" xml:space="preserve">
-    <value>Tempo</value>
+  <data name="lblAddDatePlanned_End" xml:space="preserve">
+    <value>Data fine rilievo prevista</value>
   </data>
-  <data name="lblMicrostepDescription" xml:space="preserve">
+  <data name="lblAddDatePlanned_Start" xml:space="preserve">
+    <value>Data inizio rilievo prevista</value>
+  </data>
+  <data name="lblAddDepartment" xml:space="preserve">
+    <value>Reparto</value>
+  </data>
+  <data name="lblAddDescription" xml:space="preserve">
     <value>Descrizione</value>
   </data>
-  <data name="lblMicrostepName" xml:space="preserve">
+  <data name="lblAddName" xml:space="preserve">
     <value>Nome</value>
   </data>
-  <data name="lblMicrostepValueOrWaste" xml:space="preserve">
-    <value>Valore/Spreco</value>
+  <data name="lblAddNewMeasurement" xml:space="preserve">
+    <value>Aggiungi un nuovo rilievo programmato</value>
   </data>
-  <data name="lblNoMicrosteps" xml:space="preserve">
-    <value>Nessuna microfase registrata</value>
+  <data name="lblAddProduct" xml:space="preserve">
+    <value>Prodotto/Processo da misurare</value>
   </data>
-  <data name="lblNotAuthorized" xml:space="preserve">
-    <value>Non hai i permessi necessari.</value>
+  <data name="lblAddQuantity" xml:space="preserve">
+    <value>Quantità</value>
   </data>
-  <data name="lblSeconds" xml:space="preserve">
-    <value>sec</value>
+  <data name="lblAddSerialNumber" xml:space="preserve">
+    <value>Numero di serie</value>
   </data>
-  <data name="lblValueOrWasteH" xml:space="preserve">
-    <value>Spreco occulto</value>
+  <data name="lblAllowCustomTasks" xml:space="preserve">
+    <value>Permetti agli operatori di aggiungere nuovi tasks durante il rilievo</value>
   </data>
-  <data name="lblValueOrWasteV" xml:space="preserve">
-    <value>Valore</value>
+  <data name="lblAllowRiexecuteTasks" xml:space="preserve">
+    <value>Permetti di iniziare tasks terminati precedentemente</value>
   </data>
-  <data name="lblValueOrWasteW" xml:space="preserve">
-    <value>Spreco evidente</value>
+  <data name="lblFilterF" xml:space="preserve">
+    <value>Rilievi terminati</value>
+  </data>
+  <data name="lblFilterI" xml:space="preserve">
+    <value>Rilievi in esecuzione</value>
+  </data>
+  <data name="lblFilterN" xml:space="preserve">
+    <value>Rilievi pianificati</value>
+  </data>
+  <data name="lblFilterO" xml:space="preserve">
+    <value>Tutti i rilievi non terminati</value>
+  </data>
+  <data name="lblTitle" xml:space="preserve">
+    <value>Rilievo tempi libero</value>
+  </data>
+  <data name="lblUserNotAuthorized" xml:space="preserve">
+    <value>Utente non autorizzato</value>
   </data>
 </root>
