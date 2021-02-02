@@ -150,6 +150,36 @@
   <data name="lblAllowRiexecuteTasks" xml:space="preserve">
     <value>Permetti di iniziare tasks terminati precedentemente</value>
   </data>
+  <data name="lblError12" xml:space="preserve">
+    <value>Errore nei dati di input: verifica il nome</value>
+  </data>
+  <data name="lblError13" xml:space="preserve">
+    <value>Errore: data pianificata di inizio non valida</value>
+  </data>
+  <data name="lblError14" xml:space="preserve">
+    <value>Errore: data pianificata di fine non valida</value>
+  </data>
+  <data name="lblError15" xml:space="preserve">
+    <value>Errore: reparto non valido</value>
+  </data>
+  <data name="lblError16" xml:space="preserve">
+    <value>Errore: prodotto non valido</value>
+  </data>
+  <data name="lblError17" xml:space="preserve">
+    <value>Errore: serial number non valido</value>
+  </data>
+  <data name="lblError18" xml:space="preserve">
+    <value>Errore: quantità non valida</value>
+  </data>
+  <data name="lblError19" xml:space="preserve">
+    <value>Errore: unità di misura selezionata non valida</value>
+  </data>
+  <data name="lblError20" xml:space="preserve">
+    <value>Errore: utente non autorizzato</value>
+  </data>
+  <data name="lblErrorGeneric" xml:space="preserve">
+    <value>Errore generico: contattare lo staff di assistenza di Virtual Chief</value>
+  </data>
   <data name="lblFilterF" xml:space="preserve">
     <value>Rilievi terminati</value>
   </data>
@@ -161,6 +191,27 @@
   </data>
   <data name="lblFilterO" xml:space="preserve">
     <value>Tutti i rilievi non terminati</value>
+  </data>
+  <data name="lblTHDepartment" xml:space="preserve">
+    <value>Reparto</value>
+  </data>
+  <data name="lblTHDescription" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="lblTHEndDatePlanned" xml:space="preserve">
+    <value>Data fine pianificata</value>
+  </data>
+  <data name="lblTHName" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="lblTHProductName" xml:space="preserve">
+    <value>Prodotto/Processo</value>
+  </data>
+  <data name="lblTHQuantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="lblTHStartDatePlanned" xml:space="preserve">
+    <value>Data inizio pianificata</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Rilievo tempi libero</value>

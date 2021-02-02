@@ -160,6 +160,96 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errore nei dati di input: verifica il nome.
+        /// </summary>
+        public static string lblError12 {
+            get {
+                return ResourceManager.GetString("lblError12", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: data pianificata di inizio non valida.
+        /// </summary>
+        public static string lblError13 {
+            get {
+                return ResourceManager.GetString("lblError13", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: data pianificata di fine non valida.
+        /// </summary>
+        public static string lblError14 {
+            get {
+                return ResourceManager.GetString("lblError14", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: reparto non valido.
+        /// </summary>
+        public static string lblError15 {
+            get {
+                return ResourceManager.GetString("lblError15", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: prodotto non valido.
+        /// </summary>
+        public static string lblError16 {
+            get {
+                return ResourceManager.GetString("lblError16", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: serial number non valido.
+        /// </summary>
+        public static string lblError17 {
+            get {
+                return ResourceManager.GetString("lblError17", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: quantità non valida.
+        /// </summary>
+        public static string lblError18 {
+            get {
+                return ResourceManager.GetString("lblError18", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: unità di misura selezionata non valida.
+        /// </summary>
+        public static string lblError19 {
+            get {
+                return ResourceManager.GetString("lblError19", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: utente non autorizzato.
+        /// </summary>
+        public static string lblError20 {
+            get {
+                return ResourceManager.GetString("lblError20", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore generico: contattare lo staff di assistenza di Virtual Chief.
+        /// </summary>
+        public static string lblErrorGeneric {
+            get {
+                return ResourceManager.GetString("lblErrorGeneric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rilievi terminati.
         /// </summary>
         public static string lblFilterF {
@@ -192,6 +282,69 @@ namespace ResFreeMeasurements {
         public static string lblFilterO {
             get {
                 return ResourceManager.GetString("lblFilterO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reparto.
+        /// </summary>
+        public static string lblTHDepartment {
+            get {
+                return ResourceManager.GetString("lblTHDepartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descrizione.
+        /// </summary>
+        public static string lblTHDescription {
+            get {
+                return ResourceManager.GetString("lblTHDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data fine pianificata.
+        /// </summary>
+        public static string lblTHEndDatePlanned {
+            get {
+                return ResourceManager.GetString("lblTHEndDatePlanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nome.
+        /// </summary>
+        public static string lblTHName {
+            get {
+                return ResourceManager.GetString("lblTHName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prodotto/Processo.
+        /// </summary>
+        public static string lblTHProductName {
+            get {
+                return ResourceManager.GetString("lblTHProductName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantità.
+        /// </summary>
+        public static string lblTHQuantity {
+            get {
+                return ResourceManager.GetString("lblTHQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data inizio pianificata.
+        /// </summary>
+        public static string lblTHStartDatePlanned {
+            get {
+                return ResourceManager.GetString("lblTHStartDatePlanned", resourceCulture);
             }
         }
         
