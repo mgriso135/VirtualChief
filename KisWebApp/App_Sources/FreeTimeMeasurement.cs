@@ -283,59 +283,82 @@ WHERE freemeasurements.id = 0
             }
         }
 
-        public void addTask(NoProductiveTask npTask)
+        /* Returns:
+         * -1 if generic error
+         * 
+         */
+        public int addTask(NoProductiveTask npTask)
         {
+            int ret = 0;
             if (this.id != -1)
             {
                 this.loadTasks();
-                int seq = this.Tasks.Count + 1;
-                int tID = 0;
-                if (this.Tasks.Count > 0)
-                {
-                    tID = this.Tasks.Max(t => t.TaskId);
-                }
-
-                MySqlConnection conn = (new Dati.Dati()).mycon();
-                conn.Open();
-                MySqlCommand cmdTasks = conn.CreateCommand();
-                /*cmdTasks.CommandText = "SELECT MAX(TaskId) FROM freemeasurements_tasks WHERE measurementid=@measurementid";
-                cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
-                MySqlDataReader rdr = cmdTasks.ExecuteReader();
-                int tID = 0;
-                if(rdr.Read())
-                {
-                    tID = rdr.GetInt32(0) + 1;
-                }*/
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmdTasks.Transaction = tr;
-                cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
-                    + " description, sequence, workstationid, quantity_planned, status) "
-                    + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
-                    + " @description, @sequence, @workstationid, @quantity_planned, @status)";
-
-                cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
-                cmdTasks.Parameters.AddWithValue("@taskid", tID);
-                cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
-                cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
-                cmdTasks.Parameters.AddWithValue("@VariantId", null);
-                cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", npTask.ID);
-                cmdTasks.Parameters.AddWithValue("@name", npTask.Name);
-                cmdTasks.Parameters.AddWithValue("@description", npTask.Description);
-                cmdTasks.Parameters.AddWithValue("@sequence", seq);
-                cmdTasks.Parameters.AddWithValue("@workstationid", null);
-                cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
-                cmdTasks.Parameters.AddWithValue("@status", 'N');
-
+                int found = -1;
                 try
-                {
-                    cmdTasks.ExecuteNonQuery();
-                    tr.Commit();
+                { 
+                    found = (this.Tasks.FirstOrDefault(x => x.NoProductiveTaskId == npTask.ID)).TaskId;
                 }
-                catch (Exception ex)
+                catch
                 {
-                    tr.Rollback();
+                    found = -1;
+                }
+
+                if(found == -1)
+                { 
+                    int seq = this.Tasks.Count + 1;
+                    int tID = 0;
+                    if (this.Tasks.Count > 0)
+                    {
+                        tID = this.Tasks.Max(t => t.TaskId);
+                    }
+
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmdTasks = conn.CreateCommand();
+                    /*cmdTasks.CommandText = "SELECT MAX(TaskId) FROM freemeasurements_tasks WHERE measurementid=@measurementid";
+                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
+                    MySqlDataReader rdr = cmdTasks.ExecuteReader();
+                    int tID = 0;
+                    if(rdr.Read())
+                    {
+                        tID = rdr.GetInt32(0) + 1;
+                    }*/
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmdTasks.Transaction = tr;
+                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                        + " description, sequence, workstationid, quantity_planned, status) "
+                        + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
+                        + " @description, @sequence, @workstationid, @quantity_planned, @status)";
+
+                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
+                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
+                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
+                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", npTask.ID);
+                    cmdTasks.Parameters.AddWithValue("@name", npTask.Name);
+                    cmdTasks.Parameters.AddWithValue("@description", npTask.Description);
+                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
+                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
+                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
+                    cmdTasks.Parameters.AddWithValue("@status", 'N');
+
+                    try
+                    {
+                        cmdTasks.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tr.Rollback();
+                    }
+                }
+                else
+                {
+                    ret = found;
                 }
             }
+            return ret;
         }
     }
 
@@ -606,6 +629,7 @@ WHERE freemeasurements.id = 0
                     {
                         cmd.ExecuteNonQuery();
                         tr.Commit();
+                        this._Status = value;
                     }
                     catch(Exception ex)
                     {
@@ -870,7 +894,7 @@ WHERE freemeasurements.id = 0
                             cmdDef.Parameters.AddWithValue("@taskid", npTask);
                             cmdDef.Parameters.AddWithValue("@user", op.username);
                             cmdDef.Parameters.AddWithValue("@eventtype", 'P');
-                            cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss");
+                            cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                             cmdDef.Parameters.AddWithValue("@notes", "");
                             cmdDef.ExecuteNonQuery();
 
@@ -888,7 +912,7 @@ WHERE freemeasurements.id = 0
                         cmd.Parameters.AddWithValue("@taskid", this.TaskId);
                         cmd.Parameters.AddWithValue("@user", op.username);
                         cmd.Parameters.AddWithValue("@eventtype", 'I');
-                        cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss");
+                        cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@notes", "");
                         cmd.ExecuteNonQuery();
 
@@ -945,7 +969,7 @@ WHERE freemeasurements.id = 0
                 cmd.Parameters.AddWithValue("@taskid", this.TaskId);
                 cmd.Parameters.AddWithValue("@user", op.username);
                 cmd.Parameters.AddWithValue("@eventtype", 'P');
-                cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss");
+                cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@notes", "");
                 
                 try
@@ -969,24 +993,26 @@ WHERE freemeasurements.id = 0
                 {
                     NoProductiveTasks npts = new NoProductiveTasks();
                     var defTask = npts.TaskList.FirstOrDefault(x => x.IsDefault == true);
-                    if(defTask!=null)
+                    if(defTask!=null && defTask.ID != -1)
                     {
                         MySqlCommand cmdDef = conn.CreateCommand();
                         MySqlTransaction tr2 = conn.BeginTransaction();
                         cmdDef.Transaction = tr2;
                         
                         try
-                        { 
+                        {
                             // ADD NO PRODUCTIVE TASK IN TASK_LIST
+                            FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
+                            int nptask = fm.addTask(defTask);
 
 
                             cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
                                + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
                             cmdDef.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                            cmdDef.Parameters.AddWithValue("@taskid", this.TaskId);
+                            cmdDef.Parameters.AddWithValue("@taskid", nptask);
                             cmdDef.Parameters.AddWithValue("@user", op.username);
-                            cmdDef.Parameters.AddWithValue("@eventtype", 'P');
-                            cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss");
+                            cmdDef.Parameters.AddWithValue("@eventtype", 'I');
+                            cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                             cmdDef.Parameters.AddWithValue("@notes", "");
 
                             cmdDef.ExecuteNonQuery();
@@ -996,6 +1022,103 @@ WHERE freemeasurements.id = 0
                         {
                             this.log = ex.Message;
                             tr2.Rollback();
+                        }
+                    }
+                }
+
+                conn.Close();
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+
+        /*
+          * Returns: 
+          * 0 if generic error
+          * 1 if Paused succesfully
+          * 2 if task is not running or operator not found
+          */
+        public int Finish(User op)
+        {
+            int ret = 0;
+            if (this.Status == 'I' && op.username.Length > 0)
+            {
+                DateTime eventtime = DateTime.UtcNow;
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+
+                try
+                {
+                    // Close task for all the users
+                    this.loadActiveUsers();
+
+                    foreach(var usr in this.Users)
+                    {
+                        MySqlCommand cmd = conn.CreateCommand();
+                        cmd.Transaction = tr;
+                        cmd.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
+                           + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
+                        cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
+                        cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                        cmd.Parameters.AddWithValue("@user", usr);
+                        cmd.Parameters.AddWithValue("@eventtype", 'F');
+                        cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@notes", "Task finished by " + op.username);
+
+                        cmd.ExecuteNonQuery();
+                    }
+
+
+                    tr.Commit();
+                    this.Status = 'F';
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                }
+
+
+                NoProductiveTasks npts = new NoProductiveTasks();
+                var defTask = npts.TaskList.FirstOrDefault(x => x.IsDefault == true);
+                if (defTask != null && defTask.ID != -1)
+                {
+                    // ADD NO PRODUCTIVE TASK IN TASK_LIST
+                    FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
+                    int nptask = fm.addTask(defTask);
+
+                    foreach (var usr in this.Users)
+                    {
+                        User cUsr = new User(usr);
+                        cUsr.loadFreeMeasurementRunningTasks();
+                        if(cUsr.FreeMeasurementTasks.Count == 0)
+                        { 
+                            MySqlCommand cmdDef = conn.CreateCommand();
+                            MySqlTransaction tr2 = conn.BeginTransaction();
+                            cmdDef.Transaction = tr2;
+
+                            try
+                            {
+                                cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
+                                   + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
+                                cmdDef.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
+                                cmdDef.Parameters.AddWithValue("@taskid", nptask);
+                                cmdDef.Parameters.AddWithValue("@user", cUsr.username);
+                                cmdDef.Parameters.AddWithValue("@eventtype", 'I');
+                                cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
+                                cmdDef.Parameters.AddWithValue("@notes", "");
+
+                                cmdDef.ExecuteNonQuery();
+                                tr2.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                this.log = ex.Message;
+                                tr2.Rollback();
+                            }
                         }
                     }
                 }
