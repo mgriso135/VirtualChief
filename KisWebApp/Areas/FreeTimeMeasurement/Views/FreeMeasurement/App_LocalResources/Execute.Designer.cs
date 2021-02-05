@@ -61,6 +61,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inizia un task NON produttivo.
+        /// </summary>
+        public static string lblChooseNoProductiveTask {
+            get {
+                return ResourceManager.GetString("lblChooseNoProductiveTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Scegli l&apos;operatore.
         /// </summary>
         public static string lblChooseOperator {
@@ -70,11 +79,83 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inizia un task produttivo.
+        /// </summary>
+        public static string lblChooseProductiveTask {
+            get {
+                return ResourceManager.GetString("lblChooseProductiveTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Devi selezionare solo uno fra task e nuovo task.
+        /// </summary>
+        public static string lblErrorStartOnlyOne {
+            get {
+                return ResourceManager.GetString("lblErrorStartOnlyOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rilievo / Prodotto.
+        /// </summary>
+        public static string lblMeasurementProduct {
+            get {
+                return ResourceManager.GetString("lblMeasurementProduct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task non in lista.
+        /// </summary>
+        public static string lblNewTask {
+            get {
+                return ResourceManager.GetString("lblNewTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string lblNoProdTask {
+            get {
+                return ResourceManager.GetString("lblNoProdTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks in esecuzione da parte dell&apos;operatore.
+        /// </summary>
+        public static string lblRunningTasks {
+            get {
+                return ResourceManager.GetString("lblRunningTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string lblTask {
+            get {
+                return ResourceManager.GetString("lblTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rilievo attività di lavoro.
         /// </summary>
         public static string lblTitle {
             get {
                 return ResourceManager.GetString("lblTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Errore: task non riconosciuto.
+        /// </summary>
+        public static string lblUnknownTask {
+            get {
+                return ResourceManager.GetString("lblUnknownTask", resourceCulture);
             }
         }
         

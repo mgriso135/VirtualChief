@@ -64,22 +64,36 @@
                         var startDate = Date.parse($("#txtAddPlannedStart").val());
                         var endDate = Date.parse($("#txtAddPlannedEnd").val());
 
-                        console.log("A " + startDate + " B " + endDate + " C " + allowcustomtasks + " D " + allowstartfinishedtasks
+                        var startDate = moment($("#txtAddPlannedStart").val(), "DD/MM/YYYY");
+                        var endDate = moment($("#txtAddPlannedEnd").val(), "DD/MM/YYYY");
+
+
+                        /*console.log("A " + startDate + " B " + endDate + " C " + allowcustomtasks + " D " + allowstartfinishedtasks
                             + " E " + typeof startDate + " F " + typeof endDate
-                            + " G " + measUnit);
+                            + " G " + measUnit);*/
+
+                        console.log(aproductid.length + " "
+                            + sdept.length + " "
+                            + dept + " "
+                            + quantity + " "
+                            + astartdate.length + " "
+                            + aenddate.length + " "
+                            + startDate + " "
+                            + endDate + " "
+                        );
 
                         if (aproductid.length == 3 && sdept.length > 0 && dept >= 0 && quantity >= 0
-                            && astartdate.length == 3 && aenddate.length == 3 && Date.parse(txtStartDate) && Date.parse(txtEndDate)) {
+                            && astartdate.length == 3 && aenddate.length == 3) {
                             var aStartDate = new Date(startDate);
                             var aEndDate = new Date(endDate);
 
-                            console.log("A " + startDate + " B " + endDate);
+                            //console.log("A " + startDate + " B " + endDate);
                             $.ajax({
                                 url: "@Url.Action("Add", "FreeMeasurement")",
                                 type: 'POST',
                                 data: {
-                                    plannedstartdate: aStartDate.getFullYear() + "-" + (aStartDate.getMonth() + 1) + "-" + aStartDate.getDate(),
-                                    plannedenddate: aEndDate.getFullYear() + "-" + (aEndDate.getMonth() + 1) + "-" + aEndDate.getDate(),
+                                    plannedstartdate: moment(startDate).format('YYYY-MM-DD'), // aStartDate.getFullYear() + "-" + (aStartDate.getMonth() + 1) + "-" + aStartDate.getDate(),
+                                    plannedenddate: moment(endDate).format('YYYY-MM-DD'), // aEndDate.getFullYear() + "-" + (aEndDate.getMonth() + 1) + "-" + aEndDate.getDate(),
                                     DepartmentId: dept,
                                     name: name,
                                     description: description,
@@ -93,7 +107,7 @@
                                     AllowExecuteFinishedTasks: allowstartfinishedtasks
                                 },
                                 success: function (data) {
-                                    console.log(data);
+                                    console.log("Data: " + data);
                                     if (data >= 0) {
                                         window.location.href = window.location.href;
                                     }
@@ -125,7 +139,7 @@
                                             case "-20": strError = "@ResFreeMeasurements.Index.lblError20"; break;
                                             default: strError = "@ResFreeMeasurements.Index.lblErrorGeneric"; break;
                                         }
-
+                                        console.log("Data " + data);
                                         $("#lblModalInfo").html(strError);
                                         $("#lblModalInfo").dialog({
                                             modal: true,

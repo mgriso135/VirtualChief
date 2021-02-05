@@ -6,6 +6,7 @@ using MySql.Data.MySqlClient;
 using KIS.App_Code;
 using KIS.App_Sources;
 
+
 namespace KIS.App_Sources
 {
     public class FreeTimeMeasurement
@@ -180,7 +181,7 @@ namespace KIS.App_Sources
                         + "  FROM freemeasurements INNER JOIN "
                         + " variantiprocessi ON(variantiprocessi.variante = freemeasurements.variantid "
                         + " AND variantiprocessi.processo = freemeasurements.processid "
-                        + " AND variantiprocessi.revProc = freemeasurements.processid) "
+                        + " AND variantiprocessi.revProc = freemeasurements.processrev) "
                         + " INNER JOIN processo ON(variantiprocessi.processo = processo.processId and variantiprocessi.revProc = processo.revisione) "
                         + " INNER JOIN varianti ON(variantiprocessi.variante = varianti.idvariante) "
                         + " INNER JOIN reparti ON(freemeasurements.departmentid = reparti.idreparto) "
@@ -220,43 +221,7 @@ namespace KIS.App_Sources
             }
             rdr.Close();
             conn.Close();
-            /* SELECT 
-freemeasurements.id,
-freemeasurements.creationdate,
-freemeasurements.createdby,
-freemeasurements.plannedstartdate,
-freemeasurements.plannedenddate,
-freemeasurements.departmentid,
-reparti.nome,
-reparti.timezone,
-freemeasurements.name,
-freemeasurements.description,
-freemeasurements.processid,
-freemeasurements.processrev,
-freemeasurements.variantid,
-processo.name,
-processo.description,
-varianti.nomevariante,
-freemeasurements.status,
-freemeasurements.serialnumber,
-freemeasurements.quantity,
-freemeasurements.measurementunit,
-measurementunits.type,
-freemeasurements.realenddate,
-freemeasurements.realworkingtime_hours,
-freemeasurements.realleadtime_hours,
-freemeasurements.AllowCustomTasks,
-freemeasurements.ExecuteFinishedTasks
- FROM freemeasurements INNER JOIN 
-variantiprocessi ON (variantiprocessi.variante = freemeasurements.variantid  
-AND variantiprocessi.processo = freemeasurements.processid 
-AND variantiprocessi.revProc = freemeasurements.processid) 
-INNER JOIN processo ON(variantiprocessi.processo = processo.processId and variantiprocessi.revProc = processo.revisione) 
-INNER JOIN varianti ON (variantiprocessi.variante = varianti.idvariante) 
-INNER JOIN reparti ON (freemeasurements.departmentid = reparti.idreparto) 
-INNER JOIN measurementunits ON (measurementunits.id = freemeasurements.measurementUnit) 
-WHERE freemeasurements.id = 0
-;*/
+           
         }
 
         public void loadTasks()
@@ -296,7 +261,9 @@ WHERE freemeasurements.id = 0
                 int found = -1;
                 try
                 { 
-                    found = (this.Tasks.FirstOrDefault(x => x.NoProductiveTaskId == npTask.ID)).TaskId;
+                    var itm = this.Tasks.First(x => x.NoProductiveTaskId == npTask.ID);
+                    found = 1;
+                    ret = itm.TaskId;
                 }
                 catch
                 {
@@ -309,7 +276,7 @@ WHERE freemeasurements.id = 0
                     int tID = 0;
                     if (this.Tasks.Count > 0)
                     {
-                        tID = this.Tasks.Max(t => t.TaskId);
+                        tID = this.Tasks.Max(t => t.TaskId)+1;
                     }
 
                     MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -347,15 +314,86 @@ WHERE freemeasurements.id = 0
                     {
                         cmdTasks.ExecuteNonQuery();
                         tr.Commit();
+                        ret = tID;
                     }
                     catch (Exception ex)
                     {
+                        ret = -1;
                         tr.Rollback();
                     }
                 }
                 else
                 {
-                    ret = found;
+                }
+            }
+            return ret;
+        }
+
+        public int addTask(String TaskName)
+        {
+            int ret = 0;
+            if (this.id != -1 && TaskName.Length < 255)
+            {
+                this.loadTasks();
+                int found = -1;
+                try
+                {
+                    var itm = this.Tasks.First(x => x.Name == TaskName);
+                    found = 1;
+                    ret = itm.TaskId;
+                }
+                catch
+                {
+                    found = -1;
+                }
+
+                if (found == -1)
+                {
+                    int seq = this.Tasks.Count + 1;
+                    int tID = 0;
+                    if (this.Tasks.Count > 0)
+                    {
+                        tID = this.Tasks.Max(t => t.TaskId) + 1;
+                    }
+
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmdTasks = conn.CreateCommand();
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmdTasks.Transaction = tr;
+                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                        + " description, sequence, workstationid, quantity_planned, status) "
+                        + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
+                        + " @description, @sequence, @workstationid, @quantity_planned, @status)";
+
+                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
+                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
+                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
+                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@name", TaskName);
+                    cmdTasks.Parameters.AddWithValue("@description", "");
+                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
+                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
+                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
+                    cmdTasks.Parameters.AddWithValue("@status", 'N');
+
+                    try
+                    {
+                        cmdTasks.ExecuteNonQuery();
+                        tr.Commit();
+                        ret = tID;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = -1;
+                        tr.Rollback();
+                    }
+                }
+                else
+                {
                 }
             }
             return ret;
@@ -407,7 +445,9 @@ WHERE freemeasurements.id = 0
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.MeasurementsList.Add(new FreeTimeMeasurement(rdr.GetInt32(0)));
+                int measurementid = rdr.GetInt32(0);
+                FreeTimeMeasurement curr = new FreeTimeMeasurement(measurementid);
+                this.MeasurementsList.Add(curr);
             }
             rdr.Close();
             conn.Close();
@@ -529,6 +569,177 @@ WHERE freemeasurements.id = 0
             return ret;
         }
 
+        public List<FreeMeasurentsTasksJsonStruct> GetFreeMeasurentsTasksJson(int departmentId)
+        {
+            List<FreeMeasurentsTasksJsonStruct> fmStruct = new List<FreeMeasurentsTasksJsonStruct>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT "
+                + " freemeasurements.id, "              // 0
+                + " freemeasurements.creationdate, "    // 1
+                + " freemeasurements.createdby, "
+                + " freemeasurements.plannedstartdate, "
+                + " freemeasurements.plannedenddate, "
+                + " freemeasurements.departmentid, "    // 5
+                + " freemeasurements.name AS MeasurementName,"
+                + " freemeasurements.description AS MeasurementDescription, "
+                + " freemeasurements.ProcessId, "
+                + " freemeasurements.processrev, "
+                + " freemeasurements.variantid, "       // 10
+                + " freemeasurements.status, "
+                + " freemeasurements.serialnumber, "
+                + " freemeasurements.quantity, "
+                + " freemeasurements.measurementUnit, "
+                + " measurementunits.type, "            // 15
+                + " freemeasurements_tasks.taskid, "
+                + " freemeasurements_tasks.origtaskid, "
+                + " freemeasurements_tasks.origtaskrev, "
+                + " freemeasurements_tasks.variantid, "
+                + " freemeasurements_tasks.noproductivetaskid, "    // 20
+                + " freemeasurements_tasks.name AS TaskName, "
+                + " freemeasurements_tasks.description AS TaskDescription, "
+                + " freemeasurements_tasks.sequence, "
+                + " freemeasurements_tasks.workstationid, "
+                + " postazioni.name, "                      // 25
+                + " freemeasurements_tasks.quantity_planned, "
+                + " freemeasurements_tasks.status AS TaskStatus, " // 27
+                + " processo.name AS ProcessName, "
+                + " varianti.nomeVariante AS ProductName "
+                + " FROM freemeasurements INNER JOIN freemeasurements_tasks "
+                + " ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
+                + " LEFT JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) "
+                + " LEFT JOIN measurementunits ON (measurementunits.id = freemeasurements.measurementUnit) "
+                + " INNER JOIN variantiprocessi Product ON (freemeasurements.ProcessId= Product.processo AND freemeasurements.Processrev = Product.revproc "
+                + " AND freemeasurements.variantid = Product.variante) "
+                + " INNER JOIN processo ON(PROCESSO.processid = Product.processo AND processo.revisione = product.revproc) "
+                + " INNER JOIN varianti ON(varianti.idvariante = product.variante) "
+                + " WHERE departmentid = @departmentid "
+                + " AND(ExecuteFinishedTasks = true OR(ExecuteFinishedTasks = false AND freemeasurements_tasks.status <> 'F')) "
+                + " ORDER BY freemeasurements.id, freemeasurements_tasks.sequence";
+            cmd.Parameters.AddWithValue("@departmentid", departmentId);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                FreeMeasurentsTasksJsonStruct curr = new FreeMeasurentsTasksJsonStruct();
+                curr.MeasurementId = rdr.GetInt32(0);
+                curr.Creationdate = rdr.GetDateTime(1);
+                curr.CreatedBy = rdr.GetString(2);
+                curr.PlannedStartDate = rdr.GetDateTime(3);
+                curr.PlannedEndDate = rdr.GetDateTime(4);
+                curr.DepartmentId = rdr.GetInt32(5);
+                curr.MeasurementName = rdr.GetString(6);
+                curr.MeasurementDescription = rdr.GetString(7);
+                curr.ProcessId = rdr.GetInt32(8);
+                curr.ProcessRev = rdr.GetInt32(9);
+                curr.VariantId = rdr.GetInt32(10);
+                curr.Status = rdr.GetChar(11);
+                curr.SerialNumber = rdr.GetString(12);
+                curr.Quantity = rdr.GetDouble(13);
+                curr.MeasurementUnitId = rdr.GetInt32(14);
+                curr.MeasurementUnitType = rdr.GetString(15);
+                curr.TaskId = rdr.GetInt32(16);
+                curr.OrigTaskId = rdr.IsDBNull(17) ? -1 : rdr.GetInt32(17);
+                curr.OrigTaskRev = rdr.IsDBNull(18) ? -1 : rdr.GetInt32(18);
+                curr.VariantId = rdr.IsDBNull(19) ? -1 : rdr.GetInt32(19);
+                curr.NoProductiveTaskId = rdr.IsDBNull(20) ? -1 : rdr.GetInt32(20);
+                curr.TaskName = rdr.GetString(21);
+                curr.TaskDescription = rdr.GetString(22);
+                curr.Sequence = rdr.GetInt32(23);
+                curr.WorkstationId = rdr.IsDBNull(24) ? -1 : rdr.GetInt32(24);
+                curr.WorkstationName = rdr.IsDBNull(25) ? "" : rdr.GetString(25);
+                curr.TaskQuantity = rdr.GetDouble(26);
+                curr.TaskStatus = rdr.GetChar(27);
+                curr.ProcessName = rdr.GetString(28);
+                curr.VariantName = rdr.GetString(29);
+                fmStruct.Add(curr);
+            }
+            rdr.Close();
+            conn.Close();
+
+            return fmStruct;
+        }
+
+        public List<FreeMeasurentsTasksJsonStruct> GetRunningTasks(Reparto dept, User usr)
+        {
+            /*
+             * SELECT 
+		freemeasurements_tasks.name AS TaskName, 
+        postazioni.name AS WorkstationName, 
+        freemeasurements_tasks.quantity_planned, 
+        measurementunits.type
+ FROM 
+(SELECT MAX(runningtasks.id) AS runningtasksid
+  FROM 
+	(SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype,
+	freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate
+                FROM freemeasurements_tasks 
+                INNER JOIN freemeasurements_tasks_events 
+                ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) 
+                INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) 
+                WHERE freemeasurements_tasks.status = 'I'  
+                 AND freemeasurements_tasks_events.user = 'op1'
+                 AND freemeasurements.departmentid = 0
+                ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks
+                GROUP BY runningtasks.taskid) AS runningtasks2
+               
+               INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON( freemeasurements_tasks_events2.id = runningtasks2.runningtasksid)
+               INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid) 
+               inner join freemeasurements ON (freemeasurements.id = freemeasurements_tasks.MeasurementId)
+               INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) 
+               INNER JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) 
+			WHERE eventtype = 'I'*/
+            List<FreeMeasurentsTasksJsonStruct> ret = new List<FreeMeasurentsTasksJsonStruct>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT "
+                + " freemeasurements.id, "
+                + " freemeasurements_tasks.taskid, "
+                   + " freemeasurements_tasks.name AS TaskName, "
+                   + "  postazioni.name AS WorkstationName, "
+                   + "  freemeasurements_tasks.quantity_planned, "
+                   + "  measurementunits.type "
+                   + "      FROM "
+            + " (SELECT MAX(runningtasks.id) AS runningtasksid "
+              + " FROM "
+              + "   (SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype, "
+              + "   freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate "
+              + "               FROM freemeasurements_tasks "
+              + "                INNER JOIN freemeasurements_tasks_events "
+              + "               ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+              + "               INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
+              + "               WHERE freemeasurements_tasks.status = 'I' "
+              + "                AND freemeasurements_tasks_events.user = @usr "
+              + "                AND freemeasurements.departmentid = @departmentid "
+              + "               ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks "
+              + "               GROUP BY runningtasks.taskid) AS runningtasks2 "
+              + "  INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON(freemeasurements_tasks_events2.id = runningtasks2.runningtasksid) "
+              + "  INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid) "
+              + "  inner join freemeasurements ON(freemeasurements.id = freemeasurements_tasks.MeasurementId) "
+              + "  INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
+              + "  LEFT JOIN postazioni ON(freemeasurements_tasks.workstationid = postazioni.idpostazioni) "
+                + " WHERE eventtype = 'I'";
+
+            cmd.Parameters.AddWithValue("@usr", usr.username);
+            cmd.Parameters.AddWithValue("@departmentid", dept.id);
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                FreeMeasurentsTasksJsonStruct curr = new FreeMeasurentsTasksJsonStruct();
+                curr.MeasurementId = rdr.GetInt32(0);
+                curr.TaskId = rdr.GetInt32(1);
+                curr.TaskName = rdr.GetString(2);
+                curr.WorkstationName = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
+                curr.TaskQuantity = rdr.GetDouble(4);
+                curr.MeasurementUnitType = rdr.GetString(5);
+                ret.Add(curr);
+            }
+            rdr.Close();
+            conn.Close();
+            return ret;
+        }
     }
 
     public class FreeMeasurement_Task
@@ -804,7 +1015,7 @@ WHERE freemeasurements.id = 0
                     + " freemeasurements.ExecuteFinishedTasks, " // 19
                     + " freemeasurements.DepartmentId "         // 20
                     + "  FROM freemeasurements_tasks "
-                    + " INNER JOIN postazioni ON(freemeasurements_tasks.workstationid = postazioni.idpostazioni) "
+                    + " LEFT JOIN postazioni ON(postazioni.idpostazioni=freemeasurements_tasks.workstationid) "
                     + " INNER JOIN freemeasurements ON (freemeasurements_tasks.MeasurementId = freemeasurements.id)"
                     + " WHERE freemeasurements_tasks.TaskId=@taskid AND freemeasurements_tasks.MeasurementId=@measurementid"
                     + " ORDER BY sequence";
@@ -822,10 +1033,10 @@ WHERE freemeasurements.id = 0
                 this._Name = rdr.GetString(6);
                 this._Description = rdr.GetString(7);
                 this._Sequence = rdr.GetInt32(8);
-                this._WorkstationId = rdr.GetInt32(9);
-                this._WorkstationName = rdr.GetString(10);
+                this._WorkstationId = rdr.IsDBNull(9) ? -1 : rdr.GetInt32(9);
+                this._WorkstationName = rdr.IsDBNull(10) ? "" :rdr.GetString(10);
                 this._PlannedQuantity = rdr.GetDouble(11);
-                this._ProducedQuantity = rdr.GetDouble(12);
+                this._ProducedQuantity = rdr.IsDBNull(12) ? 0 : rdr.GetDouble(12);
                 this._Status = rdr.GetChar(13);
                 this._StartDateReal = rdr.IsDBNull(14) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(14);
                 this._EndDateReal = rdr.IsDBNull(15) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(15);
@@ -845,11 +1056,12 @@ WHERE freemeasurements.id = 0
          * 2 if task already started
          * 3 if operator not found
          * 4 if operator exceeds max number of running tasks
+         * 6 if user is already running the task
          */
         public int Start(User op)
         {
             int ret = 0;
-            if(this.Status == 'N' || this.Status == 'P' || (this.Status == 'F' && this.AllowExecuteFinishedTasks))
+            if(this.Status == 'I' || this.Status == 'N' || this.Status == 'P' || (this.Status == 'F' && this.AllowExecuteFinishedTasks))
             {
                 DateTime eventtime = DateTime.UtcNow;
 
@@ -859,28 +1071,39 @@ WHERE freemeasurements.id = 0
                 Boolean checkMaxTasks = false;
                 Boolean PauseDefaultNoProductiveTask = false;
                 int npTask = -1;
-                if(maxTasksInExecution > 0 && tasksInExecution < maxTasksInExecution)
+                op.loadFreeMeasurementRunningTasks();
+                if (maxTasksInExecution > 0 && tasksInExecution < maxTasksInExecution)
                 { 
                     checkMaxTasks = true; 
                 }
-                else
+
+                if(op.FreeMeasurementTasks.Count == 1 && op.FreeMeasurementTasks[0].NoProductiveTaskId != -1 
+                     && (op.FreeMeasurementTasks[0].TaskId != this.TaskId || op.FreeMeasurementTasks[0].MeasurementId != this.MeasurementId))
                 {
-                    op.loadFreeMeasurementRunningTasks();
-                    if(op.FreeMeasurementTasks.Count == 1 && op.FreeMeasurementTasks[0].NoProductiveTaskId != -1 
-                        && (op.FreeMeasurementTasks[0].TaskId != this.TaskId || op.FreeMeasurementTasks[0].MeasurementId != this.MeasurementId))
-                    {
-                        checkMaxTasks = true;
-                        PauseDefaultNoProductiveTask = true;
-                        npTask = op.FreeMeasurementTasks[0].TaskId;
-                    }
+                    checkMaxTasks = true;
+                    PauseDefaultNoProductiveTask = true;
+                    npTask = op.FreeMeasurementTasks[0].TaskId;
                 }
 
-                if(checkMaxTasks)
+                // Check that user is not already running this task
+                Boolean checkAlreadyInExecution = false;
+                try
+                {
+                    var found = op.FreeMeasurementTasks.First(y => y.MeasurementId == this.MeasurementId && y.TaskId == this.TaskId); 
+                    checkAlreadyInExecution = true;
+                    ret = 6;
+                }
+                catch
+                {
+                    checkAlreadyInExecution = false;
+                }
+
+                if (checkMaxTasks && !checkAlreadyInExecution)
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
-                    MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
                     try
                     {
@@ -897,14 +1120,8 @@ WHERE freemeasurements.id = 0
                             cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                             cmdDef.Parameters.AddWithValue("@notes", "");
                             cmdDef.ExecuteNonQuery();
-
-                            FreeMeasurement_Task defTask = new FreeMeasurement_Task(this.MeasurementId, npTask);
-                            defTask.loadActiveUsers();
-                            if(defTask.Users.Count == 0)
-                            {
-                                defTask.Status = 'P';
-                            }
                         }
+
 
                         cmd.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
                                 + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
@@ -915,15 +1132,26 @@ WHERE freemeasurements.id = 0
                         cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@notes", "");
                         cmd.ExecuteNonQuery();
-
+                        tr.Commit();
                         this.Status = 'I';
 
-                        tr.Commit();
+                        // Eventually, change the status of the default no productive task
+                        if(PauseDefaultNoProductiveTask)
+                        {
+                            FreeMeasurement_Task defTask = new FreeMeasurement_Task(this.MeasurementId, npTask);
+                            defTask.loadActiveUsers();
+                            if (defTask.Users.Count == 0)
+                            {
+                                defTask.Status = 'P';
+                            }
+                        }
+                        ret = 1;
                     }
                     catch(Exception ex)
                     {
                         this.log = ex.Message;
                         tr.Rollback();
+                        ret = 5;
                     }
                     conn.Close();
                 }
@@ -941,9 +1169,13 @@ WHERE freemeasurements.id = 0
 
         // Running tasks queries
         /* SELECT COUNT(DISTINCT(freemeasurements_tasks.taskid)) FROM freemeasurements_tasks INNER JOIN freemeasurements_tasks_events 
-         * ON (freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) 
-         * INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) WHERE freemeasurements_tasks.status = 'I' 
-         * AND freemeasurements_tasks_events.user='admin' AND freemeasurements.departmentid=0 ORDER BY freemeasurements_tasks_events.eventdate;
+          ON (freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) 
+          INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) WHERE freemeasurements_tasks.status = 'I' 
+          AND freemeasurements_tasks_events.user='admin' 
+          -- AND freemeasurements.departmentid=0 
+          ORDER BY freemeasurements_tasks_events.eventdate;
+          
+          
          */
 
         /*
@@ -1005,7 +1237,6 @@ WHERE freemeasurements.id = 0
                             FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
                             int nptask = fm.addTask(defTask);
 
-
                             cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
                                + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
                             cmdDef.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
@@ -1014,8 +1245,11 @@ WHERE freemeasurements.id = 0
                             cmdDef.Parameters.AddWithValue("@eventtype", 'I');
                             cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                             cmdDef.Parameters.AddWithValue("@notes", "");
-
                             cmdDef.ExecuteNonQuery();
+
+                            cmdDef.CommandText = "UPDATE freemeasurements_tasks SET status='I' WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
+                            cmdDef.ExecuteNonQuery();
+
                             tr2.Commit();
                         }
                         catch(Exception ex)
@@ -1141,17 +1375,34 @@ WHERE freemeasurements.id = 0
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT user FROM "
-                     + " (SELECT DISTINCT(user), freemeasurements_tasks_events.eventtype "
-                     + "  FROM freemeasurements_tasks "
-                     + " INNER JOIN freemeasurements_tasks_events ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND "
-                     + " freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
-                     + " INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
-                     + " WHERE freemeasurements_tasks.status = 'I' "
-                     + " AND freemeasurements_tasks.measurementid = @measurementid "
-                     + " AND freemeasurements_tasks.taskid = @taskid "
-                     + " ORDER BY freemeasurements_tasks_events.eventdate) AS runningtasks "
-                     + " WHERE runningtasks.eventtype <> 'F' AND runningtasks.eventtype <> 'P'";
+                cmd.CommandText = "SELECT  "
+                    + " freemeasurements.id,  "
+                + " freemeasurements_tasks.taskid, "
+                   + " freemeasurements_tasks.name AS TaskName, "
+                    + " postazioni.name AS WorkstationName, "
+                   + "  freemeasurements_tasks.quantity_planned, "
+                   + "  measurementunits.type,"
+                   + "  freemeasurements_tasks_events2.user "
+                   + "      FROM"
+                    + " (SELECT MAX(runningtasks.id) AS runningtasksid "
+                    + "  FROM "
+                + " (SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype, "
+                + " freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate "
+                     + "        FROM freemeasurements_tasks "
+                     + "         INNER JOIN freemeasurements_tasks_events "
+                     + "        ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                     + "        INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
+                     + "        WHERE freemeasurements_tasks.status = 'I' "
+                    + " AND freemeasurements_tasks.taskid = @taskid "
+                + " AND freemeasurements.id = @measurementid "
+                + "             ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks "
+                + "             GROUP BY runningtasks.taskid) AS runningtasks2 "
+               + " INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON(freemeasurements_tasks_events2.id = runningtasks2.runningtasksid)"
+               + " INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid)"
+               + " inner join freemeasurements ON(freemeasurements.id = freemeasurements_tasks.MeasurementId)"
+               + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit)"
+               + " INNER JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid)"
+                + " WHERE eventtype = 'I'; ";
                 cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
                 cmd.Parameters.AddWithValue("@taskid", this.TaskId);
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -1163,5 +1414,38 @@ WHERE freemeasurements.id = 0
                 conn.Close();
             }
         }
+    }
+
+    public class FreeMeasurentsTasksJsonStruct
+    {
+        public int MeasurementId;
+        public DateTime Creationdate;
+        public String CreatedBy;
+        public DateTime PlannedStartDate;
+        public DateTime PlannedEndDate;
+        public int DepartmentId;
+        public String MeasurementName;
+        public String MeasurementDescription;
+        public int ProcessId;
+        public int ProcessRev;
+        public int VariantId;
+        public char Status;
+        public String SerialNumber;
+        public Double Quantity;
+        public int MeasurementUnitId;
+        public String MeasurementUnitType;
+        public int TaskId;
+        public int OrigTaskId;
+        public int OrigTaskRev;
+        public int NoProductiveTaskId;
+        public String TaskName;
+        public String TaskDescription;
+        public int Sequence;
+        public int WorkstationId;
+        public String WorkstationName;
+        public Double TaskQuantity;
+        public Char TaskStatus;
+        public String ProcessName;
+        public String VariantName;
     }
 }
