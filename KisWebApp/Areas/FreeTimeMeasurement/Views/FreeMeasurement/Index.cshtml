@@ -181,6 +181,54 @@
                         $("#frmAddFreeMeasurement")[0].reportValidity();
                     }
                 });
+
+                $("#tblMeasurements").on("click", ".endMeasurement", function () {
+                    var itm = $(this).prop("id");
+                    console.log(itm);
+                    var measurement = itm.split('_')[1];
+
+                     $.ajax({
+                                url: "@Url.Action("Finish", "FreeMeasurement")",
+                                type: 'POST',
+                                async: false,
+                                data: {
+                                    MeasurementId: measurement,
+                                },
+                                success: function (result) {
+                                    console.log("Result: " + result);
+
+                                    var strError = "";
+                                    switch (result) {
+                                        case "1": strError = "@ResFreeMeasurements.Index.lblFinishOk"; break;
+                                        case "3": strError = "@ResFreeMeasurements.Index.lblErrorFinish3"; break;
+                                        default: strError = ""; break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
+                                    if (result == "1") {
+                                        $("#freemeasurement_" + measurement).remove();
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                });
             });
 </script>
         // Add form
@@ -284,7 +332,7 @@
                 <option value="F">@ResFreeMeasurements.Index.lblFilterF</option>
             </select>
 
-            <table class="table table-hover table-striped">
+            <table class="table table-hover table-striped" id="tblMeasurements">
                 <thead>
                     <tr>
                         <th></th>
@@ -301,7 +349,7 @@
                 <tbody>
                     @foreach (var m in Model)
                     {
-                        <tr>
+                        <tr id="freemeasurement_@m.id">
                             <td><span class="material-icons">toc</span></td>
                             <td>@m.Name</td>
                             <td>@m.Description</td>
@@ -310,7 +358,7 @@
                             <td>@m.DepartmentName</td>
                             <td>@m.PlannedStartDate.ToString("dd/MM/yyyy")</td>
                             <td>@m.PlannedEndDate.ToString("dd/MM/yyyy")</td>
-                            <td><span class="material-icons">done_all</span></td>
+                            <td><span class="material-icons endMeasurement" style="cursor: pointer;" id="endMeasurement_@m.id">done_all</span></td>
                         </tr>
                     }
                 </tbody>

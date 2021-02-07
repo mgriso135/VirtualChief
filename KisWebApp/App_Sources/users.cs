@@ -3539,7 +3539,7 @@ namespace KIS.App_Code
             }
         }
 
-        public int FreeMeasurement_RunningTasks(Reparto dept)
+        /*public int FreeMeasurement_RunningTasks(Reparto dept)
         {
             int ret = 0;
             if(this.username.Length > 0)
@@ -3547,14 +3547,6 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                /*cmd.CommandText = "SELECT DISTINCT(freemeasurements_tasks.taskid) FROM freemeasurements_tasks "
-                        + " INNER JOIN freemeasurements_tasks_events ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND "
-                        + " freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
-                        + " INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
-                        + " WHERE freemeasurements_tasks.status = 'I' "
-                        + " AND freemeasurements_tasks_events.user = @usr "
-                        + " AND freemeasurements.departmentid = @deptid "
-                        + " ORDER BY freemeasurements_tasks_events.eventdate DESC";*/
                 cmd.CommandText = "SELECT COUNT(*) FROM "
                     + " (SELECT  DISTINCT(CONCAT(freemeasurements_tasks.measurementid, '_', freemeasurements_tasks.taskid)), freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, "
                     + " freemeasurements_tasks_events.eventtype FROM freemeasurements_tasks "
@@ -3578,6 +3570,38 @@ namespace KIS.App_Code
             }
             return ret;
         }
+        */
+     /*   public int FreeMeasurement_RunningTasks()
+        {
+            int ret = 0;
+            if (this.username.Length > 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+
+                cmd.CommandText = "SELECT COUNT(*) FROM "
+                    + " (SELECT  DISTINCT(CONCAT(freemeasurements_tasks.measurementid, '_', freemeasurements_tasks.taskid)), freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, "
+                    + " freemeasurements_tasks_events.eventtype FROM freemeasurements_tasks "
+                    + " INNER JOIN freemeasurements_tasks_events ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND "
+                    + " freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                    + " INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
+                    + " WHERE freemeasurements_tasks.status = 'I' "
+                    + " AND freemeasurements_tasks_events.user = @usr "
+                    // + " AND freemeasurements.departmentid = @deptid "
+                    + " ORDER BY freemeasurements_tasks_events.eventdate)  runningtasks "
+                    + " WHERE runningtasks.eventtype <> 'F' AND runningtasks.eventtype <> 'P'";
+                cmd.Parameters.AddWithValue("@usr", this.username);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read())
+                {
+                    ret = rdr.GetInt32(0);
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            return ret;
+        }*/
 
         public List<FreeMeasurement_Task> FreeMeasurementTasks;
         public void loadFreeMeasurementRunningTasks(Reparto dept)

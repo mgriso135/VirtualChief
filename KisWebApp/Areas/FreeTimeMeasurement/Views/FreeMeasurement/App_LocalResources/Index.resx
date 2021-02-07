@@ -177,6 +177,9 @@
   <data name="lblError20" xml:space="preserve">
     <value>Errore: utente non autorizzato</value>
   </data>
+  <data name="lblErrorFinish3" xml:space="preserve">
+    <value>Non è possibile terminare il prodotto perché alcuni task sono ancora in corso di esecuzione.</value>
+  </data>
   <data name="lblErrorGeneric" xml:space="preserve">
     <value>Errore generico: contattare lo staff di assistenza di Virtual Chief</value>
   </data>
@@ -191,6 +194,9 @@
   </data>
   <data name="lblFilterO" xml:space="preserve">
     <value>Tutti i rilievi non terminati</value>
+  </data>
+  <data name="lblFinishOk" xml:space="preserve">
+    <value>Rilievo terminato con successo.</value>
   </data>
   <data name="lblTHDepartment" xml:space="preserve">
     <value>Reparto</value>

@@ -126,6 +126,9 @@
   <data name="lblChooseProductiveTask" xml:space="preserve">
     <value>Inizia un task produttivo</value>
   </data>
+  <data name="lblErrorStart4" xml:space="preserve">
+    <value>Hai superato il massimo numero di task avviabili. Metti in pausa o termina un task in esecuzione.</value>
+  </data>
   <data name="lblErrorStartOnlyOne" xml:space="preserve">
     <value>Devi selezionare solo uno fra task e nuovo task</value>
   </data>

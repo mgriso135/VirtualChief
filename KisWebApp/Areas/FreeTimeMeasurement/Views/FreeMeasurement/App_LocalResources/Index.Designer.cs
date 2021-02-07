@@ -241,6 +241,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non è possibile terminare il prodotto perché alcuni task sono ancora in corso di esecuzione..
+        /// </summary>
+        public static string lblErrorFinish3 {
+            get {
+                return ResourceManager.GetString("lblErrorFinish3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Errore generico: contattare lo staff di assistenza di Virtual Chief.
         /// </summary>
         public static string lblErrorGeneric {
@@ -282,6 +291,15 @@ namespace ResFreeMeasurements {
         public static string lblFilterO {
             get {
                 return ResourceManager.GetString("lblFilterO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rilievo terminato con successo..
+        /// </summary>
+        public static string lblFinishOk {
+            get {
+                return ResourceManager.GetString("lblFinishOk", resourceCulture);
             }
         }
         

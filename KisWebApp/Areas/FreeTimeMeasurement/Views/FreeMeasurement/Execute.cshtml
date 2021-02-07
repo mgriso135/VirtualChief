@@ -103,10 +103,12 @@
                     text: ""
                 }));
                 for (var i = 0; i < measurements_tasks.length; i++) {
-                    $('#ddlTasks').append($('<option>', {
-                        value: measurements_tasks[i]["TaskId"],
-                        text: measurements_tasks[i]["TaskName"]
-                    }));
+                    if (measurements_tasks[i]["NoProductiveTaskId"] == "-1") {
+                        $('#ddlTasks').append($('<option>', {
+                            value: measurements_tasks[i]["TaskId"],
+                            text: measurements_tasks[i]["TaskName"]
+                        }));
+                    }
                 }
             }
 
@@ -155,14 +157,41 @@
                 }
 
                 $("#lblRunningTasksList").on("click", ".endtask", function () {
-                    console.log("CLICK ");
                     var itmId = $(this).prop("id");
+                    console.log("Finish " + itmId);
+                    var operator = $("#ddlOperator option:selected").val();
+                    var aItm = itmId.split('_');
+                    var measurement = aItm[1];
+                    var task = aItm[2];
+
+                    console.log(measurement + " " + task + " " + operator)
+
+                    $.ajax({
+                                url: "@Url.Action("FinishTask", "FreeMeasurement")",
+                                type: 'POST',
+                                async: false,
+                                data: {
+                                    user: operator,
+                                    MeasurementId: measurement,
+                                    TaskId: task
+                                },
+                                success: function (result) {
+                                    console.log("Result: " + result);
+                                    loadRunningTasks(operator);
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
                 });
 
                 $("#lblRunningTasksList").on("click", ".pausetask", function () {
-                    console.log("CLICK ");
                     var itmId = $(this).prop("id");
-                    console.log(itmId);
+                    console.log("Pause " + itmId);
                     var operator = $("#ddlOperator option:selected").val();
                     var aItm = itmId.split('_');
                     var measurement = aItm[1];
@@ -209,7 +238,7 @@
                     console.log(newTask);
 
                     var check = true;
-                    if (task != "" && newTask != "") {
+                    if ((task != "" && newTask != "") || (task=="" && newTask=="")) {
                         check = false;
                         $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblErrorStartOnlyOne");
                             $("#lblModalInfo").dialog({
@@ -236,6 +265,24 @@
                                 },
                                 success: function (result) {
                                     console.log("Result: " + result);
+                                    var strError = "";
+                                    switch (result) {
+                                        case "4": strError = "@ResFreeMeasurements.Execute.lblErrorStart4"; break;
+                                        default: break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
                                     loadRunningTasks(operator);
                                 },
                                 statusCode: {

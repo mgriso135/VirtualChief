@@ -109,6 +109,48 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             return ret;
         }
 
+        /* Returns:
+         * 0 if generic error
+         * 1 if finished successfully
+         * 2 if status is already finished
+         * 3 if some task is running
+         * 4 if User not authorized
+         */
+        public int Finish(int MeasurementId)
+        {
+            int ret = -1;
+            // Check write permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement Manage";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(MeasurementId);
+                ret = fm.Finish();
+            }
+            else
+            {
+                ret = 4;
+            }
+
+            return ret;
+        }
+
         public ActionResult ChooseDepartment()
         {
             // Check write permissions
@@ -328,6 +370,34 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.username.Length > 0)
                 {
                     ret = frmTask.Pause(usr);
+                }
+            }
+            return ret;
+        }
+
+        public int FinishTask(String user, int MeasurementId, int TaskId)
+        {
+            int ret = 0;
+            // Check write permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement ExecuteTasks";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                User usr = new App_Code.User(user);
+                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+                if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.username.Length > 0)
+                {
+                    ret = frmTask.Finish(usr);
                 }
             }
             return ret;

@@ -88,6 +88,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hai superato il massimo numero di task avviabili. Metti in pausa o termina un task in esecuzione..
+        /// </summary>
+        public static string lblErrorStart4 {
+            get {
+                return ResourceManager.GetString("lblErrorStart4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Devi selezionare solo uno fra task e nuovo task.
         /// </summary>
         public static string lblErrorStartOnlyOne {
