@@ -7,46 +7,215 @@
 
 <h3>@ResFreeMeasurements.ViewMeasurementDetails.lblTitle</h3>
 
-@if(ViewBag.authR)
+@if (ViewBag.authR && Model!=null)
 {
     String status = "";
-    switch(Model.Status)
+    switch (Model.Status)
     {
         case 'I': status = ResFreeMeasurements.ViewMeasurementDetails.lblStatusRunning; break;
         case 'N': status = ResFreeMeasurements.ViewMeasurementDetails.lblStatusPlanned; break;
         case 'F': status = ResFreeMeasurements.ViewMeasurementDetails.lblStatusEnded; break;
         default: break;
     }
+    bool TaskNotOrigPresent = false;
+
+<script>
+        $(document).ready(function () {
+
+            function loadTaskEvents(taskId) {
+                $.ajax({
+                    url: "@Url.Action("GetTaskEvents", "FreeMeasurement")",
+                    type: 'POST',
+                    async: true,
+                                data: {
+                                    MeasurementId: @ViewBag.MeasurementId,
+                                    TaskId: taskId
+                                },
+                                success: function (data) {
+                                    console.log(data);
+                                    console.log(typeof data);
+                                    console.log(data.length);
+
+                                    var strEvents = "<table class='table table-hover'>"
+                                        + "<tbody>"
+                                        + "<tr>"
+                                        + "<th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHId</th>"
+                                        + "<th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHDate</th>"
+                                        + "<th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHEventType</th>"
+                                        + "<th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHEventUser</th>"
+                                        + "<th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHEventNotes</th>"
+                                        + "</tr>"
+                                        + "</tbody>";
+                                    for (var i = 0; i < data.length; i++) {
+                                        var evDate = new Date(parseInt(data[i]["eventdate"].substr(6)));
+                                        var evType = "";
+                                        switch (data[i]["eventtype"]) {
+                                            case 'I': evType = "@ResFreeMeasurements.ViewMeasurementDetails.lblTHEventTypeI"; break;
+                                            case 'P': evType = "@ResFreeMeasurements.ViewMeasurementDetails.lblTHEventTypeP"; break;
+                                            case 'F': evType = "@ResFreeMeasurements.ViewMeasurementDetails.lblTHEventTypeF"; break;
+                                            default: break;
+                                        }
+
+                                        strEvents += "<tr>"
+                                            + "<td>" + data[i]["id"] + "</td>"
+                                            + "<td>" + moment(evDate).format('DD/MM/YYYY HH:mm:ss') + "</td>"
+                                            + "<td>" + evType + "</td>"
+                                            + "<td>" + data[i]["user"] + "</td>"
+                                            + "<td>" + data[i]["notes"] + "</td>"
+                                            + "</tr>";
+                                    }
+
+                                    strEvents += "</table>";
+
+                                    $("#lblModalEvents").html(strEvents);
+                                    $("#lblModalEvents").dialog({
+                                        modal: true,
+                                        title: "@ResFreeMeasurements.ViewMeasurementDetails.lblModalEventsList",
+                                        open: function (event, ui) {
+                                            /*setTimeout(function () {
+                                                $("#lblModalInfo").dialog("close");
+                                            }, 2000);*/
+                                        }
+                                    });
+                                },
+                                statusCode: {
+                                    404: function (content) { console.log('cannot find resource'); },
+                                    500: function (content) { console.log('internal server error'); }
+                                },
+                                error: function (data) {
+                                    console.log("Error " + data);
+                                }
+                });
+
+
+
+            }
+
+            $("#tblTasks").on("click", ".viewEvents", function () {
+                console.log("Test");
+                var id = $(this).prop("id");
+                var aid = id.split('_');
+                if (aid.length == 2) {
+                    var tskid = aid[1];
+                    loadTaskEvents(tskid);
+                }
+            });
+
+
+        });
+</script>
+
     <div class="row-fluid">
         <div class="span12">
             <h4>@Model.Name</h4>
+            <div>@Model.Description</div>
             <table class="table table-striped table-hover">
-                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblName</b></td><td>@Model.Name</td>
-                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDescription</b></td><td>@Model.Description</td>
-                </tr>
-                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblProduct</b></td><td>@Model.ProcessName - @Model.VariantName (rev. @Model.ProcessRev)</td>
-                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblQuantity</b></td><td>@Model.Quantity @Model.MeasurementUnitType</td></tr>
-                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDepartment</b></td><td>@Model.DepartmentName</td>
-                <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblSerialNumber</b></td><td>@Model.SerialNumber</td></tr>
                 <tr>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblName</b></td>
+                    <td>@Model.Name</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDescription</b></td>
+                    <td>@Model.Description</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDepartment</b></td>
+                    <td>@Model.DepartmentName</td>
+                </tr>
+                <tr>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblProduct</b></td>
+                    <td>@Model.ProcessName - @Model.VariantName (rev. @Model.ProcessRev)</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblQuantity</b></td>
+                    <td>@Model.Quantity @Model.MeasurementUnitType</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblSerialNumber</b></td>
+                    <td>@Model.SerialNumber</td>
+                </tr>
+                <tr>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblStatus</b></td>
+                    <td>@status</td>
                     <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblStartDate</b></td>
                     <td>@Model.PlannedStartDate.ToString("dd/MM/yyyy")</td>
                     <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblEndDate</b></td>
                     <td>@Model.PlannedEndDate.ToString("dd/MM/yyyy")</td>
                 </tr>
-                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblStatus</b></td><td>@status</td>
-                <td><b></b></td><td></td>
-                </tr>
 
             </table>
+            <h4>@ResFreeMeasurements.ViewMeasurementDetails.lblTasks</h4>
+            <table class="table table-striped table-hover" id="tblTasks">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHName</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHDescription</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblStatus</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHQuantityPlanned</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHQuantityProduced</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHWorkstationName</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHStartDateReal</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHEndDateReal</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHLeadTime</th>
+                        <th>@ResFreeMeasurements.ViewMeasurementDetails.lblTHWorkingTime</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Tasks)
+                    {
+                        if (t.NoProductiveTaskId == -1)
+                        {
+                            String startDate = t.StartDateReal > (new DateTime(2000, 1, 1)) ? t.StartDateReal.ToString("dd/MM/yyyy HH:mm:ss") : "";
+                            String endDate = t.EndDateReal > (new DateTime(2000, 1, 1)) ? t.EndDateReal.ToString("dd/MM/yyyy HH:mm:ss") : "";
+                            String stat = "";
+                            switch (t.Status)
+                            {
+                                case 'I': stat = ResFreeMeasurements.ViewMeasurementDetails.lblStatusRunning; break;
+                                case 'N': stat = ResFreeMeasurements.ViewMeasurementDetails.lblStatusPlanned; break;
+                                case 'F': stat = ResFreeMeasurements.ViewMeasurementDetails.lblStatusEnded; break;
+                                case 'P': stat = ResFreeMeasurements.ViewMeasurementDetails.lblStatusPaused; break;
+                                default: break;
+                            }
+                            <tr>
+                                <td>
+                                    @if (t.OrigTaskId == -1)
+                                    {
+                                        TaskNotOrigPresent = true;
+                                        <span class="material-icons" style="color:red;">add_task</span>
+                                    }
+                                </td>
+                                <td>@t.Name</td>
+                                <td>@t.Description</td>
+                                <td>@stat</td>
+                                <td>@t.PlannedQuantity</td>
+                                <td>@t.ProducedQuantity</td>
+                                <td>@t.WorkstationName</td>
+                                <td>@startDate</td>
+                                <td>@endDate</td>
+                                <td>@Math.Round(t.RealLeadTime_Hours, 2)</td>
+                                <td>@Math.Round(t.RealWorkingTime_Hours, 2)</td>
+                                <td><span class="material-icons viewEvents" id="viewEvents_@t.TaskId" style="cursor:pointer;" title="@ResFreeMeasurements.ViewMeasurementDetails.lblModalEventsList">view_list</span></td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="13">
+                            @if (TaskNotOrigPresent)
+                            {
+                                <span><span class="material-icons" style="color:red;">add_task</span>: @ResFreeMeasurements.ViewMeasurementDetails.lblTaskNotOrig</span>
+                            }
+
+
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
         </div>
     </div>
+    <div id="lblModalEvents" class="modal-lg" /> 
 }
 else
 {
-<div class="row-fluid">
-    <div class="span12">
-        @ResFreeMeasurements.ViewMeasurementDetails.lblUserNotAuthorized
+    <div class="row-fluid">
+        <div class="span12">
+            @ResFreeMeasurements.ViewMeasurementDetails.lblUserNotAuthorized
+        </div>
     </div>
-</div>
 }

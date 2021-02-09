@@ -126,6 +126,9 @@
   <data name="lblEndDate" xml:space="preserve">
     <value>Date prevista fine rilievo</value>
   </data>
+  <data name="lblModalEventsList" xml:space="preserve">
+    <value>Lista eventi del task</value>
+  </data>
   <data name="lblName" xml:space="preserve">
     <value>Measurement name</value>
   </data>
@@ -147,11 +150,71 @@
   <data name="lblStatusEnded" xml:space="preserve">
     <value>Terminato</value>
   </data>
+  <data name="lblStatusPaused" xml:space="preserve">
+    <value>In pausa</value>
+  </data>
   <data name="lblStatusPlanned" xml:space="preserve">
     <value>Pianificato</value>
   </data>
   <data name="lblStatusRunning" xml:space="preserve">
     <value>In esecuzione</value>
+  </data>
+  <data name="lblTaskNotOrig" xml:space="preserve">
+    <value>Task aggiunto manualmente durante il rilievo</value>
+  </data>
+  <data name="lblTasks" xml:space="preserve">
+    <value>Tasks</value>
+  </data>
+  <data name="lblTHDate" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="lblTHDescription" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="lblTHEndDateReal" xml:space="preserve">
+    <value>Data fine</value>
+  </data>
+  <data name="lblTHEventNotes" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="lblTHEventType" xml:space="preserve">
+    <value>Tipo evento</value>
+  </data>
+  <data name="lblTHEventTypeF" xml:space="preserve">
+    <value>Fine</value>
+  </data>
+  <data name="lblTHEventTypeI" xml:space="preserve">
+    <value>Inizio</value>
+  </data>
+  <data name="lblTHEventTypeP" xml:space="preserve">
+    <value>Pausa</value>
+  </data>
+  <data name="lblTHEventUser" xml:space="preserve">
+    <value>Input point</value>
+  </data>
+  <data name="lblTHId" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="lblTHLeadTime" xml:space="preserve">
+    <value>Lead time (ore)</value>
+  </data>
+  <data name="lblTHName" xml:space="preserve">
+    <value>Nome task</value>
+  </data>
+  <data name="lblTHQuantityPlanned" xml:space="preserve">
+    <value>Quantità pianificata</value>
+  </data>
+  <data name="lblTHQuantityProduced" xml:space="preserve">
+    <value>Quantità prodotta</value>
+  </data>
+  <data name="lblTHStartDateReal" xml:space="preserve">
+    <value>Data inizio</value>
+  </data>
+  <data name="lblTHWorkingTime" xml:space="preserve">
+    <value>Manodopera (ore)</value>
+  </data>
+  <data name="lblTHWorkstationName" xml:space="preserve">
+    <value>Postazione</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Rilievo tempi libero</value>

@@ -106,6 +106,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Errore: non esiste nessuna rilevazione configurata per questo reparto.
+        /// </summary>
+        public static string lblInputErrorMeasurement {
+            get {
+                return ResourceManager.GetString("lblInputErrorMeasurement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rilievo / Prodotto.
         /// </summary>
         public static string lblMeasurementProduct {
@@ -147,6 +156,60 @@ namespace ResFreeMeasurements {
         public static string lblTask {
             get {
                 return ResourceManager.GetString("lblTask", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fine.
+        /// </summary>
+        public static string lblTHEnd {
+            get {
+                return ResourceManager.GetString("lblTHEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rilievo.
+        /// </summary>
+        public static string lblTHMeasurementName {
+            get {
+                return ResourceManager.GetString("lblTHMeasurementName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pausa.
+        /// </summary>
+        public static string lblTHPause {
+            get {
+                return ResourceManager.GetString("lblTHPause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantità.
+        /// </summary>
+        public static string lblTHQuantity {
+            get {
+                return ResourceManager.GetString("lblTHQuantity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string lblTHTaskName {
+            get {
+                return ResourceManager.GetString("lblTHTaskName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postazione.
+        /// </summary>
+        public static string lblTHWorkstation {
+            get {
+                return ResourceManager.GetString("lblTHWorkstation", resourceCulture);
             }
         }
         

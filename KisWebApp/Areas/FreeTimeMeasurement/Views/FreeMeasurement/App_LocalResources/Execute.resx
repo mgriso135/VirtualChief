@@ -132,6 +132,9 @@
   <data name="lblErrorStartOnlyOne" xml:space="preserve">
     <value>Devi selezionare solo uno fra task e nuovo task</value>
   </data>
+  <data name="lblInputErrorMeasurement" xml:space="preserve">
+    <value>Errore: non esiste nessuna rilevazione configurata per questo reparto</value>
+  </data>
   <data name="lblMeasurementProduct" xml:space="preserve">
     <value>Rilievo / Prodotto</value>
   </data>
@@ -146,6 +149,24 @@
   </data>
   <data name="lblTask" xml:space="preserve">
     <value>Task</value>
+  </data>
+  <data name="lblTHEnd" xml:space="preserve">
+    <value>Fine</value>
+  </data>
+  <data name="lblTHMeasurementName" xml:space="preserve">
+    <value>Rilievo</value>
+  </data>
+  <data name="lblTHPause" xml:space="preserve">
+    <value>Pausa</value>
+  </data>
+  <data name="lblTHQuantity" xml:space="preserve">
+    <value>Quantità</value>
+  </data>
+  <data name="lblTHTaskName" xml:space="preserve">
+    <value>Task</value>
+  </data>
+  <data name="lblTHWorkstation" xml:space="preserve">
+    <value>Postazione</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Rilievo attività di lavoro</value>

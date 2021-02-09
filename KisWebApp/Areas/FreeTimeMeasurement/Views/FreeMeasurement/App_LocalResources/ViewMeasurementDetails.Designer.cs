@@ -89,6 +89,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lista eventi del task.
+        /// </summary>
+        public static string lblModalEventsList {
+            get {
+                return ResourceManager.GetString("lblModalEventsList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Measurement name.
         /// </summary>
         public static string lblName {
@@ -152,6 +161,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In pausa.
+        /// </summary>
+        public static string lblStatusPaused {
+            get {
+                return ResourceManager.GetString("lblStatusPaused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pianificato.
         /// </summary>
         public static string lblStatusPlanned {
@@ -166,6 +184,177 @@ namespace ResFreeMeasurements {
         public static string lblStatusRunning {
             get {
                 return ResourceManager.GetString("lblStatusRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task aggiunto manualmente durante il rilievo.
+        /// </summary>
+        public static string lblTaskNotOrig {
+            get {
+                return ResourceManager.GetString("lblTaskNotOrig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tasks.
+        /// </summary>
+        public static string lblTasks {
+            get {
+                return ResourceManager.GetString("lblTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        public static string lblTHDate {
+            get {
+                return ResourceManager.GetString("lblTHDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descrizione.
+        /// </summary>
+        public static string lblTHDescription {
+            get {
+                return ResourceManager.GetString("lblTHDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data fine.
+        /// </summary>
+        public static string lblTHEndDateReal {
+            get {
+                return ResourceManager.GetString("lblTHEndDateReal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note.
+        /// </summary>
+        public static string lblTHEventNotes {
+            get {
+                return ResourceManager.GetString("lblTHEventNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tipo evento.
+        /// </summary>
+        public static string lblTHEventType {
+            get {
+                return ResourceManager.GetString("lblTHEventType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fine.
+        /// </summary>
+        public static string lblTHEventTypeF {
+            get {
+                return ResourceManager.GetString("lblTHEventTypeF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inizio.
+        /// </summary>
+        public static string lblTHEventTypeI {
+            get {
+                return ResourceManager.GetString("lblTHEventTypeI", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pausa.
+        /// </summary>
+        public static string lblTHEventTypeP {
+            get {
+                return ResourceManager.GetString("lblTHEventTypeP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input point.
+        /// </summary>
+        public static string lblTHEventUser {
+            get {
+                return ResourceManager.GetString("lblTHEventUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Id.
+        /// </summary>
+        public static string lblTHId {
+            get {
+                return ResourceManager.GetString("lblTHId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lead time (ore).
+        /// </summary>
+        public static string lblTHLeadTime {
+            get {
+                return ResourceManager.GetString("lblTHLeadTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nome task.
+        /// </summary>
+        public static string lblTHName {
+            get {
+                return ResourceManager.GetString("lblTHName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantità pianificata.
+        /// </summary>
+        public static string lblTHQuantityPlanned {
+            get {
+                return ResourceManager.GetString("lblTHQuantityPlanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Quantità prodotta.
+        /// </summary>
+        public static string lblTHQuantityProduced {
+            get {
+                return ResourceManager.GetString("lblTHQuantityProduced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data inizio.
+        /// </summary>
+        public static string lblTHStartDateReal {
+            get {
+                return ResourceManager.GetString("lblTHStartDateReal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manodopera (ore).
+        /// </summary>
+        public static string lblTHWorkingTime {
+            get {
+                return ResourceManager.GetString("lblTHWorkingTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postazione.
+        /// </summary>
+        public static string lblTHWorkstationName {
+            get {
+                return ResourceManager.GetString("lblTHWorkstationName", resourceCulture);
             }
         }
         

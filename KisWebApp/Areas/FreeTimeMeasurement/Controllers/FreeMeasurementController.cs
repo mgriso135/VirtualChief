@@ -464,6 +464,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public ActionResult ViewMeasurementDetails(int MeasurementId)
         {
+            ViewBag.MeasurementId = -1;
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
             prmUser[0] = "FreeMeasurement Manage";
@@ -481,6 +482,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 KIS.App_Sources.FreeTimeMeasurement fm = new App_Sources.FreeTimeMeasurement(MeasurementId);
                 if(fm.id!= -1)
                 {
+                    ViewBag.MeasurementId = fm.id;
                     fm.loadTasks();
                     foreach(var t in fm.Tasks)
                     {
@@ -490,6 +492,38 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 }
             }
             return View();
+        }
+
+        public JsonResult GetTaskEvents(int MeasurementId, int TaskId)
+        {
+            JsonResult res = Json("");
+            // Check read permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement ExecuteTasks";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                FreeMeasurement_Task tsk = new FreeMeasurement_Task(MeasurementId, TaskId);
+                if(tsk.TaskId!=-1 && tsk.MeasurementId!=-1)
+                {
+                    tsk.loadEvents();
+                    res = Json(tsk.TaskEvents);
+                }
+            }
+            else
+            {
+                res = Json("2");
+            }
+            return res;
         }
     }    
 }

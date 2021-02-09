@@ -281,7 +281,7 @@ namespace KIS.App_Sources
         public int addTask(NoProductiveTask npTask)
         {
             int ret = 0;
-            if (this.id != -1)
+            if (this.id != -1 && this.Status != 'F')
             {
                 this.loadTasks();
                 int found = -1;
@@ -358,7 +358,7 @@ namespace KIS.App_Sources
         public int addTask(String TaskName)
         {
             int ret = 0;
-            if (this.id != -1 && TaskName.Length < 255)
+            if (this.id != -1 && TaskName.Length < 255 && this.Status != 'F')
             {
                 this.loadTasks();
                 int found = -1;
@@ -889,7 +889,8 @@ namespace KIS.App_Sources
                    + " freemeasurements_tasks.name AS TaskName, "
                    + "  postazioni.name AS WorkstationName, "
                    + "  freemeasurements_tasks.quantity_planned, "
-                   + "  measurementunits.type "
+                   + "  measurementunits.type, "
+                   + " freemeasurements.name AS MeasurementName "
                    + "      FROM "
             + " (SELECT MAX(runningtasks.id) AS runningtasksid "
               + " FROM "
@@ -924,6 +925,7 @@ namespace KIS.App_Sources
                 curr.WorkstationName = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
                 curr.TaskQuantity = rdr.GetDouble(4);
                 curr.MeasurementUnitType = rdr.GetString(5);
+                curr.MeasurementName = rdr.GetString(6);
                 ret.Add(curr);
             }
             rdr.Close();
@@ -1145,7 +1147,7 @@ namespace KIS.App_Sources
                     MySqlConnection conn = (new Dati.Dati()).mycon();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET RealLeadTime_Hours=@workingtime WHERE measurementid=@measurementid AND taskid=@taskid";
+                    cmd.CommandText = "UPDATE freemeasurements_tasks SET RealWorkingTime_Hours=@workingtime WHERE measurementid=@measurementid AND taskid=@taskid";
                     cmd.Parameters.AddWithValue("@workingtime", value);
                     cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
                     cmd.Parameters.AddWithValue("@taskid", this.TaskId);
@@ -1226,7 +1228,7 @@ namespace KIS.App_Sources
                 this._Description = rdr.GetString(7);
                 this._Sequence = rdr.GetInt32(8);
                 this._WorkstationId = rdr.IsDBNull(9) ? -1 : rdr.GetInt32(9);
-                this._WorkstationName = rdr.IsDBNull(10) ? "" :rdr.GetString(10);
+                this._WorkstationName = rdr.IsDBNull(10) ? "" : rdr.GetString(10);
                 this._PlannedQuantity = rdr.GetDouble(11);
                 this._ProducedQuantity = rdr.IsDBNull(12) ? 0 : rdr.GetDouble(12);
                 this._Status = rdr.GetChar(13);
@@ -1267,6 +1269,7 @@ namespace KIS.App_Sources
                 Reparto dept = new Reparto(this.DepartmentId);
                 int maxTasksInExecution = dept.TasksAvviabiliContemporaneamenteDaOperatore;
                 FreeTimeMeasurement fmMeas = new FreeTimeMeasurement(this.MeasurementId);
+                FreeTimeMeasurement prevMeas = null;
                 op.loadFreeMeasurementRunningTasks();
                 int tasksInExecution = op.FreeMeasurementTasks.Count;
                 Boolean checkMaxTasks = false;
@@ -1285,6 +1288,7 @@ namespace KIS.App_Sources
                     PauseDefaultNoProductiveTask = true;
                     npTask = op.FreeMeasurementTasks[0].TaskId;
                     npTaskMeasurentId = op.FreeMeasurementTasks[0].MeasurementId;
+                    prevMeas = new KIS.App_Sources.FreeTimeMeasurement(op.FreeMeasurementTasks[0].MeasurementId);
                 }
 
                 // Check that user is not already running this task
@@ -1311,6 +1315,11 @@ namespace KIS.App_Sources
                     {
                         if (PauseDefaultNoProductiveTask)
                         {
+                            char npStatus = 'P';
+                            if(prevMeas!= null && prevMeas.Status == 'F')
+                            {
+                                npStatus = 'F';
+                            }
                             MySqlCommand cmdDef = conn.CreateCommand();
                             cmdDef.Transaction = tr;
                             cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
@@ -1318,7 +1327,7 @@ namespace KIS.App_Sources
                             cmdDef.Parameters.AddWithValue("@freemeasurementid", npTaskMeasurentId);
                             cmdDef.Parameters.AddWithValue("@taskid", npTask);
                             cmdDef.Parameters.AddWithValue("@user", op.username);
-                            cmdDef.Parameters.AddWithValue("@eventtype", 'P');
+                            cmdDef.Parameters.AddWithValue("@eventtype", npStatus);
                             cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                             cmdDef.Parameters.AddWithValue("@notes", "");
                             cmdDef.ExecuteNonQuery();
@@ -1342,9 +1351,18 @@ namespace KIS.App_Sources
                         // Eventually, change the status of the default no productive task
                         if (PauseDefaultNoProductiveTask)
                         {
-                            FreeMeasurement_Task defTask = new FreeMeasurement_Task(this.MeasurementId, npTask);
+                            FreeMeasurement_Task defTask = new FreeMeasurement_Task(npTaskMeasurentId, npTask);
                             defTask.loadActiveUsers();
-                            if (defTask.Users.Count == 0)
+                            if (prevMeas.Status == 'F')
+                            {
+                                defTask.Status = 'F';
+                                defTask.EndDateReal = eventtime;
+                                Double pWt = defTask.calculateWorkingTime();
+                                defTask.RealWorkingTime_Hours = pWt;
+                                Double pLt = defTask.calculateLeadTime();
+                                defTask.RealLeadTime_Hours = pLt;
+                            }
+                            else if(defTask.Users.Count == 0)
                             {
                                 defTask.Status = 'P';
                             }
@@ -1551,6 +1569,7 @@ namespace KIS.App_Sources
                     FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
                     int nptask = fm.addTask(defTask);
                     FreeMeasurement_Task npTsk = new FreeMeasurement_Task(this.MeasurementId, nptask);
+
                     foreach (var usr in this.Users)
                     {
                         User cUsr = new User(usr);
@@ -1581,9 +1600,15 @@ namespace KIS.App_Sources
                                 tr2.Rollback();
                             }
 
-                            npTsk.Status = 'I';
+                            
                         }
                     }
+
+                    if(npTsk.Status=='N')
+                    {
+                        npTsk.StartDateReal = eventtime;
+                    }
+                    npTsk.Status = 'I';
                 }
 
                 conn.Close();
@@ -1730,7 +1755,7 @@ namespace KIS.App_Sources
                     + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
                     + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) " 
                     + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid AND (eventtype='F' OR eventtype='P') "
-                    + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
+                    // + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY eventdate DESC";
                 rdr = cmd.ExecuteReader();
                 if (rdr.Read())
@@ -1772,6 +1797,7 @@ namespace KIS.App_Sources
                     fmev.eventtype = rdr.GetChar(2);
                     fmev.eventdate = rdr.GetDateTime(3);
                     fmev.notes = rdr.GetString(4);
+                    this.TaskEvents.Add(fmev);
                 }
                 rdr.Close();
                 conn.Close();

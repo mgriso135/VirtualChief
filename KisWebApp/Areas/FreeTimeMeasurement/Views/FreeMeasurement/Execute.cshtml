@@ -65,9 +65,9 @@
                                     }));
                                     for (var i = 0; i < measurements.length; i++) {
                                         var selecte = "";
-                                        if (measurements[i]["MeasurementId"] == selected_measurement) {
+                                        /*if (measurements[i]["MeasurementId"] == selected_measurement) {
                                             selecte = "SELECTED";
-                                        }
+                                        }*/
                                         $('#ddlMeasurements').append($('<option>', {
                                             value: measurements[i]["MeasurementId"],
                                             text: measurements[i]["MeasurementName"] + " - " + measurements[i]["ProcessName"] + " - "  + measurements[i]["VariantName"]
@@ -89,6 +89,7 @@
 
             function loadFreeMeasurementsTasks(measurementId)
             {
+                var selected_task = $('#ddlTasks').val();
                 console.log("loadFreeMeasurementsTasks");
                 console.log(freemeasurementsjson);
                 var measurements_tasks = new jinqJs().from(freemeasurementsjson)
@@ -115,6 +116,8 @@
                     }
                 }
 
+                $('#ddlTasks').val(selected_task);
+
                 console.log("AllowCustomTasks " + allowcustoms);
                 if (allowcustoms) {
                     $("#rowNewTask").show();
@@ -140,16 +143,27 @@
                                     console.log(data);
                                     $("#lblRunningTasks").html("@ResFreeMeasurements.Execute.lblRunningTasks " + operator);
                                     if (data.length > 0) {
-                                        var strTable = "<table class='table table-hover table-striped' style='width:100%'>";
+                                        var strTable = "<table class='table table-hover table-striped' style='width:100%; vertical-align: middle;'>"
+                                            + "<thead><tr>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHPause</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHMeasurementName</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHTaskName</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHWorkstation</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHQuantity</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHEnd</th>"
+                                            + "</tr></thead>"
+                                            +"<tbody style='width:100%; font-size:24px;vertical-align: middle;'>";
                                         for (var i = 0; i < data.length; i++) {
                                             strTable += "<tr>"
-                                                + "<td><span style='cursor:pointer' class='material-icons pausetask' id='pausetask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>pause_circle_outline</span ></td>"
-                                                + "<td>" + data[i]["TaskName"] + "</td>"
-                                                + "<td>" + data[i]["WorkstationName"] + "</td>"
-                                                + "<td>" + data[i]["TaskQuantity"] +" " + data[i]["MeasurementUnitType"] + "</td>"
-                                                + "<td><span style='cursor:pointer' class='material-icons endtask' id='endtask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>task_alt</span ></td>"
+                                                + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons pausetask' id='pausetask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>pause_circle</span ></td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["MeasurementName"] + "</td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["TaskName"] + "</td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["WorkstationName"] + "</td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["TaskQuantity"] +" " + data[i]["MeasurementUnitType"] + "</td>"
+                                                + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons endtask' id='endtask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>done_outline</span ></td>"
                                                 + "</tr>";
                                         }
+                                        strTable += "</tbody>";
                                         strTable += "<table>";
                                         console.log(strTable);
                                         $("#lblRunningTasksList").html(strTable);
@@ -190,6 +204,7 @@
                                 },
                                 success: function (result) {
                                     console.log("Result: " + result);
+                                    loadFreeMeasurements();
                                     loadRunningTasks(operator);
                                 },
                                 statusCode: {
@@ -224,6 +239,7 @@
                                 success: function (result) {
                                     console.log("Result: " + result);
                                     loadRunningTasks(operator);
+                                    loadFreeMeasurements();
                                 },
                                 statusCode: {
                                     404: function (content) { alert('cannot find resource'); },
@@ -296,7 +312,10 @@
                                                 }
                                             });
                                     }
+                                    loadFreeMeasurements();
                                     loadRunningTasks(operator);
+                                    $("#ddlMeasurements").val('');
+                                    $("#ddlTasks").val('');
                                 },
                                 statusCode: {
                                     404: function (content) { alert('cannot find resource'); },
@@ -320,6 +339,8 @@
                                 success: function (result) {
                                     console.log(result);
                                     loadRunningTasks(operator);
+                                    $("#ddlMeasurements").val('');
+                                    $("#ddlTasks").val('');
                                 },
                                 statusCode: {
                                     404: function (content) { alert('cannot find resource'); },
@@ -337,11 +358,26 @@
                     var npTaskId = $("#ddlNoProductiveTasks").val();
                     var operator = $("#ddlOperator option:selected").val();
                     var measurement = $("#ddlMeasurements").val();
+                    if (measurement == "" || measurement.length == 0) {
+                        $("#ddlMeasurements > option").each(function (index, element) {
+                            measurement = element.value;
+                            console.log("Found " + measurement);
+                        });
+                    }
+
+                    var inputcheck = true;
+
+                    if (measurement == '' || !parseInt(measurement)) {
+                        inputcheck = false;
+                        strInputError = "@ResFreeMeasurements.Execute.lblInputErrorMeasurement";
+                    }
 
                     console.log("No Productive Task: " + npTaskId + " " + measurement);
-                    if (npTaskId != "") {
 
-                        $.ajax({
+                    if (inputcheck) {
+                        if (npTaskId != "") {
+
+                            $.ajax({
                                 url: "@Url.Action("StartNoProductiveTask", "FreeMeasurement")",
                                 type: 'POST',
                                 async: true,
@@ -361,16 +397,18 @@
 
                                     if (strError != "") {
                                         $("#lblModalInfo").html(strError);
-                                            $("#lblModalInfo").dialog({
-                                                modal: true,
-                                                title: "Info",
-                                                open: function (event, ui) {
-                                                    setTimeout(function () {
-                                                        $("#lblModalInfo").dialog("close");
-                                                    }, 2000);
-                                                }
-                                            });
+                                        $("#lblModalInfo").dialog({
+                                            modal: true,
+                                            title: "Info",
+                                            open: function (event, ui) {
+                                                setTimeout(function () {
+                                                    $("#lblModalInfo").dialog("close");
+                                                }, 2000);
+                                            }
+                                        });
                                     }
+
+                                    $("#ddlNoProductiveTasks").val('');
                                     loadRunningTasks(operator);
                                 },
                                 statusCode: {
@@ -381,9 +419,9 @@
                                     alert("Error " + data);
                                 }
                             });
-                    }
-                    else {
-                        $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblUnknownTask");
+                        }
+                        else {
+                            $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblUnknownTask");
                             $("#lblModalInfo").dialog({
                                 modal: true,
                                 title: "Info",
@@ -393,6 +431,19 @@
                                     }, 2000);
                                 }
                             });
+                        }
+                    }
+                    else {
+                        $("#lblModalInfo").html(strInputError);
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
                     }
                 });
 
@@ -445,7 +496,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align:center;">
-                            <span id="startProductiveTask" style="font-size: 72px;cursor:pointer;" class="material-icons">play_circle_outline</span>
+                            <span id="startProductiveTask" style="font-size: 72px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
                         </td>
                     </tr>
                 </table>
@@ -473,14 +524,14 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align:center;">
-                            <span id="startNoProductiveTask" style="font-size: 72px;cursor:pointer;" class="material-icons">play_circle_outline</span>
+                            <span id="startNoProductiveTask" style="font-size: 72px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
                         </td>
                     </tr>
                 </table>
 
             </div>
         </div>
-
+        <hr />
         <div class="row-fluid">
             <div class="span12" style="display:none;" id="dvRunningTasks">
                 <h4><span id="lblRunningTasks" /></h4>
