@@ -1,0 +1,52 @@
+﻿@model KIS.App_Sources.FreeTimeMeasurement
+
+@{
+    ViewBag.Title = ResFreeMeasurements.ViewMeasurementDetails.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResFreeMeasurements.ViewMeasurementDetails.lblTitle</h3>
+
+@if(ViewBag.authR)
+{
+    String status = "";
+    switch(Model.Status)
+    {
+        case 'I': status = ResFreeMeasurements.ViewMeasurementDetails.lblStatusRunning; break;
+        case 'N': status = ResFreeMeasurements.ViewMeasurementDetails.lblStatusPlanned; break;
+        case 'F': status = ResFreeMeasurements.ViewMeasurementDetails.lblStatusEnded; break;
+        default: break;
+    }
+    <div class="row-fluid">
+        <div class="span12">
+            <h4>@Model.Name</h4>
+            <table class="table table-striped table-hover">
+                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblName</b></td><td>@Model.Name</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDescription</b></td><td>@Model.Description</td>
+                </tr>
+                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblProduct</b></td><td>@Model.ProcessName - @Model.VariantName (rev. @Model.ProcessRev)</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblQuantity</b></td><td>@Model.Quantity @Model.MeasurementUnitType</td></tr>
+                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDepartment</b></td><td>@Model.DepartmentName</td>
+                <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblSerialNumber</b></td><td>@Model.SerialNumber</td></tr>
+                <tr>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblStartDate</b></td>
+                    <td>@Model.PlannedStartDate.ToString("dd/MM/yyyy")</td>
+                    <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblEndDate</b></td>
+                    <td>@Model.PlannedEndDate.ToString("dd/MM/yyyy")</td>
+                </tr>
+                <tr><td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblStatus</b></td><td>@status</td>
+                <td><b></b></td><td></td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+}
+else
+{
+<div class="row-fluid">
+    <div class="span12">
+        @ResFreeMeasurements.ViewMeasurementDetails.lblUserNotAuthorized
+    </div>
+</div>
+}

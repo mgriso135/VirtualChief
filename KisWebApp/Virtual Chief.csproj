@@ -1054,6 +1054,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewMeasurementDetails.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
     <Compile Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.Designer.cs">
@@ -6054,6 +6059,7 @@
     <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Index.cshtml" />
     <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ChooseDepartment.cshtml" />
     <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Execute.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ViewMeasurementDetails.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -6925,6 +6931,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ChooseDepartment.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResFreeMeasurements</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.resx">
+      <CustomToolNamespace>ResFreeMeasurements</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewMeasurementDetails.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

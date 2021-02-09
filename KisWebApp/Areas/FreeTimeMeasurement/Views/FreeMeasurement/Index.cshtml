@@ -9,6 +9,7 @@
 
 @if (ViewBag.authR)
 {
+
     if (ViewBag.authW)
     {
 <script>
@@ -231,6 +232,7 @@
                 });
             });
 </script>
+           
         // Add form
         <div class="row-fluid">
             <div class="span12" id="btnShowAddForm" style="cursor:pointer;">
@@ -323,13 +325,41 @@
 
     }
 
+                                            <script>
+                                                $(document).ready(function () {
+
+                                                $("#frmStatus").change(function () {
+                                                    var status = $("#frmStatus").val();
+                                                    if (!(status == 'O' || status == 'N' || status == 'I' || status == 'F')) {
+                                                        status = 'O';
+                                                    }
+                                                    window.location.href = window.location.href.split('?')[0] + "?status=" + status;
+                                                });
+                                                });
+                                            </script>
+
+
+    String selO = "";
+    String selI = "";
+    String selN = "";
+    String selF = "";
+    Char status = ViewBag.Status;
+    switch(status)
+    {
+        case 'O': selO = " SELECTED"; break;
+        case 'I': selI = " SELECTED"; break;
+        case 'N': selN = " SELECTED"; break;
+        case 'F': selF = " SELECTED"; break;
+        default: break;
+    }
+                
     <div class="row-fluid">
         <div class="span12">
             <select id="frmStatus">
-                <option value="O">@ResFreeMeasurements.Index.lblFilterO</option>
-                <option value="N">@ResFreeMeasurements.Index.lblFilterN</option>
-                <option value="I">@ResFreeMeasurements.Index.lblFilterI</option>
-                <option value="F">@ResFreeMeasurements.Index.lblFilterF</option>
+                <option value="O" @selO>@ResFreeMeasurements.Index.lblFilterO</option>
+                <option value="N" @selN>@ResFreeMeasurements.Index.lblFilterN</option>
+                <option value="I" @selI>@ResFreeMeasurements.Index.lblFilterI</option>
+                <option value="F" @selF>@ResFreeMeasurements.Index.lblFilterF</option>
             </select>
 
             <table class="table table-hover table-striped" id="tblMeasurements">
@@ -348,9 +378,13 @@
                 </thead>
                 <tbody>
                     @foreach (var m in Model)
-                    {
+            {
                         <tr id="freemeasurement_@m.id">
-                            <td><span class="material-icons">toc</span></td>
+                            <td>
+                                <a href="ViewMeasurementDetails?MeasurementId=@m.id">
+                                    <span class="material-icons">toc</span>
+                                </a>
+                            </td>
                             <td>@m.Name</td>
                             <td>@m.Description</td>
                             <td>@m.ProcessName - @m.VariantName</td>
@@ -368,7 +402,7 @@
     <div id="lblModalInfo" />
 }
 else
-{
+    {
     <div class="row-fluid">
         <div class="span12">@ResFreeMeasurements.Index.lblUserNotAuthorized</div>
     </div>

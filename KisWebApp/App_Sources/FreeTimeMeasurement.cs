@@ -487,8 +487,9 @@ namespace KIS.App_Sources
                     this.loadTasks();
                     foreach (var t in this.Tasks)
                     {
-                        if (t.Status != 'F')
+                        if (t.Status != 'F' && t.NoProductiveTaskId==-1)
                         {
+                            t.Status = 'F';
                             Double wt = t.calculateWorkingTime();
                             t.RealWorkingTime_Hours = wt;
                             Double lt = t.calculateLeadTime();
@@ -518,7 +519,10 @@ namespace KIS.App_Sources
                 this.loadTasks();
                 foreach(var t in this.Tasks)
                 {
-                    wt_Hours += t.RealWorkingTime_Hours;
+                    if(t.NoProductiveTaskId!=-1)
+                    { 
+                        wt_Hours += t.RealWorkingTime_Hours;
+                    }
                 }
             }
             return wt_Hours;
@@ -541,8 +545,11 @@ namespace KIS.App_Sources
                 Boolean checkend = false;
                 // Gets the first event
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM "
-                    + " freemeasurements_tasks_events WHERE freemeasurementid=@measurementid AND eventtype='I' "
+                cmd.CommandText = "SELECT id, freemeasurements_tasks_events.freemeasurementid, freemeasurements_tasks_events.taskid, user, eventtype, eventdate, notes FROM "
+                    + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
+                    + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                    + " WHERE freemeasurementid=@measurementid AND eventtype='I' "
+                    + " AND freemeasurements_tasks.NoProductiveTaskId=-1 "
                     + " ORDER BY eventdate";
                 cmd.Parameters.AddWithValue("@measurementid", this.id);
 
@@ -554,8 +561,11 @@ namespace KIS.App_Sources
                 }
                 rdr.Close();
 
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM "
-                    + " freemeasurements_tasks_events WHERE freemeasurementid=@measurementid AND (eventtype='F' OR eventtype='P') "
+                cmd.CommandText = "SELECT id, freemeasurements_tasks_events.freemeasurementid, freemeasurements_tasks_events.taskid, user, eventtype, eventdate, notes FROM "
+                    + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
+                    + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                    +" WHERE freemeasurementid=@measurementid AND (eventtype='F' OR eventtype='P') "
+                    + " AND freemeasurements_tasks.NoProductiveTaskId=-1 "
                     + " ORDER BY eventdate DESC";
                 rdr = cmd.ExecuteReader();
                 if (rdr.Read())
@@ -780,7 +790,9 @@ namespace KIS.App_Sources
                 + " freemeasurements_tasks.quantity_planned, "
                 + " freemeasurements_tasks.status AS TaskStatus, " // 27
                 + " processo.name AS ProcessName, "
-                + " varianti.nomeVariante AS ProductName "
+                + " varianti.nomeVariante AS ProductName, "
+                + " freemeasurements.AllowCustomTasks, "        // 30
+                + " freemeasurements.ExecuteFinishedTasks "     // 31
                 + " FROM freemeasurements INNER JOIN freemeasurements_tasks "
                 + " ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
                 + " LEFT JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) "
@@ -828,6 +840,8 @@ namespace KIS.App_Sources
                 curr.TaskStatus = rdr.GetChar(27);
                 curr.ProcessName = rdr.GetString(28);
                 curr.VariantName = rdr.GetString(29);
+                curr.AllowCustomTasks = rdr.GetBoolean(30);
+                curr.ExecuteFinishedTasks = rdr.GetBoolean(31);
                 fmStruct.Add(curr);
             }
             rdr.Close();
@@ -1161,6 +1175,8 @@ namespace KIS.App_Sources
         private int _DepartmentId;
         public int DepartmentId { get { return this._DepartmentId; } }
 
+        public List<FreeMeasurements_Tasks_Event> TaskEvents;
+
         public FreeMeasurement_Task(int measurementID, int taskID)
         {
             this._MeasurementId = -1;
@@ -1237,7 +1253,9 @@ namespace KIS.App_Sources
         public int Start(User op)
         {
             int ret = 0;
-            if(this.Status == 'I' || this.Status == 'N' || this.Status == 'P' || (this.Status == 'F' && this.AllowExecuteFinishedTasks))
+            if(this.Status == 'I' || this.Status == 'N' || this.Status == 'P' 
+                || (this.Status == 'F' && this.AllowExecuteFinishedTasks && this.NoProductiveTaskId == -1)
+                || this.NoProductiveTaskId != -1)
             {
                 DateTime eventtime = DateTime.UtcNow;
 
@@ -1433,7 +1451,7 @@ namespace KIS.App_Sources
                             cmdDef.Parameters.AddWithValue("@notes", "");
                             cmdDef.ExecuteNonQuery();
 
-                            cmdDef.CommandText = "UPDATE freemeasurements_tasks SET status='I' WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
+                            cmdDef.CommandText = "UPDATE freemeasurements_tasks SET status='I', task_startdatereal=@eventdate WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
                             cmdDef.ExecuteNonQuery();
 
                             tr2.Commit();
@@ -1637,8 +1655,11 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM "
-                    + " freemeasurements_tasks_events WHERE freemeasurementid=@measurementid AND taskid=@taskid "
+                cmd.CommandText = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, user, eventtype, eventdate, notes FROM "
+                    + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
+                    + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                    + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid "
+                   // + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY user, eventdate";
                 cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
                 cmd.Parameters.AddWithValue("@taskid", this.TaskId);
@@ -1688,8 +1709,11 @@ namespace KIS.App_Sources
                 Boolean checkend = false;
                 // Gets the first event
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM "
-                    + " freemeasurements_tasks_events WHERE freemeasurementid=@measurementid AND taskid=@taskid AND eventtype='I' "
+                cmd.CommandText = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, user, eventtype, eventdate, notes FROM "
+                    + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
+                    + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                    + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid AND eventtype='I' "
+                   // + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY eventdate";
                 cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
                 cmd.Parameters.AddWithValue("@taskid", this.TaskId);
@@ -1702,8 +1726,11 @@ namespace KIS.App_Sources
                 }
                 rdr.Close();
 
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM "
-                    + " freemeasurements_tasks_events WHERE freemeasurementid=@measurementid AND taskid=@taskid AND (eventtype='F' OR eventtype='P') "
+                cmd.CommandText = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, user, eventtype, eventdate, notes FROM "
+                    + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
+                    + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) " 
+                    + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid AND (eventtype='F' OR eventtype='P') "
+                    + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY eventdate DESC";
                 rdr = cmd.ExecuteReader();
                 if (rdr.Read())
@@ -1720,6 +1747,35 @@ namespace KIS.App_Sources
                 }
             }
             return lt_Hours / 3600;
+        }
+
+        public void loadEvents()
+        {
+            this.TaskEvents = new List<FreeMeasurements_Tasks_Event>();
+            if(this.MeasurementId != -1 && this.TaskId !=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT id, user, eventtype, eventdate, notes FROM freemeasurements_tasks_events WHERE freemeasurementid=@freemeasurementid AND taskid=@taskid "
+                    + " ORDER BY eventdate";
+                cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
+                cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    FreeMeasurements_Tasks_Event fmev = new FreeMeasurements_Tasks_Event();
+                    fmev.freemeasurementid = this.MeasurementId;
+                    fmev.taskid = this.TaskId;
+                    fmev.id = rdr.GetInt32(0);
+                    fmev.user = rdr.GetString(1);
+                    fmev.eventtype = rdr.GetChar(2);
+                    fmev.eventdate = rdr.GetDateTime(3);
+                    fmev.notes = rdr.GetString(4);
+                }
+                rdr.Close();
+                conn.Close();
+            }
         }
     }
 
@@ -1765,5 +1821,7 @@ namespace KIS.App_Sources
         public Char TaskStatus;
         public String ProcessName;
         public String VariantName;
+        public Boolean AllowCustomTasks;
+        public Boolean ExecuteFinishedTasks;
     }
 }

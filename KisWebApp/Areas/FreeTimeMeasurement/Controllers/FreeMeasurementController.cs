@@ -40,8 +40,10 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
             }
 
+            ViewBag.Status = "";
             if (ViewBag.authR || ViewBag.authW)
             {
+                ViewBag.Status = Status;
                 FreeTimeMeasurements measList = new FreeTimeMeasurements();
                 measList.loadMeasurements(Status);
                 return View(measList.MeasurementsList);
@@ -268,6 +270,14 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
         }
 
         /* Returns:
+         * -2 if this measurement does not support custom tasks
+         * -1 if Task not found
+         * 0 if generic error
+         * 1 if task started successfully
+         * 2 if task already started
+         * 3 if operator not found
+         * 4 if operator exceeds max number of running tasks
+         * 6 if user is already running the task
          */
         public int StartNewProductiveTask(String user, int MeasurementId, String TaskName)
         {
@@ -289,15 +299,23 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             {
                 User usr = new App_Code.User(user);
                 KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(MeasurementId);
+                 
                 if(fm.id!=-1 && TaskName.Length < 255)
                 {
-                    int TaskId = fm.addTask(TaskName);
-                    FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
-                
-                if (frmTask.TaskId != -1 && usr.username.Length > 0)
-                {
-                    ret = frmTask.Start(usr);
-                }
+                    if (fm.AllowCustomTasks)
+                    {
+                        int TaskId = fm.addTask(TaskName);
+                        FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+
+                        if (frmTask.TaskId != -1 && usr.username.Length > 0)
+                        {
+                            ret = frmTask.Start(usr);
+                        }
+                    }
+                    else
+                    {
+                        ret = -2;
+                    }
                 }
                 else
                 {
@@ -443,9 +461,35 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             }
             return res;
         }
-    }
 
-   
+        public ActionResult ViewMeasurementDetails(int MeasurementId)
+        {
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement Manage";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
 
-    
+            if(ViewBag.authR)
+            {
+                KIS.App_Sources.FreeTimeMeasurement fm = new App_Sources.FreeTimeMeasurement(MeasurementId);
+                if(fm.id!= -1)
+                {
+                    fm.loadTasks();
+                    foreach(var t in fm.Tasks)
+                    {
+                        t.loadEvents();
+                    }
+                    return View(fm);
+                }
+            }
+            return View();
+        }
+    }    
 }

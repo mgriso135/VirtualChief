@@ -102,7 +102,11 @@
                     value: "",
                     text: ""
                 }));
+
+                var allowcustoms = false;
+
                 for (var i = 0; i < measurements_tasks.length; i++) {
+                    allowcustoms = measurements_tasks[i]["AllowCustomTasks"];
                     if (measurements_tasks[i]["NoProductiveTaskId"] == "-1") {
                         $('#ddlTasks').append($('<option>', {
                             value: measurements_tasks[i]["TaskId"],
@@ -110,6 +114,15 @@
                         }));
                     }
                 }
+
+                console.log("AllowCustomTasks " + allowcustoms);
+                if (allowcustoms) {
+                    $("#rowNewTask").show();
+                }
+                else {
+                    $("#rowNewTask").hide();
+                }
+
             }
 
                 function loadRunningTasks(operator) {
@@ -327,6 +340,7 @@
 
                     console.log("No Productive Task: " + npTaskId + " " + measurement);
                     if (npTaskId != "") {
+
                         $.ajax({
                                 url: "@Url.Action("StartNoProductiveTask", "FreeMeasurement")",
                                 type: 'POST',
@@ -338,6 +352,25 @@
                                 },
                                 success: function (result) {
                                     console.log(result);
+                                    console.log("Result: " + result);
+                                    var strError = "";
+                                    switch (result) {
+                                        case "4": strError = "@ResFreeMeasurements.Execute.lblErrorStart4"; break;
+                                        default: break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
                                     loadRunningTasks(operator);
                                 },
                                 statusCode: {
@@ -406,7 +439,7 @@
                             </select>
                         </td>
                     </tr>
-                    <tr>
+                    <tr id="rowNewTask">
                         <td>@ResFreeMeasurements.Execute.lblNewTask</td>
                         <td><input type="text" id="txtNewTask" style="width: 77%" class="form-control" /></td>
                     </tr>
