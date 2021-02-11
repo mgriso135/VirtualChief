@@ -156,6 +156,9 @@
   <data name="lblTHMeasurementName" xml:space="preserve">
     <value>Rilievo</value>
   </data>
+  <data name="lblTHNotes" xml:space="preserve">
+    <value>Note</value>
+  </data>
   <data name="lblTHPause" xml:space="preserve">
     <value>Pausa</value>
   </data>

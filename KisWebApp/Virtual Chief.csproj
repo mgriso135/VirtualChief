@@ -86,8 +86,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\itextsharp.xtra.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=4.12.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MathNet.Numerics.4.12.0\lib\net461\MathNet.Numerics.dll</HintPath>
+    <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.15.0\lib\net461\MathNet.Numerics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -5961,8 +5961,6 @@
     <Content Include="img\iconStateOfHealth.png" />
     <Content Include="img\iconWorkInstruction.png" />
     <Content Include="robots.txt" />
-    <Content Include="Scripts\bootstrap-datetimepicker.js" />
-    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Areas\Analysis\Views\web.config" />
     <Content Include="Areas\Analysis\Views\ProductionHistory\Index.cshtml" />
     <Content Include="Areas\Analysis\Views\ProductionHistory\HistoricDataPanel.cshtml" />
@@ -6029,6 +6027,8 @@
     <Content Include="Areas\Departments\Views\DepartmentsConfig\GetAutoPauseTaskConfig.cshtml" />
     <Content Include="Areas\Analysis\Views\ProductionWorkload\Index.cshtml" />
     <Content Include="Areas\Analysis\Views\ProductionWorkload\ProductDataPanel.cshtml" />
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -6042,6 +6042,14 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="Areas\Products\Views\Products\TaskMicrostepsList.cshtml" />
+    <Content Include="Areas\ProcessMining\Views\web.config" />
+    <Content Include="Areas\Config\Views\NoProductiveTasks\Index.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\web.config" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Index.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ChooseDepartment.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Execute.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ViewMeasurementDetails.cshtml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Scripts\bootstrap.bundle.min.js.map" />
@@ -6052,14 +6060,6 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Areas\Products\Views\Products\TaskMicrostepsList.cshtml" />
-    <Content Include="Areas\ProcessMining\Views\web.config" />
-    <Content Include="Areas\Config\Views\NoProductiveTasks\Index.cshtml" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\web.config" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Index.cshtml" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ChooseDepartment.cshtml" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Execute.cshtml" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ViewMeasurementDetails.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -11332,8 +11332,6 @@
     <Content Include="Views\web.config" />
     <Content Include="Scripts\jquery-3.5.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.5.1.min.map" />
-    <Content Include="Scripts\moment.min.js.map" />
-    <Content Include="Scripts\moment-with-locales.min.js.map" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper.js.flow" />
@@ -11344,6 +11342,8 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Scripts\moment.min.js.map" />
+    <Content Include="Scripts\moment-with-locales.min.js.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">

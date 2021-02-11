@@ -178,6 +178,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Note.
+        /// </summary>
+        public static string lblTHNotes {
+            get {
+                return ResourceManager.GetString("lblTHNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pausa.
         /// </summary>
         public static string lblTHPause {

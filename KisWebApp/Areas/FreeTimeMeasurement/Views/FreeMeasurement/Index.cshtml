@@ -339,20 +339,23 @@
                                             </script>
 
 
-    String selO = "";
-    String selI = "";
-    String selN = "";
-    String selF = "";
-    Char status = ViewBag.Status;
-    switch(status)
-    {
-        case 'O': selO = " SELECTED"; break;
-        case 'I': selI = " SELECTED"; break;
-        case 'N': selN = " SELECTED"; break;
-        case 'F': selF = " SELECTED"; break;
-        default: break;
-    }
-                
+                                            String selO = "";
+                                            String selI = "";
+                                            String selN = "";
+                                            String selF = "";
+                                            Char status = ViewBag.Status;
+                                            switch(status)
+                                            {
+                                                case 'O': selO = " SELECTED"; break;
+                                                case 'I': selI = " SELECTED"; break;
+                                                case 'N': selN = " SELECTED"; break;
+                                                case 'F': selF = " SELECTED"; break;
+                                                default: break;
+                                            }
+
+                                            KIS.App_Sources.FreeTimeMeasurements tobeclosed = new KIS.App_Sources.FreeTimeMeasurements();
+                                            tobeclosed.loadMeasurementsToBeClosed();
+
     <div class="row-fluid">
         <div class="span12">
             <select id="frmStatus">
@@ -378,20 +381,30 @@
                 </thead>
                 <tbody>
                     @foreach (var m in Model)
-            {
+                    {
+                        String tbc = "";
+                        try
+                        {
+                            var t = tobeclosed.MeasurementsList.First(z => z.id == m.id);
+                            tbc = "background-color: lightgreen;";
+                        }
+                        catch
+                        {
+
+                        }
                         <tr id="freemeasurement_@m.id">
                             <td>
                                 <a href="ViewMeasurementDetails?MeasurementId=@m.id">
                                     <span class="material-icons">toc</span>
                                 </a>
                             </td>
-                            <td>@m.Name</td>
-                            <td>@m.Description</td>
-                            <td>@m.ProcessName - @m.VariantName</td>
-                            <td>@m.Quantity</td>
-                            <td>@m.DepartmentName</td>
-                            <td>@m.PlannedStartDate.ToString("dd/MM/yyyy")</td>
-                            <td>@m.PlannedEndDate.ToString("dd/MM/yyyy")</td>
+                            <td><span style="@tbc">@m.Name</span></td>
+                            <td><span style="@tbc">@m.Description</span></td>
+                            <td><span style="@tbc">@m.ProcessName - @m.VariantName</span></td>
+                            <td><span style="@tbc">@m.Quantity</span></td>
+                            <td><span style="@tbc">@m.DepartmentName</span></td>
+                            <td><span style="@tbc">@m.PlannedStartDate.ToString("dd/MM/yyyy")</span></td>
+                            <td><span style="@tbc">@m.PlannedEndDate.ToString("dd/MM/yyyy")</span></td>
                             <td><span class="material-icons endMeasurement" style="cursor: pointer;" id="endMeasurement_@m.id">done_all</span></td>
                         </tr>
                     }

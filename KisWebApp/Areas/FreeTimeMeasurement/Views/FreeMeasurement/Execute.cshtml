@@ -139,9 +139,9 @@
                                     username: operator,
                                     deptId: @ViewBag.DepartmentId
                                 },
-                                success: function (data) {
+                    success: function (data) {
                                     console.log(data);
-                                    $("#lblRunningTasks").html("@ResFreeMeasurements.Execute.lblRunningTasks " + operator);
+                                    $("#lblRunningTasks").html("@ResFreeMeasurements.Execute.lblRunningTasks <span style='font-size:48px;'>" + operator + "</span>");
                                     if (data.length > 0) {
                                         var strTable = "<table class='table table-hover table-striped' style='width:100%; vertical-align: middle;'>"
                                             + "<thead><tr>"
@@ -149,23 +149,31 @@
                                             + "<th>@ResFreeMeasurements.Execute.lblTHMeasurementName</th>"
                                             + "<th>@ResFreeMeasurements.Execute.lblTHTaskName</th>"
                                             + "<th>@ResFreeMeasurements.Execute.lblTHWorkstation</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHNotes</th>"
                                             + "<th>@ResFreeMeasurements.Execute.lblTHQuantity</th>"
                                             + "<th>@ResFreeMeasurements.Execute.lblTHEnd</th>"
                                             + "</tr></thead>"
                                             +"<tbody style='width:100%; font-size:24px;vertical-align: middle;'>";
                                         for (var i = 0; i < data.length; i++) {
+                                            var strQty = "";
+                                            if (data[i]["NoProductiveTaskId"] == "-1") {
+                                                strQty = "<input type='number' id='txtQuantity_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "' value='"
+                                                    + data[i]["TaskQuantity"] + "' class='form-text' min='0.01' step='.01' style='width:120px' />"
+                                                    + data[i]["MeasurementUnitType"];
+                                            }
                                             strTable += "<tr>"
                                                 + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons pausetask' id='pausetask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>pause_circle</span ></td>"
                                                 + "<td style='vertical-align:middle;'>" + data[i]["MeasurementName"] + "</td>"
                                                 + "<td style='vertical-align:middle;'>" + data[i]["TaskName"] + "</td>"
                                                 + "<td style='vertical-align:middle;'>" + data[i]["WorkstationName"] + "</td>"
-                                                + "<td style='vertical-align:middle;'>" + data[i]["TaskQuantity"] +" " + data[i]["MeasurementUnitType"] + "</td>"
+                                                + "<td><span class='material-icons btnViewNoteForm' id='btnViewNoteForm_" + data[i]["LastTaskEventId"] + "' style='cursor:pointer; font-size:32px;color:red;'>speaker_notes</span></td>"
+                                                + "<td style='vertical-align:middle;'>" + strQty + "</td>"
                                                 + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons endtask' id='endtask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>done_outline</span ></td>"
                                                 + "</tr>";
                                         }
                                         strTable += "</tbody>";
                                         strTable += "<table>";
-                                        console.log(strTable);
+                                        // console.log(strTable);
                                         $("#lblRunningTasksList").html(strTable);
                                         $("#dvRunningTasks").show();
                                     }
@@ -191,7 +199,9 @@
                     var measurement = aItm[1];
                     var task = aItm[2];
 
-                    console.log(measurement + " " + task + " " + operator)
+                    var producedquantity = $("#txtQuantity_" + measurement + "_" + task).val().replace('.', ',');
+
+                    console.log(measurement + " " + task + " " + operator + " " + producedquantity);
 
                     $.ajax({
                                 url: "@Url.Action("FinishTask", "FreeMeasurement")",
@@ -200,12 +210,17 @@
                                 data: {
                                     user: operator,
                                     MeasurementId: measurement,
-                                    TaskId: task
+                                    TaskId: task,
+                                    ProducedQuantity: producedquantity
                                 },
                                 success: function (result) {
                                     console.log("Result: " + result);
-                                    loadFreeMeasurements();
+                                    $("#ddlMeasurements").val('');
                                     loadRunningTasks(operator);
+                                    loadFreeMeasurements();
+                                    $("#ddlTasks").empty();
+                                    $("#ddlTasks").val('');
+                                    $("#ddlMeasurements").val('');
                                 },
                                 statusCode: {
                                     404: function (content) { alert('cannot find resource'); },
@@ -338,6 +353,25 @@
                                 },
                                 success: function (result) {
                                     console.log(result);
+                                    var strError = "";
+                                    switch (result) {
+                                        case "4": strError = "@ResFreeMeasurements.Execute.lblErrorStart4"; break;
+                                        default: break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
+                                    loadFreeMeasurements();
                                     loadRunningTasks(operator);
                                     $("#ddlMeasurements").val('');
                                     $("#ddlTasks").val('');
@@ -447,6 +481,74 @@
                     }
                 });
 
+                $("#lblRunningTasksList").on("click", ".btnViewNoteForm", function () {
+                    var sevid = $(this).prop("id");
+                    var aevid = sevid.split('_');
+                    console.log(sevid + " " + aevid);
+                    if (aevid.length == 2) {
+                        var evid = aevid[1];
+                        console.log(evid);
+                        $.ajax({
+                            url: "@Url.Action("GetTaskEventNote", "FreeMeasurement")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                EventId: evid
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                strTaskNotes = "<textarea id='txtNote" + evid + "' class='form-check txtNote'>" + result + "</textarea><br />"
+                                    + "<span class='material-icons btnSaveNote' id='btnSaveNote_" + evid + "' style='cursor:pointer;color:red;'>save</span>";
+                                $("#frmAddTaskNote").html(strTaskNotes);
+                                $("#frmAddTaskNote").dialog({
+                                    modal: true,
+                                    title: "Note",
+                                    open: function (event, ui) {
+                                    }
+                                });
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                    }
+                });
+
+                $("#frmAddTaskNote").on("click", ".btnSaveNote", function () {
+                    var notes = $('<div/>').text($('.txtNote').val()).html();
+                    var sevid = $(this).prop("id");
+                    var aevid = sevid.split('_');
+                    if (aevid.length == 2) {
+                        evid = aevid[1];
+                        $.ajax({
+                            url: "@Url.Action("SaveTaskEventNote", "FreeMeasurement")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                EventId: evid,
+                                note: notes
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                if (result == "1") {
+                                    $("#frmAddTaskNote").dialog("close");
+                                }
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                    }
+                });
+
             loadFreeMeasurements();
 
         });
@@ -496,7 +598,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align:center;">
-                            <span id="startProductiveTask" style="font-size: 72px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
+                            <span id="startProductiveTask" style="font-size: 48px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
                         </td>
                     </tr>
                 </table>
@@ -524,7 +626,7 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="text-align:center;">
-                            <span id="startNoProductiveTask" style="font-size: 72px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
+                            <span id="startNoProductiveTask" style="font-size: 48px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
                         </td>
                     </tr>
                 </table>
@@ -540,6 +642,7 @@
         </div>
 
         <div id="lblModalInfo" />
+        <div id="frmAddTaskNote" />
     }
 }
 else

@@ -393,7 +393,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             return ret;
         }
 
-        public int FinishTask(String user, int MeasurementId, int TaskId)
+        public int FinishTask(String user, int MeasurementId, int TaskId, Double ProducedQuantity)
         {
             int ret = 0;
             // Check write permissions
@@ -415,6 +415,10 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
                 if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.username.Length > 0)
                 {
+                    if(ProducedQuantity > 0)
+                    { 
+                        frmTask.ProducedQuantity = ProducedQuantity;
+                    }
                     ret = frmTask.Finish(usr);
                 }
             }
@@ -500,7 +504,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             // Check read permissions
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
-            prmUser[0] = "FreeMeasurement ExecuteTasks";
+            prmUser[0] = "FreeMeasurement Manage";
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
@@ -525,5 +529,194 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             }
             return res;
         }
-    }    
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if everything ok
+         * 2 if there were some errors while adding timespans to the database
+         * 9 if user not authorized
+         */
+        public int TransformEventsToTimespans()
+        {
+            int ret = 0;
+            // Check write permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement ExecuteTasks";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                KIS.App_Sources.FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                ret = fms.TransformEventsToTimespans();
+            }
+            else
+            {
+                ret = 9;
+            }
+            return ret;
+        }
+
+        public String FreeMeasurementDownload()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/PrintMultipleSheetsBarcodes", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/SalesOrders/SalesOrder/PrintMultipleSheetsBarcodes", "", ipAddr);
+            }
+
+            String ret = "";
+            // Check read permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement Manage";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authR)
+            {
+                String freemeasurements = 
+                    "\"AllowCustomTasks\", "
+                    + "\"AllowExecuteFinishedTasks\", "
+                    + "\"CreatedBy\", "
+                    + "\"CreationDate\", "
+                    + "\"DepartmentId\", "
+                    + "\"DepartmentName\", "
+                    + "\"DepartmentTimeZone\", "
+                    + "\"Description\", "
+                    + "\"id\", "
+                    + "\"MeasurementUnitId\", "
+                    + "\"MeasurementUnitType\", "
+                    + "\"Name\", "
+                    + "\"PlannedEndDate\", "
+                    + "\"PlannedStartDate\", "
+                    + "\"ProcessDescription\", "
+                    + "\"ProcessId\", "
+                    + "\"ProcessName\", "
+                    + "\"ProcessRev\", "
+                    + "\"Quantity\", "
+                    + "\"RealEndDate\", "
+                    + "\"RealLeadTime_Hours\", "
+                    + "\"RealWorkingTime_Hours\", "
+                    + "\"SerialNumber\", "
+                    + "\"Status\", "
+                    + "\"VariantId\", "
+                    + "\"VariantName\" "
+                    + "\n";
+                FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                fms.loadMeasurements('A');
+                foreach(var m in fms.MeasurementsList)
+                {
+                    freemeasurements += 
+                        "\"" + m.AllowCustomTasks + "\", "
+                        + "\"" + m.AllowExecuteFinishedTasks + "\", "
+                        + "\"" + m.CreatedBy + "\", "
+                        + "\"" + m.CreationDate + "\", "
+                        + "\"" + m.DepartmentId + "\", "
+                        + "\"" + m.DepartmentName + "\", "
+                        + "\"" + m.DepartmentTimeZone + "\", "
+                        + "\"" + m.Description + "\", "
+                        + "\"" + m.id + "\", "
+                        + "\"" + m.MeasurementUnitId + "\", "
+                        + "\"" + m.MeasurementUnitType + "\", "
+                        + "\"" + m.Name + "\", "
+                        + "\"" + m.PlannedEndDate + "\", "
+                        + "\"" + m.PlannedStartDate + "\", "
+                        + "\"" + m.ProcessDescription + "\", "
+                        + "\"" + m.ProcessId + "\", "
+                        + "\"" + m.ProcessName + "\", "
+                        + "\"" + m.ProcessRev + "\", "
+                        + "\"" + m.Quantity + "\", "
+                        + "\"" + m.RealEndDate + "\", "
+                        + "\"" + Math.Round(m.RealLeadTime_Hours,4).ToString().Replace(",",".") + "\", "
+                        + "\"" + Math.Round(m.RealWorkingTime_Hours, 4).ToString().Replace(",", ".") + "\", "
+                        + "\"" + m.SerialNumber + "\", "
+                        + "\"" + m.Status + "\", "
+                        + "\"" + m.VariantId + "\", "
+                        + "\"" + m.VariantName + "\" "
+                        + "\n";
+                }
+
+
+                String savePath = Server.MapPath(@"~\Data\FreeMeasurements\");
+                ret = DateTime.UtcNow.Ticks + ".csv";
+                System.IO.File.WriteAllText(savePath + ret, freemeasurements.ToString());
+
+            }
+            return ret;
+        }
+
+        public String GetTaskEventNote(int EventId)
+        {
+            String ret = "";
+            // Check read permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement Manage";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authR)
+            {
+                FreeMeasurements_Tasks_Event ev = new FreeMeasurements_Tasks_Event(EventId);
+                if(ev.id!=-1)
+                {
+                    ret = ev.notes;
+                }
+            }
+            return ret;
+        }
+
+        public int SaveTaskEventNote(int EventId, String note)
+        {
+            int ret = 0;
+            // Check write permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "FreeMeasurement ExecuteTasks";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authW)
+            {
+                FreeMeasurements_Tasks_Event fmev = new FreeMeasurements_Tasks_Event(EventId);
+                if(fmev.id != -1)
+                {
+                    ret = fmev.SaveNote(note);
+                }
+            }
+            return ret;
+        }
+    }
 }

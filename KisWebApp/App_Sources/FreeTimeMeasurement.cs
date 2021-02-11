@@ -496,6 +496,9 @@ namespace KIS.App_Sources
                             t.RealLeadTime_Hours = lt;
                         }
                     }
+
+                    FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                    fms.TransformEventsToTimespans();
                 }
                 else
                 {
@@ -614,6 +617,7 @@ namespace KIS.App_Sources
 
         /* Loads a single status
          * if input = 'O' then loads all NOT finished Measurements
+         * if input = 'A' then loads all
          */
         public void loadMeasurements(char Status)
         {
@@ -621,12 +625,20 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            String strWhere = " = '" + Status + "'";
-            if (Status == 'O')
-            {
-                strWhere = " <> 'F'";
+
+            String strWhere = "";
+            if(Status != 'A')
+            { 
+                if (Status == 'O')
+                {
+                    strWhere = " WHERE status <> 'F'";
+                }
+                else
+                {
+                    strWhere = " WHERE status = '" + Status + "'";
+                }
             }
-            cmd.CommandText = "SELECT id FROM freemeasurements WHERE status " + strWhere + " ORDER BY plannedstartdate, plannedenddate";
+            cmd.CommandText = "SELECT id FROM freemeasurements  " + strWhere + " ORDER BY plannedstartdate, plannedenddate";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -852,33 +864,6 @@ namespace KIS.App_Sources
 
         public List<FreeMeasurentsTasksJsonStruct> GetRunningTasks(Reparto dept, User usr)
         {
-            /*
-             * SELECT 
-		freemeasurements_tasks.name AS TaskName, 
-        postazioni.name AS WorkstationName, 
-        freemeasurements_tasks.quantity_planned, 
-        measurementunits.type
- FROM 
-(SELECT MAX(runningtasks.id) AS runningtasksid
-  FROM 
-	(SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype,
-	freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate
-                FROM freemeasurements_tasks 
-                INNER JOIN freemeasurements_tasks_events 
-                ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) 
-                INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) 
-                WHERE freemeasurements_tasks.status = 'I'  
-                 AND freemeasurements_tasks_events.user = 'op1'
-                 AND freemeasurements.departmentid = 0
-                ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks
-                GROUP BY runningtasks.taskid) AS runningtasks2
-               
-               INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON( freemeasurements_tasks_events2.id = runningtasks2.runningtasksid)
-               INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid) 
-               inner join freemeasurements ON (freemeasurements.id = freemeasurements_tasks.MeasurementId)
-               INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) 
-               INNER JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) 
-			WHERE eventtype = 'I'*/
             List<FreeMeasurentsTasksJsonStruct> ret = new List<FreeMeasurentsTasksJsonStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
@@ -890,8 +875,10 @@ namespace KIS.App_Sources
                    + "  postazioni.name AS WorkstationName, "
                    + "  freemeasurements_tasks.quantity_planned, "
                    + "  measurementunits.type, "
-                   + " freemeasurements.name AS MeasurementName "
-                   + "      FROM "
+                   + " freemeasurements.name AS MeasurementName, "
+                   + " runningtasksid, "
+                   + " freemeasurements_tasks.NoProductiveTaskId "
+                   + " FROM "
             + " (SELECT MAX(runningtasks.id) AS runningtasksid "
               + " FROM "
               + "   (SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype, "
@@ -926,12 +913,150 @@ namespace KIS.App_Sources
                 curr.TaskQuantity = rdr.GetDouble(4);
                 curr.MeasurementUnitType = rdr.GetString(5);
                 curr.MeasurementName = rdr.GetString(6);
+                curr.LastTaskEventId = rdr.GetInt32(7);
+                curr.NoProductiveTaskId = rdr.IsDBNull(8) ? -1 : rdr.GetInt32(8);
                 ret.Add(curr);
             }
             rdr.Close();
             conn.Close();
             return ret;
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if everything ok
+         * 2 if there were some errors while adding timespans to the database
+         */
+        public int TransformEventsToTimespans()
+        {
+            int ret = 0;
+            List<FreeMeasurements_Tasks_Events_Timespan> timespans = new List<FreeMeasurements_Tasks_Events_Timespan>();
+            List<FreeMeasurements_Tasks_Event> events = new List<FreeMeasurements_Tasks_Event>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+
+            // Get all events of finished tasks there are not in the timespans table
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT freemeasurements_tasks_events.id, "
+                            + " freemeasurements_tasks_events.freemeasurementid, "
+                            + " freemeasurements_tasks_events.taskid, "
+                            + " freemeasurements_tasks_events.user, "
+                            + " freemeasurements_tasks_events.eventtype, "
+                            + " freemeasurements_tasks_events.eventdate, "
+                            + " freemeasurements_tasks_events.notes FROM "
+                            + " freemeasurements_tasks INNER JOIN freemeasurements_tasks_events "
+                            + " ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                            + " LEFT JOIN  freemeasurements_tasks_events_timespans "
+                            + " ON(freemeasurements_tasks_events_timespans.starteventid = freemeasurements_tasks_events.id OR "
+                            + " freemeasurements_tasks_events_timespans.endeventid = freemeasurements_tasks_events.id) "
+                            + " WHERE 1 = 1 "
+                            + " AND freemeasurements_tasks.status = 'F' "
+                            + " AND freemeasurements_tasks_events_timespans.id IS NULL"
+                            + " ORDER BY freemeasurements_tasks_events.freemeasurementid, "
+                            + " freemeasurements_tasks_events.taskid, "
+                            + " freemeasurements_tasks_events.user, "
+                            + " freemeasurements_tasks_events.eventdate";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                FreeMeasurements_Tasks_Event currEv = new FreeMeasurements_Tasks_Event();
+                currEv.id = rdr.GetInt32(0);
+                currEv.freemeasurementid = rdr.GetInt32(1);
+                currEv.taskid = rdr.GetInt32(2);
+                currEv.user = rdr.GetString(3);
+                currEv.eventtype = rdr.GetChar(4);
+                currEv.eventdate = rdr.GetDateTime(5);
+                currEv.notes = rdr.GetString(6);
+                events.Add(currEv);
+            }
+            rdr.Close();
+
+            // Transform all events to timespans
+            for(int i = 0; i < events.Count; i+=2)
+            {
+                if(events[i].eventtype == 'I' && (events[i+1].eventtype == 'F' || events[i+1].eventtype == 'P')
+                    && events[i].user == events[i + 1].user
+                    && events[i].freemeasurementid == events[i+1].freemeasurementid
+                    && events[i].taskid == events[i + 1].taskid)
+                {
+                    FreeMeasurements_Tasks_Events_Timespan currTs = new FreeMeasurements_Tasks_Events_Timespan();
+                    currTs.freemeasurementid = events[i].freemeasurementid;
+                    currTs.taskid = events[i].taskid;
+                    currTs.user = events[i].user;
+                    currTs.starteventid = events[i].id;
+                    currTs.starteventtype = events[i].eventtype;
+                    currTs.starteventdate = events[i].eventdate;
+                    currTs.starteventnotes = events[i].notes;
+                    currTs.endeventid = events[i + 1].id;
+                    currTs.endeventtype = events[i+1].eventtype;
+                    currTs.endeventdate = events[i+1].eventdate;
+                    currTs.endeventnotes = events[i+1].notes;
+
+                    timespans.Add(currTs);
+                }
+                else
+                {
+                    ret = 3;
+                    this.log += "Error in events " + events[i].id + ", " + events[i + 1].id + " \n";
+                }
+            }
+
+            // Write all the timespans in the database
+            foreach(var ts in timespans)
+            {
+                MySqlTransaction tr = conn.BeginTransaction();
+                MySqlCommand cmdTs = conn.CreateCommand();
+                cmdTs.CommandText = "INSERT INTO freemeasurements_tasks_events_timespans (measurementid,taskid,inputpoint,starteventid,starteventtype,starteventdate,starteventnotes, " 
+                    + "endeventid, endeventtype, endeventdate, endeventnotes) "
+                    + " VALUES (@measurementid, @taskid, @inputpoint, @starteventid, @starteventtype, @starteventdate, @starteventnotes, "
+                    + " @endeventid, @endeventtype, @endeventdate, @endeventnotes)";
+                cmdTs.Parameters.AddWithValue("@measurementid", ts.freemeasurementid);
+                cmdTs.Parameters.AddWithValue("@taskid", ts.taskid);
+                cmdTs.Parameters.AddWithValue("@inputpoint", ts.user);
+                cmdTs.Parameters.AddWithValue("@starteventid", ts.starteventid);
+                cmdTs.Parameters.AddWithValue("@starteventtype", ts.starteventtype);
+                cmdTs.Parameters.AddWithValue("@starteventdate", ts.starteventdate.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmdTs.Parameters.AddWithValue("@starteventnotes", ts.starteventnotes);
+                cmdTs.Parameters.AddWithValue("@endeventid", ts.endeventid);
+                cmdTs.Parameters.AddWithValue("@endeventtype", ts.endeventtype);
+                cmdTs.Parameters.AddWithValue("@endeventdate", ts.endeventdate.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmdTs.Parameters.AddWithValue("@endeventnotes", ts.endeventnotes);
+                try
+                {
+                    cmdTs.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch(Exception ex)
+                {
+                    this.log += ex.Message + " \n";
+                    tr.Rollback();
+                    ret = 2;
+                }
+            }
+
+            conn.Close();
+
+            return ret;
+        }
+
+        public void loadMeasurementsToBeClosed()
+        {
+            this.MeasurementsList = new List<FreeTimeMeasurement>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT freemeasurements.id FROM freemeasurements LEFT JOIN "
+                + " (SELECT DISTINCT(measurementid) FROM freemeasurements_tasks WHERE status <> 'F' AND noproductivetaskid IS NULL) AS openmeasurements "
+                + " ON(freemeasurements.id = openmeasurements.measurementid) WHERE status <> 'F' AND measurementid IS NULL";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while(rdr.Read())
+            {
+                this.MeasurementsList.Add(new FreeTimeMeasurement(rdr.GetInt32(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
     }
 
     public class FreeMeasurement_Task
@@ -1530,7 +1655,6 @@ namespace KIS.App_Sources
 
                     this.EndDateReal = eventtime;
                     this.Status = 'F';
-                    this.ProducedQuantity = this.PlannedQuantity;
                 }
                 catch (Exception ex)
                 {
@@ -1807,6 +1931,8 @@ namespace KIS.App_Sources
 
     public class FreeMeasurements_Tasks_Event
     {
+        public String log;
+
         public int id;
         public int freemeasurementid;
         public int taskid;
@@ -1814,6 +1940,89 @@ namespace KIS.App_Sources
         public Char eventtype;
         public DateTime eventdate;
         public String notes;
+
+        public FreeMeasurements_Tasks_Event()
+        {
+            this.id = -1;
+            this.freemeasurementid = -1;
+            this.taskid = -1;
+        }
+
+        public FreeMeasurements_Tasks_Event(int eventid)
+        {
+            this.id = -1;
+            this.freemeasurementid = -1;
+            this.taskid = -1;
+            if (eventid !=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM telwin.freemeasurements_tasks_events WHERE id=@eventid";
+                cmd.Parameters.AddWithValue("@eventid", eventid);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if(rdr.Read())
+                {
+                    this.id = rdr.GetInt32(0);
+                    this.freemeasurementid = rdr.GetInt32(1);
+                    this.taskid = rdr.GetInt32(2);
+                    this.user = rdr.GetString(3);
+                    this.eventtype = rdr.GetChar(4);
+                    this.eventdate = rdr.GetDateTime(5);
+                    this.notes = rdr.GetString(6);
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if note saved successfully
+         * 2 if task event not found
+         */
+        public int SaveNote(String note)
+        {
+            int ret = 0;
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "UPDATE freemeasurements_tasks_events SET notes=@note WHERE id=@id";
+            cmd.Parameters.AddWithValue("@note", note);
+            cmd.Parameters.AddWithValue("@id", id);
+            MySqlTransaction tr = conn.BeginTransaction();
+            cmd.Transaction = tr;
+            try
+            {
+                cmd.ExecuteNonQuery();
+                tr.Commit();
+                this.notes = note;
+                ret = 1;
+            }
+            catch(Exception ex)
+            {
+                this.log = ex.Message;
+                tr.Rollback();
+            }
+            conn.Close();
+            return ret;
+        }
+    }
+
+    public class FreeMeasurements_Tasks_Events_Timespan
+    {
+        public int id;
+        public int freemeasurementid;
+        public int taskid;
+        public String user;
+        public int starteventid;
+        public Char starteventtype;
+        public DateTime starteventdate;
+        public String starteventnotes;
+        public int endeventid;
+        public Char endeventtype;
+        public DateTime endeventdate;
+        public String endeventnotes;
     }
 
     public class FreeMeasurentsTasksJsonStruct
@@ -1849,5 +2058,6 @@ namespace KIS.App_Sources
         public String VariantName;
         public Boolean AllowCustomTasks;
         public Boolean ExecuteFinishedTasks;
+        public int LastTaskEventId;
     }
 }
