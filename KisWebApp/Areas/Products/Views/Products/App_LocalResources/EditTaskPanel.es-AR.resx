@@ -198,4 +198,28 @@
   <data name="lblDefaultOperators" xml:space="preserve">
     <value>Operadores asignados a tareas por defecto</value>
   </data>
+  <data name="lblMicrosteps" xml:space="preserve">
+    <value>Microfases</value>
+  </data>
+  <data name="lblAddMicrostepCycleTime" xml:space="preserve">
+    <value>Tiempo ciclo (seg)</value>
+  </data>
+  <data name="lblAddMicrostepDescription" xml:space="preserve">
+    <value>Descripción</value>
+  </data>
+  <data name="lblAddMicrostepName" xml:space="preserve">
+    <value>Nombre</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWaste" xml:space="preserve">
+    <value>Valor o Desperdicio</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWasteH" xml:space="preserve">
+    <value>Dessperdicio oculto</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWasteV" xml:space="preserve">
+    <value>Valor</value>
+  </data>
+  <data name="lblAddMicrostepValueOrWasteW" xml:space="preserve">
+    <value>Desperdicio evidente</value>
+  </data>
 </root>

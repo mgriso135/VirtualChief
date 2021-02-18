@@ -1,0 +1,423 @@
+﻿@model IEnumerable<KIS.App_Sources.FreeTimeMeasurement>
+
+@{
+    ViewBag.Title = ResFreeMeasurements.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResFreeMeasurements.Index.lblTitle</h3>
+
+@if (ViewBag.authR)
+{
+
+    if (ViewBag.authW)
+    {
+<script>
+            $(document).ready(function () {
+
+                $(function () {
+                    $("[id*=txtAddPlanned]").datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        showWeek: true,
+                        firstDay: 1,
+                        minDate: 'today'
+                    });
+                });
+
+                $("#btnShowAddForm").click(function () {
+                    if ($('#frmAddMeasurement').is(':visible')) {
+                        $("#frmAddMeasurement").hide();
+                    }
+                    else {
+                        $("#frmAddMeasurement").show();
+                    }
+
+                });
+
+                $("#tblAddMeasurement").on("click", "#btnAddFreeMeasurement",  function () {
+                    console.log("Adding measurement...");
+                    if ($("#frmAddFreeMeasurement")[0].checkValidity()) {
+
+                        var name = $('<div/>').text($('#txtAddName').val()).html().substring(0, 255);
+                        var description = $('<div/>').text($('#txtAddDesc').val()).html();
+                        var iprod = $("#frmAddProduct").val();
+                        var sproductid = $("#ddlProductsList option[value='" + iprod + "']").attr('data-id');
+                        console.log(sproductid);
+                        var aproductid = sproductid.split('/');
+                        var idept = $("#frmAddDepartment").val();
+                        var sdept = $("#ddlDepartments option[value='" + idept + "']").attr('data-id');
+                        var dept = parseInt(sdept);
+                        console.log($("#txtAddQuantity").val());
+                        var quantity = parseFloat($("#txtAddQuantity").val());
+                        console.log(quantity);
+                        var measUnit = $("#ddlAddMU  option:selected").prop("id");
+
+                        var txtStartDate = $("#txtAddPlannedStart").val();
+                        var txtEndDate = $("#txtAddPlannedEnd").val();
+
+                        var astartdate = txtStartDate.split('/');
+                        var aenddate = txtEndDate.split('/');
+                        var serialnumber = $('<div/>').text($('#txtAddSerialNumber').val()).html().substring(0, 255);
+
+                        var allowcustomtasks = $("#frmAddAllowCustomTasks").is(":checked");
+                        var allowstartfinishedtasks = $("#frmAddAllowRiexecuteTasks").is(":checked");
+
+                        var startDate = Date.parse($("#txtAddPlannedStart").val());
+                        var endDate = Date.parse($("#txtAddPlannedEnd").val());
+
+                        var startDate = moment($("#txtAddPlannedStart").val(), "DD/MM/YYYY");
+                        var endDate = moment($("#txtAddPlannedEnd").val(), "DD/MM/YYYY");
+
+
+                        /*console.log("A " + startDate + " B " + endDate + " C " + allowcustomtasks + " D " + allowstartfinishedtasks
+                            + " E " + typeof startDate + " F " + typeof endDate
+                            + " G " + measUnit);*/
+
+                        console.log(aproductid.length + " "
+                            + sdept.length + " "
+                            + dept + " "
+                            + quantity + " "
+                            + astartdate.length + " "
+                            + aenddate.length + " "
+                            + startDate + " "
+                            + endDate + " "
+                        );
+
+                        if (aproductid.length == 3 && sdept.length > 0 && dept >= 0 && quantity >= 0
+                            && astartdate.length == 3 && aenddate.length == 3) {
+                            var aStartDate = new Date(startDate);
+                            var aEndDate = new Date(endDate);
+
+                            //console.log("A " + startDate + " B " + endDate);
+                            $.ajax({
+                                url: "@Url.Action("Add", "FreeMeasurement")",
+                                type: 'POST',
+                                data: {
+                                    plannedstartdate: moment(startDate).format('YYYY-MM-DD'), // aStartDate.getFullYear() + "-" + (aStartDate.getMonth() + 1) + "-" + aStartDate.getDate(),
+                                    plannedenddate: moment(endDate).format('YYYY-MM-DD'), // aEndDate.getFullYear() + "-" + (aEndDate.getMonth() + 1) + "-" + aEndDate.getDate(),
+                                    DepartmentId: dept,
+                                    name: name,
+                                    description: description,
+                                    processid: aproductid[0],
+                                    processrev: aproductid[1],
+                                    variantid: aproductid[2],
+                                    serialnumber: serialnumber,
+                                    quantity: quantity,
+                                    measurementUnitId: measUnit,
+                                    AllowCustomTasks: allowcustomtasks,
+                                    AllowExecuteFinishedTasks: allowstartfinishedtasks
+                                },
+                                success: function (data) {
+                                    console.log("Data: " + data);
+                                    if (data >= 0) {
+                                        window.location.href = window.location.href;
+                                    }
+                                    else {
+                                        var strError = "";
+                                        /*
+                                         * -1 if generic error
+                                         * -3 if error while adding
+                                         * -12 if error in input data - name
+                                         * -13 if error in input data - plannedstartdate
+                                         * -14 if error in input data - plannedenddate
+                                         * -15 if error in input data - department
+                                         * -16 if error in input data - process not found
+                                         * -17 if error in input data - serialnumber
+                                         * -18 if error in input data - quantity
+                                         * -19 if error in input data - measurement unit
+                                         * -20 if user is not authorized
+                                         */
+                                        switch (data) {
+                                            case "-1": strError = "@ResFreeMeasurements.Index.lblError12"; break;
+                                            case "-12": strError = "@ResFreeMeasurements.Index.lblError12"; break;
+                                            case "-13": strError = "@ResFreeMeasurements.Index.lblError13"; break;
+                                            case "-14": strError = "@ResFreeMeasurements.Index.lblError14"; break;
+                                            case "-15": strError = "@ResFreeMeasurements.Index.lblError15"; break;
+                                            case "-16": strError = "@ResFreeMeasurements.Index.lblError16"; break;
+                                            case "-17": strError = "@ResFreeMeasurements.Index.lblError17"; break;
+                                            case "-18": strError = "@ResFreeMeasurements.Index.lblError18"; break;
+                                            case "-19": strError = "@ResFreeMeasurements.Index.lblError19"; break;
+                                            case "-20": strError = "@ResFreeMeasurements.Index.lblError20"; break;
+                                            default: strError = "@ResFreeMeasurements.Index.lblErrorGeneric"; break;
+                                        }
+                                        console.log("Data " + data);
+                                        $("#lblModalInfo").html(strError);
+                                        $("#lblModalInfo").dialog({
+                                            modal: true,
+                                            title: "Info",
+                                            open: function (event, ui) {
+                                                setTimeout(function () {
+                                                    $("#lblModalInfo").dialog("close");
+                                                }, 2000);
+                                            }
+                                        });
+
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+
+                            });
+                        }
+                        else {
+                            $("#lblModalInfo").html("@ResFreeMeasurements.Index.lblError12");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+
+                        }
+                    }
+                    else {
+                        $("#frmAddFreeMeasurement")[0].reportValidity();
+                    }
+                });
+
+                $("#tblMeasurements").on("click", ".endMeasurement", function () {
+                    var itm = $(this).prop("id");
+                    console.log(itm);
+                    var measurement = itm.split('_')[1];
+
+                     $.ajax({
+                                url: "@Url.Action("Finish", "FreeMeasurement")",
+                                type: 'POST',
+                                async: false,
+                                data: {
+                                    MeasurementId: measurement,
+                                },
+                                success: function (result) {
+                                    console.log("Result: " + result);
+
+                                    var strError = "";
+                                    switch (result) {
+                                        case "1": strError = "@ResFreeMeasurements.Index.lblFinishOk"; break;
+                                        case "3": strError = "@ResFreeMeasurements.Index.lblErrorFinish3"; break;
+                                        default: strError = ""; break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
+                                    if (result == "1") {
+                                        $("#freemeasurement_" + measurement).remove();
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                });
+            });
+</script>
+           
+        // Add form
+        <div class="row-fluid">
+            <div class="span12" id="btnShowAddForm" style="cursor:pointer;">
+                <h5><span class="material-icons">addchart</span>@ResFreeMeasurements.Index.lblAddNewMeasurement</h5>
+            </div>
+        </div>
+
+        <div id="frmAddMeasurement" class="row-fluid" style="display: none;">
+            <div class="span12">
+                <form id="frmAddFreeMeasurement">
+                    <table class="table table-hover" id="tblAddMeasurement">
+                        <tbody>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddName</td>
+                                <td><input type="text" id="txtAddName" placeholder="@ResFreeMeasurements.Index.lblAddName" class="form-text" required /></td>
+                                <td>@ResFreeMeasurements.Index.lblAddDescription</td>
+                                <td><textarea id="txtAddDesc" placeholder="@ResFreeMeasurements.Index.lblAddDescription" class="form-text"></textarea></td>
+                            </tr>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddProduct</td>
+                                <td>
+                                    <input list="ddlProductsList" id="frmAddProduct" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddProduct" required>
+                                    <datalist id="ddlProductsList">
+                                        @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                                            var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
+                                            foreach (var prd in sortedProducts)
+                                            {
+                                                <option data-id="@prd.IDCombinato2" value="@prd.process.processName - @prd.variant.nomeVariante"></option>
+                                            }
+                                        }
+                                    </datalist>
+                                </td>
+                                <td>@ResFreeMeasurements.Index.lblAddDepartment</td>
+                                <td>
+                                    <input list="ddlDepartments" id="frmAddDepartment" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddDepartment" required>
+                                    <datalist id="ddlDepartments">
+                                        @{KIS.App_Code.ElencoReparti elRep = new KIS.App_Code.ElencoReparti();
+                                            var sortedDepartments = elRep.elenco.OrderBy(x => x.name);
+                                            foreach (var dept in sortedDepartments)
+                                            {
+                                                <option data-id="@dept.id" value="@dept.name"></option>
+                                            }
+                                        }
+                                    </datalist>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddQuantity</td>
+                                <td>
+                                    <input type="number" step=".01" value="1" placeholder="@ResFreeMeasurements.Index.lblAddQuantity" id="txtAddQuantity" class="form-text" min="0.01" style="width:120px;" required />
+                                    <select id="ddlAddMU" style="width:80px;">
+                                        @{
+                                            KIS.App_Code.MeasurementUnits muList = new KIS.App_Code.MeasurementUnits();
+                                            muList.loadMeasurementUnits();
+                                            var muListOrd = muList.UnitsList.OrderByDescending(x => x.IsDefault).ThenBy(y => y.Type);
+                                            foreach (var mu in muListOrd)
+                                            {
+                                                <option id="@mu.ID">@mu.Type</option>
+                                            }
+                                        }
+                                    </select>
+                                </td>
+                                <td>@ResFreeMeasurements.Index.lblAddSerialNumber</td>
+                                <td><input type="text" id="txtAddSerialNumber" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddSerialNumber" /></td>
+                            </tr>
+                            <tr>
+                                <td>@ResFreeMeasurements.Index.lblAddDatePlanned_Start</td>
+                                <td><input type="text" class="form-text" id="txtAddPlannedStart" /></td>
+                                <td>@ResFreeMeasurements.Index.lblAddDatePlanned_End</td>
+                                <td><input type="text" class="form-text" id="txtAddPlannedEnd" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">@ResFreeMeasurements.Index.lblAllowCustomTasks</td>
+                                <td colspan="2"><input type="checkbox" id="frmAddAllowCustomTasks" checked /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">@ResFreeMeasurements.Index.lblAllowRiexecuteTasks</td>
+                                <td colspan="2"><input type="checkbox" id="frmAddAllowRiexecuteTasks" checked /></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="4" class="text-align:center;"><span class="material-icons" id="btnAddFreeMeasurement" style="cursor:pointer;">save</span></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+        </div>
+
+    }
+
+                                            <script>
+                                                $(document).ready(function () {
+
+                                                $("#frmStatus").change(function () {
+                                                    var status = $("#frmStatus").val();
+                                                    if (!(status == 'O' || status == 'N' || status == 'I' || status == 'F')) {
+                                                        status = 'O';
+                                                    }
+                                                    window.location.href = window.location.href.split('?')[0] + "?status=" + status;
+                                                });
+                                                });
+                                            </script>
+
+
+                                            String selO = "";
+                                            String selI = "";
+                                            String selN = "";
+                                            String selF = "";
+                                            Char status = ViewBag.Status;
+                                            switch(status)
+                                            {
+                                                case 'O': selO = " SELECTED"; break;
+                                                case 'I': selI = " SELECTED"; break;
+                                                case 'N': selN = " SELECTED"; break;
+                                                case 'F': selF = " SELECTED"; break;
+                                                default: break;
+                                            }
+
+                                            KIS.App_Sources.FreeTimeMeasurements tobeclosed = new KIS.App_Sources.FreeTimeMeasurements();
+                                            tobeclosed.loadMeasurementsToBeClosed();
+
+    <div class="row-fluid">
+        <div class="span12">
+            <select id="frmStatus">
+                <option value="O" @selO>@ResFreeMeasurements.Index.lblFilterO</option>
+                <option value="N" @selN>@ResFreeMeasurements.Index.lblFilterN</option>
+                <option value="I" @selI>@ResFreeMeasurements.Index.lblFilterI</option>
+                <option value="F" @selF>@ResFreeMeasurements.Index.lblFilterF</option>
+            </select>
+
+            <table class="table table-hover table-striped" id="tblMeasurements">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@ResFreeMeasurements.Index.lblTHName</th>
+                        <th>@ResFreeMeasurements.Index.lblTHDescription</th>
+                        <th>@ResFreeMeasurements.Index.lblTHProductName</th>
+                        <th>@ResFreeMeasurements.Index.lblTHQuantity</th>
+                        <th>@ResFreeMeasurements.Index.lblTHDepartment</th>
+                        <th>@ResFreeMeasurements.Index.lblTHStartDatePlanned</th>
+                        <th>@ResFreeMeasurements.Index.lblTHEndDatePlanned</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        String tbc = "";
+                        try
+                        {
+                            var t = tobeclosed.MeasurementsList.First(z => z.id == m.id);
+                            tbc = "background-color: lightgreen;";
+                        }
+                        catch
+                        {
+
+                        }
+                        <tr id="freemeasurement_@m.id">
+                            <td>
+                                <a href="ViewMeasurementDetails?MeasurementId=@m.id">
+                                    <span class="material-icons">toc</span>
+                                </a>
+                            </td>
+                            <td><span style="@tbc">@m.Name</span></td>
+                            <td><span style="@tbc">@m.Description</span></td>
+                            <td><span style="@tbc">@m.ProcessName - @m.VariantName</span></td>
+                            <td><span style="@tbc">@m.Quantity</span></td>
+                            <td><span style="@tbc">@m.DepartmentName</span></td>
+                            <td><span style="@tbc">@m.PlannedStartDate.ToString("dd/MM/yyyy")</span></td>
+                            <td><span style="@tbc">@m.PlannedEndDate.ToString("dd/MM/yyyy")</span></td>
+                            <td><span class="material-icons endMeasurement" style="cursor: pointer;" id="endMeasurement_@m.id">done_all</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="lblModalInfo" />
+}
+else
+    {
+    <div class="row-fluid">
+        <div class="span12">@ResFreeMeasurements.Index.lblUserNotAuthorized</div>
+    </div>
+}
+

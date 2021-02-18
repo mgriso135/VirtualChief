@@ -1,0 +1,655 @@
+﻿
+@{
+    ViewBag.Title = ResFreeMeasurements.Execute.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResFreeMeasurements.Execute.lblTitle</h3>
+
+@if (ViewBag.authW)
+{
+    if (ViewBag.DepartmentId != -1)
+    {
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jinq/1.6.1/jinqjs.js" integrity="sha512-uui/aXrsWdhhxCo039xxseWZN5yLYjMJMQc8azPYAYOFmB5BtHy/jRWy2SEkFq6IYeSrQBIqfLIhX5cRdRG68w==" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function () {
+
+                var freemeasurementsjson;
+
+            $("#btnChooseOperator").click(function () {
+                var operator = $("#ddlOperator option:selected").val();
+                $('#ddlMeasurements').val("");
+                $('#ddlTasks').val("");
+                $('#txtNewTask').val("");
+                console.log("Operator: " + operator);
+                $("#dvStartTask").show();
+                loadRunningTasks(operator);
+
+            });
+
+                $('#ddlOperator').on('change', function () {
+                    var operator = $("#ddlOperator option:selected").val();
+                    $('#ddlMeasurements').val("");
+                    $('#ddlTasks').val("");
+                    $('#txtNewTask').val("");
+                    console.log("Operator: " + operator);
+                    $("#dvStartTask").show();
+                    loadRunningTasks(operator);
+                });
+
+                function loadFreeMeasurements() {
+                    var selected_measurement = $("#ddlMeasurements").val();
+                $.ajax({
+                    url: "@Url.Action("GetFreeMeasurentsTasksJson", "FreeMeasurement")",
+                    type: 'POST',
+                    async: true,
+                                data: {
+                                    departmentId: @ViewBag.DepartmentId
+                                },
+                                success: function (data) {
+                        console.log(data);
+                                    console.log(typeof data);
+                                    console.log(data.length);
+                                    freemeasurementsjson = data;
+                                    console.log(freemeasurementsjson);
+
+                                    var measurements = new jinqJs().from(data)
+                                        .distinct(['MeasurementId', 'MeasurementName', 'ProcessName', 'VariantName'])
+                                        .select(/*'MeasurementId', 'MeasurementName'*/);
+                                    console.log(measurements);
+
+                                    $('#ddlMeasurements').empty();
+                                    $('#ddlMeasurements').append($('<option>', {
+                                        value: "",
+                                        text: ""
+                                    }));
+                                    for (var i = 0; i < measurements.length; i++) {
+                                        var selecte = "";
+                                        /*if (measurements[i]["MeasurementId"] == selected_measurement) {
+                                            selecte = "SELECTED";
+                                        }*/
+                                        $('#ddlMeasurements').append($('<option>', {
+                                            value: measurements[i]["MeasurementId"],
+                                            text: measurements[i]["MeasurementName"] + " - " + measurements[i]["ProcessName"] + " - "  + measurements[i]["VariantName"]
+                                        }));
+                                    }
+
+                                    $("#ddlMeasurements").val(selected_measurement);
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                });
+                setTimeout(loadFreeMeasurements, 60000);
+            }
+
+            function loadFreeMeasurementsTasks(measurementId)
+            {
+                var selected_task = $('#ddlTasks').val();
+                console.log("loadFreeMeasurementsTasks");
+                console.log(freemeasurementsjson);
+                var measurements_tasks = new jinqJs().from(freemeasurementsjson)
+                    .where('MeasurementId = ' + measurementId)
+                    .select(/*'MeasurementId', 'TaskId', 'TaskName'*/);
+
+                console.log(measurements_tasks);
+
+                $('#ddlTasks').empty();
+                $('#ddlTasks').append($('<option>', {
+                    value: "",
+                    text: ""
+                }));
+
+                var allowcustoms = false;
+
+                for (var i = 0; i < measurements_tasks.length; i++) {
+                    allowcustoms = measurements_tasks[i]["AllowCustomTasks"];
+                    if (measurements_tasks[i]["NoProductiveTaskId"] == "-1") {
+                        $('#ddlTasks').append($('<option>', {
+                            value: measurements_tasks[i]["TaskId"],
+                            text: measurements_tasks[i]["TaskName"]
+                        }));
+                    }
+                }
+
+                $('#ddlTasks').val(selected_task);
+
+                console.log("AllowCustomTasks " + allowcustoms);
+                if (allowcustoms) {
+                    $("#rowNewTask").show();
+                }
+                else {
+                    $("#rowNewTask").hide();
+                }
+
+            }
+
+                function loadRunningTasks(operator) {
+                    console.log("loadRunningTasks: " + operator);
+                    var selected_measurement = $("#ddlMeasurements").val();
+                $.ajax({
+                    url: "@Url.Action("GetRunningTasks", "FreeMeasurement")",
+                    type: 'POST',
+                    async: true,
+                    data: {
+                                    username: operator,
+                                    deptId: @ViewBag.DepartmentId
+                                },
+                    success: function (data) {
+                                    console.log(data);
+                                    $("#lblRunningTasks").html("@ResFreeMeasurements.Execute.lblRunningTasks <span style='font-size:48px;'>" + operator + "</span>");
+                                    if (data.length > 0) {
+                                        var strTable = "<table class='table table-hover table-striped' style='width:100%; vertical-align: middle;'>"
+                                            + "<thead><tr>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHPause</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHMeasurementName</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHTaskName</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHWorkstation</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHNotes</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHQuantity</th>"
+                                            + "<th>@ResFreeMeasurements.Execute.lblTHEnd</th>"
+                                            + "</tr></thead>"
+                                            +"<tbody style='width:100%; font-size:24px;vertical-align: middle;'>";
+                                        for (var i = 0; i < data.length; i++) {
+                                            var strQty = "";
+                                            if (data[i]["NoProductiveTaskId"] == "-1") {
+                                                strQty = "<input type='number' id='txtQuantity_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "' value='"
+                                                    + data[i]["TaskQuantity"] + "' class='form-text' min='0.01' step='.01' style='width:120px' />"
+                                                    + data[i]["MeasurementUnitType"];
+                                            }
+                                            strTable += "<tr>"
+                                                + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons pausetask' id='pausetask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>pause_circle</span ></td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["MeasurementName"] + "</td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["TaskName"] + "</td>"
+                                                + "<td style='vertical-align:middle;'>" + data[i]["WorkstationName"] + "</td>"
+                                                + "<td><span class='material-icons btnViewNoteForm' id='btnViewNoteForm_" + data[i]["LastTaskEventId"] + "' style='cursor:pointer; font-size:32px;color:red;'>speaker_notes</span></td>"
+                                                + "<td style='vertical-align:middle;'>" + strQty + "</td>"
+                                                + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons endtask' id='endtask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>done_outline</span ></td>"
+                                                + "</tr>";
+                                        }
+                                        strTable += "</tbody>";
+                                        strTable += "<table>";
+                                        // console.log(strTable);
+                                        $("#lblRunningTasksList").html(strTable);
+                                        $("#dvRunningTasks").show();
+                                    }
+                                    else {
+                                        $("#dvRunningTasks").hide();
+                                    }
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                });
+                }
+
+                $("#lblRunningTasksList").on("click", ".endtask", function () {
+                    var itmId = $(this).prop("id");
+                    console.log("Finish " + itmId);
+                    var operator = $("#ddlOperator option:selected").val();
+                    var aItm = itmId.split('_');
+                    var measurement = aItm[1];
+                    var task = aItm[2];
+
+                    var producedquantity = $("#txtQuantity_" + measurement + "_" + task).val().replace('.', ',');
+
+                    console.log(measurement + " " + task + " " + operator + " " + producedquantity);
+
+                    $.ajax({
+                                url: "@Url.Action("FinishTask", "FreeMeasurement")",
+                                type: 'POST',
+                                async: false,
+                                data: {
+                                    user: operator,
+                                    MeasurementId: measurement,
+                                    TaskId: task,
+                                    ProducedQuantity: producedquantity
+                                },
+                                success: function (result) {
+                                    console.log("Result: " + result);
+                                    $("#ddlMeasurements").val('');
+                                    loadRunningTasks(operator);
+                                    loadFreeMeasurements();
+                                    $("#ddlTasks").empty();
+                                    $("#ddlTasks").val('');
+                                    $("#ddlMeasurements").val('');
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                });
+
+                $("#lblRunningTasksList").on("click", ".pausetask", function () {
+                    var itmId = $(this).prop("id");
+                    console.log("Pause " + itmId);
+                    var operator = $("#ddlOperator option:selected").val();
+                    var aItm = itmId.split('_');
+                    var measurement = aItm[1];
+                    var task = aItm[2];
+
+                    console.log(measurement + " " + task + " " + operator)
+
+                    $.ajax({
+                                url: "@Url.Action("PauseTask", "FreeMeasurement")",
+                                type: 'POST',
+                                async: false,
+                                data: {
+                                    user: operator,
+                                    MeasurementId: measurement,
+                                    TaskId: task
+                                },
+                                success: function (result) {
+                                    console.log("Result: " + result);
+                                    loadRunningTasks(operator);
+                                    loadFreeMeasurements();
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                });
+
+                $('#ddlMeasurements').on('change', function () {
+                    console.log("Change " + $(this).val());
+                    loadFreeMeasurementsTasks($(this).val());
+                });
+
+                $("#startProductiveTask").click(function () {
+                    var measurement = $("#ddlMeasurements").val();
+                    var task = $("#ddlTasks").val();
+                    var newTask = $('<div/>').text($('#txtNewTask').val()).html();
+                    var operator = $("#ddlOperator option:selected").val();
+
+                    console.log(measurement);
+                    console.log(task);
+                    console.log(newTask);
+
+                    var check = true;
+                    if ((task != "" && newTask != "") || (task=="" && newTask=="")) {
+                        check = false;
+                        $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblErrorStartOnlyOne");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                    }
+
+                    if (check) {
+                        if (task != "") {
+                            $.ajax({
+                                url: "@Url.Action("StartProductiveTask", "FreeMeasurement")",
+                                type: 'POST',
+                                async: false,
+                                data: {
+                                    user: operator,
+                                    MeasurementId: measurement,
+                                    TaskId: task
+                                },
+                                success: function (result) {
+                                    console.log("Result: " + result);
+                                    var strError = "";
+                                    switch (result) {
+                                        case "4": strError = "@ResFreeMeasurements.Execute.lblErrorStart4"; break;
+                                        default: break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
+                                    loadFreeMeasurements();
+                                    loadRunningTasks(operator);
+                                    $("#ddlMeasurements").val('');
+                                    $("#ddlTasks").val('');
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                        }
+                        else {
+                            $.ajax({
+                                url: "@Url.Action("StartNewProductiveTask", "FreeMeasurement")",
+                                type: 'POST',
+                                async: true,
+                                data: {
+                                    user: operator,
+                                    MeasurementId: measurement,
+                                    TaskName: newTask
+                                },
+                                success: function (result) {
+                                    console.log(result);
+                                    var strError = "";
+                                    switch (result) {
+                                        case "4": strError = "@ResFreeMeasurements.Execute.lblErrorStart4"; break;
+                                        default: break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                            $("#lblModalInfo").dialog({
+                                                modal: true,
+                                                title: "Info",
+                                                open: function (event, ui) {
+                                                    setTimeout(function () {
+                                                        $("#lblModalInfo").dialog("close");
+                                                    }, 2000);
+                                                }
+                                            });
+                                    }
+                                    loadFreeMeasurements();
+                                    loadRunningTasks(operator);
+                                    $("#ddlMeasurements").val('');
+                                    $("#ddlTasks").val('');
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                        }
+                    }
+                });
+
+                $("#startNoProductiveTask").click(function () {
+                    var npTaskId = $("#ddlNoProductiveTasks").val();
+                    var operator = $("#ddlOperator option:selected").val();
+                    var measurement = $("#ddlMeasurements").val();
+                    if (measurement == "" || measurement.length == 0) {
+                        $("#ddlMeasurements > option").each(function (index, element) {
+                            measurement = element.value;
+                            console.log("Found " + measurement);
+                        });
+                    }
+
+                    var inputcheck = true;
+
+                    if (measurement == '' || !parseInt(measurement)) {
+                        inputcheck = false;
+                        strInputError = "@ResFreeMeasurements.Execute.lblInputErrorMeasurement";
+                    }
+
+                    console.log("No Productive Task: " + npTaskId + " " + measurement);
+
+                    if (inputcheck) {
+                        if (npTaskId != "") {
+
+                            $.ajax({
+                                url: "@Url.Action("StartNoProductiveTask", "FreeMeasurement")",
+                                type: 'POST',
+                                async: true,
+                                data: {
+                                    user: operator,
+                                    MeasurementId: measurement,
+                                    NpTaskId: npTaskId
+                                },
+                                success: function (result) {
+                                    console.log(result);
+                                    console.log("Result: " + result);
+                                    var strError = "";
+                                    switch (result) {
+                                        case "4": strError = "@ResFreeMeasurements.Execute.lblErrorStart4"; break;
+                                        default: break;
+                                    }
+
+                                    if (strError != "") {
+                                        $("#lblModalInfo").html(strError);
+                                        $("#lblModalInfo").dialog({
+                                            modal: true,
+                                            title: "Info",
+                                            open: function (event, ui) {
+                                                setTimeout(function () {
+                                                    $("#lblModalInfo").dialog("close");
+                                                }, 2000);
+                                            }
+                                        });
+                                    }
+
+                                    $("#ddlNoProductiveTasks").val('');
+                                    loadRunningTasks(operator);
+                                },
+                                statusCode: {
+                                    404: function (content) { alert('cannot find resource'); },
+                                    500: function (content) { alert('internal server error'); }
+                                },
+                                error: function (data) {
+                                    alert("Error " + data);
+                                }
+                            });
+                        }
+                        else {
+                            $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblUnknownTask");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    }
+                    else {
+                        $("#lblModalInfo").html(strInputError);
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+                    }
+                });
+
+                $("#lblRunningTasksList").on("click", ".btnViewNoteForm", function () {
+                    var sevid = $(this).prop("id");
+                    var aevid = sevid.split('_');
+                    console.log(sevid + " " + aevid);
+                    if (aevid.length == 2) {
+                        var evid = aevid[1];
+                        console.log(evid);
+                        $.ajax({
+                            url: "@Url.Action("GetTaskEventNote", "FreeMeasurement")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                EventId: evid
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                strTaskNotes = "<textarea id='txtNote" + evid + "' class='form-check txtNote'>" + result + "</textarea><br />"
+                                    + "<span class='material-icons btnSaveNote' id='btnSaveNote_" + evid + "' style='cursor:pointer;color:red;'>save</span>";
+                                $("#frmAddTaskNote").html(strTaskNotes);
+                                $("#frmAddTaskNote").dialog({
+                                    modal: true,
+                                    title: "Note",
+                                    open: function (event, ui) {
+                                    }
+                                });
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                    }
+                });
+
+                $("#frmAddTaskNote").on("click", ".btnSaveNote", function () {
+                    var notes = $('<div/>').text($('.txtNote').val()).html();
+                    var sevid = $(this).prop("id");
+                    var aevid = sevid.split('_');
+                    if (aevid.length == 2) {
+                        evid = aevid[1];
+                        $.ajax({
+                            url: "@Url.Action("SaveTaskEventNote", "FreeMeasurement")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                EventId: evid,
+                                note: notes
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                if (result == "1") {
+                                    $("#frmAddTaskNote").dialog("close");
+                                }
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                    }
+                });
+
+            loadFreeMeasurements();
+
+        });
+        </script>
+        <div class="row-fluid">
+            <div class="span12">
+                @ResFreeMeasurements.Execute.lblChooseOperator
+                <select id="ddlOperator" class="form-control">
+                    <option></option>
+                    @{
+                        KIS.App_Code.Group opsGrp = new KIS.App_Code.Group("Operatori");
+                        if (opsGrp.ID != -1)
+                        {
+                            opsGrp.loadUtenti();
+                            foreach (var u in opsGrp.Utenti)
+                            {
+                                <option value="@u">@u</option>
+                            }
+                        }
+                    }
+                </select>
+                <span class="material-icons" style="cursor:pointer;" id="btnChooseOperator">arrow_forward_ios</span>
+            </div>
+        </div>
+
+        <div class="row-fluid" id="dvStartTask" style="display:none;">
+            <div class="span6">
+                <h4>@ResFreeMeasurements.Execute.lblChooseProductiveTask</h4>
+                <table class="table table-hover table-condensed" style="vertical-align: center; width:100%">
+                    <tr>
+                        <td>@ResFreeMeasurements.Execute.lblMeasurementProduct</td>
+                        <td>
+                            <select id="ddlMeasurements" style="width: 80%" class="form-control"><option value=""></option></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@ResFreeMeasurements.Execute.lblTask</td>
+                        <td>
+                            <select id="ddlTasks" style="width: 80%" class="form-control">
+                                <option value=""></option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr id="rowNewTask">
+                        <td>@ResFreeMeasurements.Execute.lblNewTask</td>
+                        <td><input type="text" id="txtNewTask" style="width: 77%" class="form-control" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <span id="startProductiveTask" style="font-size: 48px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
+                        </td>
+                    </tr>
+                </table>
+
+
+
+            </div>
+            <div class="span6">
+                <h4>@ResFreeMeasurements.Execute.lblChooseNoProductiveTask</h4>
+                <table class="table table-hover table-condensed" style="vertical-align: center; width:100%">
+                    <tr>
+                        <td>@ResFreeMeasurements.Execute.lblNoProdTask</td>
+                        <td>
+                            <select id="ddlNoProductiveTasks" style="width: 75%" class="form-control">
+                                <option value=""></option>
+                                @{
+                                    KIS.App_Sources.NoProductiveTasks npList = new KIS.App_Sources.NoProductiveTasks();
+                                    foreach (var m in npList.TaskList)
+                                    {
+                                        <option value="@m.ID">@m.Name</option>
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="text-align:center;">
+                            <span id="startNoProductiveTask" style="font-size: 48px;cursor:pointer;color:red;" class="material-icons">play_circle_outline</span>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        <hr />
+        <div class="row-fluid">
+            <div class="span12" style="display:none;" id="dvRunningTasks">
+                <h4><span id="lblRunningTasks" /></h4>
+                <div id="lblRunningTasksList" />
+            </div>
+        </div>
+
+        <div id="lblModalInfo" />
+        <div id="frmAddTaskNote" />
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResFreeMeasurements.Execute.lblUserNotAuthorized
+        </div>
+    </div>
+}

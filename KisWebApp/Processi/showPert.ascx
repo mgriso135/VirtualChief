@@ -588,7 +588,7 @@
     </div>
     <div ID="panelEditTask" style="width:100%; background: rgba(0, 0, 0, 0.5); display:none; 
 width: 100%; height:1000px; z-index:100; vertical-align:middle; border: 1px solid black;">
-        <table style="position: relative; top: 0px; left: 20%; background-color: white; border: 1px dashed black;">
+        <table style="position: relative; top: 0px; left: 10%; background-color: white; border: 1px dashed black;">
             <tr><td style="text-align: right;">
                 <img src="../img/iconLoading2.gif" id="imgLoadToolBox" style="min-width: 30px; max-width:60px;" />
                 <img src="../img/iconClose.png" style="height: 20px; text-align:right;" onclick="closeEdit();"  />

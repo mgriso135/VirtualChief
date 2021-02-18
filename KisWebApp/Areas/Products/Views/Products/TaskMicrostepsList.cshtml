@@ -1,0 +1,318 @@
+﻿@model IEnumerable<KIS.App_Code.TaskMicrostep>
+@if (ViewBag.authW)
+{
+
+
+    if (Model != null && Model.Count() > 0)
+    {
+        <style>
+            body.dragging, body.dragging * {
+                cursor: move !important;
+            }
+
+            .sorted_table tr {
+                cursor: pointer;
+            }
+                /* line 96, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                .sorted_table tr.placeholder {
+                    display: block;
+                    background: red;
+                    position: relative;
+                    margin: 0;
+                    padding: 0;
+                    border: none;
+                }
+                    /* line 103, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                    .sorted_table tr.placeholder:before {
+                        content: "";
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        border: 5px solid transparent;
+                        border-left-color: red;
+                        margin-top: -5px;
+                        left: -5px;
+                        border-right: none;
+                    }
+
+            /* line 114, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+            .sorted_head th {
+                cursor: pointer;
+            }
+                /* line 116, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                .sorted_head th.placeholder {
+                    display: block;
+                    background: red;
+                    position: relative;
+                    width: 0;
+                    height: 0;
+                    margin: 0;
+                    padding: 0;
+                }
+                    /* line 124, /Users/jonasvonandrian/jquery-sortable/source/css/application.css.sass */
+                    .sorted_head th.placeholder:before {
+                        content: "";
+                        position: absolute;
+                        width: 0;
+                        height: 0;
+                        border: 5px solid transparent;
+                        border-top-color: red;
+                        top: -6px;
+                        margin-left: -5px;
+                        border-bottom: none;
+                    }
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js" integrity="sha512-9pm50HHbDIEyz2RV/g2tn1ZbBdiTlgV7FwcQhIhvykX6qbQitydd6rF19iLmOqmJVUYq90VL2HiIUHjUMQA5fw==" crossorigin="anonymous"></script>
+        <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                // https://johnny.github.io/jquery-sortable/
+
+                // Sortable rows
+                $('.sorted_table').sortable({
+                    containerSelector: 'table',
+                    itemPath: '> tbody',
+                    itemSelector: 'tr',
+                    placeholder: '<tr class="placeholder"/>',
+
+                    onDrop: function ($item, container, _super, event) {
+                        updateMicrostepsSequence();
+                        $item.removeClass(container.group.options.draggedClass).removeAttr("style")
+                        $("body").removeClass(container.group.options.bodyClass)
+                        var newIndex = $item.index();
+                        //console.log($item.attr("id") + " " + newIndex);
+                    }
+                });
+
+                function updateMicrostepsSequence() {
+                    console.log("updateMicrostepsSequence");
+
+                    var jsonObj = {};
+                    jsonObj["TaskID"] = @ViewBag.TaskID;
+                    jsonObj["TaskRev"] = @ViewBag.TaskRev;
+                    jsonObj["variantID"] = @ViewBag.VariantID;
+
+                    var msList = [];
+                    $('#microsteps_list > tbody  > tr').each(function (index, tr) {
+                        console.log(index);
+                        console.log($(this).attr("id"));
+
+                        var microstep = $(this).attr("id").split('_');
+                        var curr = {};
+                        curr["microstepid"] = microstep[0];
+                        curr["microsteprev"] = microstep[1];
+                        curr["sequence"] = index + 1;
+                        msList.push(curr);
+                    });
+
+                    jsonObj["microsteps"] = msList;
+
+                    console.log(jsonObj);
+                    console.log(JSON.stringify(jsonObj));
+
+                    $.ajax({
+                        url: "@Url.Action("TaskMicrostepChangeSequence", "Products")",
+                        type: 'POST',
+                        dataType: 'html',
+                        data: {
+                            jsonMicrosteps: JSON.stringify(jsonObj)
+                        },
+                        success: function (result) {
+                            console.log(result);
+                            if (result == 1) {
+                                
+                            }
+                    },
+                    error: function (result) {
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                    }
+            });
+
+                }
+
+                $("#btnEditMicrostepList").on("click", function () {
+                    if ($('.lblMicrostepName').is(':visible')) {
+                        $(".lblMicrostepName").hide();
+                        $(".lblMicrostepDescription").hide();
+                        $(".lblMicrostepCycleTime").hide();
+                        $(".lblMicrostepValueOrWaste").hide();
+                        $("#btnEditMicrostepList").hide();
+
+                        $(".txtMicrostepName").show();
+                        $(".txtMicrostepDescription").show();
+                        $(".txtMicrostepCycleTime").show();
+                        $(".txtMicrostepValueOrWaste").show();
+                        $("#btnUndoMicrostepList").show();
+                        $(".btnDeleteMicrostepList").show();
+                    }
+                    else {
+                        $(".txtMicrostepName").hide();
+                        $(".txtMicrostepDescription").hide();
+                        $(".txtMicrostepCycleTime").hide();
+                        $(".txtMicrostepValueOrWaste").hide();
+                        $("#btnUndoMicrostepList").hide();
+                        $(".btnDeleteMicrostepList").hide();
+
+                        $(".lblMicrostepName").show();
+                        $(".lblMicrostepDescription").show();
+                        $(".lblMicrostepCycleTime").show();
+                        $(".lblMicrostepValueOrWaste").show();
+                        $("#btnEditMicrostepList").show();
+                    }
+                });
+
+                $("#btnUndoMicrostepList").click(function () {
+                    $('#microsteps_list > tbody  > tr').each(function (index, tr) {
+                        var rowId = $(this).attr("id");
+                        //console.log(index);
+                        //console.log($(this).attr("id"));
+                        //console.log("#txtMicrostepName_" + rowId + " " + $("#txtMicrostepName_" + rowId).val());
+                        $("#txtMicrostepName_" + rowId).val($("#lblMicrostepName_" + rowId).html());
+                        $("#txtMicrostepDescription_" + rowId).val($("#lblMicrostepDescription_" + rowId).html());
+                        $("#txtMicrostepCycleTime_" + rowId).val($("#lblMicrostepCycleTime_" + rowId).html());
+                        $("#txtMicrostepValueOrWaste_" + rowId).val($("#hdMicrostepValueOrWaste_" + rowId).val());
+                    });
+
+                    $(".txtMicrostepName").hide();
+                    $(".txtMicrostepDescription").hide();
+                    $(".txtMicrostepCycleTime").hide();
+                    $(".txtMicrostepValueOrWaste").hide();
+                    $("#btnUndoMicrostepList").hide();
+
+                    $(".lblMicrostepName").show();
+                    $(".lblMicrostepDescription").show();
+                    $(".lblMicrostepCycleTime").show();
+                    $(".lblMicrostepValueOrWaste").show();
+                    $("#btnEditMicrostepList").show();
+                    $(".btnDeleteMicrostepList").hide();
+                });
+
+                $(".btnDeleteMicrostepList").click(function () {
+                    console.log($(this).attr("id"));
+                    var microstepid = $(this).attr("id").split('_');
+                    $.ajax({
+                    url: "@Url.Action("DeleteTaskMicrostep", "Products")",
+                    type: 'POST',
+                    dataType: 'html',
+                    data:{
+                        TaskID: @ViewBag.TaskID,
+                        TaskRev: @ViewBag.TaskRev,
+                        variantID: @ViewBag.VariantID,
+                        MicrostepId: microstepid[1],
+                        MicrostepReview: microstepid[2]
+                    },
+                        success: function (result) {
+                            console.log(result);
+                            if (result == 1) {
+                                $("#" + microstepid[1] + "_" + microstepid[2]).remove();
+                            }
+                    },
+                    error: function (result) {
+                        alert("Error");
+                    },
+                    warning: function (result) {
+                        alert("Warning");
+                    }
+            });
+                });
+
+                $("#btnSaveMicrostepList").click(function () {
+                    alert("Save " + $(this).attr("id"));
+                });
+
+            });
+        </script>
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table table-hover sorted_table" id="microsteps_list">
+                    <thead class="sorted_head">
+                        <tr>
+                            <th>@ResProducts.TaskMicrostepsList.lblMicrostepName</th>
+                            <th>@ResProducts.TaskMicrostepsList.lblMicrostepDescription</th>
+                            <th>@ResProducts.TaskMicrostepsList.lblMicrostepCycleTime (@ResProducts.TaskMicrostepsList.lblSeconds)</th>
+                            <th>@ResProducts.TaskMicrostepsList.lblMicrostepValueOrWaste</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="sorted_body">
+                        @foreach (var m in Model)
+                        {
+                            String vorw = "";
+                            String selV = "";
+                            String selW = "";
+                            String selH = "";
+                            switch (m.ValueOrWaste)
+                            {
+                                case 'V': vorw = ResProducts.TaskMicrostepsList.lblValueOrWasteV; selV = "SELECTED"; break;
+                                case 'W': vorw = ResProducts.TaskMicrostepsList.lblValueOrWasteW; selW = "SELECTED"; break;
+                                case 'H': vorw = ResProducts.TaskMicrostepsList.lblValueOrWasteH; selH = "SELECTED"; break;
+                                default: vorw = ""; break;
+                            }
+                            <tr id="@m.MicrostepId.ToString()_@m.MicrostepReview.ToString()">
+                                <td>
+                                    <span id="lblMicrostepName_@m.MicrostepId.ToString()_@m.MicrostepReview" class="lblMicrostepName">@m.MicrostepName</span>
+                                    <input type="text" id="txtMicrostepName_@m.MicrostepId.ToString()_@m.MicrostepReview" value="@m.MicrostepName" style="display:none;" class="txtMicrostepName" />
+                                </td>
+                                <td>
+                                    <span id="lblMicrostepDescription_@m.MicrostepId.ToString()_@m.MicrostepReview" class="lblMicrostepDescription">@m.MicrostepDescription</span>
+                                    <textarea id="txtMicrostepDesc_@m.MicrostepId.ToString()_@m.MicrostepReview" style="display:none;" class="txtMicrostepDescription">@m.MicrostepDescription</textarea>
+                                </td>
+                                <td>
+                                    <span id="lblMicrostepCycleTime_@m.MicrostepId.ToString()_@m.MicrostepReview" class="lblMicrostepCycleTime">@m.CycleTime</span>
+                                    <input type="number" id="txtMicrostepCycleTime_@m.MicrostepId.ToString()_@m.MicrostepReview" value="@m.CycleTime" style="display:none;width:30px;" class="txtMicrostepCycleTime" />
+                                </td>
+                                <td nowrap>
+                                    <input type="hidden" id="hdMicrostepValueOrWaste_@m.MicrostepId.ToString()_@m.MicrostepReview" value="@m.ValueOrWaste" />
+                                    <span id="lblMicrostepValueOrWaste_@m.MicrostepId.ToString()_@m.MicrostepReview" class="lblMicrostepValueOrWaste">@vorw</span>
+                                    <select id="txtMicrostepValueOrWaste_@m.MicrostepId.ToString()_@m.MicrostepReview" class="txtMicrostepValueOrWaste" style="display:none;">
+                                        <option value="V" @selV>@ResProducts.TaskMicrostepsList.lblValueOrWasteV</option>
+                                        <option value="W" @selW>@ResProducts.TaskMicrostepsList.lblValueOrWasteW</option>
+                                        <option value="H" @selH>@ResProducts.TaskMicrostepsList.lblValueOrWasteH</option>
+                                    </select>
+                                </td>
+                                <td><span class="material-icons btnDeleteMicrostepList" id="btnDeleteMicrostepList_@m.MicrostepId.ToString()_@m.MicrostepReview" style="cursor: pointer; display: none;">delete</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" style="text-align: center;">
+                                <span class="material-icons" id="btnEditMicrostepList" style="cursor: pointer;">
+                                    edit
+                                </span>
+                                <span class="material-icons" id="btnUndoMicrostepList" style="cursor: pointer; display: none;">
+                                    undo
+                                </span>
+                                <span class="material-icons" id="btnSaveMicrostepList" style="cursor: pointer;">
+                                    save
+                                </span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div>
+                @ResProducts.TaskMicrostepsList.lblNoMicrosteps
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div>
+            @ResProducts.TaskMicrostepsList.lblNotAuthorized
+        </div>
+    </div>
+}

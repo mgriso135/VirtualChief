@@ -1,0 +1,505 @@
+﻿@model IEnumerable<KIS.App_Sources.NoProductiveTask>
+
+@{
+    ViewBag.Title = ResCfgNoProductiveTasks.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResCfgNoProductiveTasks.Index.lblTitle</h3>
+
+@if (ViewBag.authW)
+{
+<script>
+        $(document).ready(function () {
+            $("#tblMU").on("click", ".delMU", function () {
+                var itmId = $(this).prop("id");
+                var arrNPTaskId = itmId.split('_');
+                var npTaskId = arrNPTaskId[1];
+                var row = "#row_" + npTaskId;
+                var name = $("#txtName_" + npTaskId).val();
+                var desc = $("#txtDescription_" + npTaskId).val();
+                $.ajax({
+                    url: "@Url.Action("Edit", "NoProductiveTasks")",
+                    type: 'POST',
+                    dataType: "html",
+                    data: {
+                        NoProductiveTaskId: npTaskId,
+                        name: name,
+                        description: desc,
+                        enabled: false
+                    },
+                    success: function (result) {
+                        if (result == "0" || result == "-4") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblDeleteError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (result == "1") {
+                            $(row).remove();
+                        }
+                        else if (result == "-5") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblUnauthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                    error: function (result) {
+                        $("#lblModalInfo").html("Error");
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+                    },
+                    warning: function (result) {
+                    }
+                });
+            });
+
+             $("#tblMU").on("click", ".unarchiveMU", function () {
+                var itmId = $(this).prop("id");
+                var arrNPTaskId = itmId.split('_');
+                var npTaskId = arrNPTaskId[1];
+                var row = "#row_" + npTaskId;
+                var name = $("#txtName_" + npTaskId).val();
+                var desc = $("#txtDescription_" + npTaskId).val();
+                $.ajax({
+                    url: "@Url.Action("Edit", "NoProductiveTasks")",
+                    type: 'POST',
+                    dataType: "html",
+                    data: {
+                        NoProductiveTaskId: npTaskId,
+                        name: name,
+                        description: desc,
+                        enabled: true
+                    },
+                    success: function (result) {
+                        if (result == "0" || result == "-4") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblGenericError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (result == "1") {
+                            window.location.href = window.location.href.split('?')[0];
+                        }
+                        else if (result == "-5") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblUnauthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                    error: function (result) {
+                        $("#lblModalInfo").html("Error");
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+                    },
+                    warning: function (result) {
+                    }
+                });
+            });
+
+
+            // Edit a measurement unit
+            $("#tblMU").on("click", ".editMU", function () {
+                var aItmId = $(this).prop("id").split('_');
+                var itmId = aItmId[1];
+                console.log("Id: " + itmId);
+                var lblName = "#lblName_" + itmId;
+                var lblDescription = "#lblDescription_" + itmId;
+                var lblEnabled = "#lblEnabled_" + itmId;
+                var saveLoad = "#saveLoad_" + itmId;
+                $(lblName).hide();
+                $(lblDescription).hide();
+                $(lblEnabled).hide();
+                $("#delMU_" + itmId).hide();
+                $("#editMU_" + itmId).hide();
+                $("#txtName_" + itmId).show();
+                $("#txtDescription_" + itmId).show();
+                $("#txtEnabled_" + itmId).show();
+                $("#saveMU_" + itmId).show();
+            });
+
+            $("#tblMU").on("click", ".saveMU", function () {
+                var aItmId = $(this).prop("id").split('_');
+                var itmId = aItmId[1];
+
+                var lblDescription = "#lblDescription_" + itmId;
+                var lblEnabled = "#lblEnabled_" + itmId;
+                var saveLoad = "#saveLoad_" + itmId;
+                var saveMU = "#saveMU_" + itmId;
+                var editMU = "#editMU_" + itmId;
+
+                $(saveMU).hide();
+                $(saveLoad).show();
+
+                var txtName = "#txtName_" + itmId;
+                var txtDescription = "#txtDescription_" + itmId;
+                var txtEnabled = "#txtEnabled_" + itmId;
+                var name = $(txtName).val();
+                var description = $(txtDescription).val();
+                var enabled = $(txtEnabled).prop('checked');
+
+                $.ajax({
+                    url: "@Url.Action("Edit", "NoProductiveTasks")",
+                    type: 'POST',
+                    dataType: "html",
+                    data: {
+                        NoProductiveTaskId: itmId,
+                        name: name,
+                        description: description,
+                        enabled: enabled
+                    },
+                    success: function (result) {
+                        if (result == "0" || result == "-4") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblDeleteError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (result == "1") {
+
+                            var strEnabled = enabled ? "@ResCfgNoProductiveTasks.Index.lblEnabledChecked" : "@ResCfgNoProductiveTasks.Index.lblEnabledUnchecked";
+                            $("#lblEnabled_" + itmId).html(strEnabled);
+
+                            $(saveLoad).hide();
+                            $("#txtName_" + itmId).hide();
+                            $("#txtDescription_" + itmId).hide();
+                            $("#txtEnabled_" + itmId).hide();
+                            $("#saveMU_" + itmId).hide();
+
+                            $("#delMU_" + itmId).show();
+                            $("#editMU_" + itmId).show();
+                            $("#lblName_" + itmId).show();
+                            $("#lblDescription_" + itmId).show();
+                            $("#lblEnabled_" + itmId).show();
+
+                            window.location.href = window.location.href;
+                        }
+                        else if (result == "-5") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblUnauthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                    error: function (result) {
+                        $("#lblModalInfo").html("Error");
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+                    },
+                    warning: function (result) {
+                    }
+                });
+            });
+
+
+            $("#tblAdd").on("click", "#btnAdd", function () {
+                $(this).fadeOut();
+                $.ajax({
+                    url: "@Url.Action("Add", "NoProductiveTasks")",
+                    type: 'POST',
+                    dataType: "html",
+                    data: {
+                        name: $("#txtAddType").val(),
+                        description: $("#txtAddDescription").val()
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        ires = parseInt(result);
+                        $("#imgAddMU").fadeIn();
+                        if (ires == -1) {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblGenericError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (ires == -2 || ires == -4) {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblDataInputError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (ires == -5) {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblUnauthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (ires >= 0) {
+                            $("#txtAddType").val("");
+                            $("#txtAddDescription").val("");
+                            window.location.href = window.location.href;
+                        }
+                        else {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblGenericError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                    error: function (result) {
+                        $("#imgAddMU").fadeIn();
+                        $("#lblModalInfo").html("Error");
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+                    },
+                    warning: function (result) {
+                        $("#imgAddMU").fadeIn();
+                    }
+                });
+
+            });
+
+            $(".makedefault").click(function () {
+                var itmId = $(this).prop("id");
+                var arrNPTaskId = itmId.split('_');
+                var npTaskId = arrNPTaskId[1];
+                var row = "#row_" + npTaskId;
+                var name = $("#txtName_" + npTaskId).val();
+                var desc = $("#txtDescription_" + npTaskId).val();
+                $.ajax({
+                    url: "@Url.Action("MakeDefault", "NoProductiveTasks")",
+                    type: 'POST',
+                    dataType: "html",
+                    data: {
+                        NoProductiveTaskId: npTaskId
+                    },
+                    success: function (result) {
+                        if (result == "0" ) {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblGenericError");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                        else if (result == "1") {
+                            window.location.href = window.location.href.split('?')[0];
+                        }
+                        else if (result == "-5") {
+                            $("#lblModalInfo").html("@ResCfgNoProductiveTasks.Index.lblUnauthorized");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                        }
+                    },
+                    error: function (result) {
+                        $("#lblModalInfo").html("Error");
+                        $("#lblModalInfo").dialog({
+                            modal: true,
+                            title: "Info",
+                            open: function (event, ui) {
+                                setTimeout(function () {
+                                    $("#lblModalInfo").dialog("close");
+                                }, 2000);
+                            }
+                        });
+                    },
+                    warning: function (result) {
+                    }
+                });
+            });
+
+        });
+
+
+</script>
+}
+
+@if (ViewBag.authW)
+{
+
+        <h4>@ResCfgNoProductiveTasks.Index.lblAddMU</h4>
+        <table class="table table-condensed" id="tblAdd">
+            <tr style="vertical-align: middle;">
+                <td style="vertical-align: middle;">@ResCfgNoProductiveTasks.Index.lblTHName:&nbsp;<input type="text" maxlength="45" id="txtAddType" class="form-text" /></td>
+                <td style="vertical-align: middle;">@ResCfgNoProductiveTasks.Index.lblTHDescription:&nbsp;<textarea id="txtAddDescription" class="form-text"></textarea></td>
+                <td style="vertical-align: middle;">
+                    <span class="material-icons" id="btnAdd" style="cursor: pointer;">
+                        save
+                    </span>
+                </td>
+            </tr>
+        </table>
+    
+        <div class="row-fluid">
+            <div class="span12" style="cursor:pointer;" onclick="window.location.href = window.location.href.split('?')[0] + '?Type=1'">
+                @ResCfgNoProductiveTasks.Index.lnkLoadAllStatus
+            </div>
+        </div>
+
+    if (Model.Count() > 0)
+    {
+        <table class="table table-striped table-hover" id="tblMU">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@ResCfgNoProductiveTasks.Index.lblTHName</th>
+                    <th>@ResCfgNoProductiveTasks.Index.lblTHDescription</th>
+                    <th>@ResCfgNoProductiveTasks.Index.lblTHEnabled</th>
+                    <th>@ResCfgNoProductiveTasks.Index.lblTHCreationDate</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var m in Model)
+                {
+                    string enabledChecked = m.Enabled ? "CHECKED" : "";
+                    String strEnabled = m.Enabled ? ResCfgNoProductiveTasks.Index.lblEnabledChecked : ResCfgNoProductiveTasks.Index.lblEnabledUnchecked;
+                <tr id="row_@m.ID">
+                    <td>
+                        @if (ViewBag.authW)
+                        {
+                            if (m.Enabled)
+                            {
+                                <span class="material-icons delMU" id="delMU_@m.ID" style="cursor:pointer;">archive</span>
+                                <span class="material-icons editMU" id="editMU_@m.ID" style="cursor:pointer;">edit</span>
+                            }
+                            else
+                            {
+                                <span class="material-icons unarchiveMU" id="unarchive_@m.ID" style="cursor:pointer;">unarchive</span>
+                            }
+                        }
+                    </td>
+                    <td><div id="lblName_@m.ID">@m.Name</div><input type="text" id="txtName_@m.ID" style="display:none;" value="@m.Name" class="form-text" /></td>
+                    <td><div id="lblDescription_@m.ID">@m.Description</div><input type="text" id="txtDescription_@m.ID" style="display:none;" value="@m.Description" class="form-text" /></td>
+                    <td><div id="lblEnabled_@m.ID">@strEnabled</div><input type="checkbox" id="txtEnabled_@m.ID" style="display:none;" @enabledChecked class="form-check" /></td>
+                    <td>
+                        @m.CreationDate.ToString("dd/MM/yyyy HH:mm:ss") (UTC)
+                </td>
+                    <td>
+                        @if (ViewBag.authW)
+                        {
+                            if (!m.IsDefault)
+                            {
+
+                                <span class="material-icons makedefault" id="makedefault_@m.ID" style="cursor:pointer;">add_task</span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @if (ViewBag.authW)
+                        {
+                            if (m.Enabled)
+                            {
+                                <span class="material-icons saveMU" id="saveMU_@m.ID" style="cursor:pointer; display:none;">save</span>
+                            }
+                        }
+                            <input type="image" src="~/img/iconLoading.gif" id="saveLoad_@m.ID" class="saveMU" value="@m.ID" style="min-height:15px; max-height:20px;display:none;" />
+                        </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <div id="lblModalInfo" />
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResCfgNoProductiveTasks.Index.lblUnauthorized
+        </div>
+    </div>
+}
+

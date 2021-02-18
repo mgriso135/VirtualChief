@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using KIS.App_Code;
+using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace KIS.Areas.Products.Controllers
 {
@@ -853,6 +854,223 @@ namespace KIS.Areas.Products.Controllers
             }
 
                 return ret;
+        }
+
+        public ActionResult TaskMicrostepsList(int TaskID, int TaskRev, int variantID)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskMicrostepsList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Products/Products/TaskMicrostepsList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
+            }
+
+            ViewBag.TaskID = -1;
+            ViewBag.TaskRev = -1;
+            ViewBag.VariantID = -1;
+
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (ViewBag.authR || ViewBag.authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    ViewBag.TaskID = tskVar.Task.processID;
+                    ViewBag.TaskRev = tskVar.Task.revisione;
+                    ViewBag.VariantID = tskVar.variant.idVariante;
+
+                    tskVar.loadTaskMicrosteps();
+                    return View(tskVar.microsteps);
+                }
+            }
+            return View();
+        }
+
+        /* Returns:
+        * 0 if generic error
+        * 1 if everything is ok
+        * 2 if user not autorized
+        * 3 if error while adding the microstep
+        */
+        public int AddTaskMicrostep(int TaskID, int TaskRev, int variantID, String MicrostepName, String MicrostepDescription, int MicrostepCycleTime,
+            Char ValueOrWaste)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    tskVar.loadTaskMicrosteps();
+                    int seq = tskVar.microsteps.Count >= 1 ? (tskVar.microsteps.Count + 1) : 1;
+
+                    ret = tskVar.addMicrostep(MicrostepName, MicrostepDescription, seq, MicrostepCycleTime, ValueOrWaste);
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+
+        /* Returns:
+        * 0 if generic error
+        * 1 if everything is ok
+        * 2 if ...
+        * 3 if error while adding the microstep
+        * 4 if user not authorized
+        */
+        public int DeleteTaskMicrostep(int TaskID, int TaskRev, int variantID, int MicrostepId, int MicrostepReview)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (authW)
+            {
+                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+
+                    ret = tskVar.deleteMicrostep(MicrostepId, MicrostepReview);
+                }
+            }
+            else
+            {
+                ret = 4;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if change successful
+         * 4 if user not authorized
+         */
+        public int TaskMicrostepChangeSequence(string jsonMicrosteps)
+        {
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Task Microsteps";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            bool authW = false;
+            if (Session["user"] != null)
+            {
+                User curr = (User)Session["user"];
+                authW = curr.ValidatePermessi(elencoPermessi);
+            }
+
+            if (authW)
+            {
+                JsonTaskMicrosteps msteps = JsonConvert.DeserializeObject<JsonTaskMicrosteps>(jsonMicrosteps);
+
+                TaskVariante tskVar = new TaskVariante(new processo(msteps.TaskID, msteps.TaskRev), new variante(msteps.variantID));
+                if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
+                    tskVar.variant != null && tskVar.variant.idVariante != -1)
+                {
+                    tskVar.loadTaskMicrosteps();
+                    foreach (var itm in msteps.microsteps)
+                    {
+                        TaskMicrostep curr = tskVar.microsteps.FirstOrDefault(x => x.MicrostepId == itm.microstepid && x.MicrostepReview == itm.microsteprev);
+                        if(curr!=null && itm.sequence > 0 && itm.sequence < msteps.microsteps.Count + 20)
+                        {
+                            curr.Sequence = itm.sequence;
+                        }
+                    }
+                    
+                    ret = 1;
+                }
+            }
+            else
+            {
+                ret = 4;
+            }
+            return ret;
+        }
+
+        public class JsonTaskMicrosteps
+        {
+            public int TaskID { get; set; }
+            public int TaskRev { get; set; }
+            public int variantID { get; set; }
+            public List<JsonMicrostep> microsteps { get; set; }
+        }
+
+        public class JsonMicrostep
+        {
+            public int microstepid { get; set; }
+            public int microsteprev { get; set; }
+            public int sequence { get; set; }
         }
     }
 }
