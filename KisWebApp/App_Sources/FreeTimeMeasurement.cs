@@ -497,8 +497,7 @@ namespace KIS.App_Sources
                         }
                     }
 
-                    FreeTimeMeasurements fms = new FreeTimeMeasurements();
-                    fms.TransformEventsToTimespans();
+                    this.TransformEventsToTimespans();
                 }
                 else
                 {
@@ -585,6 +584,127 @@ namespace KIS.App_Sources
                 }
             }
             return lt_Hours / 3600;
+        }
+
+        /* Returns:
+       * 0 if generic error
+       * 1 if everything ok
+       * 2 if there were some errors while adding timespans to the database
+       */
+        public int TransformEventsToTimespans()
+        {
+            int ret = 0;
+            if (this.id != -1)
+            {
+                List<FreeMeasurements_Tasks_Events_Timespan> timespans = new List<FreeMeasurements_Tasks_Events_Timespan>();
+                List<FreeMeasurements_Tasks_Event> events = new List<FreeMeasurements_Tasks_Event>();
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+
+                // Get all events of finished tasks there are not in the timespans table
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT freemeasurements_tasks_events.id, "
+                                + " freemeasurements_tasks_events.freemeasurementid, "
+                                + " freemeasurements_tasks_events.taskid, "
+                                + " freemeasurements_tasks_events.user, "
+                                + " freemeasurements_tasks_events.eventtype, "
+                                + " freemeasurements_tasks_events.eventdate, "
+                                + " freemeasurements_tasks_events.notes FROM "
+                                + " freemeasurements_tasks INNER JOIN freemeasurements_tasks_events "
+                                + " ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                                + " LEFT JOIN  freemeasurements_tasks_events_timespans "
+                                + " ON(freemeasurements_tasks_events_timespans.starteventid = freemeasurements_tasks_events.id OR "
+                                + " freemeasurements_tasks_events_timespans.endeventid = freemeasurements_tasks_events.id) "
+                                + " WHERE 1 = 1 "
+                                + " AND freemeasurements_tasks.measurementid=@measurementid "
+                                + " AND freemeasurements_tasks.status = 'F' "
+                                + " AND freemeasurements_tasks_events_timespans.id IS NULL"
+                                + " ORDER BY freemeasurements_tasks_events.freemeasurementid, "
+                                + " freemeasurements_tasks_events.taskid, "
+                                + " freemeasurements_tasks_events.user, "
+                                + " freemeasurements_tasks_events.eventdate";
+                cmd.Parameters.AddWithValue("@measurementid", this.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    FreeMeasurements_Tasks_Event currEv = new FreeMeasurements_Tasks_Event();
+                    currEv.id = rdr.GetInt32(0);
+                    currEv.freemeasurementid = rdr.GetInt32(1);
+                    currEv.taskid = rdr.GetInt32(2);
+                    currEv.user = rdr.GetString(3);
+                    currEv.eventtype = rdr.GetChar(4);
+                    currEv.eventdate = rdr.GetDateTime(5);
+                    currEv.notes = rdr.GetString(6);
+                    events.Add(currEv);
+                }
+                rdr.Close();
+
+                // Transform all events to timespans
+                for (int i = 0; i < events.Count; i += 2)
+                {
+                    if (events[i].eventtype == 'I' && (events[i + 1].eventtype == 'F' || events[i + 1].eventtype == 'P')
+                        && events[i].user == events[i + 1].user
+                        && events[i].freemeasurementid == events[i + 1].freemeasurementid
+                        && events[i].taskid == events[i + 1].taskid)
+                    {
+                        FreeMeasurements_Tasks_Events_Timespan currTs = new FreeMeasurements_Tasks_Events_Timespan();
+                        currTs.freemeasurementid = events[i].freemeasurementid;
+                        currTs.taskid = events[i].taskid;
+                        currTs.user = events[i].user;
+                        currTs.starteventid = events[i].id;
+                        currTs.starteventtype = events[i].eventtype;
+                        currTs.starteventdate = events[i].eventdate;
+                        currTs.starteventnotes = events[i].notes;
+                        currTs.endeventid = events[i + 1].id;
+                        currTs.endeventtype = events[i + 1].eventtype;
+                        currTs.endeventdate = events[i + 1].eventdate;
+                        currTs.endeventnotes = events[i + 1].notes;
+
+                        timespans.Add(currTs);
+                    }
+                    else
+                    {
+                        ret = 3;
+                        this.log += "Error in events " + events[i].id + ", " + events[i + 1].id + " \n";
+                    }
+                }
+
+                // Write all the timespans in the database
+                foreach (var ts in timespans)
+                {
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmdTs = conn.CreateCommand();
+                    cmdTs.CommandText = "INSERT INTO freemeasurements_tasks_events_timespans (measurementid,taskid,inputpoint,starteventid,starteventtype,starteventdate,starteventnotes, "
+                        + "endeventid, endeventtype, endeventdate, endeventnotes) "
+                        + " VALUES (@measurementid, @taskid, @inputpoint, @starteventid, @starteventtype, @starteventdate, @starteventnotes, "
+                        + " @endeventid, @endeventtype, @endeventdate, @endeventnotes)";
+                    cmdTs.Parameters.AddWithValue("@measurementid", ts.freemeasurementid);
+                    cmdTs.Parameters.AddWithValue("@taskid", ts.taskid);
+                    cmdTs.Parameters.AddWithValue("@inputpoint", ts.user);
+                    cmdTs.Parameters.AddWithValue("@starteventid", ts.starteventid);
+                    cmdTs.Parameters.AddWithValue("@starteventtype", ts.starteventtype);
+                    cmdTs.Parameters.AddWithValue("@starteventdate", ts.starteventdate.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmdTs.Parameters.AddWithValue("@starteventnotes", ts.starteventnotes);
+                    cmdTs.Parameters.AddWithValue("@endeventid", ts.endeventid);
+                    cmdTs.Parameters.AddWithValue("@endeventtype", ts.endeventtype);
+                    cmdTs.Parameters.AddWithValue("@endeventdate", ts.endeventdate.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmdTs.Parameters.AddWithValue("@endeventnotes", ts.endeventnotes);
+                    try
+                    {
+                        cmdTs.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.log += ex.Message + " \n";
+                        tr.Rollback();
+                        ret = 2;
+                    }
+                }
+
+                conn.Close();
+            }
+            return ret;
         }
     }
 
@@ -1401,7 +1521,7 @@ namespace KIS.App_Sources
                 Boolean PauseDefaultNoProductiveTask = false;
                 int npTask = -1;
                 int npTaskMeasurentId = -1;
-                if (maxTasksInExecution > 0 && tasksInExecution < maxTasksInExecution)
+                if ((maxTasksInExecution > 0 && tasksInExecution < maxTasksInExecution) || maxTasksInExecution == 0)
                 { 
                     checkMaxTasks = true; 
                 }

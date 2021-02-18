@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="configAndonReparto_OLD.ascx.cs" Inherits="KIS.Reparti.configAndonReparto" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="configAndonReparto.ascx.cs" Inherits="KIS.Reparti.configAndonReparto" %>
 
 <asp:UpdatePanel runat="server" ID="upd1">
     <ContentTemplate>

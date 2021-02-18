@@ -27,7 +27,7 @@
 
             });
 
-                $('#ddlOperator').on('change', function () {
+            $('#ddlOperator').on('change', function () {
                     var operator = $("#ddlOperator option:selected").val();
                     $('#ddlMeasurements').val("");
                     $('#ddlTasks').val("");
@@ -37,7 +37,7 @@
                     loadRunningTasks(operator);
                 });
 
-                function loadFreeMeasurements() {
+            function loadFreeMeasurements() {
                     var selected_measurement = $("#ddlMeasurements").val();
                 $.ajax({
                     url: "@Url.Action("GetFreeMeasurentsTasksJson", "FreeMeasurement")",
@@ -331,6 +331,7 @@
                                     loadRunningTasks(operator);
                                     $("#ddlMeasurements").val('');
                                     $("#ddlTasks").val('');
+                                    $('#txtNewTask').val("");
                                 },
                                 statusCode: {
                                     404: function (content) { alert('cannot find resource'); },
@@ -373,8 +374,9 @@
                                     }
                                     loadFreeMeasurements();
                                     loadRunningTasks(operator);
-                                    $("#ddlMeasurements").val('');
-                                    $("#ddlTasks").val('');
+                                    $("#ddlMeasurements").val("");
+                                    $("#ddlTasks").val("");
+                                    $('#txtNewTask').val("");
                                 },
                                 statusCode: {
                                     404: function (content) { alert('cannot find resource'); },

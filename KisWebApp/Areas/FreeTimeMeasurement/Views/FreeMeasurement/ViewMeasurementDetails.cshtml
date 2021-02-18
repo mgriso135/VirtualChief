@@ -101,18 +101,23 @@
                 }
             });
 
+            $("#btnViewEditForm").click(function () {
+                $("#lblName").hide();
+
+                $("#txtName").hide();
+            });
 
         });
 </script>
 
     <div class="row-fluid">
         <div class="span12">
-            <h4>@Model.Name</h4>
+            <h4>@Model.Name&nbsp;<span class="material-icons" style="font-size: 14px;" id="btnViewEditForm">edit</span></h4>
             <div>@Model.Description</div>
             <table class="table table-striped table-hover">
                 <tr>
                     <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblName</b></td>
-                    <td>@Model.Name</td>
+                    <td><span id="lblName">@Model.Name</span><input typeof="text" id="txtName" value="@Model.Name" style="display:none;" /></td>
                     <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDescription</b></td>
                     <td>@Model.Description</td>
                     <td><b>@ResFreeMeasurements.ViewMeasurementDetails.lblDepartment</b></td>

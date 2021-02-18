@@ -5320,12 +5320,12 @@
     <Compile Include="Reconnect.aspx.designer.cs">
       <DependentUpon>Reconnect.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Reparti\configAndonReparto_OLD.ascx.cs">
-      <DependentUpon>configAndonReparto_OLD.ascx</DependentUpon>
+    <Compile Include="Reparti\configAndonReparto.ascx.cs">
+      <DependentUpon>configAndonReparto.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Reparti\configAndonReparto_OLD.ascx.designer.cs">
-      <DependentUpon>configAndonReparto_OLD.ascx</DependentUpon>
+    <Compile Include="Reparti\configAndonReparto.ascx.designer.cs">
+      <DependentUpon>configAndonReparto.ascx</DependentUpon>
     </Compile>
     <Compile Include="Reparti\configAvvioTasks.ascx.cs">
       <DependentUpon>configAvvioTasks.ascx</DependentUpon>
@@ -10541,7 +10541,7 @@
     <Content Include="Produzione\workLoadListReparti.aspx" />
     <Content Include="Produzione\WorkLoadReparti.aspx" />
     <Content Include="Reconnect.aspx" />
-    <Content Include="Reparti\configAndonReparto_OLD.ascx" />
+    <Content Include="Reparti\configAndonReparto.ascx" />
     <Content Include="Reparti\configAvvioTasks.ascx" />
     <Content Include="Reparti\configModoCalcoloTC.ascx" />
     <Content Include="Reparti\processoWorkLoad.ascx" />

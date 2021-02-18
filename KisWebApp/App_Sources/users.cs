@@ -721,7 +721,6 @@ namespace KIS.App_Code
                     {
                         cmd.CommandText = "UPDATE gruppipermessi SET r = @r WHERE idGroup = @IDGroup"
                             + " AND idpermesso = @IDPermesso";
-                        
                     }
                     else
                     {
@@ -779,15 +778,15 @@ namespace KIS.App_Code
                     {
                         cmd.CommandText = "UPDATE gruppipermessi SET w = @w WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
                         cmd.Parameters.AddWithValue("@w", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        // cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        // cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     else
                     {
                         cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, @w, false)";
                         cmd.Parameters.AddWithValue("@w", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        // cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        // cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
 
                     }
 
@@ -840,15 +839,15 @@ namespace KIS.App_Code
                     {
                         cmd.CommandText = "UPDATE gruppipermessi SET x = @x WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
                         cmd.Parameters.AddWithValue("@x", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        // cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        // cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     else
                     {
                         cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, false, @x)";
                         cmd.Parameters.AddWithValue("@x", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        // cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        // cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
                     }
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
