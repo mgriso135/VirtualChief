@@ -16,17 +16,19 @@ namespace KIS.App_Sources
     // Production Analysis
     public class ProductionHistory
     {
+        public String Tenant;
+
         public List<ProductionHistoryStruct> HistoricData;
 
-        public ProductionHistory()
+        public ProductionHistory(String Tenant)
         {
-
+            this.Tenant = Tenant;
         }
 
         public void loadProductionHistory()
         {
             this.HistoricData = new List<ProductionHistoryStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
@@ -339,7 +341,7 @@ namespace KIS.App_Sources
         public void loadProductionAnalysis()
         {
             this.AnalysisData = new List<ProductionAnalysisStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
@@ -793,9 +795,10 @@ namespace KIS.App_Sources
     // Tasks Analysis
     public  class TaskProductionHistory
     {
-        public TaskProductionHistory()
+        public String Tenant;
+        public TaskProductionHistory(String Tenant)
         {
-
+            this.Tenant = Tenant;
         }
 
         public List<TaskProductionHistoryStruct> TaskHistoricData;
@@ -803,7 +806,7 @@ namespace KIS.App_Sources
         public void loadTaskProductionHistory()
         {
             this.TaskHistoricData = new List<TaskProductionHistoryStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
@@ -1134,7 +1137,7 @@ namespace KIS.App_Sources
         public void loadTasksProductionWorkload()
         {
             this.TaskHistoricData = new List<TaskProductionHistoryStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
@@ -1675,19 +1678,22 @@ namespace KIS.App_Sources
 
     public class TaskEvents
     {
+        public String Tenant;
+
         public String log;
 
         public List<TaskEventStruct> TaskEventsData;
 
-        public TaskEvents()
+        public TaskEvents(String Tenant)
         {
+            this.Tenant = Tenant;
             this.TaskEventsData = new List<TaskEventStruct>();
         }
 
         public void loadTaskEvents(DateTime start, DateTime end)
         {
             this.TaskEventsData = new List<TaskEventStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT "
@@ -2035,7 +2041,7 @@ namespace KIS.App_Sources
 
         public void ExportTimeSpans(Boolean AllEvents)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             /*int maxstartev = 0;
@@ -2084,7 +2090,7 @@ namespace KIS.App_Sources
                         {
                             // Checks if start and end events are already in the table
                             int tsid = -1;
-                            MySqlConnection conn2 = (new Dati.Dati()).mycon();
+                            MySqlConnection conn2 = (new Dati.Dati()).mycon(this.Tenant);
                             conn2.Open();
                             MySqlCommand cmd2 = conn2.CreateCommand();
                             cmd2.CommandText = "SELECT id FROM taskstimespans WHERE starteventid=@evi OR starteventid=@evf OR endeventid=@evi OR endeventid=@evf";

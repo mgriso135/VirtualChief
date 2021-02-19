@@ -7,6 +7,8 @@ namespace KIS.App_Code
 {
     public class Kpi
     {
+        protected String Tenant;
+
         private int _id;
         public int id 
         {
@@ -21,7 +23,7 @@ namespace KIS.App_Code
             {
                 // Code to change name of kpi
                 String strSQL = "UPDATE kpi_description SET name = '" + value + "' WHERE id = " + this.id.ToString();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
                 cmd.ExecuteNonQuery();
@@ -37,7 +39,7 @@ namespace KIS.App_Code
             {
                 // Code to change description of kpi
                 String strSQL = "UPDATE kpi_description SET description = '" + value + "' WHERE id = " + this.id.ToString();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
                 cmd.ExecuteNonQuery();
@@ -71,7 +73,7 @@ namespace KIS.App_Code
             {
                 if(this._id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     String strSQL = "UPDATE kpi_description SET baseval = " + value.ToString() + " WHERE id = " + this.id;
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
@@ -88,17 +90,21 @@ namespace KIS.App_Code
             get { return _data; }
         }
 
-        public Kpi()
+        public Kpi(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._id = -1;
             this._name = "";
             this._description = "";
         }
 
-        public Kpi(int kpiID)
+        public Kpi(String Tenant, int kpiID)
         {
+            this.Tenant = Tenant;
+
             string strSQL = "SELECT id, name, description, idprocesso, revisione, attivo, baseVal FROM kpi_description WHERE id = " + kpiID.ToString();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
             MySqlDataReader rdr1 = cmd1.ExecuteReader();
@@ -128,7 +134,7 @@ namespace KIS.App_Code
             this._numData = 0;
             if(this._id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 String strSQL = "SELECT COUNT(kpiID) FROM kpi_record WHERE kpiID = " + this.id;
                 MySqlCommand cmdCount = new MySqlCommand(strSQL, conn);
@@ -146,7 +152,7 @@ namespace KIS.App_Code
                     int i = 0;
                     while (rdr.Read() && i < this._numData)
                     {
-                        this._data[i] = new KpiRecord();
+                        this._data[i] = new KpiRecord(this.Tenant);
                         this._data[i].valore = rdr.GetFloat(2);
                         this._data[i].date = rdr.GetDateTime(1);
                         this._data[i].Task = rdr.GetInt32(3);
@@ -225,7 +231,7 @@ namespace KIS.App_Code
             if (name.Length > 0 && Description.Length > 0 && proc != null && proc.processID != -1)
             {
                 string strSQL = "SELECT MAX(id) FROM kpi_description";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
                 MySqlDataReader rdr1 = cmd1.ExecuteReader();
@@ -265,7 +271,7 @@ namespace KIS.App_Code
             if (name.Length > 0 && Description.Length > 0 && procID != -1 && revProc != -1)
             {
                 string strSQL = "SELECT MAX(id) FROM kpi_description";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
                 MySqlDataReader rdr1 = cmd1.ExecuteReader();
@@ -305,7 +311,7 @@ namespace KIS.App_Code
             if (this.id != -1)
             {
                 String strSQL = "UPDATE kpi_description SET attivo=1 WHERE id=" + this.id.ToString();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
                 cmd.ExecuteNonQuery();
@@ -323,7 +329,7 @@ namespace KIS.App_Code
             if (this.id != -1)
             {
                 String strSQL = "UPDATE kpi_description SET attivo=0 WHERE id=" + this.id.ToString();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
                 cmd.ExecuteNonQuery();
@@ -339,7 +345,7 @@ namespace KIS.App_Code
         public bool delete()
         {
             bool ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             String strSQL = "DELETE FROM kpi_record WHERE kpiID = " + this.id.ToString();
             MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
@@ -364,7 +370,7 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 string val = valore.ToString().Replace(",", ".");
                 String strSQL = "INSERT INTO kpi_record(kpiID, data, valore, task) VALUES(" + this.id + ", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', " + val + ", " + task + ")";
@@ -384,7 +390,7 @@ namespace KIS.App_Code
 
             if (this._id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 String strSQL = "SELECT COUNT(kpiID) FROM kpi_record WHERE kpiID = " + this.id + " AND data >= '" + start.ToString("yyyy-MM-dd") + "' AND data <= '" + end.ToString("yyyy-MM-dd") + "'";
                 MySqlCommand cmdCount = new MySqlCommand(strSQL, conn);
@@ -402,7 +408,7 @@ namespace KIS.App_Code
                     int i = 0;
                     while (rdr.Read() && i < this._numData)
                     {
-                        this._data[i] = new KpiRecord();
+                        this._data[i] = new KpiRecord(this.Tenant);
                         this._data[i].valore = rdr.GetFloat(2);
                         this._data[i].date = rdr.GetDateTime(1);
                         this._data[i].Task = rdr.GetInt32(0);
@@ -430,6 +436,7 @@ namespace KIS.App_Code
 
     public class KpiRecord
     {
+        protected String Tenant;
 
         private float _valore;
         public float valore
@@ -442,10 +449,10 @@ namespace KIS.App_Code
         public DateTime date
         {
             get {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._date, fuso.tzFusoOrario);
             }
-            set { FusoOrario fuso = new FusoOrario();
+            set { FusoOrario fuso = new FusoOrario(this.Tenant);
                 this._date = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario); }
         }
 
@@ -456,8 +463,10 @@ namespace KIS.App_Code
             set { _task = value; }
         }
 
-        public KpiRecord()
+        public KpiRecord(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._valore = 0;
             this._date = DateTime.UtcNow;
         }

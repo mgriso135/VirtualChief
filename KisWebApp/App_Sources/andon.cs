@@ -11,10 +11,14 @@ namespace KIS.App_Code
 {
     public class AndonCompleto
     {
+        protected String Tenant; 
+
         public String log;
 
-        public AndonCompleto()
+        public AndonCompleto(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._FieldList = new Dictionary<string, int>();
             this._FieldList.Add("CommessaID", 0);
             this._FieldList.Add("OrderExternalID", 0);
@@ -77,7 +81,7 @@ namespace KIS.App_Code
             get
             {
                 char ret = '0';
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Andon Completo' "
@@ -100,7 +104,7 @@ namespace KIS.App_Code
             set
             {
                     // Verifico che sia presente la configurazione
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -159,7 +163,7 @@ namespace KIS.App_Code
              */
         public void loadScrollType()
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Completo' AND parametro LIKE 'ScrollType'";
@@ -207,7 +211,7 @@ namespace KIS.App_Code
         public int setScrollType(int ScrollType, String Params)
         {
             int ret = 0;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Completo' AND parametro LIKE 'ScrollType'";
@@ -285,7 +289,7 @@ namespace KIS.App_Code
         {
             this._CampiVisualizzati = new Dictionary<String, int>();
             Dictionary<String, int> swap = new Dictionary<string, int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
@@ -320,7 +324,7 @@ namespace KIS.App_Code
             this.loadCampiVisualizzati();
             int prog = this.CampiVisualizzati.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -354,7 +358,7 @@ namespace KIS.App_Code
             this.loadCampiVisualizzati();
             int prog = this.CampiVisualizzati.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -395,7 +399,7 @@ namespace KIS.App_Code
             this.loadCampiVisualizzati();
             int prog = this.CampiVisualizzati.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -446,7 +450,7 @@ namespace KIS.App_Code
         {
             this._CampiVisualizzatiTasks = new Dictionary<String, int>();
             Dictionary<String, int> swap = new Dictionary<string, int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
@@ -481,7 +485,7 @@ namespace KIS.App_Code
             this.loadCampiVisualizzatiTasks();
             int prog = this.CampiVisualizzatiTasks.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -515,7 +519,7 @@ namespace KIS.App_Code
             this.loadCampiVisualizzatiTasks();
             int prog = this.CampiVisualizzatiTasks.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -556,7 +560,7 @@ namespace KIS.App_Code
             this.loadCampiVisualizzatiTasks();
             int prog = this.CampiVisualizzatiTasks.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -582,6 +586,8 @@ namespace KIS.App_Code
 
     public class AndonReparto : AndonCompleto
     {
+        public String Tenant;
+
         //public String log;
         private int _RepartoID;
         public int RepartoID
@@ -605,8 +611,9 @@ namespace KIS.App_Code
 
         public List<DepartmentAndonProductsStruct> WIP;
 
-        public AndonReparto(int idRep):base()
+        public AndonReparto(String Tenant, int idRep):base(Tenant)
         {
+            this.Tenant = Tenant;
             this.WIP = new List<DepartmentAndonProductsStruct>();
             this.Warnings = new List<DepartmentWarningStruct>();
             Reparto rp = new Reparto(idRep);
@@ -697,7 +704,7 @@ namespace KIS.App_Code
             get
             {
                 int ret = 1;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
@@ -728,7 +735,7 @@ namespace KIS.App_Code
             {
                 if (this.RepartoID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
@@ -797,7 +804,7 @@ namespace KIS.App_Code
                 if (this.RepartoID != -1)
                 {
                     Char cValue = value ? '1' : '0';
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = " + this.RepartoID;
@@ -850,7 +857,7 @@ namespace KIS.App_Code
                 if (this.RepartoID != -1)
                 {
                     Char cValue = value ? '1' : '0';
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = " + this.RepartoID;
@@ -905,7 +912,7 @@ namespace KIS.App_Code
         {
             if(this.RepartoID!=-1)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = " + this.RepartoID;
@@ -956,7 +963,7 @@ namespace KIS.App_Code
             int ret = 0;
             if(this.RepartoID!=-1)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = " + this.RepartoID;
@@ -1013,7 +1020,7 @@ namespace KIS.App_Code
             if (this.RepartoID != -1)
             {
                 Dictionary<String, int> swap = new Dictionary<string, int>();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
@@ -1051,7 +1058,7 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzati();
                 int prog = this.CampiVisualizzati.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1088,7 +1095,7 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzati();
                 int prog = this.CampiVisualizzati.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1132,7 +1139,7 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzati();
                 int prog = this.CampiVisualizzati.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1163,7 +1170,7 @@ namespace KIS.App_Code
             if (this.RepartoID != -1)
             {
                 Dictionary<String, int> swap = new Dictionary<string, int>();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
@@ -1201,7 +1208,7 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzatiTasks();
                 int prog = this.CampiVisualizzatiTasks.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1238,7 +1245,7 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzatiTasks();
                 int prog = this.CampiVisualizzatiTasks.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1282,7 +1289,7 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzatiTasks();
                 int prog = this.CampiVisualizzatiTasks.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1311,7 +1318,7 @@ namespace KIS.App_Code
             this._ShowActiveUsers = false;
             if (this.RepartoID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = " + this.RepartoID;
@@ -1344,7 +1351,7 @@ namespace KIS.App_Code
             this._ShowActiveUsers = false;
             if (this.RepartoID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = " + this.RepartoID;
@@ -1390,7 +1397,7 @@ namespace KIS.App_Code
             this.WIP = new List<DepartmentAndonProductsStruct>();
             if (this.RepartoID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT "
@@ -1660,7 +1667,7 @@ namespace KIS.App_Code
                 char ret = '0';
                 if (this.RepartoID!=-1)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
@@ -1685,7 +1692,7 @@ namespace KIS.App_Code
                 if (this.RepartoID != -1)
                 {
                     // Verifico che sia presente la configurazione
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1756,7 +1763,7 @@ namespace KIS.App_Code
             int ret = 0;
             if(this.RepartoID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT COUNT(id) FROM productionplan WHERE (status = 'I' OR status='P') AND reparto = "+this.RepartoID.ToString()

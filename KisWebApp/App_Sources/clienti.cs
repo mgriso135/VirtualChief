@@ -10,6 +10,8 @@ namespace KIS.App_Code
 {
     public class Cliente
     {
+        public String Tenant;
+
         public String log;
 
         private String _CodiceCliente;
@@ -30,7 +32,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -61,7 +63,7 @@ namespace KIS.App_Code
             {
                 if (value.Length == 11 || value.Length == 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -94,7 +96,7 @@ namespace KIS.App_Code
             {
                 if (value.Length == 16 || value.Length==0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -125,7 +127,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -154,7 +156,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -186,7 +188,7 @@ namespace KIS.App_Code
             {
                 if (value.Length <= 2)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -221,7 +223,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -251,7 +253,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -283,7 +285,7 @@ namespace KIS.App_Code
             {
                 if (value.Length <= 45)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -314,7 +316,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -341,7 +343,7 @@ namespace KIS.App_Code
             ElencoContatti = new List<Contatto>();
             if (this.CodiceCliente.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idContatto FROM contatticlienti WHERE cliente = '" + this.CodiceCliente +
@@ -349,7 +351,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this.ElencoContatti.Add(new Contatto(rdr.GetInt32(0)));
+                    this.ElencoContatti.Add(new Contatto(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -369,7 +371,7 @@ namespace KIS.App_Code
                 KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
                 if (this.CodiceCliente != "" && this.CodiceCliente.Length > 0 && kboxCfg.KanbanBoxEnabled == true)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE anagraficaclienti SET kanbanManaged = " + value +
@@ -391,7 +393,7 @@ namespace KIS.App_Code
         {
             this._listCommesse = new List<Commessa>();
             this._IntervalliDiLavoro = new List<IntervalliDiLavoroEffettivi>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT codice, ragsociale, partitaiva, codfiscale, indirizzo, citta, provincia, CAP, "
@@ -492,7 +494,7 @@ namespace KIS.App_Code
             int rt = -1;
             if (this.CodiceCliente.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT MAX(idContatto) FROM contatticlienti";
@@ -544,7 +546,7 @@ namespace KIS.App_Code
             this._listCommesse = new List<Commessa>();
             if (this.CodiceCliente.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT commesse.idcommesse, commesse.anno FROM commesse "
@@ -557,7 +559,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._listCommesse.Add(new Commessa(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._listCommesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -642,7 +644,7 @@ namespace KIS.App_Code
                 {
                     this.ElencoContatti[i].Delete();
                 }
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -684,7 +686,7 @@ namespace KIS.App_Code
             this._listArticoli = new List<Articolo>();
             if (this.CodiceCliente.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM productionplan INNER JOIN commesse ON "
@@ -694,7 +696,7 @@ namespace KIS.App_Code
                 ret = true;
                 while (rdr.Read())
                 {
-                    Articolo art = new Articolo(rdr.GetInt32(0), rdr.GetInt32(1));
+                    Articolo art = new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
                     if (art.ID != -1)
                     {
                         this._listArticoli.Add(art);
@@ -712,7 +714,7 @@ namespace KIS.App_Code
             if (this.CodiceCliente.Length > 0)
             {
                 this._listArticoli = new List<Articolo>();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM "
@@ -763,7 +765,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._listArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._listArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -779,14 +781,18 @@ namespace KIS.App_Code
 
     public class PortafoglioClienti
     {
+        public String Tenant;
+
         public String log;
 
         public List<Cliente> Elenco;
-        public PortafoglioClienti()
+        public PortafoglioClienti(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.Elenco = new List<Cliente>();
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT codice FROM anagraficaclienti ORDER BY ragsociale";
@@ -802,7 +808,7 @@ namespace KIS.App_Code
         public PortafoglioClienti(DateTime inizio, DateTime fine)
         {
             this.Elenco = new List<Cliente>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT DISTINCT(anagraficaclienti.codice) FROM anagraficaclienti "
@@ -855,7 +861,7 @@ namespace KIS.App_Code
 
             if (validateCodice == true && validatePIvacFisc == true && validateRagSociale == true && validateEmail == true)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -924,6 +930,8 @@ namespace KIS.App_Code
 
     public class Contatto
     {
+        protected String Tenant;
+
         public String log;
 
         private String _Cliente;
@@ -955,7 +963,7 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.ID!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -988,7 +996,7 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1021,7 +1029,7 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1048,7 +1056,7 @@ namespace KIS.App_Code
             this.Emails = new List<ContattoEmail>();
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT email FROM contatticlienti_email WHERE idContatto = " + this.ID.ToString();
@@ -1057,7 +1065,7 @@ namespace KIS.App_Code
                 {
                     if (!rdr.IsDBNull(0))
                     {
-                        this.Emails.Add(new ContattoEmail(this.ID, new MailAddress(rdr.GetString(0))));
+                        this.Emails.Add(new ContattoEmail(this.Tenant, this.ID, new MailAddress(rdr.GetString(0))));
                     }
                 }
                 conn.Close();
@@ -1070,7 +1078,7 @@ namespace KIS.App_Code
             this.Phones = new List<ContattoTelefono>();
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT phone FROM contatticlienti_phone WHERE idContatto = " + this.ID.ToString();
@@ -1079,7 +1087,7 @@ namespace KIS.App_Code
                 {
                     if (!rdr.IsDBNull(0))
                     {
-                        this.Phones.Add(new ContattoTelefono(this.ID, rdr.GetString(0)));
+                        this.Phones.Add(new ContattoTelefono(this.Tenant, this.ID, rdr.GetString(0)));
                     }
                 }
                 conn.Close();
@@ -1096,7 +1104,7 @@ namespace KIS.App_Code
             set {
                 if(this.ID!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE contatticlienti SET user = '" + value.username + "' WHERE "
@@ -1117,14 +1125,16 @@ namespace KIS.App_Code
             }
         }
 
-        public Contatto(int idC)
+        public Contatto(String Tenant, int idC)
         {
+            this.Tenant = Tenant;
+
             this._ID = -1;
             this.Emails = new List<ContattoEmail>();
             this.Phones = new List<ContattoTelefono>();
             if (idC != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idContatto, cliente, firstname, lastname, ruolo, user "
@@ -1161,7 +1171,7 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1193,7 +1203,7 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1236,7 +1246,7 @@ namespace KIS.App_Code
                     this.Phones[i].Delete();
                 }
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -1272,6 +1282,8 @@ namespace KIS.App_Code
 
     public class ContattoEmail
     {
+        public String Tenant;
+
         public String log;
 
         private int _IdContatto;
@@ -1294,7 +1306,7 @@ namespace KIS.App_Code
             {
                 if (this.idContatto!=-1 && value.Address.Length > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1328,7 +1340,7 @@ namespace KIS.App_Code
             {
                 if (this.idContatto!=-1 && value.Length > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1351,12 +1363,14 @@ namespace KIS.App_Code
             }
         }
     
-        public ContattoEmail(int idCont, MailAddress mail)
+        public ContattoEmail(String Tenant, int idCont, MailAddress mail)
         {
+            this.Tenant = Tenant;
+
             this._Email = null;
             if(idCont!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT email, note FROM contatticlienti_email WHERE idContatto = " + idCont.ToString()
@@ -1391,7 +1405,7 @@ namespace KIS.App_Code
         public bool Delete()
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1417,6 +1431,8 @@ namespace KIS.App_Code
 
     public class ContattoTelefono
     {
+        public String Tenant;
+
         public String log;
 
         private int _IdContatto;
@@ -1439,7 +1455,7 @@ namespace KIS.App_Code
             {
                 if (this.idContatto != -1 && value.Length > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1473,7 +1489,7 @@ namespace KIS.App_Code
             {
                 if (this.idContatto != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1496,12 +1512,13 @@ namespace KIS.App_Code
             }
         }
 
-        public ContattoTelefono(int idCont, String tel)
+        public ContattoTelefono(String Tenant, int idCont, String tel)
         {
+            this.Tenant = Tenant;
             this._Phone = null;
             if (idCont != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT phone, note FROM contatticlienti_phone WHERE idContatto = " + idCont.ToString()
@@ -1536,7 +1553,7 @@ namespace KIS.App_Code
         public bool Delete()
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();

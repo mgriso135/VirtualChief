@@ -126,25 +126,31 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 ViewBag.log += "mail_verified2 " + mail_verified + "    ";
                 if(mail_verified)
                 {
-                    curr.loadWorkspaces();
-                    curr.loadDefaultWorkspace();
-                    if(curr.DefaultWorkspace != null)
+                    if (Session["ActiveWorkspace"] == null)
                     {
-                        Session["ActiveWorkspace"] = curr.DefaultWorkspace.Name;
-                        Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
-                        redirectUrl = "~/HomePage/Default.aspx";
-                    }
-                    else if(curr.workspaces.Count > 0)
-                    {
-                        Session["ActiveWorkspace"] = curr.workspaces[0].Name;
-                        Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
-                        redirectUrl = "~/HomePage/Default.aspx";
+                        curr.loadWorkspaces();
+                        curr.loadDefaultWorkspace();
+                        if (curr.DefaultWorkspace != null)
+                        {
+                            Session["ActiveWorkspace"] = curr.DefaultWorkspace.Name;
+                            Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
+                            redirectUrl = "~/HomePage/Default.aspx";
+                        }
+                        else if (curr.workspaces.Count > 0)
+                        {
+                            Session["ActiveWorkspace"] = curr.workspaces[0].Name;
+                            Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
+                            redirectUrl = "~/HomePage/Default.aspx";
+                        }
+                        else
+                        {
+                            redirectUrl = "AddWorkspaceForm";
+                        }
                     }
                     else
-                    {                        
-                        redirectUrl = "AddWorkspaceForm";
+                    {
+                        // Go to home
                     }
-                    
                 }
                 else
                 {

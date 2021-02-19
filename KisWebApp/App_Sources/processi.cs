@@ -45,7 +45,7 @@ namespace KIS.App_Code
             if(nome.Length > 0 && Descr.Length > 0)
             {                
                 string strSQL = "SELECT MAX(processID) from processo";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
                 MySqlDataReader rdr = cmd1.ExecuteReader();

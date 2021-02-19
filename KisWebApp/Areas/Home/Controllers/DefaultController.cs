@@ -22,11 +22,11 @@ namespace KIS.Areas.Home.Controllers
             if (Session["user"] != null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Home/Default/Index", "", ipAddr);
+                Dati.Utilities.LogAction(Session["ActiveWorkstpace"].ToString(), curr.username, "Controller", "/Home/Default/Index", "", ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Home/Default/Index", "", ipAddr);
+                Dati.Utilities.LogAction(Session["ActiveWorkstpace"].ToString(), Session.SessionID, "Controller", "/Home/Default/Index", "", ipAddr);
             }
 
             return View();
