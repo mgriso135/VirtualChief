@@ -44,7 +44,7 @@ namespace KIS.App_Code
 
     public abstract class ConfigurazioneEventoAmbito
     {
-        
+        protected String Tenant;
 
         public List<String> ListUsers;
         public List<int> ListGroupsID;
@@ -193,13 +193,16 @@ namespace KIS.App_Code
         public virtual void loadUsers()
         { }
 
-        public ConfigurazioneEventoAmbito() 
-        { 
+        public ConfigurazioneEventoAmbito(String Tenant) 
+        {
+            this.Tenant = Tenant;
         }
     }
 
     public abstract class ConfigurazioneRitardoAmbito : ConfigurazioneEventoAmbito
     {
+        protected String Tenant;
+
         private Ritardo _TipoEvento;
         public Ritardo TipoEvento
         {
@@ -214,9 +217,10 @@ namespace KIS.App_Code
             set { }
         }
 
-        public ConfigurazioneRitardoAmbito()
-            : base()
+        public ConfigurazioneRitardoAmbito(String Tenant)
+            : base(Tenant)
         {
+            this.Tenant = Tenant;
             this._TipoEvento = new Ritardo();
             this._RitardoMinimoDaSegnalare = new TimeSpan(0, 0, 0);
         }
@@ -224,6 +228,8 @@ namespace KIS.App_Code
 
     public class ConfigurazioneRitardoReparto : ConfigurazioneRitardoAmbito
     {
+        protected String Tenant;
+
         public String log;
         private int _repartoID;
         public int RepartoID
@@ -241,7 +247,7 @@ namespace KIS.App_Code
             {
                 // Ricerco se è già impostato
                 bool found = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventorepartoconfig WHERE "
@@ -291,10 +297,12 @@ namespace KIS.App_Code
         }
 
 
-        public ConfigurazioneRitardoReparto(int repID)
-            : base()
+        public ConfigurazioneRitardoReparto(String Tenant, int repID)
+            : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = " + repID.ToString()
@@ -320,7 +328,7 @@ namespace KIS.App_Code
         public override void loadGruppi()
         {
             this.ListGroupsID = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventorepartogruppi WHERE "
@@ -338,7 +346,7 @@ namespace KIS.App_Code
         public override void loadUsers()
         {
             this.ListUsers = new List<String>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventorepartoutenti WHERE "
@@ -357,7 +365,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -387,7 +395,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
             
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -418,7 +426,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -449,7 +457,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -478,6 +486,8 @@ namespace KIS.App_Code
 
     public abstract class ConfigurazioneWarningAmbito : ConfigurazioneEventoAmbito
     {
+        // protected String Tenant;
+
         private WarningEvent _TipoEvento;
         public WarningEvent TipoEvento
         {
@@ -485,9 +495,10 @@ namespace KIS.App_Code
 
         }
 
-        public ConfigurazioneWarningAmbito()
-            : base()
+        public ConfigurazioneWarningAmbito(String Tenant)
+            : base(Tenant)
         {
+            this.Tenant = Tenant;
             this._TipoEvento = new WarningEvent();
         }
 
@@ -502,10 +513,10 @@ namespace KIS.App_Code
             get { return this._repartoID; }
         }
 
-        public ConfigurazioneWarningReparto(int repID)
-            : base()
+        public ConfigurazioneWarningReparto(String Tenant, int repID)
+            : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = " + repID.ToString()
@@ -529,7 +540,7 @@ namespace KIS.App_Code
         public override void loadGruppi()
         {
             this.ListGroupsID = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventorepartogruppi WHERE "
@@ -547,7 +558,7 @@ namespace KIS.App_Code
         public override void loadUsers()
         {
             this.ListUsers = new List<String>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventorepartoutenti WHERE "
@@ -566,7 +577,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -596,7 +607,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -627,7 +638,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -658,7 +669,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -712,7 +723,7 @@ namespace KIS.App_Code
             {
                 // Ricerco se è già impostato
                 bool found = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventocommessaconfig WHERE "
@@ -764,10 +775,12 @@ namespace KIS.App_Code
         }
 
 
-        public ConfigurazioneRitardoCommessa(Commessa comm)
-            : base()
+        public ConfigurazioneRitardoCommessa(String Tenant, Commessa comm)
+            : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
@@ -796,7 +809,7 @@ namespace KIS.App_Code
         public override void loadGruppi()
         {
             this.ListGroupsID = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventocommessagruppi WHERE "
@@ -815,7 +828,7 @@ namespace KIS.App_Code
         public override void loadUsers()
         {
             this.ListUsers = new List<String>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventocommessautenti WHERE "
@@ -835,7 +848,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -866,7 +879,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
             
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -898,7 +911,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -930,7 +943,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -959,6 +972,8 @@ namespace KIS.App_Code
     
     public class ConfigurazioneWarningCommessa : ConfigurazioneWarningAmbito
     {
+        public String Tenant;
+
         public String log;
         private int _CommessaID;
         public int CommessaID
@@ -975,10 +990,10 @@ namespace KIS.App_Code
             }
         }
 
-        public ConfigurazioneWarningCommessa(Commessa cm)
-            : base()
+        public ConfigurazioneWarningCommessa(String Tenant, Commessa cm)
+            : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
@@ -1006,7 +1021,7 @@ namespace KIS.App_Code
         public override void loadGruppi()
         {
             this.ListGroupsID = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventocommessagruppi WHERE "
@@ -1025,7 +1040,7 @@ namespace KIS.App_Code
         public override void loadUsers()
         {
             this.ListUsers = new List<String>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventocommessautenti WHERE "
@@ -1045,7 +1060,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1076,7 +1091,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1108,7 +1123,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1140,7 +1155,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1195,7 +1210,7 @@ namespace KIS.App_Code
             {
                 // Ricerco se è già impostato
                 bool found = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventoarticoloconfig WHERE "
@@ -1247,10 +1262,12 @@ namespace KIS.App_Code
         }
 
 
-        public ConfigurazioneRitardoArticolo(Articolo art)
-            : base()
+        public ConfigurazioneRitardoArticolo(String Tenant, Articolo art)
+            : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
@@ -1279,7 +1296,7 @@ namespace KIS.App_Code
         public override void loadGruppi()
         {
             this.ListGroupsID = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventoarticologruppi WHERE "
@@ -1298,7 +1315,7 @@ namespace KIS.App_Code
         public override void loadUsers()
         {
             this.ListUsers = new List<String>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventoarticoloutenti WHERE "
@@ -1318,7 +1335,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1349,7 +1366,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1381,7 +1398,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1413,7 +1430,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1458,10 +1475,12 @@ namespace KIS.App_Code
             }
         }
 
-        public ConfigurazioneWarningArticolo(Articolo art)
-            : base()
+        public ConfigurazioneWarningArticolo(String Tenant, Articolo art)
+            : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
@@ -1489,7 +1508,7 @@ namespace KIS.App_Code
         public override void loadGruppi()
         {
             this.ListGroupsID = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventoarticologruppi WHERE "
@@ -1508,7 +1527,7 @@ namespace KIS.App_Code
         public override void loadUsers()
         {
             this.ListUsers = new List<String>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventoarticoloutenti WHERE "
@@ -1528,7 +1547,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1559,7 +1578,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1591,7 +1610,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -1623,7 +1642,7 @@ namespace KIS.App_Code
         {
             bool rt = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();

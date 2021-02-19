@@ -9,6 +9,8 @@ namespace KIS.App_Code
 {
     public class Permesso
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ID;
@@ -25,7 +27,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE permessi SET nome = '" + value + "' WHERE idpermesso = " + this.ID.ToString();
@@ -54,7 +56,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE permessi SET descrizione = '" + value + "' WHERE idpermesso = " + this.ID.ToString();
@@ -76,9 +78,11 @@ namespace KIS.App_Code
             }
         }
 
-        public Permesso(int idPerm)
+        public Permesso(String Tenant, int idPerm)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idpermesso, nome, descrizione FROM permessi WHERE idpermesso = " + idPerm.ToString();
@@ -99,9 +103,11 @@ namespace KIS.App_Code
             conn.Close();
         }
 
-        public Permesso(String nomePerm)
+        public Permesso(String Tenant, String nomePerm)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idpermesso, nome, descrizione FROM permessi WHERE nome = '" + nomePerm + "'";
@@ -127,7 +133,7 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction trn = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -154,21 +160,25 @@ namespace KIS.App_Code
 
     public class ElencoPermessi
     {
+        protected String Tenant;
+
         public String log;
 
         public List<Permesso> Elenco;
         
-        public ElencoPermessi()
+        public ElencoPermessi(String Tenant)
         {
+            this.Tenant = Tenant;
+
             Elenco = new List<Permesso>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idpermesso FROM permessi ORDER BY nome";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                Elenco.Add(new Permesso(rdr.GetInt32(0)));
+                Elenco.Add(new Permesso(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -177,7 +187,7 @@ namespace KIS.App_Code
         public bool Add(String nomeP, String descP)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(idpermesso) FROM permessi";

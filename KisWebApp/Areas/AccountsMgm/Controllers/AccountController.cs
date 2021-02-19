@@ -66,7 +66,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
         [Authorize]
         public ActionResult AfterLogin()
         {
-            String redUr = "";
+            String redirectUrl = "";
             ViewBag.log = "";
             var claimsIdentity = User.Identity as ClaimsIdentity;
             ViewBag.AccessToken = claimsIdentity?.FindFirst(c => c.Type == "access_token")?.Value;
@@ -107,12 +107,12 @@ namespace KIS.Areas.AccountsMgm.Controllers
                     {
                         ViewBag.log += "Redirecting1...";
                         // Then go to add a new workspace
-                        redUr = "AddWorkspaceForm";
+                        redirectUrl = "AddWorkspaceForm";
                     }
                     else
                     {
                         // Please, verify e-mail...
-                        redUr = "VerifyEmail";
+                        redirectUrl = "VerifyEmail";
                     }
                 }
                 else
@@ -126,36 +126,41 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 ViewBag.log += "mail_verified2 " + mail_verified + "    ";
                 if(mail_verified)
                 {
-                    curr.loadWorkspaces();
-                    curr.loadDefaultWorkspace();
-                    if(curr.DefaultWorkspace != null)
+                    if (Session["ActiveWorkspace"] == null)
                     {
-                        Session["ActiveWorkspace"] = curr.DefaultWorkspace.Name;
-                        Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
-                        redUr = "~/HomePage/Default.aspx";
-                    }
-                    else if(curr.workspaces.Count > 0)
-                    {
-                        Session["ActiveWorkspace"] = curr.workspaces[0].Name;
-                        Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
-                        redUr = "~/HomePage/Default.aspx";
+                        curr.loadWorkspaces();
+                        curr.loadDefaultWorkspace();
+                        if (curr.DefaultWorkspace != null)
+                        {
+                            Session["ActiveWorkspace"] = curr.DefaultWorkspace.Name;
+                            Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
+                            redirectUrl = "~/HomePage/Default.aspx";
+                        }
+                        else if (curr.workspaces.Count > 0)
+                        {
+                            Session["ActiveWorkspace"] = curr.workspaces[0].Name;
+                            Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
+                            redirectUrl = "~/HomePage/Default.aspx";
+                        }
+                        else
+                        {
+                            redirectUrl = "AddWorkspaceForm";
+                        }
                     }
                     else
                     {
-                        redUr = "AddWorkspaceForm";
+                        // Go to home
                     }
-                    
                 }
                 else
                 {
-
-                    redUr = "VerifyEmail";
-                    ViewBag.log = redUr;
+                    
+                    redirectUrl = "VerifyEmail";
+                    ViewBag.log = redirectUrl;
                 }
             }
-            ViewBag.log = redUr;
-            ViewBag.redirectUrl = redUr;
-            return View(new Uri(redUr, UriKind.Relative));
+            ViewBag.log = redirectUrl;
+            return View(redirectUrl);
         }
 
         [Authorize]

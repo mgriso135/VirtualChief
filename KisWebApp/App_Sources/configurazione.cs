@@ -11,14 +11,17 @@ namespace KIS.App_Code
 {
     public class KISConfig
     {
+        protected String Tenant;
+
         public int workspace_id;
 
-        public KISConfig()
+        public KISConfig(String Tenant)
         {
-
+            this.Tenant = Tenant;
         }
-        public KISConfig(int workspace)
+        public KISConfig(String Tenant, int workspace)
         {
+            this.Tenant = Tenant;
             workspace_id = workspace;
         }
 
@@ -27,7 +30,7 @@ namespace KIS.App_Code
             get
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
@@ -139,7 +142,7 @@ namespace KIS.App_Code
             get
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT * FROM configurazione WHERE parametro LIKE 'TimeZone'";
@@ -162,7 +165,7 @@ namespace KIS.App_Code
             get
             {
                 bool ret = false;
-                AndonCompleto andon = new AndonCompleto();
+                AndonCompleto andon = new AndonCompleto(this.Tenant);
                 andon.loadCampiVisualizzati();
                 andon.loadCampiVisualizzatiTasks();
                 ret = (andon.CampiVisualizzati.Count > 0 && andon.CampiVisualizzatiTasks.Count > 0);
@@ -173,7 +176,7 @@ namespace KIS.App_Code
         public Boolean WizCustomerReportCompleted {
             get {
                 Boolean ret = false;
-                configBaseOrderStatusReport cfgCust = new configBaseOrderStatusReport();
+                configBaseOrderStatusReport cfgCust = new configBaseOrderStatusReport(this.Tenant);
                 ret = cfgCust.IDCommessa ||
                 cfgCust.Cliente ||
                 cfgCust.DataInserimentoOrdine ||
@@ -224,7 +227,7 @@ namespace KIS.App_Code
             get
             {
                 DateTime exp = new DateTime(1970, 1, 1);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
@@ -238,7 +241,7 @@ namespace KIS.App_Code
                         int anno = Int32.Parse(aExp[2]);
                         int mese = Int32.Parse(aExp[1]);
                         int giorno = Int32.Parse(aExp[0]);
-                        FusoOrario fuso = new FusoOrario();
+                        FusoOrario fuso = new FusoOrario(this.Tenant);
                         exp = new DateTime(anno, mese, giorno);
                         exp = TimeZoneInfo.ConvertTimeFromUtc(exp, fuso.tzFusoOrario);
                     }
@@ -253,7 +256,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 String expDate = value.Day.ToString() + "/"
@@ -328,7 +331,7 @@ namespace KIS.App_Code
             get
             {
                 String ret = "";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
@@ -358,7 +361,7 @@ namespace KIS.App_Code
             get
             {
                 String ret = "";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
@@ -388,7 +391,7 @@ namespace KIS.App_Code
             get
             {
                 String ret = "";
-                MySqlConnection conn = (new Dati.Dati().mycon());
+                MySqlConnection conn = (new Dati.Dati().mycon(this.Tenant));
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'ConfigController' AND parametro"
@@ -409,7 +412,7 @@ namespace KIS.App_Code
             get
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
@@ -429,7 +432,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
 
@@ -469,13 +472,15 @@ namespace KIS.App_Code
 
     public class Logo
     {
+        protected String Tenant;
+
         public String log;
         public String filePath
         {
             get
             {
                 String percorsoLogo = "~/Data/Logo/LogoMG.png";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
@@ -491,7 +496,7 @@ namespace KIS.App_Code
             set
             {
                 log = "Carico... ";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 bool found = false;
@@ -542,7 +547,7 @@ namespace KIS.App_Code
             get
             {
                 String percorsoLogo = "/Data/Logo/LogoMG.png";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
@@ -558,7 +563,7 @@ namespace KIS.App_Code
             set
             {
                 log = "Carico... ";
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 bool found = false;
@@ -604,13 +609,16 @@ namespace KIS.App_Code
             }
         }
 
-        public Logo()
+        public Logo(String Tenant)
         {
+            this.Tenant = Tenant;
         }
     }
 
     public class FusoOrario
     {
+        protected String Tenant;
+
         public String log;
         private String _fusoOrario;
         public String fusoOrario
@@ -618,7 +626,7 @@ namespace KIS.App_Code
             get { return this._fusoOrario; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 Boolean res = false;
@@ -670,9 +678,11 @@ namespace KIS.App_Code
             }
         }
 
-        public FusoOrario()
+        public FusoOrario(String Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'";
@@ -692,6 +702,8 @@ namespace KIS.App_Code
 
     public class KanbanBoxConfig : ConfigurationSection
     {
+        protected String Tenant;
+
         [ConfigurationProperty("kanbanBoxEnabled", DefaultValue=false, IsRequired = false)]
         public Boolean KanbanBoxEnabled
         {
@@ -742,6 +754,8 @@ namespace KIS.App_Code
 
     public class WizardConfig
     {
+        protected String Tenant;
+
         public String log;
 
         public String interfacciaPERT
@@ -749,7 +763,7 @@ namespace KIS.App_Code
             get
             {
                 String ret;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'";
@@ -768,7 +782,7 @@ namespace KIS.App_Code
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'";
@@ -805,6 +819,8 @@ namespace KIS.App_Code
 
     public class CustomersControllerConfig : ConfigurationSection
     {
+        protected String Tenant;
+
         public String x_api_key;
 
         [ConfigurationProperty("baseUrl", IsRequired = true)]
@@ -823,7 +839,7 @@ namespace KIS.App_Code
         public CustomersControllerConfig()
         {
             this.x_api_key = "";
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE "
@@ -845,6 +861,8 @@ namespace KIS.App_Code
 
     public class EventsExportControllerConfig : ConfigurationSection
     {
+        protected String Tenant;
+
         public String x_api_key;
 
         [ConfigurationProperty("baseUrl", IsRequired = true)]
@@ -863,7 +881,7 @@ namespace KIS.App_Code
         public EventsExportControllerConfig()
         {
             this.x_api_key = "";
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE "
@@ -885,6 +903,8 @@ namespace KIS.App_Code
 
     public class configBaseOrderStatusReport
     {
+        protected String Tenant;
+
         public String log;
 
         protected Boolean _IDCommessa;
@@ -893,7 +913,7 @@ namespace KIS.App_Code
             get { return this._IDCommessa; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -938,7 +958,7 @@ namespace KIS.App_Code
             { return this._Cliente; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -982,7 +1002,7 @@ namespace KIS.App_Code
             get { return this._DataInserimentoOrdine; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1026,7 +1046,7 @@ namespace KIS.App_Code
             get { return this._NoteOrdine; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1070,7 +1090,7 @@ namespace KIS.App_Code
             get { return this._IDProdotto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1114,7 +1134,7 @@ namespace KIS.App_Code
             get { return this._NomeProdotto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1158,7 +1178,7 @@ namespace KIS.App_Code
             get { return this._NomeVariante; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1202,7 +1222,7 @@ namespace KIS.App_Code
             get { return this._Matricola; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1246,7 +1266,7 @@ namespace KIS.App_Code
             get { return this._Status; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1290,7 +1310,7 @@ namespace KIS.App_Code
             get { return this._Reparto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1334,7 +1354,7 @@ namespace KIS.App_Code
             get { return this._DataPrevistaConsegna; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1378,7 +1398,7 @@ namespace KIS.App_Code
             get { return this._DataPrevistaFineProduzione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1422,7 +1442,7 @@ namespace KIS.App_Code
             get { return this._EarlyStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1466,7 +1486,7 @@ namespace KIS.App_Code
             get { return this._EarlyFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1510,7 +1530,7 @@ namespace KIS.App_Code
             get { return this._LateStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1554,7 +1574,7 @@ namespace KIS.App_Code
             get { return this._LateFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1598,7 +1618,7 @@ namespace KIS.App_Code
             get { return this._Quantita; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1642,7 +1662,7 @@ namespace KIS.App_Code
             get { return this._QuantitaProdotta; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1686,7 +1706,7 @@ namespace KIS.App_Code
             get { return this._Ritardo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1730,7 +1750,7 @@ namespace KIS.App_Code
             get { return this._TempoDiLavoroTotale; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1774,7 +1794,7 @@ namespace KIS.App_Code
             get { return this._LeadTime; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1818,7 +1838,7 @@ namespace KIS.App_Code
             get { return this._TempoDiLavoroPrevisto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1862,7 +1882,7 @@ namespace KIS.App_Code
             get { return this._IndicatoreCompletamentoTasks; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1906,7 +1926,7 @@ namespace KIS.App_Code
             get { return this._IndicatoreCompletamentoTempoPrevisto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1950,7 +1970,7 @@ namespace KIS.App_Code
             get { return this._ViewGanttTasks; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -1994,7 +2014,7 @@ namespace KIS.App_Code
             get { return this._ViewElencoTasks; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2038,7 +2058,7 @@ namespace KIS.App_Code
             get { return this._Task_ID; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2082,7 +2102,7 @@ namespace KIS.App_Code
             get { return this._Task_Nome; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2126,7 +2146,7 @@ namespace KIS.App_Code
             get { return this._Task_Descrizione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2170,7 +2190,7 @@ namespace KIS.App_Code
             get { return this._Task_Postazione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2214,7 +2234,7 @@ namespace KIS.App_Code
             get { return this._Task_EarlyStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2258,7 +2278,7 @@ namespace KIS.App_Code
             get { return this._Task_LateStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2302,7 +2322,7 @@ namespace KIS.App_Code
             get { return this._Task_EarlyFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2346,7 +2366,7 @@ namespace KIS.App_Code
             get { return this._Task_LateFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2390,7 +2410,7 @@ namespace KIS.App_Code
             get { return this._Task_NOperatori; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2434,7 +2454,7 @@ namespace KIS.App_Code
             get { return this._Task_TempoCiclo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2478,7 +2498,7 @@ namespace KIS.App_Code
             get { return this._Task_TempoDiLavoroPrevisto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2522,7 +2542,7 @@ namespace KIS.App_Code
             get { return this._Task_TempoDiLavoroEffettivo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2566,7 +2586,7 @@ namespace KIS.App_Code
             get { return this._Task_Status; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2610,7 +2630,7 @@ namespace KIS.App_Code
             get { return this._Task_QuantitaProdotta; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -2648,8 +2668,10 @@ namespace KIS.App_Code
             }
         }
 
-        public configBaseOrderStatusReport()
+        public configBaseOrderStatusReport(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._IDCommessa = true;
             this._Cliente = true;
             this._DataInserimentoOrdine = true;
@@ -2691,7 +2713,7 @@ namespace KIS.App_Code
             this._Task_Status = true;
             this._Task_QuantitaProdotta = true;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'OrderStatusCustomerReport base'";
@@ -3112,6 +3134,8 @@ namespace KIS.App_Code
 
     public class configCustomerOrderStatusReport : configBaseOrderStatusReport
     {
+        protected String Tenant;
+
         public String codCliente;
 
         public new Boolean IDCommessa
@@ -3119,7 +3143,7 @@ namespace KIS.App_Code
             get { return this._IDCommessa; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3162,7 +3186,7 @@ namespace KIS.App_Code
             { return this._Cliente; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3204,7 +3228,7 @@ namespace KIS.App_Code
             get { return this._DataInserimentoOrdine; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3246,7 +3270,7 @@ namespace KIS.App_Code
             get { return this._NoteOrdine; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3288,7 +3312,7 @@ namespace KIS.App_Code
             get { return this._IDProdotto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3330,7 +3354,7 @@ namespace KIS.App_Code
             get { return this._NomeProdotto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3372,7 +3396,7 @@ namespace KIS.App_Code
             get { return this._NomeVariante; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3414,7 +3438,7 @@ namespace KIS.App_Code
             get { return this._Matricola; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3456,7 +3480,7 @@ namespace KIS.App_Code
             get { return this._Status; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3498,7 +3522,7 @@ namespace KIS.App_Code
             get { return this._Reparto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3540,7 +3564,7 @@ namespace KIS.App_Code
             get { return this._DataPrevistaConsegna; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3582,7 +3606,7 @@ namespace KIS.App_Code
             get { return this._DataPrevistaFineProduzione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3624,7 +3648,7 @@ namespace KIS.App_Code
             get { return this._EarlyStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3666,7 +3690,7 @@ namespace KIS.App_Code
             get { return this._EarlyFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3708,7 +3732,7 @@ namespace KIS.App_Code
             get { return this._LateStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3750,7 +3774,7 @@ namespace KIS.App_Code
             get { return this._LateFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3792,7 +3816,7 @@ namespace KIS.App_Code
             get { return this._Quantita; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3834,7 +3858,7 @@ namespace KIS.App_Code
             get { return this._QuantitaProdotta; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3876,7 +3900,7 @@ namespace KIS.App_Code
             get { return this._Ritardo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3918,7 +3942,7 @@ namespace KIS.App_Code
             get { return this._TempoDiLavoroTotale; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -3960,7 +3984,7 @@ namespace KIS.App_Code
             get { return this._LeadTime; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4002,7 +4026,7 @@ namespace KIS.App_Code
             get { return this._TempoDiLavoroPrevisto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4044,7 +4068,7 @@ namespace KIS.App_Code
             get { return this._IndicatoreCompletamentoTasks; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4086,7 +4110,7 @@ namespace KIS.App_Code
             get { return this._IndicatoreCompletamentoTempoPrevisto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4128,7 +4152,7 @@ namespace KIS.App_Code
             get { return this._ViewGanttTasks; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4170,7 +4194,7 @@ namespace KIS.App_Code
             get { return this._ViewElencoTasks; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4212,7 +4236,7 @@ namespace KIS.App_Code
             get { return this._Task_ID; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4254,7 +4278,7 @@ namespace KIS.App_Code
             get { return this._Task_Nome; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4296,7 +4320,7 @@ namespace KIS.App_Code
             get { return this._Task_Descrizione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4338,7 +4362,7 @@ namespace KIS.App_Code
             get { return this._Task_Postazione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4380,7 +4404,7 @@ namespace KIS.App_Code
             get { return this._Task_EarlyStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4422,7 +4446,7 @@ namespace KIS.App_Code
             get { return this._Task_LateStart; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4464,7 +4488,7 @@ namespace KIS.App_Code
             get { return this._Task_EarlyFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4506,7 +4530,7 @@ namespace KIS.App_Code
             get { return this._Task_LateFinish; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4548,7 +4572,7 @@ namespace KIS.App_Code
             get { return this._Task_NOperatori; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4590,7 +4614,7 @@ namespace KIS.App_Code
             get { return this._Task_TempoCiclo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4632,7 +4656,7 @@ namespace KIS.App_Code
             get { return this._Task_TempoDiLavoroPrevisto; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4674,7 +4698,7 @@ namespace KIS.App_Code
             get { return this._Task_TempoDiLavoroEffettivo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4716,7 +4740,7 @@ namespace KIS.App_Code
             get { return this._Task_Status; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4758,7 +4782,7 @@ namespace KIS.App_Code
             get { return this._Task_QuantitaProdotta; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
@@ -4796,9 +4820,11 @@ namespace KIS.App_Code
             }
         }
 
-        public configCustomerOrderStatusReport(String idCliente) : base()
+        public configCustomerOrderStatusReport(String Tenant, String idCliente) : base(Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'OrderStatusCustomerReport "+idCliente+"'";
@@ -5220,7 +5246,7 @@ namespace KIS.App_Code
         public Boolean DeleteConfiguration()
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -5244,6 +5270,8 @@ namespace KIS.App_Code
 
     public class HomeBox
     {
+        protected String Tenant;
+
         private int _ID;
         public int ID
         {
@@ -5272,9 +5300,11 @@ namespace KIS.App_Code
             get { return this._Path; }
         }
 
-        public HomeBox(int boxId)
+        public HomeBox(String Tenant, int boxId)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idHomeBox, nome, descrizione, path FROM homeboxesregistro WHERE "
@@ -5301,6 +5331,8 @@ namespace KIS.App_Code
 
     public class HomeBoxesList
     {
+        protected String Tenant;
+
         private List<HomeBox> _Elenco;
         public List<HomeBox> Elenco
         {
@@ -5310,17 +5342,19 @@ namespace KIS.App_Code
             }
         }
 
-        public HomeBoxesList()
+        public HomeBoxesList(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._Elenco = new List<HomeBox>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idHomeBox FROM homeboxesregistro ORDER BY nome";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._Elenco.Add(new HomeBox(rdr.GetInt32(0)));
+                this._Elenco.Add(new HomeBox(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -5329,6 +5363,8 @@ namespace KIS.App_Code
 
     public class HomeBoxUser
     {
+        protected String Tenant;
+
         public String log;
 
         private HomeBox _homeBox;
@@ -5349,7 +5385,7 @@ namespace KIS.App_Code
             {
                 if (this.homeBox != null && this.homeBox.ID != -1 && user!=null && user.username.Length>0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -5372,9 +5408,11 @@ namespace KIS.App_Code
             }
         }
 
-        public HomeBoxUser(User usr, HomeBox hBox)
+        public HomeBoxUser(String Tenant, User usr, HomeBox hBox)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idHomeBox, user, ordine FROM homeboxesuser WHERE "
@@ -5382,7 +5420,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
-                this._homeBox = new HomeBox(rdr.GetInt32(0));
+                this._homeBox = new HomeBox(this.Tenant, rdr.GetInt32(0));
                 this._user = new User(rdr.GetString(1));
                 this._ordine = rdr.GetInt32(2);
             }
@@ -5399,6 +5437,8 @@ namespace KIS.App_Code
 
     public class HomeBoxesListUser
     {
+        protected String Tenant;
+
         private List<HomeBoxUser> _Elenco;
         public List<HomeBoxUser> Elenco
         {
@@ -5408,19 +5448,21 @@ namespace KIS.App_Code
             }
         }
 
-        public HomeBoxesListUser(User usr)
+        public HomeBoxesListUser(String Tenant, User usr)
         {
+            this.Tenant = Tenant;
+
             this._Elenco = new List<HomeBoxUser>();
             if(usr.username.Length>0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idHomeBox FROM homeboxesuser WHERE user = '"+usr.username+"' ORDER BY ordine";
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._Elenco.Add(new HomeBoxUser(usr, new HomeBox(rdr.GetInt32(0))));
+                    this._Elenco.Add(new HomeBoxUser(this.Tenant, usr, new HomeBox(this.Tenant, rdr.GetInt32(0))));
                 }
                 rdr.Close();
                 conn.Close();
@@ -5430,6 +5472,8 @@ namespace KIS.App_Code
 
     public class MeasurementUnit
     {
+        protected String Tenant;
+
         private int _ID;
         public int ID
         {
@@ -5444,7 +5488,7 @@ namespace KIS.App_Code
             {
                 if(this.ID!=-1 && value.Length > 0)
                 { 
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -5472,7 +5516,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && value.Length > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -5505,7 +5549,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     
                     int defUnit = 0;
@@ -5545,22 +5589,26 @@ namespace KIS.App_Code
             }
         }
 
-        public MeasurementUnit()
+        public MeasurementUnit(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._ID = -1;
             this._Type = "";
             this._Description = "";
             this._IsDefault = false;
         }
 
-        public MeasurementUnit(int uID)
+        public MeasurementUnit(String Tenant, int uID)
         {
+            this.Tenant = Tenant;
+
             this._ID = -1;
             this._Type = "";
             this._Description = "";
             this._IsDefault = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Type, Description, isdefault FROM measurementunits WHERE ID = " + uID.ToString();
@@ -5579,23 +5627,26 @@ namespace KIS.App_Code
 
     public class MeasurementUnits
     {
+        protected String Tenant;
+
         public List<MeasurementUnit> UnitsList;
-        public MeasurementUnits()
+        public MeasurementUnits(String Tenant)
         {
+            this.Tenant = Tenant;
             this.UnitsList = new List<MeasurementUnit>();
         }
 
         public void loadMeasurementUnits()
         {
             this.UnitsList = new List<MeasurementUnit>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID FROM measurementunits ORDER BY type ASC";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.UnitsList.Add(new MeasurementUnit(rdr.GetInt32(0)));
+                this.UnitsList.Add(new MeasurementUnit(this.Tenant, rdr.GetInt32(0)));
             }
             conn.Close();
         }
@@ -5603,7 +5654,7 @@ namespace KIS.App_Code
         public Boolean Add(String uType, String uDescription, Boolean uDefault)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(ID) FROM measurementunits";
@@ -5638,7 +5689,7 @@ namespace KIS.App_Code
             // if measurement unit was added correctly and it is the default measurement unit, set the default flag = true
             if(ret && uDefault)
             {
-                    MeasurementUnit curr = new MeasurementUnit(maxID);
+                    MeasurementUnit curr = new MeasurementUnit(this.Tenant, maxID);
                     curr.IsDefault = true;
             }
             return ret;
@@ -5647,12 +5698,12 @@ namespace KIS.App_Code
         public Boolean Delete(int uID)
         {
             Boolean ret = false;
-            MeasurementUnit currUnit = new MeasurementUnit(uID);
+            MeasurementUnit currUnit = new MeasurementUnit(this.Tenant, uID);
             if(currUnit.ID!=-1)
             { 
             Boolean wasDefault = currUnit.IsDefault;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "DELETE FROM measurementunits WHERE ID = " + uID.ToString();

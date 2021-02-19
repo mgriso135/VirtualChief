@@ -13,6 +13,8 @@ namespace KIS.App_Code
 {
     public class KanbanBoxDataSet
     {
+        protected String Tenant;
+
         public String log;
         public Boolean KanbanBoxEnabled;
         public String x_api_key;
@@ -25,8 +27,10 @@ namespace KIS.App_Code
 
         public List<User> KanbanBoxManagers;
 
-        public KanbanBoxDataSet()
+        public KanbanBoxDataSet(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.Reparti = new List<Reparto>();
             this.Clienti = new List<Cliente>();
             this.KanbanBoxManagers = new List<User>();
@@ -38,7 +42,7 @@ namespace KIS.App_Code
             Permesso prm = new Permesso("KanbanBox GetWarnings");
             if (prm.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idgroup FROM gruppipermessi WHERE idpermesso = " + prm.ID.ToString();
@@ -95,7 +99,7 @@ namespace KIS.App_Code
         public void loadReparti()
         {
             this.Reparti = new List<Reparto>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID FROM configurazione WHERE "
@@ -118,7 +122,7 @@ namespace KIS.App_Code
         public void loadClienti()
         {
             this.Clienti = new List<Cliente>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE kanbanManaged = true";
@@ -170,7 +174,7 @@ namespace KIS.App_Code
         public KanbanCardList ReadCards()
         {
             log = "";
-            KanbanCardList KanbanList = new KanbanCardList();
+            KanbanCardList KanbanList = new KanbanCardList(this.Tenant);
             LoadConfiguration();
             if (KanbanBoxEnabled == true)
             {
@@ -237,7 +241,7 @@ namespace KIS.App_Code
         public KanbanCardList ReadCards(String status)
         {
             log = "";
-            KanbanCardList KanbanList = new KanbanCardList();
+            KanbanCardList KanbanList = new KanbanCardList(this.Tenant);
             LoadConfiguration();
             if (KanbanBoxEnabled == true)
             {
@@ -307,7 +311,7 @@ namespace KIS.App_Code
             KanbanCardList elenco = this.ReadCards();
             for (int i = 0; i < elenco.cards.Count; i++)
             {
-                Articolo curr = new Articolo(elenco.cards[i]);
+                Articolo curr = new Articolo(this.Tenant, elenco.cards[i]);
                 if (curr.ID!=-1 && curr.Status == 'N')
                 {
                     ghostProds.Add(curr);
@@ -322,7 +326,7 @@ namespace KIS.App_Code
             KanbanCardList elenco = this.ReadCards();
             for (int i = 0; i < elenco.cards.Count; i++)
             {
-                Articolo curr = new Articolo(elenco.cards[i]);
+                Articolo curr = new Articolo(this.Tenant, elenco.cards[i]);
                 if (curr.ID!=-1 && curr.KanbanCardID.Length > 0 && curr.Status != 'N')
                 {
                     nonUpdatedProds.Add(curr);
@@ -337,11 +341,11 @@ namespace KIS.App_Code
                 }
             }
 
-            elenco = new KanbanCardList();
+            elenco = new KanbanCardList(this.Tenant);
             elenco = this.ReadCards("process");
             for (int i = 0; i < elenco.cards.Count; i++)
             {
-                Articolo curr = new Articolo(elenco.cards[i]);
+                Articolo curr = new Articolo(this.Tenant, elenco.cards[i]);
                 if (curr.ID != -1 && curr.KanbanCardID.Length > 0 && curr.Status == 'F')
                 {
                     nonUpdatedProds.Add(curr);
@@ -537,6 +541,7 @@ namespace KIS.App_Code
 
     public class KanbanCard
     {
+        protected String Tenant;
         public String ekanban_string { get; set; }
         public String kanban_quantity { get; set; }
         public String part_number { get; set; }
@@ -551,7 +556,7 @@ namespace KIS.App_Code
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 DateTime data_consegna = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                 Double consegna_timestamp = Double.Parse(this.required_date);
                 data_consegna = ((TimeZoneInfo.ConvertTimeFromUtc(data_consegna, fuso.tzFusoOrario))).AddSeconds(consegna_timestamp);
@@ -692,15 +697,20 @@ namespace KIS.App_Code
 
     public class KanbanCardList
     {
+        protected String Tenant;
         public List<KanbanCard> cards { get; set; }
-        public KanbanCardList()
+        public KanbanCardList(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.cards = new List<KanbanCard>();
         }
     }
 
     public class RepartiKanban
     {
+        protected String Tenant;
+
         private List<Reparto> _ElencoReparti;
         public List<Reparto> ElencoReparti
         {
@@ -710,10 +720,12 @@ namespace KIS.App_Code
             }
         }
 
-        public RepartiKanban()
+        public RepartiKanban(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._ElencoReparti = new List<Reparto>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID FROM configurazione WHERE Sezione LIKE 'Reparto' AND paramentro LIKE 'KanbanManaged' "
@@ -733,6 +745,8 @@ namespace KIS.App_Code
 
     public class ClientiKanban
     {
+        protected String Tenant;
+
         private List<Cliente> _ElencoClienti;
         public List<Cliente> ElencoClienti
         {
@@ -742,10 +756,12 @@ namespace KIS.App_Code
             }
         }
 
-        public ClientiKanban()
+        public ClientiKanban(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._ElencoClienti = new List<Cliente>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE kanbanManaged = true ORDER BY ragsociale";

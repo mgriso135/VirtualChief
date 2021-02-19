@@ -24,6 +24,9 @@ namespace Dati
 {
     public class Dati
     {
+        public String Tenant { get { return this._Tenant; } }
+        private String _Tenant;
+
         public Dati()
         {
             //
@@ -31,9 +34,9 @@ namespace Dati
             //
         }
 
-        public string GetConnectionString()
+        public string GetConnectionString(String tenant)
         {
-            String activeWorkspace = "";
+            /*String activeWorkspace = "";
             if (HttpContext.Current !=null && HttpContext.Current.Session!=null && HttpContext.Current.Session["ActiveWorkspace"]!=null)
             { 
                 activeWorkspace = HttpContext.Current.Session["ActiveWorkspace"]?.ToString();
@@ -44,15 +47,15 @@ namespace Dati
                 ClaimsPrincipal user = ctx.Authentication.User;
                 var claimsIdentity = user.Identity as ClaimsIdentity;
                 activeWorkspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace"))?.Value;
-            }
+            }*/
             string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString);
-            connStr = connStr.Replace("database=", "database=" + activeWorkspace);
+            connStr = connStr.Replace("database=", "database=" + tenant);
             return connStr;
         }
 
-        public MySql.Data.MySqlClient.MySqlConnection mycon()
+        public MySql.Data.MySqlClient.MySqlConnection mycon(String tenant)
         {
-            return new MySqlConnection(GetConnectionString());
+            return new MySqlConnection(GetConnectionString(tenant));
         }
 
         public String GetMainConnectionString()
@@ -168,9 +171,9 @@ namespace Dati
         }
 
  
-        public static Boolean LogAction(String user, String type /* Page, Controller */, String detail, String querystring, String ipAddr)
+        public static Boolean LogAction(String Tenant, String user, String type /* Page, Controller */, String detail, String querystring, String ipAddr)
         {
-            MySqlConnection conn = (new Dati()).mycon();
+            MySqlConnection conn = (new Dati()).mycon(Tenant);
             conn.Open();
             Boolean ret = false;
             MySqlCommand cmd = conn.CreateCommand();
@@ -187,9 +190,9 @@ namespace Dati
             return ret;
         }
 
-        public static Boolean Syslog(String user, String module, String itemtype, String itemid, String parameter, String oldvalue, String newvalue, String notes="")
+        public static Boolean Syslog(String Tenant, String user, String module, String itemtype, String itemid, String parameter, String oldvalue, String newvalue, String notes="")
         {
-            MySqlConnection conn = (new Dati()).mycon();
+            MySqlConnection conn = (new Dati()).mycon(Tenant);
             conn.Open();
             Boolean ret = false;
             MySqlCommand cmd = conn.CreateCommand();

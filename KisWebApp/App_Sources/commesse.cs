@@ -15,6 +15,8 @@ namespace KIS.App_Code
 {
     public class Commessa
     {
+        public String Tenant;
+
         public String log;
 
         private int _ID;
@@ -35,7 +37,7 @@ namespace KIS.App_Code
             get { return this._ExternalID; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 String extID = value;
                 if(value.Length >= 255)
@@ -103,7 +105,7 @@ namespace KIS.App_Code
             get { return this._Note; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 String notes = value;
                 if (value.Length >= 255)
@@ -203,7 +205,7 @@ namespace KIS.App_Code
                 // value.ToString("yyyy/MM/dd HH:mm:ss")
                 if (this.ID != -1 && this.Year > 2000)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE commesse set Confirmed = "
@@ -240,7 +242,7 @@ namespace KIS.App_Code
                 // value.ToString("yyyy/MM/dd HH:mm:ss")
                 if (this.ID != -1 && this.Year > 2000)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE commesse set ConfirmedDate = '"
@@ -276,7 +278,7 @@ namespace KIS.App_Code
                 // value.ToString("yyyy/MM/dd HH:mm:ss")
                 if (this.ID != -1 && this.Year > 2000)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE commesse set ConfirmedBy = '"
@@ -300,15 +302,17 @@ namespace KIS.App_Code
             }
         }
 
-        public Commessa(int idCommessa, int AnnoComm)
+        public Commessa(String Tenant, int idCommessa, int AnnoComm)
         {
+            this.Tenant = Tenant;
+
             this._ExternalID = "";
             this._Confirmed = false;
             this._ConfirmedBy = null;
             this._ConfirmationDate = new DateTime(1970, 1, 1);
             this._Note = "";
             this._Articoli = new List<Articolo>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT cliente, dataInserimento, note, confirmed, confirmedBy, confirmedDate, ExternalID"
@@ -361,7 +365,7 @@ namespace KIS.App_Code
         {
             if(this.ID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id, anno FROM productionplan WHERE commessa = " + this.ID.ToString() + " AND annoCommessa = " + this.Year.ToString()
@@ -370,7 +374,7 @@ namespace KIS.App_Code
                 this._Articoli = new List<Articolo>();
                 while (rdr.Read())
                 {
-                    this._Articoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._Articoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -381,7 +385,7 @@ namespace KIS.App_Code
         {
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id, anno FROM productionplan WHERE commessa = " + this.ID.ToString() 
@@ -392,7 +396,7 @@ namespace KIS.App_Code
                 this._Articoli = new List<Articolo>();
                 while (rdr.Read())
                 {
-                    this._Articoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._Articoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -402,7 +406,7 @@ namespace KIS.App_Code
         public bool AddArticolo(ProcessoVariante prc, DateTime consPrev, int qty)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -453,7 +457,7 @@ namespace KIS.App_Code
             int[] rt = new int[2];
             rt[0] = -1;
             rt[1] = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -506,7 +510,7 @@ namespace KIS.App_Code
             int[] rt = new int[2];
             rt[0] = -1;
             rt[1] = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
@@ -567,7 +571,7 @@ namespace KIS.App_Code
                     this.loadArticoli();
                     if (this.Articoli.Count == 0)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlTransaction tr = conn.BeginTransaction();
                         MySqlCommand cmd = conn.CreateCommand();
@@ -615,6 +619,8 @@ namespace KIS.App_Code
 
     public class ElencoCommesse
     {
+        public String Tenant;
+
         public String log;
 
         private List<Commessa> _Commesse;
@@ -623,22 +629,23 @@ namespace KIS.App_Code
             get { return this._Commesse; }
         }
 
-        public ElencoCommesse()
+        public ElencoCommesse(String Tenant)
         {
+            this.Tenant = Tenant;
             this._Commesse = new List<Commessa>();
         }
 
         public void loadCommesse()
         {
             this._Commesse = new List<Commessa>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idcommesse, anno FROM commesse ORDER BY dataInserimento DESC";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._Commesse.Add(new Commessa(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -651,7 +658,7 @@ namespace KIS.App_Code
         public int Add(String Cliente, String notes, String externalID)
         {
             int rt = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             // Ricerco l'id corretto
@@ -699,7 +706,7 @@ namespace KIS.App_Code
         public void loadCommesse(Cliente customer)
         {
             this._Commesse = new List<Commessa>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idcommesse, anno FROM commesse WHERE cliente ='" 
@@ -707,7 +714,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._Commesse.Add(new Commessa(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -727,7 +734,7 @@ namespace KIS.App_Code
         public void loadCommesse(Cliente customer, DateTime inizio, DateTime fine)
         {
             this._Commesse = new List<Commessa>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT commesse.idcommesse, commesse.anno FROM commesse "
@@ -740,7 +747,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._Commesse.Add(new Commessa(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -766,6 +773,8 @@ namespace KIS.App_Code
 
     public class ElencoCommesseAperte
     {
+        public String Tenant;
+
         public String log;
 
         private List<Commessa> _Commesse;
@@ -774,9 +783,11 @@ namespace KIS.App_Code
             get { return this._Commesse; }
         }
 
-        public ElencoCommesseAperte()
+        public ElencoCommesseAperte(String Tenant)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idcommesse, commesse.anno FROM commesse LEFT JOIN productionplan "
@@ -788,7 +799,7 @@ namespace KIS.App_Code
             this._Commesse = new List<Commessa>();
             while (rdr.Read())
             {
-                this._Commesse.Add(new Commessa(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -797,7 +808,7 @@ namespace KIS.App_Code
         public int Add(String Cliente, String notes)
         {
             int rt = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             // Ricerco l'id corretto
@@ -832,6 +843,8 @@ namespace KIS.App_Code
 
     public class Articolo
     {
+        public String Tenant;
+
         public String log;
 
         private int _ID;
@@ -878,7 +891,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -955,7 +968,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -995,7 +1008,7 @@ namespace KIS.App_Code
                 Reparto rp = new Reparto(this.Reparto);
                 if (this.ID != -1 && TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario) >= DateTime.UtcNow)// && this.Status == 'N')
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1056,7 +1069,7 @@ namespace KIS.App_Code
                 
                 if (this.ID != -1 && fineProd <= this.DataPrevistaConsegna && fineProd >= DateTime.UtcNow)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1090,7 +1103,7 @@ namespace KIS.App_Code
             get
             {
                 DateTime rt = new DateTime(1970, 1, 1);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT MAX(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM tasksproduzione "
@@ -1212,7 +1225,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && this.Year != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1247,7 +1260,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && this.Year != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1282,7 +1295,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && this.Year != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -1325,7 +1338,7 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && this.Year!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1353,7 +1366,7 @@ namespace KIS.App_Code
         {
             get
             {
-                Commessa cm = new Commessa(this.Commessa, this.AnnoCommessa);
+                Commessa cm = new Commessa(this.Tenant, this.Commessa, this.AnnoCommessa);
                 return cm.DataInserimento;
             }
         }
@@ -1423,13 +1436,15 @@ namespace KIS.App_Code
             }
         }
 
-        public Articolo(int idArticolo, int AnnoArticolo)
+        public Articolo(String Tenant, int idArticolo, int AnnoArticolo)
         {
+            this.Tenant = Tenant;
+
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
             this._LeadTimes = new List<TimeSpan>();
             this._ProductExternalID = "";
             this._EndProductionDateReal = new DateTime(1970, 1, 1);
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
@@ -1564,13 +1579,15 @@ namespace KIS.App_Code
             conn.Close();
         }
 
-        public Articolo(KanbanCard card)
+        public Articolo(String Tenant, KanbanCard card)
         {
+            this.Tenant = Tenant;
+
             this._LeadTimes = new List<TimeSpan>();
             KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
             if (kboxCfg.KanbanBoxEnabled && card.ekanban_string.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
@@ -1723,7 +1740,7 @@ namespace KIS.App_Code
             {
                 if (this.Status == 'N')
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -1774,7 +1791,7 @@ namespace KIS.App_Code
             this._Tasks = new List<TaskProduzione>();
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE idArticolo = " + this.ID.ToString() +
@@ -1882,7 +1899,7 @@ namespace KIS.App_Code
             bool ret = false;
             if (this.ID != -1 && this.Year != -1 && this.Status == 'P')
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -2373,7 +2390,7 @@ namespace KIS.App_Code
             {
                 // this.Status = I
                 // tutti i tasks --> P
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -2414,7 +2431,7 @@ namespace KIS.App_Code
             Boolean ret = false;
             if (this.ID != -1 && this.Year > 2000)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
 
@@ -2451,7 +2468,7 @@ namespace KIS.App_Code
             this.Parameters = new List<ProductParameter>();
             if(this.ID!=-1 && this.Year>2000)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ProductID, ProductYear, paramID, paramCategory "
@@ -2563,6 +2580,8 @@ namespace KIS.App_Code
 
     public class ElencoArticoliAperti
     {
+        public String Tenant;
+
         public String log;
         private List<Articolo> _ArticoliAperti;
         public List<Articolo> ArticoliAperti
@@ -2573,17 +2592,19 @@ namespace KIS.App_Code
         }
     }
 
-        public ElencoArticoliAperti()
+        public ElencoArticoliAperti(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._ArticoliAperti = new List<Articolo>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status <> 'F' ORDER BY dataConsegnaPrevista";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._ArticoliAperti.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ArticoliAperti.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -2592,7 +2613,7 @@ namespace KIS.App_Code
         public ElencoArticoliAperti(int idReparto)
         {
             this._ArticoliAperti = new List<Articolo>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status <> 'F' AND reparto = "
@@ -2600,7 +2621,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._ArticoliAperti.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ArticoliAperti.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -2609,6 +2630,8 @@ namespace KIS.App_Code
 
     public class ElencoArticoli
     {
+        public String Tenant;
+
         public String log;
         private List<Articolo> _ListArticoli;
         public List<Articolo> ListArticoli
@@ -2622,8 +2645,9 @@ namespace KIS.App_Code
         public List<FlatProduct> ProductList;
 
         // Carica tutti i prodotti
-        public ElencoArticoli()
+        public ElencoArticoli(String Tenant)
         {
+            this.Tenant = Tenant;
             this._ListArticoli = new List<Articolo>();
             this.ProductList = new List<FlatProduct>();
         }
@@ -2632,7 +2656,7 @@ namespace KIS.App_Code
         {
             this._ListArticoli = new List<Articolo>();
             this.ProductList = new List<FlatProduct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, anno FROM productionplan ORDER BY anno DESC, id DESC";
@@ -2640,7 +2664,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -2649,7 +2673,7 @@ namespace KIS.App_Code
         public void loadProductList()
         {
             this.ProductList = new List<FlatProduct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             //                cmd.CommandText = "SELECT id, anno FROM productionplan ORDER BY anno DESC, id DESC";
@@ -2694,12 +2718,14 @@ namespace KIS.App_Code
         /* prcVar: articoli generati da questo processo-varianti
          * closed: solo articoli il cui processo produttivo è già terminato
          */
-        public ElencoArticoli(ProcessoVariante prcVar, bool closed)
+        public ElencoArticoli(String Tenant, ProcessoVariante prcVar, bool closed)
         {
+            this.Tenant = Tenant;
+
             this._ListArticoli = new List<Articolo>();
             if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.process.revisione != -1 && prcVar.variant.idVariante != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id, anno FROM productionplan WHERE "
@@ -2714,7 +2740,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -2724,12 +2750,14 @@ namespace KIS.App_Code
         /* prcVar: articoli generati da questo processo-varianti
             * stato: status del prodotto
             */
-        public ElencoArticoli(ProcessoVariante prcVar, char stato, DateTime start, DateTime end)
+        public ElencoArticoli(String Tenant, ProcessoVariante prcVar, char stato, DateTime start, DateTime end)
         {
+            this.Tenant = Tenant;
+
             this._ListArticoli = new List<Articolo>();
             if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.process.revisione != -1 && prcVar.variant.idVariante != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id, anno FROM productionplan WHERE "
@@ -2747,7 +2775,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
 
                 rdr.Close();
@@ -2755,8 +2783,10 @@ namespace KIS.App_Code
             }
         }
 
-        public ElencoArticoli(Articolo art)
+        public ElencoArticoli(String Tenant, Articolo art)
         {
+            this.Tenant = Tenant;
+
             this._ListArticoli = new List<Articolo>();
             if (art.ID != -1 && art.Year != -1)
             {
@@ -2766,10 +2796,12 @@ namespace KIS.App_Code
 
         /* Carica i prodotti di un determinato cliente
          */
-        public ElencoArticoli(Cliente customer)
+        public ElencoArticoli(String Tenant, Cliente customer)
         {
+            this.Tenant = Tenant;
+
             this._ListArticoli = new List<Articolo>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM "
@@ -2793,16 +2825,18 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
         }
 
-        public ElencoArticoli(ProcessoVariante origProc, Cliente customer, DateTime start, DateTime end)
+        public ElencoArticoli(String Tenant, ProcessoVariante origProc, Cliente customer, DateTime start, DateTime end)
         {
+            this.Tenant = Tenant;
+
             this._ListArticoli = new List<Articolo>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM "
@@ -2856,15 +2890,17 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
         }
 
-        public ElencoArticoli(char stato)
+        public ElencoArticoli(String Tenant, char stato)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = '" + stato + "'ORDER BY DataPrevistaFineProduzione";
@@ -2872,15 +2908,17 @@ namespace KIS.App_Code
             this._ListArticoli = new List<Articolo>();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
         }
 
-        public ElencoArticoli(char stato, Reparto rep)
+        public ElencoArticoli(String Tenant, char stato, Reparto rep)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = '" + stato + "' AND reparto = " + rep.id.ToString() + " ORDER BY DataPrevistaFineProduzione";
@@ -2888,15 +2926,17 @@ namespace KIS.App_Code
             this._ListArticoli = new List<Articolo>();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
         }
 
-        public ElencoArticoli(char stato, DateTime start, DateTime finish)
+        public ElencoArticoli(String Tenant, char stato, DateTime start, DateTime finish)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT max(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM "
@@ -2910,15 +2950,17 @@ namespace KIS.App_Code
             this._ListArticoli = new List<Articolo>();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(1), rdr.GetInt32(2)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(1), rdr.GetInt32(2)));
             }
             rdr.Close();
             conn.Close();
         }
 
-        public ElencoArticoli(DateTime start, DateTime finish)
+        public ElencoArticoli(String Tenant, DateTime start, DateTime finish)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "Select productionplan.id, productionplan.anno from productionplan "
@@ -2931,7 +2973,7 @@ namespace KIS.App_Code
             this._ListArticoli = new List<Articolo>();
             while (rdr.Read())
             {
-                this._ListArticoli.Add(new Articolo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -3000,12 +3042,14 @@ namespace KIS.App_Code
 
     public class ProductsList
     {
+        public String Tenant;
+
         public List<FlatProduct> ProductList;
 
         public ProductsList()
         {
             this.ProductList = new List<FlatProduct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT productionplan.id, productionplan.anno, processo.name, varianti.nomevariante,"
@@ -3041,6 +3085,8 @@ namespace KIS.App_Code
 
     public class ProductParameter
     {
+        public String Tenant;
+
         public String log;
 
         private int _ProductID;
@@ -3072,7 +3118,7 @@ namespace KIS.App_Code
             {
                 if (this.ProductID != -1 && this.ProductYear != -1 && value != null && value.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE productparameters SET paramCategory = " + value.ID + " WHERE "
@@ -3112,7 +3158,7 @@ namespace KIS.App_Code
             {
                 if (this.ProductID != -1 && this.ProductYear>2000)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE productparameters SET paramName = '" + value + "' WHERE "
@@ -3143,7 +3189,7 @@ namespace KIS.App_Code
             {
                 if (this.ProductID != -1 && this.ProductYear != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE modelparameters SET paramDescription = '" + value + "' WHERE "
@@ -3174,7 +3220,7 @@ namespace KIS.App_Code
             {
                 if (this.ProductID != -1 && this.ProductYear != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE modelparameters SET isFixed = " + value + " WHERE "
@@ -3205,7 +3251,7 @@ namespace KIS.App_Code
             {
                 if (this.ProductID != -1 && this.ProductYear != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE modelparameters SET isRequired = " + value + " WHERE "
@@ -3242,7 +3288,7 @@ namespace KIS.App_Code
             this._ParameterID = -1;
             this._ProductID = -1;
             this._ProductYear = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT productID, productYear, paramID, paramCategory, paramName, "
@@ -3284,7 +3330,7 @@ namespace KIS.App_Code
             Boolean ret = false;
             if(this.ParameterID != -1 && this.ProductID != -1 && this.ProductYear > 2010)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM productparameters WHERE productID = " + this.ProductID.ToString()

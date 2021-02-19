@@ -10,6 +10,8 @@ namespace KIS.App_Code
 {
     public class Postazione
     {
+        protected String Tenant;
+
         public String log;
         public String err;
         private int _id;
@@ -26,7 +28,7 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE postazioni SET name='" + value + "' WHERE idpostazioni = " + this.id.ToString();
@@ -45,7 +47,7 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE postazioni SET description='" + value + "' WHERE idpostazioni = " + this.id.ToString();
@@ -85,7 +87,7 @@ namespace KIS.App_Code
             {
                 if(this.id!=-1)
                 { 
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -108,8 +110,10 @@ namespace KIS.App_Code
 
         }
 
-        public Postazione()
+        public Postazione(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this._id = -1;
             this._name = "";
             this._desc = "";
@@ -117,12 +121,13 @@ namespace KIS.App_Code
             this._barcodeAutoCheckIn = false;
         }
 
-        public Postazione(int postID)
+        public Postazione(String Tenant, int postID)
         {
+            this.Tenant = Tenant;
             this._ElencoIDReparti = new List<int>();
             if (postID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Connection = conn;
@@ -160,7 +165,7 @@ namespace KIS.App_Code
             if (this.id != -1)
             {
                 this._tasks = new List<processo>();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT processo, revProc FROM repartipostazioniattivita WHERE postazione = " + this.id.ToString();
@@ -178,7 +183,7 @@ namespace KIS.App_Code
         public bool add(String nome, String desc, Boolean barcodeAutoCheckIn)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(idpostazioni) FROM postazioni";
@@ -212,7 +217,7 @@ namespace KIS.App_Code
                 this.loadTasks();
                 if (this.tasks.Count == 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction trans = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -245,7 +250,7 @@ namespace KIS.App_Code
             TimeSpan carico = new TimeSpan(0);
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 for (int i = 0; i < prc.process.subProcessi.Count; i++)
@@ -285,7 +290,7 @@ namespace KIS.App_Code
         public bool LoadMainProc()
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processipadrifigli.padre, processipadrifigli.revPadre, repartipostazioniattivita.variante FROM "
@@ -343,7 +348,7 @@ namespace KIS.App_Code
             this._ElencoIDReparti = new List<int>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT DISTINCT(reparto) FROM repartipostazioniattivita WHERE postazione = " + this.id.ToString();
@@ -363,7 +368,7 @@ namespace KIS.App_Code
         {
             if (this.id != -1)
             {
-                this._calendario = new CalendarioPostazione(this.id, Inizio, Fine);
+                this._calendario = new CalendarioPostazione(this.Tenant, this.id, Inizio, Fine);
             }
         }
 
@@ -378,7 +383,7 @@ namespace KIS.App_Code
             this._UtentiLoggati = new List<String>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT username FROM registrooperatoripostazioni WHERE logout IS NULL AND postazione = " + this.id.ToString();
@@ -403,7 +408,7 @@ namespace KIS.App_Code
             this._IdTaskProduzioneAvviabili = new List<int>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE (status = 'N' OR status = 'I' OR status = 'P') "
@@ -469,7 +474,7 @@ namespace KIS.App_Code
         public void loadTaskAvviati(User usr)
         {
             this._TaskAvviatiUtente = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
@@ -532,7 +537,7 @@ namespace KIS.App_Code
         public void loadWarningAperti()
         {
             this._WarningAperti = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT warningproduzione.id FROM warningproduzione INNER JOIN tasksproduzione ON "
@@ -552,7 +557,7 @@ namespace KIS.App_Code
             TimeSpan ret = new TimeSpan(0, 0, 0);
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE postazione = " + this.id.ToString()
@@ -664,42 +669,48 @@ namespace KIS.App_Code
         {
             if (this.id != -1)
             {
-                this._Risorse = new RisorsePostazione(this);
+                this._Risorse = new RisorsePostazione(this.Tenant, this);
             }
         }
     }
 
     public class ElencoPostazioni
     {
+        protected String Tenant;
+
         public List<Postazione> elenco;
 
-        public ElencoPostazioni()
+        public ElencoPostazioni(String Tenant)
         {
+            this.Tenant = Tenant;
+
             elenco = new List<Postazione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idpostazioni FROM postazioni ORDER BY name";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                elenco.Add(new Postazione(rdr.GetInt32(0)));
+                elenco.Add(new Postazione(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
         }
 
-        public ElencoPostazioni(Reparto rp)
+        public ElencoPostazioni(String Tenant, Reparto rp)
         {
+            this.Tenant = Tenant;
+
             elenco = new List<Postazione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT DISTINCT(postazione) FROM repartipostazioniattivita WHERE reparto = " + rp.id.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                elenco.Add(new Postazione(rdr.GetInt32(0)));
+                elenco.Add(new Postazione(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -709,6 +720,8 @@ namespace KIS.App_Code
 
     public class IntervalloLavoroPostazione
     {
+        protected String Tenant;
+
         private int _idPostazione;
         public int idPostazione
         {
@@ -748,8 +761,10 @@ namespace KIS.App_Code
             get { return this._idTurno; }
         }
 
-        public IntervalloLavoroPostazione(int idPost, int repID, IntervalloCalendarioReparto intCalRep)
+        public IntervalloLavoroPostazione(String Tenant, int idPost, int repID, IntervalloCalendarioReparto intCalRep)
         {
+            this.Tenant = Tenant;
+
             Reparto rp = new Reparto(idReparto);
             this._idPostazione = idPost;
             this._Inizio = TimeZoneInfo.ConvertTimeToUtc(intCalRep.Inizio, rp.tzFusoOrario);
@@ -762,6 +777,8 @@ namespace KIS.App_Code
 
     public class IntervalloTaskPostazione
     {
+        protected String Tenant;
+
         private int _idPostazione;
         public int idPostazione
         {
@@ -801,9 +818,11 @@ namespace KIS.App_Code
             get { return this._Status; }
         }
 
-        public IntervalloTaskPostazione(int tskProd, DateTime start, DateTime end)
+        public IntervalloTaskPostazione(String Tenant, int tskProd, DateTime start, DateTime end)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT taskID, postazione, reparto, defStart, defFinish, status FROM tasksproduzione WHERE taskID = " + tskProd.ToString();
@@ -833,6 +852,8 @@ namespace KIS.App_Code
 
     public class IntervalloPostazione
     {
+        protected String Tenant;
+
         private char _Status;
         public char Status
         {
@@ -843,22 +864,23 @@ namespace KIS.App_Code
         public DateTime Inizio
         {
             get {
-                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, fuso.tzFusoOrario); }
             set {
-                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 this._Inizio = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario); }
         }
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc( this._Fine, fuso.tzFusoOrario); }
-            set { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+            set { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 this._Fine = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario); }
         }
-        public IntervalloPostazione(DateTime start, DateTime end, char stat)
+        public IntervalloPostazione(String Tenant, DateTime start, DateTime end, char stat)
         {
+            this.Tenant = Tenant;
             this.Inizio = start;
             this.Fine = end;
             this.Status = stat;
@@ -867,6 +889,8 @@ namespace KIS.App_Code
 
     public class CalendarioPostazione
     {
+        protected String Tenant;
+
         public String log;
 
         private int _pstID;
@@ -884,18 +908,20 @@ namespace KIS.App_Code
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, fuso.tzFusoOrario); }
         }
         private DateTime _Fine;
         public DateTime Fine
         {
-            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+            get { KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, fuso.tzFusoOrario); }
         }
 
-        public CalendarioPostazione(int idPost, DateTime InizioCal, DateTime FineCal)
+        public CalendarioPostazione(String Tenant, int idPost, DateTime InizioCal, DateTime FineCal)
         {
+            this.Tenant = Tenant;
+
             Intervalli = new List<IntervalloLavoroPostazione>();
             InizioCal = new DateTime(InizioCal.Ticks, DateTimeKind.Utc);
             FineCal = new DateTime(FineCal.Ticks, DateTimeKind.Utc);
@@ -903,12 +929,12 @@ namespace KIS.App_Code
             {
                 this._pstID = idPost;
                 // Trovo tutti i reparti che utilizzano la tal postazione
-                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario();
+                KIS.App_Code.FusoOrario fuso = new App_Code.FusoOrario(this.Tenant);
                 //this._Inizio = TimeZoneInfo.ConvertTimeToUtc(InizioCal, fuso.tzFusoOrario);
                 //this._Fine = TimeZoneInfo.ConvertTimeToUtc(FineCal, fuso.tzFusoOrario);
                 this._Inizio = InizioCal;
                 this._Fine = FineCal;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT DISTINCT(reparto) FROM repartipostazioniattivita WHERE postazione = " + idPost.ToString();
@@ -925,7 +951,7 @@ namespace KIS.App_Code
                     rpList[i].loadCalendario(InizioCal, FineCal);
                     for (int j = 0; j < rpList[i].CalendarioRep.Intervalli.Count; j++)
                     {
-                        Intervalli.Add(new IntervalloLavoroPostazione(this.idPostazione, rpList[i].id, rpList[i].CalendarioRep.Intervalli[j]));
+                        Intervalli.Add(new IntervalloLavoroPostazione(this.Tenant, this.idPostazione, rpList[i].id, rpList[i].CalendarioRep.Intervalli[j]));
                     }
                 }
                 Intervalli.Sort(delegate(IntervalloLavoroPostazione p1, IntervalloLavoroPostazione p2)
@@ -944,7 +970,7 @@ namespace KIS.App_Code
             IntervalliTaskProduzione = new List<IntervalloTaskPostazione>();
             if (this.idPostazione != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 
@@ -989,7 +1015,7 @@ namespace KIS.App_Code
                         }
                         //log += "Minore: " + minore.ToString() + " Residuo: " + residuo.ToString();
 
-                        this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(tsk.TaskProduzioneID, tsk.StartEffettivo, minore));
+                        this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(this.Tenant, tsk.TaskProduzioneID, tsk.StartEffettivo, minore));
                        // log += "Prima stringa: " + this.IntervalliTaskProduzione[0].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - "
                         //    + this.IntervalliTaskProduzione[0].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
                         int nextInterv = intervalloIniziale;
@@ -1026,7 +1052,7 @@ namespace KIS.App_Code
                             }
                             //log += "Minore: " + minore.ToString() + " Residuo: " + residuo.ToString() + "<br/>";
                             // Aggiungo l'intervallo alla lista
-                            this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(tsk.TaskProduzioneID, this.Intervalli[nextInterv].Inizio, minore));
+                            this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(this.Tenant, tsk.TaskProduzioneID, this.Intervalli[nextInterv].Inizio, minore));
 
                         }
                     }
@@ -1040,6 +1066,8 @@ namespace KIS.App_Code
 
     public class RisorsePostazioneTurno
     {
+        protected String Tenant;
+
         public String log;
         private Postazione _postazione;
         public Postazione postazione { get { return this._postazione; } }
@@ -1055,7 +1083,7 @@ namespace KIS.App_Code
             {
                 if (this.postazione!=null && this.turno!=null && this.postazione.id != -1 && this.turno.id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT risorse FROM risorseturnopostazione WHERE "
@@ -1100,17 +1128,19 @@ namespace KIS.App_Code
             }
         }
 
-        public RisorsePostazioneTurno(Postazione pst, Turno trn)
+        public RisorsePostazioneTurno(String Tenant, Postazione pst, Turno trn)
         {
+            this.Tenant = Tenant;
+
             this._postazione = null;
             this._turno = null;
             this._NumRisorse = 0;
             if (pst.id != -1 && trn.id != -1)
             {
-                this._postazione = new Postazione(pst.id);
+                this._postazione = new Postazione(this.Tenant, pst.id);
                 this._turno = new Turno(trn.id);
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT risorse FROM risorseturnopostazione WHERE "
@@ -1133,7 +1163,7 @@ namespace KIS.App_Code
             Boolean ret = false;
             if (this.turno != null && this.postazione != null)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -1163,24 +1193,28 @@ namespace KIS.App_Code
 
     public class RisorsePostazione
     {
+        protected String Tenant;
+
         private List<RisorsePostazioneTurno> _Turni;
         public List<RisorsePostazioneTurno> Turni
         { get { return this._Turni; } }
 
-        public RisorsePostazione(Postazione pst)
+        public RisorsePostazione(String Tenant, Postazione pst)
         {
+            this.Tenant = Tenant;
+
             this._Turni = new List<RisorsePostazioneTurno>();
 
             if (pst.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idTurno FROM risorseturnopostazione WHERE idPostazione = " + pst.id.ToString();
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this._Turni.Add(new RisorsePostazioneTurno(pst, new Turno(rdr.GetInt32(0))));
+                    this._Turni.Add(new RisorsePostazioneTurno(this.Tenant, pst, new Turno(rdr.GetInt32(0))));
                 }
                 rdr.Close();
                 conn.Close();
