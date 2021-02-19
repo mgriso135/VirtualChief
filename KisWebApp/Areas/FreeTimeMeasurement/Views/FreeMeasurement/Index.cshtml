@@ -43,7 +43,13 @@
                         var iprod = $("#frmAddProduct").val();
                         var sproductid = $("#ddlProductsList option[value='" + iprod + "']").attr('data-id');
                         console.log(sproductid);
-                        var aproductid = sproductid.split('/');
+                        var aproductid = [];
+                        if (sproductid != null && sproductid != undefined) {
+                            aproductid = sproductid.split('/');
+                        }
+                        else {
+                            aproductid = -1;
+                        }
                         var idept = $("#frmAddDepartment").val();
                         var sdept = $("#ddlDepartments option[value='" + idept + "']").attr('data-id');
                         var dept = parseInt(sdept);

@@ -487,17 +487,19 @@ namespace KIS.App_Sources
                     this.loadTasks();
                     foreach (var t in this.Tasks)
                     {
-                        if (t.Status != 'F' && t.NoProductiveTaskId==-1)
+                        if ((t.Status != 'F' && t.NoProductiveTaskId==-1) || (t.NoProductiveTaskId!=-1 && t.Status != 'F' && t.Status != 'I'))
                         {
                             t.Status = 'F';
                             Double wt = t.calculateWorkingTime();
                             t.RealWorkingTime_Hours = wt;
                             Double lt = t.calculateLeadTime();
                             t.RealLeadTime_Hours = lt;
+                            t.EndDateReal = DateTime.UtcNow;
                         }
                     }
 
-                    this.TransformEventsToTimespans();
+                    FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                    fms.TransformEventsToTimespans();
                 }
                 else
                 {
@@ -666,6 +668,7 @@ namespace KIS.App_Sources
                     {
                         ret = 3;
                         this.log += "Error in events " + events[i].id + ", " + events[i + 1].id + " \n";
+                        i--;
                     }
                 }
 
@@ -1073,8 +1076,8 @@ namespace KIS.App_Sources
                             + " AND freemeasurements_tasks.status = 'F' "
                             + " AND freemeasurements_tasks_events_timespans.id IS NULL"
                             + " ORDER BY freemeasurements_tasks_events.freemeasurementid, "
-                            + " freemeasurements_tasks_events.taskid, "
                             + " freemeasurements_tasks_events.user, "
+                            + " freemeasurements_tasks_events.taskid, "
                             + " freemeasurements_tasks_events.eventdate";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
@@ -1092,7 +1095,7 @@ namespace KIS.App_Sources
             rdr.Close();
 
             // Transform all events to timespans
-            for(int i = 0; i < events.Count; i+=2)
+            for(int i = 0; i < events.Count - 1; i+=2)
             {
                 if(events[i].eventtype == 'I' && (events[i+1].eventtype == 'F' || events[i+1].eventtype == 'P')
                     && events[i].user == events[i + 1].user
@@ -1117,7 +1120,8 @@ namespace KIS.App_Sources
                 else
                 {
                     ret = 3;
-                    this.log += "Error in events " + events[i].id + ", " + events[i + 1].id + " \n";
+                    this.log += "Error in events " + events[i].id + " - " + events[i].id + " \n";
+                    i--;
                 }
             }
 
@@ -1612,6 +1616,10 @@ namespace KIS.App_Sources
                                 defTask.Status = 'P';
                             }
                         }
+
+                        FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                        fms.TransformEventsToTimespans();
+
                         ret = 1;
                     }
                     catch(Exception ex)

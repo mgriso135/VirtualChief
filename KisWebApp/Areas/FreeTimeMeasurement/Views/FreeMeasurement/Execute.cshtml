@@ -199,7 +199,12 @@
                     var measurement = aItm[1];
                     var task = aItm[2];
 
-                    var producedquantity = $("#txtQuantity_" + measurement + "_" + task).val().replace('.', ',');
+                    var producedquantity = 0;
+                    var txtQuantity = $("#txtQuantity_" + measurement + "_" + task);
+                    if (txtQuantity != null && txtQuantity != undefined &&
+                        txtQuantity.val() != null && txtQuantity.val() != undefined) {
+                        producedquantity = txtQuantity.val().replace('.', ',');
+                    }                   
 
                     console.log(measurement + " " + task + " " + operator + " " + producedquantity);
 
