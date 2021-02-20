@@ -29,7 +29,7 @@ namespace KIS.Andon
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    KIS.App_Code.AndonReparto andrp = new KIS.App_Code.AndonReparto(idReparto);
+                    KIS.App_Code.AndonReparto andrp = new KIS.App_Code.AndonReparto(this.Tenant, idReparto);
                     if (andrp.RepartoID != -1)
                     {
                         for (int i = 1; i <= 500; i++)
