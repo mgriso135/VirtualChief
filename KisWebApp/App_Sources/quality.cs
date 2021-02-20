@@ -16,6 +16,8 @@ namespace KIS.App_Sources
 {
     public class NonCompliance
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ID;
@@ -41,7 +43,7 @@ namespace KIS.App_Sources
             {
                 if(value > 0)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliances SET Quantity = " + value.ToString()
@@ -68,12 +70,12 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._OpeningDate, fuso.tzFusoOrario);
             }
             set
             {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE NonCompliances SET OpeningDate = '" + value.ToString()
@@ -103,7 +105,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE NonCompliances SET User = '" + value.ToString()
@@ -135,7 +137,7 @@ namespace KIS.App_Sources
             {
                 if(value!=null && value.username.Length>0)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliances SET User = '" + value.username.ToString()
@@ -165,7 +167,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliances SET Description = '" + value.ToString()
@@ -195,7 +197,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliances SET ImmediateAction = '" + value.ToString()
@@ -227,7 +229,7 @@ namespace KIS.App_Sources
             {
                 if(value >=0)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliances SET Cost = " + value.ToString()
@@ -262,7 +264,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -295,12 +297,12 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._ClosureDate, fuso.tzFusoOrario); ;
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliances SET ClosureDate = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
@@ -329,8 +331,10 @@ namespace KIS.App_Sources
 
         public List<String> Files;
 
-        public NonCompliance(int NCID, int NCYear)
+        public NonCompliance(String Tenant, int NCID, int NCYear)
         {
+            this.Tenant = Tenant;
+
             this._ID = -1;
             this._Year = -1;
             this._Quantity = -1;
@@ -339,7 +343,7 @@ namespace KIS.App_Sources
             this.Products = new List<NonComplianceProduct>();
             this.Files = new List<String>();
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year, Quantity, OpeningDate, User, Description, ImmediateAction, "
@@ -376,7 +380,7 @@ namespace KIS.App_Sources
             this.Categories = new List<NonComplianceType>();
             if(this.ID!=-1 && this.Year!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT TypeID FROM noncompliancestype_nc WHERE "
@@ -385,7 +389,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this.Categories.Add(new NonComplianceType(rdr.GetInt32(0)));
+                    this.Categories.Add(new NonComplianceType(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -397,7 +401,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if(this.ID!=-1 && this.Year!=-1)
             { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT INTO noncompliancestype_nc(TypeID, NCID, NCYear) VALUES("
@@ -428,7 +432,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 int typeID = -1;
@@ -454,7 +458,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM noncompliancestype_nc WHERE TypeID = " + catID.ToString() 
@@ -465,7 +469,7 @@ namespace KIS.App_Sources
                 {
                     cmd.ExecuteNonQuery();
                     tr.Commit();
-                    NonComplianceTypes ncCatList = new NonComplianceTypes();
+                    NonComplianceTypes ncCatList = new NonComplianceTypes(this.Tenant);
                     ncCatList.Delete(catID);
                     ret = true;
                 }
@@ -485,7 +489,7 @@ namespace KIS.App_Sources
             this.Causes = new List<NonComplianceCause>();
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT CauseID FROM noncompliancescause_nc WHERE "
@@ -495,7 +499,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this.Causes.Add(new NonComplianceCause(rdr.GetInt32(0)));
+                    this.Causes.Add(new NonComplianceCause(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -507,7 +511,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT INTO noncompliancescause_nc(CauseID, NCID, NCYear) VALUES("
@@ -538,7 +542,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 int typeID = -1;
@@ -564,7 +568,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM noncompliancescause_nc WHERE CauseID = " + causeID.ToString()
@@ -575,7 +579,7 @@ namespace KIS.App_Sources
                 {
                     cmd.ExecuteNonQuery();
                     tr.Commit();
-                    NonComplianceCauses ncCauseList = new NonComplianceCauses();
+                    NonComplianceCauses ncCauseList = new NonComplianceCauses(this.Tenant);
                     ncCauseList.Delete(causeID);
                     ret = true;
                 }
@@ -594,7 +598,7 @@ namespace KIS.App_Sources
         {
             this.Products = new List<NonComplianceProduct>();
             if(this.ID!=-1 && this.Year > 1970) { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ProductID, ProductYear FROM noncompliances_products WHERE "
@@ -604,7 +608,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this.Products.Add(new NonComplianceProduct(this.ID, this.Year, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this.Products.Add(new NonComplianceProduct(this.Tenant, this.ID, this.Year, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
             conn.Close();
@@ -618,7 +622,7 @@ namespace KIS.App_Sources
             if(this.ID!=-1 && this.Year>1970)
             {
                 log = "if1. ";
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             // Check if already added
             bool check = false;
@@ -637,7 +641,7 @@ namespace KIS.App_Sources
                 log += "Check: " + check.ToString() + ". ";
             if (!check)
             {
-                 Articolo art = new Articolo(prdID, prdYear);
+                 Articolo art = new Articolo(this.Tenant, prdID, prdYear);
                  if(art.ID!=-1 && art.Year > 1970)
                  {
                         log += "if2. ";
@@ -679,7 +683,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year > 1970 && wrn.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 // Check if already added
                 bool check = false;
@@ -697,8 +701,8 @@ namespace KIS.App_Sources
 
                 if (!check)
                 {
-                    TaskProduzione tsk = new TaskProduzione(wrn.TaskID);
-                    Articolo art = new Articolo(tsk.ArticoloID, tsk.ArticoloAnno);
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, wrn.TaskID);
+                    Articolo art = new Articolo(this.Tenant, tsk.ArticoloID, tsk.ArticoloAnno);
                     char source ='P';
                     int qty = art.Quantita;
                     cmd.CommandText = "INSERT INTO noncompliances_products(NonComplianceID, NonComplianceYear, "
@@ -737,7 +741,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.ID != -1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM noncompliances_products WHERE NonComplianceID = " + this.ID.ToString()
@@ -795,26 +799,30 @@ namespace KIS.App_Sources
 
     public class NonCompliances
     {
+        protected String Tenant;
+
         public String log;
 
         public List<NonCompliance> NonCompliancesList;
 
-        public NonCompliances()
+        public NonCompliances(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.NonCompliancesList = new List<NonCompliance>();
         }
 
         public void loadNonCompliances()
         {
             this.NonCompliancesList = new List<NonCompliance>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year FROM NonCompliances ORDER BY Year desc, ID desc";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.NonCompliancesList.Add(new NonCompliance(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this.NonCompliancesList.Add(new NonCompliance(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -823,7 +831,7 @@ namespace KIS.App_Sources
         public Boolean Add(int qty, DateTime opDate, String usr, String desc, String immAction, Double cst, char stat, DateTime closure)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(ID) From NonCompliances WHERE Year = " + DateTime.UtcNow.Year.ToString();
@@ -870,7 +878,7 @@ namespace KIS.App_Sources
         {
             int[] ret = new int[2];
             ret[0] = -1; ret[1] = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(ID) From NonCompliances WHERE Year = " + DateTime.UtcNow.Year.ToString();
@@ -916,7 +924,7 @@ namespace KIS.App_Sources
         public Boolean Delete(int NCID, int NCYear)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "DELETE FROM NonCompliances WHERE ID = " + NCID.ToString() 
@@ -940,24 +948,28 @@ namespace KIS.App_Sources
 
     public class NonComplianceTypes
     {
+        protected String Tenant;
+
         public List<NonComplianceType> TypeList;
 
-        public NonComplianceTypes()
+        public NonComplianceTypes(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.TypeList = new List<NonComplianceType>();
         }
 
         public void loadTypeList()
         {
             this.TypeList = new List<NonComplianceType>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Name, Description FROM NonCompliancesTypes ORDER BY Name";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.TypeList.Add(new NonComplianceType(rdr.GetInt32(0)));
+                this.TypeList.Add(new NonComplianceType(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -966,7 +978,7 @@ namespace KIS.App_Sources
         public Boolean Add(String name, String desc)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(ID) FROM NonCompliancesTypes";
@@ -1002,7 +1014,7 @@ namespace KIS.App_Sources
         public Boolean Delete(int typeID)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT * FROM NonCompliancesType_nc WHERE TypeID = " + typeID.ToString();
@@ -1037,7 +1049,7 @@ namespace KIS.App_Sources
         public int findIDByName(String name)
         {
             int ret = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID FROM NonCompliancesTypes WHERE Name = '" + name + "'";
@@ -1054,6 +1066,8 @@ namespace KIS.App_Sources
 
     public class NonComplianceType
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ID;
@@ -1074,7 +1088,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliancesTypes SET Name = '"+value+"' WHERE ID = " + this.ID.ToString();
@@ -1102,7 +1116,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliancesTypes SET Description = '" + value + "' WHERE ID = " + this.ID.ToString();
@@ -1121,9 +1135,11 @@ namespace KIS.App_Sources
             }
         }
 
-        public NonComplianceType(int typeID)
+        public NonComplianceType(String Tenant, int typeID)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Name, Description FROM NonCompliancesTypes WHERE ID = " + typeID.ToString();
@@ -1146,24 +1162,28 @@ namespace KIS.App_Sources
 
     public class NonComplianceCauses
     {
+        protected String Tenant;
+
         public List<NonComplianceCause> CausesList;
 
-        public NonComplianceCauses()
+        public NonComplianceCauses(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.CausesList = new List<NonComplianceCause>();
         }
 
         public void loadCausesList()
         {
             this.CausesList = new List<NonComplianceCause>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Name, Description FROM NonCompliancesCause ORDER BY Name";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.CausesList.Add(new NonComplianceCause(rdr.GetInt32(0)));
+                this.CausesList.Add(new NonComplianceCause(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -1172,7 +1192,7 @@ namespace KIS.App_Sources
         public Boolean Add(String name, String desc)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(ID) FROM NonCompliancesCause";
@@ -1207,7 +1227,7 @@ namespace KIS.App_Sources
         public Boolean Delete(int typeID)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT * FROM NonCompliancesCause_nc WHERE CauseID = " + typeID.ToString();
@@ -1242,7 +1262,7 @@ namespace KIS.App_Sources
         public int findIDByName(String name)
         {
             int ret = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID FROM NonCompliancesCause WHERE Name = '" + name + "'";
@@ -1259,6 +1279,8 @@ namespace KIS.App_Sources
 
     public class NonComplianceCause
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ID;
@@ -1279,7 +1301,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliancesCause SET Name = '" + value + "' WHERE ID = " + this.ID.ToString();
@@ -1308,7 +1330,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE NonCompliancesCause SET Description = '" + value + "' WHERE ID = " + this.ID.ToString();
@@ -1328,9 +1350,11 @@ namespace KIS.App_Sources
             }
         }
 
-        public NonComplianceCause(int typeID)
+        public NonComplianceCause(String Tenant, int typeID)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Name, Description FROM NonCompliancesCause WHERE ID = " + typeID.ToString();
@@ -1353,10 +1377,12 @@ namespace KIS.App_Sources
 
     public class NonComplianceProduct
     {
+        protected String Tenant;
+
         public String log;
 
         private int _NonComplianceID;
-            public int NonComplianceID { get { return this._NonComplianceID; } }
+        public int NonComplianceID { get { return this._NonComplianceID; } }
         private int _NonComplianceYear;
         public int NonComplianceYear { get { return this._NonComplianceYear; } }
         private int _ProductID;
@@ -1383,7 +1409,7 @@ namespace KIS.App_Sources
             set {
                 if(this.ProductID!=-1 && this.ProductYear > 1970 && this.NonComplianceID !=-1 &&this.NonComplianceYear>1970)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE noncompliances_products SET source = '" + value.ToString() + "' WHERE "
@@ -1413,7 +1439,7 @@ namespace KIS.App_Sources
             {
                 if (this.ProductID != -1 && this.ProductYear > 1970 && this.NonComplianceID != -1 && this.NonComplianceYear > 1970)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     if(value == -1)
@@ -1439,7 +1465,7 @@ namespace KIS.App_Sources
                         }
                         else
                         {
-                            Postazione p = new Postazione(value);
+                            Postazione p = new Postazione(this.Tenant, value);
                             this._Workstation = value;
                             this._WorkstationName = p.name;
                         }
@@ -1463,10 +1489,10 @@ namespace KIS.App_Sources
         public int QuantityInvolved { get { return this._QuantityInvolved; }
             set
             {
-                Articolo art = new Articolo(this.ProductID, this.ProductYear);
+                Articolo art = new Articolo(this.Tenant, this.ProductID, this.ProductYear);
                 if (this.ProductID != -1 && this.ProductYear > 1970 && this.NonComplianceID != -1 && this.NonComplianceYear > 1970 && value <= art.QuantitaProdotta)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE noncompliances_products SET Quantity = '" + value.ToString() + "' WHERE "
@@ -1488,11 +1514,13 @@ namespace KIS.App_Sources
             }
         }
 
-        public NonComplianceProduct(int ncID, int ncYear, int prdID, int prdYear)
+        public NonComplianceProduct(String Tenant, int ncID, int ncYear, int prdID, int prdYear)
         {
+            this.Tenant = Tenant;
+
             this._ProductID = -1;
             this._ProductYear = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT productionplan.id, productionplan.anno, processo.name, varianti.nomevariante, "
@@ -1535,7 +1563,7 @@ namespace KIS.App_Sources
                 this._Source = rdr.GetChar(8);
                 this._WarningID = !rdr.IsDBNull(9) ? rdr.GetInt32(9) : -1;
                 this._Workstation = !rdr.IsDBNull(10) ? rdr.GetInt32(10) : -1;
-                if (this.Workstation!=-1) { Postazione p = new Postazione(this.Workstation);this._WorkstationName = p.name; }
+                if (this.Workstation!=-1) { Postazione p = new Postazione(this.Tenant, this.Workstation);this._WorkstationName = p.name; }
                 this._QuantityInvolved = rdr.GetInt32(11);
     }
             else
@@ -1552,31 +1580,35 @@ namespace KIS.App_Sources
 
     public class FreeWarnings
     {
+        protected String Tenant;
+
         public String log;
 
         public List<FlatWarning> FreeWarningList;
-        public FreeWarnings()
+        public FreeWarnings(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.FreeWarningList = new List<FlatWarning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT warningproduzione.id, warningproduzione.datachiamata, warningproduzione.task, "
-+ " postazioni.idpostazioni, postazioni.name,"
-+ " productionplan.id, productionplan.anno, processo.name, varianti.nomevariante, "
-+ " productionplan.matricola, productionplan.quantita, commesse.cliente, anagraficaclienti.ragsociale, "
-+ " warningproduzione.user, warningproduzione.motivo, warningproduzione.risoluzione "
-+ " FROM noncompliances_products RIGHT JOIN warningproduzione ON"
-+ " (noncompliances_products.warningID = warningproduzione.ID)"
-+ " INNER JOIN tasksproduzione ON (warningproduzione.task = tasksproduzione.taskID)"
-+ " INNER JOIN productionplan ON (productionplan.id = tasksproduzione.idArticolo AND"
-+ " productionplan.anno = tasksproduzione.annoArticolo)"
-+ " INNER JOIN variantiprocessi "
-+ " ON (productionplan.processo = variantiprocessi.processo"
-+ " AND productionplan.revisione = variantiprocessi.revproc"
-+ " AND productionplan.variante = variantiprocessi.variante)"
-+ " INNER JOIN processo ON (processo.processID = variantiprocessi.processo"
-+ " AND processo.revisione = variantiprocessi.revProc)"
+            + " postazioni.idpostazioni, postazioni.name,"
+            + " productionplan.id, productionplan.anno, processo.name, varianti.nomevariante, "
+            + " productionplan.matricola, productionplan.quantita, commesse.cliente, anagraficaclienti.ragsociale, "
+            + " warningproduzione.user, warningproduzione.motivo, warningproduzione.risoluzione "
+            + " FROM noncompliances_products RIGHT JOIN warningproduzione ON"
+            + " (noncompliances_products.warningID = warningproduzione.ID)"
+            + " INNER JOIN tasksproduzione ON (warningproduzione.task = tasksproduzione.taskID)"
+            + " INNER JOIN productionplan ON (productionplan.id = tasksproduzione.idArticolo AND"
+            + " productionplan.anno = tasksproduzione.annoArticolo)"
+            + " INNER JOIN variantiprocessi "
+            + " ON (productionplan.processo = variantiprocessi.processo"
+            + " AND productionplan.revisione = variantiprocessi.revproc"
+            + " AND productionplan.variante = variantiprocessi.variante)"
+            + " INNER JOIN processo ON (processo.processID = variantiprocessi.processo"
+            + " AND processo.revisione = variantiprocessi.revProc)"
             + " INNER JOIN varianti ON (variantiprocessi.variante = varianti.idvariante)"
             + " INNER JOIN commesse ON (productionplan.commessa = commesse.idcommesse"
             + " AND productionplan.annocommessa = commesse.anno)"
@@ -1627,6 +1659,8 @@ namespace KIS.App_Sources
 
     public class AnalysisNCCause
     {
+        protected String Tenant;
+
         public int NCID;
         public int NCYear;
         public DateTime OpeningDate;
@@ -1684,13 +1718,17 @@ namespace KIS.App_Sources
 
     public class NCAnalysis
     {
+        protected String Tenant;
+
         public List<AnalysisNCCause> ncCauses;
         public List<AnalysisNCCategory> ncCategory;
         public List<AnalysisNCProduct> ncProduct;
         public List<NonCompliancesAnalysisStruct> ncList;
 
-        public NCAnalysis()
+        public NCAnalysis(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.ncCauses = new List<AnalysisNCCause>();
             this.ncCategory = new List<AnalysisNCCategory>();
             this.ncProduct = new List<AnalysisNCProduct>();
@@ -1700,7 +1738,7 @@ namespace KIS.App_Sources
         public void loadNcCauses()
         {
             this.ncCauses = new List<AnalysisNCCause>();
-            MySqlConnection conn = (new Dati.Dati().mycon());
+            MySqlConnection conn = (new Dati.Dati().mycon(this.Tenant));
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT noncompliances.ID, noncompliances.Year, noncompliances.OpeningDate, noncompliances.User, "
@@ -1736,7 +1774,7 @@ namespace KIS.App_Sources
         public void loadNcCategories()
         {
             this.ncCategory = new List<AnalysisNCCategory>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT noncompliances.ID, noncompliances.Year, noncompliances.OpeningDate, noncompliances.User, "
@@ -1772,7 +1810,7 @@ namespace KIS.App_Sources
         public void loadNcProducts()
         {
             this.ncProduct = new List<AnalysisNCProduct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT noncompliances.ID, noncompliances.Year, noncompliances.OpeningDate, "
@@ -1829,7 +1867,7 @@ namespace KIS.App_Sources
         public List<NonCompliancesAnalysisStruct> loadNonCompliances()
         {
             ncList = new List<NonCompliancesAnalysisStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year, Quantity, OpeningDate, Status, ClosureDate, cost FROM noncompliances";
@@ -1868,25 +1906,29 @@ namespace KIS.App_Sources
 
     public class ImprovementActions
     {
+        protected String Tenant;
+
         public String log;
 
         public List<ImprovementAction> ImprovementActionsList;
-        public ImprovementActions()
+        public ImprovementActions(String Tenant)
         {
+            this.Tenant = Tenant;
+
             this.ImprovementActionsList = new List<ImprovementAction>();
         }
 
         public void loadImprovementActions()
         {
             this.ImprovementActionsList = new List<ImprovementAction>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year FROM ImprovementActions ORDER BY OpeningDate";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.ImprovementActionsList.Add(new ImprovementAction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this.ImprovementActionsList.Add(new ImprovementAction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -1895,7 +1937,7 @@ namespace KIS.App_Sources
         public void loadImprovementActions(char stat)
         {
             this.ImprovementActionsList = new List<ImprovementAction>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year FROM ImprovementActions WHERE improvementactions.status = '" + stat 
@@ -1903,7 +1945,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.ImprovementActionsList.Add(new ImprovementAction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this.ImprovementActionsList.Add(new ImprovementAction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -1912,7 +1954,7 @@ namespace KIS.App_Sources
         public void loadImprovementActions(User usr)
         {
             this.ImprovementActionsList = new List<ImprovementAction>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year FROM ImprovementActions INNER JOIN improvementactions_team ON "
@@ -1923,7 +1965,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.ImprovementActionsList.Add(new ImprovementAction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this.ImprovementActionsList.Add(new ImprovementAction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -1932,7 +1974,7 @@ namespace KIS.App_Sources
         public void loadImprovementActions(User usr, Char status)
         {
             this.ImprovementActionsList = new List<ImprovementAction>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year FROM ImprovementActions INNER JOIN improvementactions_team ON "
@@ -1944,7 +1986,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.ImprovementActionsList.Add(new ImprovementAction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this.ImprovementActionsList.Add(new ImprovementAction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -1955,7 +1997,7 @@ namespace KIS.App_Sources
             int[] ret = new int[2];
             ret[0] = -1;
             ret[1] = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(ID) FROM ImprovementActions WHERE Year = " + DateTime.UtcNow.Year.ToString();
@@ -2006,7 +2048,7 @@ namespace KIS.App_Sources
         public Boolean Delete(int id, int year)
         {
             Boolean ret = false;
-            ImprovementAction curr = new ImprovementAction(id, year);
+            ImprovementAction curr = new ImprovementAction(this.Tenant, id, year);
             if(curr.ID!=-1 && curr.Year!=-1)
             {
                 curr.loadCorrectiveActions();
@@ -2030,7 +2072,7 @@ namespace KIS.App_Sources
                     curr.MemberRemove(curr.TeamMembers[i].User);
                 }
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "DELETE FROM improvementactions WHERE ID = " + id.ToString() + " AND Year = " + year.ToString();
@@ -2055,6 +2097,8 @@ namespace KIS.App_Sources
 
     public class ImprovementAction
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ID;
@@ -2066,12 +2110,12 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._OpeningDate, fuso.tzFusoOrario);
             }
             set
             {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE ImprovementActions SET OpeningDate = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2104,7 +2148,7 @@ namespace KIS.App_Sources
             get { return this._CurrentSituation; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET CurrentSituation = '" + value
@@ -2131,7 +2175,7 @@ namespace KIS.App_Sources
             get { return this._ExpectedResults; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET ExpectedResults = '" + value
@@ -2158,7 +2202,7 @@ namespace KIS.App_Sources
             get { return this._RootCauses; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET RootCauses = '" + value
@@ -2185,7 +2229,7 @@ namespace KIS.App_Sources
             get { return this._ClosureNotes; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET ClosureNotes = '" + value
@@ -2229,7 +2273,7 @@ namespace KIS.App_Sources
                 }
                 if(value == 'O' || (value == 'C' && check))
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET Status = '" + value
@@ -2251,18 +2295,17 @@ namespace KIS.App_Sources
             }
         }
 
-
         private DateTime _EndDateExpected;
         public DateTime EndDateExpected
         {
             get {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EndDateExpected, fuso.tzFusoOrario); }
             set
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 DateTime curr = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET EndDateExpected = '" + curr.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2287,11 +2330,11 @@ namespace KIS.App_Sources
         public DateTime EndDateReal
         {
             get {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EndDateReal, fuso.tzFusoOrario); }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET EndDateReal = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2321,7 +2364,7 @@ namespace KIS.App_Sources
                 User usr = new User(value);
                 if(usr.username.Length > 0)
                 { 
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE ImprovementActions SET ModifiedBy = '" + value
@@ -2347,11 +2390,11 @@ namespace KIS.App_Sources
         public DateTime ModifiedDate
         {
             get {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._ModifiedDate, fuso.tzFusoOrario); }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE ImprovementActions SET ModifiedDate = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2375,13 +2418,14 @@ namespace KIS.App_Sources
         public List<ImprovementActionTeamMember> TeamMembers;
 
         public List<CorrectiveAction> CorrectiveActions;
-
-        public ImprovementAction(int iActID, int iActYear)
+        public ImprovementAction(String Tenant, int iActID, int iActYear)
         {
+            this.Tenant = Tenant;
+
             this.TeamMembers = new List<ImprovementActionTeamMember>();
             this.CorrectiveActions = new List<CorrectiveAction>();
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year, OpeningDate, CurrentSituation, ExpectedResults, RootCauses, "
@@ -2463,7 +2507,7 @@ namespace KIS.App_Sources
         {
             this.TeamMembers = new List<ImprovementActionTeamMember>();
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT user, role FROM improvementactions_team WHERE ImprovementActionID = " + this.ID.ToString()
@@ -2471,7 +2515,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.TeamMembers.Add(new ImprovementActionTeamMember(this.ID, this.Year, rdr.GetString(0), rdr.GetChar(1)));
+                this.TeamMembers.Add(new ImprovementActionTeamMember(this.Tenant, this.ID, this.Year, rdr.GetString(0), rdr.GetChar(1)));
             }
             rdr.Close();
             conn.Close();
@@ -2482,7 +2526,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if(this.ID!=-1 && this.Year!=-1)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "INSERT INTO ImprovementActions_Team(ImprovementActionID, ImprovementActionYear, user, role) "
@@ -2510,7 +2554,7 @@ namespace KIS.App_Sources
         public Boolean MemberRemove(String username)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
              cmd.CommandText = "DELETE FROM improvementactions_team WHERE ImprovementActionID = "
@@ -2538,7 +2582,7 @@ namespace KIS.App_Sources
             this.CorrectiveActions = new List<CorrectiveAction>();
             if(this.ID!=-1 && this.Year > 1970)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID FROM correctiveactions WHERE ImprovementActionID = " + this.ID.ToString()
@@ -2547,7 +2591,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.CorrectiveActions.Add(new CorrectiveAction(this.ID, this.Year, rdr.GetInt32(0)));
+                this.CorrectiveActions.Add(new CorrectiveAction(this.Tenant, this.ID, this.Year, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -2559,7 +2603,7 @@ namespace KIS.App_Sources
             int ret = -1;
             if(this.ID!=-1 && this.Year != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT MAX(ID) FROM correctiveactions WHERE ImprovementActionID = " + this.ID.ToString()
@@ -2612,7 +2656,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if(this.ID!=-1 && this.Year > 1970)
             {
-                CorrectiveAction curr = new CorrectiveAction(this.ID, this.Year, CorrectiveActionID);
+                CorrectiveAction curr = new CorrectiveAction(this.Tenant, this.ID, this.Year, CorrectiveActionID);
                 curr.loadTasks();
                 for(int i = 0; i < curr.Tasks.Count; i++)
                 {
@@ -2625,7 +2669,7 @@ namespace KIS.App_Sources
                     curr.MemberRemove(curr.TeamMembers[i].User);
                 }
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM correctiveactions WHERE ID = " + CorrectiveActionID.ToString()
@@ -2652,6 +2696,8 @@ namespace KIS.App_Sources
 
     public class ImprovementActionTeamMember
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ImprovementActionID;
@@ -2691,9 +2737,11 @@ namespace KIS.App_Sources
             }
         }
 
-        public ImprovementActionTeamMember(int iActID, int iActYear, String iActUser)
+        public ImprovementActionTeamMember(String Tenant, int iActID, int iActYear, String iActUser)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ImprovementActionID, ImprovementActionYear, user, role FROM "
@@ -2718,8 +2766,10 @@ namespace KIS.App_Sources
             conn.Close();
         }
 
-        public ImprovementActionTeamMember(int iActID, int iActYear, String iActUser, Char iActRole)
+        public ImprovementActionTeamMember(String Tenant, int iActID, int iActYear, String iActUser, Char iActRole)
         {
+            this.Tenant = Tenant;
+
             this._ImprovementActionID = iActID;
             this._ImprovementActionYear = iActYear;
             this._User = iActUser;
@@ -2729,6 +2779,8 @@ namespace KIS.App_Sources
 
     public class CorrectiveAction
     {
+        protected String Tenant;
+
         public String log;
 
         private int _CorrectiveActionID;
@@ -2764,7 +2816,7 @@ namespace KIS.App_Sources
             }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET Description = '" + value
@@ -2797,7 +2849,7 @@ namespace KIS.App_Sources
             {
                 if(value >=0)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET LeadTimeExpected = " + value
@@ -2825,14 +2877,14 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStart, fuso.tzFusoOrario);
             }
             set
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 DateTime curr = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET EarlyStart = '" + curr.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2859,14 +2911,14 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateStart, fuso.tzFusoOrario);
             }
             set
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 DateTime curr = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET LateStart = '" + curr.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2893,14 +2945,14 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinish, fuso.tzFusoOrario);
             }
             set
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 DateTime curr = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET EarlyFinish = '" + curr.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2927,14 +2979,14 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinish, fuso.tzFusoOrario);
             }
             set
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 DateTime curr = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET LateFinish = '" + curr.ToString("yyyy-MM-dd HH:mm:ss")
@@ -2971,7 +3023,7 @@ namespace KIS.App_Sources
             {
                 if(Status == 'I' || Status == 'C' || Status == 'O')
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET Status = '" + value
@@ -3001,7 +3053,7 @@ namespace KIS.App_Sources
             get { return this._EndDateReal; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE CorrectiveActions SET EndDateReal = '" + value.ToString("yyyy-MM-dd HH:mm:ss")
@@ -3028,12 +3080,14 @@ namespace KIS.App_Sources
 
         public List<CorrectiveActionTask> Tasks;
 
-        public CorrectiveAction(int iActID, int iActYear, int CorrectiveActionID)
+        public CorrectiveAction(String Tenant, int iActID, int iActYear, int CorrectiveActionID)
         {
+            this.Tenant = Tenant;
+
             this.TeamMembers = new List<CorrectiveActionTeamMember>();
             this.Tasks = new List<CorrectiveActionTask>();
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, ImprovementActionID, ImprovementActionYear, Description, LeadTimeExpected, "
@@ -3086,7 +3140,7 @@ namespace KIS.App_Sources
         public void loadTeamMembers()
         {
             this.TeamMembers = new List<CorrectiveActionTeamMember>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT User, role "
@@ -3097,7 +3151,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.TeamMembers.Add(new CorrectiveActionTeamMember(this.ImprovementActionID, this.ImprovementActionYear, this.CorrectiveActionID, rdr.GetString(0), rdr.GetChar(1)));
+                this.TeamMembers.Add(new CorrectiveActionTeamMember(this.Tenant, this.ImprovementActionID, this.ImprovementActionYear, this.CorrectiveActionID, rdr.GetString(0), rdr.GetChar(1)));
             }
             rdr.Close();
             conn.Close();
@@ -3108,7 +3162,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if (this.CorrectiveActionID != -1 && this.ImprovementActionID != -1 && this.ImprovementActionYear != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT INTO CorrectiveActions_Team(CorrectiveActionID, ImprovementActionID, ImprovementActionYear, user, role) "
@@ -3137,7 +3191,7 @@ namespace KIS.App_Sources
         public Boolean MemberRemove(String username)
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "DELETE FROM correctiveactions_team WHERE CorrectiveActionID = " + this.CorrectiveActionID.ToString()
@@ -3166,7 +3220,7 @@ namespace KIS.App_Sources
             this.Tasks = new List<CorrectiveActionTask>();
             if(this.ImprovementActionYear!=-1 && this.ImprovementActionID != -1 && this.CorrectiveActionID!=-1)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT TaskID, Description, User, Date FROM correctiveactions_tasks WHERE "
@@ -3177,7 +3231,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this.Tasks.Add(new CorrectiveActionTask(this.ImprovementActionID,
+                    this.Tasks.Add(new CorrectiveActionTask(this.Tenant, this.ImprovementActionID,
                         this.ImprovementActionYear,
                         this.CorrectiveActionID,
                         rdr.GetInt32(0)));
@@ -3193,7 +3247,7 @@ namespace KIS.App_Sources
             if (this.CorrectiveActionID!= -1 && this.ImprovementActionID!=-1 && this.ImprovementActionYear > 1970 &&
                 usr != null && usr.username.Length > 0 && date!=null && date > new DateTime(1970, 1, 1))
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT MAX(TaskID) FROM correctiveactions_tasks WHERE CorrectiveActionID = "
@@ -3242,7 +3296,7 @@ namespace KIS.App_Sources
             Boolean ret = false;
             if(this.CorrectiveActionID!=-1 && this.ImprovementActionID!=-1 && this.ImprovementActionYear>1970)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "DELETE FROM correctiveactions_tasks WHERE TaskID = " + idTask.ToString()
@@ -3270,6 +3324,8 @@ namespace KIS.App_Sources
 
     public class CorrectiveActionTeamMember
     {
+        protected String Tenant;
+
         public String log;
 
         private int _ImprovementActionID;
@@ -3317,9 +3373,11 @@ namespace KIS.App_Sources
             }
         }
 
-        public CorrectiveActionTeamMember(int iActID, int iActYear, int cActID, String iActUser)
+        public CorrectiveActionTeamMember(String Tenant, int iActID, int iActYear, int cActID, String iActUser)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ImprovementActionID, ImprovementActionYear, CorrectiveActionID, user, role FROM "
@@ -3346,8 +3404,10 @@ namespace KIS.App_Sources
             conn.Close();
         }
 
-        public CorrectiveActionTeamMember(int iActID, int iActYear, int cActID, String iActUser, Char iActRole)
+        public CorrectiveActionTeamMember(String Tenant, int iActID, int iActYear, int cActID, String iActUser, Char iActRole)
         {
+            this.Tenant = Tenant;
+
             this._ImprovementActionID = iActID;
             this._ImprovementActionYear = iActYear;
             this._CorrectiveActionID = cActID;
@@ -3358,6 +3418,8 @@ namespace KIS.App_Sources
 
     public class CorrectiveActionTask
     {
+        protected String Tenant;
+
         private int _ImprovementActionID;
         public int ImprovementActionID
         {
@@ -3411,14 +3473,16 @@ namespace KIS.App_Sources
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Date, fuso.tzFusoOrario);
             }
         }
 
-        public CorrectiveActionTask(int iActID, int iActYear, int cActID, int tskID)
+        public CorrectiveActionTask(String Tenant, int iActID, int iActYear, int cActID, int tskID)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            this.Tenant = Tenant;
+
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT Description, User, Date FROM correctiveactions_tasks WHERE "
@@ -3455,24 +3519,25 @@ namespace KIS.App_Sources
             }
             conn.Close();
         }
-
     }
 
     public class ImprovementActionsEvents
     {
+        protected String Tenant;
+
         public List<ImprovementAction> LateImprovementActions;
-        public ImprovementActionsEvents()
+        public ImprovementActionsEvents(String Tenant)
         {
             this.LateImprovementActions = new List<ImprovementAction>();
         }
 
         public void loadLateImprovementActions()
         {
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(this.Tenant);
             String tzOffset = "";
             tzOffset = fuso.tzFusoOrario.BaseUtcOffset.Ticks >= 0 ? "+" : "";
             tzOffset += fuso.tzFusoOrario.BaseUtcOffset.Hours + ":" + fuso.tzFusoOrario.BaseUtcOffset.Minutes;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year FROM improvementactions WHERE status <> 'C' AND "
@@ -3481,7 +3546,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.LateImprovementActions.Add(new ImprovementAction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                this.LateImprovementActions.Add(new ImprovementAction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
             }
             rdr.Close();
             conn.Close();
@@ -3492,9 +3557,11 @@ namespace KIS.App_Sources
 
     public class CorrectiveActionsEvents
     {
+        protected String Tenant;
+
         public List<CorrectiveAction> NotFinishedCorrectiveActions;
         public List<CorrectiveAction> NotStartedCorrectiveActions;
-        public CorrectiveActionsEvents()
+        public CorrectiveActionsEvents(String Tenant)
         {
             this.NotStartedCorrectiveActions = new List<CorrectiveAction>();
             this.NotFinishedCorrectiveActions = new List<CorrectiveAction>();
@@ -3502,13 +3569,13 @@ namespace KIS.App_Sources
 
         public void loadNotStartedCorrectiveActions()
         {
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(this.Tenant);
             String tzOffset = "";
             tzOffset = fuso.tzFusoOrario.BaseUtcOffset.Ticks >= 0 ? "+" : "";
             tzOffset += fuso.tzFusoOrario.BaseUtcOffset.Hours + ":" + fuso.tzFusoOrario.BaseUtcOffset.Minutes;
 
             this.NotStartedCorrectiveActions = new List<CorrectiveAction>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, ImprovementActionID, ImprovementActionYear FROM correctiveactions "
@@ -3520,7 +3587,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.NotStartedCorrectiveActions.Add(new CorrectiveAction(rdr.GetInt32(1), rdr.GetInt32(2), rdr.GetInt32(0)));
+                this.NotStartedCorrectiveActions.Add(new CorrectiveAction(this.Tenant, rdr.GetInt32(1), rdr.GetInt32(2), rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -3528,13 +3595,13 @@ namespace KIS.App_Sources
 
         public void loadNotFinishedCorrectiveActions()
         {
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(this.Tenant);
             String tzOffset = "";
             tzOffset = fuso.tzFusoOrario.BaseUtcOffset.Ticks >= 0 ? "+" : "";
             tzOffset += fuso.tzFusoOrario.BaseUtcOffset.Hours + ":" + fuso.tzFusoOrario.BaseUtcOffset.Minutes;
 
             this.NotFinishedCorrectiveActions = new List<CorrectiveAction>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, ImprovementActionID, ImprovementActionYear FROM correctiveactions "
@@ -3543,7 +3610,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.NotFinishedCorrectiveActions.Add(new CorrectiveAction(rdr.GetInt32(1), rdr.GetInt32(2), rdr.GetInt32(0)));
+                this.NotFinishedCorrectiveActions.Add(new CorrectiveAction(this.Tenant, rdr.GetInt32(1), rdr.GetInt32(2), rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -3562,9 +3629,11 @@ namespace KIS.App_Sources
 
     public class ImprovementActionAnalysis
     {
+        protected String Tenant;
+
         public List<ImprovementActionAnalysisStruct> IAList;
 
-        public ImprovementActionAnalysis()
+        public ImprovementActionAnalysis(String Tenant)
         {
             this.IAList = new List<ImprovementActionAnalysisStruct>();
         }
@@ -3572,7 +3641,7 @@ namespace KIS.App_Sources
         public void loadIAList()
         {
             this.IAList = new List<ImprovementActionAnalysisStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year, OpeningDate, Status, EndDateExpected, EndDateReal From improvementactions";

@@ -8,6 +8,8 @@ namespace KIS.App_Code
 {
     public class relations
     {
+        protected String Tenant;
+
         public relazione[] list;
         private int _numRelations;
         public int numRelations
@@ -15,10 +17,11 @@ namespace KIS.App_Code
             get { return _numRelations; }
         }
 
-        public relations()
+        public relations(String tenant)
         {
+            this.Tenant = tenant;
             string strSQL = "SELECT COUNT(*) FROM relazioniprocessi ORDER BY name";
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
             MySqlDataReader rdr = cmd1.ExecuteReader();
@@ -32,7 +35,7 @@ namespace KIS.App_Code
             int i = 0;
             while(rdr.Read())
             {
-                list[i] = new relazione(rdr.GetInt32(0));
+                list[i] = new relazione(this.Tenant, rdr.GetInt32(0));
                 i++;
             }
             conn.Close();
@@ -41,6 +44,8 @@ namespace KIS.App_Code
 
     public class relazione
     {
+        protected String Tenant;
+
         private int _relationID;
         public int relationID { get { return _relationID; } }
         private String _name;
@@ -61,18 +66,20 @@ namespace KIS.App_Code
             get { return _imgURL; }
         }
 
-        public relazione()
+        public relazione(String tenant)
         {
+            this.Tenant = tenant;
             this._relationID = -1;
             this._name = "";
             this._description = "";
             this._imgURL = "";
         }
 
-        public relazione(int relID)
+        public relazione(String tenant, int relID)
         {
+            this.Tenant = tenant;
             String strSQL = "SELECT * FROM relazioniprocessi WHERE relazioneID = " + relID.ToString();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
             MySqlDataReader rdr = cmd1.ExecuteReader();
