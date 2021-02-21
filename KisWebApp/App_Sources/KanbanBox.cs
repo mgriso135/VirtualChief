@@ -39,7 +39,7 @@ namespace KIS.App_Code
         public void loadKanbanBoxManagers()
         {
             this.KanbanBoxManagers = new List<User>();
-            Permesso prm = new Permesso("KanbanBox GetWarnings");
+            Permesso prm = new Permesso(this.Tenant, "KanbanBox GetWarnings");
             if (prm.ID != -1)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -49,7 +49,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    Group grp = new Group(rdr.GetInt32(0));
+                    Group grp = new Group(this.Tenant, rdr.GetInt32(0));
                     if (grp.ID != -1)
                     {
                         grp.loadUtenti();
@@ -109,7 +109,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                Reparto rp = new Reparto(rdr.GetInt32(0));
+                Reparto rp = new Reparto(this.Tenant, rdr.GetInt32(0));
                 if (rp!=null && rp.id != -1)
                 {
                     this.Reparti.Add(rp);
@@ -444,8 +444,8 @@ namespace KIS.App_Code
                                 int ckPERT = proc.checkConsistencyPERT(proc.variantiProcesso[0]);
                                 if (ckPERT == 1)
                                 {
-                                    variante var = new variante(proc.variantiProcesso[0].idVariante);
-                                    ProcessoVariante procVar = new ProcessoVariante(proc, var);
+                                    variante var = new variante(this.Tenant, proc.variantiProcesso[0].idVariante);
+                                    ProcessoVariante procVar = new ProcessoVariante(this.Tenant, proc, var);
                                     procVar.loadReparto();
                                     procVar.process.loadFigli(procVar.variant);
                                     if (procVar != null && procVar.process != null && procVar.process.processID != -1
@@ -466,7 +466,7 @@ namespace KIS.App_Code
                                             proc.loadFigli(var);
                                             for(int k = 0; k < proc.subProcessi.Count; k++)
                                             {
-                                            TaskVariante tskVar = new TaskVariante(proc.subProcessi[k], var);
+                                            TaskVariante tskVar = new TaskVariante(this.Tenant, proc.subProcessi[k], var);
                                             if (tskVar != null)
                                             {
                                                 Postazione pstCheck = tskVar.CercaPostazione(rp);
@@ -616,8 +616,8 @@ namespace KIS.App_Code
                                 int ckPERT = proc.checkConsistencyPERT(proc.variantiProcesso[0]);
                                 if (ckPERT == 1)
                                 {
-                                    variante var = new variante(proc.variantiProcesso[0].idVariante);
-                                    ProcessoVariante procVar = new ProcessoVariante(proc, var);
+                                    variante var = new variante(this.Tenant, proc.variantiProcesso[0].idVariante);
+                                    ProcessoVariante procVar = new ProcessoVariante(this.Tenant, proc, var);
                                     procVar.loadReparto();
                                     procVar.process.loadFigli(procVar.variant);
                                     if (procVar != null && procVar.process != null && procVar.process.processID != -1
@@ -637,7 +637,7 @@ namespace KIS.App_Code
                                             proc.loadFigli(var);
                                             for (int k = 0; k < proc.subProcessi.Count; k++)
                                             {
-                                                TaskVariante tskVar = new TaskVariante(proc.subProcessi[k], var);
+                                                TaskVariante tskVar = new TaskVariante(this.Tenant, proc.subProcessi[k], var);
                                                 if (tskVar != null)
                                                 {
                                                     Postazione pstCheck = tskVar.CercaPostazione(rp);
@@ -735,7 +735,7 @@ namespace KIS.App_Code
             {
                 if (!rdr.IsDBNull(0))
                 {
-                    this._ElencoReparti.Add(new Reparto(rdr.GetInt32(0)));
+                    this._ElencoReparti.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
                 }
             }
             rdr.Close();

@@ -122,7 +122,7 @@ namespace KIS.Users
 
             if (GroupID != -1 && permID != -1)
             {
-                GruppoPermesso grpPrm = new GruppoPermesso(GroupID, new Permesso(permID));
+                GruppoPermesso grpPrm = new GruppoPermesso(Session["ActiveWorkspace"].ToString(), GroupID, new Permesso(Session["ActiveWorkspace"].ToString(), permID));
                 grpPrm.R = chk.Checked;
             }
         }
@@ -155,7 +155,7 @@ namespace KIS.Users
 
             if (GroupID != -1 && permID != -1)
             {
-                GruppoPermesso grpPrm = new GruppoPermesso(GroupID, new Permesso(permID));
+                GruppoPermesso grpPrm = new GruppoPermesso(Session["ActiveWorkspace"].ToString(), GroupID, new Permesso(Session["ActiveWorkspace"].ToString(), permID));
                 grpPrm.W = chk.Checked;
             }
         }
@@ -189,7 +189,7 @@ namespace KIS.Users
             lbl1.Text = GroupID.ToString() + " " + permID.ToString();
             if (GroupID != -1 && permID != -1)
             {
-                GruppoPermesso grpPrm = new GruppoPermesso(GroupID, new Permesso(permID));
+                GruppoPermesso grpPrm = new GruppoPermesso(Session["ActiveWorkspace"].ToString(), GroupID, new Permesso(Session["ActiveWorkspace"].ToString(), permID));
                 grpPrm.X = chk.Checked;
             }
 

@@ -51,7 +51,7 @@ namespace KIS.Admin
 
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
-            MainMenu mn = new MainMenu();
+            MainMenu mn = new MainMenu(Session["ActiveWorkspace"].ToString());
             bool rt = mn.Add(Server.HtmlEncode(txtTitolo.Text), Server.HtmlEncode(txtDesc.Text), Server.HtmlEncode(txtURL.Text));
             if (rt == true)
             {

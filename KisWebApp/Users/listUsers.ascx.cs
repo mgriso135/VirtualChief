@@ -36,7 +36,7 @@ namespace KIS.Admin
             {
                 if(!Page.IsPostBack && !Page.IsCallback)
                 { 
-                UserList lst = new UserList();
+                UserList lst = new UserList(Session["ActiveWorkspace"].ToString());
             if (lst.numUsers > 0)
             {
                 
@@ -60,7 +60,7 @@ namespace KIS.Admin
         protected void rptUsers_ItemCommand1(object source, RepeaterCommandEventArgs e)
         {
             String usrID = e.CommandArgument.ToString();
-            KISConfig vcCfg = new KISConfig();
+            KISConfig vcCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
             String checksum = vcCfg.basePath;
 
             if(e.CommandName== "printBarcode")

@@ -10,6 +10,7 @@ namespace KIS.App_Sources
 {
     public class Analysis
     {
+        protected String Tenant;
     }
 
 
@@ -98,7 +99,7 @@ namespace KIS.App_Sources
             {
                 ProductionHistoryStruct curr = new ProductionHistoryStruct();
                 curr.DepartmentID = rdr.GetInt32(41);
-                KIS.App_Code.Reparto rp = new App_Code.Reparto(curr.DepartmentID);
+                KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
                 if (!rdr.IsDBNull(0))
                 {
                     curr.CustomerID = rdr.GetString(0);
@@ -408,7 +409,7 @@ namespace KIS.App_Sources
             {
                 ProductionAnalysisStruct curr = new ProductionAnalysisStruct();
                 curr.DepartmentID = rdr.GetInt32(41);
-                KIS.App_Code.Reparto rp = new App_Code.Reparto(curr.DepartmentID);
+                KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
                 if (!rdr.IsDBNull(0))
                 {
                     curr.CustomerID = rdr.GetString(0);
@@ -902,7 +903,7 @@ namespace KIS.App_Sources
             {
                 TaskProductionHistoryStruct curr = new TaskProductionHistoryStruct();
                 curr.DepartmentID = rdr.GetInt32(41);
-                KIS.App_Code.Reparto rp = new App_Code.Reparto(curr.DepartmentID);
+                KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
                 if (!rdr.IsDBNull(0))
                 {
                     curr.CustomerID = rdr.GetString(0);
@@ -1233,7 +1234,7 @@ namespace KIS.App_Sources
             {
                 TaskProductionHistoryStruct curr = new TaskProductionHistoryStruct();
                 curr.DepartmentID = rdr.GetInt32(41);
-                KIS.App_Code.Reparto rp = new App_Code.Reparto(curr.DepartmentID);
+                KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
                 if (!rdr.IsDBNull(0))
                 {
                     curr.CustomerID = rdr.GetString(0);
@@ -1801,7 +1802,7 @@ namespace KIS.App_Sources
                 TaskEventStruct curr = new TaskEventStruct();
 
                 curr.DepartmentID = rdr.GetInt32(41);
-                KIS.App_Code.Reparto rp = new App_Code.Reparto(curr.DepartmentID);
+                KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
                 if (!rdr.IsDBNull(0))
                 {
                     curr.CustomerID = rdr.GetString(0);

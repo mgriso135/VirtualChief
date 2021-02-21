@@ -32,11 +32,11 @@ namespace KIS.Admin
             {
                 if (idGruppo != -1)
                 {
-                    Group grp = new Group(idGruppo);
+                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
                     grp.loadMenu();
                     if (!Page.IsPostBack)
                     {
-                        MainMenu elencoTotale = new MainMenu();
+                        MainMenu elencoTotale = new MainMenu(Session["ActiveWorkspace"].ToString());
                         List<VoceMenu> NonGruppate = new List<VoceMenu>();
                         for (int i = 0; i < elencoTotale.Elenco.Count; i++)
                         {
@@ -76,8 +76,8 @@ namespace KIS.Admin
 
             if (idGruppo != -1 && voceID != -1)
             {
-                Group grp = new Group(idGruppo);
-                VoceMenu vm = new VoceMenu(voceID);
+                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
+                VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), voceID);
 
                 if (e.CommandName == "addVoce")
                 {

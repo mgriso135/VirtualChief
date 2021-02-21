@@ -88,7 +88,7 @@ namespace KIS.App_Code
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._DataInserimento, fuso.tzFusoOrario);
             }
         }
@@ -234,7 +234,7 @@ namespace KIS.App_Code
         {
             get
             {
-                FusoOrario fuso = new FusoOrario();
+                FusoOrario fuso = new FusoOrario(this.Tenant);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._ConfirmationDate, fuso.tzFusoOrario);
             }
             set
@@ -421,7 +421,7 @@ namespace KIS.App_Code
             {
                 artID = 0;
             }
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(this.Tenant);
             rdr.Close();
             cmd.Transaction = tr;
             cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
@@ -474,7 +474,7 @@ namespace KIS.App_Code
             }
             rdr.Close();
             cmd.Transaction = tr;
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(this.Tenant);
             cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
                 + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta, MeasurementUnit) VALUES(" + artID.ToString() + ", " + DateTime.UtcNow.Year.ToString()
                 + ", " + prc.process.processID.ToString() + ", " + prc.process.revisione.ToString() + ", " + prc.variant.idVariante.ToString()
@@ -527,7 +527,7 @@ namespace KIS.App_Code
             }
             rdr.Close();
             cmd.Transaction = tr;
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(this.Tenant);
             cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
                 + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta, kanbanCard, measurementunit) VALUES(" 
                 + artID.ToString() + ", " 
@@ -602,7 +602,7 @@ namespace KIS.App_Code
         {
             if (this.ID != -1 && this.Year != -1)
             {
-                this.EventoRitardo = new ConfigurazioneRitardoCommessa(this);
+                this.EventoRitardo = new ConfigurazioneRitardoCommessa(this.Tenant, this);
             }
         }
 
@@ -611,7 +611,7 @@ namespace KIS.App_Code
         {
             if (this.ID != -1 && this.Year != -1)
             {
-                this.EventoWarning = new ConfigurazioneWarningCommessa(this);
+                this.EventoWarning = new ConfigurazioneWarningCommessa(this.Tenant, this);
             }
         }
     
@@ -923,7 +923,7 @@ namespace KIS.App_Code
         {
             get
             {
-                Reparto rp = new Reparto(this.Reparto);
+                Reparto rp = new Reparto(this.Tenant, this.Reparto);
                 return rp.name;
             }
         }
@@ -997,7 +997,7 @@ namespace KIS.App_Code
                 DateTime consegna = this._DataPrevistaConsegna;
                 if (this.reparto == null || this.reparto.id == -1)
                 {
-                    this.reparto = new Reparto(this.Reparto);
+                    this.reparto = new Reparto(this.Tenant, this.Reparto);
                 }
 
                 consegna = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaConsegna, this.reparto.tzFusoOrario);
@@ -1005,7 +1005,7 @@ namespace KIS.App_Code
             }
             set
             {
-                Reparto rp = new Reparto(this.Reparto);
+                Reparto rp = new Reparto(this.Tenant, this.Reparto);
                 if (this.ID != -1 && TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario) >= DateTime.UtcNow)// && this.Status == 'N')
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -1040,12 +1040,12 @@ namespace KIS.App_Code
                 DateTime dataFine = this._DataPrevistaFineProduzione;
                 if(this.reparto==null || this.reparto.id==-1)
                 {
-                    this.reparto = new Reparto(this.Reparto);
+                    this.reparto = new Reparto(this.Tenant, this.Reparto);
                     dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, this.reparto.tzFusoOrario);
                 }
                 else
                 {
-                    FusoOrario fuso = new FusoOrario();
+                    FusoOrario fuso = new FusoOrario(this.Tenant);
                     dataFine = TimeZoneInfo.ConvertTimeFromUtc(this._DataPrevistaFineProduzione, fuso.tzFusoOrario);
                 }
 
@@ -1058,12 +1058,12 @@ namespace KIS.App_Code
                 DateTime fineProd = value;
                 if (this.reparto == null || this.reparto.id == -1)
                 {
-                    this.reparto = new Reparto(this.Reparto);
+                    this.reparto = new Reparto(this.Tenant, this.Reparto);
                     fineProd = TimeZoneInfo.ConvertTimeToUtc(value, this.reparto.tzFusoOrario);
                 }
                 else
                 {
-                    FusoOrario fuso = new FusoOrario();
+                    FusoOrario fuso = new FusoOrario(this.Tenant);
                     fineProd = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario);
                 }
                 
@@ -1119,7 +1119,7 @@ namespace KIS.App_Code
                 conn.Close();
                 if(this.reparto==null || this.reparto.id==-1)
                 {
-                    reparto = new Reparto(this.Reparto);
+                    reparto = new Reparto(this.Tenant, this.Reparto);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(rt, reparto.tzFusoOrario);
             }
@@ -1146,7 +1146,7 @@ namespace KIS.App_Code
                 }
                 if (this.reparto == null || this.reparto.id == -1)
                 {
-                    reparto = new Reparto(this.Reparto);
+                    reparto = new Reparto(this.Tenant, this.Reparto);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(ret, reparto.tzFusoOrario);
             }
@@ -1173,7 +1173,7 @@ namespace KIS.App_Code
                 }
                 if (this.reparto == null || this.reparto.id == -1)
                 {
-                    reparto = new Reparto(this.Reparto);
+                    reparto = new Reparto(this.Tenant, this.Reparto);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(ret, reparto.tzFusoOrario);
             }
@@ -1200,7 +1200,7 @@ namespace KIS.App_Code
                 }
                 if(this.reparto==null || this.reparto.id==-1)
                 { 
-                    reparto = new Reparto(this.Reparto);
+                    reparto = new Reparto(this.Tenant, this.Reparto);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(ret, reparto.tzFusoOrario);
             }
@@ -1458,7 +1458,7 @@ namespace KIS.App_Code
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
                 this._ID = idArticolo;
-                this._Proc = new ProcessoVariante(new processo(rdr.GetInt32(0), rdr.GetInt32(1)), new variante(rdr.GetInt32(2)));
+                this._Proc = new ProcessoVariante(this.Tenant, new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)), new variante(this.Tenant, rdr.GetInt32(2)));
                 this._Proc.loadReparto();
                 this._Proc.process.loadFigli(this._Proc.variant);
                 this._ProductExternalID = this._Proc.ExternalID;
@@ -1486,7 +1486,7 @@ namespace KIS.App_Code
                 }
                 else
                 {
-                    Reparto rp = new Reparto(this.Reparto);
+                    Reparto rp = new Reparto(this.Tenant, this.Reparto);
                     this._DataPrevistaFineProduzione = TimeZoneInfo.ConvertTimeToUtc(new DateTime(1970, 1, 1), rp.tzFusoOrario);
                 }
                 if (!rdr.IsDBNull(12))
@@ -1603,7 +1603,7 @@ namespace KIS.App_Code
                 {
                     this._ID = rdr.GetInt32(16);
                     this._Year = rdr.GetInt32(17);
-                    this._Proc = new ProcessoVariante(new processo(rdr.GetInt32(0), rdr.GetInt32(1)), new variante(rdr.GetInt32(2)));
+                    this._Proc = new ProcessoVariante(this.Tenant, new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)), new variante(this.Tenant, rdr.GetInt32(2)));
                     this._Proc.loadReparto();
                     this._Proc.process.loadFigli(this._Proc.variant);
                     if (!rdr.IsDBNull(3))
@@ -1799,7 +1799,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._Tasks.Add(new TaskProduzione(rdr.GetInt32(0)));
+                    this._Tasks.Add(new TaskProduzione(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -1825,7 +1825,7 @@ namespace KIS.App_Code
                 }
                 if (this.reparto == null || this.reparto.id == -1)
                 {
-                    reparto = new Reparto(this.Reparto);
+                    reparto = new Reparto(this.Tenant, this.Reparto);
                 }
                 //return TimeZoneInfo.ConvertTimeFromUtc(max, reparto.tzFusoOrario);
                 return max;
@@ -1837,7 +1837,7 @@ namespace KIS.App_Code
         {
             if (this.ID != -1 && this.Year != -1)
             {
-                this.EventoRitardo = new ConfigurazioneRitardoArticolo(this);
+                this.EventoRitardo = new ConfigurazioneRitardoArticolo(this.Tenant, this);
             }
         }
 
@@ -1846,7 +1846,7 @@ namespace KIS.App_Code
         {
             if (this.ID != -1 && this.Year != -1)
             {
-                this.EventoWarning = new ConfigurazioneWarningArticolo(this);
+                this.EventoWarning = new ConfigurazioneWarningArticolo(this.Tenant, this);
             }
         }
 
@@ -2071,7 +2071,7 @@ namespace KIS.App_Code
 
                 if (this.reparto == null || this.reparto.id == -1)
                 {
-                    reparto = new Reparto(this.Reparto);
+                    reparto = new Reparto(this.Tenant, this.Reparto);
                 }
                 reparto.loadCalendario(inizio.AddDays(-30), DateTime.UtcNow.AddDays(1));
                 this.log = inizio.ToString("dd/MM/yyyy HH:mm") + " - " + fine.ToString("dd/MM/yyyy HH:mm");
@@ -2123,7 +2123,7 @@ namespace KIS.App_Code
                     ret = max - min;
                 }*/
 
-                Reparto rp = new Reparto(this.Reparto);
+                Reparto rp = new Reparto(this.Tenant, this.Reparto);
                 rp.loadCalendario(min.AddDays(-30), max.AddDays(7));
                 for(int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
                 {
@@ -2324,21 +2324,21 @@ namespace KIS.App_Code
                     this.DataPrevistaFineProduzione = dFineProd;
 
                     List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
-                    Reparto rp = new Reparto(this.Reparto);
+                    Reparto rp = new Reparto(this.Tenant, this.Reparto);
 
                     this.Proc.process.loadFigli(this.Proc.variant);
                     for (int i = 0; i < this.Proc.process.subProcessi.Count; i++)
                     {
-                        TaskVariante tskVar = new TaskVariante(new processo(this.Proc.process.subProcessi[i].processID, this.Proc.process.subProcessi[i].revisione), this.Proc.variant);
+                        TaskVariante tskVar = new TaskVariante(this.Tenant, new processo(this.Tenant, this.Proc.process.subProcessi[i].processID, this.Proc.process.subProcessi[i].revisione), this.Proc.variant);
                         tskVar.loadTempiCiclo();
-                        TempoCiclo tc = new TempoCiclo(tskVar.Task.processID, tskVar.Task.revisione, this.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                        TempoCiclo tc = new TempoCiclo(this.Tenant, tskVar.Task.processID, tskVar.Task.revisione, this.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                         if (tc.Tempo != null)
                         {
-                            lstTasks.Add(new TaskConfigurato(tskVar, tc, rp.id, this.Quantita));
+                            lstTasks.Add(new TaskConfigurato(this.Tenant, tskVar, tc, rp.id, this.Quantita));
                         }
                     }
 
-                    ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(this, lstTasks, rp, this.Quantita);
+                    ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(this.Tenant, this, lstTasks, rp, this.Quantita);
                     int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                     if (rt1 == 1)
                     {
@@ -2479,7 +2479,7 @@ namespace KIS.App_Code
                 while(rdr.Read())
                 {
                     this.Parameters.Add(new ProductParameter(rdr.GetInt32(0), rdr.GetInt32(1),
-                        new ProductParametersCategory(rdr.GetInt32(3)),
+                        new ProductParametersCategory(this.Tenant, rdr.GetInt32(3)),
                         rdr.GetInt32(2)));
                 }
                 rdr.Close();
@@ -2508,7 +2508,7 @@ namespace KIS.App_Code
         {
             if (this.MeasurementUnitID != -1)
             {
-                this.MeasurementUnit = new MeasurementUnit(this.MeasurementUnitID);
+                this.MeasurementUnit = new MeasurementUnit(this.Tenant, this.MeasurementUnitID);
             }
             else
             {
@@ -2533,7 +2533,7 @@ namespace KIS.App_Code
                     var lstTasks = this.Tasks.Where(z=>z.Status != 'F').OrderBy(x => x.LateFinish);
                     foreach(var tsk in lstTasks)
                     {
-                        Postazione currWS = new Postazione(tsk.PostazioneID);
+                        Postazione currWS = new Postazione(this.Tenant, tsk.PostazioneID);
                         if(currWS!=null)
                         {
                             Boolean checkCheckIn = usr.DoCheckIn(currWS);
@@ -2542,8 +2542,8 @@ namespace KIS.App_Code
                                 Boolean checkStart = tsk.Start(usr);
                                 if(checkStart)
                                 {
-                                    TaskVariante origTsk = new TaskVariante(new App_Code.processo(tsk.OriginalTask,
-                            tsk.OriginalTaskRevisione), new variante(tsk.VarianteID));
+                                    TaskVariante origTsk = new TaskVariante(this.Tenant, new App_Code.processo(this.Tenant, tsk.OriginalTask,
+                            tsk.OriginalTaskRevisione), new variante(this.Tenant, tsk.VarianteID));
                                     origTsk.loadParameters();
                                     foreach(var prm in origTsk.Parameters)
                                     {
@@ -3303,7 +3303,7 @@ namespace KIS.App_Code
                 this._ProductID = rdr.GetInt32(0);
                 this._ProductYear = rdr.GetInt32(1);
                 this._ParameterID = rdr.GetInt32(2);
-                this.ParameterCategory = new ProductParametersCategory(rdr.GetInt32(3));
+                this.ParameterCategory = new ProductParametersCategory(this.Tenant, rdr.GetInt32(3));
                 if (!rdr.IsDBNull(4))
                 {
                     this._Name = rdr.GetString(4);
