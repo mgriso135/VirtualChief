@@ -18,7 +18,7 @@ namespace KIS.Users
                 if (usr.username.Length > 0)
                 {
                     lblNome.Text = GetLocalResourceObject("lblTitle1").ToString() + " " + usr.name + " " + usr.cognome;
-                    GroupList grpList = new GroupList();
+                    GroupList grpList = new GroupList(Session["ActiveWorkspace"].ToString());
                     rptGruppi.DataSource = grpList.Elenco;
                     rptGruppi.DataBind();
                 }
@@ -113,7 +113,7 @@ namespace KIS.Users
                 }
                 if (grpID != -1)
                 {
-                    Group g = new Group(grpID);
+                    Group g = new Group(Session["ActiveWorkspace"].ToString(), grpID);
                     
                     if (g.ID != -1)
                     {

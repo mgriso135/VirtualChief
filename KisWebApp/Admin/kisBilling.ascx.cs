@@ -35,12 +35,12 @@ namespace KIS.Admin
                 rptTasksYear.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    KISConfig kisCfg = new KISConfig();
+                    KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
                     lblExpiryDate.Text = GetLocalResourceObject("lblExpirydate").ToString() +
                         "&nbsp;<b>" + kisCfg.ExpiryDate.ToString("dd/MM/yyyy") +"</b>";
 
 
-                    ElencoArticoli elArt = new ElencoArticoli(new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1));
+                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1));
                     var elArtMonth = elArt.ListArticoli.Where(y=>y.DataInserimento>= DateTime.UtcNow.AddMonths(-13))
                         .OrderBy(z=>z.DataInserimento)
                         .GroupBy(x => new
@@ -57,7 +57,7 @@ namespace KIS.Admin
                     rptOrdiniMonth.DataSource = elArtMonth;
                     rptOrdiniMonth.DataBind();
 
-                    ElencoTaskProduzione elTasks = new ElencoTaskProduzione(new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1), 'F');
+                    ElencoTaskProduzione elTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1), 'F');
                     var elTasksMonth = elTasks.Tasks.Where(y=>y.DataFineTask >= DateTime.UtcNow.AddMonths(-13))
                         .OrderBy(z => z.DataFineTask)
                         .GroupBy(x => new

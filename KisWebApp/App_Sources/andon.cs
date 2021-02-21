@@ -616,7 +616,7 @@ namespace KIS.App_Code
             this.Tenant = Tenant;
             this.WIP = new List<DepartmentAndonProductsStruct>();
             this.Warnings = new List<DepartmentWarningStruct>();
-            Reparto rp = new Reparto(idRep);
+            Reparto rp = new Reparto(this.Tenant, idRep);
             this._RepartoID = idRep;
             this._DepartmentName = rp.name;
             this._WIP = new List<Articolo>();
@@ -1744,7 +1744,7 @@ namespace KIS.App_Code
             this.UserPanel = new List<UserPanelStruct>();
             if(this.RepartoID!=-1)
             { 
-                UserList usrList = new UserList(new Permesso("Task Produzione"));
+                UserList usrList = new UserList(this.Tenant, new Permesso(this.Tenant, "Task Produzione"));
                 foreach(var m in usrList.listUsers)
                 {
                     m.loadTaskAvviati();
@@ -1783,7 +1783,7 @@ namespace KIS.App_Code
             this.Warnings = new List<DepartmentWarningStruct>();
             if(this.RepartoID!=-1)
             { 
-                WarningAperti Elenco = new WarningAperti(new Reparto(this.RepartoID));
+                WarningAperti Elenco = new WarningAperti(this.Tenant, new Reparto(this.Tenant, this.RepartoID));
                 if(Elenco!=null && Elenco.Elenco!=null)
                 {
                     for(int i = 0; i < Elenco.Elenco.Count; i++)

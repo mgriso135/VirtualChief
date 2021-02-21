@@ -51,7 +51,7 @@ namespace KIS.Admin
 
                 if (gID != -1)
                 {
-                    Group grp = new Group(gID);
+                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), gID);
                     frmListVoci.idGruppo = grp.ID;
                     frmAddVoce.idGruppo = grp.ID;
                     if (!Page.IsPostBack)

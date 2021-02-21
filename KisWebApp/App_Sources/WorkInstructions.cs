@@ -18,6 +18,8 @@ namespace KIS.App_Sources
 
         public class WorkInstruction
         {
+            protected String Tenant;
+
             private int _ID;
             public int ID
             {
@@ -40,7 +42,7 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE manuals SET Name='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
@@ -69,7 +71,7 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE manuals SET Description='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
@@ -95,7 +97,7 @@ namespace KIS.App_Sources
                 {
                     if(this.ID!=-1 && this.Version!=-1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE manuals SET path='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
@@ -133,7 +135,7 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE manuals SET expirydate='" + value.ToString("yyyy-MM-dd") + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
@@ -165,7 +167,7 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE manuals SET isActive=" + value + " WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
@@ -202,8 +204,10 @@ namespace KIS.App_Sources
 
             public List<WITaskProduct> listTasksProducts;
 
-            public WorkInstruction(int id, int version)
+            public WorkInstruction(String tenant, int id, int version)
             {
+                this.Tenant = tenant;
+
                 this._ID = -1;
                 this._Version = -1;
                 this._Name = "";
@@ -217,7 +221,7 @@ namespace KIS.App_Sources
                 this.listTasksProducts = new List<WITaskProduct>();
                 this.OlderVersions = new List<WIOlderVersion>();
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
@@ -241,8 +245,10 @@ namespace KIS.App_Sources
 
             }
 
-            public WorkInstruction(int id)
+            public WorkInstruction(String tenant, int id)
             {
+                this.Tenant = tenant;
+
                 this._ID = -1;
                 this._Version = -1;
                 this._Name = "";
@@ -255,7 +261,7 @@ namespace KIS.App_Sources
                 this.listTasksProducts = new List<WITaskProduct>();
                 this.OlderVersions = new List<WIOlderVersion>();
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
@@ -282,14 +288,14 @@ namespace KIS.App_Sources
             public void loadLabels()
             {
                 this.Labels = new List<WILabel>();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT LabelID FROM manualswilabels WHERE ManualID = " + this.ID.ToString() + " AND ManualVersion = " + this.Version.ToString();
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this.Labels.Add(new WILabel(rdr.GetInt32(0)));
+                    this.Labels.Add(new WILabel(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -312,7 +318,7 @@ namespace KIS.App_Sources
 
                 if(!bfound)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -341,7 +347,7 @@ namespace KIS.App_Sources
             public Boolean addLabel(String labelName)
             {
                 Boolean ret = false;
-                WILabelList lblList = new WILabelList();
+                WILabelList lblList = new WILabelList(this.Tenant);
                 int lblID = lblList.addLabel(labelName);
                 if(lblID!=-1)
                 {
@@ -353,7 +359,7 @@ namespace KIS.App_Sources
             public Boolean deleteLabel(int labelID)
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -375,7 +381,7 @@ namespace KIS.App_Sources
                     ret = false;
                 }
 
-                WILabel lblCurr = new WILabel(labelID);
+                WILabel lblCurr = new WILabel(this.Tenant, labelID);
                 lblCurr.Delete();
 
 
@@ -388,7 +394,7 @@ namespace KIS.App_Sources
                 this.listTasksProducts = new List<WITaskProduct>();
                 if (this.ID!=-1 && this.Version!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti, tasksmanuals.validityInitialDate, tasksmanuals.expiryDate FROM "
@@ -404,13 +410,13 @@ namespace KIS.App_Sources
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while(rdr.Read())
                     {
-                        processo proc = new processo(rdr.GetInt32(0), rdr.GetInt32(1));
-                        variante var = new variante(rdr.GetInt32(2));
+                        processo proc = new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        variante var = new variante(this.Tenant, rdr.GetInt32(2));
                         if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
                         {
                             int[] padre = proc.getPadre(var);
-                            ProcessoVariante prodotti = new ProcessoVariante(new processo(padre[0], padre[1]), var);
-                            WITaskProduct curr = new WITaskProduct(this.ID, this.Version, rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetInt32(2));
+                            ProcessoVariante prodotti = new ProcessoVariante(this.Tenant, new processo(this.Tenant, padre[0], padre[1]), var);
+                            WITaskProduct curr = new WITaskProduct(this.Tenant, this.ID, this.Version, rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetInt32(2));
                                 curr.ProductID = prodotti.process.processID;
                                 curr.ProductVersion = prodotti.process.revisione;
                                 curr.VariantID = prodotti.variant.idVariante;
@@ -432,7 +438,7 @@ namespace KIS.App_Sources
                 this.OlderVersions = new List<WIOlderVersion>();
                 if(this.ID!=-1 && this.Version!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT ID, Version, Name, Description, path, uploaddate, expirydate, isActive, user FROM manuals WHERE "
@@ -475,7 +481,7 @@ namespace KIS.App_Sources
                 int ret = 0;
                 if(this.ID!=-1 && this.Version!=-1 && ValidityInitialDate < ValidityExpiryDate)
                 {
-                    TaskVariante tsk = new TaskVariante(new processo(TaskID, TaskVersion), new variante(VariantID));
+                    TaskVariante tsk = new TaskVariante(this.Tenant, new processo(this.Tenant, TaskID, TaskVersion), new variante(this.Tenant, VariantID));
                     tsk.loadWorkInstructions();
                     bool checkOverlaps = false;
                     for(int i = 0; i < tsk.WorkInstructions.Count && !checkOverlaps; i++)
@@ -505,7 +511,7 @@ namespace KIS.App_Sources
                     if (!checkOverlaps)
                     { 
 
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                         int maxSequence = 0;
@@ -560,7 +566,7 @@ namespace KIS.App_Sources
                 ret[0] = 0; ret[1] = 0;
                 if(this.ID!=-1 && this.Version >=0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -606,7 +612,7 @@ namespace KIS.App_Sources
                         }
                         this.IsActive = false;
 
-                        WorkInstruction newWI = new WorkInstruction(this.ID, (this.Version) + 1);
+                        WorkInstruction newWI = new WorkInstruction(this.Tenant, this.ID, (this.Version) + 1);
                         // Copy tasks and set end date as ExpiryDate-1Day for tasks in current manual
                         this.loadTaskProducts();
                         for(int i = 0; i < this.listTasksProducts.Count; i++)
@@ -654,23 +660,29 @@ namespace KIS.App_Sources
 
         public class WorkInstructionsList
         {
+            protected String Tenant;
+
             private List<WorkInstruction> _List;
             public List<WorkInstruction> List
             {
                 get { return this._List; }
             }
 
-            public WorkInstructionsList() {
+            public WorkInstructionsList(String tenant) {
+                this.Tenant = tenant;
+
                 this._List = new List<WorkInstruction>();
             }
 
-            public WorkInstructionsList(List<int> idLabels, Boolean onlyActives=true)
+            public WorkInstructionsList(String tenant, List<int> idLabels, Boolean onlyActives=true)
             {
+                this.Tenant = tenant;
+
                 this._List = new List<WorkInstruction>();
                 this._List = new List<WorkInstruction>();
                 if (idLabels.Count > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
 
@@ -709,7 +721,7 @@ namespace KIS.App_Sources
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
-                        this._List.Add(new WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                        this._List.Add(new WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                     }
                     rdr.Close();
                     conn.Close();
@@ -719,7 +731,7 @@ namespace KIS.App_Sources
             public void loadWorkInstructionList(Boolean onlyActives =true)
             {
                 this._List = new List<WorkInstruction>();
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 String strOnlyActives = "";
@@ -731,7 +743,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._List.Add(new WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._List.Add(new WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -746,7 +758,7 @@ namespace KIS.App_Sources
                 int[] ret = new int[2];
                 ret[0] = -1; ret[1] = -1;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT MAX(ID) FROM manuals";
@@ -796,6 +808,8 @@ namespace KIS.App_Sources
 
         public class WILabel
         {
+            protected String Tenant;
+
             private int _WILabelID;
             public int WILabelID
             {
@@ -810,13 +824,15 @@ namespace KIS.App_Sources
 
             public List<WorkInstruction> workInstructions;
 
-            public WILabel(int LabelID)
+            public WILabel(String tenant, int LabelID)
             {
+                this.Tenant = tenant;
+
                 this.workInstructions = new List<WorkInstruction>();
                 this._WILabelID = -1;
                 this._WILabelName = "";
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT wiLabelName FROM workinstructionslabel WHERE wiLabelID = " + LabelID.ToString();
@@ -835,7 +851,7 @@ namespace KIS.App_Sources
                 this.workInstructions = new List<WorkInstruction>();
                 if(this.WILabelID!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
@@ -845,7 +861,7 @@ namespace KIS.App_Sources
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while(rdr.Read())
                     {
-                        this.workInstructions.Add(new WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1)));
+                        this.workInstructions.Add(new WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                     }
                     rdr.Close();
                     conn.Close();
@@ -863,7 +879,7 @@ namespace KIS.App_Sources
                 int ret = 0;
                 if(this.WILabelID!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
@@ -911,10 +927,14 @@ namespace KIS.App_Sources
 
         public class WILabelList
         {
+            protected String Tenant;
+
             public List<WILabel> List;
 
-            public WILabelList()
+            public WILabelList(String tenant)
             {
+                this.Tenant = tenant;
+
                 this.List = new List<WILabel>();
             }
 
@@ -922,14 +942,14 @@ namespace KIS.App_Sources
             {
                 this.List = new List<WILabel>();
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT wiLabelID FROM workinstructionslabel ORDER BY wilabelname";
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this.List.Add(new WILabel(rdr.GetInt32(0)));
+                    this.List.Add(new WILabel(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -943,7 +963,7 @@ namespace KIS.App_Sources
             {
                 int ret = -1;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
 
                 MySqlCommand cmd = conn.CreateCommand();
@@ -994,6 +1014,8 @@ namespace KIS.App_Sources
 
         public class WITaskProduct
         {
+            protected String Tenant;
+
             public int ManualID;
             public int ManualVersion;
 
@@ -1014,7 +1036,7 @@ namespace KIS.App_Sources
                 set {
                     if (this.TaskID != -1 && this.TaskVersion != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE tasksmanuals SET validityInitialDate='" + value.ToString("yyyy-MM-dd") 
@@ -1048,7 +1070,7 @@ namespace KIS.App_Sources
                 {
                     if (this.TaskID != -1 && this.TaskVersion != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE tasksmanuals SET expiryDate='" + value.ToString("yyyy-MM-dd")
@@ -1083,7 +1105,7 @@ namespace KIS.App_Sources
                 {
                     if (this.TaskID != -1 && this.TaskVersion != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon();
+                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "UPDATE tasksmanuals SET IsActive=" + value
@@ -1109,8 +1131,10 @@ namespace KIS.App_Sources
                 }
             }
 
-            public WITaskProduct(int ManualID, int ManualVersion, int TaskID, int TaskVersion, int VariantID)
+            public WITaskProduct(String tenant, int ManualID, int ManualVersion, int TaskID, int TaskVersion, int VariantID)
             {
+                this.Tenant = tenant;
+
                 this.ManualID = -1;
                 this.ManualVersion = -1;
                 this.VariantID = -1;
@@ -1118,7 +1142,7 @@ namespace KIS.App_Sources
                 this.TaskVersion = -1;
                 this._InitialDate = new DateTime(1970, 1, 1);
                 this._ExpiryDate = new DateTime(1970, 1, 1);
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE TaskID=@TaskId AND taskRev=@TaskVersion AND "

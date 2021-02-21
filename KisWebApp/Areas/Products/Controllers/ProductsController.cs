@@ -168,11 +168,11 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                Dati.Utilities.LogAction(Session["ActiveWorkspace"].ToString(), curr.username, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                Dati.Utilities.LogAction(Session["ActiveWorkspace"].ToString(), Session.SessionID, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
 
             ViewBag.TaskID = TaskID;

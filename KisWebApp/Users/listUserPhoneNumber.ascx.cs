@@ -80,7 +80,7 @@ namespace KIS.Users
 
                 if (e.CommandName == "delete")
                 {
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(userID, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
                     bool rt = usrPhone.delete();
                     if (rt == true)
                     {
@@ -93,7 +93,7 @@ namespace KIS.Users
                 }
                 else if (e.CommandName == "edit")
                 {
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(userID, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
                     txtNote.Text = usrPhone.Note;
                     chkAlarm.Checked = usrPhone.ForAlarm;
                     if (txtNote.Visible == false)
@@ -117,7 +117,7 @@ namespace KIS.Users
                 }
                 else if (e.CommandName == "save")
                 {
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(userID, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
                     usrPhone.Note = Server.HtmlEncode(txtNote.Text);
                     usrPhone.ForAlarm = chkAlarm.Checked;
                     lblNote.Text = Server.HtmlEncode(txtNote.Text);
@@ -131,7 +131,7 @@ namespace KIS.Users
                 }
                 else if (e.CommandName == "undo")
                 {
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(userID, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
                     txtNote.Text = Server.HtmlDecode(usrPhone.Note);
                     chkAlarm.Checked = usrPhone.ForAlarm;
                     txtNote.Visible = false;

@@ -56,8 +56,8 @@ namespace KIS.Admin
 
             if (voceID != -1 && idGruppo!=-1)
             {
-                VoceMenu vm = new VoceMenu(voceID);
-                Group grp = new Group(idGruppo);
+                VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), voceID);
+                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
                 if (e.CommandName == "MoveUp" || e.CommandName == "MoveDown")
                 {
                     bool verso = false;

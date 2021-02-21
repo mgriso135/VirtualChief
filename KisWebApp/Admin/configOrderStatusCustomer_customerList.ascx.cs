@@ -31,7 +31,7 @@ namespace KIS.Admin
                 rptCustomerList.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    PortafoglioClienti customers = new PortafoglioClienti();
+                    PortafoglioClienti customers = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                     var customersOrdered = customers.Elenco.OrderBy(x => x.RagioneSociale).ToList();
                     rptCustomerList.DataSource = customersOrdered;
                     rptCustomerList.DataBind();

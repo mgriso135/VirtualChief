@@ -44,7 +44,7 @@ namespace KIS.Admin
 
         public void loadDdlDefaultValues()
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             ddlIDCommessa.SelectedValue = cfgCust.IDCommessa ? "true" : "false";
             ddlCliente.SelectedValue = cfgCust.Cliente ? "true" : "false";
             ddlDataInserimentoOrdine.SelectedValue = cfgCust.DataInserimentoOrdine ? "true" : "false";
@@ -89,7 +89,7 @@ namespace KIS.Admin
 
         protected void ddlIDCommessa_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.IDCommessa;
             Boolean check = false;
             try
@@ -114,7 +114,7 @@ namespace KIS.Admin
 
         protected void ddlCliente_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Cliente;
             Boolean check = false;
             try
@@ -139,7 +139,7 @@ namespace KIS.Admin
 
         protected void ddlDataInserimentoOrdine_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.DataInserimentoOrdine;
             Boolean check = false;
             try
@@ -164,7 +164,7 @@ namespace KIS.Admin
 
         protected void ddlNoteOrdine_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.NoteOrdine;
             Boolean check = false;
             try
@@ -189,7 +189,7 @@ namespace KIS.Admin
 
         protected void ddlIDProdotto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.IDProdotto;
             Boolean check = false;
             try
@@ -214,7 +214,7 @@ namespace KIS.Admin
 
         protected void ddlNomeProdotto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.NomeProdotto;
             Boolean check = false;
             try
@@ -239,7 +239,7 @@ namespace KIS.Admin
 
         protected void ddlNomeVariante_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.NomeVariante;
             Boolean check = false;
             try
@@ -264,7 +264,7 @@ namespace KIS.Admin
 
         protected void ddlMatricola_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Matricola;
             Boolean check = false;
             try
@@ -289,7 +289,7 @@ namespace KIS.Admin
 
         protected void ddlStatus_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Status;
             Boolean check = false;
             try
@@ -314,7 +314,7 @@ namespace KIS.Admin
 
         protected void ddlReparto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Reparto;
             Boolean check = false;
             try
@@ -339,7 +339,7 @@ namespace KIS.Admin
 
         protected void ddlDataPrevistaConsegna_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.DataPrevistaConsegna;
             Boolean check = false;
             try
@@ -364,7 +364,7 @@ namespace KIS.Admin
 
         protected void ddlDataPrevistaFineProduzione_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.DataPrevistaFineProduzione;
             Boolean check = false;
             try
@@ -389,7 +389,7 @@ namespace KIS.Admin
 
         protected void ddlEarlyStart_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.EarlyStart;
             Boolean check = false;
             try
@@ -414,7 +414,7 @@ namespace KIS.Admin
 
         protected void ddlEarlyFinish_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.EarlyFinish;
             Boolean check = false;
             try
@@ -439,7 +439,7 @@ namespace KIS.Admin
 
         protected void ddlLateStart_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.LateStart;
             Boolean check = false;
             try
@@ -464,7 +464,7 @@ namespace KIS.Admin
 
         protected void ddlLateFinish_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.LateFinish;
             Boolean check = false;
             try
@@ -489,7 +489,7 @@ namespace KIS.Admin
 
         protected void ddlQuantita_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Quantita;
             Boolean check = false;
             try
@@ -514,7 +514,7 @@ namespace KIS.Admin
 
         protected void ddlQuantitaProdotta_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.QuantitaProdotta;
             Boolean check = false;
             try
@@ -539,7 +539,7 @@ namespace KIS.Admin
 
         protected void ddlRitardo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Ritardo;
             Boolean check = false;
             try
@@ -564,7 +564,7 @@ namespace KIS.Admin
 
         protected void ddlTempoDiLavoroTotale_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.TempoDiLavoroTotale;
             Boolean check = false;
             try
@@ -589,7 +589,7 @@ namespace KIS.Admin
 
         protected void ddlLeadTime_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.LeadTime;
             Boolean check = false;
             try
@@ -614,7 +614,7 @@ namespace KIS.Admin
 
         protected void ddlTempoDiLavoroPrevisto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.TempoDiLavoroPrevisto;
             Boolean check = false;
             try
@@ -639,7 +639,7 @@ namespace KIS.Admin
 
         protected void ddlIndicatoreCompletamentoTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.IndicatoreCompletamentoTasks;
             Boolean check = false;
             try
@@ -664,7 +664,7 @@ namespace KIS.Admin
 
         protected void ddlIndicatoreCompletamentoTempoPrevisto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.IndicatoreCompletamentoTempoPrevisto;
             Boolean check = false;
             try
@@ -689,7 +689,7 @@ namespace KIS.Admin
 
         protected void ddlViewGanttTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.ViewGanttTasks;
             Boolean check = false;
             try
@@ -714,7 +714,7 @@ namespace KIS.Admin
 
         protected void ddlViewElencoTasks_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.ViewElencoTasks;
             Boolean check = false;
             try
@@ -739,7 +739,7 @@ namespace KIS.Admin
 
         protected void ddlTask_ID_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_ID;
             Boolean check = false;
             try
@@ -764,7 +764,7 @@ namespace KIS.Admin
 
         protected void ddlTask_Nome_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_Nome;
             Boolean check = false;
             try
@@ -789,7 +789,7 @@ namespace KIS.Admin
 
         protected void ddlTask_Descrizione_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_Descrizione;
             Boolean check = false;
             try
@@ -814,7 +814,7 @@ namespace KIS.Admin
 
         protected void ddlTask_Postazione_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_Postazione;
             Boolean check = false;
             try
@@ -839,7 +839,7 @@ namespace KIS.Admin
 
         protected void ddlTask_EarlyStart_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_EarlyStart;
             Boolean check = false;
             try
@@ -864,7 +864,7 @@ namespace KIS.Admin
 
         protected void ddlTask_LateStart_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_LateStart;
             Boolean check = false;
             try
@@ -889,7 +889,7 @@ namespace KIS.Admin
 
         protected void ddlTask_EarlyFinish_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_EarlyFinish;
             Boolean check = false;
             try
@@ -914,7 +914,7 @@ namespace KIS.Admin
 
         protected void ddlTask_LateFinish_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_LateFinish;
             Boolean check = false;
             try
@@ -939,7 +939,7 @@ namespace KIS.Admin
 
         protected void ddlTask_NOperatori_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_NOperatori;
             Boolean check = false;
             try
@@ -964,7 +964,7 @@ namespace KIS.Admin
 
         protected void ddlTask_TempoCiclo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_TempoCiclo;
             Boolean check = false;
             try
@@ -989,7 +989,7 @@ namespace KIS.Admin
 
         protected void ddlTask_TempoDiLavoroPrevisto_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_TempoDiLavoroPrevisto;
             Boolean check = false;
             try
@@ -1014,7 +1014,7 @@ namespace KIS.Admin
 
         protected void ddlTask_TempoDiLavoroEffettivo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_TempoDiLavoroEffettivo;
             Boolean check = false;
             try
@@ -1039,7 +1039,7 @@ namespace KIS.Admin
 
         protected void ddlTask_Status_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_Status;
             Boolean check = false;
             try
@@ -1064,7 +1064,7 @@ namespace KIS.Admin
 
         protected void ddlTask_QuantitaProdotta_SelectedIndexChanged(object sender, EventArgs e)
         {
-            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+            configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
             Boolean newValue = cfgCust.Task_QuantitaProdotta;
             Boolean check = false;
             try
@@ -1092,7 +1092,7 @@ namespace KIS.Admin
             Cliente cli = new Cliente(codCliente);
             if (cli.CodiceCliente.Length > 0)
             {
-                configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(codCliente);
+                configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);
                 bool ret = cfgCust.DeleteConfiguration();
                 lbl1.Text = ret ? GetLocalResourceObject("lblResetConfig_Ok").ToString() : GetLocalResourceObject("lblResetConfig_Ko").ToString();
                 loadDdlDefaultValues();

@@ -35,7 +35,7 @@ namespace KIS.Admin
                     ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
                     ddlTimezones.DataTextField = "DisplayName";
                     ddlTimezones.DataValueField = "Id";
-                    FusoOrario fo = new FusoOrario();
+                    FusoOrario fo = new FusoOrario(Session["ActiveWorkspace"].ToString());
                     ddlTimezones.SelectedValue = fo.tzFusoOrario.Id;
                     ddlTimezones.DataBind();
                 }
@@ -49,7 +49,7 @@ namespace KIS.Admin
         protected void ddlTimezones_SelectedIndexChanged(object sender, EventArgs e)
         {
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
-            FusoOrario current = new FusoOrario();
+            FusoOrario current = new FusoOrario(Session["ActiveWorkspace"].ToString());
             current.fusoOrario = ddlTimezones.SelectedValue;
             lbl1.Text = ddlTimezones.SelectedIndex + " - " + ddlTimezones.SelectedValue + "<br/>" + tz.Id 
                 + " <br />" + current.log;

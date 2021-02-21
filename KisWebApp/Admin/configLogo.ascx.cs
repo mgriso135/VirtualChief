@@ -30,7 +30,7 @@ namespace KIS.Admin
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    Logo lg = new Logo();
+                    Logo lg = new Logo(Session["ActiveWorkspace"].ToString());
                     if (lg.filePath.Length > 0)
                     {
                         imgCurrentLogo.Visible = true;
@@ -86,7 +86,7 @@ namespace KIS.Admin
                                 
                                 string fileName = Path.GetFileName(FileUpload1.PostedFile.FileName);
                                 FileUpload1.PostedFile.SaveAs(Server.MapPath("~/Data/Logo/") + fileName);
-                                Logo logo = new Logo();
+                                Logo logo = new Logo(Session["ActiveWorkspace"].ToString());
                                 logo.filePath = fileName;
                                 lbl1.Text += "Log: "+logo.log;
                                 Response.Redirect(Request.RawUrl);
