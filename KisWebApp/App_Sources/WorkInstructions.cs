@@ -18,6 +18,8 @@ namespace KIS.App_Sources
 
         public class WorkInstruction
         {
+            protected String Tenant;
+
             private int _ID;
             public int ID
             {
@@ -654,6 +656,7 @@ namespace KIS.App_Sources
 
         public class WorkInstructionsList
         {
+            protected String Tenant;
             private List<WorkInstruction> _List;
             public List<WorkInstruction> List
             {
@@ -796,6 +799,7 @@ namespace KIS.App_Sources
 
         public class WILabel
         {
+            protected String Tenant;
             private int _WILabelID;
             public int WILabelID
             {
@@ -911,6 +915,7 @@ namespace KIS.App_Sources
 
         public class WILabelList
         {
+            protected String Tenant;
             public List<WILabel> List;
 
             public WILabelList()
@@ -994,6 +999,7 @@ namespace KIS.App_Sources
 
         public class WITaskProduct
         {
+            protected String Tenant;
             public int ManualID;
             public int ManualVersion;
 

@@ -142,7 +142,7 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Tasks in esecuzione da parte dell&apos;operatore.
+        ///   Looks up a localized string similar to Tasks in esecuzione.
         /// </summary>
         public static string lblRunningTasks {
             get {

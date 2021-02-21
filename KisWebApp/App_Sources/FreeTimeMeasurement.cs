@@ -2086,8 +2086,8 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM telwin.freemeasurements_tasks_events WHERE id=@eventid";
-                cmd.Parameters.AddWithValue("@eventid", eventid);
+                cmd.CommandText = "SELECT id, freemeasurementid, taskid, user, eventtype, eventdate, notes FROM freemeasurements_tasks_events WHERE id=@evid";
+                cmd.Parameters.AddWithValue("@evid", eventid);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read())
                 {

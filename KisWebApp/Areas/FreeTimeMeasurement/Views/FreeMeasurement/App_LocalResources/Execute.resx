@@ -145,7 +145,7 @@
     <value>Task</value>
   </data>
   <data name="lblRunningTasks" xml:space="preserve">
-    <value>Tasks in esecuzione da parte dell'operatore</value>
+    <value>Tasks in esecuzione</value>
   </data>
   <data name="lblTask" xml:space="preserve">
     <value>Task</value>

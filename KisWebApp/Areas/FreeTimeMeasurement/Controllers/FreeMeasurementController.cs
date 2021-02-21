@@ -191,12 +191,15 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
             }
 
+            ViewBag.DepartmentName = "";
+            ViewBag.DepartmentId = -1;
             if (ViewBag.authW)
             {
                 Reparto dept = new Reparto(DepartmentId);
                 if(dept.id!=-1)
                 { 
                     ViewBag.DepartmentId = DepartmentId;
+                    ViewBag.DepartmentName = dept.name;
                 }
                 else
                 {
@@ -671,7 +674,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             // Check read permissions
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
-            prmUser[0] = "FreeMeasurement Manage";
+            prmUser[0] = "FreeMeasurement ExecuteTasks";
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authR = false;
