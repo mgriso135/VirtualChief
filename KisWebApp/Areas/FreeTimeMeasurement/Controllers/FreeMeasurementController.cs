@@ -15,6 +15,18 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
         // GET: FreeTimeMeasurement/FreeMeasurement
         public ActionResult Index(char Status = 'O')
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Index", "Status=" + Status, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Index", "Status=" + Status, ipAddr);
+            }
+
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
@@ -68,6 +80,44 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
         public int Add(DateTime plannedstartdate, DateTime plannedenddate, int DepartmentId, String name, String description, int processid, int processrev, int variantid,
             String serialnumber, Double quantity, int measurementUnitId, Boolean AllowCustomTasks, Boolean AllowExecuteFinishedTasks) 
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Add", 
+                    "plannedstartdate=" + plannedstartdate.ToString("dd/MM/yyyy HH:mm:ss") 
+                    + "&plannedenddate="+ plannedenddate.ToString("dd/MM/yyyy HH:mm:ss") 
+                    + "&DepartmentId="+DepartmentId
+                    + "&name=" + name
+                    + "&description=" + description
+                    +"&processid="+processid
+                    +"&processrev="+processrev
+                    +"&variantid="+variantid
+                    + "&serialnumber="+serialnumber
+                    + "&quantity=" + quantity
+                    + "&measurementUnitId="+measurementUnitId
+                    + "&AllowCustomTasks="+AllowCustomTasks
+                    +"&AllowExecuteFinishedTasks="+AllowExecuteFinishedTasks, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Add",
+                    "plannedstartdate=" + plannedstartdate.ToString("dd/MM/yyyy HH:mm:ss")
+                    + "&plannedenddate=" + plannedenddate.ToString("dd/MM/yyyy HH:mm:ss")
+                    + "&DepartmentId=" + DepartmentId
+                    + "&name=" + name
+                    + "&description=" + description
+                    + "&processid=" + processid
+                    + "&processrev=" + processrev
+                    + "&variantid=" + variantid
+                    + "&serialnumber=" + serialnumber
+                    + "&quantity=" + quantity
+                    + "&measurementUnitId=" + measurementUnitId
+                    + "&AllowCustomTasks=" + AllowCustomTasks
+                    + "&AllowExecuteFinishedTasks=" + AllowExecuteFinishedTasks, ipAddr);
+            }
+
             int ret = -1;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -120,6 +170,18 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          */
         public int Finish(int MeasurementId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Finish", "MeasurementId=" + MeasurementId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Finish", "MeasurementId=" + MeasurementId, ipAddr);
+            }
+
             int ret = -1;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -155,6 +217,18 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public ActionResult ChooseDepartment()
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/ChooseDepartment", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/ChooseDepartment", "", ipAddr);
+            }
+
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
@@ -178,6 +252,18 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public ActionResult Execute(int DepartmentId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Execute", "DepartmentId="+ DepartmentId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Execute", "DepartmentId="+ DepartmentId, ipAddr);
+            }
+
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
@@ -216,6 +302,18 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          */
         public JsonResult GetFreeMeasurentsTasksJson(int departmentId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetFreeMeasurentsTasksJson", "departmentId=" + departmentId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetFreeMeasurentsTasksJson", "departmentId=" + departmentId, ipAddr);
+            }
+
             JsonResult res = Json("");
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -245,6 +343,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public int StartProductiveTask(String user, int MeasurementId, int TaskId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask", 
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask", 
+                    "user=" + user + "&MeasurementId="+MeasurementId+"&TaskId="+TaskId, ipAddr);
+            }
+
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -284,6 +396,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          */
         public int StartNewProductiveTask(String user, int MeasurementId, String TaskName)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskName=" + TaskName, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskName=" + TaskName, ipAddr);
+            }
+
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -332,6 +458,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          */
         public int StartNoProductiveTask(String user, int MeasurementId, int NpTaskId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartNoProductiveTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&NpTaskId=" + NpTaskId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartNoProductiveTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&NpTaskId=" + NpTaskId, ipAddr);
+            }
+
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -370,6 +510,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public int PauseTask(String user, int MeasurementId, int TaskId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/PauseTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/PauseTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
+            }
+
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -398,6 +552,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public int FinishTask(String user, int MeasurementId, int TaskId, Double ProducedQuantity)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/FinishTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId + "&ProducedQuantity=" + ProducedQuantity, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/FinishTask",
+                    "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId + "&ProducedQuantity=" + ProducedQuantity, ipAddr);
+            }
+
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -433,6 +601,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          */
         public JsonResult GetRunningTasks(String username, int deptId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetRunningTasks",
+                    "username=" + username + "&deptId=" + deptId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetRunningTasks",
+                    "username=" + username + "&deptId=" + deptId, ipAddr);
+            }
+
             JsonResult res = Json("");
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -471,6 +653,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public ActionResult ViewMeasurementDetails(int MeasurementId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/ViewMeasurementDetails",
+                    "MeasurementId=" + MeasurementId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/ViewMeasurementDetails",
+                    "MeasurementId=" + MeasurementId, ipAddr);
+            }
+
             ViewBag.MeasurementId = -1;
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
@@ -503,6 +699,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public JsonResult GetTaskEvents(int MeasurementId, int TaskId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents",
+                    "MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents",
+                    "MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
+            }
+
             JsonResult res = Json("");
             // Check read permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -541,6 +751,18 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          */
         public int TransformEventsToTimespans()
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents", "", ipAddr);
+            }
+
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -574,11 +796,11 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             if (Session["user"] != null)
             {
                 KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/PrintMultipleSheetsBarcodes", "", ipAddr);
+                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "", ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Action", "/SalesOrders/SalesOrder/PrintMultipleSheetsBarcodes", "", ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "", ipAddr);
             }
 
             String ret = "";
@@ -659,7 +881,6 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                         + "\n";
                 }
 
-
                 String savePath = Server.MapPath(@"~\Data\FreeMeasurements\");
                 ret = DateTime.UtcNow.Ticks + ".csv";
                 System.IO.File.WriteAllText(savePath + ret, freemeasurements.ToString());
@@ -670,6 +891,17 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public String GetTaskEventNote(int EventId)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "EventId="+ EventId, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "EventId=" + EventId, ipAddr);
+            }
             String ret = "";
             // Check read permissions
             List<String[]> elencoPermessi = new List<String[]>();
@@ -697,6 +929,17 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public int SaveTaskEventNote(int EventId, String note)
         {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FreeMeasurement/SaveTaskEventNote", "EventId=" + EventId + "&note="+ note, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/FreeTimeMeasurement/FreeMeasurement/SaveTaskEventNote", "EventId=" + EventId + "&note=" + note, ipAddr);
+            }
             int ret = 0;
             // Check write permissions
             List<String[]> elencoPermessi = new List<String[]>();
