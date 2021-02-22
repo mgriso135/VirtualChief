@@ -1012,7 +1012,7 @@ namespace KIS.App_Sources
               + "               INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
               + "               WHERE freemeasurements_tasks.status = 'I' "
               + "                AND freemeasurements_tasks_events.user = @usr "
-              + "                AND freemeasurements.departmentid = @departmentid "
+              + "                AND (freemeasurements.departmentid = @departmentid OR freemeasurements_tasks.NoProductiveTaskId IS NOT NULL) "
               + "               ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks "
               + "               GROUP BY runningtasks.taskid) AS runningtasks2 "
               + "  INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON(freemeasurements_tasks_events2.id = runningtasks2.runningtasksid) "
@@ -1753,7 +1753,7 @@ namespace KIS.App_Sources
         public int Finish(User op)
         {
             int ret = 0;
-            if (this.Status == 'I' && op.username.Length > 0)
+            if (this.Status == 'I' && op.username.Length > 0 && this.NoProductiveTaskId == -1)
             {
                 DateTime eventtime = DateTime.UtcNow;
                 MySqlConnection conn = (new Dati.Dati()).mycon();

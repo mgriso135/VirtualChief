@@ -1547,7 +1547,14 @@ namespace KIS.App_Code
                             + " AND revPrec = " + this.revisione.ToString() + " AND succ = " + next.processID.ToString()
                             + " AND revSucc = " + next.revisione.ToString() + " AND variante = " + var.idVariante.ToString();
                         MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                        cmd.ExecuteNonQuery();
+                        try
+                        { 
+                             cmd.ExecuteNonQuery();
+                        }
+                        catch(Exception ex)
+                        {
+                            this.log = ex.Message;
+                        }
                         conn.Close();
                         res = 1;
                         loadSuccessivi();

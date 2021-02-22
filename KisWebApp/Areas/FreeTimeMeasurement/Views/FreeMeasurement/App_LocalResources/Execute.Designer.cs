@@ -248,5 +248,14 @@ namespace ResFreeMeasurements {
                 return ResourceManager.GetString("lblUserNotAuthorized", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sessione scaduta... Sarai reindirizzato alla schermata di login.
+        /// </summary>
+        public static string lblUserNotAuthorizedRedirecting {
+            get {
+                return ResourceManager.GetString("lblUserNotAuthorizedRedirecting", resourceCulture);
+            }
+        }
     }
 }

@@ -180,4 +180,7 @@
   <data name="lblUserNotAuthorized" xml:space="preserve">
     <value>Utente non autorizzato</value>
   </data>
+  <data name="lblUserNotAuthorizedRedirecting" xml:space="preserve">
+    <value>Sessione scaduta... Sarai reindirizzato alla schermata di login</value>
+  </data>
 </root>
