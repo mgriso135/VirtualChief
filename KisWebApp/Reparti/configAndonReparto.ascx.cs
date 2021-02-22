@@ -29,7 +29,7 @@ namespace KIS.Reparti
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if (rp.id != -1)
                     {
                         rbList.SelectedValue = rp.AndonPostazioniFormatoUsername.ToString();
@@ -54,7 +54,7 @@ namespace KIS.Reparti
             char valore = rbList.SelectedValue[0];
             if (idReparto != -1)
             {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     rp.AndonPostazioniFormatoUsername = valore;

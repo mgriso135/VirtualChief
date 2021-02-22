@@ -35,7 +35,7 @@ namespace KIS.Postazioni
                 cont = 0;
                 if (!Page.IsPostBack)
                 {
-                    el = new ElencoPostazioni();
+                    el = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
                     rptPostazioni.DataSource = el.elenco;
                     rptPostazioni.DataBind();
                 }
@@ -103,7 +103,7 @@ namespace KIS.Postazioni
            {
                if (e.CommandName == "delete")
                {
-                    Postazione p = new Postazione(pstID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                     if (p.id != -1)
                     {
                         p.loadTasks();
@@ -138,7 +138,7 @@ namespace KIS.Postazioni
                 }
                else if (e.CommandName == "printBarCode")
                {
-                   Postazione p = new Postazione(pstID);
+                   Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                    if (p.id != -1)
                    {
                        System.Drawing.Image code = GenCode128.Code128Rendering.MakeBarcodeImage("P" + p.id.ToString(), 2, true);

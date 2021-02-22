@@ -28,7 +28,7 @@ namespace KIS.Postazioni
                 }
                 if (pstID != -1)
                 {
-                    Postazione pst = new Postazione(pstID);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                     lblNomePost.Text = pst.name;
                     lblDescPost.Text = pst.desc;
                     viewCalendarioPostazione.idPostazione = pst.id;

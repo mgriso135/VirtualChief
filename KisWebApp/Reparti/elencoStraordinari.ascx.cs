@@ -30,8 +30,8 @@ namespace KIS.Reparti
 
                 if (idTurno != -1)
                 {
-                    Turno trn = new Turno(idTurno);
-                    Reparto rp = new Reparto(trn.idReparto);
+                    Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
                     if (trn.id != -1)
                     {
                         if (!Page.IsPostBack)
@@ -82,8 +82,8 @@ namespace KIS.Reparti
         {
             if (idTurno != -1)
             {
-                Turno trn = new Turno(idTurno);
-                Reparto rp = new Reparto(trn.idReparto);
+                Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
                 if (rp.id != -1)
                 {
                     if (e.CommandName == "deleteStraord")
@@ -99,7 +99,7 @@ namespace KIS.Reparti
                         }
                         if (idFs != -1)
                         {
-                            Straordinario fs = new Straordinario(idFs);
+                            Straordinario fs = new Straordinario(Session["ActiveWorkspace"].ToString(), idFs);
                             if (fs.idStraordinario != -1)
                             {
                                 bool rt = fs.delete();

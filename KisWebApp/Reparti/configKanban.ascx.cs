@@ -29,7 +29,7 @@ namespace KIS.Reparti
             {
                 if (!Page.IsPostBack && !Page.IsCallback && idReparto != -1)
                 {
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if (rp.id != -1)
                     {
                         if (rp.KanbanManaged == true)
@@ -52,7 +52,7 @@ namespace KIS.Reparti
 
         protected void rb1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Reparto rp = new Reparto(idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (rb1.SelectedValue == "0")
             {
                 rp.KanbanManaged = false;

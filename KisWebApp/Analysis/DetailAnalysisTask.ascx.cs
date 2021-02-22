@@ -31,7 +31,7 @@ namespace KIS.Analysis
 
             if (checkUser == true)
             {
-                processo proc = new processo(processID, revisione);
+                processo proc = new processo(Session["ActiveWorkspace"].ToString(), processID, revisione);
                 if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
                 {
                     if (!Page.IsPostBack)
@@ -55,7 +55,7 @@ namespace KIS.Analysis
 
         protected void btnAnalizza_Click(object sender, ImageClickEventArgs e)
         {
-            processo proc = new processo(processID, revisione);
+            processo proc = new processo(Session["ActiveWorkspace"].ToString(), processID, revisione);
             if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
             {
                 DateTime inPrd = new DateTime(1970, 1, 1), finPrd = new DateTime(1970, 1, 1);
@@ -99,7 +99,7 @@ namespace KIS.Analysis
                         rptProdotti.DataSource = prodotti;
                         rptProdotti.DataBind();
 
-                        ElencoTaskProduzione elTasks_c = new ElencoTaskProduzione(proc, inPrd, finPrd);
+                        ElencoTaskProduzione elTasks_c = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), proc, inPrd, finPrd);
                         var elTasks = elTasks_c.Tasks.OrderBy(x => x.DataInizioTask);
 
                         // Grafico tempi di lavoro

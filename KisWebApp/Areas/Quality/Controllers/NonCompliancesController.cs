@@ -44,7 +44,7 @@ namespace KIS.Areas.Quality.Controllers
             {
                 ViewBag.authorized = true;
 
-                NonCompliances lstNC = new NonCompliances();
+                NonCompliances lstNC = new NonCompliances(Session["ActiveWorkspace"].ToString());
                 lstNC.loadNonCompliances();
                 for (int i = 0; i < lstNC.NonCompliancesList.Count; i++)
                 {
@@ -160,7 +160,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliances ncList = new NonCompliances();
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
                 User curr = (User)Session["user"];
                 var created = ncList.Add(curr.username);
                 if(created[0]!=-1 && created[1]!=-1)
@@ -191,7 +191,7 @@ namespace KIS.Areas.Quality.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Quality/NonCompliances/Update", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
 
-            ViewBag.catList = new NonComplianceTypes();
+            ViewBag.catList = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
             ViewBag.authenticated = false;
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
@@ -209,12 +209,12 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliance nonC = new NonCompliance(ID, Year);
-                NonComplianceTypes ncCats = new NonComplianceTypes();
+                NonCompliance nonC = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
+                NonComplianceTypes ncCats = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
                 ncCats.loadTypeList();
                 ViewBag.catList = ncCats.TypeList;
 
-                NonComplianceCauses ncCauses = new NonComplianceCauses();
+                NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
                 ncCauses.loadCausesList();
                 ViewBag.causeList = ncCauses.CausesList;
 
@@ -242,8 +242,8 @@ namespace KIS.Areas.Quality.Controllers
             Boolean ret = false;
             if(ID!=-1 && Year>1970)
             {
-                NonCompliances ncList = new NonCompliances();
-                NonCompliance nc = new NonCompliance(ID, Year);
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 nc.CategoryLoad();
                 for(int i = 0; i < nc.Categories.Count; i++)
                 {
@@ -289,7 +289,7 @@ namespace KIS.Areas.Quality.Controllers
             }
 
             int ret = 0;
-            NonCompliance nc = new NonCompliance(ID, Year);
+            NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
             if(nc.ID!=-1 && nc.Year > 0)
             {
                 
@@ -522,7 +522,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliance nonC = new NonCompliance(ID, Year);
+                NonCompliance nonC = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 nonC.CategoryLoad();
                 return PartialView(nonC);
             }
@@ -547,7 +547,7 @@ namespace KIS.Areas.Quality.Controllers
             int ret = 0;
             if(ID!=-1 && Year != -1 && catName.Length>0)
             {
-                NonComplianceTypes ncCatList = new NonComplianceTypes();
+                NonComplianceTypes ncCatList = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
                 int catID = ncCatList.findIDByName(Server.HtmlEncode(catName));
                 Boolean ncAddCheck = false;
                 if (catID == -1)
@@ -555,7 +555,7 @@ namespace KIS.Areas.Quality.Controllers
                     ncAddCheck = ncCatList.Add(Server.HtmlEncode(catName), "");
                 }
 
-                NonCompliance nc = new NonCompliance(ID, Year);
+                NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 Boolean ncLinkCheck = nc.CategoryAdd(Server.HtmlEncode(catName));
                 ret = ncLinkCheck ? 1 : 4;
             }
@@ -601,7 +601,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authenticated = true;
                 if (ID != -1 && Year != -1 && catID != -1)
                 {
-                    NonCompliance nc = new NonCompliance(ID, Year);
+                    NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                     Boolean ncLinkCheck = nc.CategoryDel(catID);
                     ret = ncLinkCheck ? 1 : 4;
                 }
@@ -648,7 +648,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliance nonC = new NonCompliance(ID, Year);
+                NonCompliance nonC = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 nonC.CauseLoad();
                 return PartialView(nonC);
             }
@@ -673,7 +673,7 @@ namespace KIS.Areas.Quality.Controllers
             int ret = 0;
             if (ID != -1 && Year != -1 && causeName.Length>0)
             {
-                NonComplianceCauses ncCauseList = new NonComplianceCauses();
+                NonComplianceCauses ncCauseList = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
                 int causeID = ncCauseList.findIDByName(Server.HtmlEncode(causeName));
                 Boolean ncAddCheck = false;
                 if (causeID == -1)
@@ -681,7 +681,7 @@ namespace KIS.Areas.Quality.Controllers
                     ncAddCheck = ncCauseList.Add(Server.HtmlEncode(causeName), "");
                 }
 
-                NonCompliance nc = new NonCompliance(ID, Year);
+                NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 Boolean ncLinkCheck = nc.CauseAdd(Server.HtmlEncode(causeName));
                 ret = ncLinkCheck ? 1 : 4;
             }
@@ -727,7 +727,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authenticated = true;
                 if (ID != -1 && Year != -1 && causeID != -1)
                 {
-                    NonCompliance nc = new NonCompliance(ID, Year);
+                    NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                     Boolean ncLinkCheck = nc.CauseDel(causeID);
                     ret = ncLinkCheck ? 1 : 4;
                 }
@@ -773,7 +773,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authenticated = true;
                 if(ID!=-1 && Year > 1970)
                 { 
-                    FreeWarnings fWarnList = new FreeWarnings();
+                    FreeWarnings fWarnList = new FreeWarnings(Session["ActiveWorkspace"].ToString());
                     return PartialView(fWarnList.FreeWarningList);
                 }
             }
@@ -796,8 +796,8 @@ namespace KIS.Areas.Quality.Controllers
             }
 
             Boolean ret = true;
-            NonCompliance nc = new NonCompliance(ID, Year);
-            ret = nc.ProductAdd(new Warning(wrnID));
+            NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
+            ret = nc.ProductAdd(new Warning(Session["ActiveWorkspace"].ToString(), wrnID));
 
             return ret;
         }
@@ -836,10 +836,10 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliance nonC = new NonCompliance(ID, Year);
+                NonCompliance nonC = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 nonC.ProductsLoad();
 
-                ElencoPostazioni elPost = new ElencoPostazioni();
+                ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
                 List <String[]> ddlPst = new List<String[]>();
                 for (int i = 0; i < elPost.elenco.Count; i++)
                 { 
@@ -887,7 +887,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliance nc = new NonCompliance(ncID, NCYear);
+                NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ncID, NCYear);
                 if (nc.ID != -1 && nc.Year > 1970)
                 {
                     ret = nc.ProductDel(prdID, prdYear);
@@ -930,7 +930,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonComplianceProduct prd = new NonComplianceProduct(ncID, NCYear, prdID, prdYear);
+                NonComplianceProduct prd = new NonComplianceProduct(Session["ActiveWorkspace"].ToString(), ncID, NCYear, prdID, prdYear);
                 if(prd.ProductID!=-1 && prd.ProductYear > 1970)
                 {
                     ret = true;
@@ -951,7 +951,7 @@ namespace KIS.Areas.Quality.Controllers
                     }
                     else
                     { 
-                        Postazione p = new Postazione(WStation);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), WStation);
                         if(p.id!=-1)
                         { 
                             prd.Workstation = WStation;
@@ -1004,7 +1004,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.listProdotti = el.elencoFigli.OrderBy(x => x.NomeCombinato);
                 List<ProcessoVariante> elP = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 //elP[0].IDCombinato2;
-                PortafoglioClienti elCustomers = new PortafoglioClienti();
+                PortafoglioClienti elCustomers = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 ViewBag.listClienti = elCustomers.Elenco;
                 //elCustomers.Elenco[0].RagioneSociale            
             }
@@ -1092,7 +1092,7 @@ namespace KIS.Areas.Quality.Controllers
 
                 ViewBag.ncID = ncID;
                 ViewBag.ncYear = ncYear;
-                ElencoArticoli elPrd = new ElencoArticoli();
+                ElencoArticoli elPrd = new ElencoArticoli(Session["ActiveWorkspace"].ToString());
                 elPrd.loadProductList();
                 prodList = elPrd.ProductList;
 
@@ -1176,7 +1176,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliance nc = new NonCompliance(ID, Year);
+                NonCompliance nc = new NonCompliance(Session["ActiveWorkspace"].ToString(), ID, Year);
                 ret = nc.ProductAdd(prodID, prodYear);
             }
             return ret;

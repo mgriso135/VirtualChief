@@ -43,7 +43,7 @@ namespace KIS.Areas.Users.Controllers
 
             ViewBag.Activated = false;
             ViewBag.checksum = "NO";
-            User curr = new User();
+            User curr = new User(Session["ActiveWorkspace"].ToString());
                 Boolean ret = curr.Activate(usr, checksum);
                 ViewBag.Activated = ret;
             ViewBag.checksum = checksum;
@@ -84,29 +84,29 @@ namespace KIS.Areas.Users.Controllers
                 if(curr!=null && curr.username.Length > 0)
                 {
                     ViewBag.usr = curr;
-                    PortafoglioClienti customers = new PortafoglioClienti();
+                    PortafoglioClienti customers = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                     ViewBag.Customers = customers.Elenco.OrderBy(x => x.RagioneSociale);
-                    ElencoCommesseAperte lstOpenOrders = new ElencoCommesseAperte();
+                    ElencoCommesseAperte lstOpenOrders = new ElencoCommesseAperte(Session["ActiveWorkspace"].ToString());
                     ViewBag.OpenOrders = lstOpenOrders.Commesse.ToList();
 
-                    ElencoArticoliAperti lstProducts = new ElencoArticoliAperti();
+                    ElencoArticoliAperti lstProducts = new ElencoArticoliAperti(Session["ActiveWorkspace"].ToString());
                     ViewBag.OpenProducts=lstProducts.ArticoliAperti.OrderBy(x=>x.Year).ThenBy(x=>x.ID).ToList();
 
                     List<TaskProduzione> lstOpenTasks = new List<TaskProduzione>();
-                    ElencoTaskProduzione lstTasks = new ElencoTaskProduzione('I');
+                    ElencoTaskProduzione lstTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), 'I');
                     foreach (var m in lstTasks.Tasks)
                     {
-                        lstOpenTasks.Add(new TaskProduzione(m.TaskProduzioneID));
+                        lstOpenTasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), m.TaskProduzioneID));
                     }
-                    lstTasks = new ElencoTaskProduzione('N');
+                    lstTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), 'N');
                     foreach (var m in lstTasks.Tasks)
                     {
-                        lstOpenTasks.Add(new TaskProduzione(m.TaskProduzioneID));
+                        lstOpenTasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), m.TaskProduzioneID));
                     }
-                    lstTasks = new ElencoTaskProduzione('P');
+                    lstTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), 'P');
                     foreach (var m in lstTasks.Tasks)
                     {
-                        lstOpenTasks.Add(new TaskProduzione(m.TaskProduzioneID));
+                        lstOpenTasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), m.TaskProduzioneID));
                     }
                     ViewBag.OpenTasks = lstOpenTasks.OrderBy(x => x.TaskProduzioneID).ToList();
                 }
@@ -273,7 +273,7 @@ namespace KIS.Areas.Users.Controllers
             {
                 retS += "User authenticated. ";
                 User usr = new User(usrID);
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (usr != null && usr.username.Length > 0 && tsk!=null && tsk.TaskProduzioneID!=-1)
                 {
                     ret = usr.addIntervalloDiLavoroOperatore(tsk, usr, completed, producedQuantity, start, end);
@@ -304,7 +304,7 @@ namespace KIS.Areas.Users.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Users/Users/OpenOrders", "", ipAddr);
             }
 
-            ElencoCommesseAperte lstOpenOrder = new ElencoCommesseAperte();
+            ElencoCommesseAperte lstOpenOrder = new ElencoCommesseAperte(Session["ActiveWorkspace"].ToString());
             List<Commessa> lstOpenOrderCst= lstOpenOrder.Commesse;
 
             String[] curr3 = new String[2];
@@ -346,7 +346,7 @@ namespace KIS.Areas.Users.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Users/Users/OpenProducts", "", ipAddr);
             }
 
-            ElencoArticoliAperti lstOpenProducts = new ElencoArticoliAperti();
+            ElencoArticoliAperti lstOpenProducts = new ElencoArticoliAperti(Session["ActiveWorkspace"].ToString());
             var lstOpenProductsFiltered = lstOpenProducts.ArticoliAperti;
             if(customer.Length > 0)
             {
@@ -386,20 +386,20 @@ namespace KIS.Areas.Users.Controllers
             }
 
             List<TaskProduzione> lstOpenTasks = new List<TaskProduzione>();
-            ElencoTaskProduzione lstTasks = new ElencoTaskProduzione('I');
+            ElencoTaskProduzione lstTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), 'I');
             foreach (var m in lstTasks.Tasks)
             {
-                lstOpenTasks.Add(new TaskProduzione(m.TaskProduzioneID));
+                lstOpenTasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), m.TaskProduzioneID));
             }
-            lstTasks = new ElencoTaskProduzione('N');
+            lstTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), 'N');
             foreach (var m in lstTasks.Tasks)
             {
-                lstOpenTasks.Add(new TaskProduzione(m.TaskProduzioneID));
+                lstOpenTasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), m.TaskProduzioneID));
             }
-            lstTasks = new ElencoTaskProduzione('P');
+            lstTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), 'P');
             foreach (var m in lstTasks.Tasks)
             {
-                lstOpenTasks.Add(new TaskProduzione(m.TaskProduzioneID));
+                lstOpenTasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), m.TaskProduzioneID));
             }
 
             lstOpenTasks = lstOpenTasks.OrderBy(y => y.ArticoloAnno).ThenBy(z => z.ArticoloID).ThenBy(w => w.TaskProduzioneID).ToList();
@@ -475,7 +475,7 @@ namespace KIS.Areas.Users.Controllers
                     bool isEnabled = currUsr.Enabled;
                     currUsr.Enabled = !isEnabled;
 
-                    Dati.Utilities.Syslog(curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
+                    Dati.Utilities.Syslog(Session["ActiveWorkspace"].ToString(), curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
 
                     ret = 1;
                 }
@@ -530,7 +530,7 @@ namespace KIS.Areas.Users.Controllers
 
             if (ViewBag.authR)
             {
-                DisabledUsers lstDisabledUsers = new DisabledUsers();
+                DisabledUsers lstDisabledUsers = new DisabledUsers(Session["ActiveWorkspace"].ToString());
                 return View(lstDisabledUsers.UserList);
             }
                 return View();
@@ -573,13 +573,13 @@ namespace KIS.Areas.Users.Controllers
 
             if (ViewBag.authW)
             {
-                DisabledUser currUsr = new DisabledUser(user);
+                DisabledUser currUsr = new DisabledUser(Session["ActiveWorkspace"].ToString(), user);
                 if (currUsr != null && currUsr.username.Length > 0)
                 {
                     bool isEnabled = currUsr.Enabled;
                     currUsr.Enabled = !isEnabled;
 
-                    Dati.Utilities.Syslog(curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
+                    Dati.Utilities.Syslog(Session["ActiveWorkspace"].ToString(), curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
 
                     ret = 1;
                 }

@@ -28,7 +28,7 @@ namespace KIS.Analysis
             }
             if (checkUser == true)
             {
-                Commessa comm = new Commessa(commID, commYear);
+                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), commID, commYear);
                 if (comm.ID != -1 && comm.Year != -1)
                 {
                     tblCommessa.Visible = true;

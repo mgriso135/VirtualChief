@@ -32,7 +32,7 @@ namespace KIS.Analysis
                 rptCustomers.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    elencoClienti = new PortafoglioClienti();
+                    elencoClienti = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                     var elencoClientiSorted = elencoClienti.Elenco.OrderBy(x => x.RagioneSociale);
                     rptCustomers.DataSource = elencoClientiSorted;
                     rptCustomers.DataBind();

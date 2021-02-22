@@ -43,12 +43,12 @@ namespace KIS.Produzione
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
                     lbl1.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                    rp = new Reparto(repID);
+                    rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                     if (rp.id != -1)
                     {
                         frmShowStatusUtenti.repID = rp.id;
                         frmArticoliAvviati.repID = rp.id;
-                            andonCfg = new KIS.App_Code.AndonReparto(rp.id);
+                            andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), rp.id);
                         andonCfg.loadCampiVisualizzati();
                         andonCfg.loadScrollType();
                         ScrollType = andonCfg.ScrollType;
@@ -137,7 +137,7 @@ namespace KIS.Produzione
                 }
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     
                     if (art.ID != -1 &&tRow!=null)
@@ -396,8 +396,8 @@ namespace KIS.Produzione
         protected void loadCommesse(Reparto rp)
         {
 
-            ElencoArticoli elArtN =new ElencoArticoli('N', rp);
-            ElencoArticoli elArtP = new ElencoArticoli('P', rp);
+            ElencoArticoli elArtN =new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'N', rp);
+            ElencoArticoli elArtP = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'P', rp);
 
             artNP = elArtP.ListArticoli.Concat(elArtN.ListArticoli).ToList();
             artNP.Sort(delegate(Articolo p1, Articolo p2)
@@ -429,7 +429,7 @@ namespace KIS.Produzione
             {
                 frmShowStatusUtenti.repID = repID;
                 //Reparto 
-                rp = new Reparto(repID);
+                rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                 if (rp.id != -1)
                 {
 

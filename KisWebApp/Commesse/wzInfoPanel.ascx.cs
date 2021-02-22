@@ -22,7 +22,7 @@ namespace KIS.Commesse
             lblDataFineProduzione.Visible = false;
             lblQuantita.Visible = false;
 
-            Commessa cm = new Commessa(idCommessa, annoCommessa);
+            Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
             if (cm.ID!=-1 && cm.Year!=-1)
             {
                 lblIDCommessa.Visible = true;
@@ -37,7 +37,7 @@ namespace KIS.Commesse
             {
                 lblQuantita.Visible = true;
                 lblQuantita.Text = GetLocalResourceObject("lblQuantita").ToString() + ": " + quantita.ToString() + "<br />";
-                ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVariante));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
                 prcVar.loadReparto();
                 prcVar.process.loadFigli(prcVar.variant);
                 if (prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.variant.idVariante != -1)

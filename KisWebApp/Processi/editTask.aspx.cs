@@ -36,7 +36,8 @@ namespace KIS.Processi
 
                 if (taskID != -1 && revTaskID != -1 && varianteID != -1)
                 {
-                    TaskVariante tsk = new TaskVariante(new processo(taskID, revTaskID), new variante(varianteID));
+                    TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID, revTaskID), 
+                        new variante(Session["ActiveWorkspace"].ToString(), varianteID));
                     if (tsk != null && tsk.Task != null && tsk.variant != null && tsk.Task.processID != -1 && tsk.variant.idVariante != -1)
                     {
                         frmEditTask.Visible = true;

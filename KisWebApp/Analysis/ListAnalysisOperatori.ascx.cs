@@ -27,7 +27,7 @@ namespace KIS.Analysis
             if (checkUser == true)
             {
                 rptOperatori.Visible = true;
-                UserList usrLst = new UserList();
+                UserList usrLst = new UserList(Session["ActiveWorkspace"].ToString());
                 List<User> lista = usrLst.listUsers.OrderBy(x => x.cognome).ThenBy(y=>y.cognome).ToList();
                 rptOperatori.DataSource = lista;
                 rptOperatori.DataBind();

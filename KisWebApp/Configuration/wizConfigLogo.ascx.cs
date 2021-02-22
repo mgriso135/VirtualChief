@@ -33,7 +33,7 @@ namespace KIS.Configuration
 
             if (checkUser == true)
             {
-                KISConfig cfg = new KISConfig();
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
                 if (!cfg.WizLogoCompleted)
                 {
                     FileUpload1.Visible = true;
@@ -42,7 +42,7 @@ namespace KIS.Configuration
                     FileUpload1.Enabled = true;
                     if (!Page.IsPostBack && !Page.IsCallback)
                     {
-                        Logo lg = new Logo();
+                        Logo lg = new Logo(Session["ActiveWorkspace"].ToString());
                         if (lg.filePath.Length > 0)
                         {
                             imgCurrentLogo.Visible = true;

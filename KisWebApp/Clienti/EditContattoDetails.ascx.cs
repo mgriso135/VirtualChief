@@ -154,7 +154,7 @@ namespace KIS.Clienti
         {
             if (idContatto != -1)
             {
-                Contatto cnt = new Contatto(idContatto);
+                Contatto cnt = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
                 if (cnt.ID != -1)
                 {
                     bool rt = cnt.addPhone(Server.HtmlEncode(txtNewPhone.Text), Server.HtmlEncode(txtNoteNewPhone.Text));

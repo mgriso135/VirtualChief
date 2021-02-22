@@ -43,7 +43,7 @@ namespace KIS.Produzione
 
         protected void save_Click(object sender, EventArgs e)
         {
-            Postazione pst = new Postazione();
+            Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString());
             Boolean barcodeAutoCheckIn = ddlAutoCheckIn.SelectedValue == "1" ? true : false;
             bool rt = pst.add(Server.HtmlEncode(nomePost.Text), Server.HtmlEncode(descPost.Text), barcodeAutoCheckIn);
             if (rt == true)

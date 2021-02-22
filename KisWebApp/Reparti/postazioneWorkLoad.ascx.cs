@@ -29,7 +29,7 @@ namespace KIS.Produzione
 
             if (checkUser == true)
             {
-                Postazione p = new Postazione(postID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
                 if (p.id != -1)
                 {
                     lblNomePost.Text = p.name;
@@ -48,7 +48,7 @@ namespace KIS.Produzione
 
         protected void Chart1_Load(object sender, EventArgs e)
         {
-            Postazione pst = new Postazione(postID);
+            Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
             Chart1.Series.Clear();
                         Chart1.Titles.Clear();
                         Chart1.Series.Add("WorkLoad");

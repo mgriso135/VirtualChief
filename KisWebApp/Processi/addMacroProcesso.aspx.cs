@@ -39,7 +39,7 @@ namespace KIS.Processi
 
         public void btnAddMacroProc_Click(object sender, EventArgs e)
         {
-            macroProcessi proc = new macroProcessi();
+            macroProcessi proc = new macroProcessi(Session["ActiveWorkspace"].ToString());
             bool vsmV = bool.Parse(vsm.SelectedValue);
             if(proc.Add(Server.HtmlEncode(ProcName.Text), Server.HtmlEncode(ProcDesc.Text), vsmV))
             {

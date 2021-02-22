@@ -128,12 +128,13 @@ namespace KIS.Processi
 
             if (n_ops != -1 && task!=-1 && varianteID!=-1)
             {
-                TaskVariante tsk = new TaskVariante(new processo(task), new variante(varianteID));
+                TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), task), 
+                    new variante(Session["ActiveWorkspace"].ToString(), varianteID));
                 TimeSpan tc = new TimeSpan(sore, sminuti, ssecondi);
                 TimeSpan tSetup = new TimeSpan(soreSetup, sminSetup, ssecSetup);
                 // Controllo che il numero di operatori inserito non sia già presente
                 bool check = false;
-                TempiCiclo ElencoTc = new TempiCiclo(tsk.Task.processID, tsk.Task.revisione, tsk.variant.idVariante);
+                TempiCiclo ElencoTc = new TempiCiclo(Session["ActiveWorkspace"].ToString(), tsk.Task.processID, tsk.Task.revisione, tsk.variant.idVariante);
                 for (int i = 0; i < ElencoTc.Tempi.Count; i++)
                 {
                     if (ElencoTc.Tempi[i].NumeroOperatori == n_ops)

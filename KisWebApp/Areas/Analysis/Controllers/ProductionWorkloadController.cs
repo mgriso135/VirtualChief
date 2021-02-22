@@ -41,14 +41,14 @@ namespace KIS.Areas.Analysis.Controllers
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti();
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti();
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 ViewBag.TypeOfProducts = TypeOfProductsList;
-                ElencoPostazioni elWorkstations = new ElencoPostazioni();
+                ElencoPostazioni elWorkstations = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
                 ViewBag.Workstations = elWorkstations.elenco;
                 return View();
             }
@@ -108,7 +108,7 @@ namespace KIS.Areas.Analysis.Controllers
             {
                 if (startPeriod < endPeriod)
                 {
-                    TaskProductionHistory History = new TaskProductionHistory();
+                    TaskProductionHistory History = new TaskProductionHistory(Session["ActiveWorkspace"].ToString());
                     History.loadTasksProductionWorkload();
 
                     // Date filter

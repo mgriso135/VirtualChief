@@ -47,10 +47,10 @@ namespace KIS.Produzione
 
         protected void loadChart()
         {
-            Reparto rep = new Reparto(repID);
-            processo curr = new processo(procID);
-            variante vr1 = new variante(var);
-            ProcessoVariante prc = new ProcessoVariante(curr, vr1);
+            Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+            processo curr = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            variante vr1 = new variante(Session["ActiveWorkspace"].ToString(), var);
+            ProcessoVariante prc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), curr, vr1);
             prc.loadReparto();
             prc.process.loadFigli(prc.variant);
             bool rt = rep.loadPostazioniTask(prc);
@@ -95,7 +95,7 @@ namespace KIS.Produzione
                     int cont = 0;
                     for (int i = 0; i < posts.Count; i++)
                     {
-                        Postazione pst = new Postazione(posts[i]);
+                        Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), posts[i]);
                         if (pst.id != -1)
                         {
                             TimeSpan carico = pst.calculateWorkLoad(prc);

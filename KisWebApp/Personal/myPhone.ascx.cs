@@ -102,7 +102,7 @@ namespace KIS.Personal
                     imgSave.Visible = false;
                     imgUndo.Visible = false;
                     chkAlarm.Enabled = false;
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(curr.username, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
                     if (usrPhone != null && usrPhone.UserID != "")
                     {
                         chkAlarm.Checked = usrPhone.ForAlarm;
@@ -110,7 +110,7 @@ namespace KIS.Personal
                 }
                 else if (e.CommandName == "save")
                 {
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(curr.username, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
                     if (usrPhone != null && usrPhone.UserID != "")
                     {
                         usrPhone.ForAlarm = chkAlarm.Checked;
@@ -123,7 +123,7 @@ namespace KIS.Personal
                 }
                 else if (e.CommandName == "delete")
                 {
-                    UserPhoneNumber usrPhone = new UserPhoneNumber(curr.username, e.CommandArgument.ToString());
+                    UserPhoneNumber usrPhone = new UserPhoneNumber(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
                     if (usrPhone != null && usrPhone.UserID != "")
                     {
                         usrPhone.delete();

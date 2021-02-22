@@ -28,7 +28,7 @@ namespace KIS.Produzione
             {
                 if (!Page.IsPostBack)
                 {
-                    Warning wrn = new Warning(idWarning);
+                    Warning wrn = new Warning(Session["ActiveWorkspace"].ToString(), idWarning);
                     if (wrn.ID != -1 && wrn.isOpen)
                     {
                     }
@@ -54,8 +54,8 @@ namespace KIS.Produzione
         protected void imgSave_Click(object sender, ImageClickEventArgs e)
         {
             lbl1.Text = GetLocalResourceObject("lblSave").ToString();
-            Warning wrn = new Warning(idWarning);
-            wrn.DataRisoluzione = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario()).tzFusoOrario);
+            Warning wrn = new Warning(Session["ActiveWorkspace"].ToString(), idWarning);
+            wrn.DataRisoluzione = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario(Session["ActiveWorkspace"].ToString())).tzFusoOrario);
             wrn.MotivoChiamata = Server.HtmlEncode(txtCausa.Text);
             wrn.Risoluzione = Server.HtmlEncode(txtRisoluzione.Text);
             txtRisoluzione.Enabled = false;

@@ -33,8 +33,8 @@ namespace KIS.Analysis
 
             if (checkUser == true)
             {
-                processo task = new processo(taskID, revTask);
-                ProcessoVariante prod = new ProcessoVariante(new processo(prodID, prodRev), new variante(varianteID));
+                processo task = new processo(Session["ActiveWorkspace"].ToString(), taskID, revTask);
+                ProcessoVariante prod = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), prodID, prodRev), new variante(Session["ActiveWorkspace"].ToString(), varianteID));
                 prod.loadReparto();
                 prod.process.loadFigli(prod.variant);
                 if (task.processID != -1 && prod != null && prod.process != null && prod.variant != null && prod.process.processID != -1 && prod.variant.idVariante != -1)
@@ -59,8 +59,8 @@ namespace KIS.Analysis
 
         protected void btnAnalizza_Click(object sender, ImageClickEventArgs e)
         {
-            processo task = new processo(taskID, revTask);
-            ProcessoVariante prod = new ProcessoVariante(new processo(prodID, prodRev), new variante(varianteID));
+            processo task = new processo(Session["ActiveWorkspace"].ToString(), taskID, revTask);
+            ProcessoVariante prod = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), prodID, prodRev), new variante(Session["ActiveWorkspace"].ToString(), varianteID));
             prod.loadReparto();
             prod.process.loadFigli(prod.variant);
             if (task.processID != -1 && prod != null && prod.process != null && prod.variant != null && prod.process.processID != -1 && prod.variant.idVariante != -1)
@@ -104,7 +104,7 @@ namespace KIS.Analysis
                         lblMediaTempoDiLavoro.Visible = true;
                         chartTempiLavoro.Visible = true;
 
-                        ElencoTaskProduzione elTasks_c = new ElencoTaskProduzione(task, prod, inPrd, finPrd);
+                        ElencoTaskProduzione elTasks_c = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), task, prod, inPrd, finPrd);
                         var elTasks = elTasks_c.Tasks.OrderBy(x => x.DataInizioTask);
 
                         // Grafico tempi di lavoro

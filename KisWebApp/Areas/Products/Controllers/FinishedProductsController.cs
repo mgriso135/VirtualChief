@@ -62,7 +62,7 @@ namespace KIS.Areas.Products.Controllers
 
             if(ViewBag.authR)
             {
-                Articolo art = new Articolo(ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
                 if(art!=null && art.ID!=-1 && art.Year!=-1)
                 {
                     return View(art);
@@ -104,7 +104,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR)
             {
-                Articolo art = new Articolo(ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
                 if(art!=null && art.ID!=-1 && art.Year>2010)
                 {
                     art.loadParameters();
@@ -146,7 +146,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR)
             {
-                Articolo art = new Articolo(ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
                 if (art != null && art.ID != -1 && art.Year > 2010)
                 {
                     art.loadTaskParameters();
@@ -201,7 +201,7 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.log = "";
             if (ViewBag.authR)
             {
-                Articolo art = new Articolo(ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
                 if (art != null && art.ID != -1 && art.Year > 2010)
                 {
                     art.loadTaskParameters();

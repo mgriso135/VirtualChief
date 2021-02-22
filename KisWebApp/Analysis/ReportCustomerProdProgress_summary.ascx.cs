@@ -152,7 +152,7 @@ namespace KIS.Analysis
                 PdfPCell[] intestazioneFoglio = new PdfPCell[2];
                 intestazioneFoglio[0] = new PdfPCell();
                 intestazioneFoglio[1] = new PdfPCell();
-                Logo logoAzienda = new Logo();
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -182,7 +182,7 @@ namespace KIS.Analysis
                     List<Articolo> lstProd = (List<Articolo>)Session["prodI"];
                     if (lstProd.Count > 0)
                     {
-                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
+                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), customer.CodiceCliente);
                         iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdI").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
@@ -231,7 +231,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.DataInserimento.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -246,7 +246,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.Note, new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -881,7 +881,7 @@ namespace KIS.Analysis
                     List<Articolo> lstProd = (List<Articolo>)Session["prodP"];
                     if (lstProd.Count > 0)
                     {
-                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
+                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), customer.CodiceCliente);
                         iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdP").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
@@ -930,7 +930,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.DataInserimento.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -945,7 +945,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.Note, new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -1580,7 +1580,7 @@ namespace KIS.Analysis
                     List<Articolo> lstProd = (List<Articolo>)Session["prodN"];
                     if (lstProd.Count > 0)
                     {
-                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
+                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), customer.CodiceCliente);
                         iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdN").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
@@ -1629,7 +1629,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.DataInserimento.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -1644,7 +1644,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.Note, new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -2221,7 +2221,7 @@ namespace KIS.Analysis
                     List<Articolo> lstProd = (List<Articolo>)Session["prodF"];
                     if (lstProd.Count > 0)
                     {
-                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(customer.CodiceCliente);
+                        configCustomerOrderStatusReport cfgCustomer = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), customer.CodiceCliente);
                         iTextSharp.text.Paragraph par = new Paragraph(GetLocalResourceObject("lblReportProdF").ToString(), new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD));
                         par.SpacingAfter = 20;
                         cartPDF.Add(par);
@@ -2270,7 +2270,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.DataInserimento.ToString("dd/MM/yyyy"), new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);
@@ -2285,7 +2285,7 @@ namespace KIS.Analysis
                                 tbl.AddCell(cl[0]);
 
                                 cl[1] = new PdfPCell();
-                                Commessa comm = new Commessa(lstProd[i].Commessa, lstProd[i].AnnoCommessa);
+                                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), lstProd[i].Commessa, lstProd[i].AnnoCommessa);
                                 iTextSharp.text.Paragraph txt1 = new Paragraph(comm.Note, new Font(Font.FontFamily.TIMES_ROMAN, 10, Font.NORMAL));
                                 cl[1].AddElement(txt1);
                                 tbl.AddCell(cl[1]);

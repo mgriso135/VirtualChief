@@ -10,6 +10,7 @@ namespace KIS.App_Code
 {
     public abstract class evento
     {
+        protected String Tenant;
         protected String _Nome;
         public String Nome
         {
@@ -19,25 +20,28 @@ namespace KIS.App_Code
             }
         }
 
-        public evento()
+        public evento(String tenant)
         {
+            this.Tenant = tenant;
         }
     }
 
     public class WarningEvent : evento
     {
-        public WarningEvent()
-            : base()
+        public WarningEvent(String tenant)
+            : base(tenant)
         {
+            this.Tenant = tenant;
             this._Nome = "Warning";
         }
     }
 
     public class Ritardo : evento
     {
-        public Ritardo()
-            : base()
+        public Ritardo(String tenant)
+            : base(tenant)
         {
+            this.Tenant = tenant;
             this._Nome = "Ritardo";
         }
     }
@@ -84,7 +88,7 @@ namespace KIS.App_Code
                 // Cerco gli indirizzi all'interno dei gruppi
                 for (int i = 0; i < this.ListGroupsID.Count; i++)
                 {
-                    Group currGroup = new Group(this.ListGroupsID[i]);
+                    Group currGroup = new Group(this.Tenant, this.ListGroupsID[i]);
                     currGroup.loadUtenti();
                     for (int j = 0; j < currGroup.Utenti.Count; j++)
                     {
@@ -153,7 +157,7 @@ namespace KIS.App_Code
                 // Cerco gli indirizzi all'interno dei gruppi
                 for (int i = 0; i < this.ListGroupsID.Count; i++)
                 {
-                    Group currGroup = new Group(this.ListGroupsID[i]);
+                    Group currGroup = new Group(this.Tenant, this.ListGroupsID[i]);
                     currGroup.loadUtenti();
                     for (int j = 0; j < currGroup.Utenti.Count; j++)
                     {
@@ -201,7 +205,6 @@ namespace KIS.App_Code
 
     public abstract class ConfigurazioneRitardoAmbito : ConfigurazioneEventoAmbito
     {
-        protected String Tenant;
 
         private Ritardo _TipoEvento;
         public Ritardo TipoEvento
@@ -221,15 +224,13 @@ namespace KIS.App_Code
             : base(Tenant)
         {
             this.Tenant = Tenant;
-            this._TipoEvento = new Ritardo();
+            this._TipoEvento = new Ritardo(this.Tenant);
             this._RitardoMinimoDaSegnalare = new TimeSpan(0, 0, 0);
         }
     }
 
     public class ConfigurazioneRitardoReparto : ConfigurazioneRitardoAmbito
     {
-        protected String Tenant;
-
         public String log;
         private int _repartoID;
         public int RepartoID
@@ -499,7 +500,7 @@ namespace KIS.App_Code
             : base(Tenant)
         {
             this.Tenant = Tenant;
-            this._TipoEvento = new WarningEvent();
+            this._TipoEvento = new WarningEvent(this.Tenant);
         }
 
     }

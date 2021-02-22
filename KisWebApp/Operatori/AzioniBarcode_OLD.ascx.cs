@@ -101,8 +101,8 @@ namespace KIS.Operatori
 
                 if (usrID != -1 && postID != -1)
                 {
-                    User usr = new User(usrID);
-                    Postazione p = new Postazione(postID);
+                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
                     if (usr.username.Length > 0 && p.id != -1)
                     {
                         rt = true;
@@ -172,8 +172,8 @@ namespace KIS.Operatori
                     taskID = -1;
                 }
 
-                User usr = new User(usrID);
-                TaskProduzione tsk = new TaskProduzione(taskID);
+                User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
 
                 log.Text += usr.username + " " + tsk.TaskProduzioneID.ToString() + " " + action + "<br/>";
 

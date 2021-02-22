@@ -17,15 +17,15 @@ namespace KIS.Eventi
     {
 
         [WebMethod]
-        public void Main()
+        public void Main(string tenant)
         {
-            SegnalaWarning();
+            SegnalaWarning(tenant);
         }
 
-        private bool SegnalaWarning()
+        private bool SegnalaWarning(string tenant)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
             conn.Open();
             List<TaskProduzione> tskList = new List<TaskProduzione>();
             MySqlCommand cmd = conn.CreateCommand();
@@ -33,7 +33,7 @@ namespace KIS.Eventi
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                tskList.Add(new TaskProduzione(rdr.GetInt32(0)));
+                tskList.Add(new TaskProduzione(tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             for (int i = 0; i < tskList.Count; i++)
@@ -41,7 +41,7 @@ namespace KIS.Eventi
                 // Ricerco tutti gli indirizzi cui inviare la mail
                 List<System.Net.Mail.MailAddress> MailList = new List<System.Net.Mail.MailAddress>();
                 // Ricerca per reparto
-                Reparto rp = new Reparto(tskList[i].RepartoID);
+                Reparto rp = new Reparto(tenant, tskList[i].RepartoID);
                 rp.loadEventoWarning();
                 for (int j = 0; j < rp.EventoWarning.MailingList.Count; j++)
                 {
@@ -59,7 +59,7 @@ namespace KIS.Eventi
                     }
                 }
                 // Ricerca per articolo
-                Articolo art = new Articolo(tskList[i].ArticoloID, tskList[i].ArticoloAnno);
+                Articolo art = new Articolo(tenant, tskList[i].ArticoloID, tskList[i].ArticoloAnno);
                 art.loadEventoWarning();
                 for (int j = 0; j < art.EventoWarning.MailingList.Count; j++)
                 {
@@ -79,7 +79,7 @@ namespace KIS.Eventi
 
 
                 // Ricerco per commessa
-                Commessa cm = new Commessa(art.Commessa, art.AnnoCommessa);
+                Commessa cm = new Commessa(tenant, art.Commessa, art.AnnoCommessa);
                 cm.loadEventoWarning();
                 for (int j = 0; j < cm.EventoWarning.MailingList.Count; j++)
                 {
@@ -98,7 +98,7 @@ namespace KIS.Eventi
                 }
 
 
-                Postazione pst = new Postazione(tskList[i].PostazioneID);
+                Postazione pst = new Postazione(tenant, tskList[i].PostazioneID);
                 
                 // Ricerca per specifico task
                 //.................

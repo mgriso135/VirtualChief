@@ -17,7 +17,7 @@ namespace KIS.Processi
             {
                 if (procVar!=null && procVar.Task != null && procVar.variant != null)
                 {
-                    ElencoTasks elTsk = new ElencoTasks();
+                    ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString());
                     List<processo> curr = new List<processo>();
                     for (int i = 0; i < elTsk.Elenco.Count; i++)
                     {
@@ -40,7 +40,7 @@ namespace KIS.Processi
             lbl1.Text = "<br/><br/>"+procVar.Task.processID.ToString() + " " + procVar.variant.idVariante.ToString();
 
             lbl1.Text += "<br/>" + ddlTasks.SelectedItem.Value.ToString() + " " + ddlTasks.SelectedItem.Text.ToString();
-            processo pr = new processo(procVar.Task.processID);
+            processo pr = new processo(Session["ActiveWorkspace"].ToString(), procVar.Task.processID);
             int tskID = -1;
             try
             {
@@ -53,7 +53,7 @@ namespace KIS.Processi
 
             if (tskID != -1)
             {
-                bool rt = procVar.Task.linkProcessoVariante(new TaskVariante(new processo(tskID), procVar.variant));
+                bool rt = procVar.Task.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), procVar.variant));
                 if (rt == true)
                 {
                     Response.Redirect(Request.RawUrl);

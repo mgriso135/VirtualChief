@@ -40,9 +40,9 @@ namespace KIS.Areas.Analysis.Controllers
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti();
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti();
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
@@ -103,7 +103,7 @@ namespace KIS.Areas.Analysis.Controllers
             {
                 if (startPeriod < endPeriod)
                 {
-                    ProductionHistory History = new ProductionHistory();
+                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
                     History.loadProductionAnalysis();
 
                     List<ProductionAnalysisStruct> curr = History.AnalysisData.Where(x => x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
@@ -317,8 +317,8 @@ namespace KIS.Areas.Analysis.Controllers
                             prodCurr[1] = rev;
                             prodCurr[2] = variant;
                             TypeOfProductsFilter.Add(prodCurr);
-                                processo prcCurr = new processo(prod, rev);
-                                variante varCurr = new variante(variant);
+                                processo prcCurr = new processo(Session["ActiveWorkspace"].ToString(), prod, rev);
+                                variante varCurr = new variante(Session["ActiveWorkspace"].ToString(), variant);
                                 ViewBag.ProductsFilter += "data.addColumn('number', '" + prcCurr.processName + " - " + varCurr.nomeVariante + "');";
                         }
                     }

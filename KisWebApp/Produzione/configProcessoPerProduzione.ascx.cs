@@ -38,7 +38,7 @@ namespace KIS.Produzione
                 Articolo art = null;
                 if (artID != -1)
                 {
-                    art = new Articolo(artID, artYear);
+                    art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                     if (art.ID != -1 && art.Proc != null)
                     {
                         procID = art.Proc.process.processID;
@@ -48,7 +48,7 @@ namespace KIS.Produzione
 
                 if (procID != -1 && varID != -1 && art != null)
                 {
-                    ProcessoVariante prc = new ProcessoVariante(new processo(procID), new variante(varID));
+                    ProcessoVariante prc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
                     prc.loadReparto();
                     prc.process.loadFigli(prc.variant);
                     if (prc.process != null && prc.variant != null && prc.RepartoProduttivo != null)
@@ -126,7 +126,7 @@ namespace KIS.Produzione
 
                 if (ind != -1)
                 {
-                    TaskVariante tsk = new TaskVariante(new processo(taskID), new variante(varID));
+                    TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID), new variante(Session["ActiveWorkspace"].ToString(), varID));
                     tsk.loadTempiCiclo();
                     ddlTempi.DataSource = tsk.Tempi.Tempi;
                     ddlTempi.DataValueField = "NumeroOperatori";
@@ -153,7 +153,7 @@ namespace KIS.Produzione
                     Label prec = (Label)e.Item.FindControl("lblPrecedenti");
                     for (int i = 0; i < configProc.Processi[ind].Precedenti.Count; i++)
                     {
-                        processo s = new processo(configProc.Processi[ind].Precedenti[i]);
+                        processo s = new processo(Session["ActiveWorkspace"].ToString(), configProc.Processi[ind].Precedenti[i]);
 
                         prec.Text += s.processID.ToString() + " " + s.processName 
                             + "("+ configProc.Processi[ind].PrecedentiPausa[i].TotalHours.ToString()
@@ -163,7 +163,7 @@ namespace KIS.Produzione
                     Label succ = (Label)e.Item.FindControl("lblSuccessivi");
                     for (int i = 0; i < configProc.Processi[ind].Successivi.Count; i++)
                     {
-                        processo s = new processo(configProc.Processi[ind].Successivi[i]);
+                        processo s = new processo(Session["ActiveWorkspace"].ToString(), configProc.Processi[ind].Successivi[i]);
 
                         succ.Text += s.processID.ToString() + " " + s.processName + "<br/>";
                     }
@@ -201,20 +201,20 @@ namespace KIS.Produzione
             HtmlTableRow tr = (HtmlTableRow)ddl.Parent.Parent;
             HiddenField tsk = (HiddenField)tr.FindControl("taskID");
             int task = Int32.Parse(tsk.Value);
-            Articolo curr = new Articolo(artID, artYear);
+            Articolo curr = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
             for (int i = 0; i < configProc.Processi.Count; i++)
             {
                 if (configProc.Processi[i].Task.Task.processID == task)
                 {
-                    TempoCiclo t = new TempoCiclo(task, configProc.Processi[i].Task.Task.revisione, varID, numOps);
-                    configProc.Processi[i] = new TaskConfigurato(new TaskVariante(new processo(task), new variante(varID)), t, configProc.RepartoProduttivo.id, curr.Quantita);
+                    TempoCiclo t = new TempoCiclo(Session["ActiveWorkspace"].ToString(), task, configProc.Processi[i].Task.Task.revisione, varID, numOps);
+                    configProc.Processi[i] = new TaskConfigurato(Session["ActiveWorkspace"].ToString(), new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), task), new variante(Session["ActiveWorkspace"].ToString(), varID)), t, configProc.RepartoProduttivo.id, curr.Quantita);
                 }
             }
 
-            ProcessoVariante prc = new ProcessoVariante(new processo(procID), new variante(varID));
+            ProcessoVariante prc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
             prc.loadReparto();
             prc.process.loadFigli(prc.variant);
-            configProc = new ConfigurazioneProcesso(curr, configProc.Processi, new Reparto(repID), curr.Quantita);
+            configProc = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), curr, configProc.Processi, new Reparto(Session["ActiveWorkspace"].ToString(), repID), curr.Quantita);
             configProc.calculateCriticalPath();
             rptTasks.DataSource = configProc.Processi;
             rptTasks.DataBind();
@@ -226,7 +226,7 @@ namespace KIS.Produzione
         {
             if (e.CommandName == "checkConfigurazione" && e.CommandArgument.ToString() == "CLICK")
             {
-                Articolo currArt = new Articolo(artID, artYear);
+                Articolo currArt = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
                 Repeater rpt = (Repeater)source;
                 foreach (RepeaterItem rptItm in rpt.Items)
@@ -246,15 +246,15 @@ namespace KIS.Produzione
                         opsID = -1;
                     }
                     
-                    TaskVariante tskVar = new TaskVariante(new processo(tskID), new variante(varID));
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), new variante(Session["ActiveWorkspace"].ToString(), varID));
                     tskVar.loadTempiCiclo();
-                    TempoCiclo tc = new TempoCiclo(tskVar.Task.processID, tskVar.Task.revisione, varID, opsID);
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, varID, opsID);
                     if (tc.Tempo != null)
                     {
-                        lstTasks.Add(new TaskConfigurato(tskVar, tc, repID, currArt.Quantita));
+                        lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, repID, currArt.Quantita));
                     }
                 }
-                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(currArt, lstTasks, new Reparto(repID), currArt.Quantita);
+                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), currArt, lstTasks, new Reparto(Session["ActiveWorkspace"].ToString(), repID), currArt.Quantita);
 
                 int rt = prcCfg.SimulaIntroduzioneInProduzione();
                 lbl1.Text = prcCfg.log;
@@ -313,7 +313,7 @@ namespace KIS.Produzione
         {
             if (e.CommandName == "ProductionLaunch" && e.CommandArgument.ToString() == "OK")
             {
-                Articolo tobePlanned = new Articolo(artID, artYear);
+                Articolo tobePlanned = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 ImageButton btnLancia = (ImageButton)e.Item.FindControl("btnLANCIA");
                 btnLancia.Enabled = false;
                 List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
@@ -335,16 +335,16 @@ namespace KIS.Produzione
                         opsID = -1;
                     }
 
-                    TaskVariante tskVar = new TaskVariante(new processo(tskID), new variante(varID));
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), new variante(Session["ActiveWorkspace"].ToString(), varID));
                     tskVar.loadTempiCiclo();
-                    TempoCiclo tc = new TempoCiclo(tskVar.Task.processID, tskVar.Task.revisione, varID, opsID);
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, varID, opsID);
                     if (tc.Tempo != null)
                     {
-                        lstTasks.Add(new TaskConfigurato(tskVar, tc, repID, tobePlanned.Quantita));
+                        lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, repID, tobePlanned.Quantita));
                     }
                 }
 
-                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(tobePlanned, lstTasks, new Reparto(repID), tobePlanned.Quantita);
+                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), tobePlanned, lstTasks, new Reparto(Session["ActiveWorkspace"].ToString(), repID), tobePlanned.Quantita);
                 int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                 if (rt1 == 1)
                 {
@@ -374,9 +374,9 @@ namespace KIS.Produzione
 
         protected void ddlRepartoProduttivo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Articolo art = new Articolo(artID, artYear);
+            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
             List<TaskConfigurato> lst = new List<TaskConfigurato>();
-            ProcessoVariante prc = new ProcessoVariante(new processo(procID), new variante(varID));
+            ProcessoVariante prc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
             prc.loadReparto();
             prc.process.loadFigli(prc.variant);
             repID = -1;
@@ -391,7 +391,7 @@ namespace KIS.Produzione
 
             if(repID!=-1)
             {
-                Reparto rp = new Reparto(repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                 // controllo che il reparto esista, e che appartenga al processo selezionato
                 bool checkReparto = false;
                 if(rp.id!=-1)
@@ -432,7 +432,7 @@ namespace KIS.Produzione
                 }
             }
 
-            configProc = new ConfigurazioneProcesso(art, lst, new Reparto(repID), art.Quantita);
+            configProc = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, lst, new Reparto(Session["ActiveWorkspace"].ToString(), repID), art.Quantita);
             int consistenza = configProc.checkConsistency();
             if (consistenza == 1)
             {

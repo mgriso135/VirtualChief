@@ -171,9 +171,9 @@ namespace Dati
         }
 
  
-        public static Boolean LogAction(String Tenant, String user, String type /* Page, Controller */, String detail, String querystring, String ipAddr)
+        public static Boolean LogAction(String user, String type /* Page, Controller */, String detail, String querystring, String ipAddr)
         {
-            MySqlConnection conn = (new Dati()).mycon(Tenant);
+            MySqlConnection conn = (new Dati()).VCMainConn();
             conn.Open();
             Boolean ret = false;
             MySqlCommand cmd = conn.CreateCommand();

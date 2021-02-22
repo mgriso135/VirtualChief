@@ -28,7 +28,7 @@ namespace KIS.KanbanBox
         public String kBoxURL;
         public KanbanCardList KanbanList;
 
-        public void LoadConfiguration()
+        public void LoadConfiguration(String tenant)
         {
             try
             {
@@ -48,9 +48,9 @@ namespace KIS.KanbanBox
             
         }
 
-        public String ReadCards()
+        public String ReadCards(String tenant)
         {
-            KanbanList = new KanbanCardList();
+            KanbanList = new KanbanCardList(Session["ActiveWorkspace"].ToString());
             String ret = "";
             LoadConfiguration();
             if (KanbanBoxEnabled == true)
@@ -94,7 +94,7 @@ namespace KIS.KanbanBox
                             kbCard.initial_empty_date = kbList[i].initial_empty_date;
                             kbCard.required_date = kbList[i].required_date;
 
-                            Cliente customer = new Cliente(kbCard.customer_name);
+                            Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), kbCard.customer_name);
                             Reparto rp = new Reparto(kbCard.supplier_name);
 
                             if (customer.KanbanManaged == true || rp.KanbanManaged == true)
@@ -119,7 +119,7 @@ namespace KIS.KanbanBox
             return ret;
         }
 
-        public Boolean ChangeStatus(KanbanCard card, String status)
+        public Boolean ChangeStatus(String tenant, KanbanCard card, String status)
         {
             Boolean ret = false;
             if (card.ekanban_string != "")
@@ -176,15 +176,15 @@ namespace KIS.KanbanBox
          * 9 if Articolo where already launch and it is a 'N' status inside KIS
          * 10 if KanbanCard is not consistent
          */
-        public int AddToProductionQue(KanbanCard card)
+        public int AddToProductionQue(String tenant, KanbanCard card)
         {
             int ret = 1;
             int procID = -1;
             int qty = -1;
             
-            ElencoCommesse elComm = new ElencoCommesse();
+            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
             elComm.loadCommesse();
-            Cliente customer = new Cliente(card.customer_name);
+            Cliente customer = new Cliente(tenant, card.customer_name);
             processo prc = new processo(card.part_number);
             prc.loadVarianti();
             variante var = null;
@@ -197,8 +197,8 @@ namespace KIS.KanbanBox
             }
             else
             {
-                var = new variante(prc.variantiProcesso[0].idVariante);
-                procVar = new ProcessoVariante(prc, var);
+                var = new variante(Session["ActiveWorkspace"].ToString(), prc.variantiProcesso[0].idVariante);
+                procVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), prc, var);
                 procVar.loadReparto();
                 procVar.process.loadFigli(procVar.variant);
             }
@@ -224,7 +224,7 @@ namespace KIS.KanbanBox
                 ret = 8;
             }
 
-            Articolo chechIfAlreadyProcessed = new Articolo(card);
+            Articolo chechIfAlreadyProcessed = new Articolo(tenant, card);
             if (chechIfAlreadyProcessed.ID != -1)
             {
                 ret = 9;
@@ -254,7 +254,7 @@ namespace KIS.KanbanBox
                         + " - " + procVar.variant.idVariante.ToString() + "\n";
                     if (prod[0] != -1 && prod[1] != -1)
                     {
-                        Articolo art = new Articolo(prod[0], prod[1]);
+                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), prod[0], prod[1]);
                         art.DataPrevistaFineProduzione = card.DataConsegna;
                         art.Reparto = rp.id;
                         List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
@@ -262,16 +262,16 @@ namespace KIS.KanbanBox
                         art.Proc.process.loadFigli(art.Proc.variant);
                         for (int i = 0; i < art.Proc.process.subProcessi.Count; i++)
                         {
-                            TaskVariante tskVar = new TaskVariante(new processo(art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
+                            TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
                             tskVar.loadTempiCiclo();
-                            TempoCiclo tc = new TempoCiclo(tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                            TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                             if (tc.Tempo != null)
                             {
-                                lstTasks.Add(new TaskConfigurato(tskVar, tc, rp.id, art.Quantita));
+                                lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, rp.id, art.Quantita));
                             }
                         }
  
-                        ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(art, lstTasks, rp, art.Quantita);
+                        ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, lstTasks, rp, art.Quantita);
                         int consistenza = prcCfg.checkConsistency();
                         int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
 
@@ -336,15 +336,15 @@ namespace KIS.KanbanBox
 
 
         [WebMethod]
-        public String Main()
+        public String Main(String tenant)
         {
-            LoadConfiguration();
+            LoadConfiguration(tenant);
             if (KanbanBoxEnabled == true)
             {
-                ReadCards();
+                ReadCards(tenant);
                 for (int i = 0; i < KanbanList.cards.Count; i++)
                 {
-                    AddToProductionQue(KanbanList.cards[i]);
+                    AddToProductionQue(tenant, KanbanList.cards[i]);
                 }
             }
             return this.log;

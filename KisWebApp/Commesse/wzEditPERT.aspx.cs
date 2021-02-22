@@ -113,7 +113,7 @@ namespace KIS.Commesse
                 if (idProdotto != -1 && annoProdotto != -1)
                 {
                     checkIntegrity = false;
-                    Articolo art = new Articolo(idProdotto, annoProdotto);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                     if (art.ID != -1 && art.Year != -1)
                     {
                         if (art.Commessa == idCommessa && art.AnnoCommessa == annoCommessa && art.Proc.process.processID == idProc && art.Proc.process.revisione == revProc && art.Proc.variant.idVariante == idVariante)
@@ -124,7 +124,7 @@ namespace KIS.Commesse
                 }
 
 
-                        ProcessoVariante prcVar = new ProcessoVariante(prc, var);
+                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), prc, var);
                         prcVar.loadReparto();
                         prcVar.process.loadFigli(prcVar.variant);
                         if (prcVar != null && prcVar.process != null && prcVar.variant != null && checkIntegrity)

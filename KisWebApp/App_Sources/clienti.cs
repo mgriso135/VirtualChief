@@ -398,8 +398,9 @@ namespace KIS.App_Code
             }
         }
 
-        public Cliente(String cod)
+        public Cliente(String tenant, String cod)
         {
+            this.Tenant = tenant;
             this._listCommesse = new List<Commessa>();
             this._IntervalliDiLavoro = new List<IntervalliDiLavoroEffettivi>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);

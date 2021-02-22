@@ -17,7 +17,7 @@ namespace KIS
             {
                 Response.Redirect("~/AccountsMgm/Account/Login");
             }
-                KISConfig kCfg = new KISConfig(activeWorkspace_id);
+                KISConfig kCfg = new KISConfig(Session["ActiveWorkspace"].ToString(), activeWorkspace_id);
                 FullyConfigured =
                     kCfg.WizAdminUserCompleted &&
                     kCfg.WizAndonCompleted &&

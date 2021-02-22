@@ -95,7 +95,7 @@ namespace KIS.Areas.Quality.Controllers
                         // If the request is POST, get the values from the form
                         var name = Request.Form["name"];
                         var description = Request.Form["description"];
-                        KIS.App_Sources.NonComplianceCauses lstCauses = new NonComplianceCauses();
+                        KIS.App_Sources.NonComplianceCauses lstCauses = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
                         created = lstCauses.Add(Server.HtmlEncode(name), Server.HtmlEncode(description));
                         if (created)
                         {

@@ -46,7 +46,7 @@ namespace KIS.Reparti
 
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto();
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString());
             int rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
             if (rt != -1)
             {

@@ -40,9 +40,9 @@ namespace KIS.Areas.Analysis.Controllers
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti();
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti();
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
@@ -73,7 +73,7 @@ namespace KIS.Areas.Analysis.Controllers
             ViewBag.products = TypeOfProducts;
             if(startPeriod < endPeriod)
             { 
-                ProductionHistory History = new ProductionHistory();
+                ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
                 History.loadProductionHistory();
                 List<ProductionHistoryStruct> curr = History.HistoricData.Where(x=>x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
 
@@ -162,7 +162,7 @@ namespace KIS.Areas.Analysis.Controllers
             ViewBag.products = TypeOfProducts;
             if (startPeriod < endPeriod)
             {
-                ProductionHistory History = new ProductionHistory();
+                ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
                 History.loadProductionHistory();
                 List<ProductionHistoryStruct> curr = History.HistoricData.Where(x => x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
 
@@ -306,7 +306,7 @@ namespace KIS.Areas.Analysis.Controllers
 
             if (ckUser == true)
             {
-                Articolo art = new Articolo(ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
                 if(art!=null && art.ID!=-1)
                 { 
                     ret = art.Riesuma();

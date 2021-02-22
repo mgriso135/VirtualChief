@@ -30,7 +30,7 @@ namespace KIS
             
             if (checkUser == true)
             {
-                macroProcessi el = new macroProcessi();
+                macroProcessi el = new macroProcessi(Session["ActiveWorkspace"].ToString());
                 rptMacroProc.DataSource = el.Elenco;
                 rptMacroProc.DataBind();
             }

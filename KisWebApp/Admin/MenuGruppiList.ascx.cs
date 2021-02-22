@@ -21,7 +21,7 @@ namespace KIS.Admin
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             bool checkUser = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
                 User curr = (User)Session["user"];
                 checkUser = curr.ValidatePermessi(elencoPermessi);
@@ -33,7 +33,7 @@ namespace KIS.Admin
                 {
                     if (!Page.IsPostBack)
                     {
-                        Group grp = new Group(idGruppo);
+                        Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
                         grp.loadMenu();
                         rptVociGruppi.DataSource = grp.VociDiMenu;
                         rptVociGruppi.DataBind();

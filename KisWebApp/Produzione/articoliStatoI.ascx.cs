@@ -34,12 +34,12 @@ namespace KIS.Produzione
 
             if (checkUser == true)
             {*/
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(Session["ActiveWorkspace"].ToString());
             tzFuso = fuso.tzFusoOrario;
             if (!Page.IsPostBack && !Page.IsCallback)
             {
                 
-                    andonCfg = new AndonCompleto();
+                    andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
                     andonCfg.loadCampiVisualizzati();
                     andonCfg.loadCampiVisualizzatiTasks();
 
@@ -74,7 +74,7 @@ namespace KIS.Produzione
         {
             //ElencoArticoliInProduzione artAperti = new ElencoArticoliInProduzione();
             //artI = artAperti.ElencoArticoli;
-            ElencoCommesse elComm = new ElencoCommesse();
+            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
             elComm.loadCommesse();
             artI = new List<Articolo>();
             
@@ -101,7 +101,7 @@ namespace KIS.Produzione
 
             if (andonCfg == null || andonCfg.CampiVisualizzati == null)
             {
-                andonCfg = new AndonCompleto();
+                andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
                 andonCfg.loadCampiVisualizzati();
                 andonCfg.loadCampiVisualizzatiTasks();
             }
@@ -129,7 +129,7 @@ namespace KIS.Produzione
                 }
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                     if (art.ID != -1)
                     {
                         if (art.Status == 'N')
@@ -503,7 +503,7 @@ namespace KIS.Produzione
                                 lblTaskFields.Text += tsk.Description.ToString();
                                 break;
                             case "TaskPostazione":
-                                Postazione pst = new Postazione(tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                                 lblTaskFields.Text += pst.name.ToString();
                                 break;
                             case "TaskEarlyStart":

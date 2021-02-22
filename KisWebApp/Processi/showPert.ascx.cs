@@ -95,9 +95,9 @@ namespace KIS.Processi
                     }
                     else
                     {
-                        processo padre = new processo(procID);
+                        processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
 
-                        int controllo = padre.checkConsistencyPERT(new variante(varID));
+                        int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
 
                         if (controllo == 0)
                         {
@@ -116,7 +116,7 @@ namespace KIS.Processi
                         //svg1.Text += "</svg>";
 
                         // Dropdown collega task esistente
-                            ElencoTasks elTsk = new ElencoTasks();
+                            ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString());
                             List<processo> curr = new List<processo>();
                             for (int i = 0; i < elTsk.Elenco.Count; i++)
                             {
@@ -156,10 +156,10 @@ namespace KIS.Processi
                     procID = -1;
                 }
             }
-            processo padre = new processo(procID);
+            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
             if (padre.processID != -1 && varID != -1)
             {
-                int procCreated = padre.createDefaultSubProcess(new variante(varID));
+                int procCreated = padre.createDefaultSubProcess(new variante(Session["ActiveWorkspace"].ToString(), varID));
                 if (procCreated >= 0)
                 {
                     Response.Redirect(Request.RawUrl);
@@ -287,9 +287,9 @@ namespace KIS.Processi
         protected void timer1_Tick(object sender, EventArgs e)
         {
             lbl1.Text = "";
-            processo padre = new processo(procID);
+            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
 
-            int controllo = padre.checkConsistencyPERT(new variante(varID));
+            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
 
             if (controllo == 0)
             {
@@ -312,7 +312,7 @@ namespace KIS.Processi
 
             //lbl1.Text += "<br/>" + ddlTasks.SelectedItem.Value.ToString() + " " + ddlTasks.SelectedItem.Text.ToString();
             //processo pr = new processo(procVar.Task.processID);
-            processo pr = new processo(procID);
+            processo pr = new processo(Session["ActiveWorkspace"].ToString(), procID);
             int tskID = -1;
             try
             {
@@ -325,7 +325,7 @@ namespace KIS.Processi
 
             if (tskID != -1)
             {
-                bool rt = pr.linkProcessoVariante(new TaskVariante(new processo(tskID), new variante(varID)));
+                bool rt = pr.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), new variante(Session["ActiveWorkspace"].ToString(), varID)));
                 if (rt == true)
                 {
                     //Response.Redirect(Request.RawUrl);

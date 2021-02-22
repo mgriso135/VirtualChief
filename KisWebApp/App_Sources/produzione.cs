@@ -87,7 +87,7 @@ namespace KIS.App_Code
                         this._status = rdr.GetChar(4);
                         this._RepartoID = rdr.GetInt32(5);
                         this._dataIniziale = rdr.GetDateTime(6);
-                        Reparto rp = new Reparto(this.RepartoID);
+                        Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                         rp.loadTurni();
                     }
                     else
@@ -121,7 +121,7 @@ namespace KIS.App_Code
             {
                 TimeZoneInfo tz = null;
                 if (this.RepartoID != -1)
-                { Reparto rp = new Reparto(this.RepartoID);
+                { Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                     tz = rp.tzFusoOrario;
                 }
                 else
@@ -168,7 +168,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStart, rp.tzFusoOrario);
             }
@@ -176,7 +176,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
@@ -208,13 +208,13 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateStart, rp.tzFusoOrario);
             }
             set
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -243,7 +243,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinish, rp.tzFusoOrario);
             }
@@ -251,7 +251,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
@@ -281,13 +281,13 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinish, rp.tzFusoOrario);
             }
             set
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -316,7 +316,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._StartEffettivo, rp.tzFusoOrario);
             }
@@ -328,7 +328,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._FinishEffettivo, rp.tzFusoOrario);
             }
@@ -484,9 +484,9 @@ namespace KIS.App_Code
             }
         }
 
-        public TaskProduzione(String Tenant, int tskProdID)
+        public TaskProduzione(String tenant, int tskProdID)
         {
-            this.Tenant = Tenant;
+            this.Tenant = tenant;
             this.WorkInstructionActive = null;
             this.TaskOperatorNotes = null;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -871,7 +871,7 @@ namespace KIS.App_Code
                 }
 
                 bool controlloTasksAvviatiUtente = true;
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 if (rp.TasksAvviabiliContemporaneamenteDaOperatore == 0)
                 {
                     controlloTasksAvviatiUtente = true;
@@ -1025,7 +1025,7 @@ namespace KIS.App_Code
                 }
 
                 bool controlloTasksAvviatiUtente = true;
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 if (rp.TasksAvviabiliContemporaneamenteDaOperatore == 0)
                 {
                     controlloTasksAvviatiUtente = true;
@@ -1195,7 +1195,7 @@ namespace KIS.App_Code
                 rdr.Close();
                 try
                 {
-                    Reparto rp = new Reparto(this.RepartoID);
+                    Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                     cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
                             + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
                             + TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") + "', 'P', '')";
@@ -1337,7 +1337,7 @@ namespace KIS.App_Code
 
                             // Segnalo a kanbanbox che ho finito il mio mestiere!
                             KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
-                            Reparto rp = new Reparto(this.RepartoID);
+                            Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                             Cliente cust = new Cliente(art.Cliente);
                             if (rp.id != -1 && cust.CodiceCliente.Length > 0)
                             {
@@ -1548,7 +1548,7 @@ namespace KIS.App_Code
                     try
                     {
                         // Termino tutti gli utenti attivi
-                        Reparto rp = new Reparto(this.RepartoID);
+                        Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                         DateTime endDate = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario);
                         this.loadUtentiAttivi();
                         for (int i = 0; i < this.UtentiAttivi.Count; i++)
@@ -1711,7 +1711,7 @@ namespace KIS.App_Code
                 {
                     if (this.rp == null || rp.id == -1)
                     {
-                        this.rp = new Reparto(this.RepartoID);
+                        this.rp = new Reparto(this.Tenant, this.RepartoID);
                     }
                     log = "<br/><B>" + rp.id.ToString() + "</b> " + rp.ModoCalcoloTC.ToString() + "<br />";
                     if (rp.ModoCalcoloTC == false)
@@ -1869,7 +1869,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 log = "<br/><B>" + rp.id.ToString() + "</b> " + rp.ModoCalcoloTC.ToString() + "<br />";
                 if (rp.ModoCalcoloTC == false)
@@ -2017,7 +2017,7 @@ namespace KIS.App_Code
                 }
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 //return TimeZoneInfo.ConvertTimeFromUtc(min, rp.tzFusoOrario);
                 return min;
@@ -2030,7 +2030,7 @@ namespace KIS.App_Code
         {
             get
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._RealEndDate, rp.tzFusoOrario);
             }
         }
@@ -2063,7 +2063,7 @@ namespace KIS.App_Code
                     }
                     if (this.rp == null || rp.id == -1)
                     {
-                        this.rp = new Reparto(this.RepartoID);
+                        this.rp = new Reparto(this.Tenant, this.RepartoID);
                     }
                     //return TimeZoneInfo.ConvertTimeFromUtc(max, rp.tzFusoOrario);
                     return max;
@@ -2179,7 +2179,7 @@ namespace KIS.App_Code
             {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 log = "";
                 TimeSpan rit = new TimeSpan(0, 0, 0);
@@ -2353,7 +2353,7 @@ namespace KIS.App_Code
         {
             if (this.rp == null || rp.id == -1)
             {
-                this.rp = new Reparto(this.RepartoID);
+                this.rp = new Reparto(this.Tenant, this.RepartoID);
             }
             log = "";
             TimeSpan rit = new TimeSpan(0, 0, 0);
@@ -2559,7 +2559,7 @@ namespace KIS.App_Code
             if (this.Status == 'F' && min <= max)
             {
                 // Find earliest started task and latest finished task
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 rp.loadCalendario(min.AddDays(-30), max.AddDays(7));
                 for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
                 {
@@ -2604,7 +2604,7 @@ namespace KIS.App_Code
             if (this.Status == 'F')
             {
                 // Carica gli intervalli di lavoro NON tenendo conto degli intervalli produttivi
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 if (rp.ModoCalcoloTC == false)
                 {
                     log = "ENTRO IN LOADINTERVALLI<br />";
@@ -2815,7 +2815,7 @@ namespace KIS.App_Code
                 TimeSpan tc = new TimeSpan(0, 0, 0);
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 if (rp.ModoCalcoloTC == false)
                 {
@@ -3336,7 +3336,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0) && !rdr.IsDBNull(1))
                 {
-                    this.WorkInstructionActive = new App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1));
+                    this.WorkInstructionActive = new App_Sources.WorkInstructions.WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
                 }
 
                 rdr.Close();
@@ -3429,7 +3429,7 @@ namespace KIS.App_Code
             DateTime ret = new DateTime(1970, 1, 1);
             if (this.TaskProduzioneID != -1)
             {
-                Reparto rp = new Reparto(this.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                 if (rp != null && rp.id != -1 && TimeZoneInfo.ConvertTimeToUtc(start, rp.tzFusoOrario) > DateTime.UtcNow)
                 {
                     TimeSpan minsevendays = new TimeSpan(7, 0, 0, 0);
@@ -3759,7 +3759,7 @@ namespace KIS.App_Code
                 // Ricerco la disponibilità della postazione per il primo processo del percorso critico per capire quando far partire il prodotto
                 vr.process.calculateCriticalPath(vr.variant);
 
-                RepartoProcessoPostazione p1 = new RepartoProcessoPostazione(this.RepartoID, new TaskVariante(this.Tenant, vr.process.CriticalPath[0], vr.variant));
+                RepartoProcessoPostazione p1 = new RepartoProcessoPostazione(this.Tenant, this.RepartoID, new TaskVariante(this.Tenant, vr.process.CriticalPath[0], vr.variant));
                 Postazione pst = p1.Pst;
                 /*DateTime inizio = pst.trovaDisponibilita(new Reparto(RepartoID));
                 err += pst.err;
@@ -3869,7 +3869,7 @@ namespace KIS.App_Code
                 if (!rdr.IsDBNull(41))
                 { 
                     curr.DepartmentID = rdr.GetInt32(41);
-                    rp = new App_Code.Reparto(curr.DepartmentID);
+                    rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
                 }
                 else
                 {
@@ -4221,13 +4221,13 @@ namespace KIS.App_Code
             get {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyStartDate, rp.tzFusoOrario); }
             set {
                 if (this.rp == null || rp.id == -1)
                 {
-                    this.rp = new Reparto(this.RepartoID);
+                    this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 this._EarlyStartDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario); }
         }
@@ -4237,14 +4237,14 @@ namespace KIS.App_Code
             get {
                 if (this.rp == null || rp.id == -1)
                 {
-                    rp = new Reparto(this.RepartoID);
+                    rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateStartDate, rp.tzFusoOrario);
             }
             set {
                 if (this.rp == null || rp.id == -1)
                 {
-                    rp = new Reparto(this.RepartoID);
+                    rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 this._LateStartDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
             }
@@ -4255,14 +4255,14 @@ namespace KIS.App_Code
             get {
                 if (this.rp == null || rp.id == -1)
                 {
-                    rp = new Reparto(this.RepartoID);
+                    rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._EarlyFinishDate, rp.tzFusoOrario);
             }
             set {
                 if (this.rp == null || rp.id == -1)
                 {
-                    rp = new Reparto(this.RepartoID);
+                    rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 this._EarlyFinishDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
             }
@@ -4273,13 +4273,13 @@ namespace KIS.App_Code
             get {
                 if (this.rp == null || rp.id == -1)
                 {
-                    rp = new Reparto(this.RepartoID);
+                    rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._LateFinishDate, rp.tzFusoOrario); }
             set {
                 if (this.rp == null || rp.id == -1)
                 {
-                    rp = new Reparto(this.RepartoID);
+                    rp = new Reparto(this.Tenant, this.RepartoID);
                 }
                 this._LateFinishDate = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
             }
@@ -4301,7 +4301,7 @@ namespace KIS.App_Code
             this.PrecedentiPausa = new List<TimeSpan>();
             this.SuccessiviPausa = new List<TimeSpan>();
             tsk.loadTempiCiclo();
-            Reparto rp = new Reparto(repID);
+            Reparto rp = new Reparto(this.Tenant, repID);
             if (tc.IdProcesso == tsk.Task.processID && tc.RevisioneProcesso == tsk.Task.revisione && tsk.variant.idVariante == tc.Variante && rp.id != -1)
             {
                 this._RepartoID = repID;
@@ -4675,7 +4675,7 @@ namespace KIS.App_Code
             if (art.ID != -1 && TimeZoneInfo.ConvertTimeToUtc(art.DataPrevistaFineProduzione, this.RepartoProduttivo.tzFusoOrario) > DateTime.UtcNow)
             {
                 // Per prima cosa, verifico quale è la data di consegna, ed il primo turno utile in cui inserire il task
-                Reparto rp = new Reparto(art.Reparto);
+                Reparto rp = new Reparto(this.Tenant, art.Reparto);
                 rp.loadCalendario(DateTime.UtcNow, TimeZoneInfo.ConvertTimeToUtc(art.DataPrevistaConsegna, this.RepartoProduttivo.tzFusoOrario).AddDays(7));
                 // Ricerco l'ultimo turno papabile
                 TimeSpan tempoADisposizione = new TimeSpan(0, 0, 0);
@@ -5330,7 +5330,7 @@ namespace KIS.App_Code
                 if(rp==null || rp.id==-1)
                 {
                     TaskProduzione tskProd = new TaskProduzione(this.Tenant, this.TaskProduzioneID);
-                    rp = new Reparto(tskProd.RepartoID);
+                    rp = new Reparto(this.Tenant, tskProd.RepartoID);
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Data, rp.tzFusoOrario); }
         }
@@ -5406,7 +5406,7 @@ namespace KIS.App_Code
         {
             get {
                 TaskProduzione tsk = new TaskProduzione(this.Tenant, this.TaskID);
-                Reparto rp = new Reparto(tsk.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, tsk.RepartoID);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._DataChiamata, rp.tzFusoOrario); }
         }
 
@@ -5427,13 +5427,13 @@ namespace KIS.App_Code
         {
             get {
                 TaskProduzione tsk = new TaskProduzione(this.Tenant, this.TaskID);
-                Reparto rp = new Reparto(tsk.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, tsk.RepartoID);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._DataRisoluzione, rp.tzFusoOrario);
             }
             set
             {
                 TaskProduzione tsk = new TaskProduzione(this.Tenant, this.TaskID);
-                Reparto rp = new Reparto(tsk.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, tsk.RepartoID);
                 this._DataRisoluzione = DateTime.UtcNow;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
@@ -5581,7 +5581,7 @@ namespace KIS.App_Code
             get
             {
                 TaskProduzione tsk = new TaskProduzione(this.Tenant, this.TaskID);
-                Reparto rp = new Reparto(tsk.RepartoID);
+                Reparto rp = new Reparto(this.Tenant, tsk.RepartoID);
                 return rp.name;
             }
         }
@@ -5749,7 +5749,7 @@ namespace KIS.App_Code
             {
                 //FusoOrario fuso = new FusoOrario();
                 //return TimeZoneInfo.ConvertTimeFromUtc(this.Inizio, fuso.tzFusoOrario);
-                Reparto rp = new Reparto(this.idReparto);
+                Reparto rp = new Reparto(this.Tenant, this.idReparto);
                 return TimeZoneInfo.ConvertTimeFromUtc(this.Inizio, rp.tzFusoOrario);
             }
         }
@@ -5759,7 +5759,7 @@ namespace KIS.App_Code
             {
                 //FusoOrario fuso = new FusoOrario();
                 //return TimeZoneInfo.ConvertTimeFromUtc(this.Fine, fuso.tzFusoOrario);
-                Reparto rp = new Reparto(this.idReparto);
+                Reparto rp = new Reparto(this.Tenant, this.idReparto);
                 return TimeZoneInfo.ConvertTimeFromUtc(this.Fine, rp.tzFusoOrario);
             }
         }

@@ -32,10 +32,10 @@ namespace KIS.Processi
                 {
                     if (!Page.IsPostBack)
                     {
-                        ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVar));
+                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
                         prcVar.loadReparto();
                         prcVar.process.loadFigli(prcVar.variant);
-                        ElencoReparti elRep = new ElencoReparti();
+                        ElencoReparti elRep = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                         rptReparti.DataSource = elRep.elenco;
                         rptReparti.DataBind();
                     }
@@ -66,8 +66,8 @@ namespace KIS.Processi
                 }
                 if (repID != -1)
                 {
-                    Reparto rp = new Reparto(repID);
-                    ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVar));
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
                     prcVar.loadReparto();
                     prcVar.process.loadFigli(prcVar.variant);
                     lnkPostazioni.NavigateUrl += prcVar.process.processID.ToString() + "&variante=" + prcVar.variant.idVariante.ToString() + "&repID=" + rp.id.ToString();
@@ -132,10 +132,10 @@ namespace KIS.Processi
 
             if (repID != -1)
             {
-                Reparto rp = new Reparto(repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                 if (rp.id != -1)
                 {
-                    ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVar));
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
                     prcVar.loadReparto();
                     prcVar.process.loadFigli(prcVar.variant);
                     bool rt;

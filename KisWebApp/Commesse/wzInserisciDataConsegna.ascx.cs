@@ -35,11 +35,11 @@ namespace KIS.Commesse
 
             if (checkUser == true)
             {
-                Commessa cm = new Commessa(idCommessa, annoCommessa);
-                ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVariante));
+                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
                 prcVar.loadReparto();
                 prcVar.process.loadFigli(prcVar.variant);
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 if (cm.ID != -1 && prcVar.process != null && prcVar.variant != null && rp.id != -1)
                 {
                     tbl.Visible = true;
@@ -59,7 +59,7 @@ namespace KIS.Commesse
                     {
                         if (idProdotto != -1 && annoProdotto != -1)
                         {
-                            Articolo art = new Articolo(idProdotto, annoProdotto);
+                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                             if (art.ID != -1 && art.Year != -1 && art.DataPrevistaConsegna >= DateTime.Now)
                             {
                                 calDate.SelectedDate = art.DataPrevistaConsegna;
@@ -78,9 +78,9 @@ namespace KIS.Commesse
 
         protected void btnGoFwd_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto(idReparto);
-            Commessa cm = new Commessa(idCommessa, annoCommessa);
-            ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, revProc), new variante(idVariante));
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+            Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
             prcVar.loadReparto();
             prcVar.process.loadFigli(prcVar.variant);
             if (idProdotto == -1 && annoProdotto == -1)
@@ -92,7 +92,7 @@ namespace KIS.Commesse
                         int[] newArt = cm.AddArticoloInt(prcVar, calDate.SelectedDate, quantita);
                         if (newArt[0] != -1 && newArt[1] != -1)
                         {
-                            Articolo art = new Articolo(newArt[0], newArt[1]);
+                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), newArt[0], newArt[1]);
                             art.Reparto = rp.id;
                             if(!String.IsNullOrEmpty(matricola) && matricola.Length>0)
                             { 
@@ -123,7 +123,7 @@ namespace KIS.Commesse
             }
             else
             {
-                Articolo art = new Articolo(idProdotto, annoProdotto);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     if (art.ID != -1 && art.Year != -1)

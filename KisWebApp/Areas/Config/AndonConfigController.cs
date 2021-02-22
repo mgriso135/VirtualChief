@@ -56,7 +56,7 @@ namespace KIS.Areas.Config
 
             if (ViewBag.authW == true)
             {
-                AndonCompleto andonCfg = new AndonCompleto();
+                AndonCompleto andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
                 andonCfg.loadScrollType();
                 ViewBag.ScrollType = andonCfg.ScrollType;
                 ViewBag.ContinuousScrollGoSpeed = andonCfg.ContinuousScrollGoSpeed;
@@ -99,7 +99,7 @@ namespace KIS.Areas.Config
 
             if (ViewBag.authW == true)
             {
-                AndonCompleto andonCfg = new AndonCompleto();
+                AndonCompleto andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
                 ret = andonCfg.setScrollType(ScrollType, ScrollParams);
             }
             return ret;
@@ -136,7 +136,7 @@ namespace KIS.Areas.Config
             if (ViewBag.authW == true)
             {
                 ViewBag.DepartmentID = DepartmentID;
-                AndonReparto andonCfg = new AndonReparto(DepartmentID);
+                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 andonCfg.loadScrollType();
                 ViewBag.ScrollType = andonCfg.ScrollType;
                 ViewBag.ContinuousScrollGoSpeed = andonCfg.ContinuousScrollGoSpeed;
@@ -179,7 +179,7 @@ namespace KIS.Areas.Config
 
             if (ViewBag.authW == true)
             {
-                AndonReparto andonCfg = new AndonReparto(DepartmentID);
+                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 ret = andonCfg.setScrollType(ScrollType, ScrollParams);
             }
             return ret;

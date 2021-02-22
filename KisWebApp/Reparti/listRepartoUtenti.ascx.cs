@@ -32,13 +32,13 @@ namespace KIS.Reparti
                     frmAddOperator.Visible = false;
                     if (idReparto != -1)
                     {
-                        Reparto rp = new Reparto(idReparto);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                         if (rp.id != -1)
                         {
                             rp.loadOperatori();
                             rptRepUsers.DataSource = rp.Operatori.Elenco;
                             rptRepUsers.DataBind();
-                            UserList elUsr = new UserList();
+                            UserList elUsr = new UserList(Session["ActiveWorkspace"].ToString());
                             ddlUser.DataSource = elUsr.elencoUtenti;
                             ddlUser.DataTextField = "FullName";
                             ddlUser.DataValueField = "username";
@@ -82,7 +82,7 @@ namespace KIS.Reparti
 
         protected void imgAddUser_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto(idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
             //lbl1.Text = rp.id + " " + ddlUser.SelectedItem.Value;
             rp.loadOperatori();
             bool rt = rp.Operatori.Add(new User(ddlUser.SelectedItem.Value));
@@ -100,7 +100,7 @@ namespace KIS.Reparti
         {
             if (e.CommandName == "deleteOP")
             {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     rp.loadOperatori();

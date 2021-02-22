@@ -27,14 +27,14 @@ namespace KIS.Reparti
 
             if (checkUser == true)
             {
-                Turno turno = new Turno(idTurno);
+                Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
                 if (turno.id != -1)
                 {
                     rowTitolo.Visible = true;
                     lblTitolo.Text = turno.Nome;
                     if (!Page.IsPostBack)
                     {
-                        ElencoPostazioni elPostazioni = new ElencoPostazioni();
+                        ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
                         List<Postazione> elPostazioniSorted = elPostazioni.elenco.OrderBy(x => x.name).ToList();
                         rptPostazioni.DataSource = elPostazioniSorted;
                         rptPostazioni.DataBind();
@@ -65,13 +65,13 @@ namespace KIS.Reparti
             {
                 if (idPostazione != -1)
                 {
-                    Postazione pst = new Postazione(idPostazione);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazione);
                     if (pst.id != -1)
                     {
-                        Turno turno = new Turno(idTurno);
+                        Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
                         if (turno.id != -1)
                         {
-                            RisorsePostazioneTurno res = new RisorsePostazioneTurno(pst, turno);
+                            RisorsePostazioneTurno res = new RisorsePostazioneTurno(Session["ActiveWorkspace"].ToString(), pst, turno);
                             res.NumRisorse = numRes;
                             lbl1.Text =GetLocalResourceObject("lblSetOk1").ToString()
                                 +  " (" + res.NumRisorse.ToString()
@@ -120,14 +120,14 @@ namespace KIS.Reparti
                     }
                     if (idPostazione != -1)
                     {
-                        Postazione pst = new Postazione(idPostazione);
+                        Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazione);
                         if (pst!=null && pst.id != -1)
                         {
                             for (int i = 0; i <= 1000; i++)
                             {
                                 ddlRisorse.Items.Add(new ListItem(i.ToString(), i.ToString()));
                             }
-                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(pst, new Turno(idTurno));
+                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(Session["ActiveWorkspace"].ToString(), pst, new Turno(Session["ActiveWorkspace"].ToString(), idTurno));
                             if (resPost != null && resPost.postazione != null && resPost.postazione.id != -1 && resPost.turno != null && resPost.turno.id != -1)
                             {
                                 ddlRisorse.SelectedValue = resPost.NumRisorse.ToString();

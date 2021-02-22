@@ -44,7 +44,7 @@ namespace KIS.Configuration
                         ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
                         ddlTimezones.DataTextField = "DisplayName";
                         ddlTimezones.DataValueField = "Id";
-                        FusoOrario fo = new FusoOrario();
+                        FusoOrario fo = new FusoOrario(Session["ActiveWorkspace"].ToString());
                         //ddlTimezones.SelectedValue = fo.tzFusoOrario.Id;
                         ddlTimezones.DataBind();
                     }

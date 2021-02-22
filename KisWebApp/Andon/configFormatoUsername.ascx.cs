@@ -29,7 +29,7 @@ namespace KIS.Andon
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    AndonCompleto andone = new AndonCompleto();
+                    AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace"].ToString());
                     rbList.SelectedValue = andone.PostazioniFormatoUsername.ToString();
                 }
             }
@@ -42,7 +42,7 @@ namespace KIS.Andon
 
         protected void rbList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AndonCompleto andone = new AndonCompleto();
+            AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace"].ToString());
             lbl1.Text = "";
             char valore = rbList.SelectedValue[0];
             andone.PostazioniFormatoUsername = valore;
