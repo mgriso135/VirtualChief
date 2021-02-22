@@ -29,7 +29,7 @@ namespace KIS.Admin
             {
                 if (!Page.IsPostBack)
                 {
-                    MainMenu lst = new MainMenu();
+                    MainMenu lst = new MainMenu(Session["ActiveWorkspace"].ToString());
                     rptMainVoci.DataSource = lst.Elenco;
                     rptMainVoci.DataBind();
                 }
@@ -91,7 +91,7 @@ namespace KIS.Admin
             {
                 if (e.CommandName == "delete")
                 {
-                    VoceMenu vm = new VoceMenu(vID);
+                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
                     bool rt = vm.Delete();
                     
                     if (rt == true)
@@ -132,7 +132,7 @@ namespace KIS.Admin
                 }
                 else if (e.CommandName == "save")
                 {
-                    VoceMenu vm = new VoceMenu(vID);
+                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
                     vm.Titolo = Server.HtmlEncode(txtTitolo.Text);
                     vm.Descrizione = Server.HtmlEncode(txtDesc.Text);
                     vm.URL = txtURL.Text;
@@ -140,7 +140,7 @@ namespace KIS.Admin
                 }
                 else if (e.CommandName == "undo")
                 {
-                    VoceMenu vm = new VoceMenu(vID);
+                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
                     txtTitolo.Text = vm.Titolo;
                     txtDesc.Text = vm.Descrizione;
                     txtURL.Text = vm.URL;

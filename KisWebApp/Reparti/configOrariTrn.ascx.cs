@@ -34,7 +34,7 @@ namespace KIS.Reparti
                         txtNomeTurno.Visible = false;
                         saveNomeTurno.Visible = false;
                         undoNomeTurno.Visible = false;
-                        Turno tr = new Turno(idTurno);
+                        Turno tr = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
                         txtNomeTurno.Text = tr.Nome;
                         nomeTurno.Text = tr.Nome;
                         formAddOrario.Visible = false;
@@ -116,7 +116,7 @@ namespace KIS.Reparti
 
         protected void saveNomeTurno_Click(object sender, ImageClickEventArgs e)
         {
-            Turno t = new Turno(idTurno);
+            Turno t = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
             if (t.id != -1)
             {
                 t.Nome = txtNomeTurno.Text;
@@ -132,7 +132,7 @@ namespace KIS.Reparti
 
         protected void undoNomeTurno_Click(object sender, ImageClickEventArgs e)
         {
-            Turno t = new Turno(idTurno);
+            Turno t = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
             txtNomeTurno.Text = t.Nome;
             txtNomeTurno.Visible = false;
             saveNomeTurno.Visible = false;
@@ -156,7 +156,7 @@ namespace KIS.Reparti
 
         protected void saveOrario_Click(object sender, ImageClickEventArgs e)
         {
-            Turno t = new Turno(idTurno);
+            Turno t = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
             bool ok = false;
             DayOfWeek dayInizio, dayFine;
             dayInizio = new DayOfWeek();
@@ -194,7 +194,7 @@ namespace KIS.Reparti
         protected void rptOrari_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             lbl1.Text = e.CommandArgument.ToString();
-            IntervalloLavorativoTurno interv = new IntervalloLavorativoTurno(Int32.Parse(e.CommandArgument.ToString()));
+            IntervalloLavorativoTurno interv = new IntervalloLavorativoTurno(Session["ActiveWorkspace"].ToString(), Int32.Parse(e.CommandArgument.ToString()));
             bool rt = interv.Delete();
             if (rt == true)
             {

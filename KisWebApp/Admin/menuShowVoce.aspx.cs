@@ -27,7 +27,7 @@ namespace KIS.Admin
                 if (id != -1)
                 {
                     frmShowFigli.id = id;
-                    VoceMenu mnv = new VoceMenu(id);
+                    VoceMenu mnv = new VoceMenu(Session["ActiveWorkspace"].ToString(), id);
                     lblDescrizione.Text = mnv.Descrizione;
                     lblTitolo.Text = mnv.Titolo;
                     lblURL.Text = mnv.URL;

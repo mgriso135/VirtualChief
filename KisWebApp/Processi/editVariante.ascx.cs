@@ -30,16 +30,16 @@ namespace KIS.Processi
                 {
                     if (!Page.IsPostBack)
                     {
-                        variante var = new variante(varianteID);
+                        variante var = new variante(Session["ActiveWorkspace"].ToString(), varianteID);
                         nomeVar.Text = var.nomeVariante;
                         descVar.Text = var.descrizioneVariante;
-                        MeasurementUnits muList = new MeasurementUnits();
+                        MeasurementUnits muList = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
                         muList.loadMeasurementUnits();
                         ddlMeasurementUnits.DataSource = muList.UnitsList;
                         ddlMeasurementUnits.DataValueField = "ID";
                         ddlMeasurementUnits.DataTextField = "Type";
 
-                        ProcessoVariante prcVar = new ProcessoVariante(new processo(processID), var);
+                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID), var);
                         if (prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1 &&
                             prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                         {
@@ -63,12 +63,12 @@ namespace KIS.Processi
 
             if (varianteID != -1)
             {
-                variante var = new variante(varianteID);
+                variante var = new variante(Session["ActiveWorkspace"].ToString(), varianteID);
                 if (var.idVariante != -1)
                 {
                     var.nomeVariante = Server.HtmlEncode(nomeVar.Text);
                     var.descrizioneVariante = Server.HtmlEncode(descVar.Text);
-                    ProcessoVariante prcVar = new ProcessoVariante(new processo(processID), var);
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID), var);
                     if (prcVar != null && prcVar.process != null && prcVar.process.processID != -1 &&
                         prcVar.variant != null && prcVar.variant.idVariante != -1)
                     {

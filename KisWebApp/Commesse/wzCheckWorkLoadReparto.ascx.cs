@@ -64,7 +64,7 @@ namespace KIS.Commesse
                 if (!Page.IsPostBack)
                 {
                     articoliNuovi = new List<Articolo>();
-                    art = new Articolo(idProdotto, annoProdotto);
+                    art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                     
                     articoliNuovi.Add(art);
 
@@ -352,7 +352,7 @@ namespace KIS.Commesse
                         bool check = true;
                         for (int j = 0; j < prcVar.process.subProcessi.Count; j++)
                         {
-                            TaskVariante tskVar = new TaskVariante(prcVar.process.subProcessi[j], prcVar.variant);
+                            TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), prcVar.process.subProcessi[j], prcVar.variant);
                             TempoCiclo tc = null;
                             tskVar.loadTempiCiclo();
                             for (int k = 0; k < tskVar.Tempi.Tempi.Count; k++)
@@ -365,7 +365,7 @@ namespace KIS.Commesse
 
                             if (tc != null)
                             {
-                                tskLst.Add(new TaskConfigurato(tskVar, tc, articoliNuovi[i].Reparto, articoliNuovi[i].Quantita));
+                                tskLst.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, articoliNuovi[i].Reparto, articoliNuovi[i].Quantita));
                             }
                             else
                             {
@@ -375,7 +375,7 @@ namespace KIS.Commesse
                         if (check == true)
                         {
 
-                            ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(articoliNuovi[i], tskLst, new Reparto(articoliNuovi[i].Reparto), articoliNuovi[i].Quantita);
+                            ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), articoliNuovi[i], tskLst, new Reparto(Session["ActiveWorkspace"].ToString(), articoliNuovi[i].Reparto), articoliNuovi[i].Quantita);
                             int retSim = cfgPrc.SimulaIntroduzioneInProduzione();
                             processiConf.Add(cfgPrc);
                             cont = 0;
@@ -549,7 +549,7 @@ namespace KIS.Commesse
                     if (found == false)
                     {
                         caricoDiLavoro nullo = new caricoDiLavoro();
-                        nullo.postazione = new Postazione(idPostazioni[i]);
+                        nullo.postazione = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[i]);
                         nullo.articolo = -1;
                         nullo.articoloAnno = -1;
                         nullo.carico = new TimeSpan(0, 0, 1);
@@ -558,7 +558,7 @@ namespace KIS.Commesse
                     }
 
                     // Ricerco turni di lavoro e verifico la capacità produttiva.
-                    Postazione p = new Postazione(idPostazioni[i]);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[i]);
 
                     p.loadCalendario(inizio, fine);
 
@@ -566,8 +566,8 @@ namespace KIS.Commesse
                     {
                         if (p.Calendario.Intervalli[b].idReparto == idReparto && (p.Calendario.Intervalli[b].Status == 'L' || p.Calendario.Intervalli[b].Status == 'S'))
                         {
-                            Turno turno = new Turno(p.Calendario.Intervalli[b].idTurno);
-                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(p, turno);
+                            Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), p.Calendario.Intervalli[b].idTurno);
+                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(Session["ActiveWorkspace"].ToString(), p, turno);
 
                             lblErr.Text += p.name + " " + resPost.NumRisorse.ToString() + " " + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                             lbl1.Text += p.name + " " + resPost.NumRisorse.ToString() + " " + p.Calendario.Intervalli[b].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - " + p.Calendario.Intervalli[b].Fine.ToString("dd/MM/yyyy HH:mm:ss");
@@ -650,7 +650,7 @@ namespace KIS.Commesse
                         }
                         else
                         {
-                            Articolo art = new Articolo(cd.articolo, cd.articoloAnno);
+                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), cd.articolo, cd.articoloAnno);
                             Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = art.ID.ToString() + "/" +
                                 art.Year.ToString() + " - " + art.Cliente + " - " +
                                 art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
@@ -874,7 +874,7 @@ namespace KIS.Commesse
                 prcVar.process.loadFigli(art.Proc.variant);
                 for (int j = 0; j < prcVar.process.subProcessi.Count; j++)
                 {
-                    TaskVariante tskVar = new TaskVariante(prcVar.process.subProcessi[j], prcVar.variant);
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), prcVar.process.subProcessi[j], prcVar.variant);
                     TempoCiclo tc = null;
                     tskVar.loadTempiCiclo();
                     for (int k = 0; k < tskVar.Tempi.Tempi.Count; k++)
@@ -887,7 +887,7 @@ namespace KIS.Commesse
 
                     if (tc != null)
                     {
-                        tskLst.Add(new TaskConfigurato(tskVar, tc, idReparto, art.Quantita));
+                        tskLst.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, idReparto, art.Quantita));
                     }
                     else
                     {

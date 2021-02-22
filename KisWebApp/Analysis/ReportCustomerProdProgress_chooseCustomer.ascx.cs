@@ -31,7 +31,7 @@ namespace KIS.Analysis
                 {
                     lnkGoFwd.Visible = false;
                     imgGoFwd.Visible = false;
-                    PortafoglioClienti pClienti = new PortafoglioClienti();
+                    PortafoglioClienti pClienti = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                     var clientiSorted = pClienti.Elenco.OrderBy(x => x.RagioneSociale);
                     rblClienti.DataSource = clientiSorted;
                     rblClienti.DataValueField = "CodiceCliente";

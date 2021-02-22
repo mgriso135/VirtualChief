@@ -28,7 +28,7 @@ namespace KIS.Reparti
             {
                 if (idReparto != -1)
                 {
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if (rp.id != -1)
                     {
                         if (!Page.IsPostBack && !Page.IsCallback)
@@ -74,7 +74,7 @@ namespace KIS.Reparti
                 {
                     val = false;
                 }
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     rp.ModoCalcoloTC = val;

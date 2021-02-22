@@ -29,7 +29,7 @@ namespace KIS.Postazioni
             {
                 if (pstID != -1)
                 {
-                    Postazione pst = new Postazione(pstID);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                     if (pst.id != -1)
                     {
                         if (!Page.IsPostBack)
@@ -72,7 +72,7 @@ namespace KIS.Postazioni
         {
             if (pstID != -1)
             {
-                Postazione pst = new Postazione(pstID);
+                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                 if (pst.id != -1)
                 {
                     pst.name = Server.HtmlEncode(postName.Text);
@@ -95,7 +95,7 @@ namespace KIS.Postazioni
         {
             if (pstID != -1)
             {
-                Postazione pst = new Postazione(pstID);
+                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                 if (pst.id != -1)
                 {
                     postName.Text = pst.name;

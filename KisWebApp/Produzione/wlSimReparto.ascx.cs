@@ -50,7 +50,7 @@ namespace KIS.Produzione
                     chkLstPostazioni.Visible = false;
                     inizio = DateTime.Now;
                     fine = inizio;
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     rp.loadPostazioni();
                     idPostazioni = new List<int>();
                     for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -61,7 +61,7 @@ namespace KIS.Produzione
 
                     // Carico gli articoli
                     List<Articolo> elencoStatoN = new List<Articolo>();
-                    ElencoCommesse elComm = new ElencoCommesse();
+                    ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
                     elComm.loadCommesse();
                     for (int i = 0; i < elComm.Commesse.Count; i++)
                     {
@@ -134,7 +134,7 @@ namespace KIS.Produzione
             if (res == 0)
             {
                 chkLstPostazioni.Visible = false;
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -151,7 +151,7 @@ namespace KIS.Produzione
             {
                 chkLstPostazioni.Visible = true;
                 chkLstPostazioni.Items.Clear();
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -206,7 +206,7 @@ namespace KIS.Produzione
             if (idReparto != -1 && inizio < fine)
             {
                 Chart1.Visible = true;
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 Chart1.Titles.Clear();
                 Chart1.Titles.Add(new System.Web.UI.DataVisualization.Charting.Title(rp.name));
                 
@@ -253,7 +253,7 @@ namespace KIS.Produzione
                         bool check = true;
                         for (int j = 0; j < prcVar.process.subProcessi.Count; j++)
                         {
-                            TaskVariante tskVar = new TaskVariante(prcVar.process.subProcessi[j], prcVar.variant);
+                            TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), prcVar.process.subProcessi[j], prcVar.variant);
                             TempoCiclo tc = null;
                             tskVar.loadTempiCiclo();
                             for (int k = 0; k < tskVar.Tempi.Tempi.Count; k++)
@@ -266,7 +266,7 @@ namespace KIS.Produzione
                             
                             if (tc != null)
                             {
-                                tskLst.Add(new TaskConfigurato(tskVar, tc, articoliNuovi[i].Reparto, articoliNuovi[i].Quantita));
+                                tskLst.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, articoliNuovi[i].Reparto, articoliNuovi[i].Quantita));
                             }
                             else
                             {
@@ -276,7 +276,8 @@ namespace KIS.Produzione
                         if (check == true)
                         {
                             
-                            ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(articoliNuovi[i], tskLst, new Reparto(articoliNuovi[i].Reparto), articoliNuovi[i].Quantita);
+                            ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), articoliNuovi[i], tskLst, 
+                                new Reparto(Session["ActiveWorkspace"].ToString(), articoliNuovi[i].Reparto), articoliNuovi[i].Quantita);
                             int retSim = cfgPrc.SimulaIntroduzioneInProduzione();
                             processiConf.Add(cfgPrc);
                             cont = 0;
@@ -461,7 +462,7 @@ namespace KIS.Produzione
                         }
                         else
                         {
-                            Articolo art = new Articolo(cd.articolo, cd.articoloAnno);
+                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), cd.articolo, cd.articoloAnno);
                             Chart1.Series[cd.articolo.ToString()].Points[ind].ToolTip = art.ID.ToString() + "/" +
                                 art.Year.ToString() + " - " + art.Cliente + " - " +
                                 art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
@@ -503,7 +504,7 @@ namespace KIS.Produzione
                         if (found == false)
                         {
                             caricoDiLavoro nullo = new caricoDiLavoro();
-                            nullo.postazione = new Postazione(idPostazioni[i]);
+                            nullo.postazione = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[i]);
                             nullo.articolo = -1;
                             nullo.articoloAnno = -1;
                             nullo.carico = new TimeSpan(0, 0, 1);
@@ -512,7 +513,7 @@ namespace KIS.Produzione
                         }
 
                         // Ricerco turni di lavoro e verifico la capacità produttiva.
-                        Postazione p = new Postazione(idPostazioni[i]);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[i]);
                         
                         p.loadCalendario(inizio, fine);
 
@@ -520,8 +521,8 @@ namespace KIS.Produzione
                         {
                             if (p.Calendario.Intervalli[b].idReparto == idReparto && (p.Calendario.Intervalli[b].Status == 'L' || p.Calendario.Intervalli[b].Status == 'S'))
                             {
-                                Turno turno = new Turno(p.Calendario.Intervalli[b].idTurno);
-                                RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(p, turno);
+                                Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), p.Calendario.Intervalli[b].idTurno);
+                                RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(Session["ActiveWorkspace"].ToString(), p, turno);
 
                                 TimeSpan intervallo = new TimeSpan(0, 0, 0);
                                 if (p.Calendario.Intervalli[b].Fine < inizio)
@@ -565,7 +566,7 @@ namespace KIS.Produzione
                             if (found == false)
                             {
                                 caricoDiLavoro nullo = new caricoDiLavoro();
-                                nullo.postazione = new Postazione(idPostazioni[i]);
+                                nullo.postazione = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[i]);
                                 nullo.articolo = articoliNuovi[z].ID;
                                 nullo.articoloAnno = articoliNuovi[z].Year;
                                 nullo.carico = new TimeSpan(0, 0, 0);
@@ -602,7 +603,7 @@ namespace KIS.Produzione
                         List<Double> sommaOre = new List<double>();
                         //double sumH = 0;
 
-                        Postazione p = new Postazione(idPostazioni[q]);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[q]);
 
                         var arts = carico2.GroupBy(i => i.articolo)
                             .Select(g => new {
@@ -644,7 +645,7 @@ namespace KIS.Produzione
                                     }
                                     else
                                     {
-                                        Articolo art = new Articolo(cd.articolo, cd.articoloAnno);
+                                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), cd.articolo, cd.articoloAnno);
                                         Chart1.Series[cd.articolo.ToString()].Points[indice].ToolTip = art.ID.ToString() + "/" +
                                             art.Year.ToString() + " - " + art.Cliente + " - " +
                                             art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante +
@@ -739,7 +740,7 @@ namespace KIS.Produzione
                     yy = -1;
                     finePrd = new DateTime(1970, 1, 1);
                 }
-                Articolo art = new Articolo(prdID, prdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), prdID, prdYear);
                 if (finePrd >= DateTime.Now && finePrd <=art.DataPrevistaConsegna)
                 {
                     dvErr.Visible = false;
@@ -784,7 +785,7 @@ namespace KIS.Produzione
                 }
                 if (prdID != -1 && prdYear != -1)
                 {
-                    Articolo art = new Articolo(prdID, prdYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), prdID, prdYear);
                     for (int i = 0; i < 24; i++)
                     {
                         ddlOre.Items.Add(new ListItem(i.ToString(), i.ToString()));
@@ -846,7 +847,7 @@ namespace KIS.Produzione
                 {
                     articoliNuovi = new List<Articolo>();
                 }
-                Articolo art = new Articolo(artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 if (ck.Checked == true)
                 {
                     art.Reparto = idReparto;

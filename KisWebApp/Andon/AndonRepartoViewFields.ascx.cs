@@ -31,7 +31,7 @@ namespace KIS.Andon
             {
                 if (!Page.IsPostBack)
                 {
-                    AndonReparto andonCfg = new AndonReparto(idReparto);
+                    AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     andonCfg.loadCampiVisualizzati();
                     rptFields.DataSource = andonCfg.CampiVisualizzati;
                     rptFields.DataBind();
@@ -59,7 +59,7 @@ namespace KIS.Andon
                 HtmlTableRow tr = (HtmlTableRow)e.Item.FindControl("tr1");
                 if (tr != null)
                 {
-                    AndonReparto andonCfg = new AndonReparto(idReparto);
+                    AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     andonCfg.loadCampiVisualizzati();
                     ImageButton imgUp = (ImageButton)e.Item.FindControl("imgUp");
                     ImageButton imgDown = (ImageButton)e.Item.FindControl("imgDown");
@@ -86,7 +86,7 @@ namespace KIS.Andon
             ImageButton imgDown = (ImageButton)e.Item.FindControl("imgDown");
             ImageButton imgDelete = (ImageButton)e.Item.FindControl("imgDelete");
             String hKey = e.CommandArgument.ToString();
-            AndonReparto andonCfg = new AndonReparto(idReparto);
+            AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (hKey.Length > 0 && imgUp != null && imgDown != null && imgDelete != null)
             {
                 if (e.CommandName == "Delete")
@@ -158,7 +158,7 @@ namespace KIS.Andon
                 if (tr != null && hID != null)
                 {
                     String chiave = hID.Value.ToString();
-                    AndonReparto cfg = new AndonReparto(idReparto);
+                    AndonReparto cfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     cfg.loadCampiVisualizzati();
                     //var trova = cfg.CampiVisualizzati.FirstOrDefault(x => x.Key == chiave);
                     if (cfg.CampiVisualizzati.ContainsKey(chiave))
@@ -173,7 +173,7 @@ namespace KIS.Andon
         {
             ImageButton imgAdd = (ImageButton)e.Item.FindControl("imgAdd");
             String hKey = e.CommandArgument.ToString();
-            AndonReparto andonCfg = new AndonReparto(idReparto);
+            AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (hKey.Length > 0 && imgAdd != null)
             {
                 if (e.CommandName == "Add")
@@ -202,7 +202,7 @@ namespace KIS.Andon
             ImageButton imgDown = (ImageButton)e.Item.FindControl("imgTaskDown");
             ImageButton imgDelete = (ImageButton)e.Item.FindControl("imgTaskDelete");
             String hKey = e.CommandArgument.ToString();
-            AndonReparto andonCfg = new AndonReparto(idReparto);
+            AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (hKey.Length > 0 && imgUp != null && imgDown != null && imgDelete != null)
             {
                 if (e.CommandName == "Delete")
@@ -272,7 +272,7 @@ namespace KIS.Andon
                 HtmlTableRow tr = (HtmlTableRow)e.Item.FindControl("tr1");
                 if (tr != null)
                 {
-                    AndonReparto andonCfg = new AndonReparto(idReparto);
+                    AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     andonCfg.loadCampiVisualizzatiTasks();
                     ImageButton imgUp = (ImageButton)e.Item.FindControl("imgTaskUp");
                     ImageButton imgDown = (ImageButton)e.Item.FindControl("imgTaskDown");
@@ -302,7 +302,7 @@ namespace KIS.Andon
                 if (tr != null && hID != null)
                 {
                     String chiave = hID.Value.ToString();
-                    AndonReparto cfg = new AndonReparto(idReparto);
+                    AndonReparto cfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     cfg.loadCampiVisualizzatiTasks();
                     //var trova = cfg.CampiVisualizzati.FirstOrDefault(x => x.Key == chiave);
                     if (cfg.CampiVisualizzatiTasks.ContainsKey(chiave))
@@ -317,7 +317,7 @@ namespace KIS.Andon
         {
             ImageButton imgAdd = (ImageButton)e.Item.FindControl("imgTaskAdd");
             String hKey = e.CommandArgument.ToString();
-            AndonReparto andonCfg = new AndonReparto(idReparto);
+            AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (hKey.Length > 0 && imgAdd != null)
             {
                 if (e.CommandName == "Add")

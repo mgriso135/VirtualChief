@@ -43,9 +43,9 @@ namespace KIS.Areas.Production.Controllers
 
             if (ViewBag.authR)
             {
-                ElencoReparti deptList = new ElencoReparti();
+                ElencoReparti deptList = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Departments = deptList.elenco;
-                PortafoglioClienti listCst = new PortafoglioClienti();
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 ViewBag.Customers = listCst.Elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
@@ -106,7 +106,7 @@ namespace KIS.Areas.Production.Controllers
 
             if(ViewBag.authR)
             {
-                ProductionSchedule schdl = new ProductionSchedule();
+                ProductionSchedule schdl = new ProductionSchedule(Session["ActiveWorkspace"].ToString());
                 schdl.loadProductionSchedule();
                 List<ProductionOrderStruct> curr = schdl.ScheduledProducts;
 

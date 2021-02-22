@@ -38,7 +38,7 @@ namespace KIS.Areas.Config.Controllers
             }
             if (ViewBag.authR)
             {
-                MeasurementUnits lstMU = new MeasurementUnits();
+                MeasurementUnits lstMU = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
                 lstMU.loadMeasurementUnits();
                 return View(lstMU.UnitsList);
             }
@@ -68,10 +68,10 @@ namespace KIS.Areas.Config.Controllers
 
             if(ViewBag.authW)
             {
-                MeasurementUnit curr = new MeasurementUnit(uID);
+                MeasurementUnit curr = new MeasurementUnit(Session["ActiveWorkspace"].ToString(), uID);
                 if(curr.ID!=-1)
                 { 
-                    MeasurementUnits lst = new MeasurementUnits();
+                    MeasurementUnits lst = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
                     Boolean deleted = lst.Delete(uID);
                     if(deleted)
                     {
@@ -117,7 +117,7 @@ namespace KIS.Areas.Config.Controllers
 
             if (ViewBag.authW)
             {
-                MeasurementUnit curr = new MeasurementUnit(uID);
+                MeasurementUnit curr = new MeasurementUnit(Session["ActiveWorkspace"].ToString(), uID);
                 curr.Type = uType;
                 curr.Description = uDescription;
                 curr.IsDefault = uDefault;
@@ -153,7 +153,7 @@ namespace KIS.Areas.Config.Controllers
 
             if (ViewBag.authW)
             {
-                MeasurementUnits lst = new MeasurementUnits();
+                MeasurementUnits lst = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
                 Boolean added = lst.Add(uType, uDescription, uDefault);
                 if (added) { ret = 1; }
             }

@@ -32,7 +32,7 @@ namespace KIS.Produzione
                 {
                     if (!Page.IsPostBack)
                     {
-                        Articolo art = new Articolo(artID, artYear);
+                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                         lblAnno.Text = art.Year.ToString();
                         lblID.Text = art.ID.ToString();
                         lblAnnoCommessa.Text = art.AnnoCommessa.ToString();
@@ -41,7 +41,7 @@ namespace KIS.Produzione
                         lblIDCommessa.Text = art.Commessa.ToString();
                         lblMatricola.Text = art.Matricola;
                         lblProcesso.Text = art.Proc.process.processName;
-                        Reparto rep = new Reparto(art.Reparto);
+                        Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), art.Reparto);
                         rpFuso = rep.tzFusoOrario;
                         lblReparto.Text = rep.name;
                         lblStatus.Text = art.Status.ToString();
@@ -98,10 +98,10 @@ namespace KIS.Produzione
                     taskID = -1;
                 }
 
-                TaskProduzione tsk = new TaskProduzione(taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
-                    Postazione pst = new Postazione(tsk.PostazioneID);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                     postazione.Text = pst.name;// +"<br/>" + tsk.TempoCicloEffettivo.TotalHours + " " + tsk.log;
                 }
                 else
@@ -153,7 +153,7 @@ namespace KIS.Produzione
             else if (e.Item.ItemType == ListItemType.Footer)
             {
                 Label a = ((Label)e.Item.FindControl("lblTotTempoDiLavoro"));
-                Articolo art = new Articolo(artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 art.loadTempoDiLavoroTotale();
                 a.Text = Math.Round(art.TempoDiLavoroTotale.TotalHours, 2).ToString() + " " + GetLocalResourceObject("lblHours");
 
@@ -170,9 +170,9 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            Articolo art = new Articolo(artID, artYear);
+            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
             lblDataUpdate.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-            Reparto rep = new Reparto(art.Reparto);
+            Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), art.Reparto);
             rpFuso = rep.tzFusoOrario;
             art.loadTasksProduzione();
             rptTasks.DataSource = art.Tasks;
@@ -211,13 +211,13 @@ namespace KIS.Produzione
 
                 if (ckUser == true)
                 {
-                    TaskProduzione tskProd = new TaskProduzione(taskID);
+                    TaskProduzione tskProd = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
                     if (tskProd.Status == 'F')
                     {
                         Boolean rt = tskProd.Riesuma();
                         if (rt == true)
                         {
-                            Articolo art = new Articolo(artID, artYear);
+                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                             art.loadTasksProduzione();
                             rptTasks.DataSource = art.Tasks;
                             rptTasks.DataBind();

@@ -104,7 +104,7 @@ namespace KIS.Analysis
 
             if (artID != -1 && artYear != -1)
             {
-                Articolo art = new Articolo(artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     if (checkBox.Checked)
@@ -167,7 +167,7 @@ namespace KIS.Analysis
 
             if (artID != -1 && artYear != -1)
             {
-                Articolo art = new Articolo(artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     if (checkBox.Checked)
@@ -230,7 +230,7 @@ namespace KIS.Analysis
 
             if (artID != -1 && artYear != -1)
             {
-                Articolo art = new Articolo(artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     if (checkBox.Checked)
@@ -292,7 +292,7 @@ namespace KIS.Analysis
 
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                     if(art.ID!=-1 && art.Year!=-1)
                     {
                     if (Session["prodI"] != null)
@@ -327,7 +327,7 @@ namespace KIS.Analysis
 
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                     if (art.ID != -1 && art.Year != -1)
                     {
                         if (Session["prodP"] != null)
@@ -362,7 +362,7 @@ namespace KIS.Analysis
 
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
                     if (art.ID != -1 && art.Year != -1)
                     {
                         if (Session["prodN"] != null)

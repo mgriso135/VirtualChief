@@ -71,7 +71,7 @@ namespace KIS.Areas.Products.Controllers
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
                 ViewBag.authorized = true;
-                ProductParametersCategories paramCats = new ProductParametersCategories();
+                ProductParametersCategories paramCats = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
                 paramCats.loadCategories();
                 return View(paramCats.Categories);
             }
@@ -152,7 +152,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                KIS.App_Code.ProductParametersCategories prms = new ProductParametersCategories();
+                KIS.App_Code.ProductParametersCategories prms = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
                 ret = prms.Add(Server.HtmlEncode(CategoryName), Server.HtmlEncode(CategoryDescription));
             }
             return ret;
@@ -193,7 +193,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                ProductParametersCategories prms = new ProductParametersCategories();
+                ProductParametersCategories prms = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
                 ret = prms.Delete(catID);
             }
             return ret;
@@ -234,7 +234,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                ProductParametersCategory prms = new ProductParametersCategory(CategoryID);
+                ProductParametersCategory prms = new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), CategoryID);
                 if(prms.ID > -1)
                 {
                     prms.Name = Server.HtmlEncode(CategoryName);

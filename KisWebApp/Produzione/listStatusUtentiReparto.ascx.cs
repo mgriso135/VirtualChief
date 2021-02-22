@@ -29,10 +29,10 @@ namespace KIS.Produzione
 
             if (checkUser == true)
             {*/
-            Reparto rp = new Reparto(repID);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
             if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    UserList usrList = new UserList(new Permesso("Task Produzione"));
+                    UserList usrList = new UserList(Session["ActiveWorkspace"].ToString(), new Permesso(Session["ActiveWorkspace"].ToString(), "Task Produzione"));
                     if (usrList.listUsers.Count > 0)
                     {
                         rptUserList.DataSource = usrList.listUsers;
@@ -67,7 +67,7 @@ namespace KIS.Produzione
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
-                        Reparto rp = new Reparto(repID);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                         User curr = new User(lblUsername.Value.ToString());
                         curr.loadTaskAvviati();
 
@@ -110,8 +110,8 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            Reparto rp = new Reparto(repID);
-            UserList usrList = new UserList(new Permesso("Task Produzione"));
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+            UserList usrList = new UserList(Session["ActiveWorkspace"].ToString(), new Permesso(Session["ActiveWorkspace"].ToString(), "Task Produzione"));
             if (usrList.listUsers.Count > 0)
             {
                 rptUserList.DataSource = usrList.listUsers;

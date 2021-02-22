@@ -30,7 +30,7 @@ namespace KIS.Analysis
 
                 if (idComm != -1 && annoComm != -1)
                 {
-                    Commessa cm = new Commessa(idComm, annoComm);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idComm, annoComm);
                     if (cm.ID != -1 && cm.Year != -1)
                     {
                         frmCostDetail.commID = cm.ID;

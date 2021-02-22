@@ -20,8 +20,8 @@ namespace KIS.Produzione
         protected void Page_Load(object sender, EventArgs e)
         {
             cont = 0;
-            procs = new processo(procID);
-            procs.loadFigli(new variante(varID));
+            procs = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            procs.loadFigli(new variante(Session["ActiveWorkspace"].ToString(), varID));
             procs.loadPostazioniFigli();
             if (!Page.IsPostBack)
             {
@@ -119,8 +119,8 @@ namespace KIS.Produzione
 
             if (postID != -1 && taskID != -1)
             {
-                    processo task = new processo(taskID);
-                    Postazione pst = new Postazione(postID);
+                    processo task = new processo(Session["ActiveWorkspace"].ToString(), taskID);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
                     if (task.processID != -1 && pst.id != -1)
                     {
                         task.loadPostazioniTask();
@@ -149,7 +149,7 @@ namespace KIS.Produzione
             }
             else if (taskID != -1 && ddl.SelectedValue == "")
             {
-                processo task = new processo(taskID);
+                processo task = new processo(Session["ActiveWorkspace"].ToString(), taskID);
                 task.loadPostazioniTask();
                 if (task.elencoPostazioniTask.Count > 0)
                 {

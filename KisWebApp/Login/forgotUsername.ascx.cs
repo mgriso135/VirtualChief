@@ -30,7 +30,7 @@ namespace KIS.Login
             if (mailAddr != null)
             {
                 bool found = false;
-                UserList lista = new UserList();
+                UserList lista = new UserList(Session["ActiveWorkspace"].ToString());
                 for (int i = 0; i < lista.numUsers; i++)
                 {
                     lista.elencoUtenti[i].loadEmails();
@@ -41,10 +41,10 @@ namespace KIS.Login
                             found = true;
                             // Invio l'e-mail
                             System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
-                            mMessage.From = new MailAddress("tools@kaizenpeople.it", "robot@kis");
+                            mMessage.From = new MailAddress("info@virtualchief.net", "Matteo@VirtualChief");
                             mMessage.To.Add(mailAddr);
-                            mMessage.Bcc.Add("tools@kaizenpeople.it");
-                            mMessage.Subject = "KIS - Recupero username";
+                            mMessage.Bcc.Add("info@virtualchief.net");
+                            mMessage.Subject = "Virtual Chief - Recupero username";
                             mMessage.IsBodyHtml = true;
 
                             mMessage.Body = GetLocalResourceObject("lblMail1").ToString()

@@ -30,7 +30,7 @@ namespace KIS.Reparti
 
             if (trnID != -1)
             {
-                Turno trn = new Turno(trnID);
+                Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), trnID);
                 if (trn.id != -1)
                 {
                     addFest.idTurno = trn.id;

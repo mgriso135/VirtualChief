@@ -27,7 +27,7 @@ namespace KIS.Produzione
 
             if (ckUser == true)
             {
-                TaskProduzione tsk = new TaskProduzione(taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     lblNomeTask.InnerText = tsk.Name;
@@ -64,7 +64,7 @@ namespace KIS.Produzione
 
                 if (evtID != -1)
                 {
-                    EventoTaskProduzione ev = new EventoTaskProduzione(evtID);
+                    EventoTaskProduzione ev = new EventoTaskProduzione(Session["ActiveWorkspace"].ToString(), evtID);
                     if (ev.IdEvento != -1)
                     {
                         User usr = new User(ev.User);

@@ -78,7 +78,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authX)
             {
-                ElencoPostazioni elPost = new ElencoPostazioni();
+                ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
                 KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
                 usr.loadPostazioniAttive();
                 List<Postazione> results = elPost.elenco.Where(f => !usr.PostazioniAttive.Any(t => t.id == f.id)).ToList();
@@ -125,7 +125,7 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 User curr = (User)Session["user"];
-                Postazione p = new Postazione(workstationID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), workstationID);
                 if(p.id!=-1)
                 {
                     bool rt = curr.DoCheckIn(p);
@@ -219,7 +219,7 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 User curr = (User)Session["user"];
-                Postazione p = new Postazione(workstationID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), workstationID);
                 if (p.id != -1)
                 {
                     bool rt = curr.DoCheckOut(p);
@@ -271,7 +271,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authX)
             {
-                Postazione p = new Postazione(WorkstationID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), WorkstationID);
                 if(p.id!=-1)
                 {
                     ViewBag.WorkstationID = p.id;
@@ -323,7 +323,7 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 User curr = (User)Session["user"];
-                Postazione p = new Postazione(WorkstationID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), WorkstationID);
                 bool controlloLogin = false;
                 p.loadUtentiLoggati();
                 for (int i = 0; i < p.UtentiLoggati.Count; i++)
@@ -342,7 +342,7 @@ namespace KIS.Areas.Workplace.Controllers
                     List<TaskProduzione> tasks = new List<TaskProduzione>();
                     for(int i =0; i < p.TaskAvviatiUtente.Count; i++)
                     {
-                        tasks.Add(new TaskProduzione(p.TaskAvviatiUtente[i]));
+                        tasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), p.TaskAvviatiUtente[i]));
                     }
                     tasks = tasks.OrderBy(x => x.LateFinish).ToList();
                     return View(tasks);
@@ -390,7 +390,7 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 User curr = (User)Session["user"];
-                Postazione p = new Postazione(WorkstationID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), WorkstationID);
                 bool controlloLogin = false;
                 p.loadUtentiLoggati();
                 for (int i = 0; i < p.UtentiLoggati.Count; i++)
@@ -410,7 +410,7 @@ namespace KIS.Areas.Workplace.Controllers
                     List<TaskProduzione> tasks = new List<TaskProduzione>();
                     for (int i = 0; i < results.Count; i++)
                     {
-                        tasks.Add(new TaskProduzione(results[i]));
+                        tasks.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), results[i]));
                     }
                     tasks = tasks.OrderBy(x => x.LateStart).ToList();
                     return View(tasks);
@@ -461,7 +461,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authX)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     bool rt = tsk.Start((User)Session["user"]);
@@ -471,7 +471,7 @@ namespace KIS.Areas.Workplace.Controllers
                     }
                     else
                     {
-                        Reparto rp = new Reparto(tsk.RepartoID);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), tsk.RepartoID);
                         User curr = (User)Session["user"];
                         curr.loadTaskAvviati();
                         if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && curr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
@@ -531,7 +531,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authX)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     bool rt = tsk.Pause((User)Session["user"]);
@@ -590,10 +590,10 @@ namespace KIS.Areas.Workplace.Controllers
             }
             if (ViewBag.authX)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
-                    Articolo art = new Articolo(tsk.ArticoloID, tsk.ArticoloAnno);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
                     bool rt = tsk.Complete((User)Session["user"]);
                     if (rt == true)
                     {
@@ -608,7 +608,7 @@ namespace KIS.Areas.Workplace.Controllers
                         tsk.loadPrecedenti();
                         for(int i = 0; i < tsk.PreviousTasks.Count; i++)
                         {
-                            TaskProduzione tskPrev = new TaskProduzione(tsk.PreviousTasks[i].NearTaskID);
+                            TaskProduzione tskPrev = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tsk.PreviousTasks[i].NearTaskID);
                             if(tskPrev.Status!='F')
                             {
                                 ret = 5;
@@ -663,7 +663,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authW)
             {
-                TaskProduzione tskProduzione = new TaskProduzione(TaskID);
+                TaskProduzione tskProduzione = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if(tskProduzione!=null && tskProduzione.TaskProduzioneID!=-1)
                 {
                     ViewBag.TaskID = tskProduzione.TaskProduzioneID;
@@ -686,8 +686,8 @@ namespace KIS.Areas.Workplace.Controllers
                         lstParams.Add(curr);
                     }
 
-                    TaskVariante tskCurr = new TaskVariante(new processo(tskProduzione.OriginalTask,
-                        tskProduzione.OriginalTaskRevisione), new App_Code.variante(tskProduzione.VarianteID));
+                    TaskVariante tskCurr = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskProduzione.OriginalTask,
+                        tskProduzione.OriginalTaskRevisione), new App_Code.variante(Session["ActiveWorkspace"].ToString(), tskProduzione.VarianteID));
                     tskCurr.loadParameters();
 
                     for (int i = 0; i < tskCurr.Parameters.Count; i++)
@@ -794,7 +794,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authW)
             {
-                TaskProduzione tskProduzione = new TaskProduzione(TaskID);
+                TaskProduzione tskProduzione = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tskProduzione != null && tskProduzione.TaskProduzioneID != -1)
                 {
                     tskProduzione.loadParameters();
@@ -814,8 +814,8 @@ namespace KIS.Areas.Workplace.Controllers
                     if(!exists)
                     {
                         Boolean existsOriginal = false;
-                        TaskVariante origTsk = new TaskVariante(new App_Code.processo(tskProduzione.OriginalTask,
-                            tskProduzione.OriginalTaskRevisione), new variante(tskProduzione.VarianteID));
+                        TaskVariante origTsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new App_Code.processo(Session["ActiveWorkspace"].ToString(), tskProduzione.OriginalTask,
+                            tskProduzione.OriginalTaskRevisione), new variante(Session["ActiveWorkspace"].ToString(), tskProduzione.VarianteID));
                         origTsk.loadParameters();
                         //ret += "Parameters: " + origTsk.Parameters.Count + "<br />";
                         ModelTaskParameter origParam = null;
@@ -899,7 +899,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authW)
             {
-                TaskProduzione tskProduzione = new TaskProduzione(TaskID);
+                TaskProduzione tskProduzione = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tskProduzione != null && tskProduzione.TaskProduzioneID != -1)
                 {
                     tskProduzione.loadParameters();
@@ -955,7 +955,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authW)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     bool rt = tsk.generateWarning((User)Session["user"]);
@@ -1015,7 +1015,7 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authW)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     if (Quantity <= tsk.QuantitaPrevista)
@@ -1597,13 +1597,13 @@ namespace KIS.Areas.Workplace.Controllers
                     List<int> results = curr.ExecutableTasks.Where(f => !curr.TaskAvviati.Any(t => t == f)).ToList();
                     for (int i = 0; i < results.Count; i++)
                     {
-                        TaskProduzione currTask = new TaskProduzione(results[i]);
+                        TaskProduzione currTask = new TaskProduzione(Session["ActiveWorkspace"].ToString(), results[i]);
                         JsonAvailableTasks currAvTask = new JsonAvailableTasks();
                         currAvTask.TaskID = currTask.TaskProduzioneID;
                         currAvTask.CustomerName = currTask.CustomerName;
                         currAvTask.ExternalID = "";
                         currAvTask.ExternalID = currTask.ExternalID;
-                        Articolo currProd = new Articolo(currTask.ArticoloID, currTask.ArticoloAnno);
+                        Articolo currProd = new Articolo(Session["ActiveWorkspace"].ToString(), currTask.ArticoloID, currTask.ArticoloAnno);
                         if (currTask.ExternalID.Length == 0)
                         {
                             currAvTask.ExternalID = currTask.ArticoloID.ToString() + "/" + currTask.ArticoloAnno.ToString();

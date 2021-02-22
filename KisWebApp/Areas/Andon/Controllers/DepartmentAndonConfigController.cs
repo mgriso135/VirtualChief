@@ -34,7 +34,7 @@ namespace KIS.Areas.Andon.Controllers
                 ViewBag.ShowActiveUsers = false;
                 ViewBag.ShowProdIndicator = false;
                 ViewBag.UsernameFormat = '0';
-                AndonReparto andonCfg = new AndonReparto(DepartmentID);
+                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
             if(andonCfg.RepartoID!=-1)
             {
                     ViewBag.DepartmentID = andonCfg.RepartoID;
@@ -73,7 +73,7 @@ namespace KIS.Areas.Andon.Controllers
 
             if (ViewBag.authW)
             {
-                AndonReparto aRp = new AndonReparto(DepartmentID);
+                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 if(aRp.RepartoID!=-1)
                 {
                     aRp.ShowProductionIndicator = flag;
@@ -114,7 +114,7 @@ namespace KIS.Areas.Andon.Controllers
 
             if (ViewBag.authW)
             {
-                AndonReparto aRp = new AndonReparto(DepartmentID);
+                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 if (aRp.RepartoID != -1)
                 {
                     aRp.ShowActiveUsers = flag;
@@ -155,7 +155,7 @@ namespace KIS.Areas.Andon.Controllers
 
             if (ViewBag.authW)
             {
-                AndonReparto aRp = new AndonReparto(DepartmentID);
+                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 if (aRp.RepartoID != -1)
                 {
                     aRp.UsernameFormat = flag;

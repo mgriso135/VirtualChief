@@ -44,10 +44,10 @@ namespace KIS.Produzione
                 }
                 if (repID != -1 && check == true)
                 {
-                    Reparto rp = new Reparto(repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                     if (!Page.IsPostBack)
                     {
-                        WarningAperti Elenco = new WarningAperti(rp);
+                        WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace"].ToString(), rp);
                         if (Elenco.Elenco.Count == 0)
                         {
                             rptWarnings.Visible = false;
@@ -107,7 +107,7 @@ namespace KIS.Produzione
                 }
                 if (repID != -1 && check == true)
                 {
-                    WarningAperti Elenco = new WarningAperti(new Reparto(repID));
+                    WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace"].ToString(), new Reparto(Session["ActiveWorkspace"].ToString(), repID));
                     if (Elenco.Elenco.Count == 0)
                     {
                         rptWarnings.Visible = false;

@@ -39,7 +39,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authorized = true;
-                NonComplianceTypes ncTypes = new NonComplianceTypes();
+                NonComplianceTypes ncTypes = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
                 ncTypes.loadTypeList();
                 return View(ncTypes.TypeList);
             }
@@ -94,7 +94,7 @@ namespace KIS.Areas.Quality.Controllers
                     // If the request is POST, get the values from the form
                     var name = Request.Form["name"];
                     var description = Request.Form["description"];
-                    KIS.App_Sources.NonComplianceTypes lstTypes = new NonComplianceTypes();
+                    KIS.App_Sources.NonComplianceTypes lstTypes = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
                     created = lstTypes.Add(Server.HtmlEncode(name), Server.HtmlEncode(description));
                     if (created)
                     {
@@ -149,7 +149,7 @@ namespace KIS.Areas.Quality.Controllers
             {
                 ViewBag.authenticated = true;
                 // Get the clients
-                NonComplianceTypes ncList = new NonComplianceTypes();
+                NonComplianceTypes ncList = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
                 ViewBag.Deleted = ncList.Delete(id);
                 // Add the process details to the ViewBag
                 if (ViewBag.Deleted)
@@ -198,7 +198,7 @@ namespace KIS.Areas.Quality.Controllers
                     var name = Request.Form["name"];
                     var description = Request.Form["description"];
 
-                    NonComplianceType ncTypeU = new NonComplianceType(id);
+                    NonComplianceType ncTypeU = new NonComplianceType(Session["ActiveWorkspace"].ToString(), id);
                     if (ncTypeU != null && ncTypeU.ID != -1)
                     {
                         ncTypeU.Name = Server.HtmlEncode(name);
@@ -215,7 +215,7 @@ namespace KIS.Areas.Quality.Controllers
 
 
                 // Create a model object.
-                NonComplianceType ncType = new NonComplianceType(id);
+                NonComplianceType ncType = new NonComplianceType(Session["ActiveWorkspace"].ToString(), id);
                 // Get the list of clients            
                 if (ncType != null && ncType.ID != -1)
                 {

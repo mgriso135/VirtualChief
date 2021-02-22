@@ -77,7 +77,7 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.varianteID = "C";
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(new processo(processID, processRev), new variante(variantID));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID, processRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if(prcVar!=null && prcVar.process!=null && prcVar.process.processID > -1 &&
                     prcVar.variant != null && prcVar.variant.idVariante > -1)
                 {
@@ -154,13 +154,13 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(new processo(processID, processRev),
-                    new variante(variantID));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID, processRev),
+                    new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if(prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1 &&
                     prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                 {
                     ret = prcVar.addParameter(Server.HtmlEncode(ParamName), Server.HtmlEncode(ParamDescription),
-                        new ProductParametersCategory(ParamCategory), ParamIsFixed, ParamIsRequired);
+                        new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), ParamCategory), ParamIsFixed, ParamIsRequired);
                 }   
             }
             return ret;
@@ -203,7 +203,8 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(new processo(processID, processRev), new variante(variantID));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), 
+                    processID, processRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if(prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1 &&
                     prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                 {
@@ -251,12 +252,12 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                ModelParameter prodParam = new ModelParameter(processID, processRev, variantID, ParamID);
+                ModelParameter prodParam = new ModelParameter(Session["ActiveWorkspace"].ToString(), processID, processRev, variantID, ParamID);
                 if(prodParam.ParameterID!=-1)
                 {
                     prodParam.Name = paramName;
                     prodParam.Description = paramDescription;
-                    prodParam.ParameterCategory = new ProductParametersCategory(paramCategory);
+                    prodParam.ParameterCategory = new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), paramCategory);
                     prodParam.isFixed = isFixed;
                     prodParam.isRequired = isRequired;
                     ret = true;

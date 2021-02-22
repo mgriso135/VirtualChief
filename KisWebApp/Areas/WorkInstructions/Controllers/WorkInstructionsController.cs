@@ -62,7 +62,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 }
 
                 // Show list
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList();
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString());
                 wiList.loadWorkInstructionList();
                 return View(wiList.List);
             }
@@ -96,7 +96,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             }
             if (ViewBag.authW)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList();
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString());
                 int[] retWI = wiList.Add(name, description, "", ((User)Session["user"]).username);
                 if (retWI[0] != -1)
                 {
@@ -142,7 +142,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                     { }
                 }
 
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(ids);
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString(), ids);
                 //wiList.loadWorkInstructionList();
                 for (int i = 0; i < wiList.List.Count; i++)
                 {
@@ -189,7 +189,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             if (ViewBag.authW)
             {
-                currWI = new App_Sources.WorkInstructions.WorkInstruction(manualID, manualRev);
+                currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), manualID, manualRev);
                 currWI.loadLabels();
                 currWI.loadTaskProducts();
                 currWI.loadOlderVersions();
@@ -222,7 +222,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             if (ViewBag.authW)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
                 if(currWI.ID!=-1)
                 {
                     currWI.Name = Name;
@@ -250,7 +250,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
         public int AddLabelById(int ID, int Version, int LabelID)
         {
             int ret = 0;
-            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
             if(currWI.ID!=-1 && currWI.Version!=-1)
             {
                 bool bret = currWI.addLabel(LabelID);
@@ -269,10 +269,10 @@ namespace KIS.Areas.WorkInstructions.Controllers
         public int AddLabelByName(int ID, int Version, String LabelName)
         {
             int ret = 0;
-            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
             if (currWI.ID != -1 && currWI.Version != -1)
             {
-                KIS.App_Sources.WorkInstructions.WILabelList lblList = new App_Sources.WorkInstructions.WILabelList();
+                KIS.App_Sources.WorkInstructions.WILabelList lblList = new App_Sources.WorkInstructions.WILabelList(Session["ActiveWorkspace"].ToString());
                 lblList.loadLabelsList();
                 int LabelID = -1;
                 try
@@ -331,7 +331,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             if (ViewBag.authW)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(ID, Version);
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
                 bool bret = currWI.deleteLabel(LabelID);
                 ret = bret ? 1 : 3;
             }
@@ -390,7 +390,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             {
                 if(ViewBag.authR)
                 {
-                    KIS.App_Sources.WorkInstructions.WILabelList currList = new App_Sources.WorkInstructions.WILabelList();
+                    KIS.App_Sources.WorkInstructions.WILabelList currList = new App_Sources.WorkInstructions.WILabelList(Session["ActiveWorkspace"].ToString());
                     currList.loadLabelsList();
                     for(int i =0; i < currList.List.Count; i++)
                     {
@@ -470,7 +470,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             if(checkdates && action== "NewVersion")
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(origManualID);
+                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), origManualID);
                 wi.loadTaskProducts();
                 for(int i = 0; i < wi.listTasksProducts.Count && checkdates; i++)
                 {
@@ -497,20 +497,20 @@ namespace KIS.Areas.WorkInstructions.Controllers
                         {
                             if (action == "add")
                             {
-                                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList();
+                                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString());
                                 int[] res = wiList.Add(resultList[i].name, "", resultList[i].name, ((KIS.App_Code.User)Session["user"]).username);
                                 if (res[0] != -1 && res[1] != -1)
                                 {
                                     System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
                                     HostingEnvironment.MapPath(serverMapPath) + "/" + res[0] + "_" + res[1] + ".pdf");
-                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(res[0], res[1]);
+                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), res[0], res[1]);
                                     curr.Path = res[0] + "_" + res[1] + ".pdf";
                                     curr.ExpiryDate = expiry;
                                 }
                             }
                             else if(action == "NewVersion")
                             {
-                                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(origManualID);
+                                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), origManualID);
                                 if(wi!=null && wi.ID!=-1 && wi.Version>=0)
                                 { 
 
@@ -520,7 +520,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                                         
                                     System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
                                     HostingEnvironment.MapPath(serverMapPath) + "/" + res[0] + "_" + res[1] + ".pdf");
-                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(res[0], res[1]);
+                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), res[0], res[1]);
                                     curr.Path = res[0] + "_" + res[1] + ".pdf";
                                     curr.ExpiryDate = expiry;
                                 }

@@ -8,11 +8,11 @@ namespace KIS
         protected void Page_Load(object sender, EventArgs e)
         {
             lblLicenseExpired.Visible = false;
-            Logo lg = new Logo();
+            Logo lg = new Logo(Session["ActiveWorkspace"].ToString());
             kisLogo.ImageUrl = lg.filePath;
             kisLogo.Height = 50;
 
-            KISConfig kisCfg = new KISConfig();
+            KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
             DateTime licenseExpDate = kisCfg.ExpiryDate;
             if(licenseExpDate.AddDays(7) <= DateTime.UtcNow)
             {

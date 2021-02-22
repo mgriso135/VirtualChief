@@ -78,7 +78,7 @@ namespace KIS.Operatori
 
                     // Inserisco la lista degli utenti già loggati
                     Label lblUserLoggati = (Label)e.Item.FindControl("lblUserLogged");
-                    Postazione p = new Postazione(pstID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                     p.loadUtentiLoggati();
                     for (int i = 0; i < p.UtentiLoggati.Count; i++)
                     {
@@ -134,7 +134,7 @@ namespace KIS.Operatori
 
                 if (pst != -1)
                 {
-                    Postazione p = new Postazione(pst);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pst);
                     if (p.id != -1)
                     {
                         bool rt = curr.DoCheckOut(p);

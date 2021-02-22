@@ -29,7 +29,7 @@ namespace KIS.Areas.Production.Controllers
             {
                 if(ProductID!=null && ProductYear!=null && ProductID!=-1 && ProductYear>2010)
                 {
-                    Articolo prod = new Articolo(ProductID, ProductYear);
+                    Articolo prod = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
                         if(prod!=null && prod.ID!=-1 && prod.Year!=-1)
                     {
                         prod.loadTasksProduzione();
@@ -72,7 +72,7 @@ namespace KIS.Areas.Production.Controllers
 
             if (ViewBag.authR)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if(tsk!=null && tsk.TaskProduzioneID!=-1)
                 {
                     tsk.loadParameters();
@@ -110,7 +110,7 @@ namespace KIS.Areas.Production.Controllers
 
             if (ViewBag.authR)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk != null && tsk.TaskProduzioneID != -1)
                 {
                     tsk.loadTaskOperatorNotes();
@@ -148,7 +148,7 @@ namespace KIS.Areas.Production.Controllers
 
             if (ViewBag.authR)
             {
-                TaskProduzione tsk = new TaskProduzione(TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tsk != null && tsk.TaskProduzioneID != -1)
                 {
                     tsk.loadIntervalliDiLavoroEffettivi();
@@ -188,7 +188,7 @@ namespace KIS.Areas.Production.Controllers
 
             if (ckUser == true)
             {
-                TaskProduzione tskProd = new TaskProduzione(TaskID);
+                TaskProduzione tskProd = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
                 if (tskProd.Status == 'F')
                 {
                     ret = tskProd.Riesuma();

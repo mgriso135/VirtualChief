@@ -59,7 +59,7 @@ namespace KIS.Users
             if (nomeP.Length > 0 && descP.Length > 0)
             {
                 bool rt = false;
-                GroupList grl = new GroupList();
+                GroupList grl = new GroupList(Session["ActiveWorkspace"].ToString());
                 rt = grl.Add(nomeP, descP);
                 if (rt == true)
                 {

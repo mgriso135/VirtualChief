@@ -30,7 +30,7 @@ namespace KIS.Reparti
             {
                 if (idTurno != -1)
                 {
-                    Turno trn = new Turno(idTurno);
+                    Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
                     if (trn.id != -1)
                     {
                         if (!Page.IsPostBack)
@@ -78,10 +78,10 @@ namespace KIS.Reparti
 
         protected void rptFest_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            Turno trn = new Turno(idTurno);
+            Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
             if (trn.idReparto != -1)
             {
-                Reparto rp = new Reparto(trn.idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
                 if (rp.id != -1)
                 {
                     if (e.CommandName == "deleteFest")
@@ -97,7 +97,7 @@ namespace KIS.Reparti
                         }
                         if (idFs != -1)
                         {
-                            Festivita fs = new Festivita(idFs);
+                            Festivita fs = new Festivita(Session["ActiveWorkspace"].ToString(), idFs);
                             if (fs.idFestivita != -1)
                             {
                                 bool rt = fs.delete();

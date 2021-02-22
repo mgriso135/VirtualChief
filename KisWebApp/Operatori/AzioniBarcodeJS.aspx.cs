@@ -56,11 +56,11 @@ namespace KIS.Operatori
 
                     if (newQty > 0 && tskId != -1)
                     {
-                        TaskProduzione tsk = new TaskProduzione(tskId);
+                        TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tskId);
                         if (tsk.TaskProduzioneID != -1)
                         {
                             tsk.QuantitaProdotta = newQty;
-                            Articolo art = new Articolo(tsk.ArticoloID, tsk.ArticoloAnno);
+                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
                             if (art.Status == 'F')
                             {
                                 art.QuantitaProdotta = newQty;
@@ -86,7 +86,7 @@ namespace KIS.Operatori
 
         protected bool elabora()
         {
-            KISConfig vcCfg = new KISConfig();
+            KISConfig vcCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
             String origChecksum = vcCfg.basePath;
             imgLoading.Style.Value = "visibility: hidden; height: 2px";
             
@@ -132,8 +132,8 @@ namespace KIS.Operatori
 
                 if (usrID != -1 && postID != -1 && checksum.Length > 0 && checksum == origChecksum)
                 {
-                    User usr = new User(usrID);
-                    Postazione p = new Postazione(postID);
+                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
                     if (usr.username.Length > 0 && p.id != -1)
                     {
                         rt = true;
@@ -218,12 +218,12 @@ namespace KIS.Operatori
 
                 if (checksum == origChecksum)
                 {
-                    User usr = new User(usrID);
-                    TaskProduzione tsk = new TaskProduzione(taskID);
+                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
                     //Session["user"] = usr;
                     if (action == "I")
                     {
-                        Postazione p = new Postazione(tsk.PostazioneID);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                         if (p.barcodeAutoCheckIn)
                         {
                             usr.DoCheckIn(p);
@@ -271,14 +271,14 @@ namespace KIS.Operatori
 
                             if (foundPost == false)
                             {
-                                Postazione pst = new Postazione(tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                                 log.Text += "- " + GetLocalResourceObject("lblErrorReason3").ToString() + " " + pst.name + "<br />";
                             }
 
                             tsk.loadPrecedenti();
                             for (int i = 0; i < tsk.IdPrecedenti.Count; i++)
                             {
-                                TaskProduzione prec = new TaskProduzione(tsk.IdPrecedenti[i]);
+                                TaskProduzione prec = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tsk.IdPrecedenti[i]);
                                 if (prec.Status != 'F')
                                 {
                                     log.Text += "- " + GetLocalResourceObject("lblErrorReason4A").ToString() + " \"" + prec.Name
@@ -291,15 +291,15 @@ namespace KIS.Operatori
 
                             // Controllo che l'utente non abbia avviato troppi tasks
                             usr.loadTaskAvviati();
-                            Reparto rp = new Reparto(tsk.RepartoID);
+                            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), tsk.RepartoID);
                             if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && usr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
                             {
                                 log.Text += GetLocalResourceObject("lblMaxTasksReached").ToString() + ":<br /><UL>";
                                 for (int i = 0; i < usr.TaskAvviati.Count; i++)
                                 {
-                                    TaskProduzione tskAttivo = new TaskProduzione(usr.TaskAvviati[i]);
-                                    Articolo art = new Articolo(tskAttivo.ArticoloID, tskAttivo.ArticoloAnno);
-                                    Commessa cm = new Commessa(art.Commessa, art.AnnoCommessa);
+                                    TaskProduzione tskAttivo = new TaskProduzione(Session["ActiveWorkspace"].ToString(), usr.TaskAvviati[i]);
+                                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tskAttivo.ArticoloID, tskAttivo.ArticoloAnno);
+                                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                                     log.Text += "<li>"
                                         + tskAttivo.TaskProduzioneID.ToString() + " "
                                         + tskAttivo.Name
@@ -349,7 +349,7 @@ namespace KIS.Operatori
                                     + " " + GetLocalResourceObject("lblYouAreNotWorking2").ToString() + ".<br />";
                             }
                         }
-                        Postazione p = new Postazione(tsk.PostazioneID);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                         if (p.barcodeAutoCheckIn)
                         {
                             usr.DoCheckOut(p);
@@ -400,7 +400,7 @@ namespace KIS.Operatori
                             }
                             if (checkpost == false)
                             {
-                                Postazione pst = new Postazione(tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                                 log.Text += "- " + GetLocalResourceObject("lblNonAcceduto").ToString()
                                     + " " + pst.name + "<br />";
                             }
@@ -411,7 +411,7 @@ namespace KIS.Operatori
                             String errPreviousTasks = "";
                             for (int i = 0; i < tsk.PreviousTasks.Count; i++)
                             {
-                                TaskProduzione curr = new TaskProduzione(tsk.PreviousTasks[i].NearTaskID);
+                                TaskProduzione curr = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tsk.PreviousTasks[i].NearTaskID);
                                 if(curr.Status!='F')
                                 {
                                     checkPreviousTasks = false;
@@ -431,7 +431,7 @@ namespace KIS.Operatori
                             imgChangeQty.Visible = true;
                             hFldTaskID.Value = tsk.TaskProduzioneID.ToString();
                         }
-                        Postazione p = new Postazione(tsk.PostazioneID);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
                         if (p.barcodeAutoCheckIn)
                         {
                             usr.DoCheckOut(p);
@@ -497,7 +497,7 @@ namespace KIS.Operatori
                 }
 
                 log.Text = GetLocalResourceObject("lblTHProdotto").ToString() + " " + idComm.ToString() + "/" + yearComm.ToString() + "<br />";
-                Articolo art = new Articolo(idComm, yearComm);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idComm, yearComm);
                 if (art.ID != -1 && checksum == origChecksum)
                 {
                     rptStatusCommessa.Visible = true;
@@ -599,8 +599,8 @@ namespace KIS.Operatori
 
                     }
 
-                    Articolo art = new Articolo(tsk.ArticoloID, tsk.ArticoloAnno);
-                    Commessa comms = new Commessa(art.Commessa, art.AnnoCommessa);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
+                    Commessa comms = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                     lblAnnoCommessa.Text = comms.Year.ToString();
                     lblCliente.Text = comms.Cliente;
                     lblCommessa.Text = comms.ID.ToString();
@@ -649,7 +649,7 @@ namespace KIS.Operatori
 
                     // Inserisco la lista degli utenti già loggati
                     Label lblUserLoggati = (Label)e.Item.FindControl("lblUserLogged");
-                    Postazione p = new Postazione(pstID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
                     p.loadUtentiLoggati();
 
                     for (int i = 0; i < p.UtentiLoggati.Count; i++)
@@ -739,9 +739,9 @@ namespace KIS.Operatori
 
             if (taskID != -1)
             {
-                TaskProduzione tsk = new TaskProduzione(taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
                 String configShowNomi = "0";
-                Reparto rp = new Reparto(tsk.RepartoID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), tsk.RepartoID);
                 if (rp.id != -1)
                 {
                     configShowNomi = rp.AndonPostazioniFormatoUsername.ToString();

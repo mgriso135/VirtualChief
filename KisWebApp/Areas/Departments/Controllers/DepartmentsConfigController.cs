@@ -118,7 +118,7 @@ namespace KIS.Areas.Departments.Controllers
             {
                 ViewBag.AutoPauseConfig = true;
                 ViewBag.deptID = -1;
-                Reparto rp = new Reparto(DepartmentID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 if(rp!=null && rp.id!=-1)
                 {
                     ViewBag.deptID = rp.id;
@@ -152,7 +152,7 @@ namespace KIS.Areas.Departments.Controllers
 
             if (ViewBag.authW)
             {
-                Reparto dept = new Reparto(DepartmentID);
+                Reparto dept = new Reparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
                 if(dept!=null && dept.id!=-1)
                 {
                     if(!Flag)

@@ -30,7 +30,7 @@ namespace KIS.Reparti
                 ddlTimezones.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if(rp.id!=-1 && idReparto!=-1)
                     {                        
                         ddlTimezones.Items.Clear();
@@ -52,7 +52,7 @@ namespace KIS.Reparti
         protected void ddlTimezones_SelectedIndexChanged(object sender, EventArgs e)
         {
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
-            Reparto rp = new Reparto(idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (rp.id != -1)
             {
                 rp.fusoOrario = ddlTimezones.SelectedValue;

@@ -17,7 +17,7 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 KIS.App_Code.User cu1rr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(cu1rr.username, "Controller", "/Analysis/OperatorsAnalysis/GetOperatorProductivity", "user="+user+"&start="+start.ToString("dd/MM/yyyy HH:mm:ss")+"&end="+end.ToString("dd/MM/yyyy HH:mm:ss"), ipAddr);
+                Dati.Utilities.LogAction( cu1rr.username, "Controller", "/Analysis/OperatorsAnalysis/GetOperatorProductivity", "user="+user+"&start="+start.ToString("dd/MM/yyyy HH:mm:ss")+"&end="+end.ToString("dd/MM/yyyy HH:mm:ss"), ipAddr);
             }
             else
             {

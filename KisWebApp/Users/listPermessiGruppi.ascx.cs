@@ -48,11 +48,11 @@ namespace KIS.Users
 
                 if (GroupID != -1 && !Page.IsPostBack)
                 {
-                    Group grp = new Group(GroupID);
+                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), GroupID);
                     if (grp.ID != -1)
                     {
                         lblNome.Text = grp.Nome;
-                        GruppoPermessi grpPerm = new GruppoPermessi(grp.ID);
+                        GruppoPermessi grpPerm = new GruppoPermessi(Session["ActiveWorkspace"].ToString(), grp.ID);
                         rptPermessi.DataSource = grpPerm.Elenco;
                         rptPermessi.DataBind();
                     }

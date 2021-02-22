@@ -29,7 +29,7 @@ namespace KIS.Analysis
             if (checkUser == true)
             {
                 rptListTasks.Visible = true;
-                ElencoTasks elTsk = new ElencoTasks(true);
+                ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString(), true);
                 var elTskProd = from q in elTsk.Elenco
                                         where q.processoPadre != -1 && q.revPadre != -1
                                         select q;

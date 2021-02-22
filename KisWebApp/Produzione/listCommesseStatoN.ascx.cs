@@ -31,7 +31,7 @@ namespace KIS.Produzione
             {
                 if (!Page.IsPostBack)
                 {
-                    ElencoArticoli elArtAperti = new ElencoArticoli('N');
+                    ElencoArticoli elArtAperti = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'N');
                     if (elArtAperti.ListArticoli.Count > 0)
                     {
                         rptStatoN.DataSource = elArtAperti.ListArticoli;
@@ -139,7 +139,7 @@ namespace KIS.Produzione
                 {
                     if(tbMatricola.Text.Length > 0)
                     {
-                        Articolo art = new Articolo(artID, artAnno);
+                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artAnno);
                         art.Matricola = Server.HtmlEncode(tbMatricola.Text);
                         lbl1.Text = art.log;
                         lblMatricola.Text = Server.HtmlEncode(tbMatricola.Text);
@@ -152,7 +152,7 @@ namespace KIS.Produzione
                 }
                 else if (e.CommandName == "resetSN")
                 {
-                    Articolo art = new Articolo(artID, artAnno);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artAnno);
                     tbMatricola.Text = art.Matricola;
                     lblMatricola.Text = art.Matricola;
                     imgUndoSN.Visible = false;
@@ -210,7 +210,7 @@ namespace KIS.Produzione
                     if (ora != -1 && min != -1 && sec != -1)
                     {
                         lbl1.Text = artID.ToString() + "/" + artAnno.ToString();
-                        Articolo art = new Articolo(artID, artAnno);
+                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artAnno);
                         DateTime fineProd = new DateTime(changeFP.SelectedDate.Year, changeFP.SelectedDate.Month, changeFP.SelectedDate.Day, ora, min, sec);
                         if (fineProd > DateTime.Now && fineProd <= art.DataPrevistaConsegna)
                         {

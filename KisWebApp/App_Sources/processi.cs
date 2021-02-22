@@ -1058,7 +1058,7 @@ namespace KIS.App_Code
                 {
                     this._processiPrec.Add(mysqlReader.GetInt32(0));
                     this._revisionePrec.Add(mysqlReader.GetInt32(1));
-                    this._relazionePrec.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._relazionePrec.Add(new relazione(this.Tenant, mysqlReader.GetInt32(2)));
                     this._pausePrec.Add(mysqlReader.GetTimeSpan(3));
                     this._ConstraintType.Add(mysqlReader.GetInt32(4));
 
@@ -1105,7 +1105,7 @@ namespace KIS.App_Code
                 while(mysqlReader.Read())
                 {
                     this._processiPrec.Add(mysqlReader.GetInt32(0));
-                    this._relazionePrec.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._relazionePrec.Add(new relazione(this.Tenant, mysqlReader.GetInt32(2)));
                     this._revisionePrec.Add(mysqlReader.GetInt32(1));
                     this._pausePrec.Add(mysqlReader.GetTimeSpan(3));
                     this._ConstraintType.Add(mysqlReader.GetInt32(4));
@@ -1154,7 +1154,7 @@ namespace KIS.App_Code
                 {
                     this._processiSucc.Add(mysqlReader.GetInt32(0));
                     this._revisioneSucc.Add(mysqlReader.GetInt32(1));
-                    this._relazioneSucc.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._relazioneSucc.Add(new relazione(this.Tenant, mysqlReader.GetInt32(2)));
                     this._pauseSucc.Add(mysqlReader.GetTimeSpan(3));
                     if(!mysqlReader.IsDBNull(4))
                     { 
@@ -1212,7 +1212,7 @@ namespace KIS.App_Code
                 {
                     this._processiSucc.Add(mysqlReader.GetInt32(0));
                     this._revisioneSucc.Add(mysqlReader.GetInt32(1));
-                    this._relazioneSucc.Add(new relazione(mysqlReader.GetInt32(2)));
+                    this._relazioneSucc.Add(new relazione(this.Tenant, mysqlReader.GetInt32(2)));
                     this._pauseSucc.Add(mysqlReader.GetTimeSpan(3));
                     this._ConstraintType.Add(mysqlReader.GetInt32(4));
 
@@ -1361,7 +1361,7 @@ namespace KIS.App_Code
                this.loadFigli();
                this.loadKPIs();
                bool foundReparto = false;
-               ElencoReparti elRep = new ElencoReparti();
+               ElencoReparti elRep = new ElencoReparti(this.Tenant);
                for (int i = 0; i < elRep.elenco.Count; i++)
                {
                    elRep.elenco[i].loadProcessiVarianti();
@@ -3281,7 +3281,7 @@ namespace KIS.App_Code
         {
             get
             {
-                Reparto rp = new Reparto();
+                Reparto rp = new Reparto(this.Tenant);
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
@@ -3293,7 +3293,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
-                    rp = new Reparto(rdr.GetInt32(0));
+                    rp = new Reparto(this.Tenant, rdr.GetInt32(0));
                 }
                 rdr.Close();
                 conn.Close();
@@ -3398,8 +3398,8 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this._RepartoProduttivo = new Reparto(rdr.GetInt32(0));
-                    this._RepartiProduttivi.Add(new Reparto(rdr.GetInt32(0)));
+                    this._RepartoProduttivo = new Reparto(this.Tenant, rdr.GetInt32(0));
+                    this._RepartiProduttivi.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -3653,7 +3653,7 @@ namespace KIS.App_Code
                                         {
                                             //nuovo.loadWorkInstructions();
                                             //nuovo.WorkInstructions.Add(nuovo.WorkInstructions[i]);
-                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
+                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(this.Tenant, orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
                                             int lnkRet = currWI.linkManualToTask(nuovo.Task.processID, nuovo.Task.revisione, nuovo.variant.idVariante,
                                                 orig.WorkInstructions[j].InitialDate,
                                                 orig.WorkInstructions[j].ExpiryDate,
@@ -3863,7 +3863,7 @@ namespace KIS.App_Code
                                         orig.loadWorkInstructions();
                                         for (int j = 0; j < orig.WorkInstructions.Count; j++)
                                         {
-                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
+                                            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(this.Tenant, orig.WorkInstructions[j].WI.ID, orig.WorkInstructions[j].WI.Version);
                                             int lnkRet = currWI.linkManualToTask(nuovo.Task.processID, nuovo.Task.revisione, nuovo.variant.idVariante,
                                                 orig.WorkInstructions[j].InitialDate,
                                                 orig.WorkInstructions[j].ExpiryDate,
@@ -5747,7 +5747,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read())
             {
-                this.WI = new App_Sources.WorkInstructions.WorkInstruction(rdr.GetInt32(0), rdr.GetInt32(1));
+                this.WI = new App_Sources.WorkInstructions.WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
                 this._InitialDate = rdr.GetDateTime(2);
                 this._ExpiryDate = rdr.GetDateTime(3);
                 this._Sequence = rdr.GetInt32(4);

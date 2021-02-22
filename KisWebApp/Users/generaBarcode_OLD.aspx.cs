@@ -42,7 +42,7 @@ namespace KIS.Users
 
                 if (usrID != -1)
                 {
-                    User usr = new User(usrID);
+                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
                     String matricola = usr.ID.ToString();
                     /*while (matricola.Length < 10)
                     {

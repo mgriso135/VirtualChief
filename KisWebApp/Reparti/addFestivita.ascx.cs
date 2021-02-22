@@ -59,9 +59,9 @@ namespace KIS.Reparti
             if (inizio < fine && inizio > DateTime.UtcNow)
             {
                 List<TaskProduzione> lstTasks = new List<TaskProduzione>();
-                ElencoTaskProduzione elTasksI = new ElencoTaskProduzione(inizio, fine, 'I');
-                ElencoTaskProduzione elTasksN = new ElencoTaskProduzione(inizio, fine, 'N');
-                ElencoTaskProduzione elTasksP = new ElencoTaskProduzione(inizio, fine, 'P');
+                ElencoTaskProduzione elTasksI = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), inizio, fine, 'I');
+                ElencoTaskProduzione elTasksN = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), inizio, fine, 'N');
+                ElencoTaskProduzione elTasksP = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), inizio, fine, 'P');
 
                 lstTasks.AddRange(elTasksI.Tasks);
                 lstTasks.AddRange(elTasksN.Tasks);
@@ -83,7 +83,7 @@ namespace KIS.Reparti
                         + "<br />";
                 for(int i = 0; i < prodotti.Count; i++)
                 {
-                        Articolo art = new Articolo(prodotti[i].ArticoloID, prodotti[i].ArticoloAnno);
+                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), prodotti[i].ArticoloID, prodotti[i].ArticoloAnno);
                         lblListProd.Text += art.ID.ToString() + "/" + art.Year.ToString()
                             + " - "+GetLocalResourceObject("lblWarnTasksPlanned2").ToString()+": " 
                             + art.RagioneSocialeCliente 
@@ -131,11 +131,11 @@ namespace KIS.Reparti
 
         protected void salva(DateTime inizio, DateTime fine)
         {
-            Turno trn = new Turno(idTurno);
-            Reparto rp = new Reparto(trn.idReparto);
+            Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
             if (inizio < fine && inizio > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, rp.tzFusoOrario))
             {
-                ElencoFestivita rs = new ElencoFestivita(trn.idReparto);
+                ElencoFestivita rs = new ElencoFestivita(Session["ActiveWorkspace"].ToString(), trn.idReparto);
                 bool ret = rs.Add(idTurno, inizio, fine);
                 if (ret == false)
                 {

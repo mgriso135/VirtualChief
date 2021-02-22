@@ -13,7 +13,7 @@ namespace KIS.Configuration
         protected void Page_Load(object sender, EventArgs e)
         {
             tblInputNewUser.Visible = false;
-            KISConfig cfg = new KISConfig();
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
             if (!cfg.WizAdminUserCompleted)
             {
                 tblInputNewUser.Visible = true;
@@ -56,7 +56,7 @@ namespace KIS.Configuration
 
                 if (adminGroupID != -1)
                 {
-                    Group adminGroup = new Group(adminGroupID);
+                    Group adminGroup = new Group(Session["ActiveWorkspace"].ToString(), adminGroupID);
                     User adm = new User(Server.HtmlEncode(inputUsername.Text));
                     adm.Language = ddlLanguages.SelectedValue;
 

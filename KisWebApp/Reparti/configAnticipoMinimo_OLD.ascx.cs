@@ -30,7 +30,7 @@ namespace KIS.Reparti
             {
                 if (repID != -1)
                 {
-                    Reparto rp = new Reparto(repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                     if (rp.id != -1)
                     {
                         if (!Page.IsPostBack)
@@ -76,7 +76,7 @@ namespace KIS.Reparti
             }
             else
             {
-                Reparto rp = new Reparto(repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                 ore.Text = rp.anticipoMinimoTasks.Hours.ToString();
                 minuti.SelectedValue = rp.anticipoMinimoTasks.Minutes.ToString();
                 secondi.SelectedValue = rp.anticipoMinimoTasks.Seconds.ToString();
@@ -92,7 +92,7 @@ namespace KIS.Reparti
         {
             if (repID != -1)
             {
-                Reparto rp = new Reparto(repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                 rp.anticipoMinimoTasks = new TimeSpan(Int32.Parse(ore.Text), Int32.Parse(minuti.SelectedValue), Int32.Parse(secondi.SelectedValue));
                 Response.Redirect(Request.RawUrl);
             }
@@ -100,7 +100,7 @@ namespace KIS.Reparti
 
         protected void undo_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto(repID);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
             ore.Text = rp.anticipoMinimoTasks.Hours.ToString();
             minuti.SelectedValue = rp.anticipoMinimoTasks.Minutes.ToString();
             secondi.SelectedValue = rp.anticipoMinimoTasks.Seconds.ToString();

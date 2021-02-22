@@ -31,7 +31,7 @@ namespace KIS.Reparti
 
                 if (idReparto != -1)
                 {
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if (rp.id != -1)
                     {/*
                         crt.Visible = true;
@@ -82,8 +82,8 @@ namespace KIS.Reparti
                     crt.Series["Turno" + i.ToString()].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                     crt.Series["Turno" + i.ToString()].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.String;
                     crt.Series["Turno" + i.ToString()].BorderWidth = 20;
-                    IntervalloLavorativoTurno intTr = new IntervalloLavorativoTurno(rp.CalendarioRep.Turni[i].idOrarioTurno);
-                    Turno tr = new Turno(intTr.idTurno);
+                    IntervalloLavorativoTurno intTr = new IntervalloLavorativoTurno(Session["ActiveWorkspace"].ToString(), rp.CalendarioRep.Turni[i].idOrarioTurno);
+                    Turno tr = new Turno(Session["ActiveWorkspace"].ToString(), intTr.idTurno);
                     crt.Series["Turno" + i.ToString()].Color = tr.Colore;
                     crt.Series["Turno" + i.ToString()].BorderColor = tr.Colore;
                     crt.Series["Turno" + i.ToString()].Points.AddXY(rp.CalendarioRep.Turni[i].Inizio.ToOADate(), 4);
@@ -92,7 +92,7 @@ namespace KIS.Reparti
                     crt.Series["Turno" + i.ToString()].Points[1].ToolTip = tr.Nome + " " + GetLocalResourceObject("lblFine").ToString() + ": " + rp.CalendarioRep.Turni[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
                 }
             }
-            ElencoStraordinari elStraord = new ElencoStraordinari(rp.id);
+            ElencoStraordinari elStraord = new ElencoStraordinari(Session["ActiveWorkspace"].ToString(), rp.id);
 
             for (int i = 0; i < elStraord.Straordinari.Count; i++)
             {
@@ -119,7 +119,7 @@ namespace KIS.Reparti
             }
 
 
-            ElencoFestivita elFest = new ElencoFestivita(rp.id);
+            ElencoFestivita elFest = new ElencoFestivita(Session["ActiveWorkspace"].ToString(), rp.id);
             for (int i = 0; i < elFest.feste.Count; i++)
             {
                 if (elFest.feste[i].Inizio >= inizioCal && elFest.feste[i].Inizio <= fineCal)
@@ -198,7 +198,7 @@ namespace KIS.Reparti
 
             start = start > end ? DateTime.Now : start;
 
-            Reparto rp = new Reparto(idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
             rp.loadCalendario(start, end);
             this.loadCalendario(start, end, rp);
         }

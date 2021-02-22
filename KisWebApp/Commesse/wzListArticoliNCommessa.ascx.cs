@@ -29,7 +29,7 @@ namespace KIS.Commesse
             {
                 if (idCommessa != -1 && annoCommessa != -1)
                 {
-                    Commessa cm = new Commessa(idCommessa, annoCommessa);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
                     if (cm.ID != -1 && cm.Year != -1)
                     {
                         cm.loadArticoli();

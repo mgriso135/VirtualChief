@@ -51,7 +51,7 @@ namespace KIS.Produzione
                 }
                 if (repID != -1)
                 {
-                    Reparto rp = new Reparto(repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                     //if (!Page.IsPostBack)
                     {
                         rp.loadCalendario(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-7), rp.tzFusoOrario), TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(10), rp.tzFusoOrario));

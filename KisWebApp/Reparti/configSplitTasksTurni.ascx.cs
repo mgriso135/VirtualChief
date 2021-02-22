@@ -32,7 +32,7 @@ namespace KIS.Reparti
                 {
                     if (!Page.IsPostBack)
                     {
-                        Reparto rp = new Reparto(idReparto);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                         if (rp.splitTasks == true)
                         {
                             splitTasks.SelectedValue = "1";
@@ -59,7 +59,7 @@ namespace KIS.Reparti
         {
             if (idReparto != -1)
             {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 if (splitTasks.SelectedItem.Value == "0")
                 {
                     rp.splitTasks = false;

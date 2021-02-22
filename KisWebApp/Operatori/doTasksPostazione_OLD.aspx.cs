@@ -28,7 +28,7 @@ namespace KIS.Operatori
                         lbl1.Text = "Wrong querystring.";
                     }
 
-                    Postazione pst = new Postazione(pID);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), pID);
                     
 
                     if (pst.id != -1)

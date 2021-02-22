@@ -27,14 +27,14 @@ namespace KIS.Processi
         public List<String[]> loadTempiCiclo(int procID, int rev, int varID)
         {
             List<String[]> ret = new List<String[]>();
-            processo padre = new processo(procID);
-            variante var = new variante(varID);
-            padre.loadFigli(new variante(varID));
+            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
+            padre.loadFigli(new variante(Session["ActiveWorkspace"].ToString(), varID));
 
             for (int i = 0; i < padre.subProcessi.Count; i++)
             {
                 String[] element = new String[5];
-                TaskVariante tsk = new TaskVariante(padre.subProcessi[i], var);
+                TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), padre.subProcessi[i], var);
                 TimeSpan tc = tsk.getDefaultTempoCiclo();
                 int n_ops = tsk.getDefaultOperatori();
 
@@ -54,12 +54,12 @@ namespace KIS.Processi
         public List<int[]> loadPrecedenze(int procID, int rev, int varID)
         {
             List<int[]> ret = new List<int[]>();
-            processo padre = new processo(procID, rev);
-            variante var = new variante(varID);
+            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID, rev);
+            variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
             padre.loadFigli(var);
             for (int i = 0; i < padre.subProcessi.Count; i++)
             {
-                padre.subProcessi[i].loadSuccessivi(new variante(varID));
+                padre.subProcessi[i].loadSuccessivi(new variante(Session["ActiveWorkspace"].ToString(), varID));
                 // Costruisco l'array dei successivi
                 for (int j = 0; j < padre.subProcessi[i].processiSucc.Count; j++)
                 {
@@ -79,10 +79,10 @@ namespace KIS.Processi
         public int addDefaultSubProcess(int procID, int rev, int varID)
         {
             int ret = -1;
-            processo padre = new processo(procID);
+            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
             if (padre.processID != -1 && varID != -1)
             {
-                int procCreated = padre.createDefaultSubProcess(new variante(varID));
+                int procCreated = padre.createDefaultSubProcess(new variante(Session["ActiveWorkspace"].ToString(), varID));
                 if (procCreated >= 0)
                 {
                     ret = procCreated;
@@ -99,11 +99,11 @@ namespace KIS.Processi
         public bool linkExistingSubProcess(int procID, int rev, int varID, int taskID, int taskRev)
         {
             bool rt = false;
-            processo pr = new processo(procID, rev);
+            processo pr = new processo(Session["ActiveWorkspace"].ToString(), procID, rev);
 
             if (taskID != -1)
             {
-                 rt = pr.linkProcessoVariante(new TaskVariante(new processo(taskID), new variante(varID)));
+                 rt = pr.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID), new variante(Session["ActiveWorkspace"].ToString(), varID)));
             }
             else
             {
@@ -115,9 +115,9 @@ namespace KIS.Processi
         [WebMethod]
         public bool deleteSubProcess(int procID, int rev, int varID, int taskID, int taskRev)
         {
-                processo prc = new processo(taskID);
-                variante var = new variante(varID);
-                TaskVariante tsk = new TaskVariante(prc, var);
+                processo prc = new processo(Session["ActiveWorkspace"].ToString(), taskID);
+                variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
+                TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), prc, var);
 
                 bool controllo = true;
 

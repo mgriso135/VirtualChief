@@ -102,7 +102,7 @@ namespace KIS.Personal
                 imgSave.Visible = false;
                 imgUndo.Visible = false;
                 chkAlarm.Enabled = false;
-                UserEmail usrMail = new UserEmail(curr.username, e.CommandArgument.ToString());
+                UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
                 if (usrMail != null && usrMail.UserID != "")
                 {
                     chkAlarm.Checked = usrMail.ForAlarm;
@@ -110,7 +110,7 @@ namespace KIS.Personal
             }
             else if (e.CommandName == "save")
             {
-                UserEmail usrMail = new UserEmail(curr.username, e.CommandArgument.ToString());
+                UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
                 if (usrMail != null && usrMail.UserID != "")
                 {
                     usrMail.ForAlarm = chkAlarm.Checked;
@@ -123,7 +123,7 @@ namespace KIS.Personal
             }
             else if (e.CommandName == "delete")
             {
-                UserEmail usrMail = new UserEmail(curr.username, e.CommandArgument.ToString());
+                UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
                 if (usrMail != null && usrMail.UserID != "")
                 {
                     usrMail.delete();

@@ -36,7 +36,7 @@ namespace KIS.Analysis
                 tblSelectDate.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    portClienti = new PortafoglioClienti();
+                    portClienti = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 }
             }
             else

@@ -41,7 +41,7 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.showAddWI = false;
             if (ViewBag.authW)
             { 
-                TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new variante(VariantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new App_Code.processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), VariantID));
                 tskVar.loadWorkInstructions();
                 ViewBag.showAddWI = tskVar.WorkInstructions.Count == 0 ? true : false;
                 return View(tskVar);
@@ -78,11 +78,11 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new App_Code.variante(VariantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new App_Code.processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new App_Code.variante(Session["ActiveWorkspace"].ToString(), VariantID));
                 Boolean found = false;
                 if (TaskName!=tskVar.Task.processName)
                 { 
-                    ElencoTasks lstTasks = new ElencoTasks();
+                    ElencoTasks lstTasks = new ElencoTasks(Session["ActiveWorkspace"].ToString());
                     try
                     {
                         var existingtask = lstTasks.Elenco.First(x => x.processName.ToLower() == Server.HtmlEncode(TaskName).ToLower());
@@ -150,7 +150,8 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW && NumOps >=1 && sTime.TotalHours >= 0 && cTime.TotalHours >=0)
             {
-                TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new App_Code.variante(VariantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new App_Code.processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), 
+                    new App_Code.variante(Session["ActiveWorkspace"].ToString(), VariantID));
                 if(tskVar!=null && tskVar.Task!=null && tskVar.variant!=null && 
                     tskVar.Task.processID!=-1 && tskVar.variant.idVariante!=-1)
                 {
@@ -205,7 +206,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR || ViewBag.authW)
             {
-                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(VariantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), VariantID));
                 if(tskVar!=null && tskVar.Task!=null && tskVar.Task.processID!=-1 &&
                     tskVar.variant!=null && tskVar.variant.idVariante!=-1)
                 { 
@@ -318,14 +319,14 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                TaskVariante taskVar = new TaskVariante(new processo(TaskID, TaskRev),
-                    new variante(variantID));
+                TaskVariante taskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev),
+                    new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if (taskVar != null && taskVar.Task != null && taskVar.Task.processID != -1 &&
                     taskVar.variant != null && taskVar.variant.idVariante != -1)
                 {
                     
                     ret = taskVar.addParameter(Server.HtmlEncode(ParamName), Server.HtmlEncode(ParamDescription),
-                        new ProductParametersCategory(ParamCategory), ParamIsFixed, ParamIsRequired);
+                        new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), ParamCategory), ParamIsFixed, ParamIsRequired);
                 }
             }
             return ret;
@@ -368,7 +369,8 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                TaskVariante prcVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                TaskVariante prcVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), 
+                    new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if (prcVar != null && prcVar.Task != null && prcVar.Task.processID != -1 &&
                     prcVar.variant != null && prcVar.variant.idVariante != -1)
                 {
@@ -416,12 +418,12 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                ModelTaskParameter prodParam = new ModelTaskParameter(TaskID, TaskRev, variantID, ParamID);
+                ModelTaskParameter prodParam = new ModelTaskParameter(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev, variantID, ParamID);
                 if (prodParam.ParameterID != -1)
                 {
                     prodParam.Name = paramName;
                     prodParam.Description = paramDescription;
-                    prodParam.ParameterCategory = new ProductParametersCategory(paramCategory);
+                    prodParam.ParameterCategory = new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), paramCategory);
                     prodParam.isFixed = isFixed;
                     prodParam.isRequired = isRequired;
                     ret = true;
@@ -492,7 +494,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
-                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(VariantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), VariantID));
                 if (tskVar != null && tskVar.Task != null && tskVar.Task.processID > -1 &&
                     tskVar.variant != null && tskVar.variant.idVariante > -1)
                 {
@@ -527,7 +529,7 @@ namespace KIS.Areas.Products.Controllers
             }
 
             int retCT = 0;
-            ProcessoVariante prcVar=new ProcessoVariante(new processo(processID, processRev), new variante(variantID));
+            ProcessoVariante prcVar=new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID, processRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
             if(prcVar!=null && prcVar.process!= null && prcVar.variant!=null && prcVar.process.processID!=-1
                 && prcVar.variant.idVariante!=-1)
             {
@@ -541,7 +543,7 @@ namespace KIS.Areas.Products.Controllers
                 { 
                 for(int i = 0; i < prcVar.process.subProcessi.Count && retCT == 1; i++)
                 {
-                    TaskVariante tskVar = new TaskVariante(prcVar.process.subProcessi[i], prcVar.variant);
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), prcVar.process.subProcessi[i], prcVar.variant);
                     tskVar.loadTempiCiclo();
                     bool found = false;
                     foreach (var cTime in tskVar.Tempi.Tempi)
@@ -586,10 +588,10 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(WorkInstructionID, WorkInstructionVersion);
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), WorkInstructionID, WorkInstructionVersion);
                 if(currWI!=null && currWI.ID!=-1 && currWI.Version!=-1)
                 {
-                    TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
                     if(tskVar!=null && tskVar.Task!=null && tskVar.Task.processID!=-1
                         && tskVar.variant!=null && tskVar.variant.idVariante!=-1)
                     {
@@ -703,7 +705,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR || ViewBag.authW)
             {
-                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
                     tskVar.variant != null && tskVar.variant.idVariante != -1)
                 {
@@ -744,7 +746,7 @@ namespace KIS.Areas.Products.Controllers
 
             if(authW)
             {
-                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
                     tskVar.variant != null && tskVar.variant.idVariante != -1)
                 {
@@ -785,7 +787,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (authW)
             {
-                TaskVariante tskVar = new TaskVariante(new processo(TaskID, TaskRev), new variante(variantID));
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
                 if (tskVar != null && tskVar.Task != null && tskVar.Task.processID != -1 &&
                     tskVar.variant != null && tskVar.variant.idVariante != -1)
                 {
@@ -836,7 +838,7 @@ namespace KIS.Areas.Products.Controllers
             }
             if (ViewBag.authX)
             {
-                Articolo art = new Articolo(ProductID, ProductYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
                 if(art!=null && art.ID!=-1 && art.Year > 2010)
                 {
                     User curr1 = (User)Session["user"];

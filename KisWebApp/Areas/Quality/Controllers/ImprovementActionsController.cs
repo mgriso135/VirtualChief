@@ -57,7 +57,7 @@ namespace KIS.Areas.Quality.Controllers
             if (ViewBag.authR || ViewBag.authW)
             {
                 ViewBag.authorized = true;
-                ImprovementActions impActs = new ImprovementActions();
+                ImprovementActions impActs = new ImprovementActions(Session["ActiveWorkspace"].ToString());
                 impActs.loadImprovementActions();
                 iActsList = impActs.ImprovementActionsList;
             }
@@ -66,7 +66,7 @@ namespace KIS.Areas.Quality.Controllers
                 if (Session["user"] != null)
                 {
                     ViewBag.authR = true;
-                    ImprovementActions impActs = new ImprovementActions();
+                    ImprovementActions impActs = new ImprovementActions(Session["ActiveWorkspace"].ToString());
                     impActs.loadImprovementActions((User)Session["user"]);
                     iActsList = impActs.ImprovementActionsList;
                 }
@@ -207,7 +207,7 @@ namespace KIS.Areas.Quality.Controllers
             {
                 ViewBag.authenticated = true;
 
-                ImprovementActions impActList = new ImprovementActions();
+                ImprovementActions impActList = new ImprovementActions(Session["ActiveWorkspace"].ToString());
                 User curr = (User)Session["user"];
                 int[] ret = impActList.Add(curr);
                 ViewBag.Message = impActList.log;
@@ -258,8 +258,8 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authenticated = true;
                 if (ID != -1 && Year > 1970)
                 {
-                    ImprovementActions impActsList = new ImprovementActions();
-                    ImprovementAction curr = new ImprovementAction(ID, Year);
+                    ImprovementActions impActsList = new ImprovementActions(Session["ActiveWorkspace"].ToString());
+                    ImprovementAction curr = new ImprovementAction(Session["ActiveWorkspace"].ToString(), ID, Year);
                     curr.loadTeamMembers();
                     for (int i = 0; i < curr.TeamMembers.Count; i++)
                     {
@@ -313,7 +313,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
             }
 
-            ImprovementAction currImpAct = new ImprovementAction(ID, Year);
+            ImprovementAction currImpAct = new ImprovementAction(Session["ActiveWorkspace"].ToString(), ID, Year);
             if ((!ViewBag.authR || !ViewBag.authW) && Session["user"] != null)
             {
                 User curr = (User)Session["user"];
@@ -390,7 +390,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
             }
 
-            ImprovementAction currImpAct = new ImprovementAction(ID, Year);
+            ImprovementAction currImpAct = new ImprovementAction(Session["ActiveWorkspace"].ToString(), ID, Year);
             if ((!ViewBag.authR || !ViewBag.authW) && Session["user"] != null)
             {
                 User curr = (User)Session["user"];
@@ -414,7 +414,7 @@ namespace KIS.Areas.Quality.Controllers
 
             if (ViewBag.authR || ViewBag.authW)
             {
-                ImprovementAction iAct = new ImprovementAction(ID, Year);
+                ImprovementAction iAct = new ImprovementAction(Session["ActiveWorkspace"].ToString(), ID, Year);
                 if(iAct.ID!=-1 && iAct.Year!=-1)
                 {
                     iAct.loadTeamMembers();
@@ -1361,7 +1361,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
             }
 
-            ImprovementActions iActscActsList = new ImprovementActions();
+            ImprovementActions iActscActsList = new ImprovementActions(Session["ActiveWorkspace"].ToString());
             if (ViewBag.authR || ViewBag.authW)
             {
                 ViewBag.authorized = true;
@@ -1426,7 +1426,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.currUser = curr.username;
             }
 
-            ImprovementAction currImpAct = new ImprovementAction(ImprovementActionID, ImprovementActionYear);
+            ImprovementAction currImpAct = new ImprovementAction(Session["ActiveWorkspace"].ToString(), ImprovementActionID, ImprovementActionYear);
             if ((!ViewBag.authR || !ViewBag.authW) && Session["user"] != null)
             {
                 User curr = (User)Session["user"];

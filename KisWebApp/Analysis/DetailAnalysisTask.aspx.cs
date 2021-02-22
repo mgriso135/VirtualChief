@@ -45,7 +45,7 @@ namespace KIS.Analysis
 
                     if (procID != -1 && rev != -1)
                     {
-                        processo prc = new processo(procID, rev);
+                        processo prc = new processo(Session["ActiveWorkspace"].ToString(), procID, rev);
                         if (prc.processID != -1)
                         {
                             lnkNavigation.Visible = true;

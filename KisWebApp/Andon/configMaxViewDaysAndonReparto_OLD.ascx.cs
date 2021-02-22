@@ -29,7 +29,7 @@ namespace KIS.Andon
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    KIS.App_Code.AndonReparto andrp = new KIS.App_Code.AndonReparto(this.Tenant, idReparto);
+                    KIS.App_Code.AndonReparto andrp = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if (andrp.RepartoID != -1)
                     {
                         for (int i = 1; i <= 500; i++)
@@ -55,7 +55,7 @@ namespace KIS.Andon
         protected void ddlNumDays_SelectedIndexChanged(object sender, EventArgs e)
         {
             lbl1.Text += idReparto.ToString() + " " + ddlNumDays.SelectedValue.ToString() + "<br />";
-            KIS.App_Code.AndonReparto andRep = new App_Code.AndonReparto(idReparto);
+            KIS.App_Code.AndonReparto andRep = new App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             int maxDays = -1;
             try
             {

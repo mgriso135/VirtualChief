@@ -172,7 +172,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._tasks.Add(new processo(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._tasks.Add(new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 conn.Close();
             }
@@ -305,7 +305,7 @@ namespace KIS.App_Code
             while (rdr.Read())
             {
                     log += rdr.GetInt32(0) + " " + rdr.GetInt32(1) + " " + rdr.GetInt32(2) + "<br />";
-                ProcessoVariante daAggiungere = new ProcessoVariante(new processo(rdr.GetInt32(0), rdr.GetInt32(1)), new variante(rdr.GetInt32(2)));
+                ProcessoVariante daAggiungere = new ProcessoVariante(this.Tenant, new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)), new variante(this.Tenant, rdr.GetInt32(2)));
                     daAggiungere.loadReparto();
                     daAggiungere.process.loadFigli(daAggiungere.variant);
                     if (daAggiungere.process != null && daAggiungere.variant != null)
@@ -418,7 +418,7 @@ namespace KIS.App_Code
                 {
 
                     // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
-                    TaskProduzione tsk = new TaskProduzione(rdr.GetInt32(0));
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
                     
                     if (tsk.TaskProduzioneID != -1)
                     {
@@ -438,7 +438,7 @@ namespace KIS.App_Code
                         }*/
                         for(int i = 0; i < tsk.PreviousTasks.Count; i++)
                         {
-                            TaskProduzione prec = new TaskProduzione(tsk.PreviousTasks[i].NearTaskID);
+                            TaskProduzione prec = new TaskProduzione(this.Tenant, tsk.PreviousTasks[i].NearTaskID);
                             if(tsk.PreviousTasks[i].ConstraintType == 0)
                             {
                                 if (prec.Status == 'N')
@@ -546,7 +546,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._WarningAperti.Add(new Warning(rdr.GetInt32(0)));
+                this._WarningAperti.Add(new Warning(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -570,11 +570,11 @@ namespace KIS.App_Code
                     + ") ORDER BY lateFinish ASC";
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 log = cmd.CommandText + "<br />";
-                Reparto rp = new Reparto(reparto);
+                Reparto rp = new Reparto(this.Tenant, reparto);
                 rp.loadCalendario(inizio.AddDays(-1), fine.AddDays(1));
                 while (rdr.Read())
                 {
-                    TaskProduzione tsk = new TaskProduzione(rdr.GetInt32(0));
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
                     log += "Task " + tsk.TaskProduzioneID.ToString() + ", postazione " + tsk.PostazioneID.ToString() + " " + tsk.LateStart.ToString("dd/MM/yyyy HH:mm:ss") + " - " + tsk.LateFinish.ToString("dd/MM/yyyy HH:mm:ss") + " - " + tsk.TempoC.TotalHours.ToString() + "<br />";
 
                     if (tsk.LateStart >= inizio && tsk.LateFinish <= fine)
@@ -737,7 +737,7 @@ namespace KIS.App_Code
         public DateTime Inizio
         {
             get {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(this.Tenant, idReparto);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Inizio, rp.tzFusoOrario); }
         }
 
@@ -745,7 +745,7 @@ namespace KIS.App_Code
         public DateTime Fine
         {
             get {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(this.Tenant, idReparto);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario); }
         }
 
@@ -765,7 +765,7 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
 
-            Reparto rp = new Reparto(idReparto);
+            Reparto rp = new Reparto(this.Tenant, idReparto);
             this._idPostazione = idPost;
             this._Inizio = TimeZoneInfo.ConvertTimeToUtc(intCalRep.Inizio, rp.tzFusoOrario);
             this._Fine = TimeZoneInfo.ConvertTimeToUtc(intCalRep.Fine, rp.tzFusoOrario);
@@ -799,7 +799,7 @@ namespace KIS.App_Code
         private DateTime _Inizio;
         public DateTime Inizio
         {
-            get { Reparto rp = new Reparto(idReparto);
+            get { Reparto rp = new Reparto(this.Tenant, idReparto);
                 return TimeZoneInfo.ConvertTimeFromUtc( this._Inizio, rp.tzFusoOrario); }
         }
 
@@ -807,7 +807,7 @@ namespace KIS.App_Code
         public DateTime Fine
         {
             get {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(this.Tenant, idReparto);
                 return TimeZoneInfo.ConvertTimeFromUtc(this._Fine, rp.tzFusoOrario);
             }
         }
@@ -942,7 +942,7 @@ namespace KIS.App_Code
                 List<Reparto> rpList = new List<Reparto>();
                 while (rdr.Read())
                 {
-                    rpList.Add(new Reparto(rdr.GetInt32(0)));
+                    rpList.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -980,7 +980,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    TaskProduzione tsk = new TaskProduzione(rdr.GetInt32(0));
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
                     // Ricerco l'intervallo di lavoro corretto
                     int intervalloIniziale = -1;
                     for (int i = 0; i < this.Intervalli.Count && intervalloIniziale == -1; i++)
@@ -1138,7 +1138,7 @@ namespace KIS.App_Code
             if (pst.id != -1 && trn.id != -1)
             {
                 this._postazione = new Postazione(this.Tenant, pst.id);
-                this._turno = new Turno(trn.id);
+                this._turno = new Turno(this.Tenant, trn.id);
 
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
@@ -1214,7 +1214,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
-                    this._Turni.Add(new RisorsePostazioneTurno(this.Tenant, pst, new Turno(rdr.GetInt32(0))));
+                    this._Turni.Add(new RisorsePostazioneTurno(this.Tenant, pst, new Turno(this.Tenant, rdr.GetInt32(0))));
                 }
                 rdr.Close();
                 conn.Close();

@@ -29,12 +29,12 @@ namespace KIS.Postazioni
                 }
                 if (repID != -1 && check == true)
                 {
-                    Reparto rp = new Reparto(repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                     if (!Page.IsPostBack)
                     {
                         if (rp.id != -1)
                         {
-                            ElencoPostazioni elPost = new ElencoPostazioni(rp);
+                            ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString(), rp);
                             rptPostazioniUtenti.DataSource = elPost.elenco;
                             rptPostazioniUtenti.DataBind();
                         }
@@ -75,7 +75,7 @@ namespace KIS.Postazioni
             String configShowNomi = "0";
             if (repID != -1)
             {
-                Reparto rp = new Reparto(repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
                 if(rp.id!=-1)
                 {
                     configShowNomi = rp.AndonPostazioniFormatoUsername.ToString();
@@ -85,7 +85,7 @@ namespace KIS.Postazioni
 
             if (pID != -1)
             {
-                Postazione p = new Postazione(pID);
+                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pID);
                 p.loadUtentiLoggati();
                 for (int i = 0; i < p.UtentiLoggati.Count; i++)
                 {
@@ -156,8 +156,8 @@ namespace KIS.Postazioni
                 if (repID != -1 && check == true)
                 {
                     rptPostazioniUtenti.Visible = true;
-                    Reparto rp = new Reparto(repID);
-                    ElencoPostazioni elPost = new ElencoPostazioni(rp);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString(), rp);
                     rptPostazioniUtenti.DataSource = elPost.elenco;
                     rptPostazioniUtenti.DataBind();
                 }

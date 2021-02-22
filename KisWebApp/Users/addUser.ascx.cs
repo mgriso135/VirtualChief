@@ -62,7 +62,7 @@ namespace KIS.Admin
 
         protected void btnSaveUser_Click(object sender, EventArgs e)
         {
-            User utn = new User();
+            User utn = new User(Session["ActiveWorkspace"].ToString());
             String rt = utn.add(inputUsername.Text, inputPassword.Text, inputNome.Text, inputCognome.Text, 
                 tipoUtente.SelectedValue, ddlLanguages.SelectedValue,
                 true,

@@ -7,7 +7,7 @@ namespace KIS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            KISConfig kCfg = new KISConfig();
+            KISConfig kCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
             Boolean FullyConfigured =
                 kCfg.WizAdminUserCompleted &&
                 kCfg.WizAndonCompleted &&

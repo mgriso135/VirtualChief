@@ -27,7 +27,7 @@ namespace KIS.Reparti
 
             if (checkUser == true)
             {
-                    ElencoReparti el = new ElencoReparti();
+                    ElencoReparti el = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                     rptListReparti.DataSource = el.elenco;
                     rptListReparti.DataBind();
             }

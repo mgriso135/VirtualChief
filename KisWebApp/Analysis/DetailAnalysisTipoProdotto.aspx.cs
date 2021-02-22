@@ -30,7 +30,7 @@ namespace KIS.Analysis
                 }
                 if (idProc != -1 && rev != -1 && idVar != -1)
                 {
-                    ProcessoVariante prcVar = new ProcessoVariante(new processo(idProc, rev), new variante(idVar));
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace"].ToString(), idVar));
                     prcVar.loadReparto();
                     prcVar.process.loadFigli(prcVar.variant);
                     if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.process.revisione != -1 && prcVar.variant.idVariante != -1)

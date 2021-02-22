@@ -25,7 +25,7 @@ namespace KIS.KanbanBox
         public string Main()
         {
             String ret = "";
-            KanbanBoxDataSet kbSet = new KanbanBoxDataSet();
+            KanbanBoxDataSet kbSet = new KanbanBoxDataSet(Session["ActiveWorkspace"].ToString());
             List<String> nonExPN2 = kbSet.checkNonExistentPartNumbers();
             var nonExPN = nonExPN2.Distinct().ToList();
             if (nonExPN.Count > 0)

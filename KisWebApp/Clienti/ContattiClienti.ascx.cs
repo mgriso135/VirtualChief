@@ -113,7 +113,7 @@ namespace KIS.Clienti
             }
             if(e.CommandName=="delete")
             {
-                Contatto person = new Contatto(idContatto);
+                Contatto person = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
                 if (person.ID != -1)
                 {
                     person.Delete();

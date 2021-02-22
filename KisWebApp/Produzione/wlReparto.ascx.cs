@@ -36,7 +36,7 @@ namespace KIS.Produzione
                     chkLstPostazioni.Visible = false;
                     inizio = DateTime.Now;
                     fine = inizio;
-                    Reparto rp = new Reparto(idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     rp.loadPostazioni();
                     idPostazioni = new List<int>();
                     for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -125,7 +125,7 @@ namespace KIS.Produzione
             if (res == 0)
             {
                 chkLstPostazioni.Visible = false;
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -141,7 +141,7 @@ namespace KIS.Produzione
             {
                 chkLstPostazioni.Visible = true;
                 chkLstPostazioni.Items.Clear();
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -190,7 +190,7 @@ namespace KIS.Produzione
             if (idReparto != -1)
             {
                 Chart1.Visible = true;
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 Chart1.Series.Clear();
                 Chart1.Titles.Clear();
                 Chart1.Titles.Add(new System.Web.UI.DataVisualization.Charting.Title(rp.name));

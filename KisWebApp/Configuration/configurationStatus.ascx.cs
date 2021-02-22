@@ -13,7 +13,7 @@ namespace KIS.Configuration
         protected void Page_Load(object sender, EventArgs e)
         {
             
-            KISConfig kisCfg = new KISConfig();
+            KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
 
             adminOK.Visible = kisCfg.WizAdminUserCompleted;
             adminKO.Visible = !kisCfg.WizAdminUserCompleted;

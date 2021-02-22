@@ -39,12 +39,12 @@ namespace KIS.Areas.Customers.Controllers
 
 
             int ret = 0;
-            Cliente cst = new Cliente(customer);
+            Cliente cst = new Cliente(Session["ActiveWorkspace"].ToString(), customer);
             if ((cst == null || cst.CodiceCliente.Length == 0) && ret == 0)
             {
                 ret = 2;
             }
-            User usr = new App_Code.User();
+            User usr = new App_Code.User(Session["ActiveWorkspace"].ToString());
             if(usr.UserExists(username) && ret == 0)
             {
                 ret = 4;
@@ -61,7 +61,7 @@ namespace KIS.Areas.Customers.Controllers
                 ret = 3;
             }
             }
-            Group grp = new Group("CustomerUser");
+            Group grp = new Group(Session["ActiveWorkspace"].ToString(), "CustomerUser");
             if((grp == null || grp.ID == -1) && ret == 0)
             {
                 ret = 5;
@@ -73,12 +73,12 @@ namespace KIS.Areas.Customers.Controllers
             int contactID = cst.AddContatto(FirstName, LastName, Role);
                 if(contactID !=-1 && mail!=null && mail.Address.Length > 0)
                 {
-                    Contatto cont = new Contatto(contactID);
+                    Contatto cont = new Contatto(Session["ActiveWorkspace"].ToString(), contactID);
                         cont.addEmail(mail, "Default");
                         if(createUser && password.Length>0 && password == password2)
                         {
-                            User curr = new App_Code.User();
-                            KISConfig cfg = new KISConfig();
+                            User curr = new App_Code.User(Session["ActiveWorkspace"].ToString());
+                            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
                             String checkUsrAdd = curr.add(username, password, FirstName, LastName, "User", cfg.Language,
                                 false, mail);
                         curr = new App_Code.User(username);
@@ -89,7 +89,7 @@ namespace KIS.Areas.Customers.Controllers
                         String baseURL = cfg.baseUrl + cfg.basePath;
 
                         System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
-                        mMessage.From = new MailAddress("kaizenindicatorsystem@kaizenkey.com", "Virtual Chief");
+                        mMessage.From = new MailAddress("virtualchief@kaizenkey.com", "Virtual Chief");
                         mMessage.To.Add(new MailAddress(mail.Address, FirstName + " " + LastName));
                         mMessage.Subject = "[Virtual Chief] " + ResCustomer.addCustomerContact.lblSubject;
                         mMessage.IsBodyHtml = true;
