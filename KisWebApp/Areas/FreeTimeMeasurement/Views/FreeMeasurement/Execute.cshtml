@@ -175,16 +175,18 @@
                                         for (var i = 0; i < data.length; i++) {
                                             var strQty = "";
                                             var strBtnEnd = "<td></td>";
+                                            var strMeasurementName = "<td></td>";
                                             if (data[i]["NoProductiveTaskId"] == "-1") {
                                                 strQty = "<input type='number' id='txtQuantity_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "' value='"
                                                     + data[i]["TaskQuantity"] + "' class='form-text' min='0.01' step='.01' style='width:80px' />"
                                                     + data[i]["MeasurementUnitType"];
+                                                strMeasurementName = "<td style='vertical-align:middle;'>" + data[i]["MeasurementName"] + "</td>";
 
                                                 strBtnEnd = "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons endtask' id='endtask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>done_outline</span ></td>";
                                             }
                                             strTable += "<tr>"
                                                 + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons pausetask' id='pausetask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>pause_circle</span ></td>"
-                                                + "<td style='vertical-align:middle;'>" + data[i]["MeasurementName"] + "</td>"
+                                                + strMeasurementName
                                                 + "<td style='vertical-align:middle;'>" + data[i]["TaskName"] + "</td>"
                                                 + "<td style='vertical-align:middle;'>" + data[i]["WorkstationName"] + "</td>"
                                                 + "<td><span class='material-icons btnViewNoteForm' id='btnViewNoteForm_" + data[i]["LastTaskEventId"] + "' style='cursor:pointer; font-size:32px;color:red;'>speaker_notes</span></td>"

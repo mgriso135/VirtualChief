@@ -280,7 +280,7 @@ namespace KIS.App_Sources
          */
         public int addTask(NoProductiveTask npTask)
         {
-            int ret = 0;
+            int ret = -1;
             if (this.id != -1 && this.Status != 'F')
             {
                 this.loadTasks();
@@ -1695,6 +1695,7 @@ namespace KIS.App_Sources
                 { 
                     cmd.ExecuteNonQuery();
                     tr.Commit();
+                    ret = 1;
                 }
                 catch(Exception ex)
                 {
@@ -1717,32 +1718,50 @@ namespace KIS.App_Sources
                         MySqlCommand cmdDef = conn.CreateCommand();
                         MySqlTransaction tr2 = conn.BeginTransaction();
                         cmdDef.Transaction = tr2;
-                        
-                        try
-                        {
-                            // ADD NO PRODUCTIVE TASK IN TASK_LIST
-                            FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
-                            int nptask = fm.addTask(defTask);
 
-                            cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
-                               + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
-                            cmdDef.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                            cmdDef.Parameters.AddWithValue("@taskid", nptask);
-                            cmdDef.Parameters.AddWithValue("@user", op.username);
-                            cmdDef.Parameters.AddWithValue("@eventtype", 'I');
-                            cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                            cmdDef.Parameters.AddWithValue("@notes", "");
-                            cmdDef.ExecuteNonQuery();
-
-                            cmdDef.CommandText = "UPDATE freemeasurements_tasks SET status='I', task_startdatereal=@eventdate WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
-                            cmdDef.ExecuteNonQuery();
-
-                            tr2.Commit();
+                        // ADD NO PRODUCTIVE TASK IN TASK_LIST
+                        int nptask = -1;
+                        int npmeasurement = -1;
+                        FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
+                        if(fm.Status!='F')
+                        { 
+                            nptask = fm.addTask(defTask);
+                            npmeasurement = this.MeasurementId;
                         }
-                        catch(Exception ex)
+                        else
                         {
-                            this.log = ex.Message;
-                            tr2.Rollback();
+                            FreeTimeMeasurements fmss = new FreeTimeMeasurements();
+                            fmss.loadMeasurements('I');
+                            if(fmss.MeasurementsList.Count > 0)
+                            {
+                                nptask = fmss.MeasurementsList[0].addTask(defTask);
+                                npmeasurement = fmss.MeasurementsList[0].id;
+                            }
+                        }
+                        if (nptask!=-1)
+                        { 
+                            try
+                            {
+                                cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
+                                   + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
+                                cmdDef.Parameters.AddWithValue("@freemeasurementid", npmeasurement);
+                                cmdDef.Parameters.AddWithValue("@taskid", nptask);
+                                cmdDef.Parameters.AddWithValue("@user", op.username);
+                                cmdDef.Parameters.AddWithValue("@eventtype", 'I');
+                                cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
+                                cmdDef.Parameters.AddWithValue("@notes", "");
+                                cmdDef.ExecuteNonQuery();
+
+                                cmdDef.CommandText = "UPDATE freemeasurements_tasks SET status='I', task_startdatereal=@eventdate WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
+                                cmdDef.ExecuteNonQuery();
+
+                                tr2.Commit();
+                            }
+                            catch(Exception ex)
+                            {
+                                this.log = ex.Message;
+                                tr2.Rollback();
+                            }
                         }
                     }
                 }
@@ -1831,48 +1850,68 @@ namespace KIS.App_Sources
                 {
                     // ADD NO PRODUCTIVE TASK IN TASK_LIST
                     FreeTimeMeasurement fm = new FreeTimeMeasurement(this.MeasurementId);
-                    int nptask = fm.addTask(defTask);
-                    FreeMeasurement_Task npTsk = new FreeMeasurement_Task(this.MeasurementId, nptask);
-
-                    foreach (var usr in this.Users)
+                    // int nptask = fm.addTask(defTask);
+                    int nptask = -1;
+                    int npmeasurement = -1;
+                    if (fm.Status != 'F')
                     {
-                        User cUsr = new User(usr);
-                        cUsr.loadFreeMeasurementRunningTasks();
-                        if(cUsr.FreeMeasurementTasks.Count == 0)
-                        { 
-                            MySqlCommand cmdDef = conn.CreateCommand();
-                            MySqlTransaction tr2 = conn.BeginTransaction();
-                            cmdDef.Transaction = tr2;
-
-                            try
-                            {
-                                cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
-                                   + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
-                                cmdDef.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                                cmdDef.Parameters.AddWithValue("@taskid", nptask);
-                                cmdDef.Parameters.AddWithValue("@user", cUsr.username);
-                                cmdDef.Parameters.AddWithValue("@eventtype", 'I');
-                                cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                                cmdDef.Parameters.AddWithValue("@notes", "");
-
-                                cmdDef.ExecuteNonQuery();
-                                tr2.Commit();
-                            }
-                            catch (Exception ex)
-                            {
-                                this.log = ex.Message;
-                                tr2.Rollback();
-                            }
-
-                            
+                        nptask = fm.addTask(defTask);
+                        npmeasurement = this.MeasurementId;
+                    }
+                    else
+                    {
+                        FreeTimeMeasurements fmss = new FreeTimeMeasurements();
+                        fmss.loadMeasurements('I');
+                        if (fmss.MeasurementsList.Count > 0)
+                        {
+                            nptask = fmss.MeasurementsList[0].addTask(defTask);
+                            npmeasurement = fmss.MeasurementsList[0].id;
                         }
                     }
-
-                    if(npTsk.Status=='N')
+                    if (nptask != -1)
                     {
-                        npTsk.StartDateReal = eventtime;
+                        FreeMeasurement_Task npTsk = new FreeMeasurement_Task(this.MeasurementId, nptask);
+
+                        foreach (var usr in this.Users)
+                        {
+                            User cUsr = new User(usr);
+                            cUsr.loadFreeMeasurementRunningTasks();
+                            if (cUsr.FreeMeasurementTasks.Count == 0)
+                            {
+                                MySqlCommand cmdDef = conn.CreateCommand();
+                                MySqlTransaction tr2 = conn.BeginTransaction();
+                                cmdDef.Transaction = tr2;
+
+                                try
+                                {
+                                    cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, user, eventtype, eventdate, notes) "
+                                       + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
+                                    cmdDef.Parameters.AddWithValue("@freemeasurementid", npmeasurement);
+                                    cmdDef.Parameters.AddWithValue("@taskid", nptask);
+                                    cmdDef.Parameters.AddWithValue("@user", cUsr.username);
+                                    cmdDef.Parameters.AddWithValue("@eventtype", 'I');
+                                    cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
+                                    cmdDef.Parameters.AddWithValue("@notes", "");
+
+                                    cmdDef.ExecuteNonQuery();
+                                    tr2.Commit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    this.log = ex.Message;
+                                    tr2.Rollback();
+                                }
+
+
+                            }
+                        }
+                    
+                        if(npTsk.Status=='N')
+                        {
+                            npTsk.StartDateReal = eventtime;
+                        }
+                        npTsk.Status = 'I';
                     }
-                    npTsk.Status = 'I';
                 }
 
                 conn.Close();
