@@ -5,6 +5,7 @@ using System.Web;
 using System.Net.Mail;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using KIS.App_Code;
 
 
 namespace KIS.App_Sources
@@ -105,6 +106,43 @@ namespace KIS.App_Sources
             cmd.Parameters.AddWithValue("@userid", id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read())
+            {
+                this._id = rdr.GetInt32(0);
+                this._userId = rdr.GetString(1);
+                this._email = new MailAddress(rdr.GetString(2));
+                this._firstname = rdr.GetString(3);
+                this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
+                this._nickname = rdr.GetString(5);
+                this._pictureUrl = rdr.GetString(6);
+                this._locale = rdr.IsDBNull(7) ? "en" : rdr.GetString(7);
+                this._updatedAt = rdr.GetDateTime(8);
+                this._iss = rdr.GetString(9);
+                this._nonce = rdr.GetString(10);
+                this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
+                this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
+                this._created_at = rdr.GetDateTime(13);
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        /* Returns:
+          * Object with data, if account exists in Virtual Chief
+          * id = -1 otherwise
+          */
+        public UserAccount(int id)
+        {
+            this._id = -1;
+            this._userId = "";
+            this._Workspaces = new List<Workspace>();
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at "
+                + " FROM useraccounts WHERE id=@userid";
+            cmd.Parameters.AddWithValue("@userid", id);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
             {
                 this._id = rdr.GetInt32(0);
                 this._userId = rdr.GetString(1);
@@ -271,6 +309,33 @@ namespace KIS.App_Sources
                 conn.Close();
             }
         }
+
+        private List<Group> _Groups;
+        public List<Group> Groups { get { return this._Groups; } }
+
+        private List<GroupPermissions> _GroupPermissions;
+        public List<GroupPermissions> GroupPermissions { get { return this._GroupPermissions; } }
+
+        public void loadGroupPermissions(int WorkspaceId)
+        {
+            this._GroupPermissions = new List<GroupPermissions>();
+            if(this.id !=-1 && WorkspaceId >=0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT groupid FROM useraccountsgroups WHERE userid=@userid AND workspaceid=@workspaceid";
+                cmd.Parameters.AddWithValue("@userid", this.id);
+                cmd.Parameters.AddWithValue("@workspaceid", WorkspaceId);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this._GroupPermissions.Add(new GroupPermissions(rdr.GetInt32(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
     }
 
     public class UserAccounts
@@ -382,10 +447,14 @@ namespace KIS.App_Sources
         private DateTime _enabledDate;
         public DateTime enabledDate { get { return this._enabledDate; } }
 
+        private List<UserAccount> _UserAccounts;
+        public List<UserAccount> UserAccounts { get { return this._UserAccounts; } }
+
         public Workspace(int wsid)
         {
             this._id = -1;
             this._Name = "";
+            this._UserAccounts = new List<UserAccounts>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
@@ -403,6 +472,40 @@ namespace KIS.App_Sources
             }
             rdr.Close();
             conn.Close();
+        }
+
+        public void loadUserAccounts()
+        {
+            this._UserAccounts = new List<UserAccount>();
+            if(this.id!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT useraccounts.id FROM useraccountworkspaces "
+                    + " INNER JOIN useraccounts ON(useraccountworkspaces.userid= useraccounts.id) "
+                    + " WHERE workspaceid = @workspaceid "
+                    + " ORDER BY useraccounts.userid";
+                cmd.Parameters.AddWithValue("@workspaceid", this.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this._UserAccounts.Add(new UserAccount(rdr.GetInt32(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if invitation sent successfully
+         * 2 if
+         */
+        public int InviteUser(UserAccount usr)
+        {
+            int ret = 0;
+            return ret;
         }
     }
 
@@ -424,6 +527,956 @@ namespace KIS.App_Sources
             }
             rdr.Close();
             conn.Close();
+        }
+    }
+
+    public class Group
+    {
+        public String log;
+        private int _ID;
+        public int ID
+        {
+            get { return this._ID; }
+        }
+        private String _Nome;
+        public String Nome
+        {
+            get { return this._Nome; }
+            set
+            {
+                if (this._ID != -1 && value.Length > 0)
+                {
+                    String strSQL = "UPDATE groupss SET nomeGruppo = @GroupName WHERE id = @ID";
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlTransaction trn = conn.BeginTransaction();
+
+                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@GroupName", value);
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    cmd.Transaction = trn;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        trn.Commit();
+                        this._Nome = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        trn.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+        private String _Descrizione;
+        public String Descrizione
+        {
+            get { return this._Descrizione; }
+            set
+            {
+                if (this.ID != -1 && value.Length > 0)
+                {
+                    String strSQL = "UPDATE groupss SET descrizione = @desc WHERE id = @ID";
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlTransaction trn = conn.BeginTransaction();
+
+                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@desc", value);
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    cmd.Transaction = trn;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        trn.Commit();
+                        this._Descrizione = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        trn.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
+        private GruppoPermessi _Permessi;
+        public GruppoPermessi Permessi
+        {
+            get { return this._Permessi; }
+        }
+
+        public Group(int groupID)
+        {
+            String strSQL = "SELECT * FROM groupss WHERE id = @ID";
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@ID", groupID);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            rdr.Read();
+            this._Permessi = new GruppoPermessi(groupID);
+            if (rdr.HasRows)
+            {
+                this._ID = rdr.GetInt32(0);
+                this._Nome = rdr.GetString(1);
+                this._Descrizione = rdr.GetString(2);
+            }
+            else
+            {
+                this._ID = -1;
+                this._Nome = "";
+                this._Descrizione = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public Group(String GroupName) : base()
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, nomegruppo, descrizione FROM groupss WHERE nomeGruppo = @GroupName";
+            cmd.Parameters.AddWithValue("@GroupName", GroupName);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._ID = rdr.GetInt32(0);
+                this._Nome = rdr.GetString(1);
+                this._Descrizione = rdr.GetString(2);
+            }
+            else
+            {
+                this._ID = -1;
+                this._Nome = "";
+                this._Descrizione = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool Delete()
+        {
+            bool rt = false;
+            if (this.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlTransaction trn = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = trn;
+
+
+                try
+                {
+                    cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    cmd.ExecuteNonQuery();
+                    cmd.CommandText = "DELETE FROM groupss WHERE id = " + this.ID.ToString();
+                    cmd.ExecuteNonQuery();
+                    trn.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message;
+                    rt = false;
+                    trn.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
+        }
+
+        private List<VoceMenu> _VociDiMenu;
+        public List<VoceMenu> VociDiMenu
+        {
+            get { return this._VociDiMenu; }
+        }
+
+        public void loadMenu()
+        {
+            this._VociDiMenu = new List<VoceMenu>();
+            if (this.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT idVoce FROM menugruppi WHERE gruppo = @ID"
+                    + " ORDER BY ordinamento";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this._VociDiMenu.Add(new VoceMenu(this.Tenant, rdr.GetInt32(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        public bool AddMenu(VoceMenu vm)
+        {
+            bool rt = false;
+            if (this.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                this.loadMenu();
+                int maxOrd = this.VociDiMenu.Count + 1;
+                cmd.CommandText = "INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(@ID, @vmid, @maxOrd)";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
+                cmd.Parameters.AddWithValue("@vmid", vm.ID);
+                cmd.Parameters.AddWithValue("@maxOrd", maxOrd);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message;
+                    rt = false;
+                    tr.Rollback();
+                }
+            }
+            return rt;
+        }
+
+        public bool DeleteMenu(VoceMenu vm)
+        {
+            bool rt = false;
+            if (this.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                cmd.CommandText = "DELETE FROM menugruppi WHERE gruppo = @ID AND idVoce = @vmid";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
+                cmd.Parameters.AddWithValue("@vmid", vm.ID);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message;
+                    rt = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
+        }
+
+        /* Cambia l'ordinamento delle voci di menu
+         * direzione = true: sposta in su
+         * direzione = false: sposta in giu
+         */
+        public bool SpostaVoce(VoceMenu vm, bool direzione)
+        {
+            log = "Entro in SpostaVoce()<br />";
+            bool ret = false;
+            if (this.ID != -1)
+            {
+                this.loadMenu();
+                // Trovo la voce di menu attuale
+                int indVM = -1;
+                for (int i = 0; i < this.VociDiMenu.Count; i++)
+                {
+                    if (vm.ID == this.VociDiMenu[i].ID)
+                    {
+                        indVM = i;
+                    }
+                }
+
+
+                if (indVM != -1)
+                {
+                    log = "Entro nella funzione.<br />Mi occupo dell'item: " + indVM.ToString();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    if (direzione == true)
+                    {
+                        log += "Sposto in su<br/>";
+                        if (indVM == 0)
+                        {
+                            // Non sposto niente
+                        }
+                        else
+                        {
+                            MySqlTransaction tr = conn.BeginTransaction();
+                            MySqlCommand cmd = conn.CreateCommand();
+                            cmd.Transaction = tr;
+                            try
+                            {
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento1"
+                                    + " WHERE gruppo = @ID"
+                                    + " AND idVoce = @idVoce1";
+                                cmd.Parameters.AddWithValue("@ordinamento1", (indVM - 1));
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce1", this.VociDiMenu[indVM].ID);
+
+                                cmd.ExecuteNonQuery();
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento2"
+                                    + " WHERE gruppo = @ID "
+                                    + " AND idVoce = @idVoce2";
+                                cmd.Parameters.AddWithValue("@ordinamento2", indVM);
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce2", this.VociDiMenu[indVM - 1].ID);
+                                cmd.ExecuteNonQuery();
+                                tr.Commit();
+                                ret = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                ret = false;
+                                log = ex.Message;
+                                tr.Rollback();
+                            }
+                        }
+                    }
+                    else
+                    {
+                        log += "Sposto in giu<br/>";
+                        if (indVM >= this.VociDiMenu.Count - 1)
+                        {
+                            // Non sposto niente
+                        }
+                        else
+                        {
+                            MySqlTransaction tr = conn.BeginTransaction();
+                            MySqlCommand cmd = conn.CreateCommand();
+                            cmd.Transaction = tr;
+                            try
+                            {
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento1"
+                                    + " WHERE gruppo = @ID"
+                                    + " AND idVoce = @idVoce1";
+                                cmd.Parameters.AddWithValue("@ordinamento1", (indVM + 1));
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce1", this.VociDiMenu[indVM].ID);
+                                cmd.ExecuteNonQuery();
+                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento2"
+                                    + " WHERE gruppo = @ID"
+                                    + " AND idVoce = @idVoce2";
+                                cmd.Parameters.AddWithValue("@ordinamento2", indVM);
+                                cmd.Parameters.AddWithValue("@ID", this.ID);
+                                cmd.Parameters.AddWithValue("@idVoce2", this.VociDiMenu[indVM + 1].ID);
+                                cmd.ExecuteNonQuery();
+                                tr.Commit();
+                                ret = true;
+                            }
+                            catch (Exception ex)
+                            {
+                                ret = false;
+                                log = ex.Message;
+                                tr.Rollback();
+                            }
+                        }
+                    }
+                    conn.Close();
+                }
+                else
+                {
+                    ret = false;
+                }
+            }
+            return ret;
+        }
+
+        private List<String> _Utenti;
+        public List<String> Utenti
+        {
+            get
+            {
+                return this._Utenti;
+            }
+        }
+
+        public void loadUtenti()
+        {
+            this._Utenti = new List<string>();
+            if (this.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT user FROM groupusers WHERE groupID = @ID";
+                cmd.Parameters.AddWithValue("@ID", this.ID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this._Utenti.Add(rdr.GetString(0));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        public List<Reparto> SegnalazioneRitardiReparto
+        {
+            get
+            {
+                List<Reparto> ret = new List<Reparto>();
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Ritardo' "
+                        + "AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        ret.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                    }
+                    rdr.Close();
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
+
+        public List<Commessa> SegnalazioneRitardiCommessa
+        {
+            get
+            {
+                List<Commessa> ret = new List<Commessa>();
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
+                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Commessa cm = new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        if (cm.Status != 'F')
+                        {
+                            ret.Add(cm);
+                        }
+                    }
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
+
+        public List<Articolo> SegnalazioneRitardiArticolo
+        {
+            get
+            {
+                List<Articolo> ret = new List<Articolo>();
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
+                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Articolo cm = new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        if (cm.Status != 'F')
+                        {
+                            ret.Add(cm);
+                        }
+                    }
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
+
+        public List<Reparto> SegnalazioneWarningReparto
+        {
+            get
+            {
+                List<Reparto> ret = new List<Reparto>();
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Warning' "
+                        + "AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        ret.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                    }
+                    rdr.Close();
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
+
+        public List<Commessa> SegnalazioneWarningCommessa
+        {
+            get
+            {
+                List<Commessa> ret = new List<Commessa>();
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
+                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Commessa cm = new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        if (cm.Status != 'F')
+                        {
+                            ret.Add(cm);
+                        }
+                    }
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
+
+        public List<Articolo> SegnalazioneWarningArticolo
+        {
+            get
+            {
+                List<Articolo> ret = new List<Articolo>();
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
+                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID";
+                    cmd.Parameters.AddWithValue("@ID", this.ID);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    while (rdr.Read())
+                    {
+                        Articolo cm = new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        if (cm.Status != 'F')
+                        {
+                            ret.Add(cm);
+                        }
+                    }
+                    conn.Close();
+                }
+                return ret;
+            }
+        }
+    }
+
+    public class GroupList
+    {
+        public String log;
+
+        public List<Group> Elenco;
+
+        public GroupList()
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id FROM groupss ORDER BY nomeGruppo";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            Elenco = new List<Group>();
+            while (rdr.Read())
+            {
+                Elenco.Add(new Group(rdr.GetInt32(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool Add(String nomeG, String descG)
+        {
+            bool rt = false;
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT MAX(id) FROM groupss";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int maxID = 0;
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                maxID = rdr.GetInt32(0) + 1;
+            }
+            else
+            {
+                maxID = 0;
+            }
+            rdr.Close();
+
+            MySqlTransaction trn = conn.BeginTransaction();
+            cmd.Transaction = trn;
+            cmd.CommandText = "INSERT INTO groupss(id, nomeGruppo, descrizione) VALUES(@ID, @NAME, @DESC)";
+            cmd.Parameters.AddWithValue("@ID", maxID);
+            cmd.Parameters.AddWithValue("@NAME", nomeG);
+            cmd.Parameters.AddWithValue("@DESC", descG);
+            try
+            {
+                cmd.ExecuteNonQuery();
+                trn.Commit();
+                rt = true;
+            }
+            catch (Exception ex)
+            {
+                rt = false;
+                log = ex.Message;
+                trn.Rollback();
+            }
+            conn.Close();
+            return rt;
+        }
+    }
+
+    public class GroupPermission
+    {
+        public String log;
+
+        private int _GroupID;
+        public int GroupID
+        {
+            get
+            {
+                return this._GroupID;
+            }
+        }
+
+        public Permesso Permes;
+
+        private int _IdPermesso;
+        public int IdPermesso
+        {
+            get { return this._IdPermesso; }
+        }
+
+        private String _NomePermesso;
+        public String NomePermesso
+        {
+            get { return this._NomePermesso; }
+        }
+        private String _PermessoDesc;
+        public String PermessoDesc
+        {
+            get { return this._PermessoDesc; }
+        }
+
+        private bool _R;
+        public bool R
+        {
+            get { return this._R; }
+            set
+            {
+
+                if (this.GroupID != -1 && this.IdPermesso != -1)
+                {
+
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+
+                    // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
+                    bool recExists;
+
+                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" +
+                        " AND idpermesso = @IDPermesso";
+                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        recExists = true;
+                    }
+                    else
+                    {
+                        recExists = false;
+                    }
+                    rdr.Close();
+
+                    log = "OK " + recExists.ToString();
+
+                    if (recExists)
+                    {
+                        cmd.CommandText = "UPDATE gruppipermessi SET r = @r WHERE idGroup = @IDGroup"
+                            + " AND idpermesso = @IDPermesso";
+
+                    }
+                    else
+                    {
+                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, @r, false, false)";
+                    }
+                    cmd.Parameters.AddWithValue("@r", value);
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+        private bool _W;
+        public bool W
+        {
+            get { return this._W; }
+            set
+            {
+                if (this.GroupID != -1 && this.IdPermesso != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+
+                    // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
+                    bool recExists;
+
+                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" +
+                        " AND idpermesso = @IDPermesso";
+                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        recExists = true;
+                    }
+                    else
+                    {
+                        recExists = false;
+                    }
+                    rdr.Close();
+
+                    if (recExists)
+                    {
+                        cmd.CommandText = "UPDATE gruppipermessi SET w = @w WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
+                        cmd.Parameters.AddWithValue("@w", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                    }
+                    else
+                    {
+                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, @w, false)";
+                        cmd.Parameters.AddWithValue("@w", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+
+                    }
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
+        private bool _X;
+        public bool X
+        {
+            get { return this._X; }
+            set
+            {
+                if (this.GroupID != -1 && this.IdPermesso != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
+                    bool recExists;
+
+                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
+                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    {
+                        recExists = true;
+                    }
+                    else
+                    {
+                        recExists = false;
+                    }
+                    rdr.Close();
+
+                    if (recExists)
+                    {
+                        cmd.CommandText = "UPDATE gruppipermessi SET x = @x WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
+                        cmd.Parameters.AddWithValue("@x", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                    }
+                    else
+                    {
+                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, false, @x)";
+                        cmd.Parameters.AddWithValue("@x", value);
+                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
+                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                    }
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
+        public GroupPermission(int grp, Permission prm)
+        {
+            bool check = false;
+            if (prm.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT id FROM groupss WHERE id = @ID";
+                cmd.Parameters.AddWithValue("@ID", grp);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    check = true;
+                }
+                rdr.Close();
+                conn.Close();
+            }
+
+            if (check == true)
+            {
+                this._GroupID = grp;
+                this.Permes = new Permission(prm.ID);
+                this._NomePermesso = Permes.Nome;
+                this._PermessoDesc = Permes.Descrizione;
+                this._IdPermesso = Permes.ID;
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT r, w, x FROM gruppipermessi WHERE idgroup = @GroupID AND idpermesso = @PermesID";
+                cmd.Parameters.AddWithValue("@GroupID", grp);
+                cmd.Parameters.AddWithValue("@PermesID", Permes.ID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if (rdr.Read() && !rdr.IsDBNull(0))
+                {
+                    this._R = rdr.GetBoolean(0);
+                    this._W = rdr.GetBoolean(1);
+                    this._X = rdr.GetBoolean(2);
+                }
+                else
+                {
+                    this._R = false;
+                    this._W = false;
+                    this._X = false;
+
+                }
+                rdr.Close();
+                conn.Close();
+            }
+            else
+            {
+                this._GroupID = -1;
+                this.Permes = null;
+                this._R = false;
+                this._W = false;
+                this._X = false;
+            }
+        }
+    }
+
+    public class GroupPermissions
+    {
+        public List<GroupPermission> Elenco;
+        private int _GroupID;
+        public int GroupID
+        {
+            get
+            {
+                return this._GroupID;
+            }
+        }
+
+        public GroupPermissions(int grp)
+        {
+            bool check = false;
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT ID FROM groupss WHERE id = @GroupID";
+            cmd.Parameters.AddWithValue("@GroupID", grp);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                check = true;
+            }
+            else
+            {
+                check = false;
+            }
+            rdr.Close();
+            conn.Close();
+
+            if (check == true)
+            {
+                this._GroupID = grp;
+                this.Elenco = new List<GroupPermission>();
+                PermissionsList elPrm = new PermissionsList();
+                for (int i = 0; i < elPrm.Elenco.Count; i++)
+                {
+                    this.Elenco.Add(new GroupPermission(this.GroupID, elPrm.Elenco[i]));
+                }
+
+            }
+            else
+            {
+                this._GroupID = -1;
+                this.Elenco = null;
+            }
         }
     }
 }
