@@ -50,7 +50,7 @@ namespace KIS.Commesse
                 }
                 if (idCommessa != -1 && annoCommessa != -1 && idProc != -1 && revProc != -1 && idVariante != -1 && idReparto != -1)
                 {
-                    Articolo art = new Articolo(idProdotto, annoProdotto);
+                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                     frmSetFineProduzione.Visible = true;
 
                     frmSetFineProduzione.idCommessa = idCommessa;

@@ -49,7 +49,7 @@ namespace KIS.Commesse
 
             if (idReparto != -1)
             {
-                Reparto rp = new Reparto(idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     lblReparto.Visible = true;
@@ -59,7 +59,7 @@ namespace KIS.Commesse
 
             if (idProdotto != -1 && annoProdotto != -1)
             {
-                Articolo art = new Articolo(idProdotto, annoProdotto);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     if (art.DataPrevistaConsegna > DateTime.Now)

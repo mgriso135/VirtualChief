@@ -20,7 +20,7 @@ namespace KIS.Controllers
 
         // GET api/<controller>
         [HttpGet]
-        public HttpResponseMessage GetRemoteAddSalesOrderHeader(String customer, String notes, String externalID, String customerName="", String vatNumber ="",
+        public HttpResponseMessage GetRemoteAddSalesOrderHeader(String tenant, String customer, String notes, String externalID, String customerName="", String vatNumber ="",
             String codFiscale="", String address="", String city="", String province="", String zipcode="", String country="", String phone="", String email="")
         //    public HttpResponseMessage GetRemoteAddSalesOrderHeader(String customer)
         {
@@ -28,7 +28,7 @@ namespace KIS.Controllers
             String externalID = "";
             String customerName = ""; String vatNumber = "";
             String codFiscale = ""; String address = ""; String city = ""; String province = ""; String zipcode = ""; String country = ""; String phone = ""; String email = "";*/
-            KISConfig tpcfg = new KISConfig();
+            KISConfig tpcfg = new KISConfig(tenant);
             if (tpcfg.SalesOrderImportFrom3PartySystem)
             {
                 String cKey = "";
@@ -46,7 +46,7 @@ namespace KIS.Controllers
                 if (xKey == cKey && xKey.Length > 0)
                 {
                     // If customer does not exist, I will add the customer
-                    Cliente cln = new Cliente(customer);
+                    Cliente cln = new Cliente(tenant, customer);
                     Boolean customerExists = false;
                     if(cln!=null && cln.RagioneSociale.Length > 0)
                     {
@@ -55,7 +55,7 @@ namespace KIS.Controllers
 
                     if(!customerExists)
                     {
-                        PortafoglioClienti pcli = new PortafoglioClienti();
+                        PortafoglioClienti pcli = new PortafoglioClienti(tenant);
                         customerExists = pcli.Add(customer, customerName, vatNumber, codFiscale, address, city, province, zipcode, country, phone, email, false);
                     }
 
@@ -65,11 +65,11 @@ namespace KIS.Controllers
                     }
                     
 
-                    ElencoCommesse elCom = new ElencoCommesse();
+                    ElencoCommesse elCom = new ElencoCommesse(tenant);
                     int ret = elCom.Add(customer, notes, externalID);
                     if (ret != -1)
                     {
-                        Commessa cmd = new Commessa(ret, DateTime.UtcNow.Year);
+                        Commessa cmd = new Commessa(tenant, ret, DateTime.UtcNow.Year);
                         cmd.Confirmed = true;
                         cmd.ConfirmationDate = DateTime.UtcNow;
                         String rt2 = cmd.ID + "/" + cmd.Year;
@@ -96,10 +96,10 @@ namespace KIS.Controllers
   * 6 if error while adding the product to the order
   */
         [HttpGet]
-        public HttpResponseMessage AddProductToSalesOrderAndPlan(int OrderID, int OrderYear, String ProductID, int Quantity, DateTime DeliveryDate, DateTime EndProductionDate)
+        public HttpResponseMessage AddProductToSalesOrderAndPlan(String tenant, int OrderID, int OrderYear, String ProductID, int Quantity, DateTime DeliveryDate, DateTime EndProductionDate)
         {
             int ret = 0;
-            KISConfig tpcfg = new KISConfig();
+            KISConfig tpcfg = new KISConfig(tenant);
             if (tpcfg.SalesOrderImportFrom3PartySystem)
             {
                 // Register user action
@@ -118,25 +118,25 @@ namespace KIS.Controllers
 
                 if (xKey == cKey && xKey.Length > 0)
                 {
-                    ProcessoVariante prcVar = new ProcessoVariante(ProductID);
+                    ProcessoVariante prcVar = new ProcessoVariante(tenant, ProductID);
                     if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.variant.idVariante != -1
                         && prcVar.ExternalID.Length > 0)
                     {
-                        FusoOrario fuso = new FusoOrario();
+                        FusoOrario fuso = new FusoOrario(tenant);
                         if (DeliveryDate > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario))
                         {
-                            Commessa cm = new Commessa(OrderID, OrderYear);
+                            Commessa cm = new Commessa(tenant, OrderID, OrderYear);
                             if (cm != null && cm.ID != -1 && cm.Year > 2000)
                             {
                                 int[] rt = cm.AddArticoloInt(prcVar, DeliveryDate, Quantity);
                                 if (rt[0] != -1)
                                 {
-                                    Articolo art = new Articolo(rt[0], rt[1]);
+                                    Articolo art = new Articolo(tenant, rt[0], rt[1]);
                                     art.DataPrevistaConsegna = DeliveryDate;
                                     art.DataPrevistaFineProduzione = EndProductionDate;
                                     prcVar.loadReparto();
                                     art.Reparto = prcVar.RepartoProduttivo.id;
-                                    ret = this.PlanProduct(art.ID, art.Year, art.Reparto, EndProductionDate);
+                                    ret = this.PlanProduct(tenant, art.ID, art.Year, art.Reparto, EndProductionDate);
                                 }
                                 else
                                 {
@@ -175,9 +175,9 @@ namespace KIS.Controllers
 
         // GET api/<controller>
         [HttpGet]
-        public HttpResponseMessage CheckIfProductExists(String ExternalID)
+        public HttpResponseMessage CheckIfProductExists(String tenant, String ExternalID)
         {
-            KISConfig tpcfg = new KISConfig();
+            KISConfig tpcfg = new KISConfig(tenant);
             if (tpcfg.SalesOrderImportFrom3PartySystem)
             {
                 String cKey = "";
@@ -194,7 +194,7 @@ namespace KIS.Controllers
                 String xKey = cfg.x_api_key;
                 if (xKey == cKey && xKey.Length > 0)
                 {
-                    ProcessoVariante prcVar = new ProcessoVariante(ExternalID);
+                    ProcessoVariante prcVar = new ProcessoVariante(tenant, ExternalID);
                     if(prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1
                         &&prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                     {
@@ -223,12 +223,12 @@ namespace KIS.Controllers
             * 17 se la data prevista di fine produzione non è reale
             * 18 if product not found or invalid department or invalid end production date
             */
-        private int PlanProduct(int ProductID, int ProductYear, int DepartmentID, DateTime EndProductionDate)
+        private int PlanProduct(String tenant, int ProductID, int ProductYear, int DepartmentID, DateTime EndProductionDate)
         {
             int ret = 0;
             List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
-            Articolo art = new Articolo(ProductID, ProductYear);
-            Reparto rp = new Reparto(DepartmentID);
+            Articolo art = new Articolo(tenant, ProductID, ProductYear);
+            Reparto rp = new Reparto(tenant, DepartmentID);
 
             if (art != null && art.ID != -1 && art.Status == 'N' && rp != null && rp.id != -1 && EndProductionDate > DateTime.UtcNow && art.DataPrevistaFineProduzione <= art.DataPrevistaConsegna)
             {
@@ -238,16 +238,16 @@ namespace KIS.Controllers
                 art.Proc.process.loadFigli(art.Proc.variant);
                 for (int i = 0; i < art.Proc.process.subProcessi.Count; i++)
                 {
-                    TaskVariante tskVar = new TaskVariante(new processo(art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
+                    TaskVariante tskVar = new TaskVariante(tenant, new processo(tenant, art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
                     tskVar.loadTempiCiclo();
-                    TempoCiclo tc = new TempoCiclo(tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                    TempoCiclo tc = new TempoCiclo(tenant, tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                     if (tc.Tempo != null)
                     {
-                        lstTasks.Add(new TaskConfigurato(tskVar, tc, rp.id, art.Quantita));
+                        lstTasks.Add(new TaskConfigurato(tenant, tskVar, tc, rp.id, art.Quantita));
                     }
                 }
 
-                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(art, lstTasks, rp, art.Quantita);
+                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(tenant, art, lstTasks, rp, art.Quantita);
                 int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                 if (rt1 == 1)
                 {

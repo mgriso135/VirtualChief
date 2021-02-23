@@ -535,7 +535,7 @@ namespace KIS.Operatori
             List<TaskProduzione> tsk = new List<TaskProduzione>();
             for (int i = 0; i < uten.TaskAvviati.Count; i++)
             {
-                tsk.Add(new TaskProduzione(uten.TaskAvviati[i]));
+                tsk.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), uten.TaskAvviati[i]));
             }
             if (tsk.Count > 0)
             {
@@ -575,7 +575,7 @@ namespace KIS.Operatori
 
                 if (id != -1)
                 {
-                    TaskProduzione tsk = new TaskProduzione(id);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), id);
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
@@ -709,7 +709,7 @@ namespace KIS.Operatori
                 System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                 if (tRow != null)
                 {
-                    TaskProduzione tsk = new TaskProduzione(taskID);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
                     // Carico lo stato
                     Label lblStatus = (Label)e.Item.FindControl("lblStatus");
                     if (tsk.Status == 'F')

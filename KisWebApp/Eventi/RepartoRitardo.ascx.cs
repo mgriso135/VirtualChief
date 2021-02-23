@@ -39,7 +39,7 @@ namespace KIS.Eventi
                 }
                 if (!Page.IsPostBack)
                 {
-                    ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+                    ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     if (cfgRp.RitardoMinimoDaSegnalare != null)
                     {
                         ddlOre.SelectedValue = cfgRp.RitardoMinimoDaSegnalare.Hours.ToString();
@@ -49,7 +49,7 @@ namespace KIS.Eventi
                     List<Group> grpList = new List<Group>();
                     for (int i = 0; i < cfgRp.ListGroupsID.Count; i++)
                     {
-                        grpList.Add(new Group(cfgRp.ListGroupsID[i]));
+                        grpList.Add(new Group(Session["ActiveWorkspace"].ToString(), cfgRp.ListGroupsID[i]));
                     }
                     rptListGruppi.DataSource = grpList;
                     rptListGruppi.DataBind();
@@ -84,7 +84,7 @@ namespace KIS.Eventi
             if (frmAddRitardoGruppo.Visible == false)
             {
                 frmAddRitardoGruppo.Visible = true;
-                GroupList elencoGruppi = new GroupList();
+                GroupList elencoGruppi = new GroupList(Session["ActiveWorkspace"].ToString());
                 ddlAddRitardoGruppo.Items.Clear();
                 ddlAddRitardoGruppo.Items.Add(new ListItem(GetLocalResourceObject("lblGruppiRitSel").ToString(), ""));
                 ddlAddRitardoGruppo.DataSource = elencoGruppi.Elenco;
@@ -102,7 +102,7 @@ namespace KIS.Eventi
         protected void btnSaveRitardoGruppo_Click(object sender, ImageClickEventArgs e)
         {
             
-            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             int idGrp = -1;
             try
             {
@@ -114,7 +114,7 @@ namespace KIS.Eventi
             }
             if (idGrp != -1)
             {
-                Group grp = new Group(idGrp);
+                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
                 if (grp.ID != -1)
                 {
                     bool rt = cfgRp.addGruppo(grp);
@@ -139,7 +139,7 @@ namespace KIS.Eventi
 
         protected void btnSaveRitMin_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             int ore, min, sec;
             try
             {
@@ -168,7 +168,7 @@ namespace KIS.Eventi
 
         protected void btnUndoRitMin_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             if (cfgRp.RitardoMinimoDaSegnalare != null)
             {
                 ddlOre.SelectedValue = cfgRp.RitardoMinimoDaSegnalare.Hours.ToString();
@@ -226,10 +226,10 @@ namespace KIS.Eventi
             {
                 if (groupID != -1)
                 {
-                    ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+                    ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     // Ricerco il gruppo
                     cfgRp.loadGruppi();
-                    bool rt = cfgRp.deleteGruppo(new Group(groupID));
+                    bool rt = cfgRp.deleteGruppo(new Group(Session["ActiveWorkspace"].ToString(), groupID));
                     if (rt == true)
                     {
                         Response.Redirect(Request.RawUrl);
@@ -247,7 +247,7 @@ namespace KIS.Eventi
             if (frmAddRitardoUtente.Visible == false)
             {
                 frmAddRitardoUtente.Visible = true;
-                UserList elencoUtenti = new UserList();
+                UserList elencoUtenti = new UserList(Session["ActiveWorkspace"].ToString());
                 ddlAddRitardoUtente.Items.Clear();
                 ddlAddRitardoUtente.Items.Add(new ListItem(GetLocalResourceObject("lblUserRitSelDDl").ToString(), ""));
                 ddlAddRitardoUtente.DataSource = elencoUtenti.elencoUtenti;
@@ -264,7 +264,7 @@ namespace KIS.Eventi
 
         protected void btnSaveRitardoUtente_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+            ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             
             if (ddlAddRitardoUtente.SelectedValue != "")
             {
@@ -321,7 +321,7 @@ namespace KIS.Eventi
         {
             if (e.CommandName == "deleteUtente")
             {
-                    ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(idReparto);
+                    ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     // Ricerco il gruppo
                     
                     bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));

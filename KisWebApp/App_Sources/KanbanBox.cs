@@ -129,7 +129,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.Clienti.Add(new Cliente(rdr.GetString(0)));
+                this.Clienti.Add(new Cliente(this.Tenant, rdr.GetString(0)));
             }
             rdr.Close();
             conn.Close();
@@ -217,7 +217,7 @@ namespace KIS.App_Code
                         kbCard.initial_empty_date = kbList[i].initial_empty_date;
                         kbCard.required_date = kbList[i].required_date;
 
-                        Cliente customer = new Cliente(kbCard.customer_name);
+                        Cliente customer = new Cliente(this.Tenant, kbCard.customer_name);
                         Reparto rp = new Reparto(kbCard.supplier_name);
 
                         log += "Trovato cartellino " + kbCard.ekanban_string + "-" + kbCard.supplier_name +"-" + rp.id.ToString() + "-" + rp.KanbanManaged.ToString() + "\n";
@@ -284,7 +284,7 @@ namespace KIS.App_Code
                         kbCard.initial_empty_date = kbList[i].initial_empty_date;
                         kbCard.required_date = kbList[i].required_date;
 
-                        Cliente customer = new Cliente(kbCard.customer_name);
+                        Cliente customer = new Cliente(this.Tenant, kbCard.customer_name);
                         Reparto rp = new Reparto(kbCard.supplier_name);
 
                         log += "Trovato cartellino " + kbCard.ekanban_string + "-" + kbCard.supplier_name + "-" + rp.id.ToString() + "-" + rp.KanbanManaged.ToString() + "\n";
@@ -412,7 +412,7 @@ namespace KIS.App_Code
             KanbanCardList elenco = this.ReadCards();
             for (int i = 0; i < elenco.cards.Count; i++)
             {
-                Cliente curr = new Cliente(elenco.cards[i].customer_name);
+                Cliente curr = new Cliente(this.Tenant, elenco.cards[i].customer_name);
                 if (curr.CodiceCliente.Length == 0)
                 {
                     nExCustomers.Add(elenco.cards[i].customer_name);
@@ -770,7 +770,7 @@ namespace KIS.App_Code
             {
                 if (!rdr.IsDBNull(0))
                 {
-                    this._ElencoClienti.Add(new Cliente(rdr.GetString(0)));
+                    this._ElencoClienti.Add(new Cliente(this.Tenant, rdr.GetString(0)));
                 }
             }
             rdr.Close();

@@ -30,7 +30,7 @@ namespace KIS.Produzione
             }
             if (idCommessa != -1 && annoCommessa != -1)
             {
-                Commessa cm = new Commessa(idCommessa, annoCommessa);
+                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
                 cm.loadArticoli();
                 if (cm.ID != -1)
                 {

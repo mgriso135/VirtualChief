@@ -12,7 +12,7 @@ namespace KIS.Controllers
         // GET: Utenti
         public ActionResult Index()
         {
-            UserList usrList = new UserList();
+            UserList usrList = new UserList(Session["ActiveWorkspace"].ToString());
             return View(usrList.listUsers.ToList());
         }
     }

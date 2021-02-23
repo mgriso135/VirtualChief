@@ -170,11 +170,11 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(Session["ActiveWorkspace"].ToString(), curr.username, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session["ActiveWorkspace"].ToString(), Session.SessionID, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
 
             ViewBag.TaskID = TaskID;
@@ -248,7 +248,7 @@ namespace KIS.Areas.Products.Controllers
 
             if(ViewBag.authW)
             {
-                TempoCiclo tc = new TempoCiclo(TaskID, TaskRev, VariantID, nOps);
+                TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev, VariantID, nOps);
                 if(tc!=null && tc.NumeroOperatori>=0 && tc.IdProcesso!=-1 && tc.Variante!=-1)
                 {
                     ret = tc.Delete();
@@ -638,7 +638,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authW)
             {
-                TaskWorkInstruction curr = new TaskWorkInstruction(TaskID, TaskRev, variantID, WorkInstructionID, WorkInstructionVersion);
+                TaskWorkInstruction curr = new TaskWorkInstruction(Session["ActiveWorkspace"].ToString(), TaskID, TaskRev, variantID, WorkInstructionID, WorkInstructionVersion);
                 if (curr != null)
                 {
                     ret = curr.Delete();

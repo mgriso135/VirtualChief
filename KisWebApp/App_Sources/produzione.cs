@@ -1338,7 +1338,7 @@ namespace KIS.App_Code
                             // Segnalo a kanbanbox che ho finito il mio mestiere!
                             KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
                             Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                            Cliente cust = new Cliente(art.Cliente);
+                            Cliente cust = new Cliente(this.Tenant, art.Cliente);
                             if (rp.id != -1 && cust.CodiceCliente.Length > 0)
                             {
                                 if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
@@ -1596,7 +1596,7 @@ namespace KIS.App_Code
                             // Segnalo a kanbanbox che ho finito il mio mestiere!
                             KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
                             //Reparto rp = new Reparto(this.RepartoID);
-                            Cliente cust = new Cliente(art.Cliente);
+                            Cliente cust = new Cliente(this.Tenant, art.Cliente);
                             if (rp.id != -1 && cust.CodiceCliente.Length > 0)
                             {
                                 if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))

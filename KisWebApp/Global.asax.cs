@@ -50,16 +50,14 @@ namespace KIS
                 }
                 else
                 {
-                    KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
-                    String language = cfg.Language;
+                    String language = "en";
                     System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(language);
                     System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(language);
                 }
             }
             else
             {
-                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
-                String language = cfg.Language;
+                String language = "en";
                 System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(language);
                 System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(language);
             }

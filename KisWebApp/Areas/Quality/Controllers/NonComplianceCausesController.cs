@@ -42,7 +42,7 @@ namespace KIS.Areas.Quality.Controllers
             if (checkUser == true)
             {
                 ViewBag.authorized = true;
-                NonComplianceCauses lstCause = new NonComplianceCauses();
+                NonComplianceCauses lstCause = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
                 lstCause.loadCausesList();
                 return View(lstCause.CausesList);
             }
@@ -150,7 +150,7 @@ namespace KIS.Areas.Quality.Controllers
             {
                 ViewBag.authenticated = true;
                 // Get the clients
-                NonComplianceCauses ncCause = new NonComplianceCauses();
+                NonComplianceCauses ncCause = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
                 ViewBag.Deleted = ncCause.Delete(id);
                 // Add the process details to the ViewBag
                 if (ViewBag.Deleted)
@@ -199,7 +199,7 @@ namespace KIS.Areas.Quality.Controllers
                     var name = Request.Form["name"];
                     var description = Request.Form["description"];
 
-                    NonComplianceCause ncCauseU = new NonComplianceCause(id);
+                    NonComplianceCause ncCauseU = new NonComplianceCause(Session["ActiveWorkspace"].ToString(), id);
                     if (ncCauseU != null && ncCauseU.ID != -1)
                     {
                         ncCauseU.Name = Server.HtmlEncode(name);
@@ -215,7 +215,7 @@ namespace KIS.Areas.Quality.Controllers
 
 
                 // Create a model object.
-                NonComplianceCause ncCause = new NonComplianceCause(id);
+                NonComplianceCause ncCause = new NonComplianceCause(Session["ActiveWorkspace"].ToString(), id);
                 // Get the list of clients            
                 if (ncCause != null && ncCause.ID != -1)
                 {

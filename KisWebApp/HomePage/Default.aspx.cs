@@ -3,7 +3,7 @@ using KIS.App_Code;
 
 namespace KIS
 {
-    public partial class HPDefault : System.Web.UI.Page
+    public partial class Default : System.Web.Mvc.ViewPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

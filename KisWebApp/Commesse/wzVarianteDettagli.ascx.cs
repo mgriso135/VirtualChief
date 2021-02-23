@@ -89,7 +89,7 @@ namespace KIS.Commesse
 
         protected void imgSaveNomeVariante_Click(object sender, ImageClickEventArgs e)
         {
-            ProcessoVariante prcVar = new ProcessoVariante(new processo(idProcesso, revProcesso), new variante(idVariante));
+            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
             prcVar.loadReparto();
             prcVar.process.loadFigli(prcVar.variant);
             if (prcVar != null && prcVar.process != null && prcVar.variant != null)

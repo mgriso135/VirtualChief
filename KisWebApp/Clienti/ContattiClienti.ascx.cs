@@ -31,7 +31,7 @@ namespace KIS.Clienti
                 rptContattiClienti.Visible = false;
                 if (!String.IsNullOrEmpty(idCliente) && idCliente.Length > 0)
                 {
-                    Cliente cln = new Cliente(idCliente);
+                    Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), idCliente);
                     if (cln.CodiceCliente.Length > 0)
                     {
                         rptContattiClienti.Visible = true;
@@ -66,7 +66,7 @@ namespace KIS.Clienti
 
                 if (ID != -1 && lblPhone != null && lblEmail != null)
                 {
-                    Contatto contCln = new Contatto(ID);
+                    Contatto contCln = new Contatto(Session["ActiveWorkspace"].ToString(), ID);
                     if (contCln.ID != -1)
                     {
                         String strPhone ="", strEmail="";
@@ -118,7 +118,7 @@ namespace KIS.Clienti
                 {
                     person.Delete();
                     lbl1.Text = "";
-                    Cliente cln = new Cliente(person.Cliente);
+                    Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), person.Cliente);
                     cln.loadContatti();
                     rptContattiClienti.Visible = true;
                     rptContattiClienti.DataSource = cln.ElencoContatti;

@@ -30,11 +30,11 @@ namespace KIS.Eventi
             {
                 if (!Page.IsPostBack)
                 {
-                    ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(idReparto);
+                    ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     List<Group> grpList = new List<Group>();
                     for (int i = 0; i < cfgRp.ListGroupsID.Count; i++)
                     {
-                        grpList.Add(new Group(cfgRp.ListGroupsID[i]));
+                        grpList.Add(new Group(Session["ActiveWorkspace"].ToString(), cfgRp.ListGroupsID[i]));
                     }
                     rptListGruppi.DataSource = grpList;
                     rptListGruppi.DataBind();
@@ -64,7 +64,7 @@ namespace KIS.Eventi
             if (frmAddWarningGruppo.Visible == false)
             {
                 frmAddWarningGruppo.Visible = true;
-                GroupList elencoGruppi = new GroupList();
+                GroupList elencoGruppi = new GroupList(Session["ActiveWorkspace"].ToString());
                 ddlAddWarningGruppo.Items.Clear();
                 ddlAddWarningGruppo.Items.Add(new ListItem("Seleziona un gruppo", ""));
                 ddlAddWarningGruppo.DataSource = elencoGruppi.Elenco;
@@ -81,7 +81,7 @@ namespace KIS.Eventi
 
         protected void btnSaveWarningGruppo_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(idReparto);
+            ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(Session["ActiveWorkspace"].ToString(), idReparto);
             int idGrp = -1;
             try
             {
@@ -93,7 +93,7 @@ namespace KIS.Eventi
             }
             if (idGrp != -1)
             {
-                Group grp = new Group(idGrp);
+                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
                 if (grp.ID != -1)
                 {
                     bool rt = cfgRp.addGruppo(grp);
@@ -158,10 +158,10 @@ namespace KIS.Eventi
             {
                 if (groupID != -1)
                 {
-                    ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(idReparto);
+                    ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     // Ricerco il gruppo
                     //cfgRp.loadGruppi();
-                    bool rt = cfgRp.deleteGruppo(new Group(groupID));
+                    bool rt = cfgRp.deleteGruppo(new Group(Session["ActiveWorkspace"].ToString(), groupID));
                     if (rt == true)
                     {
                         Response.Redirect(Request.RawUrl);
@@ -179,7 +179,7 @@ namespace KIS.Eventi
             if (frmAddWarningUtente.Visible == false)
             {
                 frmAddWarningUtente.Visible = true;
-                UserList elencoUtenti = new UserList();
+                UserList elencoUtenti = new UserList(Session["ActiveWorkspace"].ToString());
                 ddlAddWarningUtente.Items.Clear();
                 ddlAddWarningUtente.Items.Add(new ListItem(GetLocalResourceObject("lblTitleCfgWarningUserSel").ToString(), ""));
                 ddlAddWarningUtente.DataSource = elencoUtenti.elencoUtenti;
@@ -224,7 +224,7 @@ namespace KIS.Eventi
         {
             if (e.CommandName == "deleteUtente")
             {
-                ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(idReparto);
+                ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                 // Ricerco il gruppo
 
                 bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));
@@ -241,7 +241,7 @@ namespace KIS.Eventi
 
         protected void btnSaveWarningUtente_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(idReparto);
+            ConfigurazioneWarningReparto cfgRp = new ConfigurazioneWarningReparto(Session["ActiveWorkspace"].ToString(), idReparto);
 
             if (ddlAddWarningUtente.SelectedValue != "")
             {

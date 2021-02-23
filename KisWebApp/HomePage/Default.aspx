@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Virtual Chief" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
-    CodeBehind="Default.aspx.cs" Inherits="KIS.HPDefault" %>
+    CodeBehind="Default.aspx.cs" Inherits="KIS.Default" %>
 <%@ Register Src="~/whatsnew.ascx" TagPrefix="Homepage" TagName="Whatsnew" %>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">

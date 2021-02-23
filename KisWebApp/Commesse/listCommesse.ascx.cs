@@ -27,7 +27,7 @@ namespace KIS.Commesse
                 {
                     if (!Page.IsPostBack)
                     {
-                        ElencoCommesseAperte elComm = new ElencoCommesseAperte();
+                        ElencoCommesseAperte elComm = new ElencoCommesseAperte(Session["ActiveWorkspace"].ToString());
                         /*List<Commessa> lstCommAperte = new List<Commessa>();
 
                         for (int i = 0; i < elComm.Commesse.Count; i++)
@@ -73,7 +73,7 @@ namespace KIS.Commesse
 
                 if (cID != -1 && cYear!=-1)
                 {
-                    Commessa comm = new Commessa(cID, cYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), cID, cYear);
                     if (comm.Status == 'N')
                     {
                         imgDelete.Visible = true;
@@ -128,7 +128,7 @@ namespace KIS.Commesse
 
             if (idCommessa != -1&&annoCommessa !=-1)
             {
-                Commessa comm = new Commessa(idCommessa, annoCommessa);
+                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
                 if (comm.ID != -1)
                 {
                     if (e.CommandName == "delete")

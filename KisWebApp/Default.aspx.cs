@@ -11,13 +11,13 @@ namespace KIS
         {
             Boolean FullyConfigured = false;
             int activeWorkspace_id = (new Dati.Dati()).getActiveWorkspaceId();
-            String activeWorkspace = (new Dati.Dati()).getActiveWorkspaceName();
+            String activeWorkspace = Session["ActiveWorkspace"] != null ? Session["ActiveWorkspace"].ToString(): "";
 
             if (activeWorkspace.Length == 0 || activeWorkspace_id == -1)
             {
                 Response.Redirect("~/AccountsMgm/Account/Login");
             }
-                KISConfig kCfg = new KISConfig(Session["ActiveWorkspace"].ToString(), activeWorkspace_id);
+                KISConfig kCfg = new KISConfig(activeWorkspace, activeWorkspace_id);
                 FullyConfigured =
                     kCfg.WizAdminUserCompleted &&
                     kCfg.WizAndonCompleted &&

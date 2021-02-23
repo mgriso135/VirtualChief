@@ -20,12 +20,12 @@ namespace KIS.Eventi
     public class Licensing : System.Web.Services.WebService
     {
         [WebMethod]
-        public string CheckLicense()
+        public string CheckLicense(String tenant)
         {
             // Verifico se devo segnalare qualcosa
 
-            KISConfig kisCfg = new KISConfig();
-            FusoOrario fuso = new FusoOrario();
+            KISConfig kisCfg = new KISConfig(tenant);
+            FusoOrario fuso = new FusoOrario(tenant);
             String ret = kisCfg.ExpiryDate.ToString("dd/MM/yyyy") + "<br />";
             String installationName = kisCfg.basePath;
             if (TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario) >= kisCfg.ExpiryDate.AddDays(-30) &&
@@ -33,7 +33,7 @@ namespace KIS.Eventi
             {
                 List<MailAddress> MailList = new List<MailAddress>();
                 int AdmGrpID = -1;
-                GroupList grpList = new GroupList();
+                GroupList grpList = new GroupList(tenant);
                 for (int i = 0; i < grpList.Elenco.Count; i++)
                 {
                     if (grpList.Elenco[i].Nome == "Admin")
@@ -42,7 +42,7 @@ namespace KIS.Eventi
                     }
                 }
 
-                Group admGroup = new Group(AdmGrpID);
+                Group admGroup = new Group(tenant, AdmGrpID);
                 admGroup.loadUtenti();
                 for (int i = 0; i < admGroup.Utenti.Count; i++)
                 {

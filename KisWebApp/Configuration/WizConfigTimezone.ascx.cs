@@ -31,7 +31,7 @@ namespace KIS.Configuration
             { 
             if (checkUser == true)
             {
-                KISConfig cfg = new KISConfig();
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
 
                 if (!cfg.WizTimezoneCompleted)
                 {
@@ -74,7 +74,7 @@ namespace KIS.Configuration
             if (ddlTimezones.SelectedValue.Length > 0)
             {
                 TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
-                FusoOrario current = new FusoOrario();
+                FusoOrario current = new FusoOrario(Session["ActiveWorkspace"].ToString());
                 current.fusoOrario = ddlTimezones.SelectedValue;
                 
                 Response.Redirect("~/Configuration/MainWizConfig.aspx");

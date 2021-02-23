@@ -39,7 +39,7 @@ namespace KIS.Analysis
 
             if (checkUser == true)
             {
-                Cliente customer = new Cliente(customerID);
+                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     rpt1.Visible = true;
@@ -119,7 +119,7 @@ namespace KIS.Analysis
 
         protected void printReportPDF()
         {
-            Cliente customer = new Cliente(customerID);
+            Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
             if (customer.CodiceCliente.Length > 0)
             {
                 String savePath = Server.MapPath(@"~\Data\Reports\");

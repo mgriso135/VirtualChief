@@ -28,8 +28,8 @@ namespace KIS.Configuration
 
             if (checkUser == true)
             {
-                KISConfig cfg = new KISConfig();
-                ElencoReparti elRep = new ElencoReparti();
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                ElencoReparti elRep = new ElencoReparti(Session["ActiveWorkspace"].ToString());
                 if (cfg.WizRepartiCompleted)
                 {
                     frmAddReparto.Visible = false;
@@ -70,7 +70,7 @@ namespace KIS.Configuration
 
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto();
+            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString());
             int rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
             if (rt != -1)
             {
@@ -109,7 +109,7 @@ namespace KIS.Configuration
                     repID = -1;
                 }
 
-                Reparto rp = new Reparto(repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
 
                 hCfg.NavigateUrl = "~/Configuration/wizConfigReparti_Detail.aspx?id=" + rp.id.ToString();
 

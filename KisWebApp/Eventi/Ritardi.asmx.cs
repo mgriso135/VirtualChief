@@ -151,7 +151,7 @@ namespace KIS.Eventi
 
 
                 // Ricerco per commessa
-                Commessa cm = new Commessa(art.Commessa, art.AnnoCommessa);
+                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                 cm.loadEventoRitardo();
 
                 if (cm.EventoRitardo.RitardoMinimoDaSegnalare != null && ritardo >= cm.EventoRitardo.RitardoMinimoDaSegnalare)

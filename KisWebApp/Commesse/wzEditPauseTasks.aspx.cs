@@ -42,8 +42,8 @@ namespace KIS.Commesse
                 if (taskID != -1 && revTaskID != -1 && varianteID != -1 && prec != -1 && revPrec != -1)
                 {                   
 
-                    variante vari = new variante(varianteID);
-                    TaskVariante tsk = new TaskVariante(new processo(taskID, revTaskID), vari);
+                    variante vari = new variante(Session["ActiveWorkspace"].ToString(), varianteID);
+                    TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID, revTaskID), vari);
                     if (tsk != null && tsk.Task != null && tsk.variant != null && tsk.Task.processID != -1 && tsk.variant.idVariante != -1)
                     {
                         frmPause.Visible = true;

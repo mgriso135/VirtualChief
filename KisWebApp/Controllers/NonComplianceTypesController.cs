@@ -12,7 +12,7 @@ namespace KIS.Controllers
         // GET: NonComplianceTypes
         public ActionResult Index()
         {
-            NonComplianceTypes ncTypeList = new NonComplianceTypes();
+            NonComplianceTypes ncTypeList = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
             ncTypeList.loadTypeList();
             return View(ncTypeList.TypeList.ToList());
         }

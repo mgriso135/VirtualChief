@@ -43,11 +43,11 @@ namespace KIS.Clienti
 
             if (checkUser == true)
             {
-                KISConfig cfg = new KISConfig();
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
                 language.Value = cfg.Language;
                 imgViewTableAdd.Visible = true;
 
-                Cliente cln = new Cliente(idCliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), idCliente);
                 if (cln.CodiceCliente.Length > 0)
                 {
                     /*if (!Page.IsPostBack)
@@ -79,7 +79,7 @@ namespace KIS.Clienti
         {
             if (idCliente.Length > 0)
             {
-                Cliente cln = new Cliente(idCliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), idCliente);
                 if (cln.CodiceCliente.Length > 0)
                 {
                     int rt = cln.AddContatto(Server.HtmlEncode(txtFirstName.Text), Server.HtmlEncode(txtLastName.Text), 

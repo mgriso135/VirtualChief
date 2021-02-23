@@ -34,7 +34,7 @@ namespace KIS.Analysis
 
             if (checkUser == true)
             {                
-                    Cliente customer = new Cliente(customerID);
+                    Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
                     if (customer.CodiceCliente.Length > 0)
                     {
                         lnkGoFwd.Visible = true;

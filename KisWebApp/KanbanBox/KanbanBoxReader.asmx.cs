@@ -50,9 +50,9 @@ namespace KIS.KanbanBox
 
         public String ReadCards(String tenant)
         {
-            KanbanList = new KanbanCardList(Session["ActiveWorkspace"].ToString());
+            KanbanList = new KanbanCardList(tenant);
             String ret = "";
-            LoadConfiguration();
+            LoadConfiguration(tenant);
             if (KanbanBoxEnabled == true)
             {
                 String urlParameters = "?status=released&limit=1000&fields=ekanban_string,kanban_quantity,part_number,"
@@ -94,7 +94,7 @@ namespace KIS.KanbanBox
                             kbCard.initial_empty_date = kbList[i].initial_empty_date;
                             kbCard.required_date = kbList[i].required_date;
 
-                            Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), kbCard.customer_name);
+                            Cliente customer = new Cliente(tenant, kbCard.customer_name);
                             Reparto rp = new Reparto(kbCard.supplier_name);
 
                             if (customer.KanbanManaged == true || rp.KanbanManaged == true)
@@ -241,7 +241,7 @@ namespace KIS.KanbanBox
             {
                 int idCommessa = elComm.Add(card.customer_name, card.ekanban_string, "");
                 int annoCommessa = DateTime.UtcNow.Year;
-                Commessa cm = new Commessa(idCommessa, annoCommessa);
+                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
 
                     cm.Confirmed = true;
                     cm.ConfirmationDate = DateTime.UtcNow;
@@ -282,7 +282,7 @@ namespace KIS.KanbanBox
                             if (rt == 1)
                             {
                                 log += "Articolo" + card.ekanban_string + " pianificato correttamente in produzione\n";
-                                Boolean cambioStato = ChangeStatus(card, "process");
+                                Boolean cambioStato = ChangeStatus(Session["ActiveWorkspace"].ToString(), card, "process");
                                 if (cambioStato == true)
                                 {
                                     log += "Il cartellino ha cambiato stato.";

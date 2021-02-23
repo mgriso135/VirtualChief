@@ -2767,7 +2767,7 @@ namespace KIS.App_Code
                                     curr.idReparto = art.Reparto;
                                     curr.nomeProdotto = art.Proc.process.processName + " - " + art.Proc.variant.nomeVariante;
                                     curr.ProductStatus = art.Status;
-                                    Cliente customer = new Cliente(art.Cliente);
+                                    Cliente customer = new Cliente(this.Tenant, art.Cliente);
                                     curr.ragioneSocialeCliente = customer.RagioneSociale;
                                     curr.EndEventStatus = EventoF;
                                     curr.StartEventID = IDEventoI;

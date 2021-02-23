@@ -46,8 +46,8 @@ namespace KIS.Commesse
 
         protected void imgPrintOrdini_Click(object sender, ImageClickEventArgs e)
         {
-                Articolo art = new Articolo(idArticolo, annoArticolo);
-                Commessa comm = new Commessa(art.Commessa, art.AnnoCommessa);
+                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
+                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                 comm.loadArticoli();
                 // Ora creo il pdf!
                 String savePath = Server.MapPath(@"~\Data\Produzione\");
@@ -91,7 +91,7 @@ namespace KIS.Commesse
                         check = false;
                     }
 
-                    Logo logoAzienda = new Logo();
+                    Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
                     iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                     logo.ScaleToFit(50 * logo.Width / logo.Height, 50);
                     cartPDF.Add(logo);
@@ -162,8 +162,8 @@ namespace KIS.Commesse
 
         protected void imgPrintOrdiniSingolo_Click(object sender, ImageClickEventArgs e)
         {
-            Articolo art = new Articolo(idArticolo, annoArticolo);
-            Commessa comm = new Commessa(art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
+            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
             comm.loadArticoli();
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
@@ -201,7 +201,7 @@ namespace KIS.Commesse
                 intestazioneFoglio[3] = new PdfPCell();
                 intestazioneFoglio[4] = new PdfPCell();
 
-                Logo logoAzienda = new Logo();
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -214,7 +214,7 @@ namespace KIS.Commesse
 
                 intestazioneFoglio[0].AddElement(logo);
 
-                Cliente cln = new Cliente(art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
                 String idComm = comm.ID.ToString() + "/" + comm.Year.ToString();
                 if (comm.ExternalID.Length > 0)
                 {
@@ -379,8 +379,8 @@ namespace KIS.Commesse
 
         protected void imgPrintOrdiniSingoloA3_Click(object sender, ImageClickEventArgs e)
         {
-            Articolo art = new Articolo(idArticolo, annoArticolo);
-            Commessa comm = new Commessa(art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
+            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
             comm.loadArticoli();
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
@@ -420,7 +420,7 @@ namespace KIS.Commesse
                 intestazioneFoglio[3] = new PdfPCell();
                 intestazioneFoglio[4] = new PdfPCell();
 
-                Logo logoAzienda = new Logo();
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -433,7 +433,7 @@ namespace KIS.Commesse
 
                 intestazioneFoglio[0].AddElement(logo);
 
-                Cliente cln = new Cliente(art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
                 String idComm = comm.ID.ToString() + "/" + comm.Year.ToString();
                 if (comm.ExternalID.Length > 0)
                 {

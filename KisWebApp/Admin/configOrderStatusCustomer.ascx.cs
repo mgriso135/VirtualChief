@@ -27,7 +27,7 @@ namespace KIS.Admin
                 checkUser = curr.ValidatePermessi(elencoPermessi);
             }
 
-            Cliente customer = new Cliente(codCliente);
+            Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
 
             if (checkUser == true)
             {
@@ -1089,7 +1089,7 @@ namespace KIS.Admin
 
         protected void btnReset_Click(object sender, ImageClickEventArgs e)
         {
-            Cliente cli = new Cliente(codCliente);
+            Cliente cli = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
             if (cli.CodiceCliente.Length > 0)
             {
                 configCustomerOrderStatusReport cfgCust = new configCustomerOrderStatusReport(Session["ActiveWorkspace"].ToString(), codCliente);

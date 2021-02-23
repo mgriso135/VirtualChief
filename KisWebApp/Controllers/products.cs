@@ -23,7 +23,7 @@ namespace KIS.Controllers
         }
         */
         [HttpGet]
-        public HttpResponseMessage FindNomeDuplicato(String nomeVariante)
+        public HttpResponseMessage FindNomeDuplicato(String tenant, String nomeVariante)
         {
             String cKey = "";
             try
@@ -39,7 +39,7 @@ namespace KIS.Controllers
             String xKey = cfg.x_api_key;
             if (xKey == cKey && xKey.Length > 0)
             {
-                elencoVarianti elVar = new elencoVarianti();
+                elencoVarianti elVar = new elencoVarianti(tenant);
                 bool result = elVar.elenco.Any(v => v.nomeVariante == nomeVariante);
                 
                 if(result)
