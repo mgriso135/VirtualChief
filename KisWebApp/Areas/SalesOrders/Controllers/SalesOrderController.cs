@@ -130,7 +130,7 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             if (ViewBag.authW)
             {
-                Cliente curr = new Cliente(customer);
+                Cliente curr = new Cliente(Session["ActiveWorkspace"].ToString(), customer);
                 if (curr != null && curr.CodiceCliente.Length > 0)
                 {
                     ElencoCommesse ordersList = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
@@ -953,7 +953,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 {
                     idComm = comm.ExternalID;
                 }
-                Cliente cln = new Cliente(art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
                 String txtCommessa = cln.RagioneSociale + Environment.NewLine
                     + ResListOrderProduct.ListOrderProduct.lblOrdine + " " + idComm + Environment.NewLine
                     + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
@@ -1189,7 +1189,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 {
                     idComm = comm.ExternalID;
                 }
-                Cliente cln = new Cliente(art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
                 String txtCommessa = cln.RagioneSociale + Environment.NewLine
                     + ResListOrderProduct.ListOrderProduct.lblOrdine + " " + idComm + Environment.NewLine
                     + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)

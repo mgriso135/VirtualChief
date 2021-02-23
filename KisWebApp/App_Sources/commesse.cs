@@ -73,7 +73,7 @@ namespace KIS.App_Code
                 String ret = "";
                 if (this._Cliente != null && this._Cliente.Length > 0)
                 {
-                    Cliente cln = new App_Code.Cliente(this.Cliente);
+                    Cliente cln = new App_Code.Cliente(this.Tenant, this.Cliente);
                     if (cln.RagioneSociale.Length > 0)
                     {
                         ret = cln.RagioneSociale;
@@ -955,7 +955,7 @@ namespace KIS.App_Code
         {
             get
             {
-                Cliente customer = new Cliente(this.Cliente);
+                Cliente customer = new Cliente(this.Tenant, this.Cliente);
                 return customer.RagioneSociale;
             }
         }

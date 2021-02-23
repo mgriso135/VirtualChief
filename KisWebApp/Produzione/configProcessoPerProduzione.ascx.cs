@@ -417,10 +417,10 @@ namespace KIS.Produzione
             prc.process.loadFigli(prc.variant);
             for (int i = 0; i < prc.process.subProcessi.Count; i++)
             {
-                TaskVariante tskVar = new TaskVariante(prc.process.subProcessi[i], prc.variant);
+                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), prc.process.subProcessi[i], prc.variant);
                 if (tskVar.getDefaultTempo() != null)
                 {
-                    lst.Add(new TaskConfigurato(tskVar, tskVar.getDefaultTempo(), rp.id, art.Quantita));
+                    lst.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tskVar.getDefaultTempo(), rp.id, art.Quantita));
                 }
                 else
                 {

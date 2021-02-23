@@ -800,7 +800,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.Elenco.Add(new Cliente(rdr.GetString(0)));
+                this.Elenco.Add(new Cliente(this.Tenant, rdr.GetString(0)));
             }
             rdr.Close();
             conn.Close();
@@ -824,7 +824,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.Elenco.Add(new Cliente(rdr.GetString(0)));
+                this.Elenco.Add(new Cliente(this.Tenant, rdr.GetString(0)));
             }
             rdr.Close();
             conn.Close();

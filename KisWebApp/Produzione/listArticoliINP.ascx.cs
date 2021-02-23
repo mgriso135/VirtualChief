@@ -370,7 +370,7 @@ namespace KIS.Produzione
                         {
                             idComm = comm.ExternalID;
                         }
-                        Cliente cln = new Cliente(art.Cliente);
+                        Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
                         String txtCommessa = cln.RagioneSociale + Environment.NewLine
                             + GetLocalResourceObject("lblOrdine") + " " + idComm + Environment.NewLine
                             + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
@@ -590,7 +590,7 @@ namespace KIS.Produzione
                         {
                             idComm = comm.ExternalID;
                         }
-                        Cliente cln = new Cliente(art.Cliente);
+                        Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
                         String txtCommessa = cln.RagioneSociale + Environment.NewLine
                             + GetLocalResourceObject("lblOrdine") + " " + idComm + Environment.NewLine
                             + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)

@@ -81,10 +81,10 @@ namespace KIS.Commesse
 
                 if (idCommessa != -1 && annoCommessa != -1 && idProc != -1 && revProc != -1 && idVariante != -1)
                 {
-                    Commessa cm = new Commessa(idCommessa, annoCommessa);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
                     cm.loadArticoli();
-                    processo prc = new processo(idProc, revProc);
-                    variante var = new variante(idVariante);
+                    processo prc = new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc);
+                    variante var = new variante(Session["ActiveWorkspace"].ToString(), idVariante);
                     if (cm != null && cm.ID != -1 && prc != null && prc.processID != -1 && var != null && var.idVariante != -1)
                     {
                         lnkAddPert.NavigateUrl = "~/Commesse/wzAddPERT.aspx?idCommessa=" + cm.ID.ToString()

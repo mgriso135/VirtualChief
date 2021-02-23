@@ -57,10 +57,10 @@ namespace KIS.Commesse
 
                     if (idCommessa != -1 && annoCommessa != -1 && idProc != -1 && revProc != -1 && idVariante != -1)
                     {
-                        Commessa cm = new Commessa(idCommessa, annoCommessa);
+                        Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
                         cm.loadArticoli();
-                        processo prc = new processo(idProc, revProc);
-                        variante var = new variante(idVariante);
+                        processo prc = new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc);
+                        variante var = new variante(Session["ActiveWorkspace"].ToString(), idVariante);
                         if (cm != null && cm.ID != -1 && prc != null && prc.processID != -1 && var != null && var.idVariante != -1)
                         {
                             lnkAddPert.NavigateUrl = "~/Commesse/wzAddPERT.aspx?idCommessa=" + cm.ID.ToString()
@@ -89,7 +89,7 @@ namespace KIS.Commesse
                             if (idProdotto != -1 && annoProdotto != -1)
                             {
                                 checkIntegrity = false;
-                                Articolo art = new Articolo(idProdotto, annoProdotto);
+                                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
                                 if (art.ID != -1 && art.Year != -1)
                                 {
                                     if (art.Commessa == idCommessa && art.AnnoCommessa == annoCommessa && art.Proc.process.processID == idProc && art.Proc.process.revisione == revProc && art.Proc.variant.idVariante == idVariante)
@@ -100,7 +100,7 @@ namespace KIS.Commesse
                             }
 
 
-                            ProcessoVariante prcVar = new ProcessoVariante(prc, var);
+                            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), prc, var);
                         prcVar.loadReparto();
                         prcVar.process.loadFigli(prcVar.variant);
                         if (prcVar != null && prcVar.process != null && prcVar.variant != null && checkIntegrity)
@@ -119,7 +119,7 @@ namespace KIS.Commesse
                                  + cm.ID.ToString()
                                  + "&annoCommessa=" + cm.Year.ToString();
 
-                                int consist2 = prcVar.process.checkConsistencyPERT(new variante(idVariante));
+                                int consist2 = prcVar.process.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), idVariante));
                                 if (consist2 == 1 || consist2 == 6)
                                 {
                                     LinkFWD.Visible = true;

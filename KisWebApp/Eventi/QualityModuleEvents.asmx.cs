@@ -23,10 +23,10 @@ namespace KIS.Eventi
         [WebMethod]
         public String NotifyImprovementActionsDelays()
         {
-            KISConfig cfg = new KISConfig();
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
             String baseURL = cfg.baseUrl + cfg.basePath;
             String ret = "";
-            ImprovementActionsEvents LateIActs = new ImprovementActionsEvents();
+            ImprovementActionsEvents LateIActs = new ImprovementActionsEvents(Session["ActiveWorkspace"].ToString());
             LateIActs.loadLateImprovementActions();
             for (int i = 0; i < LateIActs.LateImprovementActions.Count; i++)
             {
@@ -84,16 +84,16 @@ namespace KIS.Eventi
         }
 
         [WebMethod]
-        public String NotifyCorrectiveActionsDelays()
+        public String NotifyCorrectiveActionsDelays(String tenant)
         {
-            FusoOrario fuso = new FusoOrario();
+            FusoOrario fuso = new FusoOrario(tenant);
             String tzOffset = "";
             tzOffset = fuso.tzFusoOrario.BaseUtcOffset.Ticks >= 0 ? "+" : "";
             tzOffset += fuso.tzFusoOrario.BaseUtcOffset.Hours + ":" + fuso.tzFusoOrario.BaseUtcOffset.Minutes;
             String ret = "Offset: " + tzOffset + "<br />Not finished:<br />";
-            CorrectiveActionsEvents LateCActs = new CorrectiveActionsEvents();
+            CorrectiveActionsEvents LateCActs = new CorrectiveActionsEvents(tenant);
 
-            KISConfig cfg = new KISConfig();
+            KISConfig cfg = new KISConfig(tenant);
             String baseURL = cfg.baseUrl + cfg.basePath;
 
             LateCActs.loadNotFinishedCorrectiveActions();
@@ -117,7 +117,7 @@ namespace KIS.Eventi
                     }
                 }
 
-                ImprovementAction currIAct = new ImprovementAction(LateCActs.NotFinishedCorrectiveActions[i].ImprovementActionID, LateCActs.NotFinishedCorrectiveActions[i].ImprovementActionYear);
+                ImprovementAction currIAct = new ImprovementAction(tenant, LateCActs.NotFinishedCorrectiveActions[i].ImprovementActionID, LateCActs.NotFinishedCorrectiveActions[i].ImprovementActionYear);
                 currIAct.loadTeamMembers();
                 for (int j = 0; j < currIAct.TeamMembers.Count; j++)
                 {
@@ -195,7 +195,7 @@ namespace KIS.Eventi
                     }
                 }
 
-                ImprovementAction currIAct = new ImprovementAction(LateCActs.NotStartedCorrectiveActions[i].ImprovementActionID, LateCActs.NotStartedCorrectiveActions[i].ImprovementActionYear);
+                ImprovementAction currIAct = new ImprovementAction(tenant, LateCActs.NotStartedCorrectiveActions[i].ImprovementActionID, LateCActs.NotStartedCorrectiveActions[i].ImprovementActionYear);
                 currIAct.loadTeamMembers();
                 for (int j = 0; j < currIAct.TeamMembers.Count; j++)
                 {

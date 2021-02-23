@@ -35,7 +35,7 @@ namespace KIS.Analysis
                     lnkMonths.Visible = false;
                     Chart1.Visible = false;
                  String customerID = Request.QueryString["customerID"];
-                customer = new Cliente(customerID);
+                customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
                 if (customer != null && customer.CodiceCliente.Length > 0)
                 {
 

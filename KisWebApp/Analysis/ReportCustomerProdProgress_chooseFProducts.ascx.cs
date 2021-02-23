@@ -34,7 +34,7 @@ namespace KIS.Analysis
 
             if (checkUser == true)
             {
-                Cliente customer = new Cliente(customerID);
+                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     frmReport.Visible = true;
@@ -96,7 +96,7 @@ namespace KIS.Analysis
             if (inizio > new DateTime(1970, 1, 1) && fine > new DateTime(1970, 1, 1) && fine >= inizio)
             {
                 rptProductsF.Visible = true;
-                Cliente customer = new Cliente(customerID);
+                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
                 customer.loadArticoli(null, 'F', inizio, fine);
                 rptProductsF.DataSource = customer.listArticoli;
                 rptProductsF.DataBind();

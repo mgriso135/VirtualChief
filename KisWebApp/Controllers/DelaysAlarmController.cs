@@ -14,16 +14,16 @@ namespace KIS.Controllers
     {
         // GET: DelaysAlarm
         [System.Web.Mvc.HttpGet]
-        public void Main()
+        public void Main(String tenant)
         {
-            List<String[]> rt = TrovaRitardi();
-            SegnalaRitardi();
+            List<String[]> rt = TrovaRitardi(tenant);
+            SegnalaRitardi(tenant);
         }
 
-        private List<String[]> TrovaRitardi()
+        private List<String[]> TrovaRitardi(String tenant)
         {
             List<String[]> ritardi = new List<string[]>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status <> 'F' ORDER BY lateStart";
@@ -31,8 +31,8 @@ namespace KIS.Controllers
             List<int> tskRitardo = new List<int>();
             while (rdr.Read())
             {
-                TaskProduzione tsk = new TaskProduzione(rdr.GetInt32(0));
-                Reparto rp = new Reparto(tsk.RepartoID);
+                TaskProduzione tsk = new TaskProduzione(tenant, rdr.GetInt32(0));
+                Reparto rp = new Reparto(tenant, tsk.RepartoID);
                 rp.loadEventoRitardo();
 
                 String[] ritardo = new String[4];
@@ -66,12 +66,12 @@ namespace KIS.Controllers
             return ritardi;
         }
 
-        private bool SegnalaRitardi()
+        private bool SegnalaRitardi(String tenant)
         {
             bool rt = false;
-            KISConfig cfg = new KISConfig();
+            KISConfig cfg = new KISConfig(tenant);
             String baseURL = cfg.baseUrl + cfg.basePath;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
             conn.Open();
             List<TaskProduzione> tskList = new List<TaskProduzione>();
             MySqlCommand cmd = conn.CreateCommand();
@@ -80,7 +80,7 @@ namespace KIS.Controllers
             while (rdr.Read())
             {
                 //retu += "DB: " + rdr.GetInt32(0).ToString() + "<br />";
-                tskList.Add(new TaskProduzione(rdr.GetInt32(0)));
+                tskList.Add(new TaskProduzione(tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             for (int i = 0; i < tskList.Count; i++)
@@ -91,7 +91,7 @@ namespace KIS.Controllers
                 // Ricerco tutti gli indirizzi cui inviare la mail
                 List<System.Net.Mail.MailAddress> MailList = new List<System.Net.Mail.MailAddress>();
                 // Ricerca per reparto
-                Reparto rp = new Reparto(tskList[i].RepartoID);
+                Reparto rp = new Reparto(tenant, tskList[i].RepartoID);
                 rp.loadEventoRitardo();
                 if (rp.EventoRitardo.RitardoMinimoDaSegnalare != null && ritardo >= rp.EventoRitardo.RitardoMinimoDaSegnalare)
                 {
@@ -114,7 +114,7 @@ namespace KIS.Controllers
                 }
 
                 // Ricerco per articolo
-                Articolo art = new Articolo(tskList[i].ArticoloID, tskList[i].ArticoloAnno);
+                Articolo art = new Articolo(tenant, tskList[i].ArticoloID, tskList[i].ArticoloAnno);
                 art.loadEventoRitardo();
                 if (art.EventoRitardo.RitardoMinimoDaSegnalare != null && ritardo >= art.EventoRitardo.RitardoMinimoDaSegnalare)
                 {
@@ -138,7 +138,7 @@ namespace KIS.Controllers
 
 
                 // Ricerco per commessa
-                Commessa cm = new Commessa(art.Commessa, art.AnnoCommessa);
+                Commessa cm = new Commessa(tenant, art.Commessa, art.AnnoCommessa);
                 cm.loadEventoRitardo();
 
                 if (cm.EventoRitardo.RitardoMinimoDaSegnalare != null && ritardo >= cm.EventoRitardo.RitardoMinimoDaSegnalare)
@@ -161,7 +161,7 @@ namespace KIS.Controllers
                     }
                 }
 
-                Postazione pst = new Postazione(tskList[i].PostazioneID);
+                Postazione pst = new Postazione(tenant, tskList[i].PostazioneID);
                 // Ricerca per articolo
                 // Ricerca per specifico task
                 //.................

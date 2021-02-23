@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace KIS {
-    
-    
-    public partial class HPDefault {
-        
+namespace KIS
+{
+
+
+    public partial class Default
+    {
+
         /// <summary>
         /// lblBenvenuto control.
         /// </summary>
@@ -20,7 +22,7 @@ namespace KIS {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblBenvenuto;
-        
+
         /// <summary>
         /// lbl1 control.
         /// </summary>

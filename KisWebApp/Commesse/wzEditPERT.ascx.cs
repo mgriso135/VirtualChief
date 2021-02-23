@@ -36,7 +36,7 @@ namespace KIS.Commesse
                 {
                     if (!Page.IsPostBack)
                     {
-                        ProductParametersCategories parList = new ProductParametersCategories();
+                        ProductParametersCategories parList = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
                         parList.loadCategories();
                         ddlParamCategory.AppendDataBoundItems = true;
                         ddlParamCategory.Items.Clear();
@@ -49,9 +49,9 @@ namespace KIS.Commesse
                         }
                         ddlParamCategory.DataBind();
 
-                        processo padre = new processo(procID);
+                        processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
 
-                        int controllo = padre.checkConsistencyPERT(new variante(varID));
+                        int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
 
                         if (controllo == 0)
                         {
@@ -75,7 +75,7 @@ namespace KIS.Commesse
                         //svg1.Text += "</svg>";
 
                         // Dropdown collega task esistente
-                        ElencoTasks elTsk = new ElencoTasks();
+                        ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString());
                         List<processo> curr = new List<processo>();
                         for (int i = 0; i < elTsk.Elenco.Count; i++)
                         {
@@ -254,9 +254,9 @@ namespace KIS.Commesse
         protected void timer1_Tick(object sender, EventArgs e)
         {
             lbl1.Text = "";
-            processo padre = new processo(procID);
+            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
 
-            int controllo = padre.checkConsistencyPERT(new variante(varID));
+            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
 
             if (controllo == 0)
             {

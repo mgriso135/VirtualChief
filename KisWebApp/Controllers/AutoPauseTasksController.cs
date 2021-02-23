@@ -19,7 +19,7 @@ namespace KIS.Controllers
          * Ok, 1 if process terminated ok
          */
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage AutoPauseTasks()
+        public HttpResponseMessage AutoPauseTasks(String tenant)
         {
             String log = "";
             String cKey = "";
@@ -34,12 +34,12 @@ namespace KIS.Controllers
             }
 
 
-            KISConfig cfg = new KISConfig();
+            KISConfig cfg = new KISConfig(tenant);
             String xKey = cfg.ConfigController_X_API_KEY;
             if (xKey.Length > 0 && xKey == cKey)
             {
                 // Find all departments
-                ElencoReparti deptLst = new ElencoReparti();
+                ElencoReparti deptLst = new ElencoReparti(tenant);
                 foreach (var dept in deptLst.elenco)
                 {
                     log += "Department " + dept.name + "\n";
@@ -87,7 +87,7 @@ namespace KIS.Controllers
                         {
                             log += "Close all tasks";
                             // Auto-pause all tasks
-                            var lstOpenTasks = new ElencoTaskProduzione(dept, 'I');
+                            var lstOpenTasks = new ElencoTaskProduzione(tenant, dept, 'I');
                             foreach(var openTask in lstOpenTasks.Tasks)
                             {
                                 log += "Task " + openTask.Name + " " + openTask.TaskProduzioneID.ToString() + "\n";

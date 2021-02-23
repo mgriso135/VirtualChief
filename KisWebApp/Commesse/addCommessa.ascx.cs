@@ -28,7 +28,7 @@ namespace KIS.Commesse
                 if (!Page.IsPostBack)
                 {
                     frmAddCommessa.Visible = false;
-                    KIS.App_Code.PortafoglioClienti elencoClienti = new App_Code.PortafoglioClienti();
+                    KIS.App_Code.PortafoglioClienti elencoClienti = new App_Code.PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                     ddlCliente.DataSource = elencoClienti.Elenco;
                     ddlCliente.DataTextField = "RagioneSociale";
                     ddlCliente.DataValueField = "CodiceCliente";
@@ -57,14 +57,14 @@ namespace KIS.Commesse
         */
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
-            ElencoCommesse el = new ElencoCommesse();
+            ElencoCommesse el = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
             String client = Server.HtmlEncode(ddlCliente.SelectedValue);
             String note = Server.HtmlEncode(txtNote.Text);
             String externalID = Server.HtmlEncode(txtExternalID.Text);
             int rt = el.Add(client, note, externalID);
             if (rt !=-1)
             {
-                Commessa cm = new Commessa(rt, DateTime.UtcNow.Year);
+                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), rt, DateTime.UtcNow.Year);
                 if (cm != null && cm.ID != -1 && cm.Year > 2000)
                 {
                     User curr = (User)Session["user"];

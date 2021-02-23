@@ -14,7 +14,7 @@ namespace KIS.Controllers
     {
         // GET api/<controller>
         [HttpGet]
-        public HttpResponseMessage GetCustomers()
+        public HttpResponseMessage GetCustomers(String tenant)
         {
             String cKey = "";
             try
@@ -30,7 +30,7 @@ namespace KIS.Controllers
             String xKey = cfg.x_api_key;
             if (xKey == cKey && xKey.Length > 0)
             {
-                CustomersListModel elencoCli = new CustomersListModel();
+                CustomersListModel elencoCli = new CustomersListModel(tenant);
                 List<CustomerModel> ret = elencoCli.CustomerPortfolio;
                 if (ret != null)
                 {
@@ -50,7 +50,7 @@ namespace KIS.Controllers
 
         // GET api/<controller>/5
         [HttpGet]
-        public HttpResponseMessage GetCustomer(String id)
+        public HttpResponseMessage GetCustomer(String tenant, String id)
         {
             String cKey = "";
             try
@@ -66,7 +66,7 @@ namespace KIS.Controllers
             String xKey = cfg.x_api_key;
             if (xKey == cKey && xKey.Length > 0)
             {
-            CustomerModel cli = new CustomerModel(id);
+            CustomerModel cli = new CustomerModel(tenant, id);
             if (cli.CodiceCliente.Length > 0)
             {
                 return Request.CreateResponse(HttpStatusCode.OK, cli);
@@ -83,7 +83,7 @@ namespace KIS.Controllers
         }
 
         // POST api/<controller>
-        public HttpResponseMessage Post([FromBody]CustomerModelStruct value)
+        public HttpResponseMessage Post(String tenant, [FromBody]CustomerModelStruct value)
         {
             HttpResponseMessage response;
             String cKey = "";
@@ -100,7 +100,7 @@ namespace KIS.Controllers
             String xKey = cfg.x_api_key;
             if (xKey == cKey && xKey.Length > 0)
             {
-            KIS.App_Code.PortafoglioClienti portfolio = new KIS.App_Code.PortafoglioClienti();
+            KIS.App_Code.PortafoglioClienti portfolio = new KIS.App_Code.PortafoglioClienti(tenant);
             bool ret = portfolio.Add(
                 value.CodiceCliente,
                 value.RagioneSociale,
@@ -134,9 +134,9 @@ namespace KIS.Controllers
         }
 
         // PUT api/<controller>/5
-        public HttpResponseMessage PutModificaCliente(String id, [FromBody]CustomerModelStruct value)
+        public HttpResponseMessage PutModificaCliente(String tenant, String id, [FromBody]CustomerModelStruct value)
         {
-            KIS.App_Code.Cliente cust = new KIS.App_Code.Cliente(id);
+            KIS.App_Code.Cliente cust = new KIS.App_Code.Cliente(tenant, id);
             HttpResponseMessage response;
             String cKey = "";
             try
@@ -179,9 +179,9 @@ namespace KIS.Controllers
         }
 
         // DELETE api/<controller>/5
-        public HttpResponseMessage Delete(String id)
+        public HttpResponseMessage Delete(String tenant, String id)
         {
-            KIS.App_Code.Cliente cust = new KIS.App_Code.Cliente(id);
+            KIS.App_Code.Cliente cust = new KIS.App_Code.Cliente(tenant, id);
             HttpResponseMessage response;
             String cKey = "";
             try

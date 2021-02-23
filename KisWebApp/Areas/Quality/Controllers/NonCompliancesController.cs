@@ -1032,7 +1032,7 @@ namespace KIS.Areas.Quality.Controllers
 
             if (customer != "*")
             {
-                Cliente cust = new Cliente(customer);
+                Cliente cust = new Cliente(Session["ActiveWorkspace"].ToString(), customer);
                 if(cust.CodiceCliente.Length>0)
                 { 
                     el = new ElencoProcessiVarianti(true, cust);

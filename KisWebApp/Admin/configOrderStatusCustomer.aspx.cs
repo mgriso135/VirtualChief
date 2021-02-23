@@ -16,7 +16,7 @@ namespace KIS.Admin
             if (!String.IsNullOrEmpty(Request.QueryString["id"]))
             {
                 String sCustomer = Request.QueryString["id"];
-                Cliente customer = new Cliente(sCustomer);
+                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), sCustomer);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     frmConfigOrderCustomer.Visible = true;

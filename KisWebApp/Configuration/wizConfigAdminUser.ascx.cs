@@ -27,7 +27,7 @@ namespace KIS.Configuration
 
          protected void btnSaveUser_Click(object sender, EventArgs e)
         {
-            User utn = new User();
+            User utn = new User(Session["ActiveWorkspace"].ToString());
             String rt = utn.add(Server.HtmlEncode(inputUsername.Text), inputPassword.Text, Server.HtmlEncode(inputNome.Text), 
                 Server.HtmlEncode(inputCognome.Text), "Admin", ddlLanguages.SelectedValue,
                 true,
@@ -44,7 +44,7 @@ namespace KIS.Configuration
             else
             {
                 lblEsito.Text = GetLocalResourceObject("lblUserAdded").ToString();
-                GroupList grpList = new GroupList();
+                GroupList grpList = new GroupList(Session["ActiveWorkspace"].ToString());
                 int adminGroupID = -1;
                 for (int i = 0; i < grpList.Elenco.Count; i++)
                 {

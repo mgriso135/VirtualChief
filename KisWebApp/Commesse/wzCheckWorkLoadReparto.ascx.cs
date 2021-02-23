@@ -94,7 +94,7 @@ namespace KIS.Commesse
                     chkLstPostazioni.Visible = false;
                     fine = inizio;
                     //Reparto 
-                    rp = new Reparto(idReparto);
+                    rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     inizio = TimeZoneInfo.ConvertTimeFromUtc( DateTime.UtcNow, rp.tzFusoOrario);
                     rp.loadPostazioni();
                     idPostazioni = new List<int>();
@@ -122,7 +122,7 @@ namespace KIS.Commesse
                             prcVar.process.loadFigli(art.Proc.variant);
                             for (int j = 0; j < prcVar.process.subProcessi.Count; j++)
                             {
-                                TaskVariante tskVar = new TaskVariante(prcVar.process.subProcessi[j], prcVar.variant);
+                                TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), prcVar.process.subProcessi[j], prcVar.variant);
                                 TempoCiclo tc = null;
                                 tskVar.loadTempiCiclo();
                                 for (int k = 0; k < tskVar.Tempi.Tempi.Count; k++)
@@ -135,7 +135,7 @@ namespace KIS.Commesse
 
                                 if (tc != null)
                                 {
-                                    tskLst.Add(new TaskConfigurato(tskVar, tc, idReparto, art.Quantita));
+                                    tskLst.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, idReparto, art.Quantita));
                                 }
                                 else
                                 {
@@ -143,7 +143,7 @@ namespace KIS.Commesse
                                 }
                             }
 
-                            ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(art, tskLst, new Reparto(idReparto), art.Quantita);
+                            ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, tskLst, new Reparto(Session["ActiveWorkspace"].ToString(), idReparto), art.Quantita);
                             int retSim = cfgPrc.SimulaIntroduzioneInProduzione();
                             lbl1.Text = retSim.ToString() + "<br />";
                             if (retSim == 1)
@@ -692,7 +692,7 @@ namespace KIS.Commesse
                             if (found == false)
                             {
                                 caricoDiLavoro nullo = new caricoDiLavoro();
-                                nullo.postazione = new Postazione(idPostazioni[i]);
+                                nullo.postazione = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[i]);
                                 nullo.articolo = articoliNuovi[z].ID;
                                 nullo.articoloAnno = articoliNuovi[z].Year;
                                 nullo.carico = new TimeSpan(0, 0, 0);
@@ -730,7 +730,7 @@ namespace KIS.Commesse
                         List<Double> sommaOre = new List<double>();
                         //double sumH = 0;
 
-                        Postazione p = new Postazione(idPostazioni[q]);
+                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazioni[q]);
 
                         var arts = carico2.GroupBy(i => i.articolo)
                             .Select(g => new
@@ -895,7 +895,7 @@ namespace KIS.Commesse
                     }
                 }
 
-                ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(art, tskLst, new Reparto(idReparto), art.Quantita);
+                ConfigurazioneProcesso cfgPrc = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, tskLst, new Reparto(Session["ActiveWorkspace"].ToString(), idReparto), art.Quantita);
                 int retSim = cfgPrc.SimulaIntroduzioneInProduzione();
                 if (retSim == 1)
                 {
@@ -969,25 +969,25 @@ namespace KIS.Commesse
         protected void imgGoFwd_Click(object sender, ImageClickEventArgs e)
         {
             List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
-            Articolo art = new Articolo(idProdotto, annoProdotto);
+            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
 
             if (art.Status == 'N')
             {
-                Reparto rp = new Reparto(art.Reparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), art.Reparto);
 
                 art.Proc.process.loadFigli(art.Proc.variant);
                 for (int i = 0; i < art.Proc.process.subProcessi.Count; i++)
                 {
-                    TaskVariante tskVar = new TaskVariante(new processo(art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
                     tskVar.loadTempiCiclo();
-                    TempoCiclo tc = new TempoCiclo(tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                     if (tc.Tempo != null)
                     {
-                        lstTasks.Add(new TaskConfigurato(tskVar, tc, rp.id, art.Quantita));
+                        lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, rp.id, art.Quantita));
                     }
                 }
 
-                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(art, lstTasks, rp, art.Quantita);
+                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, lstTasks, rp, art.Quantita);
                 int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                 if (rt1 == 1)
                 {

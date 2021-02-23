@@ -43,7 +43,7 @@ namespace KIS.Analysis
 
         protected void rblClienti_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Cliente customer = new Cliente(rblClienti.SelectedValue);
+            Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), rblClienti.SelectedValue);
             if (customer.CodiceCliente.Length > 0)
             {
                 lnkGoFwd.Visible = true;

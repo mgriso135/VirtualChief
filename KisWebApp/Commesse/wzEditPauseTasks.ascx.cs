@@ -16,11 +16,11 @@ namespace KIS.Commesse
             lblInfo.Text = "Saving...";
             if (task != -1 && revTask != -1 && variante != -1 && prec != -1 && revPrec != -1)
             {
-                variante vari = new variante(variante);
-                TaskVariante tsk = new TaskVariante(new processo(task, revTask), vari);
+                variante vari = new variante(Session["ActiveWorkspace"].ToString(), variante);
+                TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), task, revTask), vari);
                 if (tsk != null && tsk.Task != null && tsk.variant != null && tsk.Task.processID != -1 && tsk.variant.idVariante != -1)
                 {
-                    tsk.Task.loadPrecedenti(new variante(variante));
+                    tsk.Task.loadPrecedenti(new variante(Session["ActiveWorkspace"].ToString(), variante));
                     bool found = false;
                     int index = -1;
                     try
@@ -36,7 +36,7 @@ namespace KIS.Commesse
 
                     if (found)
                     {
-                        TaskVariante tskPrec = new TaskVariante(new processo(prec, revPrec), new variante(variante));
+                        TaskVariante tskPrec = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), prec, revPrec), new variante(Session["ActiveWorkspace"].ToString(), variante));
 
                         int ore = -1, minuti = -1, secondi = -1;
                         try
@@ -88,11 +88,11 @@ namespace KIS.Commesse
         {
             if (task != -1 && revTask != -1 && variante != -1 && prec != -1 && revPrec != -1)
             {
-                variante vari = new variante(variante);
-                TaskVariante tsk = new TaskVariante(new processo(task, revTask), vari);
+                variante vari = new variante(Session["ActiveWorkspace"].ToString(), variante);
+                TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), task, revTask), vari);
                 if (tsk != null && tsk.Task != null && tsk.variant != null && tsk.Task.processID != -1 && tsk.variant.idVariante != -1)
                 {
-                    tsk.Task.loadPrecedenti(new variante(variante));
+                    tsk.Task.loadPrecedenti(new variante(Session["ActiveWorkspace"].ToString(), variante));
                     bool found = false;
                     int index = -1;
                     try
@@ -108,7 +108,7 @@ namespace KIS.Commesse
 
                     if (found)
                     {
-                        TaskVariante tskPrec = new TaskVariante(new processo(prec, revPrec), new variante(variante));
+                        TaskVariante tskPrec = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), prec, revPrec), new variante(Session["ActiveWorkspace"].ToString(), variante));
 
                         lbl1.Text = "";
                         tblPausa.Visible = true;
@@ -147,11 +147,11 @@ namespace KIS.Commesse
             {
                 if (task != -1 && revTask != -1 && variante != -1 && prec != -1 && revPrec != -1)
                 {
-                    variante vari = new variante(variante);
-                    TaskVariante tsk = new TaskVariante(new processo(task, revTask), vari);
+                    variante vari = new variante(Session["ActiveWorkspace"].ToString(), variante);
+                    TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), task, revTask), vari);
                     if (tsk != null && tsk.Task != null && tsk.variant != null && tsk.Task.processID != -1 && tsk.variant.idVariante != -1)
                     {
-                        tsk.Task.loadPrecedenti(new variante(variante));
+                        tsk.Task.loadPrecedenti(new variante(Session["ActiveWorkspace"].ToString(), variante));
                         bool found = false;
                         int index = -1;
                         try
@@ -167,7 +167,7 @@ namespace KIS.Commesse
 
                         if (found)
                         {
-                            TaskVariante tskPrec = new TaskVariante(new processo(prec, revPrec), new variante(variante));
+                            TaskVariante tskPrec = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), prec, revPrec), new variante(Session["ActiveWorkspace"].ToString(), variante));
 
                             lbl1.Text = "";
                             tblPausa.Visible = true;

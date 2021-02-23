@@ -101,7 +101,7 @@ namespace KIS.Produzione
 
             if(andonCfg==null || andonCfg.CampiVisualizzati==null)
             {
-                andonCfg = new KIS.App_Code.AndonReparto(rp.id);
+                andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), rp.id);
                 andonCfg.loadCampiVisualizzati();
                 andonCfg.loadScrollType();
                 ScrollType = andonCfg.ScrollType;
@@ -157,7 +157,7 @@ namespace KIS.Produzione
                                     td.InnerHtml = art.Commessa + "/" + art.AnnoCommessa;
                                     break;
                                 case "OrderExternalID":
-                                    comm = new Commessa(art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.ExternalID;
                                     break;
                                 case "CommessaCodiceCliente":
@@ -167,15 +167,15 @@ namespace KIS.Produzione
                                     td.InnerHtml = art.RagioneSocialeCliente;
                                     break;
                                 case "CommessaDataInserimento":
-                                    comm = new Commessa(art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.DataInserimento.ToString("dd/MM/yyyy");
                                     break;
                                 case "CommessaNote":
-                                    comm = new Commessa(art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.Note;
                                     break;
                                 case "ProdottoID":
-                                    comm = new Commessa(art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = art.ID.ToString() + "/" + art.Year.ToString();
                                     break;
                                 case "ProdottoLineaProdotto":

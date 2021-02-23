@@ -106,10 +106,10 @@ namespace KIS.Configuration
 
                             string fileName = Path.GetFileName(FileUpload1.PostedFile.FileName);
                             FileUpload1.PostedFile.SaveAs(Server.MapPath("~/Data/Logo/") + fileName);
-                            Logo logo = new Logo();
+                            Logo logo = new Logo(Session["ActiveWorkspace"].ToString());
                             logo.filePath = fileName;
                             lbl1.Text += "Log: " + logo.log;
-                            KISConfig cfg = new KISConfig();
+                            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
                             if (cfg.WizLogoCompleted)
                             {
                                 lbl1.Text = GetLocalResourceObject("lblUploadOk").ToString();

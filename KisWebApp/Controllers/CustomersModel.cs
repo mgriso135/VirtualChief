@@ -8,9 +8,11 @@ namespace KIS.Models
 {
     public class CustomerModel
     {
-        public CustomerModel(String id)
+        protected String Tenant;
+        public CustomerModel(String tenant, String id)
         {
-            Cliente customer = new Cliente(id);
+            this.Tenant = tenant;
+            Cliente customer = new Cliente(this.Tenant, id);
             if (customer != null && customer.CodiceCliente.Length > 0)
             {
                 this._CodiceCliente = customer.CodiceCliente;
@@ -54,7 +56,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.PartitaIVA = value;
@@ -71,7 +73,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.CodiceFiscale = value;
@@ -88,7 +90,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.Indirizzo = value;
@@ -105,7 +107,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.Citta = value;
@@ -122,7 +124,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.Provincia = value;
@@ -139,7 +141,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.CAP = value;
@@ -156,7 +158,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.Stato = value;
@@ -173,7 +175,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.Telefono = value;
@@ -190,7 +192,7 @@ namespace KIS.Models
             }
             set
             {
-                Cliente cust = new Cliente(this.CodiceCliente);
+                Cliente cust = new Cliente(this.Tenant, this.CodiceCliente);
                 if (cust != null && cust.CodiceCliente.Length > 0)
                 {
                     cust.Email = value;
@@ -202,14 +204,16 @@ namespace KIS.Models
 
     public class CustomersListModel
     {
+        protected String Tenant;
         public List<CustomerModel> CustomerPortfolio;
-        public CustomersListModel()
+        public CustomersListModel(String tenant)
         {
+            this.Tenant = tenant;
             CustomerPortfolio = new List<CustomerModel>();
-            PortafoglioClienti elencoCli = new PortafoglioClienti();
+            PortafoglioClienti elencoCli = new PortafoglioClienti(this.Tenant);
             for (int i = 0; i < elencoCli.Elenco.Count; i++)
             {
-                CustomerPortfolio.Add(new CustomerModel(elencoCli.Elenco[i].CodiceCliente));
+                CustomerPortfolio.Add(new CustomerModel(this.Tenant, elencoCli.Elenco[i].CodiceCliente));
             }
         }
     }

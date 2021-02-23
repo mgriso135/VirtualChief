@@ -44,7 +44,7 @@ namespace KIS.Clienti
                 tblContatto.Visible = true;
                 btnShowAddPhone.Visible = true;
                 btnShowAddEmail.Visible = true;
-                Contatto contCln = new Contatto(idContatto);
+                Contatto contCln = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
                 if (contCln.ID != -1)
                 {
                     if (!Page.IsPostBack)
@@ -87,7 +87,7 @@ namespace KIS.Clienti
 
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
-            Contatto clnCont = new Contatto(idContatto);
+            Contatto clnCont = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
             if (clnCont.ID != -1)
             {
                 clnCont.FirstName = Server.HtmlEncode(txtNominativo.Text);
@@ -102,7 +102,7 @@ namespace KIS.Clienti
 
         protected void btnUndo_Click(object sender, ImageClickEventArgs e)
         {
-            Contatto clnCont = new Contatto(idContatto);
+            Contatto clnCont = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
             if (clnCont.ID != -1)
             {
                 txtNominativo.Text=clnCont.FirstName;
@@ -112,7 +112,7 @@ namespace KIS.Clienti
 
         protected void rptPhones_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            Contatto cln = new Contatto(idContatto);
+            Contatto cln = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
             if (cln.ID != -1)
             {
                 if (e.CommandName == "Delete")
@@ -192,7 +192,7 @@ namespace KIS.Clienti
         {
             if (idContatto != -1)
             {
-                Contatto cnt = new Contatto(idContatto);
+                Contatto cnt = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
                 if (cnt.ID != -1)
                 {
                     bool check = false;
@@ -234,7 +234,7 @@ namespace KIS.Clienti
 
         protected void rptEmails_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            Contatto cln = new Contatto(idContatto);
+            Contatto cln = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
             if (cln.ID != -1)
             {
                 if (e.CommandName == "Delete")

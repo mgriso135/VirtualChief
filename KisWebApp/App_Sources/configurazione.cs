@@ -53,7 +53,7 @@ namespace KIS.App_Code
         {
             get
             {
-                ElencoReparti elRep = new ElencoReparti();
+                ElencoReparti elRep = new ElencoReparti(this.Tenant);
                 Boolean ret = true;
                 if(elRep.elenco.Count == 0)
                 {
@@ -78,7 +78,7 @@ namespace KIS.App_Code
         {
             get
             {
-                ElencoPostazioni elPost = new ElencoPostazioni();
+                ElencoPostazioni elPost = new ElencoPostazioni(this.Tenant);
                 return elPost.elenco.Count > 0;
             }
         }
@@ -87,7 +87,7 @@ namespace KIS.App_Code
         {
             get
             {
-                UserList usrList = new UserList();
+                UserList usrList = new UserList(this.Tenant);
                 Boolean ret = false;
                 if(usrList.listUsers.Count >0)
                 {

@@ -23,7 +23,7 @@ namespace KIS.Controllers
         /* This methods exports only finished tasks data, where task real end date is between start and end */
         // GET api/<controller>
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage ExportFinishedTasksEvents(DateTime start, DateTime end)
+        public HttpResponseMessage ExportFinishedTasksEvents(String tenant, DateTime start, DateTime end)
         {
             String cKey = "";
             try
@@ -40,7 +40,7 @@ namespace KIS.Controllers
             if (xKey.Length > 0 && xKey == cKey)
             {
                 // use TaskEventStruct in Analysis.cs
-                TaskEvents tskevs = new TaskEvents();
+                TaskEvents tskevs = new TaskEvents(tenant);
                 tskevs.loadTaskEvents(start, end);
                 return Request.CreateResponse(HttpStatusCode.OK, tskevs.TaskEventsData);
             }
@@ -48,7 +48,7 @@ namespace KIS.Controllers
         }
 
         [System.Web.Http.HttpGet]
-        public HttpResponseMessage TransformEventsToTimeSpansAndExport(Boolean AllEvents)
+        public HttpResponseMessage TransformEventsToTimeSpansAndExport(String tenant, Boolean AllEvents)
         {
             String cKey = "";
             try
@@ -65,7 +65,7 @@ namespace KIS.Controllers
             if (xKey.Length > 0 && xKey == cKey)
             {
                 // use TaskEventStruct in Analysis.cs
-                TaskEvents tskevs = new TaskEvents();
+                TaskEvents tskevs = new TaskEvents(tenant);
                 tskevs.ExportTimeSpans(AllEvents);
                 return Request.CreateResponse(HttpStatusCode.OK);
             }

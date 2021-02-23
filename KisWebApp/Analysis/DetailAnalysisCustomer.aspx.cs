@@ -32,7 +32,7 @@ namespace KIS.Analysis
             {
                 
                 String customerID = Request.QueryString["customerID"];
-                Cliente customer = new Cliente(customerID);
+                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     lblThisLink.Visible = true;                    

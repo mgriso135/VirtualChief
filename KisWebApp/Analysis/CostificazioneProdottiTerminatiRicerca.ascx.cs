@@ -96,7 +96,7 @@ namespace KIS.Analysis
                 Cliente customer = null;
                 if (codCliente != "-1")
                 {
-                    customer = new Cliente(codCliente);
+                    customer = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
                 }
 
                 ProcessoVariante origProc = null;

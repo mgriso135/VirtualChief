@@ -43,7 +43,7 @@ namespace KIS.Clienti
             lbl1.Text = "";
             if (Page.IsValid)
             {
-                PortafoglioClienti elenco = new PortafoglioClienti();
+                PortafoglioClienti elenco = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
                 bool checkCod = false;
                 bool checkRagSoc = false;
                 bool checkPIva = false;
