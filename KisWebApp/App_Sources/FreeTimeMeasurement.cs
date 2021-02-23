@@ -1662,7 +1662,19 @@ namespace KIS.App_Sources
         public int Pause(User op)
         {
             int ret = 0;
-            if(this.Status == 'I' && op.username.Length > 0)
+            op.loadFreeMeasurementRunningTasks();
+            bool running = false;
+            try
+            {
+                op.FreeMeasurementTasks.First(y => y.MeasurementId == this.MeasurementId && y.TaskId == this.TaskId);
+                running = true;
+            }
+            catch
+            {
+                running = false;
+            }
+
+            if (this.Status == 'I' && op.username.Length > 0 && running)
             {
                 DateTime eventtime = DateTime.UtcNow;
                 MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -1696,7 +1708,7 @@ namespace KIS.App_Sources
                 }
 
                 op.loadFreeMeasurementRunningTasks();
-                if(op.FreeMeasurementTasks.Count == 0)
+                if (op.FreeMeasurementTasks.Count == 0)
                 {
                     NoProductiveTasks npts = new NoProductiveTasks();
                     var defTask = npts.TaskList.FirstOrDefault(x => x.IsDefault == true);
