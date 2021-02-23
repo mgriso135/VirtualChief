@@ -22,12 +22,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
-//using KIS.Commesse;
-//using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.App_Code
 {
-    public class Group
+    /*public class Group
     {
         protected String Tenant;
         public String log;
@@ -285,7 +284,7 @@ namespace KIS.App_Code
          * direzione = true: sposta in su
          * direzione = false: sposta in giu
          */
-        public bool SpostaVoce(VoceMenu vm, bool direzione)
+        /*public bool SpostaVoce(VoceMenu vm, bool direzione)
         {
             log = "Entro in SpostaVoce()<br />";
             bool ret = false;
@@ -587,9 +586,9 @@ namespace KIS.App_Code
                 return ret;
             }
         }
-    }
+    }*/
 
-    public class GroupList
+   /* public class GroupList
     {
         protected String Tenant;
         public String log;
@@ -654,7 +653,7 @@ namespace KIS.App_Code
             return rt;
         }
     }
-
+    */
     public class GruppoPermesso
     {
         protected String Tenant;
@@ -997,7 +996,7 @@ namespace KIS.App_Code
             get { return this._numUsers; }
         }
 
-        public UserList(String tenant)
+        public UserList()
         {
             this.Tenant = tenant;
             String strSQL = "SELECT COUNT(userID) FROM users WHERE verified = true AND enabled = true ORDER BY userID";
@@ -1026,17 +1025,45 @@ namespace KIS.App_Code
             conn.Close();
         }
 
-        public UserList(String tenant, Permesso prm)
+        public UserList(int workspaceid)
         {
-            this.Tenant = tenant;
+            listUsers = new List<User>();
+
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            String strSQL = "SELECT userID FROM useraccounts INNER JOIN useraccountworkspaces ON (useraccounts.id=useraccountworkspaces.userid) "
+                + "WHERE verified=@verified AND enabled=@enabled AND useraccountworkspaces.workspaceid=@workspaceid ORDER BY userID";
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = strSQL;
+            cmd.Parameters.AddWithValue("@verified", true);
+            cmd.Parameters.AddWithValue("@enabled", true);
+            cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int i = 0;
+            while (rdr.Read())
+            {
+                listUsers.Add(new User(rdr.GetString(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public UserList(int workspaceid, Permesso prm)
+        {
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             this.listUsers = new List<User>();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT DISTINCT(users.userID) FROM users INNER JOIN groupusers ON (users.userid = groupusers.user) "
-            + " INNER JOIN gruppipermessi ON (groupusers.groupid = gruppipermessi.idgroup) INNER JOIN permessi ON "
-            + " (gruppipermessi.idpermesso = permessi.idpermesso) WHERE verified = true AND enabled = true AND permessi.idpermesso = @idpermesso";
+            cmd.CommandText = "SELECT DISTINCT(useraccounts.id) FROM useraccounts "
+                       + " INNER JOIN useraccountsgroups ON(useraccounts.id = useraccountsgroups.userid) "
+                       + "  INNER JOIN useraccountworkspaces ON(useraccounts.id= useraccountworkspaces.userid) "
+                       + "   INNER JOIN groupspermissions ON(useraccountsgroups.groupid = groupspermissions.groupid) "
+                       + "   INNER JOIN permissions ON "
+                       + "   (groupspermissions.permissionid = permissions.id) "
+                       + "   WHERE 1 = 1  "
+                       + "   AND permissions.id=@idpermesso "
+                       + "   AND useraccountworkspaces.workspaceid = @workspaceid";
             cmd.Parameters.AddWithValue("@idpermesso", prm.ID);
+            cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {

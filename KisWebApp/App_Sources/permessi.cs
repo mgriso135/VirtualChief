@@ -9,8 +9,6 @@ namespace KIS.App_Code
 {
     public class Permesso
     {
-        protected String Tenant;
-
         public String log;
 
         private int _ID;
@@ -160,8 +158,6 @@ namespace KIS.App_Code
 
     public class ElencoPermessi
     {
-        protected String Tenant;
-
         public String log;
 
         public List<Permesso> Elenco;
@@ -212,6 +208,212 @@ namespace KIS.App_Code
                 trn.Commit();
             }
             catch(Exception ex)
+            {
+                log = ex.Message;
+                rt = false;
+                trn.Rollback();
+            }
+            conn.Close();
+            return rt;
+        }
+    }
+
+    public class Permission
+    {
+        public String log;
+
+        private int _ID;
+        public int ID
+        {
+            get { return this._ID; }
+        }
+
+        private String _Nome;
+        public String Nome
+        {
+            get { return this._Nome; }
+            set
+            {
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "UPDATE permissions SET nome = '" + value + "' WHERE id = " + this.ID.ToString();
+                    MySqlTransaction trn = conn.BeginTransaction();
+                    cmd.Transaction = trn;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        trn.Commit();
+                        this._Nome = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        trn.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+        private String _Descrizione;
+        public String Descrizione
+        {
+            get { return _Descrizione; }
+            set
+            {
+                if (this.ID != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "UPDATE permissions SET descrizione = '" + value + "' WHERE idpermesso = " + this.ID.ToString();
+                    MySqlTransaction trn = conn.BeginTransaction();
+                    cmd.Transaction = trn;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        trn.Commit();
+                        this._Descrizione = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        trn.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
+        public Permission(int idPerm)
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, name, description FROM permissions WHERE id = " + idPerm.ToString();
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._ID = rdr.GetInt32(0);
+                this._Nome = rdr.GetString(1);
+                this._Descrizione = rdr.GetString(2);
+            }
+            else
+            {
+                this._ID = -1;
+                this._Nome = "";
+                this._Descrizione = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public Permission(String nomePerm)
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, name, description FROM permissions WHERE nome = '" + nomePerm + "'";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._ID = rdr.GetInt32(0);
+                this._Nome = rdr.GetString(1);
+                this._Descrizione = rdr.GetString(2);
+            }
+            else
+            {
+                this._ID = -1;
+                this._Nome = "";
+                this._Descrizione = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool Delete()
+        {
+            bool rt = false;
+            if (this.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction trn = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = trn;
+                cmd.CommandText = "DELETE FROM permissions WHERE id = " + this.ID.ToString();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    trn.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message;
+                    rt = false;
+                    trn.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
+        }
+
+    }
+
+    public class PermissionsList
+    {
+        public String log;
+
+        public List<Permission> Elenco;
+
+        public PermissionsList()
+        {
+
+            Elenco = new List<Permission>();
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id FROM permissions ORDER BY name";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                Elenco.Add(new Permission(rdr.GetInt32(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool Add(String nomeP, String descP)
+        {
+            bool rt = false;
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT MAX(id) FROM permissions";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int maxID = 0;
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                maxID = rdr.GetInt32(0) + 1;
+            }
+            else
+            {
+                maxID = 0;
+            }
+            rdr.Close();
+            cmd.CommandText = "INSERT INTO permissions(id, name, description) VALUES (" + maxID.ToString() + ", '" + nomeP + "', '" + descP + "')";
+            MySqlTransaction trn = conn.BeginTransaction();
+            cmd.Transaction = trn;
+            try
+            {
+                cmd.ExecuteNonQuery();
+                rt = true;
+                trn.Commit();
+            }
+            catch (Exception ex)
             {
                 log = ex.Message;
                 rt = false;
