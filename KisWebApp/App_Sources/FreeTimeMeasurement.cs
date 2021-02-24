@@ -489,12 +489,17 @@ namespace KIS.App_Sources
                     {
                         if ((t.Status != 'F' && t.NoProductiveTaskId==-1) || (t.NoProductiveTaskId!=-1 && t.Status != 'F' && t.Status != 'I'))
                         {
+                            DateTime enddate = DateTime.UtcNow;
                             t.Status = 'F';
                             Double wt = t.calculateWorkingTime();
                             t.RealWorkingTime_Hours = wt;
                             Double lt = t.calculateLeadTime();
                             t.RealLeadTime_Hours = lt;
-                            t.EndDateReal = DateTime.UtcNow;
+                            if(t.StartDateReal <= new DateTime(2010,1,1))
+                            {
+                                t.StartDateReal = enddate;
+                            }
+                            t.EndDateReal = enddate;
                         }
                     }
 
@@ -1613,7 +1618,20 @@ namespace KIS.App_Sources
                             }
                             else if(defTask.Users.Count == 0)
                             {
-                                defTask.Status = 'P';
+                                FreeTimeMeasurement fm = new FreeTimeMeasurement(defTask.MeasurementId);
+                                if(fm.Status == 'F')
+                                {
+                                    defTask.Status = 'F';
+                                    defTask.EndDateReal = eventtime;
+                                    Double pWt = defTask.calculateWorkingTime();
+                                    defTask.RealWorkingTime_Hours = pWt;
+                                    Double pLt = defTask.calculateLeadTime();
+                                    defTask.RealLeadTime_Hours = pLt;
+                                }
+                                else
+                                { 
+                                    defTask.Status = 'P';
+                                }
                             }
                         }
 
@@ -1676,6 +1694,10 @@ namespace KIS.App_Sources
 
             if (this.Status == 'I' && op.username.Length > 0 && running)
             {
+                FreeTimeMeasurement fms = new FreeTimeMeasurement(this.MeasurementId);
+                char eventtype = 'P';
+                eventtype = fms.Status == 'F' ? 'F' : 'P';
+
                 DateTime eventtime = DateTime.UtcNow;
                 MySqlConnection conn = (new Dati.Dati()).mycon();
                 conn.Open();
@@ -1687,7 +1709,7 @@ namespace KIS.App_Sources
                 cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
                 cmd.Parameters.AddWithValue("@taskid", this.TaskId);
                 cmd.Parameters.AddWithValue("@user", op.username);
-                cmd.Parameters.AddWithValue("@eventtype", 'P');
+                cmd.Parameters.AddWithValue("@eventtype", eventtype);
                 cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@notes", "");
                 
@@ -1705,7 +1727,19 @@ namespace KIS.App_Sources
                 this.loadActiveUsers();
                 if(this.Users.Count == 0)
                 {
-                    this.Status = 'P';
+                    if(fms.Status == 'F')
+                    {
+                        this.Status = 'F';
+                        this.EndDateReal = eventtime;
+                        Double pWt = this.calculateWorkingTime();
+                        this.RealWorkingTime_Hours = pWt;
+                        Double pLt = this.calculateLeadTime();
+                        this.RealLeadTime_Hours = pLt;
+                    }
+                    else
+                    { 
+                        this.Status = 'P';
+                    }
                 }
 
                 op.loadFreeMeasurementRunningTasks();
@@ -1731,7 +1765,7 @@ namespace KIS.App_Sources
                         else
                         {
                             FreeTimeMeasurements fmss = new FreeTimeMeasurements();
-                            fmss.loadMeasurements('I');
+                            fmss.loadMeasurements('O');
                             if(fmss.MeasurementsList.Count > 0)
                             {
                                 nptask = fmss.MeasurementsList[0].addTask(defTask);

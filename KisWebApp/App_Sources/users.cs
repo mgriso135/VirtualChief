@@ -3603,7 +3603,7 @@ namespace KIS.App_Code
         }*/
 
         public List<FreeMeasurement_Task> FreeMeasurementTasks;
-        public void loadFreeMeasurementRunningTasks(Reparto dept)
+        /*public void loadFreeMeasurementRunningTasks(Reparto dept)
         {
             this.FreeMeasurementTasks = new List<FreeMeasurement_Task>();
             int ret = 0;
@@ -3633,7 +3633,7 @@ namespace KIS.App_Code
                 rdr.Close();
                 conn.Close();
             }
-        }
+        }*/
 
         public void loadFreeMeasurementRunningTasks()
         {
@@ -3655,7 +3655,8 @@ namespace KIS.App_Code
                  + "    (SELECT MAX(runningtasks.id) AS runningtasksid "
                 + " FROM "
                 + " (SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype,"
-                + " freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate "
+                + " freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate, "
+                + " freemeasurements_tasks_events.user AS user "
                  + "            FROM freemeasurements_tasks "
                  + "             INNER JOIN freemeasurements_tasks_events "
                     + "         ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
@@ -3665,13 +3666,14 @@ namespace KIS.App_Code
                + "               AND freemeasurements_tasks_events.user = @usr "
 //               + "               AND freemeasurements.departmentid = 0 "
                + "              ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks "
-               + "              GROUP BY runningtasks.taskid) AS runningtasks2 "
+               + "              GROUP BY runningtasks.taskid, runningtasks.measurementid, runningtasks.user) AS runningtasks2 "
                + " INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON(freemeasurements_tasks_events2.id = runningtasks2.runningtasksid) "
                + " INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid) "
                + " inner join freemeasurements ON(freemeasurements.id = freemeasurements_tasks.MeasurementId) "
                + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
                + " LEFT JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) "
                 + " WHERE eventtype = 'I'";
+
                 cmd.Parameters.AddWithValue("@usr", this.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
