@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 //using KIS.eventi;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Eventi
 {
@@ -49,7 +50,7 @@ namespace KIS.Eventi
                     List<Group> grpList = new List<Group>();
                     for (int i = 0; i < cfgRp.ListGroupsID.Count; i++)
                     {
-                        grpList.Add(new Group(Session["ActiveWorkspace"].ToString(), cfgRp.ListGroupsID[i]));
+                        grpList.Add(new Group(cfgRp.ListGroupsID[i]));
                     }
                     rptListGruppi.DataSource = grpList;
                     rptListGruppi.DataBind();
@@ -84,7 +85,7 @@ namespace KIS.Eventi
             if (frmAddRitardoGruppo.Visible == false)
             {
                 frmAddRitardoGruppo.Visible = true;
-                GroupList elencoGruppi = new GroupList(Session["ActiveWorkspace"].ToString());
+                GroupList elencoGruppi = new GroupList();
                 ddlAddRitardoGruppo.Items.Clear();
                 ddlAddRitardoGruppo.Items.Add(new ListItem(GetLocalResourceObject("lblGruppiRitSel").ToString(), ""));
                 ddlAddRitardoGruppo.DataSource = elencoGruppi.Elenco;
@@ -114,7 +115,7 @@ namespace KIS.Eventi
             }
             if (idGrp != -1)
             {
-                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
+                Group grp = new Group(idGrp);
                 if (grp.ID != -1)
                 {
                     bool rt = cfgRp.addGruppo(grp);
@@ -229,7 +230,7 @@ namespace KIS.Eventi
                     ConfigurazioneRitardoReparto cfgRp = new ConfigurazioneRitardoReparto(Session["ActiveWorkspace"].ToString(), idReparto);
                     // Ricerco il gruppo
                     cfgRp.loadGruppi();
-                    bool rt = cfgRp.deleteGruppo(new Group(Session["ActiveWorkspace"].ToString(), groupID));
+                    bool rt = cfgRp.deleteGruppo(new Group(groupID));
                     if (rt == true)
                     {
                         Response.Redirect(Request.RawUrl);

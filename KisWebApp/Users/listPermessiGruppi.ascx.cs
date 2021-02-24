@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Users
 {
 
@@ -48,11 +50,11 @@ namespace KIS.Users
 
                 if (GroupID != -1 && !Page.IsPostBack)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), GroupID);
+                    Group grp = new Group(GroupID);
                     if (grp.ID != -1)
                     {
                         lblNome.Text = grp.Nome;
-                        GruppoPermessi grpPerm = new GruppoPermessi(Session["ActiveWorkspace"].ToString(), grp.ID);
+                        GroupPermissions grpPerm = new GroupPermissions(grp.ID);
                         rptPermessi.DataSource = grpPerm.Elenco;
                         rptPermessi.DataBind();
                     }
@@ -122,7 +124,7 @@ namespace KIS.Users
 
             if (GroupID != -1 && permID != -1)
             {
-                GruppoPermesso grpPrm = new GruppoPermesso(Session["ActiveWorkspace"].ToString(), GroupID, new Permesso(Session["ActiveWorkspace"].ToString(), permID));
+                GroupPermission grpPrm = new GroupPermission(GroupID, new Permission(permID));
                 grpPrm.R = chk.Checked;
             }
         }
@@ -155,7 +157,7 @@ namespace KIS.Users
 
             if (GroupID != -1 && permID != -1)
             {
-                GruppoPermesso grpPrm = new GruppoPermesso(Session["ActiveWorkspace"].ToString(), GroupID, new Permesso(Session["ActiveWorkspace"].ToString(), permID));
+                GroupPermission grpPrm = new GroupPermission(GroupID, new Permission(permID));
                 grpPrm.W = chk.Checked;
             }
         }
@@ -189,7 +191,7 @@ namespace KIS.Users
             lbl1.Text = GroupID.ToString() + " " + permID.ToString();
             if (GroupID != -1 && permID != -1)
             {
-                GruppoPermesso grpPrm = new GruppoPermesso(Session["ActiveWorkspace"].ToString(), GroupID, new Permesso(Session["ActiveWorkspace"].ToString(), permID));
+                GroupPermission grpPrm = new GroupPermission(GroupID, new Permission(permID));
                 grpPrm.X = chk.Checked;
             }
 

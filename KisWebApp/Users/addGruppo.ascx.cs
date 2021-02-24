@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Users
 {
     public partial class addGruppo : System.Web.UI.UserControl
@@ -59,7 +61,7 @@ namespace KIS.Users
             if (nomeP.Length > 0 && descP.Length > 0)
             {
                 bool rt = false;
-                GroupList grl = new GroupList(Session["ActiveWorkspace"].ToString());
+                GroupList grl = new GroupList();
                 rt = grl.Add(nomeP, descP);
                 if (rt == true)
                 {

@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Admin
 {
     public partial class MenuGruppiList : System.Web.UI.UserControl
@@ -33,7 +35,7 @@ namespace KIS.Admin
                 {
                     if (!Page.IsPostBack)
                     {
-                        Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
+                        Group grp = new Group(idGruppo);
                         grp.loadMenu();
                         rptVociGruppi.DataSource = grp.VociDiMenu;
                         rptVociGruppi.DataBind();
@@ -56,8 +58,8 @@ namespace KIS.Admin
 
             if (voceID != -1 && idGruppo!=-1)
             {
-                VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), voceID);
-                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
+                VoceMenu vm = new VoceMenu(voceID);
+                Group grp = new Group(idGruppo);
                 if (e.CommandName == "MoveUp" || e.CommandName == "MoveDown")
                 {
                     bool verso = false;

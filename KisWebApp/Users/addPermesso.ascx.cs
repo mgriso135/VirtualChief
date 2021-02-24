@@ -52,7 +52,7 @@ namespace KIS.Users
 
         protected void imgAddPermesso_Click(object sender, ImageClickEventArgs e)
         {
-            ElencoPermessi el = new ElencoPermessi(Session["ActiveWorkspace"].ToString());
+            PermissionsList el = new PermissionsList();
             String nome = Server.HtmlEncode(nomeP.Text);
             String dsc = Server.HtmlEncode(descP.Text);
             bool rt = el.Add(nome, dsc);

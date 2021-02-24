@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 //using KIS.Menu;
 using System.Web.UI.HtmlControls;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Admin
 {
@@ -51,7 +52,7 @@ namespace KIS.Admin
 
                 if (gID != -1)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), gID);
+                    Group grp = new Group(gID);
                     frmListVoci.idGruppo = grp.ID;
                     frmAddVoce.idGruppo = grp.ID;
                     if (!Page.IsPostBack)

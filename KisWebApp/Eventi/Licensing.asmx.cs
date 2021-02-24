@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Services;
 using KIS.App_Code;
 using System.Net.Mail;
+using KIS.App_Sources;
 
 namespace KIS.Eventi
 {
@@ -33,7 +34,7 @@ namespace KIS.Eventi
             {
                 List<MailAddress> MailList = new List<MailAddress>();
                 int AdmGrpID = -1;
-                GroupList grpList = new GroupList(tenant);
+                GroupList grpList = new GroupList();
                 for (int i = 0; i < grpList.Elenco.Count; i++)
                 {
                     if (grpList.Elenco[i].Nome == "Admin")
@@ -42,8 +43,9 @@ namespace KIS.Eventi
                     }
                 }
 
-                Group admGroup = new Group(tenant, AdmGrpID);
-                admGroup.loadUtenti();
+                Workspace ws = new Workspace(tenant);
+                Group admGroup = new Group(AdmGrpID);
+                admGroup.loadUtenti(ws.id);
                 for (int i = 0; i < admGroup.Utenti.Count; i++)
                 {
                     User usr = new User(admGroup.Utenti[i]);

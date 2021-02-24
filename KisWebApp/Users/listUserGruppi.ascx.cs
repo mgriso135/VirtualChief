@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Users
 {
     public partial class listUserGruppi : System.Web.UI.UserControl
@@ -18,7 +20,7 @@ namespace KIS.Users
                 if (usr.username.Length > 0)
                 {
                     lblNome.Text = GetLocalResourceObject("lblTitle1").ToString() + " " + usr.name + " " + usr.cognome;
-                    GroupList grpList = new GroupList(Session["ActiveWorkspace"].ToString());
+                    GroupList grpList = new GroupList();
                     rptGruppi.DataSource = grpList.Elenco;
                     rptGruppi.DataBind();
                 }
@@ -113,7 +115,7 @@ namespace KIS.Users
                 }
                 if (grpID != -1)
                 {
-                    Group g = new Group(Session["ActiveWorkspace"].ToString(), grpID);
+                    Group g = new Group(grpID);
                     
                     if (g.ID != -1)
                     {

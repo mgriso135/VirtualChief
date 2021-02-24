@@ -7,6 +7,7 @@ using System.Linq;
 using MySql.Data.MySqlClient;
 using System.Net.Http;
 using System.Net.Mail;
+using KIS.App_Sources;
 //using KIS.Commesse;
 
 namespace KIS.App_Code
@@ -39,20 +40,21 @@ namespace KIS.App_Code
         public void loadKanbanBoxManagers()
         {
             this.KanbanBoxManagers = new List<User>();
-            Permesso prm = new Permesso(this.Tenant, "KanbanBox GetWarnings");
+            Permission prm = new Permission("KanbanBox GetWarnings");
             if (prm.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idgroup FROM gruppipermessi WHERE idpermesso = " + prm.ID.ToString();
+                cmd.CommandText = "SELECT groupid FROM groupspermissions WHERE permissionid = " + prm.ID.ToString();
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    Group grp = new Group(this.Tenant, rdr.GetInt32(0));
+                    Group grp = new Group(rdr.GetInt32(0));
                     if (grp.ID != -1)
                     {
-                        grp.loadUtenti();
+                        Workspace ws = new Workspace(this.Tenant);
+                        grp.loadUtenti(ws.id);
                         for (int i = 0; i < grp.Utenti.Count; i++)
                         {
                             this.KanbanBoxManagers.Add(new User(grp.Utenti[i]));

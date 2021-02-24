@@ -28,7 +28,7 @@ namespace KIS.Users
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    ElencoPermessi el = new ElencoPermessi(Session["ActiveWorkspace"].ToString());
+                    PermissionsList el = new PermissionsList();
                     rptPermessi.DataSource = el.Elenco;
                     rptPermessi.DataBind();
                 }
@@ -115,7 +115,7 @@ namespace KIS.Users
                     }
                     if (idPerm != -1)
                     {
-                        Permesso prm = new Permesso(Session["ActiveWorkspace"].ToString(), idPerm);
+                        Permission prm = new Permission(idPerm);
                         if (prm.ID != -1)
                         {
                             prm.Nome = nomeP;
@@ -152,7 +152,7 @@ namespace KIS.Users
                 }
                 if (idPerm != -1)
                 {
-                    Permesso prm = new Permesso(Session["ActiveWorkspace"].ToString(), idPerm);
+                    Permission prm = new Permission(idPerm);
                     if (prm.ID != -1)
                     {
                         bool rt = prm.Delete();

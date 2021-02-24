@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Configuration
 {
@@ -44,7 +45,7 @@ namespace KIS.Configuration
             else
             {
                 lblEsito.Text = GetLocalResourceObject("lblUserAdded").ToString();
-                GroupList grpList = new GroupList(Session["ActiveWorkspace"].ToString());
+                GroupList grpList = new GroupList();
                 int adminGroupID = -1;
                 for (int i = 0; i < grpList.Elenco.Count; i++)
                 {
@@ -56,7 +57,7 @@ namespace KIS.Configuration
 
                 if (adminGroupID != -1)
                 {
-                    Group adminGroup = new Group(Session["ActiveWorkspace"].ToString(), adminGroupID);
+                    Group adminGroup = new Group(adminGroupID);
                     User adm = new User(Server.HtmlEncode(inputUsername.Text));
                     adm.Language = ddlLanguages.SelectedValue;
 

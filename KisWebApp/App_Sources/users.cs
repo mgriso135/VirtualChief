@@ -654,7 +654,7 @@ namespace KIS.App_Code
         }
     }
     */
-    public class GruppoPermesso
+    /*public class GruppoPermesso
     {
         protected String Tenant;
         public String log;
@@ -668,7 +668,7 @@ namespace KIS.App_Code
             }
         }
 
-        public Permesso Permes;
+        public Permission Permes;
 
         private int _IdPermesso;
         public int IdPermesso
@@ -871,7 +871,7 @@ namespace KIS.App_Code
             }
         }
 
-        public GruppoPermesso(String tenant, int grp, Permesso prm)
+        public GruppoPermesso(String tenant, int grp, Permission prm)
         {
             this.Tenant = tenant;
             bool check = false;
@@ -894,7 +894,7 @@ namespace KIS.App_Code
             if (check == true)
             {
                 this._GroupID = grp;
-                this.Permes = new Permesso(this.Tenant, prm.ID);
+                this.Permes = new Permission(this.Tenant, prm.ID);
                 this._NomePermesso = Permes.Nome;
                 this._PermessoDesc = Permes.Descrizione;
                 this._IdPermesso = Permes.ID;
@@ -930,8 +930,8 @@ namespace KIS.App_Code
                 this._X = false;
             }
         }
-    }
-
+    }*/
+    /*
     public class GruppoPermessi
     {
         protected String Tenant;
@@ -983,7 +983,7 @@ namespace KIS.App_Code
                 this.Elenco = null;
             }
         }
-    }
+    }*/
 
     public class UserList
     {
@@ -996,58 +996,56 @@ namespace KIS.App_Code
             get { return this._numUsers; }
         }
 
-        public UserList()
+        public UserList(String workspace)
         {
-            this.Tenant = tenant;
-            String strSQL = "SELECT COUNT(userID) FROM users WHERE verified = true AND enabled = true ORDER BY userID";
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+            // String strSQL = "SELECT COUNT(userID) FROM useraccounts INNER JOIN WHERE verified = true AND enabled = true ORDER BY userID";
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            /*MySqlCommand cmd = new MySqlCommand(strSQL, conn);
             MySqlDataReader rdr1 = cmd.ExecuteReader();
             rdr1.Read();
             this._numUsers = rdr1.GetInt32(0);
             elencoUtenti = new User[this.numUsers];
-            rdr1.Close();
+            rdr1.Close();*/
 
             listUsers = new List<User>();
 
-            strSQL = "SELECT userID FROM users WHERE verified = true AND enabled = true ORDER BY userID";
-            cmd = new MySqlCommand(strSQL, conn);
-            rdr1 = cmd.ExecuteReader();
-            int i = 0;
-            while (i < this.numUsers && rdr1.Read())
-            {
-                elencoUtenti[i] = new User(rdr1.GetString(0));
-                listUsers.Add(new User(rdr1.GetString(0)));
-                i++;
-            }
-            rdr1.Close();
-            conn.Close();
-        }
-
-        public UserList(int workspaceid)
-        {
-            listUsers = new List<User>();
-
-            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
-            String strSQL = "SELECT userID FROM useraccounts INNER JOIN useraccountworkspaces ON (useraccounts.id=useraccountworkspaces.userid) "
-                + "WHERE verified=@verified AND enabled=@enabled AND useraccountworkspaces.workspaceid=@workspaceid ORDER BY userID";
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = strSQL;
-            cmd.Parameters.AddWithValue("@verified", true);
-            cmd.Parameters.AddWithValue("@enabled", true);
-            cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
+            String strSQL = "SELECT * FROM useraccounts INNER JOIN useraccountworkspaces ON (useraccounts.id=useraccountworkspaces.userid) WHERE workspaceid=@workspaceid";
+            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@workspaceid", workspace);
             MySqlDataReader rdr = cmd.ExecuteReader();
             int i = 0;
-            while (rdr.Read())
+            while (i < this.numUsers && rdr.Read())
             {
+                elencoUtenti[i] = new User(rdr.GetString(0));
                 listUsers.Add(new User(rdr.GetString(0)));
+                i++;
             }
             rdr.Close();
             conn.Close();
         }
 
-        public UserList(int workspaceid, Permesso prm)
+        public UserList(int workspaceid)
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            listUsers = new List<User>();
+            String strSQL = "SELECT * FROM useraccounts INNER JOIN useraccountworkspaces ON (useraccounts.id=useraccountworkspaces.userid) WHERE workspaceid=@workspaceid";
+            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            int i = 0;
+            while (i < this.numUsers && rdr.Read())
+            {
+                elencoUtenti[i] = new User(rdr.GetString(0));
+                listUsers.Add(new User(rdr.GetString(0)));
+                i++;
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public UserList(int workspaceid, Permission prm)
         {
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -1619,7 +1617,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this.Gruppi.Add(new Group(this.Tenant, rdr.GetInt32(0)));
+                    this.Gruppi.Add(new Group(rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -2130,9 +2128,10 @@ namespace KIS.App_Code
                 this.loadGruppi();
                 for (int i = 0; i < this.Gruppi.Count; i++)
                 {
-                    for (int j = 0; j < this.Gruppi[i].SegnalazioneRitardiReparto.Count; j++)
+                    List<Reparto> ritDept = this.Gruppi[i].SegnalazioneRitardiReparto(this.Tenant);
+                    for (int j = 0; j < ritDept.Count; j++)
                     {
-                        ret.Add(this.Gruppi[i].SegnalazioneRitardiReparto[j]);
+                        ret.Add(ritDept[j]);
                     }
                 }
                 ret = ret.GroupBy(p => p.id).Select(g => g.First()).ToList();
@@ -2180,9 +2179,10 @@ namespace KIS.App_Code
                 this.loadGruppi();
                 for (int i = 0; i < this.Gruppi.Count; i++)
                 {
-                    for (int j = 0; j < this.Gruppi[i].SegnalazioneRitardiCommessa.Count; j++)
+                    List<Commessa> ritComm = this.Gruppi[i].SegnalazioneRitardiCommessa(this.Tenant);
+                    for (int j = 0; j < ritComm.Count; j++)
                     {
-                        ret.Add(this.Gruppi[i].SegnalazioneRitardiCommessa[j]);
+                        ret.Add(ritComm[j]);
                     }
                 }
                 ret = ret.GroupBy(p => new { p.ID, p.Year, p.Cliente, p.DataInserimento, p.Status }).Select(g => g.First()).ToList();
@@ -2229,9 +2229,10 @@ namespace KIS.App_Code
                 this.loadGruppi();
                 for (int i = 0; i < this.Gruppi.Count; i++)
                 {
-                    for (int j = 0; j < this.Gruppi[i].SegnalazioneRitardiArticolo.Count; j++)
+                    List<Articolo> ritArt = this.Gruppi[i].SegnalazioneRitardiArticolo(this.Tenant);
+                    for (int j = 0; j < ritArt.Count; j++)
                     {
-                        ret.Add(this.Gruppi[i].SegnalazioneRitardiArticolo[j]);
+                        ret.Add(ritArt[j]);
                     }
                 }
                 ret = ret.GroupBy(p => new { p.ID, p.Year, p.Cliente, p.DataPrevistaFineProduzione, p.Status }).Select(g => g.First()).ToList();
@@ -2276,9 +2277,10 @@ namespace KIS.App_Code
                 this.loadGruppi();
                 for (int i = 0; i < this.Gruppi.Count; i++)
                 {
-                    for (int j = 0; j < this.Gruppi[i].SegnalazioneWarningReparto.Count; j++)
+                    List<Reparto> wrnDept = this.Gruppi[i].SegnalazioneWarningReparto(this.Tenant);
+                    for (int j = 0; j < wrnDept.Count; j++)
                     {
-                        ret.Add(this.Gruppi[i].SegnalazioneWarningReparto[j]);
+                        ret.Add(wrnDept[j]);
                     }
                 }
                 ret = ret.GroupBy(p => p.id).Select(g => g.First()).ToList();
@@ -2326,9 +2328,10 @@ namespace KIS.App_Code
                 this.loadGruppi();
                 for (int i = 0; i < this.Gruppi.Count; i++)
                 {
-                    for (int j = 0; j < this.Gruppi[i].SegnalazioneWarningCommessa.Count; j++)
+                    List<Commessa> wrnComm = this.Gruppi[i].SegnalazioneWarningCommessa(this.Tenant);
+                    for (int j = 0; j < wrnComm.Count; j++)
                     {
-                        ret.Add(this.Gruppi[i].SegnalazioneWarningCommessa[j]);
+                        ret.Add(wrnComm[j]);
                     }
                 }
                 ret = ret.GroupBy(p => new { p.ID, p.Year, p.Cliente, p.DataInserimento, p.Status }).Select(g => g.First()).ToList();
@@ -2375,9 +2378,10 @@ namespace KIS.App_Code
                 this.loadGruppi();
                 for (int i = 0; i < this.Gruppi.Count; i++)
                 {
-                    for (int j = 0; j < this.Gruppi[i].SegnalazioneWarningArticolo.Count; j++)
+                    List<Articolo> wrnArt = this.Gruppi[i].SegnalazioneWarningArticolo(this.Tenant);
+                    for (int j = 0; j < wrnArt.Count; j++)
                     {
-                        ret.Add(this.Gruppi[i].SegnalazioneWarningArticolo[j]);
+                        ret.Add(wrnArt[j]);
                     }
                 }
                 ret = ret.GroupBy(p => new { p.ID, p.Year, p.Cliente, p.DataPrevistaFineProduzione, p.Status }).Select(g => g.First()).ToList();

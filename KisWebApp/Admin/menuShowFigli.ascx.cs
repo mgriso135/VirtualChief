@@ -30,7 +30,7 @@ namespace KIS.Admin
             {
                 if (id != -1 && !Page.IsPostBack)
                 {
-                    VoceMenu voce = new VoceMenu(Session["ActiveWorkspace"].ToString(), id);
+                    VoceMenu voce = new VoceMenu(id);
                     voce.loadFigli();
                     rptFigli.DataSource = voce.VociFiglie;
                     rptFigli.DataBind();
@@ -67,7 +67,7 @@ namespace KIS.Admin
             {
                 if (e.CommandName == "delete")
                 {
-                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+                    VoceMenu vm = new VoceMenu(vID);
                     bool rt = vm.Delete();
                     if (rt == true)
                     {
@@ -107,7 +107,7 @@ namespace KIS.Admin
                 }
                 else if (e.CommandName == "save")
                 {
-                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+                    VoceMenu vm = new VoceMenu(vID);
                     vm.Titolo = Server.HtmlEncode(txtTitolo.Text);
                     vm.Descrizione = Server.HtmlEncode(txtDesc.Text);
                     vm.URL = txtURL.Text;
@@ -115,15 +115,15 @@ namespace KIS.Admin
                 }
                 else if (e.CommandName == "undo")
                 {
-                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+                    VoceMenu vm = new VoceMenu(vID);
                     txtTitolo.Text = vm.Titolo;
                     txtDesc.Text = vm.Descrizione;
                     txtURL.Text = vm.URL;
                 }
                 else if (e.CommandName == "MoveUp")
                 {
-                    VoceMenu padre = new VoceMenu(Session["ActiveWorkspace"].ToString(), id);
-                    VoceMenu figlio = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+                    VoceMenu padre = new VoceMenu(id);
+                    VoceMenu figlio = new VoceMenu(vID);
                     padre.SpostaVoceFiglia(figlio, true);
                     padre.loadFigli();
                     rptFigli.DataSource = padre.VociFiglie;
@@ -131,8 +131,8 @@ namespace KIS.Admin
                 }
                 else if (e.CommandName == "MoveDown")
                 {
-                    VoceMenu padre = new VoceMenu(Session["ActiveWorkspace"].ToString(), id);
-                    VoceMenu figlio = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+                    VoceMenu padre = new VoceMenu(id);
+                    VoceMenu figlio = new VoceMenu(vID);
                     padre.SpostaVoceFiglia(figlio, false);
                     padre.loadFigli();
                     rptFigli.DataSource = padre.VociFiglie;

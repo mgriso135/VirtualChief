@@ -32,12 +32,13 @@ namespace KIS.Produzione
             Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
             if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    UserList usrList = new UserList(Session["ActiveWorkspace"].ToString(), new Permesso(Session["ActiveWorkspace"].ToString(), "Task Produzione"));
+                    KIS.App_Sources.Workspace ws = new App_Sources.Workspace(Session["ActiveWorkspace"].ToString());
+                    UserList usrList = new UserList(ws.id, new Permission("Task Produzione"));
                     if (usrList.listUsers.Count > 0)
                     {
                         rptUserList.DataSource = usrList.listUsers;
                         rptUserList.DataBind();
-                }
+                    }
                     else
                     {
                         rptUserList.Visible = false;
@@ -111,7 +112,8 @@ namespace KIS.Produzione
         protected void timer1_Tick(object sender, EventArgs e)
         {
             Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
-            UserList usrList = new UserList(Session["ActiveWorkspace"].ToString(), new Permesso(Session["ActiveWorkspace"].ToString(), "Task Produzione"));
+            KIS.App_Sources.Workspace ws = new App_Sources.Workspace(Session["ActiveWorkspace"].ToString());
+            UserList usrList = new UserList(ws.id, new Permission("Task Produzione"));
             if (usrList.listUsers.Count > 0)
             {
                 rptUserList.DataSource = usrList.listUsers;
