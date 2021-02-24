@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Users
 {
     public partial class listGruppi : System.Web.UI.UserControl
@@ -28,7 +30,7 @@ namespace KIS.Users
 
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    GroupList grl = new GroupList(Session["ActiveWorkspace"].ToString());
+                    GroupList grl = new GroupList();
                     rptGruppi.DataSource = grl.Elenco;
                     rptGruppi.DataBind();
                 }
@@ -112,7 +114,7 @@ namespace KIS.Users
                 }
                 if (idGrp != -1)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
+                    Group grp = new Group(idGrp);
                     if (grp.ID != -1)
                     {
                         grp.Nome = Server.HtmlEncode(tbNome.Text);
@@ -143,7 +145,7 @@ namespace KIS.Users
 
                 if (idGrp != -1)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
+                    Group grp = new Group(idGrp);
                     if (grp.ID != -1)
                     {
                         grp.Delete();
@@ -173,7 +175,7 @@ namespace KIS.Users
 
                 if (idGrp != -1)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
+                    Group grp = new Group(idGrp);
                     if (grp.ID != -1)
                     {
                         string url = "PermessiGruppi.aspx?ID=" + grp.ID.ToString();
@@ -204,7 +206,7 @@ namespace KIS.Users
 
                 if (idGrp != -1)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGrp);
+                    Group grp = new Group(idGrp);
                     if (grp.ID != -1)
                     {
                         string url = "../Admin/MenuGruppi.aspx?ID=" + grp.ID.ToString();

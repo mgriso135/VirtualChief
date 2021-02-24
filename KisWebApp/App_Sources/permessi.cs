@@ -7,6 +7,7 @@ using MySql.Data.MySqlClient;
 
 namespace KIS.App_Code
 {
+    /*
     public class Permesso
     {
         public String log;
@@ -217,7 +218,7 @@ namespace KIS.App_Code
             return rt;
         }
     }
-
+    */
     public class Permission
     {
         public String log;

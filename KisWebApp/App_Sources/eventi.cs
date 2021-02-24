@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using KIS.App_Sources;
 using MySql.Data.MySqlClient;
 //using KIS.Commesse;
 
@@ -88,8 +89,9 @@ namespace KIS.App_Code
                 // Cerco gli indirizzi all'interno dei gruppi
                 for (int i = 0; i < this.ListGroupsID.Count; i++)
                 {
-                    Group currGroup = new Group(this.Tenant, this.ListGroupsID[i]);
-                    currGroup.loadUtenti();
+                    Group currGroup = new Group(this.ListGroupsID[i]);
+                    Workspace ws = new Workspace(this.Tenant);
+                    currGroup.loadUtenti(ws.id);
                     for (int j = 0; j < currGroup.Utenti.Count; j++)
                     {
                         User currUsr = new User(currGroup.Utenti[j]);
@@ -157,8 +159,9 @@ namespace KIS.App_Code
                 // Cerco gli indirizzi all'interno dei gruppi
                 for (int i = 0; i < this.ListGroupsID.Count; i++)
                 {
-                    Group currGroup = new Group(this.Tenant, this.ListGroupsID[i]);
-                    currGroup.loadUtenti();
+                    Group currGroup = new Group(this.ListGroupsID[i]);
+                    Workspace ws = new Workspace(this.Tenant);
+                    currGroup.loadUtenti(ws.id);
                     for (int j = 0; j < currGroup.Utenti.Count; j++)
                     {
                         User currUsr = new User(currGroup.Utenti[j]);

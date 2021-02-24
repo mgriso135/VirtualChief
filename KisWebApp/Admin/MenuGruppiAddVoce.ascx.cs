@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Admin
 {
@@ -32,7 +33,7 @@ namespace KIS.Admin
             {
                 if (idGruppo != -1)
                 {
-                    Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
+                    Group grp = new Group(idGruppo);
                     grp.loadMenu();
                     if (!Page.IsPostBack)
                     {
@@ -76,8 +77,8 @@ namespace KIS.Admin
 
             if (idGruppo != -1 && voceID != -1)
             {
-                Group grp = new Group(Session["ActiveWorkspace"].ToString(), idGruppo);
-                VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), voceID);
+                Group grp = new Group(idGruppo);
+                VoceMenu vm = new VoceMenu(voceID);
 
                 if (e.CommandName == "addVoce")
                 {

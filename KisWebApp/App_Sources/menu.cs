@@ -8,8 +8,6 @@ namespace KIS.App_Code
 {
     public class VoceMenu
     {
-        protected String Tenant;
-
         public String log;
         private int _ID;
         public int ID
@@ -23,7 +21,7 @@ namespace KIS.App_Code
             get { return this._Titolo; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE menuvoci SET titolo = '" + value + "' WHERE id= " + this.ID.ToString();
@@ -45,7 +43,7 @@ namespace KIS.App_Code
             get { return this._Descrizione; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE menuvoci SET descrizione = '" + value + "' WHERE id= " + this.ID.ToString();
@@ -67,7 +65,7 @@ namespace KIS.App_Code
             get { return this._URL; }
             set
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "UPDATE menuvoci SET URL = '" + value + "' WHERE id= " + this.ID.ToString();
@@ -83,11 +81,10 @@ namespace KIS.App_Code
             }
         }
 
-        public VoceMenu(String Tenant, int idVoce)
+        public VoceMenu(int idVoce)
         {
-            this.Tenant = Tenant;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT titolo, descrizione, url FROM menuvoci WHERE id = " + idVoce.ToString();
@@ -118,7 +115,7 @@ namespace KIS.App_Code
             this._VociFiglie = new List<VoceMenu>();
             if(this.ID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idFiglio FROM menualbero WHERE idPadre = " + this.ID.ToString()
@@ -126,7 +123,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this._VociFiglie.Add(new VoceMenu(this.Tenant, rdr.GetInt32(0)));
+                    this._VociFiglie.Add(new VoceMenu(rdr.GetInt32(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -141,7 +138,7 @@ namespace KIS.App_Code
                 this.loadFigli();
                 if (this.VociFiglie.Count == 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     try
@@ -174,7 +171,7 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 int maxID = 0;
@@ -240,7 +237,7 @@ namespace KIS.App_Code
                 if (indVM != -1)
                 {
                     log = "Entro nella funzione.<br />Mi occupo dell'item: " + indVM.ToString();
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     if (direzione == true)
                     {
@@ -345,7 +342,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._Elenco.Add(new VoceMenu(this.Tenant, rdr.GetInt32(0)));
+                this._Elenco.Add(new VoceMenu(rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -361,7 +358,7 @@ namespace KIS.App_Code
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._Elenco.Add(new VoceMenu(this.Tenant, rdr.GetInt32(0)));
+                this._Elenco.Add(new VoceMenu(rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();

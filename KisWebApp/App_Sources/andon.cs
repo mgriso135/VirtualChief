@@ -1743,8 +1743,9 @@ namespace KIS.App_Code
         {
             this.UserPanel = new List<UserPanelStruct>();
             if(this.RepartoID!=-1)
-            { 
-                UserList usrList = new UserList(this.Tenant, new Permesso(this.Tenant, "Task Produzione"));
+            {
+                KIS.App_Sources.Workspace ws = new App_Sources.Workspace(this.Tenant);
+                UserList usrList = new UserList(ws.id, new Permission("Task Produzione"));
                 foreach(var m in usrList.listUsers)
                 {
                     m.loadTaskAvviati();

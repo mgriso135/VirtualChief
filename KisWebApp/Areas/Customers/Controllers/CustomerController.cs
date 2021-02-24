@@ -61,7 +61,7 @@ namespace KIS.Areas.Customers.Controllers
                 ret = 3;
             }
             }
-            Group grp = new Group(Session["ActiveWorkspace"].ToString(), "CustomerUser");
+            Group grp = new Group("CustomerUser");
             if((grp == null || grp.ID == -1) && ret == 0)
             {
                 ret = 5;

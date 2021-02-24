@@ -30,7 +30,7 @@ namespace KIS.Admin
             {
                 if (vID != -1 && !Page.IsPostBack)
                 {
-                    VoceMenu vm = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+                    VoceMenu vm = new VoceMenu(vID);
                     if (vm.ID != -1)
                     {
                     }
@@ -63,7 +63,7 @@ namespace KIS.Admin
 
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
-            VoceMenu mn = new VoceMenu(Session["ActiveWorkspace"].ToString(), vID);
+            VoceMenu mn = new VoceMenu(vID);
             bool rt = mn.AddFiglio(Server.HtmlEncode(txtTitolo.Text), Server.HtmlEncode(txtDesc.Text), Server.HtmlEncode(txtURL.Text));
             if (rt == true)
             {
