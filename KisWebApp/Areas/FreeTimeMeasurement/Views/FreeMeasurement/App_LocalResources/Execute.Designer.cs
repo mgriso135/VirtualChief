@@ -88,6 +88,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Attenzione: devi selezionare il rilievo prima di avviare il task.
+        /// </summary>
+        public static string lblErrorNoMeasurementSelected {
+            get {
+                return ResourceManager.GetString("lblErrorNoMeasurementSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hai superato il massimo numero di task avviabili. Metti in pausa o termina un task in esecuzione..
         /// </summary>
         public static string lblErrorStart4 {

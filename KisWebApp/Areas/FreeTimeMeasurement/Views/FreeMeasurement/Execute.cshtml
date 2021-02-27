@@ -171,14 +171,14 @@
                                             + "<th>@ResFreeMeasurements.Execute.lblTHQuantity</th>"
                                             + "<th>@ResFreeMeasurements.Execute.lblTHEnd</th>"
                                             + "</tr></thead>"
-                                            +"<tbody style='width:100%; font-size:24px;vertical-align: middle;'>";
+                                            +"<tbody style='width:100%; font-size:16px;vertical-align: middle;'>";
                                         for (var i = 0; i < data.length; i++) {
                                             var strQty = "";
                                             var strBtnEnd = "<td></td>";
                                             var strMeasurementName = "<td></td>";
                                             if (data[i]["NoProductiveTaskId"] == "-1") {
                                                 strQty = "<input type='number' id='txtQuantity_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "' value='"
-                                                    + data[i]["TaskQuantity"] + "' class='form-text' min='0.01' step='.01' style='width:80px' />"
+                                                    + data[i]["TaskQuantity"] + "' class='form-text' min='0.01' step='.01' style='width:50px' />"
                                                     + data[i]["MeasurementUnitType"];
                                                 strMeasurementName = "<td style='vertical-align:middle;'>" + data[i]["MeasurementName"] + "</td>";
 
@@ -187,7 +187,7 @@
                                             strTable += "<tr>"
                                                 + "<td><span style='cursor:pointer; font-size:32px;color:red;' class='material-icons pausetask' id='pausetask_" + data[i]["MeasurementId"] + "_" + data[i]["TaskId"] + "'>pause_circle</span ></td>"
                                                 + strMeasurementName
-                                                + "<td style='vertical-align:middle;'>" + data[i]["TaskName"] + "</td>"
+                                                + "<td style='vertical-align:middle;font-size:24px'>" + data[i]["TaskName"] + "</td>"
                                                 + "<td style='vertical-align:middle;'>" + data[i]["WorkstationName"] + "</td>"
                                                 + "<td><span class='material-icons btnViewNoteForm' id='btnViewNoteForm_" + data[i]["LastTaskEventId"] + "' style='cursor:pointer; font-size:32px;color:red;'>speaker_notes</span></td>"
                                                 + "<td style='vertical-align:middle;'>" + strQty + "</td>"
@@ -299,6 +299,10 @@
                     loadFreeMeasurementsTasks($(this).val());
                 });
 
+                $('#ddlTasks').on('change', function () {
+                    $('#txtNewTask').val("");
+                });
+
                 $("#startProductiveTask").click(function () {
                     var measurement = $("#ddlMeasurements").val();
                     var task = $("#ddlTasks").val();
@@ -310,7 +314,21 @@
                     console.log(newTask);
 
                     var check = true;
-                    if ((task != "" && newTask != "") || (task=="" && newTask=="")) {
+                    if (measurement == "")
+                    {
+                        check = false;
+                        $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblErrorNoMeasurementSelected");
+                            $("#lblModalInfo").dialog({
+                                modal: true,
+                                title: "Info",
+                                open: function (event, ui) {
+                                    setTimeout(function () {
+                                        $("#lblModalInfo").dialog("close");
+                                    }, 2000);
+                                }
+                            });
+                    }
+                    else if ((task != "" && newTask != "") || (task=="" && newTask=="")) {
                         check = false;
                         $("#lblModalInfo").html("@ResFreeMeasurements.Execute.lblErrorStartOnlyOne");
                             $("#lblModalInfo").dialog({
@@ -635,10 +653,10 @@
                         <td><input type="text" id="txtNewTask" style="width: 95%" class="form-control" /></td>
                     </tr>
                     <!--<tr>
-        <td colspan="2" style="text-align:center;">
+                        <td colspan="2" style="text-align:center;">
 
-        </td>
-    </tr>-->
+                        </td>
+                    </tr>-->
                 </table>
 
 
@@ -667,14 +685,14 @@
                     </tr>
                     <!-- <tr>
 
-     </tr>-->
+                    </tr>-->
                 </table>
 
             </div>
         </div>
         <hr />
         <div class="row-fluid">
-            <div class="span12" style="display:none;" id="dvRunningTasks">
+            <div class="span12" style="display:none;width:100%;max-width: 100px;" id="dvRunningTasks">
                 <h4><span id="lblRunningTasks" /></h4>
                 <div id="lblRunningTasksList" />
             </div>

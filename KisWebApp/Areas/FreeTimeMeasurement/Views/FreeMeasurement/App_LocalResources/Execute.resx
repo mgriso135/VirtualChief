@@ -126,6 +126,9 @@
   <data name="lblChooseProductiveTask" xml:space="preserve">
     <value>Inizia un task produttivo</value>
   </data>
+  <data name="lblErrorNoMeasurementSelected" xml:space="preserve">
+    <value>Attenzione: devi selezionare il rilievo prima di avviare il task</value>
+  </data>
   <data name="lblErrorStart4" xml:space="preserve">
     <value>Hai superato il massimo numero di task avviabili. Metti in pausa o termina un task in esecuzione.</value>
   </data>
