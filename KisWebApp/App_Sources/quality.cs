@@ -329,6 +329,12 @@ namespace KIS.App_Sources
 
         public List<String> Files;
 
+        /* Severity — is tied to alerts and describes how impacted a specific service or piece of infrastructure is (critical, warning, error, etc.
+         * 1 = Critical
+         * 2 = Error
+         * 3 = Warning
+         * 4 = Info
+         */
         private Char _Severity;
         public Char Severity { get { return this._Severity; }
             set
@@ -359,6 +365,13 @@ namespace KIS.App_Sources
                 }
             }
         }
+
+        /* Urgency — is tied to incidents and determines how you should be notified should the incident be assigned to you (high or low)
+         * 1 = Critical
+         * 2 = High
+         * 3 = Medium
+         * 4 = Low
+         */
         private Char _Urgency;
         public Char Urgency { get { return this._Urgency; }
             set
@@ -389,6 +402,13 @@ namespace KIS.App_Sources
                 }
             }
         }
+
+        /* Priority — is tied to incidents and specifies the order in which incidents should be addressed (P1, Sev-1, etc.)
+         * 1 = Critical
+         * 2 = High
+         * 3 = Medium
+         * 4 = Low
+         */
         private Char _Priority;
         public Char Priority { get { return this._Priority; }
             set
