@@ -329,6 +329,161 @@ namespace KIS.App_Sources
 
         public List<String> Files;
 
+        private Char _Severity;
+        public Char Severity { get { return this._Severity; }
+            set
+            {
+                if (this.ID != -1 && this.Year != -1 && (value == '1' || value == '2' || value == '3' || value == '4'))
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    try
+                    {
+
+                        cmd.CommandText = "UPDATE NonCompliances SET severity=@value WHERE ID=@ncid AND Year=@ncyear";
+                        cmd.Parameters.AddWithValue("@value", value);
+                        cmd.Parameters.AddWithValue("@ncid", this.ID);
+                        cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._Severity = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+        private Char _Urgency;
+        public Char Urgency { get { return this._Urgency; }
+            set
+            {
+                if (this.ID != -1 && this.Year != -1 && (value == '1' || value == '2' || value == '3' || value == '4'))
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    try
+                    {
+
+                        cmd.CommandText = "UPDATE NonCompliances SET urgency=@value WHERE ID=@ncid AND Year=@ncyear";
+                        cmd.Parameters.AddWithValue("@value", value);
+                        cmd.Parameters.AddWithValue("@ncid", this.ID);
+                        cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._Urgency = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+        private Char _Priority;
+        public Char Priority { get { return this._Priority; }
+            set
+            {
+                if (this.ID != -1 && this.Year != -1 && (value == '1' || value == '2' || value == '3' || value == '4'))
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    try
+                    {
+
+                        cmd.CommandText = "UPDATE NonCompliances SET priority=@value WHERE ID=@ncid AND Year=@ncyear";
+                        cmd.Parameters.AddWithValue("@value", value);
+                        cmd.Parameters.AddWithValue("@ncid", this.ID);
+                        cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._Priority = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
+        private DateTime _LastUpdatedDate;
+        public DateTime LastUpdatedDate 
+        { 
+            get { return this._LastUpdatedDate; }
+            set
+            {
+                if (this.ID != -1 && this.Year != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    try
+                    {
+
+                        cmd.CommandText = "UPDATE NonCompliances SET lastupdated=@value WHERE ID=@ncid AND Year=@ncyear";
+                        cmd.Parameters.AddWithValue("@value", value.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@ncid", this.ID);
+                        cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._LastUpdatedDate = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
+        private String _LastUpdatedBy;
+        public String LastUpdatedBy { get { return this._LastUpdatedBy; }
+            set
+            {
+                if (this.ID != -1 && this.Year != -1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    try
+                    {
+
+                        cmd.CommandText = "UPDATE NonCompliances SET lastupdatedby=@value WHERE ID=@ncid AND Year=@ncyear";
+                        cmd.Parameters.AddWithValue("@value", value);
+                        cmd.Parameters.AddWithValue("@ncid", this.ID);
+                        cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                        this._LastUpdatedBy = value;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
+        }
+
         public NonCompliance(int NCID, int NCYear)
         {
             this._ID = -1;
@@ -343,8 +498,11 @@ namespace KIS.App_Sources
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT ID, Year, Quantity, OpeningDate, User, Description, ImmediateAction, "
-                + "Cost, Status, ClosureDate FROM NonCompliances WHERE ID = " + NCID.ToString()
-                + " AND Year = " + NCYear.ToString();
+                + "Cost, Status, ClosureDate, lastupdated, lastupdatedby, severity, priority, urgency "
+                +" FROM NonCompliances WHERE ID =@ncid AND Year=@ncyear";
+            cmd.Parameters.AddWithValue("@ncid", NCID);
+            cmd.Parameters.AddWithValue("@ncyear", NCYear);
+
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read() && !rdr.IsDBNull(0) && !rdr.IsDBNull(1))
             {
@@ -366,6 +524,11 @@ namespace KIS.App_Sources
                 { 
                     this._ClosureDate = rdr.GetDateTime(9);
                 }
+                this._LastUpdatedBy = rdr.IsDBNull(10) ? "" : rdr.GetString(10);
+                this._LastUpdatedDate = rdr.IsDBNull(11) ? new DateTime(1970,1,1) : rdr.GetDateTime(11);
+                this._Severity = rdr.IsDBNull(12) ? '\0' : rdr.GetChar(12);
+                this._Priority = rdr.IsDBNull(13) ? '\0' : rdr.GetChar(13);
+                this._Urgency = rdr.IsDBNull(14) ? '\0' : rdr.GetChar(14);
             }
             rdr.Close();
             conn.Close();
