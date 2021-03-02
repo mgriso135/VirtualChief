@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Admin
 {
     public partial class manageReports1 : System.Web.UI.UserControl
@@ -13,9 +15,9 @@ namespace KIS.Admin
         {
             tblOptions.Visible = false;
             bool checkUser = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 checkUser = true;
             }
 
@@ -25,14 +27,14 @@ namespace KIS.Admin
                 Boolean checkAnalisi;
                 List<String[]> perm = new List<String[]>();
                 String[] prm = new String[2];
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
 
                 boxOrderStatusReport.Visible = false;
                 checkAnalisi = false;
                 prm[0] = "Configurazione Report Stato Ordini Clienti";
                 prm[1] = "W";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermessi(perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
                 
                 boxOrderStatusReport.Visible = checkAnalisi;
                 /*if (checkAnalisi == true)

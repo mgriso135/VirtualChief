@@ -318,8 +318,8 @@ namespace KIS.Areas.Config.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
 
@@ -343,8 +343,8 @@ namespace KIS.Areas.Config.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
 

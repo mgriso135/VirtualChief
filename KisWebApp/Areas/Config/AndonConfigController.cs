@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Areas.Config
 {
@@ -50,8 +51,8 @@ namespace KIS.Areas.Config
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
@@ -93,8 +94,8 @@ namespace KIS.Areas.Config
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
@@ -129,8 +130,8 @@ namespace KIS.Areas.Config
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
@@ -173,8 +174,8 @@ namespace KIS.Areas.Config
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)

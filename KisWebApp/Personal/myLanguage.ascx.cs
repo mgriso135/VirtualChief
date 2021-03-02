@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Personal
 {
@@ -17,8 +18,8 @@ namespace KIS.Personal
             imgUndo.Visible = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                if(curr.username.Length>0)
+                UserAccount curr = (UserAccount)Session["user"];
+                if(curr.id!=-1)
                 {
                     ddlLanguages.Visible = true;
                     imgSave.Visible = true;
@@ -44,8 +45,8 @@ namespace KIS.Personal
         {
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                if (curr.username.Length > 0)
+                UserAccount curr = (UserAccount)Session["user"];
+                if (curr.id!=-1)
                 {
                     curr.Language = ddlLanguages.SelectedValue.ToString();
                     ddlLanguages.Visible = true;
@@ -63,8 +64,8 @@ namespace KIS.Personal
             imgUndo.Visible = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                if (curr.username.Length > 0)
+                UserAccount curr = (UserAccount)Session["user"];
+                if (curr.id!=-1)
                 {
                     ddlLanguages.Visible = true;
                     imgSave.Visible = true;

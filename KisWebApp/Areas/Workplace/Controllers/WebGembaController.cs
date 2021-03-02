@@ -24,8 +24,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -72,8 +72,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -118,8 +118,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -167,8 +167,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -212,8 +212,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -261,8 +261,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.WorkstationID = -1;
@@ -276,8 +276,8 @@ namespace KIS.Areas.Workplace.Controllers
                 {
                     ViewBag.WorkstationID = p.id;
                     ViewBag.workstationName = p.name;
-                    User curr = (User)Session["user"];
-                    ViewBag.user = curr.username;
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.user = curr.userId;
                 }
                 else
                 {
@@ -313,8 +313,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.WorkstationID = -1;
@@ -381,8 +381,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.WorkstationID = -1;
@@ -455,8 +455,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -525,8 +525,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -585,8 +585,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
             if (ViewBag.authX)
             {
@@ -657,8 +657,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -788,8 +788,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -833,13 +833,13 @@ namespace KIS.Areas.Workplace.Controllers
                         if(existsOriginal && origParam!=null && origParam.ParameterID!=-1)
                         {
                             ret = 1;
-                            User curr = (User)Session["user"];
+                            UserAccount curr = (UserAccount)Session["user"];
                             Boolean checkAdd = tskProduzione.addParameter(ParamName,
                                 Server.HtmlEncode(ParamValue),
                                 new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), ParamCategory),
                                 origParam.isFixed,
                                 origParam.isRequired,
-                                curr.username);
+                                curr.userId);
                             ret = checkAdd ? 1 : 5;
                             retS = tskProduzione.log;
                         }
@@ -893,8 +893,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -949,8 +949,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1009,8 +1009,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1070,8 +1070,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.WorkstationID = -1;
@@ -1184,8 +1184,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.WorkstationID = -1;
@@ -1256,8 +1256,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -1382,8 +1382,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.user = "";
@@ -1447,8 +1447,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -1521,8 +1521,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
             if (ViewBag.authX)
             {
@@ -1584,8 +1584,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authX = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authX)
@@ -1664,8 +1664,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1699,8 +1699,8 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)

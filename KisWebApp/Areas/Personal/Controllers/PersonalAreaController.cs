@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using KIS.App_Sources;
 
 namespace KIS.Areas.Personal.Controllers
 {
@@ -42,8 +43,8 @@ namespace KIS.Areas.Personal.Controllers
             }
 
             ViewBag.authW = false;
-            User curr = (User)Session["User"];
-            if(curr !=null && curr.username.Length > 0)
+            UserAccount curr = (UserAccount)Session["user"];
+            if(curr !=null && curr.userId.Length > 0)
             {
                 ViewBag.authW = true;
                 return View(curr);
@@ -71,8 +72,8 @@ namespace KIS.Areas.Personal.Controllers
             }
 
             int ret = 0;
-            User curr = (User)Session["User"];
-            if (curr != null && curr.username.Length > 0)
+            UserAccount curr = (UserAccount)Session["user"];
+            if (curr != null && curr.userId.Length > 0)
             {
                 curr.DestinationURL = destUrl;
                 ret = 1;

@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
 using System.Web.UI.HtmlControls;
+using KIS.App_Sources;
 
 namespace KIS.Andon
 {
@@ -23,8 +24,8 @@ namespace KIS.Andon
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)

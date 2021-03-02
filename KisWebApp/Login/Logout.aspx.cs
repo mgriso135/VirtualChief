@@ -13,7 +13,7 @@ namespace KIS.Login
         {
             if(Session["user"] != null)
             {
-                //User curr = (User)Session["user"];
+                //UserAccount curr = (UserAccount)Session["user"];
                 //curr.logout();
                 Session["user"] = null;
             }

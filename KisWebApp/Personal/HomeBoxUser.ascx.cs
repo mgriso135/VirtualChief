@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Personal
 {
@@ -17,7 +18,7 @@ namespace KIS.Personal
             {
                 if (!Page.IsPostBack)
                 {
-                    User curr = (User)Session["user"];
+                    /*UserAccount curr = (UserAccount)Session["user"];
                     lstHomeBox = new List<HomeBox>();
                     curr.loadHomeBoxes();
                     for (int i = 0; i < curr.homeBoxes.Elenco.Count; i++)
@@ -39,7 +40,7 @@ namespace KIS.Personal
                     }
 
                     rptHomeBoxes.DataSource = lstHomeBox;
-                    rptHomeBoxes.DataBind();
+                    rptHomeBoxes.DataBind();*/
                 }
             }
             else
@@ -81,7 +82,7 @@ namespace KIS.Personal
                     {
                         if (Session["user"] != null)
                         {
-                            User curr = (User)Session["user"];
+                            /*UserAccount curr = (UserAccount)Session["user"];
                             curr.loadHomeBoxes();
 
                             try
@@ -103,7 +104,7 @@ namespace KIS.Personal
                                 btnDelete.Visible = false;
                                 btnArrowUp.Visible = false;
                                 btnArrowDown.Visible = false;
-                            }
+                            }*/
                         }
 
                     }
@@ -132,9 +133,9 @@ namespace KIS.Personal
             {
                 if (Session["user"] != null)
                 {
-                    User curr = (User)Session["user"];
+                    UserAccount curr = (UserAccount)Session["user"];
                     HomeBox hBox = new HomeBox(Session["ActiveWorkspace"].ToString(), homeBID);
-                    if (hBox.ID != -1 && curr.username.Length > 0)
+                    /*if (hBox.ID != -1 && curr.username.Length > 0)
                     {
                         Boolean ret = false;
                         HomeBoxesListUser hUser = new HomeBoxesListUser(Session["ActiveWorkspace"].ToString(), curr);
@@ -202,7 +203,7 @@ namespace KIS.Personal
                         {
                             lbl1.Text = "E' avvenuto un errore.<br />";
                         }
-                    }
+                    }*/
                 }
             }
         }
@@ -211,7 +212,7 @@ namespace KIS.Personal
         {
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
+              /*  UserAccount curr = (UserAccount)Session["user"];
                 lstHomeBox = new List<HomeBox>();
                 curr.loadHomeBoxes();
                 for (int i = 0; i < curr.homeBoxes.Elenco.Count; i++)
@@ -233,7 +234,7 @@ namespace KIS.Personal
                 }
 
                 rptHomeBoxes.DataSource = lstHomeBox;
-                rptHomeBoxes.DataBind();
+                rptHomeBoxes.DataBind();*/
             }
         }
     }

@@ -1892,7 +1892,7 @@ namespace KIS.App_Code
         // Verifica se l'utente ha tutti i permessi contenuti in elencoPrm. Ogni elemento è un array String[2].
         // elencoPrm[i][0] contiene il nome del permesso
         // elencoPrm[i][1] contiene il tipo di azione (R, W, X)
-        public bool ValidatePermessi(List<String[]> elencoPrm)
+        /*public bool ValidatePermissions(List<String[]> elencoPrm)
         {
             bool rt = false;
             List<bool> trovato = new List<bool>();
@@ -1935,7 +1935,7 @@ namespace KIS.App_Code
                 }
             }
             return rt;
-        }
+        }*/
 
         public List<UserEmail> Email;
         public void loadEmails()
@@ -1951,7 +1951,7 @@ namespace KIS.App_Code
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this.Email.Add(new UserEmail(this.Tenant, this.username, rdr.GetString(0)));
+                    this.Email.Add(new UserEmail(this.username, rdr.GetString(0)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -2000,68 +2000,7 @@ namespace KIS.App_Code
             return rt;
         }
 
-        public List<UserPhoneNumber> PhoneNumbers;
-        public void loadPhoneNumbers()
-        {
-            PhoneNumbers = new List<UserPhoneNumber>();
-            if (this.username != "")
-            {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT phoneNumber FROM userphonenumbers WHERE userID LIKE @userID ORDER BY note";
-                cmd.Parameters.AddWithValue("@userID", this.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
-                {
-                    this.PhoneNumbers.Add(new UserPhoneNumber(this.Tenant, this.username, rdr.GetString(0)));
-                }
-                rdr.Close();
-                conn.Close();
-            }
-        }
-        public bool addPhoneNumber(String phone, String note, bool forAlarm)
-        {
-            bool rt = false;
-            double phoneINT = -1;
-            try
-            {
-                phoneINT = Double.Parse(phone);
-            }
-            catch
-            {
-                phoneINT = -1;
-            }
-            if (phoneINT != -1 && this.username != "")
-            {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO userphoneNumbers(userid, phoneNumber, forAlarm, note) VALUES("
-                    + "@userid, @phoneNumber, @forAlarm, @note)";
-                cmd.Parameters.AddWithValue("@userid", this.username);
-                cmd.Parameters.AddWithValue("@phoneNumber", phone);
-                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
-                cmd.Parameters.AddWithValue("@note", note);
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    rt = true;
-                }
-                catch (Exception ex)
-                {
-                    this.log = ex.Message;
-                    rt = false;
-                    tr.Rollback();
-                }
-                conn.Close();
-            }
-            return rt;
-        }
+ 
 
         public String ResetPassword()
         {
@@ -3587,289 +3526,9 @@ namespace KIS.App_Code
         }
 
     }
-    public class UserEmail
-    {
-        protected String Tenant;
-        public String log;
+    
 
-        private String _UserID;
-        public String UserID
-        {
-            get
-            {
-                return this._UserID;
-            }
-        }
 
-        private String _Email;
-        public String Email
-        {
-            get { return this._Email; }
-        }
-
-        private bool _ForAlarm;
-        public bool ForAlarm
-        {
-            get { return this._ForAlarm; }
-            set
-            {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE useremail SET forAlarm=@forAlarm WHERE userID LIKE @userID AND email LIKE @email";
-                cmd.Parameters.AddWithValue("@forAlarm", value);
-                cmd.Parameters.AddWithValue("@userID", this.UserID);
-                cmd.Parameters.AddWithValue("@email", this.Email);
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                }
-                catch
-                {
-                    tr.Rollback();
-                }
-
-                conn.Close();
-            }
-        }
-
-        private String _Note;
-        public String Note
-        {
-            get { return this._Note; }
-            set
-            {
-                if (this.Email != "" && this.UserID != "")
-                {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE useremail SET note = @note WHERE userID LIKE @userID"
-                        + " AND email LIKE @email";
-                    cmd.Parameters.AddWithValue("@note", value);
-                    cmd.Parameters.AddWithValue("@userID", this.UserID);
-                    cmd.Parameters.AddWithValue("@email", this.Email);
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    
-                    conn.Close();
-                }
-            }
-        }
-
-        public UserEmail(String tenant, String usr, String email)
-        {
-            this.Tenant = tenant;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID, email, forAlarm, Note FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
-            cmd.Parameters.AddWithValue("@usr", usr);
-            cmd.Parameters.AddWithValue("@email", email);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
-            {
-                this._UserID = rdr.GetString(0);
-                this._Email = rdr.GetString(1);
-                this._ForAlarm = rdr.GetBoolean(2);
-                this._Note = rdr.GetString(3);
-            }
-            else
-            {
-                this._UserID = "";
-                this._Email = "";
-                this._ForAlarm = false;
-                this._Note = "";
-            }
-            rdr.Close();
-            conn.Close();
-        }
-
-        public bool delete()
-        {
-            bool rt = false;
-            if (this.UserID != "" && this.Email != "")
-            {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
-                cmd.Parameters.AddWithValue("@usr", this.UserID);
-                cmd.Parameters.AddWithValue("@email", this.Email);
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    rt = true;
-                }
-                catch (Exception ex)
-                {
-                    log = ex.Message;
-                    rt = false;
-                    tr.Rollback();
-                }
-                conn.Close();
-            }
-            return rt;
-        }
-    }
-
-    public class UserPhoneNumber
-    {
-        protected String Tenant;
-        public String log;
-
-        private String _UserID;
-        public String UserID
-        {
-            get
-            {
-                return this._UserID;
-            }
-        }
-
-        private String _PhoneNumber;
-        public String PhoneNumber
-        {
-            get { return this._PhoneNumber; }
-        }
-
-        private bool _ForAlarm;
-        public bool ForAlarm
-        {
-            get { return this._ForAlarm; }
-            set
-            {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE userphonenumbers SET forAlarm=@forAlarm WHERE userID LIKE @usr"
-                    + " AND phoneNumber LIKE @phone";
-                cmd.Parameters.AddWithValue("@forAlarm", value);
-                cmd.Parameters.AddWithValue("@usr", this.UserID);
-                cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                }
-                catch
-                {
-                    tr.Rollback();
-                }
-
-                conn.Close();
-            }
-        }
-
-        private String _Note;
-        public String Note
-        {
-            get { return this._Note; }
-            set
-            {
-                if (this.PhoneNumber != "" && this.UserID != "")
-                {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE userphonenumbers SET note=@note WHERE userID LIKE @usr AND phoneNumber LIKE @phone";
-                    cmd.Parameters.AddWithValue("@note", value);
-                    cmd.Parameters.AddWithValue("@usr", this.UserID);
-                    cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    
-                    conn.Close();
-                }
-            }
-        }
-
-        public UserPhoneNumber(String tenant, String usr, String phone)
-        {
-            this.Tenant = tenant;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID, PhoneNumber, forAlarm, Note FROM userphonenumbers WHERE userID LIKE @usr "
-                + " AND PhoneNumber LIKE @phone";
-            cmd.Parameters.AddWithValue("@usr", usr);
-            cmd.Parameters.AddWithValue("@phone", phone);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
-            {
-                this._UserID = rdr.GetString(0);
-                this._PhoneNumber = rdr.GetString(1);
-                this._ForAlarm = rdr.GetBoolean(2);
-                this._Note = rdr.GetString(3);
-            }
-            else
-            {
-                this._UserID = "";
-                this._PhoneNumber = "";
-                this._ForAlarm = false;
-                this._Note = "";
-            }
-            rdr.Close();
-            conn.Close();
-        }
-
-        public bool delete()
-        {
-            bool rt = false;
-            if (this.UserID != "" && this.PhoneNumber != "")
-            {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM userphonenumbers WHERE userID LIKE @userID AND phonenumber LIKE @phonenumber";
-                cmd.Parameters.AddWithValue("@userID", this.UserID);
-                cmd.Parameters.AddWithValue("@phonenumber", this.PhoneNumber);
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    rt = true;
-                }
-                catch (Exception ex)
-                {
-                    log = ex.Message;
-                    rt = false;
-                    tr.Rollback();
-                }
-                conn.Close();
-            }
-            return rt;
-        }
-  
-    }
 
     public class DisabledUser
     {

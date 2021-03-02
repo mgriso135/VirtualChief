@@ -58,8 +58,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -92,8 +92,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -132,8 +132,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -172,8 +172,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -211,8 +211,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -250,8 +250,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -289,8 +289,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -434,8 +434,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -548,8 +548,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -652,8 +652,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -707,8 +707,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -762,8 +762,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -843,8 +843,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1025,8 +1025,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1138,8 +1138,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1250,8 +1250,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1304,8 +1304,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1358,8 +1358,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1434,8 +1434,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1513,8 +1513,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1564,8 +1564,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1617,8 +1617,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1668,8 +1668,8 @@ namespace KIS.Areas.Quality.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)

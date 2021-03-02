@@ -34,8 +34,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authNCCause = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authNCCause = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authNCType = false;
@@ -47,8 +47,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authNCType = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authNCType = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authNC = false;
@@ -60,8 +60,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authNC = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authNC = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authNCAnalysisNum = false;
@@ -73,8 +73,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authNCAnalysisNum = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authNCAnalysisNum = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authNCAnalysisCost = false;
@@ -86,8 +86,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authNCAnalysisCost = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authNCAnalysisCost = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authNCAnalysisProduct = false;
@@ -99,8 +99,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authNCAnalysisProduct = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authNCAnalysisProduct = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authImprovementActions = false;
@@ -112,8 +112,8 @@ namespace KIS.Areas.Quality.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authImprovementActions = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authImprovementActions = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             return View();

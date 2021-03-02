@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Admin
 {
@@ -20,10 +21,10 @@ namespace KIS.Admin
             elencoPermessi.Add(prmUser);
 
             bool checkUser = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"]!=null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)

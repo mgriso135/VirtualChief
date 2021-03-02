@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Personal
 {
     public partial class myListEventoWarning : System.Web.UI.UserControl
@@ -15,16 +17,16 @@ namespace KIS.Personal
             {
                 if (!Page.IsPostBack)
                 {
-                    User curr = (User)Session["user"];
+                    UserAccount curr = (UserAccount)Session["user"];
 
-                    rptReparti.DataSource = curr.SegnalazioneWarningRepartoCompleto;
+                  /*  rptReparti.DataSource = curr.SegnalazioneWarningRepartoCompleto;
                     rptReparti.DataBind();
 
                     rptCommesse.DataSource = curr.SegnalazioneWarningCommessaCompleto;
                     rptCommesse.DataBind();
 
                     rptArticolo.DataSource = curr.SegnalazioneWarningArticoloCompleto;
-                    rptArticolo.DataBind();
+                    rptArticolo.DataBind();*/
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Areas.Production.Controllers
 {
@@ -21,8 +22,8 @@ namespace KIS.Areas.Production.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             // Articolo Depianifica
@@ -35,8 +36,8 @@ namespace KIS.Areas.Production.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authUndoSchedule = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.Departments = null;
@@ -86,22 +87,22 @@ namespace KIS.Areas.Production.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
 
                 elencoPermessi = new List<String[]>();
                 prmUser = new String[2];
                 prmUser[0] = "Articoli";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
 
                 elencoPermessi = new List<String[]>();
                 prmUser = new String[2];
                 prmUser[0] = "Articolo Depianifica";
                 prmUser[1] = "X";
                 elencoPermessi.Add(prmUser);
-                ViewBag.authUndoSchedule = curr.ValidatePermessi(elencoPermessi);
+                ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)

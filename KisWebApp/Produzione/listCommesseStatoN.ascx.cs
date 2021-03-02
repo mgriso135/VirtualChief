@@ -8,6 +8,8 @@ using KIS;
 using KIS.Commesse;
 using System.Web.UI.HtmlControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Produzione
 {
     public partial class listCommesseStatoN : System.Web.UI.UserControl
@@ -23,8 +25,8 @@ namespace KIS.Produzione
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)

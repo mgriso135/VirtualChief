@@ -35,7 +35,7 @@ namespace KIS.Areas.Home.Controllers
         public ActionResult HomeRandomTips()
         {
             ViewBag.log = "";
-            User curr = (User)Session["user"];
+            UserAccount curr = (UserAccount)Session["user"];
             string sWhatsNewPath = "~/whatsnew";
             if (curr != null && curr.Language.Length > 0)
             {

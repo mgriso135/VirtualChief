@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Operatori
 {
     public partial class doTasksPostazione : System.Web.UI.Page
@@ -13,7 +15,7 @@ namespace KIS.Operatori
         {
             if (Session["User"] != null)
             {
-                User curr = (User)Session["User"];
+                User curr = (User)Session["user"];
 
                 if (!String.IsNullOrEmpty(Request.QueryString["id"]))
                 {

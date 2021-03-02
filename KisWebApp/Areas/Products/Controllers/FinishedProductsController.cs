@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using KIS.App_Code;
 using System.Net;
 using Newtonsoft.Json;
+using KIS.App_Sources;
 
 namespace KIS.Areas.Products.Controllers
 {
@@ -56,8 +57,8 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)
@@ -98,8 +99,8 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
@@ -140,8 +141,8 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
@@ -183,8 +184,8 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             String xapikey = "";

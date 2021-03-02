@@ -34,11 +34,13 @@ namespace KIS.App_Sources
         public String firstname
         {
             get { return this._firstname; }
+            set { this._firstname = ""; }
         }
         private String _lastname;
         public String lastname
         {
             get { return this._lastname; }
+            set { this._lastname = value; }
         }
         private String _nickname;
         public String nickname
@@ -88,6 +90,19 @@ namespace KIS.App_Sources
                 return this._created_at;
             }
         }
+
+        public String Language { get { return this.locale; } 
+            set { this.Language = value; }
+        }
+
+        public List<Group> groups;
+        //public List<Group> groups { get { return this._Groups; } }
+
+        private String _DestinationURL;
+        public String DestinationURL { get { return this._DestinationURL; } 
+            set { this._DestinationURL = value; }
+        }
+        public List<UserEmail> Email;
 
         /* Returns:
          * Object with data, if account exists in Virtual Chief
@@ -310,11 +325,39 @@ namespace KIS.App_Sources
             }
         }
 
-        private List<Group> _Groups;
-        public List<Group> Groups { get { return this._Groups; } }
-
         private List<GroupPermissions> _GroupPermissions;
         public List<GroupPermissions> GroupPermissions { get { return this._GroupPermissions; } }
+
+        public bool loadGroups(int workspaceid)
+        {
+            bool rt;
+            this.groups = new List<Group>();
+            if (this.userId.Length > 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT groupID FROM useraccountsgroups INNER JOIN groupss ON (groupss.id = useraccountsgroups.groupid)  "
+                    + " WHERE useraccountsgroups.userid=@user "
+                    + " AND workspaceid=@wsid"
+                    + " ORDER BY groupss.nomeGruppo";
+                cmd.Parameters.AddWithValue("@user", this.id);
+                cmd.Parameters.AddWithValue("@wsid", workspaceid);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this.groups.Add(new Group(rdr.GetInt32(0)));
+                }
+                rdr.Close();
+                conn.Close();
+                rt = true;
+            }
+            else
+            {
+                rt = false;
+            }
+            return rt;
+        }
 
         public void loadGroupPermissions(int WorkspaceId)
         {
@@ -335,6 +378,181 @@ namespace KIS.App_Sources
                 rdr.Close();
                 conn.Close();
             }
+        }
+
+        public bool ValidatePermissions(String workspace, List<String[]> elencoPrm)
+        {
+            bool rt = false;
+            List<bool> trovato = new List<bool>();
+            Workspace ws = new Workspace(workspace);
+            if(ws.id!=-1)
+            {
+                int workspaceid = ws.id;
+                for (int i = 0; i < elencoPrm.Count; i++)
+                {
+                    bool found = false;
+                    this.loadGroups(workspaceid);
+                    for (int j = 0; j < this.groups.Count; j++)
+                    {
+                        for (int k = 0; k < this.groups[j].Permissions.Elenco.Count; k++)
+                        {
+                            if (this.groups[j].Permissions.Elenco[k].NomePermesso == elencoPrm[i][0])
+                            {
+                                if (elencoPrm[i][1] == "R" && this.groups[j].Permissions.Elenco[k].R == true)
+                                {
+                                    found = true;
+                                }
+                                else if (elencoPrm[i][1] == "W" && this.groups[j].Permissions.Elenco[k].W == true)
+                                {
+                                    found = true;
+                                }
+                                else if (elencoPrm[i][1] == "X" && this.groups[j].Permissions.Elenco[k].X == true)
+                                {
+                                    found = true;
+                                }
+
+                            }
+                        }
+
+                    }
+                    trovato.Add(found);
+                }
+            }
+
+            rt = true;
+            for (int i = 0; i < trovato.Count; i++)
+            {
+                if (trovato[i] == false)
+                {
+                    rt = false;
+                }
+            }
+            return rt;
+        }
+
+        public void loadEmails()
+        {
+            Email = new List<UserEmail>();
+            if (this.id != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT email FROM useremail WHERE userID LIKE @userID ORDER BY note";
+                cmd.Parameters.AddWithValue("@userID", this.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this.Email.Add(new UserEmail(this.userId, rdr.GetString(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+        public bool addEmail(String email, String note, bool forAlarm)
+        {
+            bool rt = false;
+            System.Net.Mail.MailAddress mailAddr = null;
+            try
+            {
+                mailAddr = new System.Net.Mail.MailAddress(email);
+            }
+            catch
+            {
+                mailAddr = null;
+            }
+            if (mailAddr != null && this.userId != "")
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "INSERT INTO useremail(userid, email, forAlarm, note) VALUES("
+                    + "@userID, @email, @forAlarm, @note)";
+                cmd.Parameters.AddWithValue("@userID", this.id);
+                cmd.Parameters.AddWithValue("@email", mailAddr.Address);
+                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
+                cmd.Parameters.AddWithValue("@note", note);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    this.log = ex.Message;
+                    rt = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
+        }
+
+        public List<UserPhoneNumber> PhoneNumbers;
+        public void loadPhoneNumbers()
+        {
+            PhoneNumbers = new List<UserPhoneNumber>();
+            if (this.userId != "")
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT phoneNumber FROM userphonenumbers WHERE userID LIKE @userID ORDER BY note";
+                cmd.Parameters.AddWithValue("@userID", this.userId);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this.PhoneNumbers.Add(new UserPhoneNumber(this.userId, rdr.GetString(0)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+        public bool addPhoneNumber(String phone, String note, bool forAlarm)
+        {
+            bool rt = false;
+            double phoneINT = -1;
+            try
+            {
+                phoneINT = Double.Parse(phone);
+            }
+            catch
+            {
+                phoneINT = -1;
+            }
+            if (phoneINT != -1 && this.id != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "INSERT INTO userphoneNumbers(userid, phoneNumber, forAlarm, note) VALUES("
+                    + "@userid, @phoneNumber, @forAlarm, @note)";
+                cmd.Parameters.AddWithValue("@userid", this.userId);
+                cmd.Parameters.AddWithValue("@phoneNumber", phone);
+                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
+                cmd.Parameters.AddWithValue("@note", note);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    this.log = ex.Message;
+                    rt = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
         }
     }
 
@@ -628,7 +846,7 @@ namespace KIS.App_Sources
         }
 
         private GroupPermissions _Permessi;
-        public GroupPermissions Permessi
+        public GroupPermissions Permissions
         {
             get { return this._Permessi; }
         }
@@ -1511,5 +1729,285 @@ namespace KIS.App_Sources
                 this.Elenco = null;
             }
         }
+    }
+
+    public class UserEmail
+    {
+        public String log;
+
+        private String _UserID;
+        public String UserID
+        {
+            get
+            {
+                return this._UserID;
+            }
+        }
+
+        private String _Email;
+        public String Email
+        {
+            get { return this._Email; }
+        }
+
+        private bool _ForAlarm;
+        public bool ForAlarm
+        {
+            get { return this._ForAlarm; }
+            set
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "UPDATE useremail SET forAlarm=@forAlarm WHERE userID LIKE @userID AND email LIKE @email";
+                cmd.Parameters.AddWithValue("@forAlarm", value);
+                cmd.Parameters.AddWithValue("@userID", this.UserID);
+                cmd.Parameters.AddWithValue("@email", this.Email);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch
+                {
+                    tr.Rollback();
+                }
+
+                conn.Close();
+            }
+        }
+
+        private String _Note;
+        public String Note
+        {
+            get { return this._Note; }
+            set
+            {
+                if (this.Email != "" && this.UserID != "")
+                {
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "UPDATE useremail SET note = @note WHERE userID LIKE @userID"
+                        + " AND email LIKE @email";
+                    cmd.Parameters.AddWithValue("@note", value);
+                    cmd.Parameters.AddWithValue("@userID", this.UserID);
+                    cmd.Parameters.AddWithValue("@email", this.Email);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+            }
+        }
+
+        public UserEmail(String usr, String email)
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT userID, email, forAlarm, Note FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
+            cmd.Parameters.AddWithValue("@usr", usr);
+            cmd.Parameters.AddWithValue("@email", email);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._UserID = rdr.GetString(0);
+                this._Email = rdr.GetString(1);
+                this._ForAlarm = rdr.GetBoolean(2);
+                this._Note = rdr.GetString(3);
+            }
+            else
+            {
+                this._UserID = "";
+                this._Email = "";
+                this._ForAlarm = false;
+                this._Note = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool delete()
+        {
+            bool rt = false;
+            if (this.UserID != "" && this.Email != "")
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "DELETE FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
+                cmd.Parameters.AddWithValue("@usr", this.UserID);
+                cmd.Parameters.AddWithValue("@email", this.Email);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message;
+                    rt = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
+        }
+    }
+
+    public class UserPhoneNumber
+    {
+        public String log;
+
+        private String _UserID;
+        public String UserID
+        {
+            get
+            {
+                return this._UserID;
+            }
+        }
+
+        private String _PhoneNumber;
+        public String PhoneNumber
+        {
+            get { return this._PhoneNumber; }
+        }
+
+        private bool _ForAlarm;
+        public bool ForAlarm
+        {
+            get { return this._ForAlarm; }
+            set
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "UPDATE userphonenumbers SET forAlarm=@forAlarm WHERE userID LIKE @usr"
+                    + " AND phoneNumber LIKE @phone";
+                cmd.Parameters.AddWithValue("@forAlarm", value);
+                cmd.Parameters.AddWithValue("@usr", this.UserID);
+                cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch
+                {
+                    tr.Rollback();
+                }
+
+                conn.Close();
+            }
+        }
+
+        private String _Note;
+        public String Note
+        {
+            get { return this._Note; }
+            set
+            {
+                if (this.PhoneNumber != "" && this.UserID != "")
+                {
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "UPDATE userphonenumbers SET note=@note WHERE userID LIKE @usr AND phoneNumber LIKE @phone";
+                    cmd.Parameters.AddWithValue("@note", value);
+                    cmd.Parameters.AddWithValue("@usr", this.UserID);
+                    cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+            }
+        }
+
+        public UserPhoneNumber(String usr, String phone)
+        {
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT userID, PhoneNumber, forAlarm, Note FROM userphonenumbers WHERE userID LIKE @usr "
+                + " AND PhoneNumber LIKE @phone";
+            cmd.Parameters.AddWithValue("@usr", usr);
+            cmd.Parameters.AddWithValue("@phone", phone);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read() && !rdr.IsDBNull(0))
+            {
+                this._UserID = rdr.GetString(0);
+                this._PhoneNumber = rdr.GetString(1);
+                this._ForAlarm = rdr.GetBoolean(2);
+                this._Note = rdr.GetString(3);
+            }
+            else
+            {
+                this._UserID = "";
+                this._PhoneNumber = "";
+                this._ForAlarm = false;
+                this._Note = "";
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool delete()
+        {
+            bool rt = false;
+            if (this.UserID != "" && this.PhoneNumber != "")
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "DELETE FROM userphonenumbers WHERE userID LIKE @userID AND phonenumber LIKE @phonenumber";
+                cmd.Parameters.AddWithValue("@userID", this.UserID);
+                cmd.Parameters.AddWithValue("@phonenumber", this.PhoneNumber);
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    rt = true;
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message;
+                    rt = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            return rt;
+        }
+
     }
 }

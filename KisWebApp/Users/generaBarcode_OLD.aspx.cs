@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 using iTextSharp;
 using iTextSharp.text;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Users
 {
     public partial class generaBarcode : System.Web.UI.Page
@@ -21,8 +23,8 @@ namespace KIS.Users
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
