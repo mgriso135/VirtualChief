@@ -15,7 +15,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction( curr.username, "Controller", "/Analysis/TaskAnalysis/Index", "", ipAddr);
@@ -33,8 +33,8 @@ namespace KIS.Areas.Analysis.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
@@ -101,8 +101,8 @@ namespace KIS.Areas.Analysis.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)

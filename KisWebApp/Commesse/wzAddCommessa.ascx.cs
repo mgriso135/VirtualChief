@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Commesse
 {
     public partial class wzAddCommessa1 : System.Web.UI.UserControl
@@ -19,8 +21,8 @@ namespace KIS.Commesse
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -65,7 +67,7 @@ namespace KIS.Commesse
                 Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), rt, DateTime.UtcNow.Year);
                 if (cm != null && cm.ID != -1 && cm.Year > 2000)
                 {
-                    User curr = (User)Session["user"];
+                    UserAccount curr = (UserAccount)Session["user"];
                     cm.Confirmed = true;
                     cm.ConfirmedBy = curr;
                     cm.ConfirmationDate = DateTime.UtcNow;

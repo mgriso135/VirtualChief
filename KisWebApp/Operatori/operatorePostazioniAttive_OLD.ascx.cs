@@ -5,18 +5,20 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Operatori
 {
     public partial class operatorePostazioniAttive : System.Web.UI.UserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["user"] != null)
+/*            if (Session["user"] != null)
             {
 
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 // Verifico se l'utente appartiene al gruppo "Operatori"
-                curr.loadGruppi();
+                curr.loadGroups();
                 bool checkOperatori = false;
                 for (int i = 0; i < curr.Gruppi.Count; i++)
                 {
@@ -52,7 +54,7 @@ namespace KIS.Operatori
             else
             {
                 rptPostazioniAttive.Visible = false;
-            }
+            }*/
         }
 
         protected void rptPostazioniAttive_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -153,9 +155,9 @@ namespace KIS.Operatori
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            if (Session["user"] != null)
+            /*if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 // Verifico se l'utente appartiene al gruppo "Operatori"
                 curr.loadGruppi();
                 bool checkOperatori = false;
@@ -185,7 +187,7 @@ namespace KIS.Operatori
                         lbl1.Text = GetLocalResourceObject("lblNoCheckIn").ToString();
                     }
                 }
-            }
+            }*/
         }
     }
 }

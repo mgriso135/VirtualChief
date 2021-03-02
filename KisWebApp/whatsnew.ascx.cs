@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+using KIS.App_Sources;
 
 namespace KIS
 {
@@ -14,7 +16,7 @@ namespace KIS
         {
             if (!Page.IsPostBack)
             {
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 string sWhatsNewPath = "~/whatsnew";
                 if(curr!=null && curr.Language.Length>0)
                 { 

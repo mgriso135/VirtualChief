@@ -10,6 +10,7 @@ using Dati;
 using MyUserControls;
 using KIS;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Processi
 {
@@ -40,8 +41,8 @@ namespace KIS.Processi
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ProcessID.Value = "-1";

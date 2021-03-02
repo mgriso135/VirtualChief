@@ -8,8 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using System.Net.Http;
-//using System.Net.Http.Headers;
-//using Newtonsoft.Json;
+using KIS.App_Sources;
 
 namespace KIS.App_Code
 {
@@ -266,8 +265,8 @@ namespace KIS.App_Code
             }
         }
 
-        private User _ConfirmedBy;
-        public User ConfirmedBy
+        private UserAccount _ConfirmedBy;
+        public UserAccount ConfirmedBy
         {
             get
             {
@@ -282,7 +281,7 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE commesse set ConfirmedBy = '"
-                            + value.username
+                            + value.userId
                             + "' WHERE idcommesse = " + this.ID.ToString()
                             + " AND anno = " + this.Year.ToString();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -335,7 +334,7 @@ namespace KIS.App_Code
                 }
                 if (!rdr.IsDBNull(4))
                 {
-                    this._ConfirmedBy = new User(rdr.GetString(4));
+                    this._ConfirmedBy = new UserAccount(rdr.GetString(4));
                 }
                 if (!rdr.IsDBNull(5))
                 {

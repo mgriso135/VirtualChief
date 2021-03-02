@@ -1992,7 +1992,7 @@ namespace KIS.App_Sources
             conn.Close();
         }
 
-        public int[] Add(User creator)
+        public int[] Add(UserAccount creator)
         {
             int[] ret = new int[2];
             ret[0] = -1;
@@ -2021,7 +2021,7 @@ namespace KIS.App_Sources
                 + "'O', "
                 + "null, "
                 + "null, "
-                + "'" + creator.username + "', "
+                + "'" + creator.userId + "', "
                 + "'', "
                 + "null"
                 + ")";
@@ -3241,11 +3241,11 @@ namespace KIS.App_Sources
             }
         }
 
-        public Boolean TaskAdd(String description, User usr, DateTime date)
+        public Boolean TaskAdd(String description, UserAccount usr, DateTime date)
         {
             Boolean ret = false;
             if (this.CorrectiveActionID!= -1 && this.ImprovementActionID!=-1 && this.ImprovementActionYear > 1970 &&
-                usr != null && usr.username.Length > 0 && date!=null && date > new DateTime(1970, 1, 1))
+                usr != null && usr.userId.Length > 0 && date!=null && date > new DateTime(1970, 1, 1))
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
@@ -3269,7 +3269,7 @@ namespace KIS.App_Sources
                     + this.CorrectiveActionID.ToString() + ", "
                     + tskID.ToString() + ", "
                     + "'" + description + "', "
-                    + "'" + usr.username + "', "
+                    + "'" + usr.userId + "', "
                     + "'" + date.ToString("yyyy-MM-dd HH:mm:ss") + "'"
                     + ")";
                 MySqlTransaction tr = conn.BeginTransaction();

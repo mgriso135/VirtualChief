@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Personal
 {
     public partial class myEmail : System.Web.UI.UserControl
@@ -17,7 +19,7 @@ namespace KIS.Personal
                 if (!Page.IsPostBack)
                 {
                     frmAddEmail.Visible = false;
-                    User curr = (User)Session["user"];
+                    UserAccount curr = (UserAccount)Session["user"];
                     curr.loadEmails();
                     rptListMail.DataSource = curr.Email;
                     rptListMail.DataBind();
@@ -49,8 +51,8 @@ namespace KIS.Personal
         {
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                if (curr.username != "")
+                UserAccount curr = (UserAccount)Session["user"];
+                if (curr.id != -1)
                 {
                     bool rt = curr.addEmail(txtEmail.Text, Server.HtmlEncode(txtAmbito.Text), chkForAlarm.Checked);
                     if (rt == false)
@@ -84,7 +86,7 @@ namespace KIS.Personal
             CheckBox chkAlarm = (CheckBox)e.Item.FindControl("chkAlarm");
             if(Session["user"]!=null)
             {
-            User curr = (User)Session["user"];
+            UserAccount curr = (UserAccount)Session["user"];
 
             if (e.CommandName == "edit")
             {
@@ -102,7 +104,7 @@ namespace KIS.Personal
                 imgSave.Visible = false;
                 imgUndo.Visible = false;
                 chkAlarm.Enabled = false;
-                UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
+                UserEmail usrMail = new UserEmail(curr.userId, e.CommandArgument.ToString());
                 if (usrMail != null && usrMail.UserID != "")
                 {
                     chkAlarm.Checked = usrMail.ForAlarm;
@@ -110,7 +112,7 @@ namespace KIS.Personal
             }
             else if (e.CommandName == "save")
             {
-                UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
+                UserEmail usrMail = new UserEmail(curr.userId, e.CommandArgument.ToString());
                 if (usrMail != null && usrMail.UserID != "")
                 {
                     usrMail.ForAlarm = chkAlarm.Checked;
@@ -123,7 +125,7 @@ namespace KIS.Personal
             }
             else if (e.CommandName == "delete")
             {
-                UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), curr.username, e.CommandArgument.ToString());
+                UserEmail usrMail = new UserEmail(curr.userId, e.CommandArgument.ToString());
                 if (usrMail != null && usrMail.UserID != "")
                 {
                     usrMail.delete();

@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
 using System.Web.Mvc;
+using KIS.App_Sources;
 
 namespace KIS
 {
@@ -14,28 +15,29 @@ namespace KIS
         protected void Page_Load(object sender, EventArgs e)
         {
             List<VoceMenu> lista = new List<VoceMenu>();
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"]!= null)
             {
                 if (!Page.IsPostBack)
                 {
-                        User curr = (User)Session["user"];
-                        curr.loadGruppi();
-                        for (int i = 0; i < curr.Gruppi.Count; i++)
+                    Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                        UserAccount curr = (UserAccount)Session["user"];
+                        curr.loadGroups(ws.id);
+                        for (int i = 0; i < curr.groups.Count; i++)
                         {
-                            curr.Gruppi[i].loadMenu();
-                            for (int j = 0; j < curr.Gruppi[i].VociDiMenu.Count; j++)
+                            curr.groups[i].loadMenu();
+                            for (int j = 0; j < curr.groups[i].VociDiMenu.Count; j++)
                             {
                                 bool controllo = false;
                                 for (int k = 0; k < lista.Count; k++)
                                 {
-                                    if (lista[k].ID == curr.Gruppi[i].VociDiMenu[j].ID)
+                                    if (lista[k].ID == curr.groups[i].VociDiMenu[j].ID)
                                     {
                                         controllo = true;
                                     }
                                 }
                                 if (controllo == false)
                                 {
-                                    lista.Add(curr.Gruppi[i].VociDiMenu[j]);
+                                    lista.Add(curr.groups[i].VociDiMenu[j]);
                                 }
                             }
                         }

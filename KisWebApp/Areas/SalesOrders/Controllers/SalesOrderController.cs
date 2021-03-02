@@ -7,6 +7,7 @@ using KIS.App_Code;
 using iTextSharp;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using KIS.App_Sources;
 
 namespace KIS.Areas.SalesOrders.Controllers
 {
@@ -53,8 +54,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             ViewBag.authAddProductW = false;
@@ -68,8 +69,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -124,8 +125,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -138,7 +139,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                     if (ret >= 0)
                     {
                         Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), ret, DateTime.UtcNow.Year);
-                        User currUsr = (User)Session["user"];
+                        UserAccount currUsr = (UserAccount)Session["user"];
                         cm.Confirmed = true;
                         cm.ConfirmedBy = currUsr;
                         cm.ConfirmationDate = DateTime.UtcNow;
@@ -182,8 +183,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -232,8 +233,8 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
@@ -296,8 +297,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
@@ -371,8 +372,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authEditProductData = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authEditProductData = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             // AUthorization to plan a product in production
@@ -385,8 +386,8 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authPlanProduction = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authPlanProduction = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authEditProductData || ViewBag.authPlanProduction)
@@ -436,8 +437,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
@@ -517,8 +518,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
@@ -598,8 +599,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
@@ -675,8 +676,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1394,8 +1395,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1444,8 +1445,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1475,8 +1476,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1501,8 +1502,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1532,8 +1533,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1579,8 +1580,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1614,8 +1615,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1646,8 +1647,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1676,8 +1677,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             elencoPermessi.Add(prmUser);
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)

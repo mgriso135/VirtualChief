@@ -131,7 +131,7 @@ namespace KIS.App_Code
                 // Cerco il numero di telefono degli utenti singoli
                 for (int i = 0; i < this.ListUsers.Count; i++)
                 {
-                    User currUsr = new User(this.ListUsers[i]);
+                    UserAccount currUsr = new UserAccount(this.ListUsers[i]);
                     currUsr.loadPhoneNumbers();
                     for (int j = 0; j < currUsr.PhoneNumbers.Count; j++)
                     {
@@ -164,7 +164,7 @@ namespace KIS.App_Code
                     currGroup.loadUtenti(ws.id);
                     for (int j = 0; j < currGroup.Utenti.Count; j++)
                     {
-                        User currUsr = new User(currGroup.Utenti[j]);
+                        UserAccount currUsr = new UserAccount(currGroup.Utenti[j]);
                         currUsr.loadPhoneNumbers();
                         for (int k = 0; k < currUsr.PhoneNumbers.Count; k++)
                         {

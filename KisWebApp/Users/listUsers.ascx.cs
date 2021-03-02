@@ -8,6 +8,8 @@ using WebApplication1;
 using KIS;
 using iTextSharp.text;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Admin
 {
     public partial class listUsers : System.Web.UI.UserControl
@@ -16,15 +18,16 @@ namespace KIS.Admin
         {
             String permessoRichiesto = "Utenti";
             bool checkUser = false;
-            if (Session["User"] != null)
+            if (Session["User"] != null && Session["ActiveWorkspace"]!=null)
             {
-                User curr = (User)Session["user"];
-                curr.loadGruppi();
-                for (int i = 0; i < curr.Gruppi.Count; i++)
+                Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                UserAccount curr = (UserAccount)Session["user"];
+                curr.loadGroups(ws.id);
+                for (int i = 0; i < curr.groups.Count; i++)
                 {
-                    for (int j = 0; j < curr.Gruppi[i].Permessi.Elenco.Count; j++)
+                    for (int j = 0; j < curr.groups[i].Permissions.Elenco.Count; j++)
                     {
-                        if (curr.Gruppi[i].Permessi.Elenco[j].NomePermesso == permessoRichiesto && curr.Gruppi[i].Permessi.Elenco[j].R == true)
+                        if (curr.groups[i].Permissions.Elenco[j].NomePermesso == permessoRichiesto && curr.groups[i].Permissions.Elenco[j].R == true)
                         {
                             checkUser = true;
                         }

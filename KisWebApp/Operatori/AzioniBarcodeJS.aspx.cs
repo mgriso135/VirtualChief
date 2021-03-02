@@ -645,7 +645,7 @@ namespace KIS.Operatori
 
                 if (pstID != -1)
                 {
-                    //User curr = (User)Session["user"];
+                    //UserAccount curr = (UserAccount)Session["user"];
 
                     // Inserisco la lista degli utenti già loggati
                     Label lblUserLoggati = (Label)e.Item.FindControl("lblUserLogged");

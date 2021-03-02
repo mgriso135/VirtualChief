@@ -5,16 +5,18 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Operatori
 {
     public partial class userLoginPostazione : System.Web.UI.UserControl
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["user"] != null)
+         /*   if (Session["user"] != null)
             {
                 
-                    User curr = (User)Session["user"];
+                    UserAccount curr = (UserAccount)Session["user"];
                     // Verifico se l'utente appartiene al gruppo "Operatori"
                     curr.loadGruppi();
                     bool checkOperatori = false;
@@ -50,7 +52,7 @@ namespace KIS.Operatori
             else
             {
                 rptPostazioni.Visible = false;
-            }
+            }*/
         }
 
         protected void rptPostazioni_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -172,9 +174,9 @@ namespace KIS.Operatori
 
         protected void timer_Tick(object sender, EventArgs e)
         {
-            if (Session["user"] != null)
+        /*    if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 if(curr!=null && curr.username.Length>0)
                 { 
                 // Verifico se l'utente appartiene al gruppo "Operatori"
@@ -205,7 +207,7 @@ namespace KIS.Operatori
                     rptPostazioni.Visible = false;
                     lblNome.Text = GetLocalResourceObject("lblPermessoKo").ToString();
                 }
-            }
+            }*/
         }
     }
 }

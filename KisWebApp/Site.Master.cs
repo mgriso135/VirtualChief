@@ -1,5 +1,6 @@
 ﻿using System;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS
 {
@@ -53,9 +54,9 @@ namespace KIS
 
             if (Session["user"]!=null)
             {
-                User curr = (User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 
-                Dati.Utilities.LogAction(curr.username, "Page", page, Request.QueryString.ToString(), ipAddr);
+                Dati.Utilities.LogAction(curr.userId, "Page", page, Request.QueryString.ToString(), ipAddr);
             }
             else
             {

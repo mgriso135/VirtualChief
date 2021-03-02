@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Areas.Users.Controllers
 {
@@ -74,8 +75,8 @@ namespace KIS.Areas.Users.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -139,8 +140,8 @@ namespace KIS.Areas.Users.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -199,8 +200,8 @@ namespace KIS.Areas.Users.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -265,8 +266,8 @@ namespace KIS.Areas.Users.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -443,8 +444,8 @@ namespace KIS.Areas.Users.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/Users/Users/DisableUser", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.userId, "Action", "/Users/Users/DisableUser", "", ipAddr);
                 
             }
             else
@@ -458,11 +459,11 @@ namespace KIS.Areas.Users.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            User curr = null;
-            if (Session["user"] != null)
+            UserAccount curr = null;
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
-                curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             int ret = 0;
@@ -475,7 +476,7 @@ namespace KIS.Areas.Users.Controllers
                     bool isEnabled = currUsr.Enabled;
                     currUsr.Enabled = !isEnabled;
 
-                    Dati.Utilities.Syslog(Session["ActiveWorkspace"].ToString(), curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
+                    Dati.Utilities.Syslog(Session["ActiveWorkspace"].ToString(), curr.userId, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
 
                     ret = 1;
                 }
@@ -492,10 +493,10 @@ namespace KIS.Areas.Users.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/Users/Users/DisabledUsers", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.userId, "Action", "/Users/Users/DisabledUsers", "", ipAddr);
 
             }
             else
@@ -509,11 +510,11 @@ namespace KIS.Areas.Users.Controllers
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authR = false;
-            User curr = null;
-            if (Session["user"] != null)
+            UserAccount curr = null;
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
-                curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             elencoPermessi = new List<String[]>();
@@ -522,10 +523,10 @@ namespace KIS.Areas.Users.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
             {
-                curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
@@ -547,8 +548,8 @@ namespace KIS.Areas.Users.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/Users/Users/ReenableUser", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.userId, "Action", "/Users/Users/ReenableUser", "", ipAddr);
 
             }
             else
@@ -562,11 +563,11 @@ namespace KIS.Areas.Users.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            User curr = null;
+            UserAccount curr = null;
             if (Session["user"] != null)
             {
-                curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             int ret = 0;
@@ -579,7 +580,7 @@ namespace KIS.Areas.Users.Controllers
                     bool isEnabled = currUsr.Enabled;
                     currUsr.Enabled = !isEnabled;
 
-                    Dati.Utilities.Syslog(Session["ActiveWorkspace"].ToString(), curr.username, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
+                    Dati.Utilities.Syslog(Session["ActiveWorkspace"].ToString(), curr.userId, "Users", "User", currUsr.username, "Enabled", isEnabled.ToString(), (!isEnabled).ToString());
 
                     ret = 1;
                 }

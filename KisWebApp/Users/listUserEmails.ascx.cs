@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Users
 {
     public partial class listUserEmails : System.Web.UI.UserControl
@@ -20,8 +22,8 @@ namespace KIS.Users
             bool checkUser = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                checkUser = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -80,7 +82,7 @@ namespace KIS.Users
 
                 if (e.CommandName == "delete")
                 {
-                    UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
+                    UserEmail usrMail = new UserEmail(userID, e.CommandArgument.ToString());
                     bool rt = usrMail.delete();
                     if (rt == true)
                     {
@@ -93,7 +95,7 @@ namespace KIS.Users
                 }
                 else if (e.CommandName == "edit")
                 {
-                    UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
+                    UserEmail usrMail = new UserEmail(userID, e.CommandArgument.ToString());
                     txtNote.Text = usrMail.Note;
                     chkAlarm.Checked = usrMail.ForAlarm;
                     if (txtNote.Visible == false)
@@ -117,7 +119,7 @@ namespace KIS.Users
                 }
                 else if (e.CommandName == "save")
                 {
-                    UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
+                    UserEmail usrMail = new UserEmail(userID, e.CommandArgument.ToString());
                     usrMail.Note = Server.HtmlEncode(txtNote.Text);
                     usrMail.ForAlarm = chkAlarm.Checked;
                     lblNote.Text = Server.HtmlEncode(txtNote.Text);
@@ -131,7 +133,7 @@ namespace KIS.Users
                 }
                 else if (e.CommandName == "undo")
                 {
-                    UserEmail usrMail = new UserEmail(Session["ActiveWorkspace"].ToString(), userID, e.CommandArgument.ToString());
+                    UserEmail usrMail = new UserEmail(userID, e.CommandArgument.ToString());
                     txtNote.Text = Server.HtmlDecode(usrMail.Note);
                     chkAlarm.Checked = usrMail.ForAlarm;
                     txtNote.Visible = false;
