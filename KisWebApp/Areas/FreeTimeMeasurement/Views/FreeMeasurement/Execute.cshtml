@@ -304,6 +304,8 @@
                 });
 
                 $("#startProductiveTask").click(function () {
+                    $("#startProductiveTask").hide();
+
                     var measurement = $("#ddlMeasurements").val();
                     var task = $("#ddlTasks").val();
                     var newTask = $('<div/>').text($('#txtNewTask').val()).html();
@@ -324,7 +326,7 @@
                                 open: function (event, ui) {
                                     setTimeout(function () {
                                         $("#lblModalInfo").dialog("close");
-                                    }, 2000);
+                                    }, 5000);
                                 }
                             });
                     }
@@ -337,7 +339,7 @@
                                 open: function (event, ui) {
                                     setTimeout(function () {
                                         $("#lblModalInfo").dialog("close");
-                                    }, 2000);
+                                    }, 5000);
                                 }
                             });
                     }
@@ -369,7 +371,7 @@
                                                 open: function (event, ui) {
                                                     setTimeout(function () {
                                                         $("#lblModalInfo").dialog("close");
-                                                    }, 2000);
+                                                    }, 5000);
                                                 }
                                             });
                                     }
@@ -378,13 +380,16 @@
                                     $("#ddlMeasurements").val('');
                                     $("#ddlTasks").val('');
                                     $('#txtNewTask').val("");
+
+                                    $("#startProductiveTask").show();
                                 },
                                 statusCode: {
-                                    404: function (content) { alert('cannot find resource'); },
-                                    500: function (content) { alert('internal server error'); }
+                                    404: function (content) { alert('cannot find resource'); $("#startProductiveTask").show();},
+                                    500: function (content) { alert('internal server error'); $("#startProductiveTask").show();}
                                 },
                                 error: function (data) {
                                     alert("Error " + data);
+                                    $("#startProductiveTask").show();
                                 }
                             });
                         }
@@ -414,7 +419,7 @@
                                                 open: function (event, ui) {
                                                     setTimeout(function () {
                                                         $("#lblModalInfo").dialog("close");
-                                                    }, 2000);
+                                                    }, 5000);
                                                 }
                                             });
                                     }
@@ -423,20 +428,25 @@
                                     $("#ddlMeasurements").val("");
                                     $("#ddlTasks").val("");
                                     $('#txtNewTask').val("");
+
+                                    $("#startProductiveTask").show();
                                 },
                                 statusCode: {
-                                    404: function (content) { alert('cannot find resource'); },
-                                    500: function (content) { alert('internal server error'); }
+                                    404: function (content) { alert('cannot find resource'); $("#startProductiveTask").show();},
+                                    500: function (content) { alert('internal server error'); $("#startProductiveTask").show();}
                                 },
                                 error: function (data) {
                                     alert("Error " + data);
+                                    $("#startProductiveTask").show();
                                 }
                             });
                         }
                     }
+                    $("#startProductiveTask").show();
                 });
 
                 $("#startNoProductiveTask").click(function () {
+                    $("#startNoProductiveTask").hide();
                     var npTaskId = $("#ddlNoProductiveTasks").val();
                     var operator = $("#ddlOperator option:selected").val();
                     var measurement = $("#ddlMeasurements").val();
@@ -485,20 +495,22 @@
                                             open: function (event, ui) {
                                                 setTimeout(function () {
                                                     $("#lblModalInfo").dialog("close");
-                                                }, 2000);
+                                                }, 5000);
                                             }
                                         });
                                     }
 
                                     $("#ddlNoProductiveTasks").val('');
                                     loadRunningTasks(operator);
+                                    $("#startNoProductiveTask").show();
                                 },
                                 statusCode: {
-                                    404: function (content) { alert('cannot find resource'); },
-                                    500: function (content) { alert('internal server error'); }
+                                    404: function (content) { alert('cannot find resource'); $("#startNoProductiveTask").show(); },
+                                    500: function (content) { alert('internal server error'); $("#startNoProductiveTask").show();}
                                 },
                                 error: function (data) {
                                     alert("Error " + data);
+                                    $("#startNoProductiveTask").show();
                                 }
                             });
                         }
@@ -510,9 +522,10 @@
                                 open: function (event, ui) {
                                     setTimeout(function () {
                                         $("#lblModalInfo").dialog("close");
-                                    }, 2000);
+                                    }, 5000);
                                 }
                             });
+                            $("#startNoProductiveTask").show();
                         }
                     }
                     else {
@@ -523,9 +536,10 @@
                             open: function (event, ui) {
                                 setTimeout(function () {
                                     $("#lblModalInfo").dialog("close");
-                                }, 2000);
+                                }, 5000);
                             }
                         });
+                        $("#startNoProductiveTask").show();
                     }
                 });
 
