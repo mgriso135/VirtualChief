@@ -24,7 +24,7 @@ namespace KIS.Processi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -33,14 +33,14 @@ namespace KIS.Processi
                 {
                     // Trovo il padre del processo
 
-                    processo current = new processo(Session["ActiveWorkspace"].ToString(), taskID);
-                    variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
+                    processo current = new processo(Session["ActiveWorkspace_Name"].ToString(), taskID);
+                    variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varID);
                     current.loadPrecedenti(var);
                     curr.InnerText = current.processName;
                     processo[] arrPrecedenti = new processo[current.processiPrec.Count];
                     for (int i = 0; i < current.processiPrec.Count; i++)
                     {
-                        arrPrecedenti[i] = new processo(Session["ActiveWorkspace"].ToString(), current.processiPrec[i]);
+                        arrPrecedenti[i] = new processo(Session["ActiveWorkspace_Name"].ToString(), current.processiPrec[i]);
                         if(current.PreviousTasks[i].ConstraintType==0)
                         {
                             current.PreviousTasks[i].ConstraintTypeDesc = GetLocalResourceObject("lblConstraintType0").ToString();
@@ -58,7 +58,7 @@ namespace KIS.Processi
                     processo[] arrSuccessivi = new processo[current.processiSucc.Count];
                     for (int i = 0; i < current.processiSucc.Count; i++)
                     {
-                        arrSuccessivi[i] = new processo(Session["ActiveWorkspace"].ToString(), current.processiSucc[i]);
+                        arrSuccessivi[i] = new processo(Session["ActiveWorkspace_Name"].ToString(), current.processiSucc[i]);
                         if (current.FollowingTasks[i].ConstraintType == 0)
                         {
                             current.FollowingTasks[i].ConstraintTypeDesc = GetLocalResourceObject("lblConstraintType0").ToString();
@@ -74,7 +74,7 @@ namespace KIS.Processi
                     int[] idPadre = new int[2];
                     //lblCheck.Text = idPadre[0] + " " + idPadre[1] + "<br/>";
                     idPadre = current.getPadre(var);
-                    processo padre = new processo(Session["ActiveWorkspace"].ToString(), idPadre[0], idPadre[1]);
+                    processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), idPadre[0], idPadre[1]);
                     padre.loadFigli(var);
                     int[] idProcessiDDL = new int[padre.subProcessi.Count];
                     // Trovo il numero di possibili precedenti: non è già tra i precedenti, non è il processo stesso, non è tra i successivi.
@@ -118,10 +118,10 @@ namespace KIS.Processi
                     if (numprocDDLPrec > 0)
                     {
                         processo[] arrProcessiDDL = new processo[numprocDDLPrec + 1];
-                        arrProcessiDDL[0] = new processo(Session["ActiveWorkspace"].ToString());
+                        arrProcessiDDL[0] = new processo(Session["ActiveWorkspace_Name"].ToString());
                         for (int i = 1; i < numprocDDLPrec + 1; i++)
                         {
-                            arrProcessiDDL[i] = new processo(Session["ActiveWorkspace"].ToString(), idProcessiDDL[i - 1]);
+                            arrProcessiDDL[i] = new processo(Session["ActiveWorkspace_Name"].ToString(), idProcessiDDL[i - 1]);
                         }
                         newPrec.DataSource = arrProcessiDDL;
                         newPrec.DataTextField = "processName";
@@ -164,8 +164,8 @@ namespace KIS.Processi
             {
                 cstr = 0;
             }
-            processo current = new processo(Session["ActiveWorkspace"].ToString(), taskID);
-            current.addProcessoPrecedente(new processo(Session["ActiveWorkspace"].ToString(), Int32.Parse(newPrec.SelectedValue)), new variante(Session["ActiveWorkspace"].ToString(), varID), cstr);
+            processo current = new processo(Session["ActiveWorkspace_Name"].ToString(), taskID);
+            current.addProcessoPrecedente(new processo(Session["ActiveWorkspace_Name"].ToString(), Int32.Parse(newPrec.SelectedValue)), new variante(Session["ActiveWorkspace_Name"].ToString(), varID), cstr);
             //Response.Write("<script language='javascript'>window.opener.location.href = window.opener.location.href; window.close();</script>");
             Response.Write("<script language='javascript'>window.close();</script>");
         }
@@ -181,8 +181,8 @@ namespace KIS.Processi
             {
                 cstr = 0;
             }
-            processo current = new processo(Session["ActiveWorkspace"].ToString(), taskID);
-            current.addProcessoSuccessivo(new processo(Session["ActiveWorkspace"].ToString(), Int32.Parse(newSucc.SelectedValue)), new variante(Session["ActiveWorkspace"].ToString(), varID), cstr);
+            processo current = new processo(Session["ActiveWorkspace_Name"].ToString(), taskID);
+            current.addProcessoSuccessivo(new processo(Session["ActiveWorkspace_Name"].ToString(), Int32.Parse(newSucc.SelectedValue)), new variante(Session["ActiveWorkspace_Name"].ToString(), varID), cstr);
             //Response.Write("<script language='javascript'>window.opener.location.href = window.opener.location.href; window.close();</script>");
             Response.Write("<script language='javascript'>window.close();</script>");
         }

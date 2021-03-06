@@ -23,7 +23,7 @@ namespace KIS.Processi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -32,16 +32,16 @@ namespace KIS.Processi
                 {
                     if (!Page.IsPostBack)
                     {
-                        variante var = new variante(Session["ActiveWorkspace"].ToString(), varianteID);
+                        variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varianteID);
                         nomeVar.Text = var.nomeVariante;
                         descVar.Text = var.descrizioneVariante;
-                        MeasurementUnits muList = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
+                        MeasurementUnits muList = new MeasurementUnits(Session["ActiveWorkspace_Name"].ToString());
                         muList.loadMeasurementUnits();
                         ddlMeasurementUnits.DataSource = muList.UnitsList;
                         ddlMeasurementUnits.DataValueField = "ID";
                         ddlMeasurementUnits.DataTextField = "Type";
 
-                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID), var);
+                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), processID), var);
                         if (prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1 &&
                             prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                         {
@@ -65,12 +65,12 @@ namespace KIS.Processi
 
             if (varianteID != -1)
             {
-                variante var = new variante(Session["ActiveWorkspace"].ToString(), varianteID);
+                variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varianteID);
                 if (var.idVariante != -1)
                 {
                     var.nomeVariante = Server.HtmlEncode(nomeVar.Text);
                     var.descrizioneVariante = Server.HtmlEncode(descVar.Text);
-                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID), var);
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), processID), var);
                     if (prcVar != null && prcVar.process != null && prcVar.process.processID != -1 &&
                         prcVar.variant != null && prcVar.variant.idVariante != -1)
                     {

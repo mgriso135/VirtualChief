@@ -26,7 +26,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -35,7 +35,7 @@ namespace KIS.Commesse
                 {
                     if (commID != -1 && commYear != -1)
                     {
-                        Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), commID, commYear);
+                        Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commYear);
                         comm.loadArticoli();
                         rptArticoliCommessa.DataSource = comm.Articoli;
                         rptArticoliCommessa.DataBind();
@@ -73,7 +73,7 @@ namespace KIS.Commesse
 
                 if (artID != -1 && artAnno !=-1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artAnno);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artAnno);
                     
                     if (art.Status == 'P')
                     {
@@ -145,7 +145,7 @@ namespace KIS.Commesse
             {
                 if (idArt != -1 && artAnno!=-1)
                 {
-                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), commID, commYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commYear);
                     comm.loadArticoli();
                     for (int i = 0; i < comm.Articoli.Count; i++)
                     {
@@ -179,7 +179,7 @@ namespace KIS.Commesse
             {
                 if (idArt != -1 && artAnno != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArt, artAnno);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArt, artAnno);
                     if (art.ID != -1)
                     {
                         if (art.Status == 'N')
@@ -201,7 +201,7 @@ namespace KIS.Commesse
             {
                 if (idArt != -1 && artAnno!=-1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArt, artAnno);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArt, artAnno);
                     if (art.ID != -1)
                     {
                         if (calDataPC.SelectedDate > DateTime.Now)
@@ -225,7 +225,7 @@ namespace KIS.Commesse
             {
                 if (idArt != -1 && artAnno!=-1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArt, artAnno);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArt, artAnno);
                     if (art.ID != -1)
                     {
                         calDataPC.SelectedDate = art.DataPrevistaConsegna;
@@ -238,11 +238,11 @@ namespace KIS.Commesse
             }
             else if (e.CommandName == "depianifica")
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArt, artAnno);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArt, artAnno);
                 bool rt = art.Depianifica();
                 if (rt == true)
                 {
-                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), commID, commYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commYear);
                     comm.loadArticoli();
                     rptArticoliCommessa.DataSource = comm.Articoli;
                     rptArticoliCommessa.DataBind();

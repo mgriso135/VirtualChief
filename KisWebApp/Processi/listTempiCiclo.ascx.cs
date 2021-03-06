@@ -42,7 +42,7 @@ namespace KIS.Processi
 
                 if (num_ops != -1 && task != null && task.Task != null && task.variant != null)
                 {
-                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), task.Task.processID, task.Task.revisione, task.variant.idVariante, num_ops);
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), task.Task.processID, task.Task.revisione, task.variant.idVariante, num_ops);
                     bool rt = tc.Delete();
                     if (rt == true)
                     {
@@ -71,8 +71,8 @@ namespace KIS.Processi
 
                 if (num_ops != -1 && task != null && task.Task != null && task.variant != null)
                 {
-                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), task.Task.processID, task.Task.revisione, task.variant.idVariante, num_ops);
-                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), task.Task.processID, task.Task.revisione), new variante(Session["ActiveWorkspace"].ToString(), task.variant.idVariante));
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), task.Task.processID, task.Task.revisione, task.variant.idVariante, num_ops);
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), task.Task.processID, task.Task.revisione), new variante(Session["ActiveWorkspace_Name"].ToString(), task.variant.idVariante));
                     tskVar.loadTempiCiclo();
                     for (int i = 0; i < tskVar.Tempi.Tempi.Count; i++)
                     {
@@ -115,7 +115,7 @@ namespace KIS.Processi
 
                 if (num_ops != -1 && task != null && task.Task != null && task.variant != null)
                 {
-                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), task.Task.processID, task.Task.revisione, task.variant.idVariante, num_ops);
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), task.Task.processID, task.Task.revisione, task.variant.idVariante, num_ops);
                     imgDef.Visible = tc.Default;
                     imgMakeDefault.Visible = !tc.Default;
                 }

@@ -23,11 +23,11 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                  UserAccount curr = (UserAccount)Session["user"];
-                 checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                 checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             if (checkUser == true)
             {
-                ElencoCommesse lstComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
+                ElencoCommesse lstComm = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
                 lstComm.loadCommesse();
                 var lstCommChiuse = (from comm in lstComm.Commesse
                                      where comm.Status == 'F'

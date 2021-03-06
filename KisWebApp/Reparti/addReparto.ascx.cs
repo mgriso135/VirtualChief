@@ -24,7 +24,7 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -48,7 +48,7 @@ namespace KIS.Reparti
 
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString());
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString());
             int rt = rp.Add(Server.HtmlEncode(nome.Text), Server.HtmlEncode(descrizione.Text), Server.HtmlEncode(ddlTimezones.SelectedValue));
             if (rt != -1)
             {

@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS.App_Code;
+using KIS.App_Sources;
+
 namespace KIS.Login
 {
     public partial class welcomeBox : System.Web.UI.UserControl
@@ -13,14 +15,14 @@ namespace KIS.Login
         {
             if (!Page.IsPostBack)
             {
-                if (((User)Session["user"]) != null && ((User)Session["user"]).authenticated == true)
+                if (((UserAccount)Session["user"]) != null)
                 {
                     lblInfoLogin.Text = "<small>"
                         + GetLocalResourceObject("lblWelcome1").ToString()
-                        +"&nbsp;" 
-                        + ((User)Session["user"]).name + " " + ((User)Session["user"]).cognome + "<br/>"
+                        + "&nbsp;"
+                        + ((UserAccount)Session["user"]).firstname + " " + ((UserAccount)Session["user"]).lastname + "<br/>"
                         + GetLocalResourceObject("lblWelcome2").ToString()
-                    +": " + ((User)Session["user"]).lastLogin.ToString() + "</small>";
+                    + ": ";// + ((UserAccount)Session["user"]).lastLogin.ToString() + "</small>";
                 }
             }
         }

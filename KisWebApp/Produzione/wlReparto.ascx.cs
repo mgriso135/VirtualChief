@@ -27,7 +27,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
                 
             }
 
@@ -38,7 +38,7 @@ namespace KIS.Produzione
                     chkLstPostazioni.Visible = false;
                     inizio = DateTime.Now;
                     fine = inizio;
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                     rp.loadPostazioni();
                     idPostazioni = new List<int>();
                     for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -127,7 +127,7 @@ namespace KIS.Produzione
             if (res == 0)
             {
                 chkLstPostazioni.Visible = false;
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -143,7 +143,7 @@ namespace KIS.Produzione
             {
                 chkLstPostazioni.Visible = true;
                 chkLstPostazioni.Items.Clear();
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 rp.loadPostazioni();
                 idPostazioni = new List<int>();
                 for (int i = 0; i < rp.Postazioni.Count; i++)
@@ -192,7 +192,7 @@ namespace KIS.Produzione
             if (idReparto != -1)
             {
                 Chart1.Visible = true;
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 Chart1.Series.Clear();
                 Chart1.Titles.Clear();
                 Chart1.Titles.Add(new System.Web.UI.DataVisualization.Charting.Title(rp.name));

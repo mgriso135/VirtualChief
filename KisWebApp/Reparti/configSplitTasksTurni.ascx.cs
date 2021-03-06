@@ -25,7 +25,7 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -34,7 +34,7 @@ namespace KIS.Reparti
                 {
                     if (!Page.IsPostBack)
                     {
-                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                         if (rp.splitTasks == true)
                         {
                             splitTasks.SelectedValue = "1";
@@ -61,7 +61,7 @@ namespace KIS.Reparti
         {
             if (idReparto != -1)
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 if (splitTasks.SelectedItem.Value == "0")
                 {
                     rp.splitTasks = false;

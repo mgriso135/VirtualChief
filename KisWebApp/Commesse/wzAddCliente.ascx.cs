@@ -23,7 +23,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -41,7 +41,7 @@ namespace KIS.Commesse
             lbl1.Text = "";
             if (Page.IsValid)
             {
-                PortafoglioClienti elenco = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti elenco = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 bool checkCod = false;
                 bool checkRagSoc = false;
                 bool checkPIva = false;

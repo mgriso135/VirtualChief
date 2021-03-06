@@ -26,7 +26,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -41,7 +41,7 @@ namespace KIS.Produzione
                         save.Enabled = false;
                         save.Visible = false;
                         valButtons.Visible = false;
-                        Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                        Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                         if (rep.id != -1)
                         {
                             if (rep.Cadenza != null)
@@ -88,7 +88,7 @@ namespace KIS.Produzione
         {
             if (repID != -1)
             {
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 rep.Cadenza = new TimeSpan(Int32.Parse(ore.Text), Int32.Parse(minuti.Text), Int32.Parse(secondi.Text));
                 ore.Enabled = false;
                 minuti.Enabled = false;
@@ -103,7 +103,7 @@ namespace KIS.Produzione
         {
             if (repID != -1)
             {
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 ore.Text = rep.Cadenza.Hours.ToString();
                 minuti.Text = rep.Cadenza.Minutes.ToString();
                 secondi.Text = rep.Cadenza.Seconds.ToString();

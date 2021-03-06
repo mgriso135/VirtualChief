@@ -40,16 +40,16 @@ namespace KIS.Clienti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
                 language.Value = cfg.Language;
                 imgViewTableAdd.Visible = true;
 
-                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), idCliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), idCliente);
                 if (cln.CodiceCliente.Length > 0)
                 {
                     /*if (!Page.IsPostBack)
@@ -81,7 +81,7 @@ namespace KIS.Clienti
         {
             if (idCliente.Length > 0)
             {
-                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), idCliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), idCliente);
                 if (cln.CodiceCliente.Length > 0)
                 {
                     int rt = cln.AddContatto(Server.HtmlEncode(txtFirstName.Text), Server.HtmlEncode(txtLastName.Text), 

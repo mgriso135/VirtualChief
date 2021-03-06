@@ -28,7 +28,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ckUser == true)
@@ -74,7 +74,7 @@ namespace KIS.Produzione
                 return p1.DataFineAttivita.CompareTo(p2.DataFineAttivita);
             });*/
 
-            ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'F', Inizio, Fine);
+            ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), 'F', Inizio, Fine);
             for (int i = 0; i < elArt.ListArticoli.Count; i++)
             {
                 elArt.ListArticoli[i].loadTempoDiLavoroTotale();
@@ -137,7 +137,7 @@ namespace KIS.Produzione
                 annoProd = -1;
             }
 
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProd, annoProd);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idProd, annoProd);
             if (art.ID != -1 && art.Year != -1)
             {
                 switch (e.CommandName)
@@ -152,7 +152,7 @@ namespace KIS.Produzione
                         if (Session["user"] != null)
                         {
                             UserAccount curr = (UserAccount)Session["user"];
-                            ckUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                            ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
                         }
 
                         if (ckUser == true)

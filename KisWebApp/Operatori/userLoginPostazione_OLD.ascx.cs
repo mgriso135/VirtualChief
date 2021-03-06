@@ -37,7 +37,7 @@ namespace KIS.Operatori
                     if (!Page.IsPostBack)
                     {
                         lblNome.Text = curr.name + " " + curr.cognome + " (" + curr.username + ")";
-                        ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                        ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                         rptPostazioni.DataSource = elPostazioni.elenco;
                         rptPostazioni.DataBind();
                     }
@@ -98,7 +98,7 @@ namespace KIS.Operatori
 
                     // Inserisco la lista degli utenti già loggati
                     Label lblUserLoggati = (Label)e.Item.FindControl("lblUserLogged");
-                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), pstID);
                     p.loadUtentiLoggati();
                     for (int i = 0; i < p.UtentiLoggati.Count; i++)
                     {
@@ -155,7 +155,7 @@ namespace KIS.Operatori
 
                 if (pst != -1)
                 {
-                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pst);
+                    Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), pst);
                     if (p.id != -1)
                     {
                         bool rt = curr.DoCheckIn(p);
@@ -197,7 +197,7 @@ namespace KIS.Operatori
                 if (checkOperatori == true)
                 {
                     lblNome.Text = curr.name + " " + curr.cognome + " (" + curr.username + ")";
-                    ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                    ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                     rptPostazioni.DataSource = elPostazioni.elenco;
                     rptPostazioni.DataBind();
                 }

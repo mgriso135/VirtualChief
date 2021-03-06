@@ -55,7 +55,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ViewBag.authAddProductW = false;
@@ -70,16 +70,16 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                PortafoglioClienti cstList = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti cstList = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.CustomersList = cstList.Elenco;
                 if (OrderID != -1 && OrderYear != -1)
                 {
-                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), OrderID, OrderYear);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), OrderID, OrderYear);
                     if (cm != null)
                     {
                         return View(cm);
@@ -126,19 +126,19 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                Cliente curr = new Cliente(Session["ActiveWorkspace"].ToString(), customer);
+                Cliente curr = new Cliente(Session["ActiveWorkspace_Name"].ToString(), customer);
                 if (curr != null && curr.CodiceCliente.Length > 0)
                 {
-                    ElencoCommesse ordersList = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
+                    ElencoCommesse ordersList = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
                     ret = ordersList.Add(curr.CodiceCliente, Notes, ExternalID);
                     if (ret >= 0)
                     {
-                        Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), ret, DateTime.UtcNow.Year);
+                        Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), ret, DateTime.UtcNow.Year);
                         UserAccount currUsr = (UserAccount)Session["user"];
                         cm.Confirmed = true;
                         cm.ConfirmedBy = currUsr;
@@ -184,12 +184,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), OrderID, OrderYear);
+                Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), OrderID, OrderYear);
                 if (cm != null && cm.ID > -1 && cm.Year > 2000)
                 {
                     cm.ExternalID = ExternalID;
@@ -234,12 +234,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), ProdID, ProdRev), new variante(Session["ActiveWorkspace"].ToString(), variant));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdRev), new variante(Session["ActiveWorkspace_Name"].ToString(), variant));
                 prcVar.loadReparto();
                 if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.variant.idVariante != -1)
                 {
@@ -298,24 +298,24 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), ProdID, ProdRev), new variante(Session["ActiveWorkspace"].ToString(), ProdVar));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdRev), new variante(Session["ActiveWorkspace_Name"].ToString(), ProdVar));
                 if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.variant.idVariante != -1)
                 {
-                    FusoOrario fuso = new FusoOrario(Session["ActiveWorkspace"].ToString());
+                    FusoOrario fuso = new FusoOrario(Session["ActiveWorkspace_Name"].ToString());
                     if (DeliveryDate > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario))
                     {
-                        Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), OrderID, OrderYear);
+                        Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), OrderID, OrderYear);
                         if (cm != null && cm.ID != -1 && cm.Year > 2000)
                         {
                             int[] rt = cm.AddArticoloInt(prcVar, DeliveryDate, Quantity);
                             if (rt[0]!=-1)
                             {
-                                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), rt[0], rt[1]);
+                                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), rt[0], rt[1]);
                                 art.DataPrevistaFineProduzione = DeliveryDate;
                                 ret = 1;
                             }
@@ -373,7 +373,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authEditProductData = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authEditProductData = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             // AUthorization to plan a product in production
@@ -387,12 +387,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authPlanProduction = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authPlanProduction = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authEditProductData || ViewBag.authPlanProduction)
             {
-                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), OrderID, OrderYear);
+                Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), OrderID, OrderYear);
                 if (cm != null && cm.ID > -1 && cm.Year > 2000)
                 {
                     cm.loadArticoli();
@@ -438,14 +438,14 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
             {
                 if (OrderID != -1 && OrderYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), OrderID, OrderYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), OrderID, OrderYear);
 
                     if (art.ID != -1 && art.Year > 2010)
                     {
@@ -519,14 +519,14 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
             {
                 if (ProductID != -1 && ProductYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
 
                     if (art.ID != -1 && art.Year > 2010)
                     {
@@ -600,12 +600,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authAddProductW)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
                 if(art!=null && art.ID!=-1 && art.Year > 2010)
                 {
                     ret = 1;
@@ -619,7 +619,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                     }
                     if(DeliveryDate > DateTime.UtcNow)
                     {
-                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), art.Reparto);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), art.Reparto);
                         art.DataPrevistaConsegna = DeliveryDate;
                     }
                     else
@@ -677,14 +677,14 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
 
                 if (art != null && art.ID != -1 && art.Status == 'N' && rp != null && rp.id != -1 && EndProductionDate > DateTime.UtcNow && EndProductionDate<= art.DataPrevistaConsegna)
                 {
@@ -694,16 +694,16 @@ namespace KIS.Areas.SalesOrders.Controllers
                     art.Proc.process.loadFigli(art.Proc.variant);
                     for (int i = 0; i < art.Proc.process.subProcessi.Count; i++)
                     {
-                        TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
+                        TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
                         tskVar.loadTempiCiclo();
-                        TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                        TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                         if (tc.Tempo != null)
                         {
-                            lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, rp.id, art.Quantita));
+                            lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace_Name"].ToString(), tskVar, tc, rp.id, art.Quantita));
                         }
                     }
 
-                    ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, lstTasks, rp, art.Quantita);
+                    ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace_Name"].ToString(), art, lstTasks, rp, art.Quantita);
                     int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                     if (rt1 == 1)
                     {
@@ -755,8 +755,8 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             String ret = "";
 
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
-            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
+            Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
             Document cartPDF = new Document(PageSize.A4, 50, 50, 25, 25);
@@ -799,7 +799,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                     check = false;
                 }
 
-                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 logo.ScaleToFit(50 * logo.Width / logo.Height, 50);
                 cartPDF.Add(logo);
@@ -899,8 +899,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             }
 
             String ret = "";
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
-            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
+            Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
             Document cartPDF = new Document(PageSize.A4, 50, 50, 25, 25);
@@ -937,7 +937,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 intestazioneFoglio[3] = new PdfPCell();
                 intestazioneFoglio[4] = new PdfPCell();
 
-                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -954,7 +954,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 {
                     idComm = comm.ExternalID;
                 }
-                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
                 String txtCommessa = cln.RagioneSociale + Environment.NewLine
                     + ResListOrderProduct.ListOrderProduct.lblOrdine + " " + idComm + Environment.NewLine
                     + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
@@ -1132,8 +1132,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             }
 
             String ret = "";
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
-            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
+            Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
             Document cartPDF = new Document(PageSize.A3, 630, 30, 20, 20);
@@ -1172,7 +1172,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 intestazioneFoglio[3] = new PdfPCell();
                 intestazioneFoglio[4] = new PdfPCell();
 
-                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -1190,7 +1190,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 {
                     idComm = comm.ExternalID;
                 }
-                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
                 String txtCommessa = cln.RagioneSociale + Environment.NewLine
                     + ResListOrderProduct.ListOrderProduct.lblOrdine + " " + idComm + Environment.NewLine
                     + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
@@ -1396,14 +1396,14 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
 
                 if (art != null && art.ID != -1 && (art.Status == 'I' || art.Status =='P') && rp != null && rp.id != -1
                     && EndProductionDate > DateTime.UtcNow && EndProductionDate <= art.DataPrevistaConsegna)
@@ -1446,7 +1446,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -1454,7 +1454,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 ViewBag.ProductID = ProductID;
                 ViewBag.ProductYear = ProductYear;
 
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
                 art.loadTasksProduzione();
                 return View(art.Tasks);
             }
@@ -1477,12 +1477,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if(tsk.TaskProduzioneID!=-1)
                 {
                     ret = tsk.addAssignedOperator(defOp);
@@ -1503,12 +1503,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
                 if(art.ID!=-1 && art.Year!=-1)
                 {
                     art.loadTasksProduzione();
@@ -1534,12 +1534,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     ret = tsk.deleteAssignedOperator(defOp);
@@ -1581,12 +1581,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if(tsk!=null && tsk.TaskProduzioneID!=-1)
                 {
                     ret = tsk.getEndDate(start);
@@ -1616,12 +1616,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     art.loadTasksProduzione();
@@ -1648,12 +1648,12 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 ret = tsk.getEndDate(start);
             }
                 return ret;
@@ -1678,14 +1678,14 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
                 if(start <= end && start >= DateTime.UtcNow)
                 {
-                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                     if(tsk.TaskProduzioneID!=-1)
                     { 
                     TimeSpan oldWT = tsk.TempoC;

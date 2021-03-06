@@ -13,9 +13,9 @@ namespace KIS.Personal
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["user"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
-                Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                Workspace ws = new Workspace(Session["ActiveWorkspace_Name"].ToString());
                 UserAccount curr = (UserAccount)Session["user"];
                 curr.loadGroups(ws.id);
                 rptGruppi.DataSource = curr.groups;

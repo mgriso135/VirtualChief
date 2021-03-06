@@ -21,17 +21,17 @@ namespace KIS.Admin
             elencoPermessi.Add(prmUser);
 
             bool checkUser = false;
-            if (Session["user"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    Logo lg = new Logo(Session["ActiveWorkspace"].ToString());
+                    Logo lg = new Logo(Session["ActiveWorkspace_Name"].ToString());
                     if (lg.filePath.Length > 0)
                     {
                         imgCurrentLogo.Visible = true;
@@ -87,7 +87,7 @@ namespace KIS.Admin
                                 
                                 string fileName = Path.GetFileName(FileUpload1.PostedFile.FileName);
                                 FileUpload1.PostedFile.SaveAs(Server.MapPath("~/Data/Logo/") + fileName);
-                                Logo logo = new Logo(Session["ActiveWorkspace"].ToString());
+                                Logo logo = new Logo(Session["ActiveWorkspace_Name"].ToString());
                                 logo.filePath = fileName;
                                 lbl1.Text += "Log: "+logo.log;
                                 Response.Redirect(Request.RawUrl);

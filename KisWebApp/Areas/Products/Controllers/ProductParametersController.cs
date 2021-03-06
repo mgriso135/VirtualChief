@@ -43,7 +43,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
 
             }
 
@@ -57,7 +57,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             elencoPermessi = new List<String[]>();
@@ -70,14 +70,14 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.processID ="A";
             ViewBag.processRev = "B";
             ViewBag.varianteID = "C";
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID, processRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), processID, processRev), new variante(Session["ActiveWorkspace_Name"].ToString(), variantID));
                 if(prcVar!=null && prcVar.process!=null && prcVar.process.processID > -1 &&
                     prcVar.variant != null && prcVar.variant.idVariante > -1)
                 {
@@ -122,7 +122,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
 
             }
 
@@ -136,7 +136,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             elencoPermessi = new List<String[]>();
@@ -149,18 +149,18 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), processID, processRev),
-                    new variante(Session["ActiveWorkspace"].ToString(), variantID));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), processID, processRev),
+                    new variante(Session["ActiveWorkspace_Name"].ToString(), variantID));
                 if(prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1 &&
                     prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                 {
                     ret = prcVar.addParameter(Server.HtmlEncode(ParamName), Server.HtmlEncode(ParamDescription),
-                        new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), ParamCategory), ParamIsFixed, ParamIsRequired);
+                        new ProductParametersCategory(Session["ActiveWorkspace_Name"].ToString(), ParamCategory), ParamIsFixed, ParamIsRequired);
                 }   
             }
             return ret;
@@ -198,13 +198,13 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), 
-                    processID, processRev), new variante(Session["ActiveWorkspace"].ToString(), variantID));
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), 
+                    processID, processRev), new variante(Session["ActiveWorkspace_Name"].ToString(), variantID));
                 if(prcVar!=null && prcVar.process!=null && prcVar.process.processID!=-1 &&
                     prcVar.variant!=null && prcVar.variant.idVariante!=-1)
                 {
@@ -247,17 +247,17 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                ModelParameter prodParam = new ModelParameter(Session["ActiveWorkspace"].ToString(), processID, processRev, variantID, ParamID);
+                ModelParameter prodParam = new ModelParameter(Session["ActiveWorkspace_Name"].ToString(), processID, processRev, variantID, ParamID);
                 if(prodParam.ParameterID!=-1)
                 {
                     prodParam.Name = paramName;
                     prodParam.Description = paramDescription;
-                    prodParam.ParameterCategory = new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), paramCategory);
+                    prodParam.ParameterCategory = new ProductParametersCategory(Session["ActiveWorkspace_Name"].ToString(), paramCategory);
                     prodParam.isFixed = isFixed;
                     prodParam.isRequired = isRequired;
                     ret = true;

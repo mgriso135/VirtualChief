@@ -49,7 +49,7 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ViewBag.log = "Entro in GetGlobalKPI ";
@@ -58,7 +58,7 @@ namespace KIS.Areas.Analysis.Controllers
             //{
                 if (startPeriod < endPeriod)
                 {
-                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
+                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                     History.loadProductionAnalysis();
 
                     List<ProductionAnalysisStruct> curr = History.AnalysisData.Where(x => x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
@@ -318,7 +318,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/GlobalKPIsController/GetWarningsKPIs", "", ipAddr);
@@ -328,7 +328,7 @@ namespace KIS.Areas.Analysis.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Analysis/GlobalKPIsController/GetWarningsKPIs", "", ipAddr);
             }
 
-            Warnings warns = new Warnings(Session["ActiveWorkspace"].ToString());
+            Warnings warns = new Warnings(Session["ActiveWorkspace_Name"].ToString());
 
 
             ViewBag.OpenedLastWeek = 0;
@@ -399,7 +399,7 @@ namespace KIS.Areas.Analysis.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Analysis/GlobalKPIsController/GetNonCompliancesKPIs", "", ipAddr);
             }
 
-            NCAnalysis ncAnalysis = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+            NCAnalysis ncAnalysis = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
             ncAnalysis.loadNonCompliances();
 
             ViewBag.OpenedLastWeek = 0;
@@ -470,7 +470,7 @@ namespace KIS.Areas.Analysis.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Analysis/GlobalKPIsController/GetImprovementActionsKPIs", "", ipAddr);
             }
 
-            ImprovementActionAnalysis IAAnalysis = new ImprovementActionAnalysis(Session["ActiveWorkspace"].ToString());
+            ImprovementActionAnalysis IAAnalysis = new ImprovementActionAnalysis(Session["ActiveWorkspace_Name"].ToString());
             IAAnalysis.loadIAList();
 
             ViewBag.OpenedLastWeek = 0;
@@ -564,7 +564,7 @@ namespace KIS.Areas.Analysis.Controllers
                 if (Session["user"] != null)
                 {
                     UserAccount curr = (UserAccount)Session["user"];
-                    ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                    ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
                 }
 
                 ViewBag.log = "Entro in GetGlobalKPI ";
@@ -573,7 +573,7 @@ namespace KIS.Areas.Analysis.Controllers
                 //{
                 if (startPeriod < endPeriod)
                 {
-                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
+                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                     History.loadProductionAnalysis();
 
                     List<ProductionAnalysisStruct> curr = History.AnalysisData.Where(x => x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
@@ -648,7 +648,7 @@ namespace KIS.Areas.Analysis.Controllers
                     }
 
                     // Check data
-                    ElencoReparti lstDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                    ElencoReparti lstDepts = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                     for(int i = 0; i < lstDepts.elenco.Count; i++)
                     {
                         // Check if exists data for department for current week

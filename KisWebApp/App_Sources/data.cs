@@ -37,9 +37,9 @@ namespace Dati
         public string GetConnectionString(String tenant)
         {
             /*String activeWorkspace = "";
-            if (HttpContext.Current !=null && HttpContext.Current.Session!=null && HttpContext.Current.Session["ActiveWorkspace"]!=null)
+            if (HttpContext.Current !=null && HttpContext.Current.Session!=null && HttpContext.Current.Session["ActiveWorkspace_Name"]!=null)
             { 
-                activeWorkspace = HttpContext.Current.Session["ActiveWorkspace"]?.ToString();
+                activeWorkspace = HttpContext.Current.Session["ActiveWorkspace_Name"]?.ToString();
             }
             if (activeWorkspace.Length == 0)
             { 
@@ -71,7 +71,7 @@ namespace Dati
         public int getActiveWorkspaceId()
         {
             int activeWorkspace = -1;
-            if (HttpContext.Current != null && HttpContext.Current.Session != null && HttpContext.Current.Session["ActiveWorkspace"] != null)
+            if (HttpContext.Current != null && HttpContext.Current.Session != null && HttpContext.Current.Session["ActiveWorkspace_Name"] != null)
             {
                 activeWorkspace = Int32.Parse(HttpContext.Current.Session["ActiveWorkspace_Id"]?.ToString());
             }
@@ -96,9 +96,9 @@ namespace Dati
         public String getActiveWorkspaceName()
         {
             String activeWorkspace = "";
-            if (HttpContext.Current != null && HttpContext.Current.Session != null && HttpContext.Current.Session["ActiveWorkspace"] != null && HttpContext.Current.Session["ActiveWorkspace_Id"] != null)
+            if (HttpContext.Current != null && HttpContext.Current.Session != null && HttpContext.Current.Session["ActiveWorkspace_Name"] != null && HttpContext.Current.Session["ActiveWorkspace_Id"] != null)
             {
-                activeWorkspace = HttpContext.Current.Session["ActiveWorkspace"]?.ToString();
+                activeWorkspace = HttpContext.Current.Session["ActiveWorkspace_Name"]?.ToString();
             }
             if (activeWorkspace.Length == 0)
             {

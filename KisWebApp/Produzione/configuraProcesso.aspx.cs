@@ -31,7 +31,7 @@ namespace KIS.Produzione
             }
             if (artID != -1 && artYear!=-1)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                 if (art.ID != -1 && art.Proc != null)
                 {
                     /*if (art.Matricola != null)

@@ -23,14 +23,14 @@ namespace KIS.Admin
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack)
                 {
-                    MainMenu lst = new MainMenu(Session["ActiveWorkspace"].ToString());
+                    MainMenu lst = new MainMenu(Session["ActiveWorkspace_Name"].ToString());
                     rptMainVoci.DataSource = lst.Elenco;
                     rptMainVoci.DataBind();
                 }

@@ -26,12 +26,12 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
+                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), postID);
                 if (p.id != -1)
                 {
                     lblNomePost.Text = p.name;
@@ -50,7 +50,7 @@ namespace KIS.Produzione
 
         protected void Chart1_Load(object sender, EventArgs e)
         {
-            Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
+            Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), postID);
             Chart1.Series.Clear();
                         Chart1.Titles.Clear();
                         Chart1.Series.Add("WorkLoad");

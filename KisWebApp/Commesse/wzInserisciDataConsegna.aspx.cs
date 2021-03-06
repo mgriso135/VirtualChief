@@ -59,11 +59,11 @@ namespace KIS.Commesse
 
                 if (idCommessa != -1 && annoCommessa != -1 && idProc != -1 && revProc != -1 && idVariante != -1 && idReparto != -1 && quantita >0)
                 {
-                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
-                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
                     prcVar.loadReparto();
                     prcVar.process.loadFigli(prcVar.variant);
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                     if (cm.ID != -1 && prcVar.process != null && prcVar.variant != null && rp.id != -1)
                     {
                         frmAssegnaDataConsegna.Visible = true;

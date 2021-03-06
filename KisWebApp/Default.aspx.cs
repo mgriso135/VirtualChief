@@ -11,7 +11,7 @@ namespace KIS
         {
             Boolean FullyConfigured = false;
             int activeWorkspace_id = (new Dati.Dati()).getActiveWorkspaceId();
-            String activeWorkspace = Session["ActiveWorkspace"] != null ? Session["ActiveWorkspace"].ToString(): "";
+            String activeWorkspace = Session["ActiveWorkspace_Name"] != null ? Session["ActiveWorkspace_Name"].ToString(): "";
 
             if (activeWorkspace.Length == 0 || activeWorkspace_id == -1)
             {
@@ -19,7 +19,6 @@ namespace KIS
             }
                 KISConfig kCfg = new KISConfig(activeWorkspace, activeWorkspace_id);
                 FullyConfigured =
-                    kCfg.WizAdminUserCompleted &&
                     kCfg.WizAndonCompleted &&
                     kCfg.WizCustomerReportCompleted &&
                     kCfg.WizLogoCompleted &&

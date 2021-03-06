@@ -23,12 +23,12 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ckUser == true)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     lblNomeTask.InnerText = tsk.Name;
@@ -65,7 +65,7 @@ namespace KIS.Produzione
 
                 if (evtID != -1)
                 {
-                    EventoTaskProduzione ev = new EventoTaskProduzione(Session["ActiveWorkspace"].ToString(), evtID);
+                    EventoTaskProduzione ev = new EventoTaskProduzione(Session["ActiveWorkspace_Name"].ToString(), evtID);
                     if (ev.IdEvento != -1)
                     {
                         User usr = new User(ev.User);

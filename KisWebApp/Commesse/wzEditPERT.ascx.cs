@@ -29,7 +29,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -38,7 +38,7 @@ namespace KIS.Commesse
                 {
                     if (!Page.IsPostBack)
                     {
-                        ProductParametersCategories parList = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
+                        ProductParametersCategories parList = new ProductParametersCategories(Session["ActiveWorkspace_Name"].ToString());
                         parList.loadCategories();
                         ddlParamCategory.AppendDataBoundItems = true;
                         ddlParamCategory.Items.Clear();
@@ -51,9 +51,9 @@ namespace KIS.Commesse
                         }
                         ddlParamCategory.DataBind();
 
-                        processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
+                        processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
 
-                        int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                        int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
                         if (controllo == 0)
                         {
@@ -77,7 +77,7 @@ namespace KIS.Commesse
                         //svg1.Text += "</svg>";
 
                         // Dropdown collega task esistente
-                        ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString());
+                        ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace_Name"].ToString());
                         List<processo> curr = new List<processo>();
                         for (int i = 0; i < elTsk.Elenco.Count; i++)
                         {
@@ -256,9 +256,9 @@ namespace KIS.Commesse
         protected void timer1_Tick(object sender, EventArgs e)
         {
             lbl1.Text = "";
-            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
 
-            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
+            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
             if (controllo == 0)
             {

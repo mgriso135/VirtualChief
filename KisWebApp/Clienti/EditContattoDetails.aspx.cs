@@ -30,7 +30,7 @@ namespace KIS.Clienti
 
                 if (idCont != -1)
                 {
-                    Contatto contCln = new Contatto(Session["ActiveWorkspace"].ToString(), idCont);
+                    Contatto contCln = new Contatto(Session["ActiveWorkspace_Name"].ToString(), idCont);
                     if (contCln.ID != -1)
                     {
                         frmEditContatto.Visible = true;

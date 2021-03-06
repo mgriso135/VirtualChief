@@ -25,14 +25,14 @@ namespace KIS.Clienti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!String.IsNullOrEmpty(codCliente) && codCliente.Length > 0)
                 {
-                    Cliente cli = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                    Cliente cli = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                     if (cli.CodiceCliente.Length > 0)
                     {
                         tblData.Visible = true;
@@ -70,7 +70,7 @@ namespace KIS.Clienti
             {
                 if (codCliente.Length > 0)
                 {
-                    Cliente cli = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                    Cliente cli = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                     if (cli.CodiceCliente.Length > 0)
                     {
                         cli.RagioneSociale = Server.HtmlDecode(txtRagSoc.Text);
@@ -103,7 +103,7 @@ namespace KIS.Clienti
             tblData.Visible = false;
             if (codCliente.Length > 0)
             {
-                Cliente cli = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                Cliente cli = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                 if (cli.CodiceCliente.Length > 0)
                 {
                         tblData.Visible = true;

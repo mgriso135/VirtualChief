@@ -14,11 +14,11 @@ namespace KIS
         protected void Page_Load(object sender, EventArgs e)
         {
             List<VoceMenu> lista = new List<VoceMenu>();
-            if (Session["user"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
                 if (!Page.IsPostBack)
                 {
-                    Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                    Workspace ws = new Workspace(Session["ActiveWorkspace_Name"].ToString());
                         UserAccount curr = (UserAccount)Session["user"];
                         curr.loadGroups(ws.id);
                         for (int i = 0; i < curr.groups.Count; i++)

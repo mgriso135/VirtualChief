@@ -22,10 +22,10 @@ namespace MyUserControls
         {
             if (fatherProcID != -1 && variante != -1)
             {
-                variante var = new variante(Session["ActiveWorkspace"].ToString(), variante);
+                variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), variante);
                 if (var.idVariante != -1)
                 {
-                    processo proc = new processo(Session["ActiveWorkspace"].ToString(), fatherProcID);
+                    processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), fatherProcID);
                     int res = proc.createDefaultSubProcess(var);
 
                     if (res != -1)

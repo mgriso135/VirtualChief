@@ -15,7 +15,7 @@ namespace KIS.Analysis
             frmChooseProductsINP.Visible = false;
             if (!String.IsNullOrEmpty(Request.QueryString["customerID"]))
             {
-                Cliente cli = new Cliente(Session["ActiveWorkspace"].ToString(), Request.QueryString["customerID"]);
+                Cliente cli = new Cliente(Session["ActiveWorkspace_Name"].ToString(), Request.QueryString["customerID"]);
                 if (cli.CodiceCliente.Length > 0)
                 {
                     frmChooseProductsINP.Visible = true;

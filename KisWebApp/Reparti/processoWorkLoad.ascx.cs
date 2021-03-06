@@ -28,7 +28,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -49,10 +49,10 @@ namespace KIS.Produzione
 
         protected void loadChart()
         {
-            Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
-            processo curr = new processo(Session["ActiveWorkspace"].ToString(), procID);
-            variante vr1 = new variante(Session["ActiveWorkspace"].ToString(), var);
-            ProcessoVariante prc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), curr, vr1);
+            Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
+            processo curr = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
+            variante vr1 = new variante(Session["ActiveWorkspace_Name"].ToString(), var);
+            ProcessoVariante prc = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), curr, vr1);
             prc.loadReparto();
             prc.process.loadFigli(prc.variant);
             bool rt = rep.loadPostazioniTask(prc);
@@ -97,7 +97,7 @@ namespace KIS.Produzione
                     int cont = 0;
                     for (int i = 0; i < posts.Count; i++)
                     {
-                        Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), posts[i]);
+                        Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), posts[i]);
                         if (pst.id != -1)
                         {
                             TimeSpan carico = pst.calculateWorkLoad(prc);

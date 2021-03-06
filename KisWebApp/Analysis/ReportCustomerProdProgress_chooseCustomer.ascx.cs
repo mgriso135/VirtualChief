@@ -23,7 +23,7 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -32,7 +32,7 @@ namespace KIS.Analysis
                 {
                     lnkGoFwd.Visible = false;
                     imgGoFwd.Visible = false;
-                    PortafoglioClienti pClienti = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                    PortafoglioClienti pClienti = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                     var clientiSorted = pClienti.Elenco.OrderBy(x => x.RagioneSociale);
                     rblClienti.DataSource = clientiSorted;
                     rblClienti.DataValueField = "CodiceCliente";
@@ -44,7 +44,7 @@ namespace KIS.Analysis
 
         protected void rblClienti_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), rblClienti.SelectedValue);
+            Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), rblClienti.SelectedValue);
             if (customer.CodiceCliente.Length > 0)
             {
                 lnkGoFwd.Visible = true;

@@ -26,7 +26,7 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -47,7 +47,7 @@ namespace KIS.Analysis
 
                     if (procID != -1 && rev != -1)
                     {
-                        processo prc = new processo(Session["ActiveWorkspace"].ToString(), procID, rev);
+                        processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), procID, rev);
                         if (prc.processID != -1)
                         {
                             lnkNavigation.Visible = true;

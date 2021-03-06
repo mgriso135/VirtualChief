@@ -30,8 +30,8 @@ namespace KIS.Reparti
 
             if (idTurno != -1)
             {
-                Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
+                Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), trn.idReparto);
                 if (trn.id != -1)
                 {
                     lbl1.Text ="<h3>"+ rp.name + " - " + trn.Nome + "</h3>";

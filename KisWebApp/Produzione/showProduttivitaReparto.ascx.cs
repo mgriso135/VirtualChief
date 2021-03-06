@@ -32,7 +32,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -51,7 +51,7 @@ namespace KIS.Produzione
                 }
                 if (repID != -1)
                 {
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     //if (!Page.IsPostBack)
                     {
                         rp.loadCalendario(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-7), rp.tzFusoOrario), TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(10), rp.tzFusoOrario));

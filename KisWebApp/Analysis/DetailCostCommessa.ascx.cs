@@ -26,11 +26,11 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                  UserAccount curr = (UserAccount)Session["user"];
-                 checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                 checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             if (checkUser == true)
             {
-                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), commID, commYear);
+                Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commYear);
                 if (comm.ID != -1 && comm.Year != -1)
                 {
                     tblCommessa.Visible = true;

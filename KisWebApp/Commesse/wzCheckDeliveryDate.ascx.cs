@@ -25,12 +25,12 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idProdotto, annoProdotto);
                 if (art.ID != -1 && art.Year != -1 && (art.Status == 'N'||art.Status=='I' || art.Status == 'P'))
                 {
                     tblDeliveryDate.Visible = true;
@@ -85,24 +85,24 @@ namespace KIS.Commesse
         protected void imgGoFwd_Click(object sender, ImageClickEventArgs e)
         {
             List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idProdotto, annoProdotto);
             if (art.Status == 'N')
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), art.Reparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), art.Reparto);
 
                 art.Proc.process.loadFigli(art.Proc.variant);
                 for (int i = 0; i < art.Proc.process.subProcessi.Count; i++)
                 {
-                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
+                    TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
                     tskVar.loadTempiCiclo();
-                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                     if (tc.Tempo != null)
                     {
-                        lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, rp.id, art.Quantita));
+                        lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace_Name"].ToString(), tskVar, tc, rp.id, art.Quantita));
                     }
                 }
 
-                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, lstTasks, rp, art.Quantita);
+                ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace_Name"].ToString(), art, lstTasks, rp, art.Quantita);
                 int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                 if (rt1 == 1)
                 {
@@ -181,7 +181,7 @@ namespace KIS.Commesse
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
             imgGoFwd.Visible = false;
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idProdotto, annoProdotto);
             if (art.ID != -1 && art.Year != -1 && (art.Status == 'N'||art.Status=='I' || art.Status == 'P'))
             {
                 int ore, minuti, secondi;

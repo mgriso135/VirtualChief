@@ -27,7 +27,7 @@ namespace KIS.Processi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -97,9 +97,9 @@ namespace KIS.Processi
                     }
                     else
                     {
-                        processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
+                        processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
 
-                        int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                        int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
                         if (controllo == 0)
                         {
@@ -118,7 +118,7 @@ namespace KIS.Processi
                         //svg1.Text += "</svg>";
 
                         // Dropdown collega task esistente
-                            ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString());
+                            ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace_Name"].ToString());
                             List<processo> curr = new List<processo>();
                             for (int i = 0; i < elTsk.Elenco.Count; i++)
                             {
@@ -158,10 +158,10 @@ namespace KIS.Processi
                     procID = -1;
                 }
             }
-            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
             if (padre.processID != -1 && varID != -1)
             {
-                int procCreated = padre.createDefaultSubProcess(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                int procCreated = padre.createDefaultSubProcess(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                 if (procCreated >= 0)
                 {
                     Response.Redirect(Request.RawUrl);
@@ -289,9 +289,9 @@ namespace KIS.Processi
         protected void timer1_Tick(object sender, EventArgs e)
         {
             lbl1.Text = "";
-            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
 
-            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
+            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
             if (controllo == 0)
             {
@@ -314,7 +314,7 @@ namespace KIS.Processi
 
             //lbl1.Text += "<br/>" + ddlTasks.SelectedItem.Value.ToString() + " " + ddlTasks.SelectedItem.Text.ToString();
             //processo pr = new processo(procVar.Task.processID);
-            processo pr = new processo(Session["ActiveWorkspace"].ToString(), procID);
+            processo pr = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
             int tskID = -1;
             try
             {
@@ -327,7 +327,7 @@ namespace KIS.Processi
 
             if (tskID != -1)
             {
-                bool rt = pr.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), new variante(Session["ActiveWorkspace"].ToString(), varID)));
+                bool rt = pr.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), tskID), new variante(Session["ActiveWorkspace_Name"].ToString(), varID)));
                 if (rt == true)
                 {
                     //Response.Redirect(Request.RawUrl);

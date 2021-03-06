@@ -24,7 +24,7 @@ namespace KIS.Admin
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -32,7 +32,7 @@ namespace KIS.Admin
                 rptCustomerList.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    PortafoglioClienti customers = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                    PortafoglioClienti customers = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                     var customersOrdered = customers.Elenco.OrderBy(x => x.RagioneSociale).ToList();
                     rptCustomerList.DataSource = customersOrdered;
                     rptCustomerList.DataBind();

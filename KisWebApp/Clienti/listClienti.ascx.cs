@@ -25,7 +25,7 @@ namespace KIS.Clienti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -33,7 +33,7 @@ namespace KIS.Clienti
                 rpt1.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    PortafoglioClienti elencoCli = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                    PortafoglioClienti elencoCli = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                     rpt1.DataSource = elencoCli.Elenco;
                     rpt1.DataBind();
                 }
@@ -50,14 +50,14 @@ namespace KIS.Clienti
             String codCliente = e.CommandArgument.ToString();
             if(e.CommandName == "delete")
             {
-                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     bool ret = customer.Delete();
                     if (ret == true)
                     {
                         lbl1.Text = GetLocalResourceObject("lblDeleteOk").ToString();
-                        PortafoglioClienti elencoCli = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                        PortafoglioClienti elencoCli = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                         rpt1.DataSource = elencoCli.Elenco;
                         rpt1.DataBind();
                     }
@@ -77,7 +77,7 @@ namespace KIS.Clienti
                 ImageButton btnDelete = (ImageButton)e.Item.FindControl("btnDelete");
                 HiddenField hCodCliente = (HiddenField)e.Item.FindControl("hcodCliente");
                 String codCliente = hCodCliente.Value.ToString();
-                Cliente cli = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                Cliente cli = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                 cli.loadCommesse(new DateTime(1970,1,1), (DateTime.Now.AddYears(10)));
                 if(cli.listCommesse.Count == 0)
                 {

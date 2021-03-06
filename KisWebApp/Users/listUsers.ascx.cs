@@ -18,9 +18,9 @@ namespace KIS.Admin
         {
             String permessoRichiesto = "Utenti";
             bool checkUser = false;
-            if (Session["User"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["User"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
-                Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                Workspace ws = new Workspace(Session["ActiveWorkspace_Name"].ToString());
                 UserAccount curr = (UserAccount)Session["user"];
                 curr.loadGroups(ws.id);
                 for (int i = 0; i < curr.groups.Count; i++)
@@ -39,7 +39,7 @@ namespace KIS.Admin
             {
                 if(!Page.IsPostBack && !Page.IsCallback)
                 { 
-                UserList lst = new UserList(Session["ActiveWorkspace"].ToString());
+                UserList lst = new UserList(Session["ActiveWorkspace_Name"].ToString());
             if (lst.numUsers > 0)
             {
                 
@@ -63,7 +63,7 @@ namespace KIS.Admin
         protected void rptUsers_ItemCommand1(object source, RepeaterCommandEventArgs e)
         {
             String usrID = e.CommandArgument.ToString();
-            KISConfig vcCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig vcCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String checksum = vcCfg.basePath;
 
             if(e.CommandName== "printBarcode")

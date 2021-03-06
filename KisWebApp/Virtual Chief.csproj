@@ -4383,20 +4383,6 @@
     <Compile Include="Configuration\WizConfig.Master.designer.cs">
       <DependentUpon>WizConfig.Master</DependentUpon>
     </Compile>
-    <Compile Include="Configuration\wizConfigAdminUser.ascx.cs">
-      <DependentUpon>wizConfigAdminUser.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Configuration\wizConfigAdminUser.ascx.designer.cs">
-      <DependentUpon>wizConfigAdminUser.ascx</DependentUpon>
-    </Compile>
-    <Compile Include="Configuration\wizConfigAdminUser.aspx.cs">
-      <DependentUpon>wizConfigAdminUser.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Configuration\wizConfigAdminUser.aspx.designer.cs">
-      <DependentUpon>wizConfigAdminUser.aspx</DependentUpon>
-    </Compile>
     <Compile Include="Configuration\wizConfigAndon.aspx.cs">
       <DependentUpon>wizConfigAndon.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -6495,8 +6481,6 @@
     <Content Include="Commesse\wzVarianteDettagli.ascx" />
     <Content Include="Configuration\configurationStatus.ascx" />
     <Content Include="Configuration\MainWizConfig.aspx" />
-    <Content Include="Configuration\wizConfigAdminUser.ascx" />
-    <Content Include="Configuration\wizConfigAdminUser.aspx" />
     <Content Include="Configuration\wizConfigAndon.aspx" />
     <Content Include="Configuration\wizConfigLogo.ascx" />
     <Content Include="Configuration\wizConfigLogo.aspx" />

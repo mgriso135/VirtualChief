@@ -22,7 +22,7 @@ namespace KIS.Areas.Departments.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ViewBag.AllowFlag = false;
@@ -70,7 +70,7 @@ namespace KIS.Areas.Departments.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -111,14 +111,14 @@ namespace KIS.Areas.Departments.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
                 ViewBag.AutoPauseConfig = true;
                 ViewBag.deptID = -1;
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 if(rp!=null && rp.id!=-1)
                 {
                     ViewBag.deptID = rp.id;
@@ -147,12 +147,12 @@ namespace KIS.Areas.Departments.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                Reparto dept = new Reparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                Reparto dept = new Reparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 if(dept!=null && dept.id!=-1)
                 {
                     if(!Flag)

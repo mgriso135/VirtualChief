@@ -15,7 +15,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/ProductAnalysis/Index", "", ipAddr);
@@ -34,15 +34,15 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
@@ -68,7 +68,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 KIS.App_Code.User cu1rr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction(cu1rr.username, "Controller", "/Analysis/ProductAnalysis/ProductDataPanel", "", ipAddr);
@@ -96,14 +96,14 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 if (startPeriod < endPeriod)
                 {
-                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
+                    ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                     History.loadProductionAnalysis();
 
                     List<ProductionAnalysisStruct> curr = History.AnalysisData.Where(x => x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
@@ -317,8 +317,8 @@ namespace KIS.Areas.Analysis.Controllers
                             prodCurr[1] = rev;
                             prodCurr[2] = variant;
                             TypeOfProductsFilter.Add(prodCurr);
-                                processo prcCurr = new processo(Session["ActiveWorkspace"].ToString(), prod, rev);
-                                variante varCurr = new variante(Session["ActiveWorkspace"].ToString(), variant);
+                                processo prcCurr = new processo(Session["ActiveWorkspace_Name"].ToString(), prod, rev);
+                                variante varCurr = new variante(Session["ActiveWorkspace_Name"].ToString(), variant);
                                 ViewBag.ProductsFilter += "data.addColumn('number', '" + prcCurr.processName + " - " + varCurr.nomeVariante + "');";
                         }
                     }

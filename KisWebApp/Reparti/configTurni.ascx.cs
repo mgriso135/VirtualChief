@@ -26,14 +26,14 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (repID != -1)
                 {
-                    Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     lnkCalendarioTotale.Visible = true;
                     lnkCalendarioTotale.NavigateUrl ="showCalendarFesteStraordinari.aspx?id=" + rep.id.ToString();
                     if (!Page.IsPostBack)
@@ -101,7 +101,7 @@ namespace KIS.Produzione
         {
             if (repID != -1)
             {
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 if (rep.id != -1)
                 {
                     bool rt = rep.addTurno(nomeTurno.Text, coloreTurno.SelectedValue);
@@ -137,13 +137,13 @@ namespace KIS.Produzione
         {
             if (repID != -1)
             {
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 if (rep.id != -1)
                 {
                     if (e.CommandName == "delete")
                     {
                         int idTurno = Int32.Parse(e.CommandArgument.ToString());
-                        bool rt = rep.deleteTurno(new Turno(Session["ActiveWorkspace"].ToString(), idTurno));
+                        bool rt = rep.deleteTurno(new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno));
                         if (rt == true)
                         {
                             Response.Redirect(Request.RawUrl);

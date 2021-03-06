@@ -27,18 +27,18 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
 
-                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
-                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
                 prcVar.loadReparto();
                 prcVar.process.loadFigli(prcVar.variant);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idProdotto, annoProdotto);
 
                     if ((art.Status=='N'||art.Status =='I' || art.Status=='P') && cm.ID != -1 && cm.Year != -1 && prcVar.process != null && prcVar.variant != null && rp.id != -1 && art.ID != -1 && art.Year != -1)
                     {

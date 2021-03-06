@@ -21,12 +21,12 @@ namespace KIS.Produzione
         {
                 if (repID != -1)
                 {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 tzFuso = rp.tzFusoOrario;
                 if (!Page.IsPostBack && !Page.IsCallback)
                     {
                     loadArticoli(repID);                    
-                    andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), repID);
+                    andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     lblData.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
 
 
@@ -52,8 +52,8 @@ namespace KIS.Produzione
         {
 
             artI = new List<Articolo>();
-            Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), rp);
-            artI = (new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'I', rep)).ListArticoli;
+            Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), rp);
+            artI = (new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), 'I', rep)).ListArticoli;
 
 
             artI = artI.OrderBy(x => x.DataPrevistaFineProduzione).ThenBy(y => y.EarlyStart).ToList();
@@ -83,11 +83,11 @@ namespace KIS.Produzione
                 }
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                     if (art.ID != -1)
                     {
-                        Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
-                        Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                        Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
+                        Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
 
                         if (art.Status == 'N')
                         {
@@ -134,7 +134,7 @@ namespace KIS.Produzione
                                         td.InnerHtml = art.Commessa + "/" + art.AnnoCommessa;
                                         break;
                                     case "OrderExternalID":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = comm.ExternalID;
                                         break;
                                     case "CommessaCodiceCliente":
@@ -144,15 +144,15 @@ namespace KIS.Produzione
                                         td.InnerHtml = art.RagioneSocialeCliente;
                                         break;
                                     case "CommessaDataInserimento":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = comm.DataInserimento.ToString("dd/MM/yyyy");
                                         break;
                                     case "CommessaNote":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = comm.Note;
                                         break;
                                     case "ProdottoID":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = art.ID.ToString() + "/" + art.Year.ToString();
                                         break;
                                     case "ProdottoLineaProdotto":
@@ -376,7 +376,7 @@ namespace KIS.Produzione
             RepeaterItem item = e.Item;
             if (andonCfg == null || andonCfg.CampiVisualizzati == null)
             {
-                andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), repID);
+                andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 andonCfg.loadCampiVisualizzati();
                 andonCfg.loadCampiVisualizzatiTasks();
             }
@@ -394,7 +394,7 @@ namespace KIS.Produzione
                     taskID = -1;
                 }
 
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
                     
@@ -413,7 +413,7 @@ namespace KIS.Produzione
                                 lblTaskFields.Text += tsk.Description.ToString();
                                 break;
                             case "TaskPostazione":
-                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                                 lblTaskFields.Text += pst.name.ToString();
                                 break;
                             case "TaskEarlyStart":

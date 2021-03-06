@@ -22,10 +22,10 @@ namespace KIS.Admin
             elencoPermessi.Add(prmUser);
 
             bool checkUser = false;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -36,12 +36,12 @@ namespace KIS.Admin
                 rptTasksYear.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                    KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
                     lblExpiryDate.Text = GetLocalResourceObject("lblExpirydate").ToString() +
                         "&nbsp;<b>" + kisCfg.ExpiryDate.ToString("dd/MM/yyyy") +"</b>";
 
 
-                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1));
+                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1));
                     var elArtMonth = elArt.ListArticoli.Where(y=>y.DataInserimento>= DateTime.UtcNow.AddMonths(-13))
                         .OrderBy(z=>z.DataInserimento)
                         .GroupBy(x => new
@@ -58,7 +58,7 @@ namespace KIS.Admin
                     rptOrdiniMonth.DataSource = elArtMonth;
                     rptOrdiniMonth.DataBind();
 
-                    ElencoTaskProduzione elTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1), 'F');
+                    ElencoTaskProduzione elTasks = new ElencoTaskProduzione(Session["ActiveWorkspace_Name"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1), 'F');
                     var elTasksMonth = elTasks.Tasks.Where(y=>y.DataFineTask >= DateTime.UtcNow.AddMonths(-13))
                         .OrderBy(z => z.DataFineTask)
                         .GroupBy(x => new

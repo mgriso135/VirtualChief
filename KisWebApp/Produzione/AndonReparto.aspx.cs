@@ -43,12 +43,12 @@ namespace KIS.Produzione
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
                     lbl1.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
-                    rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     if (rp.id != -1)
                     {
                         frmShowStatusUtenti.repID = rp.id;
                         frmArticoliAvviati.repID = rp.id;
-                            andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), rp.id);
+                            andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace_Name"].ToString(), rp.id);
                         andonCfg.loadCampiVisualizzati();
                         andonCfg.loadScrollType();
                         ScrollType = andonCfg.ScrollType;
@@ -101,7 +101,7 @@ namespace KIS.Produzione
 
             if(andonCfg==null || andonCfg.CampiVisualizzati==null)
             {
-                andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), rp.id);
+                andonCfg = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace_Name"].ToString(), rp.id);
                 andonCfg.loadCampiVisualizzati();
                 andonCfg.loadScrollType();
                 ScrollType = andonCfg.ScrollType;
@@ -137,7 +137,7 @@ namespace KIS.Produzione
                 }
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     
                     if (art.ID != -1 &&tRow!=null)
@@ -157,7 +157,7 @@ namespace KIS.Produzione
                                     td.InnerHtml = art.Commessa + "/" + art.AnnoCommessa;
                                     break;
                                 case "OrderExternalID":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.ExternalID;
                                     break;
                                 case "CommessaCodiceCliente":
@@ -167,15 +167,15 @@ namespace KIS.Produzione
                                     td.InnerHtml = art.RagioneSocialeCliente;
                                     break;
                                 case "CommessaDataInserimento":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.DataInserimento.ToString("dd/MM/yyyy");
                                     break;
                                 case "CommessaNote":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.Note;
                                     break;
                                 case "ProdottoID":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = art.ID.ToString() + "/" + art.Year.ToString();
                                     break;
                                 case "ProdottoLineaProdotto":
@@ -396,8 +396,8 @@ namespace KIS.Produzione
         protected void loadCommesse(Reparto rp)
         {
 
-            ElencoArticoli elArtN =new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'N', rp);
-            ElencoArticoli elArtP = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'P', rp);
+            ElencoArticoli elArtN =new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), 'N', rp);
+            ElencoArticoli elArtP = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), 'P', rp);
 
             artNP = elArtP.ListArticoli.Concat(elArtN.ListArticoli).ToList();
             artNP.Sort(delegate(Articolo p1, Articolo p2)
@@ -429,7 +429,7 @@ namespace KIS.Produzione
             {
                 frmShowStatusUtenti.repID = repID;
                 //Reparto 
-                rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 if (rp.id != -1)
                 {
 

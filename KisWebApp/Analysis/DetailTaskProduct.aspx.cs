@@ -41,9 +41,9 @@ namespace KIS.Analysis
 
                 if (taskID != -1 && revTask != -1 && prodID != -1 && prodRev != -1 && varianteID != -1)
                 {
-                    processo prd = new processo(Session["ActiveWorkspace"].ToString(), prodID, prodRev);
-                    prd.loadFigli(new variante(Session["ActiveWorkspace"].ToString(), varianteID));
-                    processo tsk = new processo(Session["ActiveWorkspace"].ToString(), taskID, revTask);
+                    processo prd = new processo(Session["ActiveWorkspace_Name"].ToString(), prodID, prodRev);
+                    prd.loadFigli(new variante(Session["ActiveWorkspace_Name"].ToString(), varianteID));
+                    processo tsk = new processo(Session["ActiveWorkspace_Name"].ToString(), taskID, revTask);
                     bool found = false;
                     if (prd.processID != -1 && tsk.processID != -1 && prd.subProcessi.Count > 0)
                     {

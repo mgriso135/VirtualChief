@@ -182,7 +182,7 @@ namespace KIS.KanbanBox
             int procID = -1;
             int qty = -1;
             
-            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
+            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
             elComm.loadCommesse();
             Cliente customer = new Cliente(tenant, card.customer_name);
             processo prc = new processo(card.part_number);
@@ -197,8 +197,8 @@ namespace KIS.KanbanBox
             }
             else
             {
-                var = new variante(Session["ActiveWorkspace"].ToString(), prc.variantiProcesso[0].idVariante);
-                procVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), prc, var);
+                var = new variante(Session["ActiveWorkspace_Name"].ToString(), prc.variantiProcesso[0].idVariante);
+                procVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), prc, var);
                 procVar.loadReparto();
                 procVar.process.loadFigli(procVar.variant);
             }
@@ -241,7 +241,7 @@ namespace KIS.KanbanBox
             {
                 int idCommessa = elComm.Add(card.customer_name, card.ekanban_string, "");
                 int annoCommessa = DateTime.UtcNow.Year;
-                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+                Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
 
                     cm.Confirmed = true;
                     cm.ConfirmationDate = DateTime.UtcNow;
@@ -254,7 +254,7 @@ namespace KIS.KanbanBox
                         + " - " + procVar.variant.idVariante.ToString() + "\n";
                     if (prod[0] != -1 && prod[1] != -1)
                     {
-                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), prod[0], prod[1]);
+                        Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), prod[0], prod[1]);
                         art.DataPrevistaFineProduzione = card.DataConsegna;
                         art.Reparto = rp.id;
                         List<TaskConfigurato> lstTasks = new List<TaskConfigurato>();
@@ -262,16 +262,16 @@ namespace KIS.KanbanBox
                         art.Proc.process.loadFigli(art.Proc.variant);
                         for (int i = 0; i < art.Proc.process.subProcessi.Count; i++)
                         {
-                            TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
+                            TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), art.Proc.process.subProcessi[i].processID, art.Proc.process.subProcessi[i].revisione), art.Proc.variant);
                             tskVar.loadTempiCiclo();
-                            TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
+                            TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), tskVar.Task.processID, tskVar.Task.revisione, art.Proc.variant.idVariante, tskVar.getDefaultOperatori());
                             if (tc.Tempo != null)
                             {
-                                lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace"].ToString(), tskVar, tc, rp.id, art.Quantita));
+                                lstTasks.Add(new TaskConfigurato(Session["ActiveWorkspace_Name"].ToString(), tskVar, tc, rp.id, art.Quantita));
                             }
                         }
  
-                        ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace"].ToString(), art, lstTasks, rp, art.Quantita);
+                        ConfigurazioneProcesso prcCfg = new ConfigurazioneProcesso(Session["ActiveWorkspace_Name"].ToString(), art, lstTasks, rp, art.Quantita);
                         int consistenza = prcCfg.checkConsistency();
                         int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
 
@@ -282,7 +282,7 @@ namespace KIS.KanbanBox
                             if (rt == 1)
                             {
                                 log += "Articolo" + card.ekanban_string + " pianificato correttamente in produzione\n";
-                                Boolean cambioStato = ChangeStatus(Session["ActiveWorkspace"].ToString(), card, "process");
+                                Boolean cambioStato = ChangeStatus(Session["ActiveWorkspace_Name"].ToString(), card, "process");
                                 if (cambioStato == true)
                                 {
                                     log += "Il cartellino ha cambiato stato.";

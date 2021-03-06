@@ -340,7 +340,7 @@ namespace KIS.App_Sources
                 cmd.CommandText = "SELECT groupID FROM useraccountsgroups INNER JOIN groupss ON (groupss.id = useraccountsgroups.groupid)  "
                     + " WHERE useraccountsgroups.userid=@user "
                     + " AND workspaceid=@wsid"
-                    + " ORDER BY groupss.nomeGruppo";
+                    + " ORDER BY groupss.name";
                 cmd.Parameters.AddWithValue("@user", this.id);
                 cmd.Parameters.AddWithValue("@wsid", workspaceid);
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -948,8 +948,8 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idVoce FROM menugruppi WHERE gruppo = @ID"
-                    + " ORDER BY ordinamento";
+                cmd.CommandText = "SELECT menuitemid FROM menugroups WHERE groupid=@ID"
+                    + " ORDER BY sequence";
                 cmd.Parameters.AddWithValue("@ID", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -1649,7 +1649,7 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT r, w, x FROM gruppipermessi WHERE idgroup = @GroupID AND idpermesso = @PermesID";
+                cmd.CommandText = "SELECT r, w, x FROM groupspermissions WHERE groupid=@GroupID AND permissionid=@PermesID";
                 cmd.Parameters.AddWithValue("@GroupID", grp);
                 cmd.Parameters.AddWithValue("@PermesID", Permes.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();

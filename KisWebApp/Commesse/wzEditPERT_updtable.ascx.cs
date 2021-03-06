@@ -25,7 +25,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -33,7 +33,7 @@ namespace KIS.Commesse
                 if (!Page.IsPostBack)
                 {
                     // Inizializzo gli elementi della pagina
-                    ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString());
+                    ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace_Name"].ToString());
                     List<processo> curr = new List<processo>();
                     for (int i = 0; i < elTsk.Elenco.Count; i++)
                     {
@@ -55,10 +55,10 @@ namespace KIS.Commesse
 
         public void loadTasks()
         {
-            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID, procRev);
+            processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID, procRev);
 
 
-                    int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                    int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                     lbl1.Text = "";
             if (controllo == 0)
                     {
@@ -80,8 +80,8 @@ namespace KIS.Commesse
                     }
 
 
-                    variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
-                    padre.loadFigli(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                    variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varID);
+                    padre.loadFigli(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                     rptTasks.DataSource = padre.subProcessi;
             
                     rptTasks.DataBind();
@@ -109,7 +109,7 @@ namespace KIS.Commesse
                 }
                 if (taskID != -1 && taskRev != -1)
                 {
-                    TaskVariante prc = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID, taskRev), new variante(Session["ActiveWorkspace"].ToString(), varID));
+                    TaskVariante prc = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), taskID, taskRev), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                     if (prc != null && prc.Task != null && prc.variant != null)
                     {
                              bool controllo = true;
@@ -179,7 +179,7 @@ namespace KIS.Commesse
                                 bool rt = prc.Delete();
                                 if (rt == true)
                                 {
-                                    processo prc2 = new processo(Session["ActiveWorkspace"].ToString(), taskID, taskRev);
+                                    processo prc2 = new processo(Session["ActiveWorkspace_Name"].ToString(), taskID, taskRev);
                                     int res = prc2.delete();
                                     lbl1.Text = "<br/><span style=\"color:red;\">"
                                     +GetLocalResourceObject("lblTaskDeletedOk").ToString()+"</span><br/>";
@@ -232,7 +232,7 @@ namespace KIS.Commesse
                     revTask = -1;
                 }
 
-                TaskVariante task = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID, revTask), new variante(Session["ActiveWorkspace"].ToString(), varID));
+                TaskVariante task = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), taskID, revTask), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
                 task.loadTempiCiclo();
 
@@ -274,7 +274,7 @@ namespace KIS.Commesse
                         //lblPrecedenti.Text += "<br />";
                         for (int i = 0; i < task.Task.processiPrec.Count; i++)
                         {
-                            processo proc = new processo(Session["ActiveWorkspace"].ToString(), task.Task.processiPrec[i], task.Task.revisionePrec[i]);
+                            processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), task.Task.processiPrec[i], task.Task.revisionePrec[i]);
                             lblPrecedenti.Text += proc.processName
                                 + " (" + Math.Truncate(task.Task.pausePrec[i].TotalHours)
                                 + ":" + task.Task.pausePrec[i].Minutes.ToString()
@@ -318,9 +318,9 @@ namespace KIS.Commesse
 
         protected void btnLnkTask_Click(object sender, ImageClickEventArgs e)
         {
-            TaskVariante procVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID, procRev), new variante(Session["ActiveWorkspace"].ToString(), varID));
+            TaskVariante procVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), procID, procRev), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
-            processo pr = new processo(Session["ActiveWorkspace"].ToString(), procVar.Task.processID);
+            processo pr = new processo(Session["ActiveWorkspace_Name"].ToString(), procVar.Task.processID);
             int tskID = -1;
             try
             {
@@ -333,7 +333,7 @@ namespace KIS.Commesse
 
             if (tskID != -1)
             {
-                bool rt = procVar.Task.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), procVar.variant));
+                bool rt = procVar.Task.linkProcessoVariante(new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), tskID), procVar.variant));
                 if (rt == true)
                 {
                     loadTasks();
@@ -352,10 +352,10 @@ namespace KIS.Commesse
         protected void addTaskPert(object sender, EventArgs e)
         {
 
-            processo padre = new processo(Session["ActiveWorkspace"].ToString(), procID, procRev);
+            processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID, procRev);
             if (padre.processID != -1 && varID != -1)
             {
-                int procCreated = padre.createDefaultSubProcess(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                int procCreated = padre.createDefaultSubProcess(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                 if (procCreated >= 0)
                 {
                     loadTasks();

@@ -14,7 +14,7 @@ namespace KIS.Postazioni
         {
                 if (!Page.IsPostBack)
                 {
-                    ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                    ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                     rptPostazioniUtenti.DataSource = elPost.elenco;
                     rptPostazioniUtenti.DataBind();
                 }
@@ -38,9 +38,9 @@ namespace KIS.Postazioni
 
             if (pID != -1)
             {
-                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pID);
+                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), pID);
                 p.loadUtentiLoggati();
-                AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                 String configShowNomi = andone.PostazioniFormatoUsername.ToString();
                 for (int i = 0; i < p.UtentiLoggati.Count; i++)
                 {
@@ -94,7 +94,7 @@ namespace KIS.Postazioni
         protected void updTimer1_Tick(object sender, EventArgs e)
         {
             lblData.Text = "Last update: " + DateTime.Now.ToString();
-            ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+            ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
             rptPostazioniUtenti.DataSource = elPost.elenco;
             rptPostazioniUtenti.DataBind();
         }

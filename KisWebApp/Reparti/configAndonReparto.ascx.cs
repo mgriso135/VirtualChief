@@ -24,14 +24,14 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                     if (rp.id != -1)
                     {
                         rbList.SelectedValue = rp.AndonPostazioniFormatoUsername.ToString();
@@ -56,7 +56,7 @@ namespace KIS.Reparti
             char valore = rbList.SelectedValue[0];
             if (idReparto != -1)
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     rp.AndonPostazioniFormatoUsername = valore;

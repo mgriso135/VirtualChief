@@ -15,7 +15,7 @@ namespace KIS.Processi
         {
             if (repID != -1)
             {
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 //rep.loadProductionPlan();
                 //rptProdList.DataSource = rep.PianoProduzione.ElencoCommesse;
                 rptProdList.DataBind();

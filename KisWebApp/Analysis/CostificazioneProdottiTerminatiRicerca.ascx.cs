@@ -29,7 +29,7 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ckUser == true)
@@ -37,7 +37,7 @@ namespace KIS.Analysis
                 tblRicerca.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    PortafoglioClienti portClienti = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                    PortafoglioClienti portClienti = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                     var lstClienti = portClienti.Elenco.OrderBy(x => x.RagioneSociale);
                     ddlCliente.DataValueField = "CodiceCliente";
                     ddlCliente.DataTextField = "RagioneSociale";
@@ -73,11 +73,11 @@ namespace KIS.Analysis
                     idArticolo = -1;
                     annoArticolo = -1;
                 }
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArticolo, annoArticolo);
                 if (art.ID != -1 && art.Year != -1 && art.Status == 'F')
                 {
                     rptArticoliTerminati.Visible = true;
-                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), art);
+                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), art);
                     rptArticoliTerminati.DataSource = elArt.ListArticoli;
                     rptArticoliTerminati.DataBind();
                 }
@@ -97,7 +97,7 @@ namespace KIS.Analysis
                 Cliente customer = null;
                 if (codCliente != "-1")
                 {
-                    customer = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                    customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                 }
 
                 ProcessoVariante origProc = null;
@@ -120,7 +120,7 @@ namespace KIS.Analysis
 
                     if (codProc != -1 && revProc != -1 && idVar != -1)
                     {
-                        origProc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), codProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+                        origProc = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), codProc, revProc), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
                         origProc.loadReparto();
                         origProc.process.loadFigli(origProc.variant);
                     }
@@ -163,7 +163,7 @@ namespace KIS.Analysis
 
                     if ((origProc != null && origProc.process != null && origProc.process.processID != -1 && origProc.variant != null && origProc.variant.idVariante != -1) || (customer.CodiceCliente.Length > 0) || (inPrd < finPrd && inPrd > new DateTime(1970, 1, 1)))
                     {
-                        ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), origProc, customer, inPrd, finPrd);
+                        ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), origProc, customer, inPrd, finPrd);
                         for (int i = 0; i < elArt.ListArticoli.Count; i++)
                         {
                             elArt.ListArticoli[i].loadTempoDiLavoroTotale();

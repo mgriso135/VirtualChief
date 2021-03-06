@@ -25,12 +25,12 @@ namespace KIS.Commesse
                 if (Session["user"] != null)
                 {
                     UserAccount curr = (UserAccount)Session["user"];
-                    checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                    checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
                 }
 
                 if (checkUser == true)
                 {
-                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
                 prcVar.loadReparto();
                 prcVar.process.loadFigli(prcVar.variant);
                 if (prcVar != null && prcVar.process != null && prcVar.variant != null)
@@ -47,7 +47,7 @@ namespace KIS.Commesse
                         lblMeasurementUnit.Visible = true;
                         ddlMeasurementUnits.Enabled = false;
 
-                        MeasurementUnits muList = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
+                        MeasurementUnits muList = new MeasurementUnits(Session["ActiveWorkspace_Name"].ToString());
                         muList.loadMeasurementUnits();
                         ddlMeasurementUnits.DataSource = muList.UnitsList;
                         ddlMeasurementUnits.DataValueField = "ID";
@@ -91,7 +91,7 @@ namespace KIS.Commesse
 
         protected void imgSaveNomeVariante_Click(object sender, ImageClickEventArgs e)
         {
-            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
             prcVar.loadReparto();
             prcVar.process.loadFigli(prcVar.variant);
             if (prcVar != null && prcVar.process != null && prcVar.variant != null)
@@ -134,7 +134,7 @@ namespace KIS.Commesse
 
         protected void imgUndoNomeVariante_Click(object sender, ImageClickEventArgs e)
         {
-            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
             prcVar.loadReparto();
             prcVar.process.loadFigli(prcVar.variant);
             if (prcVar != null && prcVar.process != null && prcVar.variant != null)

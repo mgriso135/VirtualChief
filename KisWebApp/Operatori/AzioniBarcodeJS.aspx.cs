@@ -56,11 +56,11 @@ namespace KIS.Operatori
 
                     if (newQty > 0 && tskId != -1)
                     {
-                        TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tskId);
+                        TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), tskId);
                         if (tsk.TaskProduzioneID != -1)
                         {
                             tsk.QuantitaProdotta = newQty;
-                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
+                            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
                             if (art.Status == 'F')
                             {
                                 art.QuantitaProdotta = newQty;
@@ -86,7 +86,7 @@ namespace KIS.Operatori
 
         protected bool elabora()
         {
-            KISConfig vcCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig vcCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String origChecksum = vcCfg.basePath;
             imgLoading.Style.Value = "visibility: hidden; height: 2px";
             
@@ -132,8 +132,8 @@ namespace KIS.Operatori
 
                 if (usrID != -1 && postID != -1 && checksum.Length > 0 && checksum == origChecksum)
                 {
-                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
-                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), postID);
+                    User usr = new User(Session["ActiveWorkspace_Name"].ToString(), usrID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), postID);
                     if (usr.username.Length > 0 && p.id != -1)
                     {
                         rt = true;
@@ -218,12 +218,12 @@ namespace KIS.Operatori
 
                 if (checksum == origChecksum)
                 {
-                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
-                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                    User usr = new User(Session["ActiveWorkspace_Name"].ToString(), usrID);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                     //Session["user"] = usr;
                     if (action == "I")
                     {
-                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                        Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                         if (p.barcodeAutoCheckIn)
                         {
                             usr.DoCheckIn(p);
@@ -271,14 +271,14 @@ namespace KIS.Operatori
 
                             if (foundPost == false)
                             {
-                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                                 log.Text += "- " + GetLocalResourceObject("lblErrorReason3").ToString() + " " + pst.name + "<br />";
                             }
 
                             tsk.loadPrecedenti();
                             for (int i = 0; i < tsk.IdPrecedenti.Count; i++)
                             {
-                                TaskProduzione prec = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tsk.IdPrecedenti[i]);
+                                TaskProduzione prec = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), tsk.IdPrecedenti[i]);
                                 if (prec.Status != 'F')
                                 {
                                     log.Text += "- " + GetLocalResourceObject("lblErrorReason4A").ToString() + " \"" + prec.Name
@@ -291,15 +291,15 @@ namespace KIS.Operatori
 
                             // Controllo che l'utente non abbia avviato troppi tasks
                             usr.loadTaskAvviati();
-                            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), tsk.RepartoID);
+                            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), tsk.RepartoID);
                             if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && usr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
                             {
                                 log.Text += GetLocalResourceObject("lblMaxTasksReached").ToString() + ":<br /><UL>";
                                 for (int i = 0; i < usr.TaskAvviati.Count; i++)
                                 {
-                                    TaskProduzione tskAttivo = new TaskProduzione(Session["ActiveWorkspace"].ToString(), usr.TaskAvviati[i]);
-                                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tskAttivo.ArticoloID, tskAttivo.ArticoloAnno);
-                                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    TaskProduzione tskAttivo = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), usr.TaskAvviati[i]);
+                                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), tskAttivo.ArticoloID, tskAttivo.ArticoloAnno);
+                                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     log.Text += "<li>"
                                         + tskAttivo.TaskProduzioneID.ToString() + " "
                                         + tskAttivo.Name
@@ -349,7 +349,7 @@ namespace KIS.Operatori
                                     + " " + GetLocalResourceObject("lblYouAreNotWorking2").ToString() + ".<br />";
                             }
                         }
-                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                        Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                         if (p.barcodeAutoCheckIn)
                         {
                             usr.DoCheckOut(p);
@@ -400,7 +400,7 @@ namespace KIS.Operatori
                             }
                             if (checkpost == false)
                             {
-                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                                 log.Text += "- " + GetLocalResourceObject("lblNonAcceduto").ToString()
                                     + " " + pst.name + "<br />";
                             }
@@ -411,7 +411,7 @@ namespace KIS.Operatori
                             String errPreviousTasks = "";
                             for (int i = 0; i < tsk.PreviousTasks.Count; i++)
                             {
-                                TaskProduzione curr = new TaskProduzione(Session["ActiveWorkspace"].ToString(), tsk.PreviousTasks[i].NearTaskID);
+                                TaskProduzione curr = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), tsk.PreviousTasks[i].NearTaskID);
                                 if(curr.Status!='F')
                                 {
                                     checkPreviousTasks = false;
@@ -431,7 +431,7 @@ namespace KIS.Operatori
                             imgChangeQty.Visible = true;
                             hFldTaskID.Value = tsk.TaskProduzioneID.ToString();
                         }
-                        Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                        Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                         if (p.barcodeAutoCheckIn)
                         {
                             usr.DoCheckOut(p);
@@ -497,7 +497,7 @@ namespace KIS.Operatori
                 }
 
                 log.Text = GetLocalResourceObject("lblTHProdotto").ToString() + " " + idComm.ToString() + "/" + yearComm.ToString() + "<br />";
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idComm, yearComm);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idComm, yearComm);
                 if (art.ID != -1 && checksum == origChecksum)
                 {
                     rptStatusCommessa.Visible = true;
@@ -535,7 +535,7 @@ namespace KIS.Operatori
             List<TaskProduzione> tsk = new List<TaskProduzione>();
             for (int i = 0; i < uten.TaskAvviati.Count; i++)
             {
-                tsk.Add(new TaskProduzione(Session["ActiveWorkspace"].ToString(), uten.TaskAvviati[i]));
+                tsk.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), uten.TaskAvviati[i]));
             }
             if (tsk.Count > 0)
             {
@@ -575,7 +575,7 @@ namespace KIS.Operatori
 
                 if (id != -1)
                 {
-                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), id);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), id);
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
@@ -599,8 +599,8 @@ namespace KIS.Operatori
 
                     }
 
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
-                    Commessa comms = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
+                    Commessa comms = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                     lblAnnoCommessa.Text = comms.Year.ToString();
                     lblCliente.Text = comms.Cliente;
                     lblCommessa.Text = comms.ID.ToString();
@@ -649,7 +649,7 @@ namespace KIS.Operatori
 
                     // Inserisco la lista degli utenti già loggati
                     Label lblUserLoggati = (Label)e.Item.FindControl("lblUserLogged");
-                    Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), pstID);
+                    Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), pstID);
                     p.loadUtentiLoggati();
 
                     for (int i = 0; i < p.UtentiLoggati.Count; i++)
@@ -709,7 +709,7 @@ namespace KIS.Operatori
                 System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                 if (tRow != null)
                 {
-                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                     // Carico lo stato
                     Label lblStatus = (Label)e.Item.FindControl("lblStatus");
                     if (tsk.Status == 'F')
@@ -739,9 +739,9 @@ namespace KIS.Operatori
 
             if (taskID != -1)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                 String configShowNomi = "0";
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), tsk.RepartoID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), tsk.RepartoID);
                 if (rp.id != -1)
                 {
                     configShowNomi = rp.AndonPostazioniFormatoUsername.ToString();

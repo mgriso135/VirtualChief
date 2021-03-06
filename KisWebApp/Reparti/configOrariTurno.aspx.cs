@@ -27,7 +27,7 @@ namespace KIS.Reparti
                 }
                 if (tID != -1)
                 {
-                    Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), tID);
+                    Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), tID);
                     if (trn.id != -1)
                     {
                         orari.Visible = true;

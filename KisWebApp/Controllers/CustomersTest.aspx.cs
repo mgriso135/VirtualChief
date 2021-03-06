@@ -161,7 +161,7 @@ namespace KIS.Controllers
 
         protected void btnModifyCustomer_Click(object sender, EventArgs e)
         {
-            KIS.App_Code.Cliente customer = new App_Code.Cliente(Session["ActiveWorkspace"].ToString(), txtcodiceCliente.Text);
+            KIS.App_Code.Cliente customer = new App_Code.Cliente(Session["ActiveWorkspace_Name"].ToString(), txtcodiceCliente.Text);
             customerStruct nCli = new customerStruct();
             nCli.codiceCliente = customer.CodiceCliente;
             nCli.ragioneSociale = customer.RagioneSociale;

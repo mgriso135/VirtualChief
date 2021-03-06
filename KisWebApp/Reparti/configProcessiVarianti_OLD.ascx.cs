@@ -22,13 +22,13 @@ namespace KIS.Reparti
                     rptAddProc.Visible = false;
 
 
-                    ElencoMacroProcessiVarianti elencoMacro = new ElencoMacroProcessiVarianti(Session["ActiveWorkspace"].ToString());
+                    ElencoMacroProcessiVarianti elencoMacro = new ElencoMacroProcessiVarianti(Session["ActiveWorkspace_Name"].ToString());
                     rptAddProc.DataSource = elencoMacro.elenco;
 
                     rptAddProc.DataBind();
 
                     // Carico i processi già associati al reparto
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     rp.loadProcessiVarianti();
 
                     rptMacroProc.DataSource = rp.processiVarianti;
@@ -110,7 +110,7 @@ namespace KIS.Reparti
 
                 if(prcID != -1 && vrID != -1)
                 {
-                    ProcessoVariante modello = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), prcID), new variante(Session["ActiveWorkspace"].ToString(), vrID));
+                    ProcessoVariante modello = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), prcID), new variante(Session["ActiveWorkspace_Name"].ToString(), vrID));
                     modello.loadReparto();
                     modello.process.loadFigli(modello.variant);
                     ImageButton aggiungi = (ImageButton)e.Item.FindControl("add");
@@ -120,7 +120,7 @@ namespace KIS.Reparti
 
                     // Controllo che il ProcessoVariante non sia già associato al reparto!!!
                     bool found = false;
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     rp.loadProcessiVarianti();
                     
                     for (int i = 0; i < rp.processiVarianti.Count; i++)
@@ -141,8 +141,8 @@ namespace KIS.Reparti
 
                     // Controllo che almeno un figlio abbia delle varianti
                     bool checkVarFigli = false;
-                    processo prc = new processo(Session["ActiveWorkspace"].ToString(), prcID);
-                    prc.loadFigli(new variante(Session["ActiveWorkspace"].ToString(), vrID));
+                    processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), prcID);
+                    prc.loadFigli(new variante(Session["ActiveWorkspace_Name"].ToString(), vrID));
                     for (int i = 0; i < prc.subProcessi.Count; i++)
                     {
                         prc.subProcessi[i].loadVariantiFigli();
@@ -204,19 +204,19 @@ namespace KIS.Reparti
             {
                 if (e.CommandName == "expand")
                 {
-                    ProcessoVariante modello = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), vrID));
+                    ProcessoVariante modello = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), procID), new variante(Session["ActiveWorkspace_Name"].ToString(), vrID));
                     modello.loadReparto();
                     modello.process.loadFigli(modello.variant);
-                    ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace"].ToString(), modello);
+                    ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), modello);
                     rptAddProc.DataSource = el.elencoFigli;
                     rptAddProc.DataBind();
                 }
                 else if (e.CommandName == "add")
                 {
-                    ProcessoVariante el = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), vrID));
+                    ProcessoVariante el = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), procID), new variante(Session["ActiveWorkspace_Name"].ToString(), vrID));
                     el.loadReparto();
                     el.process.loadFigli(el.variant);
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     bool rt = rp.addProcesso(el.process, el.variant);
                     if (rt == true)
                     {
@@ -237,8 +237,8 @@ namespace KIS.Reparti
                 String[] splittato = e.CommandArgument.ToString().Split(',');
                 int procID = Int32.Parse(splittato[0]);
                 int varID = Int32.Parse(splittato[1]);
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
-                bool rt = rep.deleteProcesso(new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
+                bool rt = rep.deleteProcesso(new processo(Session["ActiveWorkspace_Name"].ToString(), procID), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                 if (rt == true)
                 {
                     Response.Redirect(Request.RawUrl);

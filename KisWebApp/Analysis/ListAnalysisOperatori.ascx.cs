@@ -23,13 +23,13 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 rptOperatori.Visible = true;
-                UserList usrLst = new UserList(Session["ActiveWorkspace"].ToString());
+                UserList usrLst = new UserList(Session["ActiveWorkspace_Name"].ToString());
                 List<User> lista = usrLst.listUsers.OrderBy(x => x.cognome).ThenBy(y=>y.cognome).ToList();
                 rptOperatori.DataSource = lista;
                 rptOperatori.DataBind();

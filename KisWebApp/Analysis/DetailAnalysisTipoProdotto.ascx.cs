@@ -27,7 +27,7 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -36,7 +36,7 @@ namespace KIS.Analysis
                 if (!Page.IsPostBack)
                 {
                     accordion1.Visible = false;
-                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+                    ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
                     prcVar.loadReparto();
                     prcVar.process.loadFigli(prcVar.variant);
                     lblNomeTipoProdotto.Text = prcVar.process.processName + " - " + prcVar.variant.nomeVariante;
@@ -91,12 +91,12 @@ namespace KIS.Analysis
                 end = new DateTime(1970, 1, 1);
             }
 
-            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
             prcVar.loadReparto();
             prcVar.process.loadFigli(prcVar.variant);
             if (start > new DateTime(1970,1,1) && end > start && prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.process.revisione != -1 && prcVar.variant.idVariante != -1)
             {
-                elArticoli = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), prcVar, 'F', start, end);
+                elArticoli = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), prcVar, 'F', start, end);
 
                 if (elArticoli.ListArticoli.Count > 0)
                 {

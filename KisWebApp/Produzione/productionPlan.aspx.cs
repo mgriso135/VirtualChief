@@ -30,7 +30,7 @@ namespace KIS.Produzione
                 }
                 if (repID != -1)
                 {
-                    Reparto current = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto current = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     lblTitle.Text = GetLocalResourceObject("lblProgrammaProd").ToString() + " " + current.name;
                     if (current.id != -1)
                     {

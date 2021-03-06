@@ -23,14 +23,14 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (idReparto != -1)
                 {
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                     if (rp.id != -1)
                     {
                         if (!Page.IsPostBack && !Page.IsCallback)
@@ -76,7 +76,7 @@ namespace KIS.Reparti
                 {
                     val = false;
                 }
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     rp.ModoCalcoloTC = val;

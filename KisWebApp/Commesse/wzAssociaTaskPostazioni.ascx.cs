@@ -26,7 +26,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -34,8 +34,8 @@ namespace KIS.Commesse
                 if (!Page.IsPostBack)
                 {
 
-                    Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
-                    ProcessoVariante proc = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+                    Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
+                    ProcessoVariante proc = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
                     proc.loadReparto();
                     proc.process.loadFigli(proc.variant);
                     if (rep.id != -1 && proc.process != null & proc.variant != null)
@@ -70,8 +70,8 @@ namespace KIS.Commesse
                 // Ricerco la postazione già impostata
                 HiddenField task = (HiddenField)e.Item.FindControl("taskID");
                 int taskID = Int32.Parse(task.Value);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
-                ProcessoVariante prVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace"].ToString(), idVariante));
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
+                ProcessoVariante prVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProcesso, revProcesso), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante));
                 prVar.loadReparto();
                 prVar.process.loadFigli(prVar.variant);
                 rp.loadPostazioniTask(prVar);
@@ -84,7 +84,7 @@ namespace KIS.Commesse
                         selValue = rp.PostazioniTask[i].Pst.id.ToString();
                     }
                 }
-                ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                 ddlPostazioni.Items.Add(new ListItem("", ""));
                 ddlPostazioni.DataSource = elPost.elenco;
                 ddlPostazioni.DataValueField = "id";
@@ -126,11 +126,11 @@ namespace KIS.Commesse
             int taskID = Int32.Parse(((HiddenField)riga.FindControl("taskID")).Value);
             int postID;
 
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
             if (post == "")
             {
                 // Cancello la postazione!
-                bool rt = rp.DeleteLinkTaskFromPostazione(new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), taskID), new variante(Session["ActiveWorkspace"].ToString(), idVariante)));
+                bool rt = rp.DeleteLinkTaskFromPostazione(new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), taskID), new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante)));
                 if (rt == false)
                 {
                     lbl1.Text = "ERROR!";
@@ -154,14 +154,14 @@ namespace KIS.Commesse
                 //lbl1.Text += postID.ToString();
                 if (postID != -1)
                 {
-                    processo prc = new processo(Session["ActiveWorkspace"].ToString(), taskID);
-                    variante vr = new variante(Session["ActiveWorkspace"].ToString(), idVariante);
+                    processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), taskID);
+                    variante vr = new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante);
                     if (prc.processID != -1 && vr.idVariante != -1)
                     {
-                        TaskVariante eccolo = new TaskVariante(Session["ActiveWorkspace"].ToString(), prc, vr);
+                        TaskVariante eccolo = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), prc, vr);
                         rp.DeleteLinkTaskFromPostazione(eccolo);
                         //lbl1.Text = prc.processID.ToString() + " " + vr.idVariante + "<br/>" + eccolo.log;
-                        bool rt = rp.LinkTaskToPostazione(eccolo, new Postazione(Session["ActiveWorkspace"].ToString(), postID));
+                        bool rt = rp.LinkTaskToPostazione(eccolo, new Postazione(Session["ActiveWorkspace_Name"].ToString(), postID));
                         /*lbl1.Text = rp.id.ToString() + " " 
                             + " " + postID.ToString()
                             + " " + eccolo.Task.processID.ToString()

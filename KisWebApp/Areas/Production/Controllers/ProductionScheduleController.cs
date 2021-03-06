@@ -23,7 +23,7 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             // Articolo Depianifica
@@ -37,16 +37,16 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ViewBag.Departments = null;
 
             if (ViewBag.authR)
             {
-                ElencoReparti deptList = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                ElencoReparti deptList = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Departments = deptList.elenco;
-                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Customers = listCst.Elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
@@ -88,26 +88,26 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
 
                 elencoPermessi = new List<String[]>();
                 prmUser = new String[2];
                 prmUser[0] = "Articoli";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
 
                 elencoPermessi = new List<String[]>();
                 prmUser = new String[2];
                 prmUser[0] = "Articolo Depianifica";
                 prmUser[1] = "X";
                 elencoPermessi.Add(prmUser);
-                ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)
             {
-                ProductionSchedule schdl = new ProductionSchedule(Session["ActiveWorkspace"].ToString());
+                ProductionSchedule schdl = new ProductionSchedule(Session["ActiveWorkspace_Name"].ToString());
                 schdl.loadProductionSchedule();
                 List<ProductionOrderStruct> curr = schdl.ScheduledProducts;
 

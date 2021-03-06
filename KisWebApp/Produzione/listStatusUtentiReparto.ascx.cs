@@ -24,15 +24,15 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {*/
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
             if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    KIS.App_Sources.Workspace ws = new App_Sources.Workspace(Session["ActiveWorkspace"].ToString());
+                    KIS.App_Sources.Workspace ws = new App_Sources.Workspace(Session["ActiveWorkspace_Name"].ToString());
                     UserList usrList = new UserList(ws.id, new Permission("Task Produzione"));
                     if (usrList.listUsers.Count > 0)
                     {
@@ -68,7 +68,7 @@ namespace KIS.Produzione
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (tRow != null)
                     {
-                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                         User curr = new User(lblUsername.Value.ToString());
                         curr.loadTaskAvviati();
 
@@ -111,8 +111,8 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
-            KIS.App_Sources.Workspace ws = new App_Sources.Workspace(Session["ActiveWorkspace"].ToString());
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
+            KIS.App_Sources.Workspace ws = new App_Sources.Workspace(Session["ActiveWorkspace_Name"].ToString());
             UserList usrList = new UserList(ws.id, new Permission("Task Produzione"));
             if (usrList.listUsers.Count > 0)
             {

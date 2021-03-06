@@ -58,12 +58,12 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdYear);
                 if(art!=null && art.ID!=-1 && art.Year!=-1)
                 {
                     return View(art);
@@ -100,12 +100,12 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdYear);
                 if(art!=null && art.ID!=-1 && art.Year>2010)
                 {
                     art.loadParameters();
@@ -142,12 +142,12 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdYear);
                 if (art != null && art.ID != -1 && art.Year > 2010)
                 {
                     art.loadTaskParameters();
@@ -185,7 +185,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             String xapikey = "";
@@ -202,7 +202,7 @@ namespace KIS.Areas.Products.Controllers
             ViewBag.log = "";
             if (ViewBag.authR)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdYear);
                 if (art != null && art.ID != -1 && art.Year > 2010)
                 {
                     art.loadTaskParameters();

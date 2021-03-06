@@ -52,12 +52,12 @@ namespace KIS.Areas.Config
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
             {
-                AndonCompleto andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                AndonCompleto andonCfg = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                 andonCfg.loadScrollType();
                 ViewBag.ScrollType = andonCfg.ScrollType;
                 ViewBag.ContinuousScrollGoSpeed = andonCfg.ContinuousScrollGoSpeed;
@@ -95,12 +95,12 @@ namespace KIS.Areas.Config
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
             {
-                AndonCompleto andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                AndonCompleto andonCfg = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                 ret = andonCfg.setScrollType(ScrollType, ScrollParams);
             }
             return ret;
@@ -131,13 +131,13 @@ namespace KIS.Areas.Config
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
             {
                 ViewBag.DepartmentID = DepartmentID;
-                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 andonCfg.loadScrollType();
                 ViewBag.ScrollType = andonCfg.ScrollType;
                 ViewBag.ContinuousScrollGoSpeed = andonCfg.ContinuousScrollGoSpeed;
@@ -175,12 +175,12 @@ namespace KIS.Areas.Config
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW == true)
             {
-                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 ret = andonCfg.setScrollType(ScrollType, ScrollParams);
             }
             return ret;

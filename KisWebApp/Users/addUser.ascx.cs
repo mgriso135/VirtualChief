@@ -16,9 +16,9 @@ namespace KIS.Admin
         {
             String permessoRichiesto = "Utenti";
             bool checkUser = false;
-            if (Session["User"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["User"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
-                Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                Workspace ws = new Workspace(Session["ActiveWorkspace_Name"].ToString());
                 UserAccount curr = (UserAccount)Session["user"];
                 curr.loadGroups(ws.id);
                 for (int i = 0; i < curr.groups.Count; i++)
@@ -64,7 +64,7 @@ namespace KIS.Admin
 
         protected void btnSaveUser_Click(object sender, EventArgs e)
         {
-            User utn = new User(Session["ActiveWorkspace"].ToString());
+            User utn = new User(Session["ActiveWorkspace_Name"].ToString());
             String rt = utn.add(inputUsername.Text, inputPassword.Text, inputNome.Text, inputCognome.Text, 
                 tipoUtente.SelectedValue, ddlLanguages.SelectedValue,
                 true,

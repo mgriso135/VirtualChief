@@ -22,14 +22,14 @@ namespace KIS.Commesse
                 if (Session["user"] != null)
                 {
                     UserAccount curr = (UserAccount)Session["user"];
-                    checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                    checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
                 }
 
                 if (checkUser == true)
                 {
                     if (!Page.IsPostBack)
                     {
-                        ElencoCommesseAperte elComm = new ElencoCommesseAperte(Session["ActiveWorkspace"].ToString());
+                        ElencoCommesseAperte elComm = new ElencoCommesseAperte(Session["ActiveWorkspace_Name"].ToString());
                         /*List<Commessa> lstCommAperte = new List<Commessa>();
 
                         for (int i = 0; i < elComm.Commesse.Count; i++)
@@ -75,7 +75,7 @@ namespace KIS.Commesse
 
                 if (cID != -1 && cYear!=-1)
                 {
-                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), cID, cYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), cID, cYear);
                     if (comm.Status == 'N')
                     {
                         imgDelete.Visible = true;
@@ -130,7 +130,7 @@ namespace KIS.Commesse
 
             if (idCommessa != -1&&annoCommessa !=-1)
             {
-                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+                Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
                 if (comm.ID != -1)
                 {
                     if (e.CommandName == "delete")

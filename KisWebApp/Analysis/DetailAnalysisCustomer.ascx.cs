@@ -25,7 +25,7 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -36,7 +36,7 @@ namespace KIS.Analysis
                     lnkMonths.Visible = false;
                     Chart1.Visible = false;
                  String customerID = Request.QueryString["customerID"];
-                customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
+                customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), customerID);
                 if (customer != null && customer.CodiceCliente.Length > 0)
                 {
 

@@ -25,12 +25,12 @@ namespace KIS.Postazioni
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazione);
+                Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), idPostazione);
                 if (pst.id != -1)
                 {
                     if (!Page.IsPostBack)
@@ -98,7 +98,7 @@ namespace KIS.Postazioni
                         f2 = Fine;
                     }
                     wlPostazione.Series["int" + i.ToString()].Points.AddXY(f2.ToOADate(), 50);
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), p.Calendario.Intervalli[i].idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), p.Calendario.Intervalli[i].idReparto);
                     wlPostazione.Series["int" + i.ToString()].ToolTip = GetLocalResourceObject("lblReparto").ToString() + " " + rp.name + " " + p.Calendario.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm") + " - " + p.Calendario.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm");
                 }
             }
@@ -124,9 +124,9 @@ namespace KIS.Postazioni
                 }
                 wlPostazione.Series["tsk" + i.ToString()].Points.AddXY(f2.ToOADate(), 10);
                 //Reparto rp = new Reparto(p.Calendario.IntervalliTaskProduzione[i].idReparto);
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), p.Calendario.IntervalliTaskProduzione[i].TaskProduzioneID);
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
-                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), p.Calendario.IntervalliTaskProduzione[i].TaskProduzioneID);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
+                Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                 wlPostazione.Series["tsk" + i.ToString()].ToolTip = GetLocalResourceObject("lblOrdine").ToString() + " " + cm.ID + " " + cm.Cliente + " Articolo: " + art.ID + " " + art.Matricola + " Task: " + tsk.Name + " " + p.Calendario.IntervalliTaskProduzione[i].Inizio.ToString("dd/MM/yyyy HH:mm") + " - " + p.Calendario.IntervalliTaskProduzione[i].Fine.ToString("dd/MM/yyyy HH:mm");
             }
         }
@@ -158,7 +158,7 @@ namespace KIS.Postazioni
 
             if (Inizio < Fine)
             {
-                Postazione p = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazione);
+                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), idPostazione);
                 p.loadCalendario(Inizio, Fine);
                 loadCal(Inizio, Fine, p);
             }

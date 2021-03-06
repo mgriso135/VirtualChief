@@ -39,7 +39,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
                 
             }
 
@@ -53,7 +53,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             elencoPermessi = new List<String[]>();
@@ -66,13 +66,13 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
                 ViewBag.authorized = true;
-                ProductParametersCategories paramCats = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
+                ProductParametersCategories paramCats = new ProductParametersCategories(Session["ActiveWorkspace_Name"].ToString());
                 paramCats.loadCategories();
                 return View(paramCats.Categories);
             }
@@ -108,7 +108,7 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             /*if (ViewBag.authW)
@@ -148,12 +148,12 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                KIS.App_Code.ProductParametersCategories prms = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
+                KIS.App_Code.ProductParametersCategories prms = new ProductParametersCategories(Session["ActiveWorkspace_Name"].ToString());
                 ret = prms.Add(Server.HtmlEncode(CategoryName), Server.HtmlEncode(CategoryDescription));
             }
             return ret;
@@ -189,12 +189,12 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                ProductParametersCategories prms = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
+                ProductParametersCategories prms = new ProductParametersCategories(Session["ActiveWorkspace_Name"].ToString());
                 ret = prms.Delete(catID);
             }
             return ret;
@@ -230,12 +230,12 @@ namespace KIS.Areas.Products.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                ProductParametersCategory prms = new ProductParametersCategory(Session["ActiveWorkspace"].ToString(), CategoryID);
+                ProductParametersCategory prms = new ProductParametersCategory(Session["ActiveWorkspace_Name"].ToString(), CategoryID);
                 if(prms.ID > -1)
                 {
                     prms.Name = Server.HtmlEncode(CategoryName);

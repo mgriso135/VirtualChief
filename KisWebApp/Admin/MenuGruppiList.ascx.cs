@@ -23,10 +23,10 @@ namespace KIS.Admin
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             bool checkUser = false;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)

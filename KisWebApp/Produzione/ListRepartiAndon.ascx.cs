@@ -23,12 +23,12 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                ElencoReparti el = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                ElencoReparti el = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 rptListReparti.DataSource = el.elenco;
                 rptListReparti.DataBind();
             }

@@ -24,13 +24,13 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 rptListTasks.Visible = true;
-                ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace"].ToString(), true);
+                ElencoTasks elTsk = new ElencoTasks(Session["ActiveWorkspace_Name"].ToString(), true);
                 var elTskProd = from q in elTsk.Elenco
                                         where q.processoPadre != -1 && q.revPadre != -1
                                         select q;

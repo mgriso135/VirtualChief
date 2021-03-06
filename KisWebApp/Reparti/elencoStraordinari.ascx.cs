@@ -24,7 +24,7 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -32,8 +32,8 @@ namespace KIS.Reparti
 
                 if (idTurno != -1)
                 {
-                    Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
+                    Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), trn.idReparto);
                     if (trn.id != -1)
                     {
                         if (!Page.IsPostBack)
@@ -84,8 +84,8 @@ namespace KIS.Reparti
         {
             if (idTurno != -1)
             {
-                Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
+                Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), trn.idReparto);
                 if (rp.id != -1)
                 {
                     if (e.CommandName == "deleteStraord")
@@ -101,7 +101,7 @@ namespace KIS.Reparti
                         }
                         if (idFs != -1)
                         {
-                            Straordinario fs = new Straordinario(Session["ActiveWorkspace"].ToString(), idFs);
+                            Straordinario fs = new Straordinario(Session["ActiveWorkspace_Name"].ToString(), idFs);
                             if (fs.idStraordinario != -1)
                             {
                                 bool rt = fs.delete();

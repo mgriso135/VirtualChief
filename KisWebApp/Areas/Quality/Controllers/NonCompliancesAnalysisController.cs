@@ -59,7 +59,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -93,13 +93,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> lista = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 ViewBag.format = format;
@@ -133,13 +133,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> lista = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 ViewBag.format = format;
@@ -173,13 +173,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 nc.loadNcCauses();
                 List<AnalysisNCCause> lista = nc.ncCauses.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
@@ -212,13 +212,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 nc.loadNcCauses();
                 List<AnalysisNCCause> lista = nc.ncCauses.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
@@ -251,13 +251,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 nc.loadNcCategories();
                 List<AnalysisNCCategory> lista = nc.ncCategory.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
@@ -290,13 +290,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis nc = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 nc.loadNcCategories();
                 List<AnalysisNCCategory> lista = nc.ncCategory.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
@@ -330,10 +330,10 @@ namespace KIS.Areas.Quality.Controllers
             }
 
             List<CategoryCost> retCost = new List<CategoryCost>();
-            NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+            NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
             ncList.loadNonCompliances();
             List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
-            NonComplianceTypes ncCategories = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
+            NonComplianceTypes ncCategories = new NonComplianceTypes(Session["ActiveWorkspace_Name"].ToString());
             ncCategories.loadTypeList();
 
             double[][] xArr = new double[ncList2.Count][];
@@ -435,7 +435,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -451,10 +451,10 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
-                NonComplianceTypes ncCategories = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
+                NonComplianceTypes ncCategories = new NonComplianceTypes(Session["ActiveWorkspace_Name"].ToString());
                 ncCategories.loadTypeList();
 
                 double[][] xArr = new double[ncList2.Count][];
@@ -549,17 +549,17 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
-                NonComplianceTypes ncCategories = new NonComplianceTypes(Session["ActiveWorkspace"].ToString());
+                NonComplianceTypes ncCategories = new NonComplianceTypes(Session["ActiveWorkspace_Name"].ToString());
                 ncCategories.loadTypeList();
 
                 double[][] xArr = new double[ncList2.Count][];
@@ -653,7 +653,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -669,11 +669,11 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCategories();
                 var ncAnalys2 = ncAnalys.ncCategory.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 var ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 ViewBag.NcNumber = ncList2.Count;
@@ -708,7 +708,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -724,11 +724,11 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCategories();
                 var ncAnalys2 = ncAnalys.ncCategory.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 var ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 ViewBag.NcNumber = ncList2.Count;
@@ -763,7 +763,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -779,7 +779,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCategories();
                 var catFreq = ncAnalys.ncCategory.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 var catFreq2 = catFreq.GroupBy(x => new { x.CategoryID, x.CategoryName })
@@ -844,7 +844,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -860,7 +860,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCategories();
                 var catFreq = ncAnalys.ncCategory.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 var catFreq2 = catFreq.GroupBy(x => new { x.CategoryID, x.CategoryName })
@@ -921,10 +921,10 @@ namespace KIS.Areas.Quality.Controllers
             }
 
             List<CauseCost> retCost = new List<CauseCost>();
-            NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+            NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
             ncList.loadNonCompliances();
             List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
-            NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
+            NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace_Name"].ToString());
             ncCauses.loadCausesList();
 
             double[][] xArr = new double[ncList2.Count][];
@@ -1026,17 +1026,17 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
-                NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
+                NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace_Name"].ToString());
                 ncCauses.loadCausesList();
                 ViewBag.start = start.Year + "-";
                 ViewBag.start += start.Month < 10 ? "0" + start.Month.ToString() : start.Month.ToString();
@@ -1139,17 +1139,17 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
-                NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
+                NonComplianceCauses ncCauses = new NonComplianceCauses(Session["ActiveWorkspace_Name"].ToString());
                 ncCauses.loadCausesList();
                 ViewBag.start = start.Year + "-";
                 ViewBag.start += start.Month < 10 ? "0" + start.Month.ToString() : start.Month.ToString();
@@ -1251,7 +1251,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1267,11 +1267,11 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCauses();
                 var ncAnalys2 = ncAnalys.ncCauses.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 var ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 ViewBag.NcNumber = ncList2.Count;
@@ -1305,7 +1305,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1321,11 +1321,11 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCauses();
                 var ncAnalys2 = ncAnalys.ncCauses.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 var ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 ViewBag.NcNumber = ncList2.Count;
@@ -1359,7 +1359,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1375,7 +1375,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCauses();
                 var causeFreq = ncAnalys.ncCauses.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 var causeFreq2 = causeFreq.GroupBy(x => new { x.CauseID, x.CauseName })
@@ -1435,7 +1435,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1451,7 +1451,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.end += "-";
                 ViewBag.end += end.Day < 10 ? "0" + end.Day.ToString() : end.Day.ToString();
 
-                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncAnalys = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncAnalys.loadNcCauses();
                 var causeFreq = ncAnalys.ncCauses.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 var causeFreq2 = causeFreq.GroupBy(x => new { x.CauseID, x.CauseName })
@@ -1514,7 +1514,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1522,7 +1522,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authenticated = true;
 
                 ViewBag.format = format;
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
                 
@@ -1565,7 +1565,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -1573,7 +1573,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.authenticated = true;
 
                 ViewBag.format = format;
-                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances ncList = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 ncList.loadNonCompliances();
                 List<NonCompliance> ncList2 = ncList.NonCompliancesList.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
@@ -1618,13 +1618,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NCAnalysis ncProdList = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncProdList = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncProdList.loadNcProducts();
                 List<AnalysisNCProduct> ncProdList2 = ncProdList.ncProduct.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 
@@ -1669,13 +1669,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
-                NCAnalysis ncProdList = new NCAnalysis(Session["ActiveWorkspace"].ToString());
+                NCAnalysis ncProdList = new NCAnalysis(Session["ActiveWorkspace_Name"].ToString());
                 ncProdList.loadNcProducts();
                 List<AnalysisNCProduct> ncProdList2 = ncProdList.ncProduct.Where(x => x.OpeningDate >= start && x.OpeningDate <= end).ToList();
 

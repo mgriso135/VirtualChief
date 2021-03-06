@@ -24,7 +24,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -45,7 +45,7 @@ namespace KIS.Produzione
 
         protected void save_Click(object sender, EventArgs e)
         {
-            Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString());
+            Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString());
             Boolean barcodeAutoCheckIn = ddlAutoCheckIn.SelectedValue == "1" ? true : false;
             bool rt = pst.add(Server.HtmlEncode(nomePost.Text), Server.HtmlEncode(descPost.Text), barcodeAutoCheckIn);
             if (rt == true)

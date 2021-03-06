@@ -26,7 +26,7 @@ namespace KIS.Admin
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -37,7 +37,7 @@ namespace KIS.Admin
                     grp.loadMenu();
                     if (!Page.IsPostBack)
                     {
-                        MainMenu elencoTotale = new MainMenu(Session["ActiveWorkspace"].ToString());
+                        MainMenu elencoTotale = new MainMenu(Session["ActiveWorkspace_Name"].ToString());
                         List<VoceMenu> NonGruppate = new List<VoceMenu>();
                         for (int i = 0; i < elencoTotale.Elenco.Count; i++)
                         {

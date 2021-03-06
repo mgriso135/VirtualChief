@@ -23,14 +23,14 @@ namespace KIS.Andon
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                    AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                     rbList.SelectedValue = andone.PostazioniFormatoUsername.ToString();
                 }
             }
@@ -43,7 +43,7 @@ namespace KIS.Andon
 
         protected void rbList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+            AndonCompleto andone = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
             lbl1.Text = "";
             char valore = rbList.SelectedValue[0];
             andone.PostazioniFormatoUsername = valore;

@@ -34,15 +34,15 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
@@ -73,7 +73,7 @@ namespace KIS.Areas.Analysis.Controllers
             ViewBag.products = TypeOfProducts;
             if(startPeriod < endPeriod)
             { 
-                ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
+                ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                 History.loadProductionHistory();
                 List<ProductionHistoryStruct> curr = History.HistoricData.Where(x=>x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
 
@@ -162,7 +162,7 @@ namespace KIS.Areas.Analysis.Controllers
             ViewBag.products = TypeOfProducts;
             if (startPeriod < endPeriod)
             {
-                ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace"].ToString());
+                ProductionHistory History = new ProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                 History.loadProductionHistory();
                 List<ProductionHistoryStruct> curr = History.HistoricData.Where(x => x.ProductionOrderEndProductionDateReal > startPeriod && x.ProductionOrderEndProductionDateReal < endPeriod.AddDays(1)).ToList();
 
@@ -301,12 +301,12 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ckUser == true)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), ProdID, ProdYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProdID, ProdYear);
                 if(art!=null && art.ID!=-1)
                 { 
                     ret = art.Riesuma();
