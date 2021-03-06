@@ -25,14 +25,14 @@ namespace KIS.Areas.Andon.Controllers
         public JsonResult GetConfigurationParameters(int DepartmentID)
         {
             AndonConfigurationStruct aCfgStruct = new AndonConfigurationStruct();
-            AndonReparto aRep = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+            AndonReparto aRep = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
             if(aRep.RepartoID !=-1)
             {
                 ViewBag.DepartmentID = aRep.RepartoID;
                 aCfgStruct.DepartmentID = DepartmentID;
                 aCfgStruct.DepartmentName = aRep.DepartmentName;
 
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), aRep.RepartoID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), aRep.RepartoID);
                 rp.loadCalendario(TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-2), rp.tzFusoOrario), TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(10), rp.tzFusoOrario));
                 int curr = -1;
                 for (int i = 0; i < rp.CalendarioRep.Intervalli.Count; i++)
@@ -86,7 +86,7 @@ namespace KIS.Areas.Andon.Controllers
         public JsonResult loadWIP(int DepartmentID)
         {
             List<KIS.App_Code.DepartmentAndonProductsStruct> wipList = new List<DepartmentAndonProductsStruct>();
-            KIS.App_Code.AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+            KIS.App_Code.AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
             if(currAndon.RepartoID!=-1)
             {
                 currAndon.loadWIP2();
@@ -98,14 +98,14 @@ namespace KIS.Areas.Andon.Controllers
 
         public JsonResult loadUserPanel(int DepartmentID)
         {
-            AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+            AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
             currAndon.loadUserPanelData();
             return Json(JsonConvert.SerializeObject(currAndon.UserPanel), JsonRequestBehavior.AllowGet);
         }
 
         public JsonResult loadProductivityIndicators(int DepartmentID, DateTime endShift)
         {
-            AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+            AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
             ProductivityIndicatorsStruct prdIndStruct = new ProductivityIndicatorsStruct();
             prdIndStruct.OrdersToBeCompletedByTheEndOfTheShift = currAndon.OrdersToBeCompletedByTheEndOfTheShift(endShift);
             return Json(JsonConvert.SerializeObject(prdIndStruct), JsonRequestBehavior.AllowGet);
@@ -113,7 +113,7 @@ namespace KIS.Areas.Andon.Controllers
 
         public JsonResult loadOpenWarnings(int DepartmentID)
         {
-            AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+            AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
             currAndon.loadOpenWarnings();
             return Json(JsonConvert.SerializeObject(currAndon.Warnings), JsonRequestBehavior.AllowGet);
         }

@@ -26,7 +26,7 @@ namespace KIS.Areas.Andon.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authW)
@@ -34,7 +34,7 @@ namespace KIS.Areas.Andon.Controllers
                 ViewBag.ShowActiveUsers = false;
                 ViewBag.ShowProdIndicator = false;
                 ViewBag.UsernameFormat = '0';
-                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                AndonReparto andonCfg = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
             if(andonCfg.RepartoID!=-1)
             {
                     ViewBag.DepartmentID = andonCfg.RepartoID;
@@ -68,12 +68,12 @@ namespace KIS.Areas.Andon.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 if(aRp.RepartoID!=-1)
                 {
                     aRp.ShowProductionIndicator = flag;
@@ -109,12 +109,12 @@ namespace KIS.Areas.Andon.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 if (aRp.RepartoID != -1)
                 {
                     aRp.ShowActiveUsers = flag;
@@ -147,15 +147,15 @@ namespace KIS.Areas.Andon.Controllers
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authR = false;
-            if (Session["user"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace"].ToString(), DepartmentID);
+                AndonReparto aRp = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
                 if (aRp.RepartoID != -1)
                 {
                     aRp.UsernameFormat = flag;

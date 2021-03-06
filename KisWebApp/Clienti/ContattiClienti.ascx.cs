@@ -24,7 +24,7 @@ namespace KIS.Clienti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -32,7 +32,7 @@ namespace KIS.Clienti
                 rptContattiClienti.Visible = false;
                 if (!String.IsNullOrEmpty(idCliente) && idCliente.Length > 0)
                 {
-                    Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), idCliente);
+                    Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), idCliente);
                     if (cln.CodiceCliente.Length > 0)
                     {
                         rptContattiClienti.Visible = true;
@@ -67,7 +67,7 @@ namespace KIS.Clienti
 
                 if (ID != -1 && lblPhone != null && lblEmail != null)
                 {
-                    Contatto contCln = new Contatto(Session["ActiveWorkspace"].ToString(), ID);
+                    Contatto contCln = new Contatto(Session["ActiveWorkspace_Name"].ToString(), ID);
                     if (contCln.ID != -1)
                     {
                         String strPhone ="", strEmail="";
@@ -114,12 +114,12 @@ namespace KIS.Clienti
             }
             if(e.CommandName=="delete")
             {
-                Contatto person = new Contatto(Session["ActiveWorkspace"].ToString(), idContatto);
+                Contatto person = new Contatto(Session["ActiveWorkspace_Name"].ToString(), idContatto);
                 if (person.ID != -1)
                 {
                     person.Delete();
                     lbl1.Text = "";
-                    Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), person.Cliente);
+                    Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), person.Cliente);
                     cln.loadContatti();
                     rptContattiClienti.Visible = true;
                     rptContattiClienti.DataSource = cln.ElencoContatti;

@@ -26,7 +26,7 @@ namespace KIS.Personal
                         lstHomeBox.Add(curr.homeBoxes.Elenco[i].homeBox);
                     }
 
-                    HomeBoxesList lstTotal = new HomeBoxesList(Session["ActiveWorkspace"].ToString());
+                    HomeBoxesList lstTotal = new HomeBoxesList(Session["ActiveWorkspace_Name"].ToString());
                     for (int i = 0; i < lstTotal.Elenco.Count; i++)
                     {
                         try
@@ -87,7 +87,7 @@ namespace KIS.Personal
 
                             try
                             {
-                                HomeBox boxCurr = new HomeBox(Session["ActiveWorkspace"].ToString(), boxID);
+                                HomeBox boxCurr = new HomeBox(Session["ActiveWorkspace_Name"].ToString(), boxID);
                                 KIS.App_Code.HomeBoxUser cerca = curr.homeBoxes.Elenco.First(c => c.homeBox.ID == boxCurr.ID);
                                 btnAdd.Visible = false;
                                 btnDelete.Visible = true;
@@ -95,7 +95,7 @@ namespace KIS.Personal
                                 btnArrowDown.Visible = true;
 
                                 btnArrowUp.Visible = !(cerca.ordine == 0);
-                                HomeBoxesListUser lstBox = new HomeBoxesListUser(Session["ActiveWorkspace"].ToString(), curr);
+                                HomeBoxesListUser lstBox = new HomeBoxesListUser(Session["ActiveWorkspace_Name"].ToString(), curr);
                                 btnArrowDown.Visible = !(cerca.ordine == lstBox.Elenco.Count-1);
                             }
                             catch
@@ -134,11 +134,11 @@ namespace KIS.Personal
                 if (Session["user"] != null)
                 {
                     UserAccount curr = (UserAccount)Session["user"];
-                    HomeBox hBox = new HomeBox(Session["ActiveWorkspace"].ToString(), homeBID);
+                    HomeBox hBox = new HomeBox(Session["ActiveWorkspace_Name"].ToString(), homeBID);
                     /*if (hBox.ID != -1 && curr.username.Length > 0)
                     {
                         Boolean ret = false;
-                        HomeBoxesListUser hUser = new HomeBoxesListUser(Session["ActiveWorkspace"].ToString(), curr);
+                        HomeBoxesListUser hUser = new HomeBoxesListUser(Session["ActiveWorkspace_Name"].ToString(), curr);
                         int ind = -1;
                         switch (e.CommandName)
                         {
@@ -186,7 +186,7 @@ namespace KIS.Personal
                                 break;
                             case "delete":
                                 ret = curr.deleteHomeBox(hBox);
-                                hUser = new HomeBoxesListUser(Session["ActiveWorkspace"].ToString(), curr);
+                                hUser = new HomeBoxesListUser(Session["ActiveWorkspace_Name"].ToString(), curr);
                                 for (int i = 0; i < hUser.Elenco.Count; i++)
                                 {
                                     hUser.Elenco[i].ordine = i;
@@ -220,7 +220,7 @@ namespace KIS.Personal
                     lstHomeBox.Add(curr.homeBoxes.Elenco[i].homeBox);
                 }
 
-                HomeBoxesList lstTotal = new HomeBoxesList(Session["ActiveWorkspace"].ToString());
+                HomeBoxesList lstTotal = new HomeBoxesList(Session["ActiveWorkspace_Name"].ToString());
                 for (int i = 0; i < lstTotal.Elenco.Count; i++)
                 {
                     try

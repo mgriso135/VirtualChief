@@ -15,7 +15,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 KIS.App_Code.User cu1rr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction( cu1rr.username, "Controller", "/Analysis/OperatorsAnalysis/GetOperatorProductivity", "user="+user+"&start="+start.ToString("dd/MM/yyyy HH:mm:ss")+"&end="+end.ToString("dd/MM/yyyy HH:mm:ss"), ipAddr);
@@ -34,7 +34,7 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.Productivity = -1;
             if (ViewBag.authR)
@@ -57,7 +57,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 KIS.App_Code.User cu1rr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction(cu1rr.username, "Controller", "/Analysis/OperatorsAnalysis/GetOperatorOccupation", "user=" + user + "&start=" + start.ToString("dd/MM/yyyy HH:mm:ss") + "&end=" + end.ToString("dd/MM/yyyy HH:mm:ss"), ipAddr);
@@ -76,7 +76,7 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.Productivity = -1;
             if (ViewBag.authR)

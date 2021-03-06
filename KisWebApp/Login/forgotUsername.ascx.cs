@@ -30,7 +30,7 @@ namespace KIS.Login
             if (mailAddr != null)
             {
                 bool found = false;
-                UserList lista = new UserList(Session["ActiveWorkspace"].ToString());
+                UserList lista = new UserList(Session["ActiveWorkspace_Name"].ToString());
                 for (int i = 0; i < lista.numUsers; i++)
                 {
                     lista.elencoUtenti[i].loadEmails();

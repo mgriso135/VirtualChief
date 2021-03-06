@@ -24,7 +24,7 @@ namespace KIS.Users
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -44,7 +44,7 @@ namespace KIS.Users
 
                 if (usrID != -1)
                 {
-                    User usr = new User(Session["ActiveWorkspace"].ToString(), usrID);
+                    User usr = new User(Session["ActiveWorkspace_Name"].ToString(), usrID);
                     String matricola = usr.ID.ToString();
                     /*while (matricola.Length < 10)
                     {

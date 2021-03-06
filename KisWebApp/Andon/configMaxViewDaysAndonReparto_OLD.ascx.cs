@@ -24,14 +24,14 @@ namespace KIS.Andon
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {
-                    KIS.App_Code.AndonReparto andrp = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                    KIS.App_Code.AndonReparto andrp = new KIS.App_Code.AndonReparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                     if (andrp.RepartoID != -1)
                     {
                         for (int i = 1; i <= 500; i++)
@@ -57,7 +57,7 @@ namespace KIS.Andon
         protected void ddlNumDays_SelectedIndexChanged(object sender, EventArgs e)
         {
             lbl1.Text += idReparto.ToString() + " " + ddlNumDays.SelectedValue.ToString() + "<br />";
-            KIS.App_Code.AndonReparto andRep = new App_Code.AndonReparto(Session["ActiveWorkspace"].ToString(), idReparto);
+            KIS.App_Code.AndonReparto andRep = new App_Code.AndonReparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
             int maxDays = -1;
             try
             {

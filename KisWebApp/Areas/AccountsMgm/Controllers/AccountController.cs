@@ -126,20 +126,23 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 ViewBag.log += "mail_verified2 " + mail_verified + "    ";
                 if(mail_verified)
                 {
-                    if (Session["ActiveWorkspace"] == null)
+                    if (Session["ActiveWorkspace_Name"] == null)
                     {
                         curr.loadWorkspaces();
                         curr.loadDefaultWorkspace();
                         if (curr.DefaultWorkspace != null)
                         {
-                            Session["ActiveWorkspace"] = curr.DefaultWorkspace.Name;
+                            Session["ActiveWorkspace_Name"] = curr.DefaultWorkspace.Name;
                             Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
+                            Session["user"] = curr;
                             redirectUrl = "~/HomePage/Default.aspx";
                         }
                         else if (curr.workspaces.Count > 0)
                         {
-                            Session["ActiveWorkspace"] = curr.workspaces[0].Name;
+                            Session["ActiveWorkspace_Name"] = curr.workspaces[0];
+                            Session["ActiveWorkspace_Name"] = curr.workspaces[0].Name;
                             Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
+                            Session["user"] = curr;
                             redirectUrl = "~/HomePage/Default.aspx";
                         }
                         else
@@ -195,7 +198,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
                     ret = usr.addWorkspace(ws_name);
                     if(ret > 0)
                     {
-                        Session["ActiveWorkspace"] = ws_name;
+                        Session["ActiveWorkspace_Name"] = ws_name;
                         Session["ActiveWorkspace_Id"] = ret;
                     }
                 }

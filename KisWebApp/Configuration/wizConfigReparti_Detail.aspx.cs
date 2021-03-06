@@ -25,7 +25,7 @@ namespace KIS.Configuration
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -48,7 +48,7 @@ namespace KIS.Configuration
                     {
                         repID = -1;
                     }
-                    Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     if (rep.id != -1)
                     {
                         if (Page.IsPostBack)

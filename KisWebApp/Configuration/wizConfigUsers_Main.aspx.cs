@@ -17,10 +17,10 @@ namespace KIS.Configuration
             frmListUser.Visible = false;
             String permessoRichiesto = "Utenti";
             bool checkUser = false;
-            if (Session["User"] != null && Session["ActiveWorkspace"]!=null)
+            if (Session["User"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                Workspace ws = new Workspace(Session["ActiveWorkspace"].ToString());
+                Workspace ws = new Workspace(Session["ActiveWorkspace_Name"].ToString());
                 if(ws.id!=-1)
                 { 
                     curr.loadGroups(ws.id);

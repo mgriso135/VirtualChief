@@ -22,7 +22,7 @@ namespace KIS.Admin
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -51,7 +51,7 @@ namespace KIS.Admin
 
         protected void save_Click(object sender, ImageClickEventArgs e)
         {
-            MainMenu mn = new MainMenu(Session["ActiveWorkspace"].ToString());
+            MainMenu mn = new MainMenu(Session["ActiveWorkspace_Name"].ToString());
             bool rt = mn.Add(Server.HtmlEncode(txtTitolo.Text), Server.HtmlEncode(txtDesc.Text), Server.HtmlEncode(txtURL.Text));
             if (rt == true)
             {

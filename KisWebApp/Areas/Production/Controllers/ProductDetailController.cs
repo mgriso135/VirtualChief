@@ -22,14 +22,14 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)
             {
                 if(ProductID!=null && ProductYear!=null && ProductID!=-1 && ProductYear>2010)
                 {
-                    Articolo prod = new Articolo(Session["ActiveWorkspace"].ToString(), ProductID, ProductYear);
+                    Articolo prod = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
                         if(prod!=null && prod.ID!=-1 && prod.Year!=-1)
                     {
                         prod.loadTasksProduzione();
@@ -67,12 +67,12 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if(tsk!=null && tsk.TaskProduzioneID!=-1)
                 {
                     tsk.loadParameters();
@@ -105,12 +105,12 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if (tsk != null && tsk.TaskProduzioneID != -1)
                 {
                     tsk.loadTaskOperatorNotes();
@@ -143,12 +143,12 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if (tsk != null && tsk.TaskProduzioneID != -1)
                 {
                     tsk.loadIntervalliDiLavoroEffettivi();
@@ -183,12 +183,12 @@ namespace KIS.Areas.Production.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ckUser == true)
             {
-                TaskProduzione tskProd = new TaskProduzione(Session["ActiveWorkspace"].ToString(), TaskID);
+                TaskProduzione tskProd = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if (tskProd.Status == 'F')
                 {
                     ret = tskProd.Riesuma();

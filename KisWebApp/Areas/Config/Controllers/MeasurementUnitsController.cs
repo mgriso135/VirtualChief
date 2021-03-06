@@ -23,7 +23,7 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             // Check write permissions
@@ -35,11 +35,11 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             if (ViewBag.authR)
             {
-                MeasurementUnits lstMU = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
+                MeasurementUnits lstMU = new MeasurementUnits(Session["ActiveWorkspace_Name"].ToString());
                 lstMU.loadMeasurementUnits();
                 return View(lstMU.UnitsList);
             }
@@ -64,15 +64,15 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authW)
             {
-                MeasurementUnit curr = new MeasurementUnit(Session["ActiveWorkspace"].ToString(), uID);
+                MeasurementUnit curr = new MeasurementUnit(Session["ActiveWorkspace_Name"].ToString(), uID);
                 if(curr.ID!=-1)
                 { 
-                    MeasurementUnits lst = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
+                    MeasurementUnits lst = new MeasurementUnits(Session["ActiveWorkspace_Name"].ToString());
                     Boolean deleted = lst.Delete(uID);
                     if(deleted)
                     {
@@ -113,12 +113,12 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                MeasurementUnit curr = new MeasurementUnit(Session["ActiveWorkspace"].ToString(), uID);
+                MeasurementUnit curr = new MeasurementUnit(Session["ActiveWorkspace_Name"].ToString(), uID);
                 curr.Type = uType;
                 curr.Description = uDescription;
                 curr.IsDefault = uDefault;
@@ -149,12 +149,12 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                MeasurementUnits lst = new MeasurementUnits(Session["ActiveWorkspace"].ToString());
+                MeasurementUnits lst = new MeasurementUnits(Session["ActiveWorkspace_Name"].ToString());
                 Boolean added = lst.Add(uType, uDescription, uDefault);
                 if (added) { ret = 1; }
             }

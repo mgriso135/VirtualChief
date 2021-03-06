@@ -9,13 +9,9 @@ namespace KIS
         protected void Page_Load(object sender, EventArgs e)
         {
             lblLicenseExpired.Visible = false;
-            Logo lg = new Logo(Session["ActiveWorkspace"].ToString());
-            kisLogo.ImageUrl = lg.filePath;
-            kisLogo.Height = 50;
-
-            KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             DateTime licenseExpDate = kisCfg.ExpiryDate;
-            if(licenseExpDate.AddDays(7) <= DateTime.UtcNow)
+            if (licenseExpDate.AddDays(7) <= DateTime.UtcNow)
             {
                 Response.Redirect("~/LicenseExpired.aspx");
             }
@@ -27,14 +23,21 @@ namespace KIS
                     + " " + Math.Round(diffDate.TotalDays, 0) + " "
                     + GetLocalResourceObject("lblLicense2").ToString();
             }
-            else if(DateTime.UtcNow.AddDays(30) >= licenseExpDate && DateTime.UtcNow <= licenseExpDate)
+            else if (DateTime.UtcNow.AddDays(30) >= licenseExpDate && DateTime.UtcNow <= licenseExpDate)
             {
                 lblLicenseExpired.Visible = true;
                 TimeSpan diffDate = (licenseExpDate - DateTime.UtcNow);
-                lblLicenseExpired.Text ="<br />" + GetLocalResourceObject("lblLicense1").ToString()
+                lblLicenseExpired.Text = "<br />" + GetLocalResourceObject("lblLicense1").ToString()
                     + " " + Math.Round(diffDate.TotalDays, 0) + " "
                     + GetLocalResourceObject("lblLicense2").ToString();
             }
+
+            Logo lg = new Logo(Session["ActiveWorkspace_Name"].ToString());
+            kisLogo.ImageUrl = lg.filePath;
+            kisLogo.Height = 50;
+
+            
+            
 
             // Register user action
             //String ipAddr = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];

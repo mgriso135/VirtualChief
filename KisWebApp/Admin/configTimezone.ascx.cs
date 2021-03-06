@@ -24,7 +24,7 @@ namespace KIS.Admin
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -36,7 +36,7 @@ namespace KIS.Admin
                     ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
                     ddlTimezones.DataTextField = "DisplayName";
                     ddlTimezones.DataValueField = "Id";
-                    FusoOrario fo = new FusoOrario(Session["ActiveWorkspace"].ToString());
+                    FusoOrario fo = new FusoOrario(Session["ActiveWorkspace_Name"].ToString());
                     ddlTimezones.SelectedValue = fo.tzFusoOrario.Id;
                     ddlTimezones.DataBind();
                 }
@@ -50,7 +50,7 @@ namespace KIS.Admin
         protected void ddlTimezones_SelectedIndexChanged(object sender, EventArgs e)
         {
             TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
-            FusoOrario current = new FusoOrario(Session["ActiveWorkspace"].ToString());
+            FusoOrario current = new FusoOrario(Session["ActiveWorkspace_Name"].ToString());
             current.fusoOrario = ddlTimezones.SelectedValue;
             lbl1.Text = ddlTimezones.SelectedIndex + " - " + ddlTimezones.SelectedValue + "<br/>" + tz.Id 
                 + " <br />" + current.log;

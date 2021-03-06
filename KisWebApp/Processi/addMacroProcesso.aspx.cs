@@ -26,7 +26,7 @@ namespace KIS.Processi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -41,7 +41,7 @@ namespace KIS.Processi
 
         public void btnAddMacroProc_Click(object sender, EventArgs e)
         {
-            macroProcessi proc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+            macroProcessi proc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
             bool vsmV = bool.Parse(vsm.SelectedValue);
             if(proc.Add(Server.HtmlEncode(ProcName.Text), Server.HtmlEncode(ProcDesc.Text), vsmV))
             {

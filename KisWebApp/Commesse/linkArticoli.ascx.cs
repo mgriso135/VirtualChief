@@ -23,7 +23,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -32,7 +32,7 @@ namespace KIS.Commesse
                 {
                     if (!Page.IsPostBack)
                     {
-                        Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), idComm, annoComm);
+                        Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idComm, annoComm);
                         ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                         ddlArticoli.DataSource = el.elencoFigli;
                         ddlArticoli.DataValueField = "IDCombinato";
@@ -52,7 +52,7 @@ namespace KIS.Commesse
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
             bool check = true;
-            if (consegnaprevista.SelectedDate < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario(Session["ActiveWorkspace"].ToString())).tzFusoOrario))
+            if (consegnaprevista.SelectedDate < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario(Session["ActiveWorkspace_Name"].ToString())).tzFusoOrario))
             {
                 check = false;
                 lbl1.Text = GetLocalResourceObject("lblErrorData").ToString();
@@ -94,7 +94,7 @@ namespace KIS.Commesse
                 }
                 if (check == true)
                 {
-                    artic = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
+                    artic = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), procID), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                     artic.loadReparto();
                     artic.process.loadFigli(artic.variant);
                     if (artic.process == null || artic.variant == null)
@@ -110,7 +110,7 @@ namespace KIS.Commesse
                 //Se tutto è ok inserisco!
                 if (check == true && qty!=-1)
                 {
-                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idComm, annoComm);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idComm, annoComm);
                     cm.loadArticoli();
                     if (cm.ID != -1)
                     {
@@ -135,7 +135,7 @@ namespace KIS.Commesse
         protected void btnUndo_Click(object sender, ImageClickEventArgs e)
         {
             ddlArticoli.SelectedValue = "-1";
-            consegnaprevista.SelectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario(Session["ActiveWorkspace"].ToString())).tzFusoOrario);
+            consegnaprevista.SelectedDate = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, (new FusoOrario(Session["ActiveWorkspace_Name"].ToString())).tzFusoOrario);
         }
     }
 }

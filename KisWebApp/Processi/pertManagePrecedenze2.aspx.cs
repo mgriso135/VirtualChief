@@ -32,8 +32,8 @@ namespace KIS.Processi
                 {
                     precedenze.varID = varID;
                     precedenze.taskID = procID;
-                    processo proc = new processo(Session["ActiveWorkspace"].ToString(), procID, revTaskID);
-                    variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
+                    processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), procID, revTaskID);
+                    variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varID);
                     if (proc.processID != -1 && var.idVariante != -1)
                     {
                         lblTitle.Text = proc.processName + " - " + var.nomeVariante;

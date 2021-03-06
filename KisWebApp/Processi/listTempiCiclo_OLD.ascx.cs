@@ -50,7 +50,7 @@ namespace KIS.Processi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             
             if (checkUser == true)
@@ -60,7 +60,7 @@ namespace KIS.Processi
                     
                 if(tskID!=-1 && vrID!=-1)
                 {
-                    TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), tskID), new variante(Session["ActiveWorkspace"].ToString(), vrID));
+                    TaskVariante tsk = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), tskID), new variante(Session["ActiveWorkspace_Name"].ToString(), vrID));
                     taskID.Value = tsk.Task.processID.ToString();
                     varID.Value = tsk.variant.idVariante.ToString();
                     tsk.loadTempiCiclo();
@@ -95,7 +95,7 @@ namespace KIS.Processi
                 }
                 if (num_ops != -1 && prc != null && prc.Task != null && prc.variant != null)
                 {
-                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace"].ToString(), prc.Task.processID, prc.Task.revisione, prc.variant.idVariante, num_ops);
+                    TempoCiclo tc = new TempoCiclo(Session["ActiveWorkspace_Name"].ToString(), prc.Task.processID, prc.Task.revisione, prc.variant.idVariante, num_ops);
                     bool rt = tc.Delete();
                     lbl1.Text = rt.ToString();
                     if (rt == true)

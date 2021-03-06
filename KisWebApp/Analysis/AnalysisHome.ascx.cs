@@ -27,10 +27,10 @@ namespace KIS.Analysis
             elencoPermessi.Add(prmUser);
 
             bool checkUser = false;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -55,7 +55,7 @@ namespace KIS.Analysis
                 prm[0] = "Analisi Operatori Tempi";
                 prm[1] = "R";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 if (checkAnalisi == true)
                 {
                     boxAnalisiOperatori.Visible = true;
@@ -80,7 +80,7 @@ namespace KIS.Analysis
                 prm[0] = "Analisi TipoProdotto";
                 prm[1] = "R";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 if (checkAnalisi == true)
                 {
                     boxProductAnalysis2.Visible = true;
@@ -94,7 +94,7 @@ namespace KIS.Analysis
                 prm[0] = "Analisi Tasks";
                 prm[1] = "R";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 if (checkAnalisi == true)
                 {
                     boxAnalisiTasks.Visible = true;
@@ -107,7 +107,7 @@ namespace KIS.Analysis
                 prm[0] = "Analisi Clienti";
                 prm[1] = "R";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 if (checkAnalisi == true)
                 {
                     boxAnalisiClienti.Visible = true;
@@ -119,7 +119,7 @@ namespace KIS.Analysis
                 prm[0] = "Report Stato Ordini Clienti";
                 prm[1] = "X";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 if (checkAnalisi == true)
                 {
                     boxReportAvanzamentoOrdini.Visible = true;
@@ -131,7 +131,7 @@ namespace KIS.Analysis
                 prm[0] = "Analisi Articolo Costo";
                 prm[1] = "R";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 if (checkAnalisi == true)
                 {
                     boxProductionHistory.Visible = true;

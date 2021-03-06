@@ -23,10 +23,10 @@ namespace KIS.Eventi
         [WebMethod]
         public String NotifyImprovementActionsDelays()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String baseURL = cfg.baseUrl + cfg.basePath;
             String ret = "";
-            ImprovementActionsEvents LateIActs = new ImprovementActionsEvents(Session["ActiveWorkspace"].ToString());
+            ImprovementActionsEvents LateIActs = new ImprovementActionsEvents(Session["ActiveWorkspace_Name"].ToString());
             LateIActs.loadLateImprovementActions();
             for (int i = 0; i < LateIActs.LateImprovementActions.Count; i++)
             {

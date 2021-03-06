@@ -16,7 +16,7 @@ namespace KIS.Areas.Config.Controllers
 
         public JsonResult getExpiryDate()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
 
             String apikeyGiven = "";
@@ -64,7 +64,7 @@ namespace KIS.Areas.Config.Controllers
                 apikeyGiven = "";
             }
 
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
             if (apikeyGiven == apikey && apikey.Length > 10)
             {
@@ -89,7 +89,7 @@ namespace KIS.Areas.Config.Controllers
 
         public JsonResult getOrdersResume()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
 
             String apikeyGiven = "";
@@ -105,7 +105,7 @@ namespace KIS.Areas.Config.Controllers
 
             if (apikeyGiven == apikey && apikey.Length > 10)
             {
-                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1));
+                    ElencoArticoli elArt = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1));
     var elArtMonth = elArt.ListArticoli
         .OrderBy(z => z.DataInserimento)
         .GroupBy(x => new
@@ -130,7 +130,7 @@ namespace KIS.Areas.Config.Controllers
 
         public JsonResult getTasksResume()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
 
             String apikeyGiven = "";
@@ -146,7 +146,7 @@ namespace KIS.Areas.Config.Controllers
 
             if (apikeyGiven == apikey && apikey.Length > 10)
             {
-                ElencoTaskProduzione elTasks = new ElencoTaskProduzione(Session["ActiveWorkspace"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1), 'F');
+                ElencoTaskProduzione elTasks = new ElencoTaskProduzione(Session["ActiveWorkspace_Name"].ToString(), new DateTime(1970, 1, 1), DateTime.UtcNow.AddMonths(1), 'F');
                 var elTasksMonth = elTasks.Tasks.Where(y => y.DataFineTask >= DateTime.UtcNow.AddMonths(-13))
                     .OrderBy(z => z.DataFineTask)
                     .GroupBy(x => new
@@ -171,7 +171,7 @@ namespace KIS.Areas.Config.Controllers
 
         public JsonResult getNonCompliancesResume()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
 
             String apikeyGiven = "";
@@ -187,7 +187,7 @@ namespace KIS.Areas.Config.Controllers
 
             if (apikeyGiven == apikey && apikey.Length > 10)
             {
-                NonCompliances elNCs = new NonCompliances(Session["ActiveWorkspace"].ToString());
+                NonCompliances elNCs = new NonCompliances(Session["ActiveWorkspace_Name"].ToString());
                 elNCs.loadNonCompliances();
                 var elNCsMonth = elNCs.NonCompliancesList
                     .OrderBy(z => z.OpeningDate)
@@ -214,7 +214,7 @@ namespace KIS.Areas.Config.Controllers
 
         public JsonResult getImprovementActionsResume()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
 
             String apikeyGiven = "";
@@ -230,7 +230,7 @@ namespace KIS.Areas.Config.Controllers
 
             if (apikeyGiven == apikey && apikey.Length > 10)
             {
-                ImprovementActions elIActs = new ImprovementActions(Session["ActiveWorkspace"].ToString());
+                ImprovementActions elIActs = new ImprovementActions(Session["ActiveWorkspace_Name"].ToString());
                 elIActs.loadImprovementActions();
                 var elIActsMonth = elIActs.ImprovementActionsList
                     .OrderBy(z => z.OpeningDate)
@@ -257,7 +257,7 @@ namespace KIS.Areas.Config.Controllers
 
         public JsonResult getCorrectiveActionsResume()
         {
-            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             String apikey = cfg.ConfigController_X_API_KEY;
 
             String apikeyGiven = "";
@@ -274,7 +274,7 @@ namespace KIS.Areas.Config.Controllers
             if (apikeyGiven == apikey && apikey.Length > 10)
             {
                 List<CorrectiveAction> elCActs = new List<CorrectiveAction>();
-                ImprovementActions elIActs = new ImprovementActions(Session["ActiveWorkspace"].ToString());
+                ImprovementActions elIActs = new ImprovementActions(Session["ActiveWorkspace_Name"].ToString());
                 elIActs.loadImprovementActions();
                 for (int i = 0; i < elIActs.ImprovementActionsList.Count; i++)
                 {
@@ -319,14 +319,14 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
 
             ViewBag.ThirdPartyActive = false;
             if (ViewBag.authW)
             {
-                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.ThirdPartyActive = cfg.SalesOrderImportFrom3PartySystem;
             }
             return View();
@@ -344,14 +344,14 @@ namespace KIS.Areas.Config.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
 
             ViewBag.ThirdPartyActive = false;
             if (ViewBag.authW)
             {
-                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
                 cfg.SalesOrderImportFrom3PartySystem = ThirdPartyActive;
                 ret = true;
             }

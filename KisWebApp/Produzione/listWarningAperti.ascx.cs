@@ -21,7 +21,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -29,7 +29,7 @@ namespace KIS.Produzione
                 lbl1.Text = "";
             if (!Page.IsPostBack)
             {
-                WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace"].ToString());
+                WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace_Name"].ToString());
                 if (Elenco.Elenco.Count == 0)
                 {
                     rptWarnings.Visible = false;
@@ -55,7 +55,7 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace"].ToString());
+            WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace_Name"].ToString());
             if (Elenco.Elenco.Count == 0)
             {
                 rptWarnings.Visible = false;

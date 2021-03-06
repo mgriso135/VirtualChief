@@ -24,14 +24,14 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack && !Page.IsCallback && idReparto != -1)
                 {
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                     if (rp.id != -1)
                     {
                         if (rp.KanbanManaged == true)
@@ -54,7 +54,7 @@ namespace KIS.Reparti
 
         protected void rb1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
             if (rb1.SelectedValue == "0")
             {
                 rp.KanbanManaged = false;

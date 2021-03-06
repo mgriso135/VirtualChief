@@ -19,7 +19,7 @@ namespace KIS.Personal
                 {
                     UserAccount curr = (UserAccount)Session["user"];
                     
-                    /*rptReparti.DataSource = curr.SegnalazioneRitardiRepartoCompleto(Session["ActiveWorkspace"].ToString());
+                    /*rptReparti.DataSource = curr.SegnalazioneRitardiRepartoCompleto(Session["ActiveWorkspace_Name"].ToString());
                     rptReparti.DataBind();
 
                     rptCommesse.DataSource = curr.SegnalazioneRitardiCommessaCompleto;

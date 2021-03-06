@@ -29,7 +29,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -47,8 +47,8 @@ namespace KIS.Commesse
 
         protected void imgPrintOrdini_Click(object sender, ImageClickEventArgs e)
         {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
-                Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArticolo, annoArticolo);
+                Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                 comm.loadArticoli();
                 // Ora creo il pdf!
                 String savePath = Server.MapPath(@"~\Data\Produzione\");
@@ -92,7 +92,7 @@ namespace KIS.Commesse
                         check = false;
                     }
 
-                    Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                    Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                     iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                     logo.ScaleToFit(50 * logo.Width / logo.Height, 50);
                     cartPDF.Add(logo);
@@ -163,8 +163,8 @@ namespace KIS.Commesse
 
         protected void imgPrintOrdiniSingolo_Click(object sender, ImageClickEventArgs e)
         {
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
-            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArticolo, annoArticolo);
+            Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
             comm.loadArticoli();
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
@@ -202,7 +202,7 @@ namespace KIS.Commesse
                 intestazioneFoglio[3] = new PdfPCell();
                 intestazioneFoglio[4] = new PdfPCell();
 
-                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -215,7 +215,7 @@ namespace KIS.Commesse
 
                 intestazioneFoglio[0].AddElement(logo);
 
-                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
                 String idComm = comm.ID.ToString() + "/" + comm.Year.ToString();
                 if (comm.ExternalID.Length > 0)
                 {
@@ -380,8 +380,8 @@ namespace KIS.Commesse
 
         protected void imgPrintOrdiniSingoloA3_Click(object sender, ImageClickEventArgs e)
         {
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArticolo, annoArticolo);
-            Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArticolo, annoArticolo);
+            Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
             comm.loadArticoli();
             // Ora creo il pdf!
             String savePath = Server.MapPath(@"~\Data\Produzione\");
@@ -421,7 +421,7 @@ namespace KIS.Commesse
                 intestazioneFoglio[3] = new PdfPCell();
                 intestazioneFoglio[4] = new PdfPCell();
 
-                Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                 iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                 if (logo.Height > logo.Width)
                 {
@@ -434,7 +434,7 @@ namespace KIS.Commesse
 
                 intestazioneFoglio[0].AddElement(logo);
 
-                Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
+                Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
                 String idComm = comm.ID.ToString() + "/" + comm.Year.ToString();
                 if (comm.ExternalID.Length > 0)
                 {

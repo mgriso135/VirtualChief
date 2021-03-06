@@ -24,7 +24,7 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -34,13 +34,13 @@ namespace KIS.Reparti
                     frmAddOperator.Visible = false;
                     if (idReparto != -1)
                     {
-                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                        Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                         if (rp.id != -1)
                         {
                             rp.loadOperatori();
                             rptRepUsers.DataSource = rp.Operatori.Elenco;
                             rptRepUsers.DataBind();
-                            UserList elUsr = new UserList(Session["ActiveWorkspace"].ToString());
+                            UserList elUsr = new UserList(Session["ActiveWorkspace_Name"].ToString());
                             ddlUser.DataSource = elUsr.elencoUtenti;
                             ddlUser.DataTextField = "FullName";
                             ddlUser.DataValueField = "username";
@@ -84,7 +84,7 @@ namespace KIS.Reparti
 
         protected void imgAddUser_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
             //lbl1.Text = rp.id + " " + ddlUser.SelectedItem.Value;
             rp.loadOperatori();
             bool rt = rp.Operatori.Add(new User(ddlUser.SelectedItem.Value));
@@ -102,7 +102,7 @@ namespace KIS.Reparti
         {
             if (e.CommandName == "deleteOP")
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
                     rp.loadOperatori();

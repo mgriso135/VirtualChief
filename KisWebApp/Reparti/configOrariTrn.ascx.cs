@@ -24,7 +24,7 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -36,7 +36,7 @@ namespace KIS.Reparti
                         txtNomeTurno.Visible = false;
                         saveNomeTurno.Visible = false;
                         undoNomeTurno.Visible = false;
-                        Turno tr = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+                        Turno tr = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
                         txtNomeTurno.Text = tr.Nome;
                         nomeTurno.Text = tr.Nome;
                         formAddOrario.Visible = false;
@@ -118,7 +118,7 @@ namespace KIS.Reparti
 
         protected void saveNomeTurno_Click(object sender, ImageClickEventArgs e)
         {
-            Turno t = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+            Turno t = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
             if (t.id != -1)
             {
                 t.Nome = txtNomeTurno.Text;
@@ -134,7 +134,7 @@ namespace KIS.Reparti
 
         protected void undoNomeTurno_Click(object sender, ImageClickEventArgs e)
         {
-            Turno t = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+            Turno t = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
             txtNomeTurno.Text = t.Nome;
             txtNomeTurno.Visible = false;
             saveNomeTurno.Visible = false;
@@ -158,7 +158,7 @@ namespace KIS.Reparti
 
         protected void saveOrario_Click(object sender, ImageClickEventArgs e)
         {
-            Turno t = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+            Turno t = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
             bool ok = false;
             DayOfWeek dayInizio, dayFine;
             dayInizio = new DayOfWeek();
@@ -196,7 +196,7 @@ namespace KIS.Reparti
         protected void rptOrari_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             lbl1.Text = e.CommandArgument.ToString();
-            IntervalloLavorativoTurno interv = new IntervalloLavorativoTurno(Session["ActiveWorkspace"].ToString(), Int32.Parse(e.CommandArgument.ToString()));
+            IntervalloLavorativoTurno interv = new IntervalloLavorativoTurno(Session["ActiveWorkspace_Name"].ToString(), Int32.Parse(e.CommandArgument.ToString()));
             bool rt = interv.Delete();
             if (rt == true)
             {

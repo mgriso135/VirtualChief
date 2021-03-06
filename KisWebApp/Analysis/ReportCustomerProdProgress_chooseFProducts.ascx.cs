@@ -30,12 +30,12 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
+                Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), customerID);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     frmReport.Visible = true;
@@ -97,7 +97,7 @@ namespace KIS.Analysis
             if (inizio > new DateTime(1970, 1, 1) && fine > new DateTime(1970, 1, 1) && fine >= inizio)
             {
                 rptProductsF.Visible = true;
-                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), customerID);
+                Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), customerID);
                 customer.loadArticoli(null, 'F', inizio, fine);
                 rptProductsF.DataSource = customer.listArticoli;
                 rptProductsF.DataBind();
@@ -128,7 +128,7 @@ namespace KIS.Analysis
 
             if (artID != -1 && artYear != -1)
             {
-                Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                 if (art.ID != -1 && art.Year != -1)
                 {
                     if (checkBox.Checked)
@@ -190,7 +190,7 @@ namespace KIS.Analysis
 
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                     if (art.ID != -1 && art.Year != -1)
                     {
                         if (Session["prodF"] != null)

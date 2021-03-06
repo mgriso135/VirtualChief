@@ -25,14 +25,14 @@ namespace KIS.Eventi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack)
                 {
-                    ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace"].ToString(), new Commessa(Session["ActiveWorkspace"].ToString(), commID, commAnno));
+                    ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace_Name"].ToString(), new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commAnno));
                     List<Group> grpList = new List<Group>();
                     for (int i = 0; i < cfgRp.ListGroupsID.Count; i++)
                     {
@@ -84,7 +84,7 @@ namespace KIS.Eventi
 
         protected void btnSaveWarningGruppo_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace"].ToString(), new Commessa(Session["ActiveWorkspace"].ToString(), commID, commAnno));
+            ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace_Name"].ToString(), new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commAnno));
             int idGrp = -1;
             try
             {
@@ -161,7 +161,7 @@ namespace KIS.Eventi
             {
                 if (groupID != -1)
                 {
-                    ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace"].ToString(), new Commessa(Session["ActiveWorkspace"].ToString(), commID, commAnno));
+                    ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace_Name"].ToString(), new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commAnno));
                     // Ricerco il gruppo
                     //cfgRp.loadGruppi();
                     bool rt = cfgRp.deleteGruppo(new Group(groupID));
@@ -182,7 +182,7 @@ namespace KIS.Eventi
             if (frmAddWarningUtente.Visible == false)
             {
                 frmAddWarningUtente.Visible = true;
-                UserList elencoUtenti = new UserList(Session["ActiveWorkspace"].ToString());
+                UserList elencoUtenti = new UserList(Session["ActiveWorkspace_Name"].ToString());
                 ddlAddWarningUtente.Items.Clear();
                 ddlAddWarningUtente.Items.Add(new ListItem(GetLocalResourceObject("lblCfgWarnUserSel").ToString(), ""));
                 ddlAddWarningUtente.DataSource = elencoUtenti.elencoUtenti;
@@ -227,7 +227,7 @@ namespace KIS.Eventi
         {
             if (e.CommandName == "deleteUtente")
             {
-                ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace"].ToString(), new Commessa(Session["ActiveWorkspace"].ToString(), commID, commAnno));
+                ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace_Name"].ToString(), new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commAnno));
                 // Ricerco il gruppo
 
                 bool rt = cfgRp.deleteUtente(new User(e.CommandArgument.ToString()));
@@ -244,7 +244,7 @@ namespace KIS.Eventi
 
         protected void btnSaveWarningUtente_Click(object sender, ImageClickEventArgs e)
         {
-            ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace"].ToString(), new Commessa(Session["ActiveWorkspace"].ToString(), commID, commAnno));
+            ConfigurazioneWarningCommessa cfgRp = new ConfigurazioneWarningCommessa(Session["ActiveWorkspace_Name"].ToString(), new Commessa(Session["ActiveWorkspace_Name"].ToString(), commID, commAnno));
 
             if (ddlAddWarningUtente.SelectedValue != "")
             {

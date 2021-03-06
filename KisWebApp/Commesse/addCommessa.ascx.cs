@@ -22,7 +22,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -30,7 +30,7 @@ namespace KIS.Commesse
                 if (!Page.IsPostBack)
                 {
                     frmAddCommessa.Visible = false;
-                    KIS.App_Code.PortafoglioClienti elencoClienti = new App_Code.PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                    KIS.App_Code.PortafoglioClienti elencoClienti = new App_Code.PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                     ddlCliente.DataSource = elencoClienti.Elenco;
                     ddlCliente.DataTextField = "RagioneSociale";
                     ddlCliente.DataValueField = "CodiceCliente";
@@ -59,14 +59,14 @@ namespace KIS.Commesse
         */
         protected void btnSave_Click(object sender, ImageClickEventArgs e)
         {
-            ElencoCommesse el = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
+            ElencoCommesse el = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
             String client = Server.HtmlEncode(ddlCliente.SelectedValue);
             String note = Server.HtmlEncode(txtNote.Text);
             String externalID = Server.HtmlEncode(txtExternalID.Text);
             int rt = el.Add(client, note, externalID);
             if (rt !=-1)
             {
-                Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), rt, DateTime.UtcNow.Year);
+                Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), rt, DateTime.UtcNow.Year);
                 if (cm != null && cm.ID != -1 && cm.Year > 2000)
                 {
                     UserAccount curr = (UserAccount)Session["user"];

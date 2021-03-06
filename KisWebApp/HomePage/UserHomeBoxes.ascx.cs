@@ -21,7 +21,7 @@ namespace KIS.HomePage
                 {
                     if (!Page.IsPostBack)
                     {
-                        HomeBoxesListUser boxList = new HomeBoxesListUser(Session["ActiveWorkspace"].ToString(), utente);
+                        HomeBoxesListUser boxList = new HomeBoxesListUser(Session["ActiveWorkspace_Name"].ToString(), utente);
                         if (boxList.Elenco.Count > 0)
                         {
                             tblOptions.Visible = true;
@@ -52,7 +52,7 @@ namespace KIS.HomePage
 
                 if (boxID != -1)
                 {
-                    HomeBox box = new HomeBox(Session["ActiveWorkspace"].ToString(), boxID);
+                    HomeBox box = new HomeBox(Session["ActiveWorkspace_Name"].ToString(), boxID);
                     if (box.ID != -1)
                     {
                         //lItem.Text = box.Nome;

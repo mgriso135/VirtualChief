@@ -27,12 +27,12 @@ namespace KIS
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             
             if (checkUser == true)
             {
-                macroProcessi el = new macroProcessi(Session["ActiveWorkspace"].ToString());
+                macroProcessi el = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
                 rptMacroProc.DataSource = el.Elenco;
                 rptMacroProc.DataBind();
             }

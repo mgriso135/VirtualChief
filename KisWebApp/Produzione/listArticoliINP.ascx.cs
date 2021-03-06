@@ -32,15 +32,15 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (!Page.IsPostBack)
                 {
-                    ElencoArticoliInProduzione el = new ElencoArticoliInProduzione(Session["ActiveWorkspace"].ToString());
-                    ElencoArticoli elN = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'N');
+                    ElencoArticoliInProduzione el = new ElencoArticoliInProduzione(Session["ActiveWorkspace_Name"].ToString());
+                    ElencoArticoli elN = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), 'N');
                     artINP = el.ElencoArticoli.Concat(elN.ListArticoli).ToList();
                     List<Articolo> artINPOrdered = artINP.OrderBy(x => x.Status).ThenBy(x => x.DataPrevistaFineProduzione).ThenBy(x=>x.DataPrevistaConsegna).ToList();
                     //rptArticoli.DataSource = el.ElencoArticoli;
@@ -91,7 +91,7 @@ namespace KIS.Produzione
 
                     if (idArt != -1 && yearArt != -1)
                     {
-                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idArt, yearArt);
+                        Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idArt, yearArt);
                         if (art.ID != -1)
                         {
                             if (art.KanbanCardID.Length == 0)
@@ -189,8 +189,8 @@ namespace KIS.Produzione
             {
                 if (e.CommandName == "printOrdini")
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
-                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                     // Ora creo il pdf!
                     String savePath = Server.MapPath(@"~\Data\Produzione\");
                     Document cartPDF = new Document(PageSize.A4, 50, 50, 25, 25);
@@ -233,7 +233,7 @@ namespace KIS.Produzione
                             check = false;
                         }
 
-                        Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                        Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                         iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                         logo.ScaleToFit(50 * logo.Width / logo.Height, 50);
                         cartPDF.Add(logo);
@@ -316,8 +316,8 @@ namespace KIS.Produzione
                 }
                 else if (e.CommandName == "printOrdiniSingolo")
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
-                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                     // Ora creo il pdf!
                     String savePath = Server.MapPath(@"~\Data\Produzione\");
                     Document cartPDF = new Document(PageSize.A4, 50, 50, 25, 25);
@@ -354,7 +354,7 @@ namespace KIS.Produzione
                         intestazioneFoglio[3] = new PdfPCell();
                         intestazioneFoglio[4] = new PdfPCell();
 
-                        Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                        Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                         iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                         if (logo.Height > logo.Width)
                         {
@@ -371,7 +371,7 @@ namespace KIS.Produzione
                         {
                             idComm = comm.ExternalID;
                         }
-                        Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
+                        Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
                         String txtCommessa = cln.RagioneSociale + Environment.NewLine
                             + GetLocalResourceObject("lblOrdine") + " " + idComm + Environment.NewLine
                             + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
@@ -533,8 +533,8 @@ namespace KIS.Produzione
                 }
                 else if (e.CommandName == "printOrdiniSingoloA3")
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
-                    Commessa comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
+                    Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                     // Ora creo il pdf!
                     String savePath = Server.MapPath(@"~\Data\Produzione\");
                     Document cartPDF = new Document(PageSize.A3, 630, 30, 20, 20);
@@ -573,7 +573,7 @@ namespace KIS.Produzione
                         intestazioneFoglio[3] = new PdfPCell();
                         intestazioneFoglio[4] = new PdfPCell();
 
-                        Logo logoAzienda = new Logo(Session["ActiveWorkspace"].ToString());
+                        Logo logoAzienda = new Logo(Session["ActiveWorkspace_Name"].ToString());
                         iTextSharp.text.Image logo = iTextSharp.text.Image.GetInstance(Server.MapPath(logoAzienda.filePath));
                         if (logo.Height > logo.Width)
                         {
@@ -591,7 +591,7 @@ namespace KIS.Produzione
                         {
                             idComm = comm.ExternalID;
                         }
-                        Cliente cln = new Cliente(Session["ActiveWorkspace"].ToString(), art.Cliente);
+                        Cliente cln = new Cliente(Session["ActiveWorkspace_Name"].ToString(), art.Cliente);
                         String txtCommessa = cln.RagioneSociale + Environment.NewLine
                             + GetLocalResourceObject("lblOrdine") + " " + idComm + Environment.NewLine
                             + Server.HtmlDecode(art.Proc.process.processName + " " + art.Proc.variant.nomeVariante)
@@ -783,8 +783,8 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            ElencoArticoliInProduzione el = new ElencoArticoliInProduzione(Session["ActiveWorkspace"].ToString());
-            ElencoArticoli elN = new ElencoArticoli(Session["ActiveWorkspace"].ToString(), 'N');
+            ElencoArticoliInProduzione el = new ElencoArticoliInProduzione(Session["ActiveWorkspace_Name"].ToString());
+            ElencoArticoli elN = new ElencoArticoli(Session["ActiveWorkspace_Name"].ToString(), 'N');
             List<Articolo> artINP = el.ElencoArticoli.Concat(elN.ListArticoli).ToList();
             
             List<Articolo> artINPOrdered;

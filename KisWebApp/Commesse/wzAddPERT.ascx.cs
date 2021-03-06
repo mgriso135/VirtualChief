@@ -27,14 +27,14 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (idCommessa != -1 && annoCommessa != -1)
                 {
-                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
                     if (cm.ID != -1 && cm.Year != -1)
                     {                       
 
@@ -53,7 +53,7 @@ namespace KIS.Commesse
                             lblTitle.Text = GetLocalResourceObject("lblCliente").ToString()
                                 +": " + cm.Cliente;
 
-                            PortafoglioClienti portCli = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                            PortafoglioClienti portCli = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                             ddlCopiaPERTClienti.DataSource = portCli.Elenco;
                             ddlCopiaPERTClienti.DataValueField = "CodiceCliente";
                             ddlCopiaPERTClienti.DataTextField = "RagioneSociale";
@@ -82,7 +82,7 @@ namespace KIS.Commesse
 
         protected void btnCopiaPERT_Click(object sender, EventArgs e)
         {
-            elencoVarianti elVar = new elencoVarianti(Session["ActiveWorkspace"].ToString());
+            elencoVarianti elVar = new elencoVarianti(Session["ActiveWorkspace_Name"].ToString());
             bool result = elVar.elenco.Any(v => v.nomeVariante == txtNomeCopiaProd.Text);
             if (result)
             {
@@ -122,7 +122,7 @@ namespace KIS.Commesse
             if (ddlCopiaPERTClienti.SelectedValue.Length > 0)
             {
                 String codCliente = Server.HtmlEncode(ddlCopiaPERTClienti.SelectedValue);
-                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                 ElencoProcessiVarianti el = null;
                 if (customer.CodiceCliente.Length > 0)
                 {
@@ -180,10 +180,10 @@ namespace KIS.Commesse
 
                 if (idProc != -1 && rev != -1 && idVar != -1 && qty > 0)
                 {
-                    Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+                    Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
                     if (cm.ID != -1 && cm.Year != -1)
                     {
-                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, rev), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
                         prcVar.loadReparto();
                         prcVar.process.loadFigli(prcVar.variant);
                         if (prcVar != null && prcVar.process != null && prcVar.variant != null && prcVar.process.processID != -1 && prcVar.variant.idVariante != -1)
@@ -224,7 +224,7 @@ namespace KIS.Commesse
             if (ddlStdFiltroCliente.SelectedValue.Length > 0)
             {
                 String codCliente = Server.HtmlEncode(ddlStdFiltroCliente.SelectedValue);
-                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), codCliente);
+                Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), codCliente);
                 ElencoProcessiVarianti el = null;
                 if (customer.CodiceCliente.Length > 0)
                 {
@@ -266,7 +266,7 @@ namespace KIS.Commesse
 
         protected void addVariante_Click1(object sender, ImageClickEventArgs e)
         {
-            elencoVarianti elVar = new elencoVarianti(Session["ActiveWorkspace"].ToString());
+            elencoVarianti elVar = new elencoVarianti(Session["ActiveWorkspace_Name"].ToString());
             bool result = elVar.elenco.Any(v => v.nomeVariante == txtNomeBlankProd.Text);
             if (result)
             {
@@ -292,15 +292,15 @@ namespace KIS.Commesse
             addVariante.Visible = true;
 
             // Cerco se esiste un processo di tipo PERT con il nome del cliente
-            Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
-            macroProcessi elProc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+            Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
+            macroProcessi elProc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
             List<int[]> lstProc = elProc.FindByName(cm.Cliente);
             int prcID = -1;
             int prcRev = -1;
             for (int i = 0; i < lstProc.Count; i++)
             {
                 lbl1.Text += lstProc[i][0] + " " + lstProc[i][1] + "<br />";
-                processo prc = new processo(Session["ActiveWorkspace"].ToString(), lstProc[i][0], lstProc[i][1]);
+                processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), lstProc[i][0], lstProc[i][1]);
                 if (prc.isVSM == false)
                 {
                     prcID = prc.processID;
@@ -326,7 +326,7 @@ namespace KIS.Commesse
                 if (prcID == -1 && prcRev == -1)
                 {
                     // Creo un nuovo processo
-                    macroProcessi elMacroProc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+                    macroProcessi elMacroProc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
                     bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
                     if (check == false)
                     {
@@ -334,7 +334,7 @@ namespace KIS.Commesse
                     }
                     else
                     {
-                        elMacroProc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+                        elMacroProc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
                         List<int[]> res = elMacroProc.FindByName(cm.Cliente);
                         prcID = res[0][0];
                         prcRev = res[0][1];
@@ -344,8 +344,8 @@ namespace KIS.Commesse
                 // Aggiungo la variante al processo
                 if (prcID != -1 && prcRev != -1)
                 {
-                    processo proc = new processo(Session["ActiveWorkspace"].ToString(), prcID, prcRev);
-                    variante var = new variante(Session["ActiveWorkspace"].ToString());
+                    processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), prcID, prcRev);
+                    variante var = new variante(Session["ActiveWorkspace_Name"].ToString());
 
                     int varID = var.add(Server.HtmlEncode(txtNomeBlankProd.Text), Server.HtmlEncode(txtDescBlankProd.Text));
                     if (varID == -1)
@@ -354,7 +354,7 @@ namespace KIS.Commesse
                     }
                     else
                     {
-                        bool retAddProcVar = proc.addVariante(new variante(Session["ActiveWorkspace"].ToString(), varID));
+                        bool retAddProcVar = proc.addVariante(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                         if (retAddProcVar == true)
                         {
                             String page = "wzEditPERT.aspx";
@@ -415,7 +415,7 @@ namespace KIS.Commesse
 
         protected void addCopyProduct()
         {
-            Commessa cm = new Commessa(Session["ActiveWorkspace"].ToString(), idCommessa, annoCommessa);
+            Commessa cm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idCommessa, annoCommessa);
             int procID = -1;
             int varID = -1;
             int currProc = -1;
@@ -439,14 +439,14 @@ namespace KIS.Commesse
             if (qty > 0)
             {
 
-                macroProcessi elProc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+                macroProcessi elProc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
                 List<int[]> lstProc = elProc.FindByName(cm.Cliente);
                 int prcID = -1;
                 int prcRev = -1;
                 for (int i = 0; i < lstProc.Count; i++)
                 {
                     lbl1.Text += lstProc[i][0] + " " + lstProc[i][1] + "<br />";
-                    processo prc = new processo(Session["ActiveWorkspace"].ToString(), lstProc[i][0], lstProc[i][1]);
+                    processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), lstProc[i][0], lstProc[i][1]);
                     if (prc.isVSM == false)
                     {
                         prcID = prc.processID;
@@ -459,7 +459,7 @@ namespace KIS.Commesse
                 if (prcID == -1 && prcRev == -1)
                 {
                     // Creo un nuovo processo
-                    macroProcessi elMacroProc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+                    macroProcessi elMacroProc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
                     bool check = elMacroProc.Add(cm.Cliente, cm.Cliente, false);
                     if (check == false)
                     {
@@ -467,7 +467,7 @@ namespace KIS.Commesse
                     }
                     else
                     {
-                        elMacroProc = new macroProcessi(Session["ActiveWorkspace"].ToString());
+                        elMacroProc = new macroProcessi(Session["ActiveWorkspace_Name"].ToString());
                         List<int[]> res = elMacroProc.FindByName(cm.Cliente);
                         prcID = res[0][0];
                         prcRev = res[0][1];
@@ -476,10 +476,10 @@ namespace KIS.Commesse
 
                 if (prcID != -1 && prcRev != -1 && varID != -1)
                 {
-                    ProcessoVariante daCopiare = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
+                    ProcessoVariante daCopiare = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), procID), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                     daCopiare.loadReparto();
                     daCopiare.process.loadFigli(daCopiare.variant);
-                    processo curr = new processo(Session["ActiveWorkspace"].ToString(), prcID, prcRev);
+                    processo curr = new processo(Session["ActiveWorkspace_Name"].ToString(), prcID, prcRev);
                     if (curr != null && daCopiare != null && curr.processID != -1 && daCopiare.process != null && daCopiare.variant != null)
                     {
                         lbl1.Text = "curr: " + curr.processID.ToString() + "<br />"

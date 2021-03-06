@@ -25,7 +25,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -34,7 +34,7 @@ namespace KIS.Produzione
                 {
                     if (!Page.IsPostBack)
                     {
-                        Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                        Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                         // if (!Page.IsCallback)
                         {
                             art.loadTasksProduzione();
@@ -69,10 +69,10 @@ namespace KIS.Produzione
                     taskID = -1;
                 }
 
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                 if (tsk.TaskProduzioneID != -1)
                 {
-                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                     postazione.Text = pst.name;
                 }
                 else
@@ -108,7 +108,7 @@ namespace KIS.Produzione
 
         protected void timer1_Tick(object sender, EventArgs e)
         {
-            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
             lblDataUpdate.Text = "Last update: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
             art.loadTasksProduzione();
             rptTasks.DataSource = art.Tasks;

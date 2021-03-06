@@ -30,7 +30,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -42,7 +42,7 @@ namespace KIS.Produzione
                 ScrollTypeContinuousGoSpeed = 0.0;
                 ScrollTypeContinuousBackSpeed = 0.0;
 
-                andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                andonCfg = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                     andonCfg.loadCampiVisualizzati();
                     loadCommesse();
                     //try
@@ -96,7 +96,7 @@ namespace KIS.Produzione
 
             if(andonCfg==null||andonCfg.CampiVisualizzati==null)
             {
-                andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                andonCfg = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                 andonCfg.loadCampiVisualizzati();
                 andonCfg.loadScrollType();
                 ScrollType = andonCfg.ScrollType;
@@ -130,7 +130,7 @@ namespace KIS.Produzione
                 }
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                     System.Web.UI.HtmlControls.HtmlTableRow tRow = (System.Web.UI.HtmlControls.HtmlTableRow)e.Item.FindControl("tr1");
                     if (art.ID != -1 && tRow!=null)
                     {
@@ -152,7 +152,7 @@ namespace KIS.Produzione
                                     td.InnerHtml = art.Commessa + "/" + art.AnnoCommessa;
                                     break;
                                 case "OrderExternalID":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.ExternalID;
                                     break;
                                 case "CommessaCodiceCliente":
@@ -162,15 +162,15 @@ namespace KIS.Produzione
                                     td.InnerHtml = art.RagioneSocialeCliente;
                                     break;
                                 case "CommessaDataInserimento":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.DataInserimento.ToString("dd/MM/yyyy");
                                     break;
                                 case "CommessaNote":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = comm.Note;
                                     break;
                                 case "ProdottoID":
-                                    comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                    comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                     td.InnerHtml = art.ID.ToString() + "/" + art.Year.ToString();
                                     break;
                                 case "ProdottoLineaProdotto":
@@ -391,7 +391,7 @@ namespace KIS.Produzione
 
         protected void loadCommesse()
         {
-            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
+            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
             elComm.loadCommesse();
             for (int i = 0; i < elComm.Commesse.Count; i++)
             {

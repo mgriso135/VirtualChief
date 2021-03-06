@@ -33,8 +33,8 @@ namespace KIS.Reparti
 
             if (idTurno != -1)
             {
-                Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), turno.idReparto);
+                Turno turno = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), turno.idReparto);
                 if (turno.id != -1 && rp.id != -1)
                 {
                     frmRisorsePostazioni.Visible = true;

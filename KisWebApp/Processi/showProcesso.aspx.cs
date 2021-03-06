@@ -42,7 +42,7 @@ namespace KIS.Processi
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ProcessID.Value = "-1";
@@ -54,7 +54,7 @@ namespace KIS.Processi
                 if (!String.IsNullOrEmpty(Request.QueryString["id"]))
                 {
                     string procID = Request.QueryString["id"];
-                    processo padre = new processo(Session["ActiveWorkspace"].ToString(), int.Parse(procID));
+                    processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), int.Parse(procID));
                     ProcessID.Value = padre.processID.ToString();
                     ProcessRev.Value = padre.revisione.ToString();
                     if (!Page.IsPostBack)
@@ -144,13 +144,13 @@ namespace KIS.Processi
                         }
                         if (idVariante != -1)
                         {
-                            variante var = new variante(Session["ActiveWorkspace"].ToString(), idVariante);
+                            variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), idVariante);
                             if (var.idVariante != -1)
                             {
                                 VariantID.Value = var.idVariante.ToString();
                                 if (!Page.IsPostBack)
                                 {
-                                    ProductParametersCategories parList = new ProductParametersCategories(Session["ActiveWorkspace"].ToString());
+                                    ProductParametersCategories parList = new ProductParametersCategories(Session["ActiveWorkspace_Name"].ToString());
                                     parList.loadCategories();
                                     ddlParamCategory.AppendDataBoundItems = true;
                                     ddlParamCategory.Items.Clear();
@@ -166,7 +166,7 @@ namespace KIS.Processi
                                 deleteVariante.Visible = true;
                                 lblTitoloVariante.Text = GetLocalResourceObject("lblProdotto").ToString()+" " + var.nomeVariante;
                                 lblDescrizioneVariante.Text = var.descrizioneVariante;
-                                ProcessoVariante prcVar1 = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), padre, var);
+                                ProcessoVariante prcVar1 = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), padre, var);
                                 if (prcVar1 != null && prcVar1.process != null && prcVar1.process.processID != -1 &&
                                     prcVar1.variant != null && prcVar1.variant.idVariante != -1)
                                 {
@@ -249,7 +249,7 @@ namespace KIS.Processi
                                     pert.procID = padre.processID;
                                     /*containerVSM.Visible = false;
                                     ProcStream.Visible = false;*/
-                                    TaskVariante prcVar = new TaskVariante(Session["ActiveWorkspace"].ToString(), padre, var);
+                                    TaskVariante prcVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), padre, var);
                                     //frmLinkSubProc.Visible = true;
                                     //frmLinkSubProc.procVar = prcVar;
                                     // lblErr.Text = prcVar.Task.processID.ToString() + " " + prcVar.Task.revisione.ToString() + " " + prcVar.variant.idVariante.ToString();
@@ -398,7 +398,7 @@ namespace KIS.Processi
         {
             lblErr.Text = "";
             lblErr.Visible = true;     
-            processo proc = new processo(Session["ActiveWorkspace"].ToString(), int.Parse(lblProcID.Text));
+            processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), int.Parse(lblProcID.Text));
             proc.processName = Server.HtmlEncode(inputProcName.Text);
             proc.processDescription = Server.HtmlEncode(inputProcDesc.Text);
             lblErr.Text = GetLocalResourceObject("lblVSM").ToString() + ": " + inputVSM.SelectedValue.ToString();
@@ -564,7 +564,7 @@ namespace KIS.Processi
                 }*/
                             if (idProc != -1 && idVariante == -1)
                 {
-                    processo prc = new processo(Session["ActiveWorkspace"].ToString(), idProc);
+                    processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), idProc);
                     int rt = prc.delete();
                     if (rt == 0)
                     {
@@ -605,13 +605,13 @@ namespace KIS.Processi
                 }
                 if(procID != -1)
                 {
-                    processo curr = new processo(Session["ActiveWorkspace"].ToString(), procID);
+                    processo curr = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
                     if (curr.processID != -1)
                     {
                         
-                        variante var = new variante(Session["ActiveWorkspace"].ToString());
+                        variante var = new variante(Session["ActiveWorkspace_Name"].ToString());
                         int varID = var.add(GetLocalResourceObject("lblNuovoProcDefault").ToString(), GetLocalResourceObject("lblNuovoProcDefault").ToString());
-                        var = new variante(Session["ActiveWorkspace"].ToString(), varID);
+                        var = new variante(Session["ActiveWorkspace_Name"].ToString(), varID);
                         if (var.idVariante != -1)
                         {
                             bool rt = curr.addVariante(var);
@@ -660,7 +660,7 @@ namespace KIS.Processi
                     
                     if (varID != -1)
                     {
-                        variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
+                        variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varID);
                         if (var.idVariante != -1)
                         {
                             editVariante.Visible = true;
@@ -686,7 +686,7 @@ namespace KIS.Processi
             }
             if (prcID != -1)
             {
-                processo proc = new processo(Session["ActiveWorkspace"].ToString(), prcID);
+                processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), prcID);
                 if (proc.processID != -1)
                 {
                     bool ret = proc.buildNewBlankRevision();
@@ -715,7 +715,7 @@ namespace KIS.Processi
             }
             if (prcID != -1)
             {
-                processo proc = new processo(Session["ActiveWorkspace"].ToString(), prcID);
+                processo proc = new processo(Session["ActiveWorkspace_Name"].ToString(), prcID);
                 if (proc.processID != -1)
                 {
                     lblErr.Text = proc.buildNewRevisionCopy().ToString() + "<br/>" + proc.err;
@@ -745,10 +745,10 @@ namespace KIS.Processi
 
             if (varID != -1 && procID!=-1)
             {
-                variante var = new variante(Session["ActiveWorkspace"].ToString(), varID);
-                processo prc = new processo(Session["ActiveWorkspace"].ToString(), procID);
+                variante var = new variante(Session["ActiveWorkspace_Name"].ToString(), varID);
+                processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
                 var.loadProcessi();
-                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), prc, var);
+                ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), prc, var);
                 prcVar.loadReparto();
                 prcVar.process.loadFigli(prcVar.variant);
                 bool controllo = true;
@@ -831,10 +831,10 @@ namespace KIS.Processi
 
             if (currProc != -1 && procID != -1 && varID != -1)
             {
-                ProcessoVariante daCopiare = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), procID), new variante(Session["ActiveWorkspace"].ToString(), varID));
+                ProcessoVariante daCopiare = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), procID), new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
                 daCopiare.loadReparto();
                 daCopiare.process.loadFigli(daCopiare.variant);
-                processo curr = new processo(Session["ActiveWorkspace"].ToString(), currProc);
+                processo curr = new processo(Session["ActiveWorkspace_Name"].ToString(), currProc);
                 if (curr != null && daCopiare != null && curr.processID!=-1 && daCopiare.process != null && daCopiare.variant != null)
                 {
                     lblErr.Text = "curr: " + curr.processID.ToString() + "<br />"

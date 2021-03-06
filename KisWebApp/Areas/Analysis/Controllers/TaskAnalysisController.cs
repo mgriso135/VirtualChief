@@ -15,7 +15,7 @@ namespace KIS.Areas.Analysis.Controllers
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
                 Dati.Utilities.LogAction( curr.username, "Controller", "/Analysis/TaskAnalysis/Index", "", ipAddr);
@@ -34,22 +34,22 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 ViewBag.TypeOfProducts = TypeOfProductsList;
-                ElencoPostazioni listWst = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                ElencoPostazioni listWst = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Workstations = listWst.elenco;
-                ElencoTasks listTasks = new ElencoTasks(Session["ActiveWorkspace"].ToString());
+                ElencoTasks listTasks = new ElencoTasks(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Tasks = listTasks.Elenco;
                 return View();
             }
@@ -102,14 +102,14 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 if (startPeriod < endPeriod)
                 {
-                    TaskProductionHistory History = new TaskProductionHistory(Session["ActiveWorkspace"].ToString());
+                    TaskProductionHistory History = new TaskProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                     History.loadTaskProductionHistory();
 
                     List<TaskProductionHistoryStruct> curr = History.TaskHistoricData.Where(x => x.TaskRealEndDate > startPeriod && x.TaskRealEndDate < endPeriod.AddDays(1)).ToList();
@@ -204,7 +204,7 @@ namespace KIS.Areas.Analysis.Controllers
                             if (tskID!=-1)
                             {
                             TaskFilter.Add(tskID);
-                            processo prcCurr = new processo(Session["ActiveWorkspace"].ToString(), tskID);
+                            processo prcCurr = new processo(Session["ActiveWorkspace_Name"].ToString(), tskID);
                                 ViewBag.TaskFilter += "data.addColumn('number', '" + prcCurr.processName + "');";                        }
                         }
 

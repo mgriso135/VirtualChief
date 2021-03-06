@@ -1,5 +1,6 @@
 ﻿using System;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS
 {
@@ -7,9 +8,10 @@ namespace KIS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            KISConfig kCfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+            if(Session["ActiveWorkspace_Name"]!=null)
+            { 
+            KISConfig kCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             Boolean FullyConfigured =
-                kCfg.WizAdminUserCompleted &&
                 kCfg.WizAndonCompleted &&
                 kCfg.WizCustomerReportCompleted &&
                 kCfg.WizLogoCompleted &&
@@ -27,14 +29,19 @@ namespace KIS
 
             if (Session["user"] != null)
             {
-                lbl1.Text = ((User)Session["user"]).name + " " + ((User)Session["user"]).cognome +
-                    "<br/>Last login: " + ((User)Session["user"]).lastLogin.ToString();
+                lbl1.Text = ((UserAccount)Session["user"]).firstname + " " + ((UserAccount)Session["user"]).lastname +
+                    "<br/>Last login: " ;
                 lblBenvenuto.Visible = true;                
             }
             else
             {
                 lblBenvenuto.Visible = false;
                 lbl1.Text = GetLocalResourceObject("lbl1_NotLoggedIn.Text").ToString();
+            }
+        }
+            else
+            {
+                Response.Redirect("~/AccountsMgm/Account/AfterLogin");
             }
         }
     }

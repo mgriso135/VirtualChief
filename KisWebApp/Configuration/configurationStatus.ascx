@@ -7,15 +7,6 @@
         <asp:Label runat="server" ID="lbl1" />
 <table class="table-center">
     <tr>
-        <td><asp:Image ID="Image5" runat="server" ImageUrl="~/img/iconAdmin.png" Height="60" /></td>
-<td><a href="wizConfigAdminUser.aspx"><p class="lead"><asp:Literal runat="server" ID="lblAdmin" Text="<%$Resources:lblAdmin %>" /></p></a>
-    </td>
-        <td>
-            <asp:Image runat="server" ID="adminOK" ImageUrl="~/img/iconComplete.png" Height="60" Visible="false" ToolTip="<%$Resources:lblTTCfgOk %>" />
-            <asp:Image runat="server" ID="adminKO" ImageUrl="~/img/iconWarning.png" Height="60" Visible="false" ToolTip="<%$Resources:lblTTCfgKo %>"/>
-        </td>
-    </tr>
-    <tr>
         <td><asp:Image ID="Image1" runat="server" ImageUrl="~/img/LogoKIS.jpg" Height="60" /></td>
 <td><a href="wizConfigLogo.aspx"><p class="lead"><asp:Literal runat="server" ID="lblLogo" Text="<%$Resources:lblLogo %>" /></p></a>
     </td>

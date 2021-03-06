@@ -39,7 +39,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             elencoPermessi = new List<String[]>();
@@ -51,7 +51,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
@@ -62,7 +62,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 }
 
                 // Show list
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString());
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace_Name"].ToString());
                 wiList.loadWorkInstructionList();
                 return View(wiList.List);
             }
@@ -92,11 +92,11 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             if (ViewBag.authW)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString());
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace_Name"].ToString());
                 int[] retWI = wiList.Add(name, description, "", ((User)Session["user"]).username);
                 if (retWI[0] != -1)
                 {
@@ -126,7 +126,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             if (ViewBag.authR)
             {
@@ -142,7 +142,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                     { }
                 }
 
-                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString(), ids);
+                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace_Name"].ToString(), ids);
                 //wiList.loadWorkInstructionList();
                 for (int i = 0; i < wiList.List.Count; i++)
                 {
@@ -184,12 +184,12 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), manualID, manualRev);
+                currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), manualID, manualRev);
                 currWI.loadLabels();
                 currWI.loadTaskProducts();
                 currWI.loadOlderVersions();
@@ -217,12 +217,12 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), ID, Version);
                 if(currWI.ID!=-1)
                 {
                     currWI.Name = Name;
@@ -250,7 +250,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
         public int AddLabelById(int ID, int Version, int LabelID)
         {
             int ret = 0;
-            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
+            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), ID, Version);
             if(currWI.ID!=-1 && currWI.Version!=-1)
             {
                 bool bret = currWI.addLabel(LabelID);
@@ -269,10 +269,10 @@ namespace KIS.Areas.WorkInstructions.Controllers
         public int AddLabelByName(int ID, int Version, String LabelName)
         {
             int ret = 0;
-            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
+            KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), ID, Version);
             if (currWI.ID != -1 && currWI.Version != -1)
             {
-                KIS.App_Sources.WorkInstructions.WILabelList lblList = new App_Sources.WorkInstructions.WILabelList(Session["ActiveWorkspace"].ToString());
+                KIS.App_Sources.WorkInstructions.WILabelList lblList = new App_Sources.WorkInstructions.WILabelList(Session["ActiveWorkspace_Name"].ToString());
                 lblList.loadLabelsList();
                 int LabelID = -1;
                 try
@@ -326,12 +326,12 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), ID, Version);
+                KIS.App_Sources.WorkInstructions.WorkInstruction currWI = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), ID, Version);
                 bool bret = currWI.deleteLabel(LabelID);
                 ret = bret ? 1 : 3;
             }
@@ -354,7 +354,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.showAdd = false;
             if (ViewBag.authW)
@@ -383,14 +383,14 @@ namespace KIS.Areas.WorkInstructions.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (Session["user"] != null)
             {
                 if(ViewBag.authR)
                 {
-                    KIS.App_Sources.WorkInstructions.WILabelList currList = new App_Sources.WorkInstructions.WILabelList(Session["ActiveWorkspace"].ToString());
+                    KIS.App_Sources.WorkInstructions.WILabelList currList = new App_Sources.WorkInstructions.WILabelList(Session["ActiveWorkspace_Name"].ToString());
                     currList.loadLabelsList();
                     for(int i =0; i < currList.List.Count; i++)
                     {
@@ -470,7 +470,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
 
             if(checkdates && action== "NewVersion")
             {
-                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), origManualID);
+                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), origManualID);
                 wi.loadTaskProducts();
                 for(int i = 0; i < wi.listTasksProducts.Count && checkdates; i++)
                 {
@@ -497,20 +497,20 @@ namespace KIS.Areas.WorkInstructions.Controllers
                         {
                             if (action == "add")
                             {
-                                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace"].ToString());
+                                KIS.App_Sources.WorkInstructions.WorkInstructionsList wiList = new App_Sources.WorkInstructions.WorkInstructionsList(Session["ActiveWorkspace_Name"].ToString());
                                 int[] res = wiList.Add(resultList[i].name, "", resultList[i].name, ((KIS.App_Code.User)Session["user"]).username);
                                 if (res[0] != -1 && res[1] != -1)
                                 {
                                     System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
                                     HostingEnvironment.MapPath(serverMapPath) + "/" + res[0] + "_" + res[1] + ".pdf");
-                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), res[0], res[1]);
+                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), res[0], res[1]);
                                     curr.Path = res[0] + "_" + res[1] + ".pdf";
                                     curr.ExpiryDate = expiry;
                                 }
                             }
                             else if(action == "NewVersion")
                             {
-                                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), origManualID);
+                                KIS.App_Sources.WorkInstructions.WorkInstruction wi = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), origManualID);
                                 if(wi!=null && wi.ID!=-1 && wi.Version>=0)
                                 { 
 
@@ -520,7 +520,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                                         
                                     System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
                                     HostingEnvironment.MapPath(serverMapPath) + "/" + res[0] + "_" + res[1] + ".pdf");
-                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace"].ToString(), res[0], res[1]);
+                                    App_Sources.WorkInstructions.WorkInstruction curr = new App_Sources.WorkInstructions.WorkInstruction(Session["ActiveWorkspace_Name"].ToString(), res[0], res[1]);
                                     curr.Path = res[0] + "_" + res[1] + ".pdf";
                                     curr.ExpiryDate = expiry;
                                 }

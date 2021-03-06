@@ -108,35 +108,6 @@ namespace KIS.App_Code
             }
         }
         
-        public Boolean WizAdminUserCompleted
-        {
-            get
-            {
-                Boolean ret = false;
-                if(this.workspace_id != -1)
-                { 
-                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT groupss.id, groupusers.useraccountid FROM groupss INNER JOIN groupusers ON("
-                        + "groupss.id = groupusers.groupid) WHERE name LIKE 'Admin' AND workspaceid=@wsid";
-                    cmd.Parameters.AddWithValue("@wsid", this.workspace_id);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
-                    {
-                        ret = true;
-                    }
-                    else
-                    {
-                        ret = false;
-                    }
-                    rdr.Close();
-                    conn.Close();
-                }
-                return ret;
-            }
-        }
-
         public Boolean WizTimezoneCompleted
         {
             get

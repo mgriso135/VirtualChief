@@ -26,13 +26,13 @@ namespace KIS.Configuration
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             try
             { 
             if (checkUser == true)
             {
-                KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
 
                 if (!cfg.WizTimezoneCompleted)
                 {
@@ -45,7 +45,7 @@ namespace KIS.Configuration
                         ddlTimezones.DataSource = TimeZoneInfo.GetSystemTimeZones();
                         ddlTimezones.DataTextField = "DisplayName";
                         ddlTimezones.DataValueField = "Id";
-                        FusoOrario fo = new FusoOrario(Session["ActiveWorkspace"].ToString());
+                        FusoOrario fo = new FusoOrario(Session["ActiveWorkspace_Name"].ToString());
                         //ddlTimezones.SelectedValue = fo.tzFusoOrario.Id;
                         ddlTimezones.DataBind();
                     }
@@ -75,7 +75,7 @@ namespace KIS.Configuration
             if (ddlTimezones.SelectedValue.Length > 0)
             {
                 TimeZoneInfo tz = TimeZoneInfo.FindSystemTimeZoneById(ddlTimezones.SelectedValue);
-                FusoOrario current = new FusoOrario(Session["ActiveWorkspace"].ToString());
+                FusoOrario current = new FusoOrario(Session["ActiveWorkspace_Name"].ToString());
                 current.fusoOrario = ddlTimezones.SelectedValue;
                 
                 Response.Redirect("~/Configuration/MainWizConfig.aspx");

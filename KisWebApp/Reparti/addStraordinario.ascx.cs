@@ -24,7 +24,7 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -63,12 +63,12 @@ namespace KIS.Reparti
                 Int32.Parse(OraF.SelectedValue), Int32.Parse(MinutoF.SelectedValue), 0);
             lbl1.Text = inizio.ToString("yyyy/MM/dd HH:mm:ss") + " " + fine.ToString("yyyy/MM/dd HH:mm:ss");
 
-            Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
+            Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), trn.idReparto);
             if (inizio < fine && TimeZoneInfo.ConvertTimeToUtc(inizio, rp.tzFusoOrario) > DateTime.UtcNow)
             {
                 //Turno trn = new Turno(idTurno);
-                ElencoStraordinari rs = new ElencoStraordinari(Session["ActiveWorkspace"].ToString(), trn.idReparto);
+                ElencoStraordinari rs = new ElencoStraordinari(Session["ActiveWorkspace_Name"].ToString(), trn.idReparto);
                 bool ret = rs.Add(trn.id, inizio, fine);
                 if (ret == false)
                 {

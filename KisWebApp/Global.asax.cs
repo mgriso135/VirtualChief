@@ -9,6 +9,7 @@ using System.Web.Routing;
 using System.Web.Mvc;
 using KIS.App_Code;
 using KIS.App_Start;
+using KIS.App_Sources;
 
 namespace KIS
 {
@@ -41,8 +42,8 @@ namespace KIS
             // Code that runs on application startup
             if(HttpContext.Current != null && HttpContext.Current.Session != null)
             {
-                User currUser = (User)HttpContext.Current.Session["user"];
-                if(currUser!=null && currUser.username.Length>0 && currUser.Language.Length>0)
+                UserAccount currUser = (UserAccount)HttpContext.Current.Session["user"];
+                if(currUser!=null && currUser.id != -1 && currUser.Language.Length>0)
                 {
                     String language = currUser.Language;
                     System.Threading.Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo(language);

@@ -17,7 +17,7 @@ namespace KIS.Analysis
             lnkProdReportF.Visible = false;
             if (!String.IsNullOrEmpty(Request.QueryString["customerID"]))
             {
-                Cliente customer = new Cliente(Session["ActiveWorkspace"].ToString(), Request.QueryString["customerID"]);
+                Cliente customer = new Cliente(Session["ActiveWorkspace_Name"].ToString(), Request.QueryString["customerID"]);
                 if (customer.CodiceCliente.Length > 0)
                 {
                     lnkProdReportF.Visible = true;

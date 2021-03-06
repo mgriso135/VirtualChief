@@ -35,20 +35,20 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 List<String[]> cst = new List<String[]>();
-                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Departments = listDepts.elenco;
                 ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 ViewBag.TypeOfProducts = TypeOfProductsList;
-                ElencoPostazioni elWorkstations = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                ElencoPostazioni elWorkstations = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Workstations = elWorkstations.elenco;
                 return View();
             }
@@ -101,14 +101,14 @@ namespace KIS.Areas.Analysis.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 if (startPeriod < endPeriod)
                 {
-                    TaskProductionHistory History = new TaskProductionHistory(Session["ActiveWorkspace"].ToString());
+                    TaskProductionHistory History = new TaskProductionHistory(Session["ActiveWorkspace_Name"].ToString());
                     History.loadTasksProductionWorkload();
 
                     // Date filter

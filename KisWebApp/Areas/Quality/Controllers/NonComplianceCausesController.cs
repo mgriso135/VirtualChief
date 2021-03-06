@@ -36,13 +36,13 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authorized = true;
-                NonComplianceCauses lstCause = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
+                NonComplianceCauses lstCause = new NonComplianceCauses(Session["ActiveWorkspace_Name"].ToString());
                 lstCause.loadCausesList();
                 return View(lstCause.CausesList);
             }
@@ -79,7 +79,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -95,7 +95,7 @@ namespace KIS.Areas.Quality.Controllers
                         // If the request is POST, get the values from the form
                         var name = Request.Form["name"];
                         var description = Request.Form["description"];
-                        KIS.App_Sources.NonComplianceCauses lstCauses = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
+                        KIS.App_Sources.NonComplianceCauses lstCauses = new NonComplianceCauses(Session["ActiveWorkspace_Name"].ToString());
                         created = lstCauses.Add(Server.HtmlEncode(name), Server.HtmlEncode(description));
                         if (created)
                         {
@@ -143,14 +143,14 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 ViewBag.authenticated = true;
                 // Get the clients
-                NonComplianceCauses ncCause = new NonComplianceCauses(Session["ActiveWorkspace"].ToString());
+                NonComplianceCauses ncCause = new NonComplianceCauses(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Deleted = ncCause.Delete(id);
                 // Add the process details to the ViewBag
                 if (ViewBag.Deleted)
@@ -187,7 +187,7 @@ namespace KIS.Areas.Quality.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -199,7 +199,7 @@ namespace KIS.Areas.Quality.Controllers
                     var name = Request.Form["name"];
                     var description = Request.Form["description"];
 
-                    NonComplianceCause ncCauseU = new NonComplianceCause(Session["ActiveWorkspace"].ToString(), id);
+                    NonComplianceCause ncCauseU = new NonComplianceCause(Session["ActiveWorkspace_Name"].ToString(), id);
                     if (ncCauseU != null && ncCauseU.ID != -1)
                     {
                         ncCauseU.Name = Server.HtmlEncode(name);
@@ -215,7 +215,7 @@ namespace KIS.Areas.Quality.Controllers
 
 
                 // Create a model object.
-                NonComplianceCause ncCause = new NonComplianceCause(Session["ActiveWorkspace"].ToString(), id);
+                NonComplianceCause ncCause = new NonComplianceCause(Session["ActiveWorkspace_Name"].ToString(), id);
                 // Get the list of clients            
                 if (ncCause != null && ncCause.ID != -1)
                 {

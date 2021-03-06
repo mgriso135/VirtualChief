@@ -39,12 +39,12 @@ namespace KIS.Areas.Customers.Controllers
 
 
             int ret = 0;
-            Cliente cst = new Cliente(Session["ActiveWorkspace"].ToString(), customer);
+            Cliente cst = new Cliente(Session["ActiveWorkspace_Name"].ToString(), customer);
             if ((cst == null || cst.CodiceCliente.Length == 0) && ret == 0)
             {
                 ret = 2;
             }
-            User usr = new App_Code.User(Session["ActiveWorkspace"].ToString());
+            User usr = new App_Code.User(Session["ActiveWorkspace_Name"].ToString());
             if(usr.UserExists(username) && ret == 0)
             {
                 ret = 4;
@@ -73,12 +73,12 @@ namespace KIS.Areas.Customers.Controllers
             int contactID = cst.AddContatto(FirstName, LastName, Role);
                 if(contactID !=-1 && mail!=null && mail.Address.Length > 0)
                 {
-                    Contatto cont = new Contatto(Session["ActiveWorkspace"].ToString(), contactID);
+                    Contatto cont = new Contatto(Session["ActiveWorkspace_Name"].ToString(), contactID);
                         cont.addEmail(mail, "Default");
                         if(createUser && password.Length>0 && password == password2)
                         {
-                            User curr = new App_Code.User(Session["ActiveWorkspace"].ToString());
-                            KISConfig cfg = new KISConfig(Session["ActiveWorkspace"].ToString());
+                            User curr = new App_Code.User(Session["ActiveWorkspace_Name"].ToString());
+                            KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
                             String checkUsrAdd = curr.add(username, password, FirstName, LastName, "User", cfg.Language,
                                 false, mail);
                         curr = new App_Code.User(username);

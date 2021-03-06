@@ -24,19 +24,19 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
-                Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+                Turno turno = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
                 if (turno.id != -1)
                 {
                     rowTitolo.Visible = true;
                     lblTitolo.Text = turno.Nome;
                     if (!Page.IsPostBack)
                     {
-                        ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace"].ToString());
+                        ElencoPostazioni elPostazioni = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
                         List<Postazione> elPostazioniSorted = elPostazioni.elenco.OrderBy(x => x.name).ToList();
                         rptPostazioni.DataSource = elPostazioniSorted;
                         rptPostazioni.DataBind();
@@ -67,13 +67,13 @@ namespace KIS.Reparti
             {
                 if (idPostazione != -1)
                 {
-                    Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazione);
+                    Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), idPostazione);
                     if (pst.id != -1)
                     {
-                        Turno turno = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+                        Turno turno = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
                         if (turno.id != -1)
                         {
-                            RisorsePostazioneTurno res = new RisorsePostazioneTurno(Session["ActiveWorkspace"].ToString(), pst, turno);
+                            RisorsePostazioneTurno res = new RisorsePostazioneTurno(Session["ActiveWorkspace_Name"].ToString(), pst, turno);
                             res.NumRisorse = numRes;
                             lbl1.Text =GetLocalResourceObject("lblSetOk1").ToString()
                                 +  " (" + res.NumRisorse.ToString()
@@ -122,14 +122,14 @@ namespace KIS.Reparti
                     }
                     if (idPostazione != -1)
                     {
-                        Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), idPostazione);
+                        Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), idPostazione);
                         if (pst!=null && pst.id != -1)
                         {
                             for (int i = 0; i <= 1000; i++)
                             {
                                 ddlRisorse.Items.Add(new ListItem(i.ToString(), i.ToString()));
                             }
-                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(Session["ActiveWorkspace"].ToString(), pst, new Turno(Session["ActiveWorkspace"].ToString(), idTurno));
+                            RisorsePostazioneTurno resPost = new RisorsePostazioneTurno(Session["ActiveWorkspace_Name"].ToString(), pst, new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno));
                             if (resPost != null && resPost.postazione != null && resPost.postazione.id != -1 && resPost.turno != null && resPost.turno.id != -1)
                             {
                                 ddlRisorse.SelectedValue = resPost.NumRisorse.ToString();

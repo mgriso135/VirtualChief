@@ -29,7 +29,7 @@ namespace KIS.Analysis
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -37,7 +37,7 @@ namespace KIS.Analysis
                 tblSelectDate.Visible = true;
                 if (!Page.IsPostBack)
                 {
-                    portClienti = new PortafoglioClienti(Session["ActiveWorkspace"].ToString());
+                    portClienti = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 }
             }
             else

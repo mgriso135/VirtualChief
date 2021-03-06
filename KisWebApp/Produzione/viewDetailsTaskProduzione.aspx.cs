@@ -24,7 +24,7 @@ namespace KIS.Produzione
                 }
                 if (taskID != -1)
                 {
-                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                    TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                     if (tsk.TaskProduzioneID != -1)
                     {
                         frmViewDetails.taskID = tsk.TaskProduzioneID;

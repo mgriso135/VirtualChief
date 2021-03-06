@@ -29,7 +29,7 @@ namespace KIS.Commesse
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -73,7 +73,7 @@ namespace KIS.Commesse
                         }
                         else
                         {
-                            Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), idProdotto, annoProdotto);
+                            Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), idProdotto, annoProdotto);
                             if (art.ID!=-1 && art.Proc.process.processID == idProc && art.Proc.process.revisione == revProc && art.Proc.variant.idVariante == idVar && art.Commessa == idCommessa && art.AnnoCommessa == annoCommessa)
                             {
                                 checkCoerenza = true;
@@ -82,10 +82,10 @@ namespace KIS.Commesse
 
                         if (checkCoerenza == true)
                         {
-                            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+                            ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
                             prcVar.loadReparto();
                             prcVar.process.loadFigli(prcVar.variant);
-                            ElencoReparti elRep = new ElencoReparti(Session["ActiveWorkspace"].ToString());
+                            ElencoReparti elRep = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                             rptReparti.DataSource = elRep.elenco;
                             rptReparti.DataBind();
                         }
@@ -133,8 +133,8 @@ namespace KIS.Commesse
                     }
                     if (repID != -1)
                     {
-                        Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
-                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+                        Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
+                        ProcessoVariante prcVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
                         prcVar.loadReparto();
                         prcVar.process.loadFigli(prcVar.variant);
                         bool trovato = false;
@@ -199,10 +199,10 @@ namespace KIS.Commesse
 
             if (idReparto != -1)
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), idReparto);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), idReparto);
                 if (rp.id != -1)
                 {
-                    ProcessoVariante procVar = new ProcessoVariante(Session["ActiveWorkspace"].ToString(), new processo(Session["ActiveWorkspace"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace"].ToString(), idVar));
+                    ProcessoVariante procVar = new ProcessoVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), idProc, revProc), new variante(Session["ActiveWorkspace_Name"].ToString(), idVar));
                     procVar.loadReparto();
                     procVar.process.loadFigli(procVar.variant);
                     procVar.AddReparto(rp);

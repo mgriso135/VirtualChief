@@ -28,7 +28,7 @@ namespace KIS.configReparto
                 {
                     repID = -1;
                 }
-                Reparto rep = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rep = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 if (rep.id != -1)
                 {
                     if (Page.IsPostBack)

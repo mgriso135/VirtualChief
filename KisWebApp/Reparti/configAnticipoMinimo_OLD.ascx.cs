@@ -25,14 +25,14 @@ namespace KIS.Reparti
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {
                 if (repID != -1)
                 {
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     if (rp.id != -1)
                     {
                         if (!Page.IsPostBack)
@@ -78,7 +78,7 @@ namespace KIS.Reparti
             }
             else
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 ore.Text = rp.anticipoMinimoTasks.Hours.ToString();
                 minuti.SelectedValue = rp.anticipoMinimoTasks.Minutes.ToString();
                 secondi.SelectedValue = rp.anticipoMinimoTasks.Seconds.ToString();
@@ -94,7 +94,7 @@ namespace KIS.Reparti
         {
             if (repID != -1)
             {
-                Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                 rp.anticipoMinimoTasks = new TimeSpan(Int32.Parse(ore.Text), Int32.Parse(minuti.SelectedValue), Int32.Parse(secondi.SelectedValue));
                 Response.Redirect(Request.RawUrl);
             }
@@ -102,7 +102,7 @@ namespace KIS.Reparti
 
         protected void undo_Click(object sender, ImageClickEventArgs e)
         {
-            Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+            Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
             ore.Text = rp.anticipoMinimoTasks.Hours.ToString();
             minuti.SelectedValue = rp.anticipoMinimoTasks.Minutes.ToString();
             secondi.SelectedValue = rp.anticipoMinimoTasks.Seconds.ToString();

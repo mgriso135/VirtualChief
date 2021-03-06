@@ -15,7 +15,7 @@ namespace KIS.Admin
         {
             tblOptions.Visible = false;
             bool checkUser = false;
-            if (Session["user"] != null && Session["ActiveWorkspace"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 checkUser = true;
@@ -34,7 +34,7 @@ namespace KIS.Admin
                 prm[0] = "Configurazione Report Stato Ordini Clienti";
                 prm[1] = "W";
                 perm.Add(prm);
-                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), perm);
+                checkAnalisi = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), perm);
                 
                 boxOrderStatusReport.Visible = checkAnalisi;
                 /*if (checkAnalisi == true)

@@ -29,17 +29,17 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
             {*/
-            FusoOrario fuso = new FusoOrario(Session["ActiveWorkspace"].ToString());
+            FusoOrario fuso = new FusoOrario(Session["ActiveWorkspace_Name"].ToString());
             tzFuso = fuso.tzFusoOrario;
             if (!Page.IsPostBack && !Page.IsCallback)
             {
                 
-                    andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                    andonCfg = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                     andonCfg.loadCampiVisualizzati();
                     andonCfg.loadCampiVisualizzatiTasks();
 
@@ -74,7 +74,7 @@ namespace KIS.Produzione
         {
             //ElencoArticoliInProduzione artAperti = new ElencoArticoliInProduzione();
             //artI = artAperti.ElencoArticoli;
-            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace"].ToString());
+            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
             elComm.loadCommesse();
             artI = new List<Articolo>();
             
@@ -101,7 +101,7 @@ namespace KIS.Produzione
 
             if (andonCfg == null || andonCfg.CampiVisualizzati == null)
             {
-                andonCfg = new AndonCompleto(Session["ActiveWorkspace"].ToString());
+                andonCfg = new AndonCompleto(Session["ActiveWorkspace_Name"].ToString());
                 andonCfg.loadCampiVisualizzati();
                 andonCfg.loadCampiVisualizzatiTasks();
             }
@@ -129,7 +129,7 @@ namespace KIS.Produzione
                 }
                 if (artID != -1 && artYear != -1)
                 {
-                    Articolo art = new Articolo(Session["ActiveWorkspace"].ToString(), artID, artYear);
+                    Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), artID, artYear);
                     if (art.ID != -1)
                     {
                         if (art.Status == 'N')
@@ -179,7 +179,7 @@ namespace KIS.Produzione
                                         td.InnerHtml = art.Commessa + "/" + art.AnnoCommessa;
                                         break;
                                     case "OrderExternalID":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = comm.ExternalID;
                                         break;
                                     case "CommessaCodiceCliente":
@@ -189,15 +189,15 @@ namespace KIS.Produzione
                                         td.InnerHtml = art.RagioneSocialeCliente;
                                         break;
                                     case "CommessaDataInserimento":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = comm.DataInserimento.ToString("dd/MM/yyyy");
                                         break;
                                     case "CommessaNote":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = comm.Note;
                                         break;
                                     case "ProdottoID":
-                                        comm = new Commessa(Session["ActiveWorkspace"].ToString(), art.Commessa, art.AnnoCommessa);
+                                        comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), art.Commessa, art.AnnoCommessa);
                                         td.InnerHtml = art.ID.ToString() + "/" + art.Year.ToString();
                                         break;
                                     case "ProdottoLineaProdotto":
@@ -484,7 +484,7 @@ namespace KIS.Produzione
                     taskID = -1;
                 }
 
-                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace"].ToString(), taskID);
+                TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), taskID);
                 lblTaskFields.Text = "";
                 if (tsk.TaskProduzioneID != -1)
                 {
@@ -503,7 +503,7 @@ namespace KIS.Produzione
                                 lblTaskFields.Text += tsk.Description.ToString();
                                 break;
                             case "TaskPostazione":
-                                Postazione pst = new Postazione(Session["ActiveWorkspace"].ToString(), tsk.PostazioneID);
+                                Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                                 lblTaskFields.Text += pst.name.ToString();
                                 break;
                             case "TaskEarlyStart":

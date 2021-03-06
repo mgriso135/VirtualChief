@@ -21,7 +21,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -44,10 +44,10 @@ namespace KIS.Produzione
                 }
                 if (repID != -1 && check == true)
                 {
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), repID);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID);
                     if (!Page.IsPostBack)
                     {
-                        WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace"].ToString(), rp);
+                        WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace_Name"].ToString(), rp);
                         if (Elenco.Elenco.Count == 0)
                         {
                             rptWarnings.Visible = false;
@@ -85,7 +85,7 @@ namespace KIS.Produzione
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace"].ToString(), elencoPermessi);
+                checkUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (checkUser == true)
@@ -107,7 +107,7 @@ namespace KIS.Produzione
                 }
                 if (repID != -1 && check == true)
                 {
-                    WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace"].ToString(), new Reparto(Session["ActiveWorkspace"].ToString(), repID));
+                    WarningAperti Elenco = new WarningAperti(Session["ActiveWorkspace_Name"].ToString(), new Reparto(Session["ActiveWorkspace_Name"].ToString(), repID));
                     if (Elenco.Elenco.Count == 0)
                     {
                         rptWarnings.Visible = false;

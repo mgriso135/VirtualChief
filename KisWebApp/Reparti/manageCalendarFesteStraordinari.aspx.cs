@@ -28,8 +28,8 @@ namespace KIS.Reparti
 
                 if (idTurno != -1)
                 {
-                    Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
-                    Reparto rp = new Reparto(Session["ActiveWorkspace"].ToString(), trn.idReparto);
+                    Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
+                    Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), trn.idReparto);
                     if (rp.id != -1 && trn.id!=-1)
                     {
                         
@@ -79,8 +79,8 @@ namespace KIS.Reparti
                     crt.Series["Turno" + i.ToString()].XValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.DateTime;
                     crt.Series["Turno" + i.ToString()].YValueType = System.Web.UI.DataVisualization.Charting.ChartValueType.String;
                     crt.Series["Turno" + i.ToString()].BorderWidth = 20;
-                    IntervalloLavorativoTurno intTr = new IntervalloLavorativoTurno(Session["ActiveWorkspace"].ToString(), trn.CalendarioTrn.Turni[i].idOrarioTurno);
-                    Turno tr = new Turno(Session["ActiveWorkspace"].ToString(), intTr.idTurno);
+                    IntervalloLavorativoTurno intTr = new IntervalloLavorativoTurno(Session["ActiveWorkspace_Name"].ToString(), trn.CalendarioTrn.Turni[i].idOrarioTurno);
+                    Turno tr = new Turno(Session["ActiveWorkspace_Name"].ToString(), intTr.idTurno);
                     crt.Series["Turno" + i.ToString()].Color = tr.Colore;
                     crt.Series["Turno" + i.ToString()].BorderColor = tr.Colore;
                     crt.Series["Turno" + i.ToString()].Points.AddXY(trn.CalendarioTrn.Turni[i].Inizio.ToOADate(), 4);
@@ -176,7 +176,7 @@ namespace KIS.Reparti
             {
                 inCal = DateTime.UtcNow;
             }
-            Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+            Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
                 trn.loadCalendario(inCal, fiCal);
                 this.loadCalendario(inCal, fiCal, trn);
             
@@ -187,7 +187,7 @@ namespace KIS.Reparti
             DateTime end = dtEndCal.SelectedDate;
             if (/*end >= DateTime.Now &&*/ end >= inCal)
             {
-                Turno trn = new Turno(Session["ActiveWorkspace"].ToString(), idTurno);
+                Turno trn = new Turno(Session["ActiveWorkspace_Name"].ToString(), idTurno);
                 fiCal = end;
                 trn.loadCalendario(inCal, fiCal);
                 this.loadCalendario(inCal, fiCal,trn);
