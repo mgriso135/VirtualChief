@@ -1431,6 +1431,44 @@ namespace KIS.App_Sources
         private int _DepartmentId;
         public int DepartmentId { get { return this._DepartmentId; } }
 
+        /* Step is the pace used by the operator.
+         * Default = 60
+         * If > 60 the operator kept a fast pace
+         * if lower than 60 the operator kept a slower pace
+         */
+        private Double _Step;
+        public Double Step { get { return this._Step; } }
+
+        private Boolean _isAcyclic;
+        public Boolean isAcyclic { get { return this._isAcyclic; } }
+
+        /* Cycle Time expressed in HOURS */
+        private Double _Acyclic_CycleTime;
+        public double Acyclic_CycleTime { get { return this._Acyclic_CycleTime; } }
+
+        private Double _Acyclic_QuantityUsed;
+        public Double Acyclic_QuantityUsed { get { return this._Acyclic_QuantityUsed; } }
+
+        private Double _Acyclic_QuantityForEachProduct;
+        public Double Acyclic_QuantityForEachProduct { get { return this._Acyclic_QuantityForEachProduct; } }
+
+        /* Values admitted
+         * V = Value
+         * E = Evident Waste
+         * H = Hidden Waste
+         */
+        private Char _ValueOrWaste;
+        public Char ValueOrWaste { get { return this._ValueOrWaste; } }
+
+        /* Values admitted
+         * 1 = Normale, con tronco quasi fermo
+         * 2 = Normale, con tronco entro 45°
+         * 3 = Disagevole con movimenti entro i 45°
+         * 4 = Disagevole con movimenti del tronco molto ampi, > 45°
+         */
+        private int _Ergonomy;
+        public int Ergonomy { get { return this._Ergonomy; } }
+
         public List<FreeMeasurements_Tasks_Event> TaskEvents;
 
         public FreeMeasurement_Task(int measurementID, int taskID)
@@ -1461,7 +1499,14 @@ namespace KIS.App_Sources
                     + " freemeasurements_tasks.realworkingtime_hours, "  // 17
                     + " freemeasurements.AllowCustomTasks, "
                     + " freemeasurements.ExecuteFinishedTasks, " // 19
-                    + " freemeasurements.DepartmentId "         // 20
+                    + " freemeasurements.DepartmentId, "         // 20
+                    + " freemeasurements_tasks.step, "
+                    + " freemeasurements_tasks.isacyclic, "
+                    + " freemeasurements_tasks.acyclic_cycletime, "
+                    + " freemeasurements_tasks.acyclic_qtyused, "
+                    + " freemeasurements_tasks.acyclic_qtyforeachproduct, "  // 25
+                    + " freemeasurements_tasks.valueorwaste, "
+                    + " freemeasurements_tasks.ergonomy "           // 27
                     + "  FROM freemeasurements_tasks "
                     + " LEFT JOIN postazioni ON(postazioni.idpostazioni=freemeasurements_tasks.workstationid) "
                     + " INNER JOIN freemeasurements ON (freemeasurements_tasks.MeasurementId = freemeasurements.id)"
@@ -1493,6 +1538,11 @@ namespace KIS.App_Sources
                 this._AllowCustomTasks = rdr.GetBoolean(18);
                 this._AllowExecuteFinishedTasks = rdr.GetBoolean(19);
                 this._DepartmentId = rdr.GetInt32(20);
+                this._Step = rdr.IsDBNull(21) ? 60 : rdr.GetInt32(21);                this._isAcyclic = rdr.IsDBNull(22) ? false : rdr.GetBoolean(22);
+                this._Acyclic_CycleTime = rdr.IsDBNull(23) ? 0 : rdr.GetDouble(23);                this._Acyclic_QuantityUsed = rdr.IsDBNull(24) ? 0 : rdr.GetDouble(24);
+                this._Acyclic_QuantityForEachProduct = rdr.IsDBNull(25) ? 0 : rdr.GetDouble(25);
+                this._ValueOrWaste = rdr.IsDBNull(26) ? '\0' : rdr.GetChar(26);
+                this._Ergonomy = rdr.IsDBNull(27) ? -1 : rdr.GetInt32(27);
             }
             rdr.Close();
             conn.Close();
@@ -2272,5 +2322,12 @@ namespace KIS.App_Sources
         public Boolean AllowCustomTasks;
         public Boolean ExecuteFinishedTasks;
         public int LastTaskEventId;
+        public double step;
+        public Boolean isAcyclic;
+        public double Acyclic_CycleTime;
+        public double Acyclic_QuantityUsed;
+        public double Acyclic_QuantityForEachProduct;
+        public char ValueOrWaste;
+        public int Ergonomy;
     }
 }

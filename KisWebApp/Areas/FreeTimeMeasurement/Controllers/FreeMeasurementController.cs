@@ -7,6 +7,9 @@ using KIS.App_Code;
 using KIS.App_Sources;
 using Newtonsoft.Json;
 using MySql.Data.MySqlClient;
+using System.Web.Hosting;
+using jQuery_File_Upload.MVC5.Helpers;
+using System.IO;
 
 namespace KIS.Areas.FreeTimeMeasurement.Controllers
 {
@@ -964,5 +967,118 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             }
             return ret;
         }
+    }
+
+    public class FileUploadMeasurementController : Controller
+    {
+        FilesHelper filesHelper;
+        String tempPath = "~/Data/Measurements/tmp";
+        String serverMapPath = "~/Data/Measurements";
+        private string StorageRoot
+        {
+            get { return Path.Combine(HostingEnvironment.MapPath(serverMapPath)); }
+        }
+        private string UrlBase = "/Data/Measurements/";
+        String DeleteURL = "/FileUpload/DeleteFile/?file=";
+        String DeleteType = "GET";
+        public FileUploadMeasurementController()
+        {
+            filesHelper = new FilesHelper(DeleteURL, DeleteType, StorageRoot, UrlBase, tempPath, serverMapPath);
+        }
+
+        /* Returns:
+         * 2 if user not logged in
+         * 3 if file extension is not .csv
+         */
+        [HttpPost]
+        public JsonResult Upload()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FileUploadMeasurement/Upload", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/FreeTimeMeasurement/FileUploadMeasurement/Upload", "", ipAddr);
+            }
+
+            if (Session["user"] != null)
+            {
+                User usr = (User)Session["user"];
+                var resultList = new List<ViewDataUploadFilesResult>();
+
+                var CurrentContext = HttpContext;
+
+                filesHelper.UploadAndShowResults(CurrentContext, resultList);
+                for (int i = 0; i < resultList.Count; i++)
+                {
+                    if(resultList[i].name.Substring(resultList[i].name.Length - 4, 4) == ".csv")
+                    { 
+                        String filename = usr.username + "_" + DateTime.UtcNow.Ticks + "_" + resultList[i].name + ".csv";
+                            System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
+                        HostingEnvironment.MapPath(serverMapPath) + "/" + filename);
+                    }
+                    else
+                    {
+                        return Json("3");
+                    }
+                }
+                JsonFiles files = new JsonFiles(resultList);
+                return Json(files);
+            }
+            else
+            {
+                return Json("2");
+            }
+        }
+
+        public JsonResult GetFileList()
+        {
+            var list = filesHelper.GetFileList();
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult DeleteFile(string file)
+        {
+            filesHelper.DeleteFile(file);
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        /* Returns:
+         */
+        public int LoadMeasures(String fileName)
+        {
+            this.MeasurementBatchList = new List<FreeMeasurentsTasksJsonStruct>();
+            int ret = 0;
+            using (var reader = new StreamReader(HostingEnvironment.MapPath(serverMapPath) + "/" + fileName))
+            {
+                List<string> listA = new List<string>();
+                List<string> listB = new List<string>();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(';');
+
+                    foreach(var v in values)
+                    {
+
+                    }
+                }
+            }
+            return ret;
+        }
+
+        public int ValidateMeasures()
+        {
+            int ret = 0;
+            return ret;
+        }
+
+        public List<FreeMeasurentsTasksJsonStruct> MeasurementBatchList;
+
+
     }
 }

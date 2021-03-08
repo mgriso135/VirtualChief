@@ -70,11 +70,6 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return View();
         }
 
-        public ActionResult TestUpload()
-        {
-            return View();
-        }
-
         /* Results:
          * -2 if user is not authorized
          * 0 if generic error
@@ -307,7 +302,6 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return ret;
         }
 
-
         /* Returns:
          * 0 if generic error
          * 1 if all is ok
@@ -341,35 +335,6 @@ namespace KIS.Areas.WorkInstructions.Controllers
             }
                 return ret;
         }
-
-        /*public ActionResult EditTaskWorkInstruction(int TaskID, int TaskRev, int VariantID)
-        {
-            List<KIS.App_Sources.WorkInstructions.WorkInstruction> ret = new List<App_Sources.WorkInstructions.WorkInstruction>();
-            List<String[]> elencoPermessi = new List<String[]>();
-            String[] prmUser = new String[2];
-            prmUser[0] = "Task WorkInstructions";
-            prmUser[1] = "W";
-            elencoPermessi.Add(prmUser);
-            ViewBag.authW = false;
-            if (Session["user"] != null)
-            {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
-            }
-            ViewBag.showAdd = false;
-            if (ViewBag.authW)
-            {
-                TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new App_Code.variante(VariantID));
-                if (tskVar != null && tskVar.Task != null && tskVar.variant != null &&
-                    tskVar.Task.processID != -1 && tskVar.variant.idVariante != -1)
-                {
-                    tskVar.loadWorkInstructions();
-                    ViewBag.showAdd = tskVar.WorkInstructions.Count == 0 ? true : false;
-                    ret = tskVar.WorkInstructions;
-                }
-            }
-            return View(ret);
-        }*/
 
         public JsonResult getAllLabels()
         {
