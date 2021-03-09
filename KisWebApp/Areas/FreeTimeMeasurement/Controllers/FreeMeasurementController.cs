@@ -971,6 +971,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
     public class FileUploadMeasurementController : Controller
     {
+        public String log;
+
         FilesHelper filesHelper;
         String tempPath = "~/Data/Measurements/tmp";
         String serverMapPath = "~/Data/Measurements";
@@ -991,7 +993,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
          * 3 if file extension is not .csv
          */
         [HttpPost]
-        public JsonResult Upload()
+        public JsonResult Upload(String ddlBatchUploadProductsList)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
@@ -1009,7 +1011,6 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             {
                 User usr = (User)Session["user"];
                 var resultList = new List<ViewDataUploadFilesResult>();
-
                 var CurrentContext = HttpContext;
 
                 filesHelper.UploadAndShowResults(CurrentContext, resultList);
@@ -1017,13 +1018,15 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 {
                     if(resultList[i].name.Substring(resultList[i].name.Length - 4, 4) == ".csv")
                     { 
-                        String filename = usr.username + "_" + DateTime.UtcNow.Ticks + "_" + resultList[i].name + ".csv";
-                            System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
+                        String filename = usr.username + "_" + DateTime.UtcNow.Ticks + ".csv";
+                        System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
                         HostingEnvironment.MapPath(serverMapPath) + "/" + filename);
+
+                        this.ProcessFile(filename);
                     }
                     else
                     {
-                        return Json("3");
+                        // return Json("3");
                     }
                 }
                 JsonFiles files = new JsonFiles(resultList);
@@ -1048,25 +1051,70 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
         }
 
         /* Returns:
+         * 0 if generic error
+         * 1 if everything is ok
+         * 2 if there is some error in the data
          */
         public int LoadMeasures(String fileName)
         {
             this.MeasurementBatchList = new List<FreeMeasurentsTasksJsonStruct>();
             int ret = 0;
+            Boolean check = true;
             using (var reader = new StreamReader(HostingEnvironment.MapPath(serverMapPath) + "/" + fileName))
             {
-                List<string> listA = new List<string>();
-                List<string> listB = new List<string>();
-                while (!reader.EndOfStream)
+                var line = reader.ReadLine();
+                int lineNo = 1;
+                while (!reader.EndOfStream && check)
                 {
-                    var line = reader.ReadLine();
-                    var values = line.Split(';');
+                    line = reader.ReadLine();
+                    var values = line.Split(',');
 
-                    foreach(var v in values)
+                    // Data rilievo,Prodotto,Reparto/Area,Ciclo, // 3
+                    // Operatore,Macrofase,Sequenza,    // 6
+                    // Tempo,Passo,Aciclico,            // 9
+                    // Quantità usata,Quantità a generatore,V/NV,   // 12
+                    // Ergonomia,Note,Tempo aciclico per ciclo,     // 15
+                    // Tempo con passo                              // 16
+                    FreeMeasurentsTasksJsonStruct curr = new FreeMeasurentsTasksJsonStruct();
+                    try
                     {
+                        String measurementdate = values[0];
+                        curr.PlannedStartDate = DateTime.Parse(measurementdate);
+                        curr.PlannedEndDate = DateTime.Parse(measurementdate);
+                        curr.ProductName = values[1];
+                        curr.DepartmentName = values[2];
+                        curr.MeasurementName = values[3];
+                        curr.Operator = values[4];
+                        curr.TaskName = values[5];
+                        curr.Sequence = Int32.Parse(values[6]);
+                        curr.RealWorkingTime_Hour = Double.Parse(values[7]) / 3600;
+                        curr.step = Int32.Parse(values[8]);
+                        curr.isAcyclic = values[9].Length > 0 ? true : false;
+                        curr.Acyclic_QuantityUsed = Double.Parse(values[10]);
+                        curr.Acyclic_QuantityForEachProduct = values[11].ToString().Length == 0 ? 0 : Double.Parse(values[11]);
+                        curr.ValueOrWaste = Char.Parse(values[12]);
+                        curr.Ergonomy = Char.Parse(values[13]);
+                        curr.Notes = (values[14] == null || values[14] == "" || values[14].ToString().Length == 0) ? "" : values[14];
+                        curr.Acyclic_CycleTime = Double.Parse(values[15]) / 3600;
+                        curr.AdjustedTime = Double.Parse(values[16]) / 3600;
 
+                        this.MeasurementBatchList.Add(curr);
                     }
+                    catch(Exception ex)
+                    {
+                        check = false;
+                        this.log = "Error on line " + lineNo.ToString() + " " + ex.Message;
+                        ret = 3;
+                    }
+                    lineNo++;
                 }
+
+                ret = 1;
+            }
+
+            if(!check)
+            {
+                ret = 2;
             }
             return ret;
         }
@@ -1074,11 +1122,39 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
         public int ValidateMeasures()
         {
             int ret = 0;
+            
             return ret;
         }
 
         public List<FreeMeasurentsTasksJsonStruct> MeasurementBatchList;
 
+        public String ProcessFile(String filename)
+        {
+            User usr = (User)Session["user"];
+            String ret = "0";
+            int loadMeasures = this.LoadMeasures(filename);
 
+            if (loadMeasures == 1)
+            {
+                FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                var measurements = this.MeasurementBatchList.GroupBy(t => t.MeasurementName).Select(g => g.First()).ToList();
+                foreach (var m in measurements)
+                {
+                    int measure = fms.AddBatch(usr.username, m.PlannedStartDate, m.PlannedEndDate, m.MeasurementName, m.MeasurementDescription,
+                        m.SerialNumber, m.Quantity, 0, 0);
+                    KIS.App_Sources.FreeTimeMeasurement tm = new KIS.App_Sources.FreeTimeMeasurement(measure);
+                    if(tm.id!=-1)
+                    {
+
+                    }
+                }
+                ret = "1";
+            }
+            else
+            {
+                ret = this.log;
+            }
+            return ret;
+        }
     }
 }

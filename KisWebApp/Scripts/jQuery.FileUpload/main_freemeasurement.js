@@ -18,7 +18,7 @@ $(function () {
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
-        url: '../../FreeMeasurement/FileUploadMeasurement/Upload',
+        url: '../../FreeTimeMeasurement/FileUploadMeasurement/Upload',
     });
 
     // Enable iframe cross-domain access via redirect option:

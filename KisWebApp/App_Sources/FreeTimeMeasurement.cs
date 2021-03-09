@@ -425,6 +425,92 @@ namespace KIS.App_Sources
             return ret;
         }
 
+        public int addTask(String TaskName, Double workingtime, int step, Boolean isAcyclic, Double Acyclic_CycleTime, Double Acyclic_QtyUsed, 
+            Double Acyclic_QtyForEachProduct, Char ValueOrWaste, Char Ergonomy)
+        {
+            int ret = 0;
+            if (this.id != -1 && TaskName.Length < 255)
+            {
+                this.loadTasks();
+                int found = -1;
+                try
+                {
+                    var itm = this.Tasks.First(x => x.Name == TaskName);
+                    found = 1;
+                    ret = itm.TaskId;
+                }
+                catch
+                {
+                    found = -1;
+                }
+
+                if (found == -1)
+                {
+                    int seq = this.Tasks.Count + 1;
+                    int tID = 0;
+                    if (this.Tasks.Count > 0)
+                    {
+                        tID = this.Tasks.Max(t => t.TaskId) + 1;
+                    }
+
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmdTasks = conn.CreateCommand();
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmdTasks.Transaction = tr;
+                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                        + " description, sequence, workstationid, quantity_planned, status, quantityproduced, task_startdatereal, task_enddatereal, "
+                        + " realleadtime_hours, realworkingtime_hours, step, isAcyclic, Acyclic_CycleTime, Acyclic_QtyUsed, Acyclic_QtyForEachProduct, ValueOrWaste, Ergonomy"
+                        + ") "
+                        + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
+                        + " @description, @sequence, @workstationid, @quantity_planned, @status, @quantityproduced, @task_startdatereal, @task_enddatereal, "
+                        + " @realleadtime_hours, @realworkingtime_hours, @step, @isAcyclic, @Acyclic_CycleTime, @Acyclic_QtyUsed, @Acyclic_QtyForEachProduct, @ValueOrWaste, @Ergonomy)";
+
+                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
+                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
+                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
+                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@name", TaskName);
+                    cmdTasks.Parameters.AddWithValue("@description", "");
+                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
+                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
+                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
+                    cmdTasks.Parameters.AddWithValue("@status", 'F');
+                    cmdTasks.Parameters.AddWithValue("@quantityproduced", this.Quantity);
+                    cmdTasks.Parameters.AddWithValue("@task_startdatereal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmdTasks.Parameters.AddWithValue("@task_enddatereal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmdTasks.Parameters.AddWithValue("@realleadtime_hours", 0);
+                    cmdTasks.Parameters.AddWithValue("@realworkingtime_hours", workingtime);
+                    cmdTasks.Parameters.AddWithValue("@step", step);
+                    cmdTasks.Parameters.AddWithValue("@isAcyclic", isAcyclic);
+                    cmdTasks.Parameters.AddWithValue("@Acyclic_CycleTime", Acyclic_CycleTime);
+                    cmdTasks.Parameters.AddWithValue("@Acyclic_QtyUsed", Acyclic_QtyUsed);
+                    cmdTasks.Parameters.AddWithValue("@Acyclic_QtyForEachProduct", Acyclic_QtyForEachProduct);
+                    cmdTasks.Parameters.AddWithValue("@ValueOrWaste", ValueOrWaste);
+                    cmdTasks.Parameters.AddWithValue("@Ergonomy", Ergonomy);
+
+                    try
+                    {
+                        cmdTasks.ExecuteNonQuery();
+                        tr.Commit();
+                        ret = tID;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = -1;
+                        tr.Rollback();
+                    }
+                }
+                else
+                {
+                }
+            }
+            return ret;
+        }
+
         /* Returns:
          * 0 if generic error
          * 1 if finished successfully
@@ -886,6 +972,78 @@ namespace KIS.App_Sources
                 {
                     ret = -2;
                 }
+            }
+            else
+            {
+                ret = -2;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * FreeMeasurementId if everything is ok
+         * -1 if generic error
+         * -2 if input error
+         * -3 if error while adding
+         */
+        public int AddBatch(String createdby, DateTime plannedstartdate, DateTime plannedenddate, String name, String description,
+             String serialnumber, Double quantity, Double realleadtime, Double realworkingtime,
+             int measurementUnitId = 0, Boolean AllowCustomTasks = true, Boolean AllowExecuteFinishedTasks = true)
+        {
+            int ret = -1;
+            if (name.Length < 255)
+            {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "INSERT INTO freemeasurements(createdby, plannedstartdate, plannedenddate, departmentid, name, description,"
+                        + " processid, processrev, variantid, status, serialnumber, quantity, measurementunit, "
+                        + " AllowCustomTasks, ExecuteFinishedTasks, MeasurementType, realenddate, realleadtime, realworkingtime) "
+                        + " VALUES(@createdby, @plannedstartdate, @plannedenddate, @departmentid, @name, @description,"
+                        + " @processid, @processrev, @variantid, @status, @serialnumber, @quantity, @measurementunit, "
+                        + " @AllowCustomTasks, @ExecuteFinishedTasks, @MeasurementType, @realenddate, @realleadtime, @realworkingtime)";
+
+                    cmd.Parameters.AddWithValue("@createdby", createdby);
+                    cmd.Parameters.AddWithValue("@plannedstartdate", plannedstartdate);
+                    cmd.Parameters.AddWithValue("@plannedenddate", plannedenddate);
+                    cmd.Parameters.AddWithValue("@departmentid", null);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@processid", null);
+                    cmd.Parameters.AddWithValue("@processrev", null);
+                    cmd.Parameters.AddWithValue("@variantid", null);
+                    cmd.Parameters.AddWithValue("@status", 'F');
+                    cmd.Parameters.AddWithValue("@serialnumber", serialnumber);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@measurementunit", measurementUnitId);
+                    cmd.Parameters.AddWithValue("@AllowCustomTasks", AllowCustomTasks);
+                    cmd.Parameters.AddWithValue("@ExecuteFinishedTasks", AllowExecuteFinishedTasks);
+                cmd.Parameters.AddWithValue("@MeasurementType", "B");
+                cmd.Parameters.AddWithValue("@realenddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@realleadtime", realleadtime);
+                cmd.Parameters.AddWithValue("@realworkingtime", realworkingtime);
+
+                try
+                    {
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "SELECT LAST_INSERT_ID()";
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        if (rdr.Read())
+                        {
+                            ret = rdr.GetInt32(0);
+                        }
+                        rdr.Close();
+
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.log = ex.Message;
+                        ret = -3;
+                    }
+                    conn.Close();
             }
             else
             {
@@ -2296,11 +2454,13 @@ namespace KIS.App_Sources
         public DateTime PlannedStartDate;
         public DateTime PlannedEndDate;
         public int DepartmentId;
+        public String DepartmentName;
         public String MeasurementName;
         public String MeasurementDescription;
         public int ProcessId;
         public int ProcessRev;
         public int VariantId;
+        public String ProductName;
         public char Status;
         public String SerialNumber;
         public Double Quantity;
@@ -2328,6 +2488,11 @@ namespace KIS.App_Sources
         public double Acyclic_QuantityUsed;
         public double Acyclic_QuantityForEachProduct;
         public char ValueOrWaste;
-        public int Ergonomy;
+        public Char Ergonomy;
+        public String Operator;
+        public Double RealLeadTime_Hour;
+        public Double RealWorkingTime_Hour;
+        public String Notes;
+        public Double AdjustedTime; // Adjusted time considering the step: Acyclic_CycleTime * step / 60
     }
 }
