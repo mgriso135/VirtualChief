@@ -1145,7 +1145,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                     KIS.App_Sources.FreeTimeMeasurement tm = new KIS.App_Sources.FreeTimeMeasurement(measure);
                     if(tm.id!=-1)
                     {
-
+                        var tasklist = this.MeasurementBatchList.Where(p => p.MeasurementName == tm.Name);
+                        KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(tm.id);
+                        foreach(var t in tasklist)
+                        {
+                            fm.addTask(t.TaskName, t.RealWorkingTime_Hour, t.step, t.isAcyclic,
+                                t.Acyclic_CycleTime, t.Acyclic_QuantityUsed, t.Acyclic_QuantityForEachProduct, t.ValueOrWaste, t.Ergonomy);
+                        }
                     }
                 }
                 ret = "1";
