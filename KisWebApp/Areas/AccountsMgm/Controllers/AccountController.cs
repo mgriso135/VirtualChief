@@ -139,7 +139,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
                         }
                         else if (curr.workspaces.Count > 0)
                         {
-                            Session["ActiveWorkspace_Name"] = curr.workspaces[0];
+                            //Session["ActiveWorkspace_Name"] = curr.workspaces[0];
                             Session["ActiveWorkspace_Name"] = curr.workspaces[0].Name;
                             Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
                             Session["user"] = curr;

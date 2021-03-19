@@ -332,7 +332,7 @@ namespace KIS.App_Sources
         {
             bool rt;
             this.groups = new List<Group>();
-            if (this.userId.Length > 0)
+            if (this.id!=-1)
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
