@@ -13,9 +13,9 @@ namespace KIS.Configuration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Session["ActiveWorkspace"]!=null)
+            if(Session["ActiveWorkspace_Id"]!=null)
             {
-                Workspace ws = (Workspace)Session["ActiveWorkspace"];
+                Workspace ws = new Workspace(Int32.Parse(Session["ActiveWorkspace_Id"].ToString())); ;
                 KISConfig kisCfg = new KISConfig(ws.Name);
 
                /* adminOK.Visible = kisCfg.WizAdminUserCompleted;

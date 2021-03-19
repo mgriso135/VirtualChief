@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using KIS;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.Login
 {
@@ -15,12 +16,12 @@ namespace KIS.Login
         {
             if (!Page.IsPostBack)
             {
-                if (((User)Session["user"]) != null)
+                if (((UserAccount)Session["user"]) != null)
                 {
                     forgotPassword.Visible = false;
                     tblLogin.Visible = false;
                     tblLogout.Visible = true;
-                    if (((User)Session["user"]).authenticated == true)
+                    if (((UserAccount)Session["user"]).userId.Length > 0)
                     {
                         lblInfoLogin.Text =GetLocalResourceObject("lblLoggedIn1").ToString()
                             + ": " + ((User)Session["user"]).username 
