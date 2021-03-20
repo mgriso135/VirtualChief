@@ -948,7 +948,7 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT menuitemid FROM menugroups WHERE groupid=@ID"
+                cmd.CommandText = "SELECT menuitemid FROM menugroups WHERE groupid=@ID "
                     + " ORDER BY sequence";
                 cmd.Parameters.AddWithValue("@ID", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();

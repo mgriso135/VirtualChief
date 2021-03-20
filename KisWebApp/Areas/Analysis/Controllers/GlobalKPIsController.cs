@@ -532,8 +532,8 @@ namespace KIS.Areas.Analysis.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/GlobalKPIsController/GetGlobalKPIs", "startPeriod=" + startPeriod.ToString("dd/MM/yyyy")
+                KIS.App_Sources.UserAccount curr = (KIS.App_Sources.UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.userId, "Controller", "/Analysis/GlobalKPIsController/GetGlobalKPIs", "startPeriod=" + startPeriod.ToString("dd/MM/yyyy")
                     + "&endPeriod=" + endPeriod.ToString("dd/MM/yyyy") + "&periodType=" + periodType, ipAddr);
             }
             else

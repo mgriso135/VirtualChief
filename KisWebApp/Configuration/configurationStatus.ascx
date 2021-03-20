@@ -25,14 +25,6 @@
         </td>
     </tr>
     <tr>
-        <td><asp:Image ID="Image4" runat="server" ImageUrl="~/img/iconUser.png" Height="60" /></td>
-<td>
-<a href="wizConfigUsers_Main.aspx"><p class="lead"><asp:Literal runat="server" ID="lblUtenti" Text="<%$Resources:lblUtenti %>" /></p></a>
-    </td>
-        <td><asp:Image runat="server" ID="UtentiOK" ImageUrl="~/img/iconComplete.png" Height="60" Visible="false" ToolTip="<%$Resources:lblTTCfgOk %>"/>
-            <asp:Image runat="server" ID="UtentiKO" ImageUrl="~/img/iconWarning.png" Height="60" Visible="false"  ToolTip="<%$Resources:lblTTCfgKo %>"/></td>
-        </tr>
-    <tr>
         <td><asp:Image ID="Image2" runat="server" ImageUrl="~/img/iconDepartment.png" Height="60" /></td>
 <td><a href="wizConfigReparti_Main.aspx"><p class="lead"><asp:Literal runat="server" ID="lblReparti" Text="<%$Resources:lblReparti %>" />
                                          </p></a>

@@ -66,6 +66,8 @@ namespace KIS.Areas.AccountsMgm.Controllers
         [Authorize]
         public ActionResult AfterLogin()
         {
+            Session["IsWorkspaceAdmin"] = "0";
+
             String redirectUrl = "";
             ViewBag.log = "";
             var claimsIdentity = User.Identity as ClaimsIdentity;
@@ -93,6 +95,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             //DateTime created_at = DateTime.UtcNow;
             ViewBag.log += "usrId = " + usrId + " <br />";
             UserAccount curr = new UserAccount(usrId);
+            Session["User"] = curr;
             ViewBag.log += "curr.userId = " + curr.userId + "<br />";
             if (curr.id == -1)
             {
@@ -132,6 +135,20 @@ namespace KIS.Areas.AccountsMgm.Controllers
                         curr.loadDefaultWorkspace();
                         if (curr.DefaultWorkspace != null)
                         {
+                            curr.loadGroups(curr.DefaultWorkspace.id);
+                            bool isWsAdmin = false;
+                            try
+                            {
+                                var wsAdm = curr.groups.First(i => i.Nome == "WorkspaceAdmin");
+                                isWsAdmin = true;
+                                Session["IsWorkspaceAdmin"] = "1";
+                            }
+                            catch
+                            {
+                                isWsAdmin = false;
+                                Session["IsWorkspaceAdmin"] = "0";
+                            }
+
                             Session["ActiveWorkspace_Name"] = curr.DefaultWorkspace.Name;
                             Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
                             Session["user"] = curr;
@@ -143,6 +160,19 @@ namespace KIS.Areas.AccountsMgm.Controllers
                             Session["ActiveWorkspace_Name"] = curr.workspaces[0].Name;
                             Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
                             Session["user"] = curr;
+                            curr.loadGroups(curr.workspaces[0].id);
+                            bool isWsAdmin = false;
+                            try
+                            {
+                                var wsAdm = curr.groups.First(i => i.Nome == "WorkspaceAdmin");
+                                isWsAdmin = true;
+                                Session["IsWorkspaceAdmin"] = "1";
+                            }
+                            catch
+                            {
+                                isWsAdmin = false;
+                                Session["IsWorkspaceAdmin"] = "0";
+                            }
                             redirectUrl = "~/HomePage/Default.aspx";
                         }
                         else
