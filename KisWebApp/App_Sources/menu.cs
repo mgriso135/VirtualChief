@@ -87,7 +87,7 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT titolo, descrizione, url FROM menuvoci WHERE id = " + idVoce.ToString();
+            cmd.CommandText = "SELECT name, description, url FROM menuvoci WHERE id = " + idVoce.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {

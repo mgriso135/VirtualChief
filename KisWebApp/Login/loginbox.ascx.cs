@@ -23,14 +23,14 @@ namespace KIS.Login
                     tblLogout.Visible = true;
                     if (((UserAccount)Session["user"]).userId.Length > 0)
                     {
-                        lblInfoLogin.Text =GetLocalResourceObject("lblLoggedIn1").ToString()
-                            + ": " + ((User)Session["user"]).username 
+                        lblInfoLogin.Text = GetLocalResourceObject("lblLoggedIn1").ToString()
+                            + ": " + ((UserAccount)Session["user"]).firstname + " " + ((UserAccount)Session["user"]).lastname
                             + "<br/>"
-                            + GetLocalResourceObject("lblLoggedIn2").ToString()+": " + ((User)Session["user"]).lastLogin.ToString();
+                            + GetLocalResourceObject("lblLoggedIn2").ToString()+": " + ((UserAccount)Session["user"]).LastLogin.ToString("dd/MM/yyyy HH:mm:ss");
                     }
                     else
                     {
-                        lblInfoLogin.Text = GetLocalResourceObject("lblNotLoggedIn").ToString()+": " + ((User)Session["user"]).username;
+                        lblInfoLogin.Text = GetLocalResourceObject("lblNotLoggedIn").ToString()+": " + ((UserAccount)Session["user"]).userId;
                     }
                 }
                 else

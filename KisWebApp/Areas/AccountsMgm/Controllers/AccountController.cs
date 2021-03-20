@@ -125,6 +125,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             }
             else
             {
+                curr.LastLogin = DateTime.UtcNow;
                 // if e-mail is verified
                 ViewBag.log += "mail_verified2 " + mail_verified + "    ";
                 if(mail_verified)

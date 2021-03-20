@@ -116,7 +116,7 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at "
+            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, lastlogin "
                 + " FROM useraccounts WHERE userid=@userid";
             cmd.Parameters.AddWithValue("@userid", id);
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -136,6 +136,7 @@ namespace KIS.App_Sources
                 this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
                 this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
                 this._created_at = rdr.GetDateTime(13);
+                this._LastLogin = rdr.GetDateTime(14);
             }
             rdr.Close();
             conn.Close();
@@ -153,7 +154,7 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at "
+            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, lastlogin "
                 + " FROM useraccounts WHERE id=@userid";
             cmd.Parameters.AddWithValue("@userid", id);
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -173,6 +174,7 @@ namespace KIS.App_Sources
                 this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
                 this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
                 this._created_at = rdr.GetDateTime(13);
+                this._LastLogin = rdr.GetDateTime(14);
             }
             rdr.Close();
             conn.Close();
@@ -188,6 +190,34 @@ namespace KIS.App_Sources
         public Workspace DefaultWorkspace
         {
             get { return this._DefaultWorkspace; }
+        }
+
+        private DateTime _LastLogin;
+        public DateTime LastLogin { get { return this._LastLogin; } 
+            set
+            {
+                if(this.id!=-1)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "UPDATE useraccounts SET lastlogin=@lastlogin WHERE id=@userid";
+                    cmd.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@userid", this.id);
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+            }
         }
 
         public void loadWorkspaces()

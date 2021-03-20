@@ -320,8 +320,8 @@ namespace KIS.Areas.Analysis.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/GlobalKPIsController/GetWarningsKPIs", "", ipAddr);
+                KIS.App_Sources.UserAccount curr = (KIS.App_Sources.UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/GlobalKPIsController/GetWarningsKPIs", "", ipAddr);
             }
             else
             {
