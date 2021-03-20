@@ -12,6 +12,14 @@ namespace KIS.Configuration
         protected void Page_Load(object sender, EventArgs e)
         {
             this.Master.section = "";
+            if (Session["ActiveWorkspace_Id"] != null && Session["IsWorkspaceAdmin"] != null && Session["IsWorkspaceAdmin"].ToString() == "1")
+            {
+                frmConfigStatus.Visible = true;
+            }
+            else
+            {
+                frmConfigStatus.Visible = false;
+            }
         }
     }
 }

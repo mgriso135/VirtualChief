@@ -36,15 +36,6 @@ namespace KIS
             kisLogo.ImageUrl = lg.filePath;
             kisLogo.Height = 50;
 
-            
-            
-
-            // Register user action
-            //String ipAddr = Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-            /*if(String.IsNullOrEmpty(ipAddr))
-            {
-                ipAddr = Request.ServerVariables["REMOTE_ADDR"];
-            }*/
             String ipAddr = Request.UserHostAddress;
             String page = Request.RawUrl;
             try

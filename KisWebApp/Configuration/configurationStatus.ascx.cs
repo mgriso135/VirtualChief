@@ -13,13 +13,10 @@ namespace KIS.Configuration
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if(Session["ActiveWorkspace_Id"]!=null)
+            if(Session["ActiveWorkspace_Id"]!=null && Session["IsWorkspaceAdmin"]!=null && Session["IsWorkspaceAdmin"].ToString() == "1")
             {
                 Workspace ws = new Workspace(Int32.Parse(Session["ActiveWorkspace_Id"].ToString())); ;
                 KISConfig kisCfg = new KISConfig(ws.Name);
-
-               /* adminOK.Visible = kisCfg.WizAdminUserCompleted;
-                adminKO.Visible = !kisCfg.WizAdminUserCompleted;*/
 
                 timezoneOK.Visible = kisCfg.WizTimezoneCompleted;
                 timezoneKO.Visible = !kisCfg.WizTimezoneCompleted;
@@ -61,16 +58,6 @@ namespace KIS.Configuration
                 {
                     PostazioniOK.Visible = false;
                     PostazioniKO.Visible = true;
-                }
-                if (kisCfg.WizUsersCompleted)
-                {
-                    UtentiOK.Visible = true;
-                    UtentiKO.Visible = false;
-                }
-                else
-                {
-                    UtentiOK.Visible = false;
-                    UtentiKO.Visible = true;
                 }
 
                 andonOK.Visible = kisCfg.WizAndonCompleted;

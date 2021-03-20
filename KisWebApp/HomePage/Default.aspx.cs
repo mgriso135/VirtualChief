@@ -10,35 +10,34 @@ namespace KIS
         {
             if(Session["ActiveWorkspace_Name"]!=null)
             { 
-            KISConfig kCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
-            Boolean FullyConfigured =
-                kCfg.WizAndonCompleted &&
-                kCfg.WizCustomerReportCompleted &&
-                kCfg.WizLogoCompleted &&
-                kCfg.WizPostazioniCompleted &&
-                kCfg.WizRepartiCompleted &&
-                kCfg.WizTimezoneCompleted &&
-                kCfg.WizUsersCompleted;
+                KISConfig kCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
+                Boolean FullyConfigured =
+                    kCfg.WizAndonCompleted &&
+                    kCfg.WizCustomerReportCompleted &&
+                    kCfg.WizLogoCompleted &&
+                    kCfg.WizPostazioniCompleted &&
+                    kCfg.WizRepartiCompleted &&
+                    kCfg.WizTimezoneCompleted;
 
-            if (!FullyConfigured)
-            {
-                Response.Redirect("~/Configuration/MainWizConfig.aspx");
-            }
+                if (!FullyConfigured)
+                {
+                    Response.Redirect("~/Configuration/MainWizConfig.aspx");
+                }
 
-            lblBenvenuto.Visible = false;
-
-            if (Session["user"] != null)
-            {
-                lbl1.Text = ((UserAccount)Session["user"]).firstname + " " + ((UserAccount)Session["user"]).lastname +
-                    "<br/>Last login: " ;
-                lblBenvenuto.Visible = true;                
-            }
-            else
-            {
                 lblBenvenuto.Visible = false;
-                lbl1.Text = GetLocalResourceObject("lbl1_NotLoggedIn.Text").ToString();
+
+                if (Session["user"] != null)
+                {
+                    lbl1.Text = ((UserAccount)Session["user"]).firstname + " " + ((UserAccount)Session["user"]).lastname +
+                        "<br/>Last login: " ;
+                    lblBenvenuto.Visible = true;                
+                }
+                else
+                {
+                    lblBenvenuto.Visible = false;
+                    lbl1.Text = GetLocalResourceObject("lbl1_NotLoggedIn.Text").ToString();
+                }
             }
-        }
             else
             {
                 Response.Redirect("~/AccountsMgm/Account/AfterLogin");
