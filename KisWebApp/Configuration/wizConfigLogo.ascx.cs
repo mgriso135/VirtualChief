@@ -94,19 +94,19 @@ namespace KIS.Configuration
                         try
                         {
                             //lbl1.Text = FileUpload1.PostedFile.ContentLength.ToString() + " " + FileUpload1.PostedFile.ContentType.ToString();
-                            if (!System.IO.Directory.Exists(Server.MapPath("~/Data/Logo/")))
+                            if (!System.IO.Directory.Exists(Server.MapPath("~/Data/" + Session["ActiveWorkspace_Name"].ToString() + "/Logo/")))
                             {
-                                System.IO.Directory.CreateDirectory(Server.MapPath("~/Data/Logo"));
+                                System.IO.Directory.CreateDirectory(Server.MapPath("~/Data/" + Session["ActiveWorkspace_Name"].ToString() + "/Logo"));
                             }
 
                             // Pulisco la cartella
-                            foreach (var file in Directory.GetFiles(Server.MapPath("~/Data/Logo/")))
+                            foreach (var file in Directory.GetFiles(Server.MapPath("~/Data/" + Session["ActiveWorkspace_Name"].ToString() + "/Logo/")))
                             {
                                 File.Delete(file);
                             }
 
                             string fileName = Path.GetFileName(FileUpload1.PostedFile.FileName);
-                            FileUpload1.PostedFile.SaveAs(Server.MapPath("~/Data/Logo/") + fileName);
+                            FileUpload1.PostedFile.SaveAs(Server.MapPath("~/Data/" + Session["ActiveWorkspace_Name"].ToString() + "/Logo/") + fileName);
                             Logo logo = new Logo(Session["ActiveWorkspace_Name"].ToString());
                             logo.filePath = fileName;
                             lbl1.Text += "Log: " + logo.log;

@@ -5,9 +5,7 @@
 <%@ Register TagPrefix="reparti" TagName="eventoRitardo" Src="~/Eventi/RepartoRitardo.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="eventoWarning" Src="~/Eventi/RepartoWarning.ascx" %>
 <%@ Register TagPrefix="reparti" TagName="ModoCalcoloTC" Src="~/Reparti/configModoCalcoloTC.ascx" %>
-<%@ Register TagPrefix="config" TagName="AndonReparto" Src="~/Reparti/configAndonReparto.ascx" %>
 <%@ Register TagPrefix="config" TagName="AvvioTasks" Src="~/Reparti/configAvvioTasks.ascx" %>
-<%@ Register TagPrefix="Andon" TagName="configViewFields" Src="~/Andon/AndonRepartoViewFields.ascx" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="HeadContent" runat="server">
 </asp:Content>
@@ -89,23 +87,6 @@
                 </div>
             </div>
             </div>
-
-        <div class="accordion-group">
-            <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseNine">
-          <asp:Literal runat="server" id="lblAndon" Text="<%$Resources:lblAndon %>" />
-      </a>
-    </div>
-            <div id="collapseNine" class="accordion-body collapse">
-      <div class="accordion-inner">
-        
-          <config:AndonReparto runat="server" ID="frmConfigAndonReparto" />
-          <andon:configViewFields runat="server" id="frmAndonViewFields" />
-
-      </div>
-    </div>
-            </div>
-
     <div class="accordion-group">
             <div class="accordion-heading">
       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTen">

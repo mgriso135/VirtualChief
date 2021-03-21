@@ -68,25 +68,8 @@ namespace KIS.Configuration
                         frmEvWarning.idReparto = rep.id;                        
                         frmModoCalcoloTC.idReparto = rep.id;
                         frmModoCalcoloTC.Visible = true;
-                        frmConfigAndonReparto.idReparto = rep.id;
-                        frmConfigAndonReparto.Visible = true;
                         frmAvvioTask.idReparto = rep.id;
-                        frmAvvioTask.Visible = true;
-                        frmAndonViewFields.Visible = true;
-                        frmAndonViewFields.idReparto = rep.id;
-
-                        // Abilito la gestione a kanban solo se è attivo KanbanBox by Sintesia
-                        /*                    frmConfigKanban.idReparto = rep.id;
-                                            KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
-                                            if (kboxCfg.KanbanBoxEnabled == true)
-                                            {
-                                                frmConfigKanban.Visible = true;
-                                            }
-                                            else
-                                            {
-                                                frmConfigKanban.Visible = false;
-                                            }*/
-                    }
+                        frmAvvioTask.Visible = true;                    }
                     else
                     {
                         lbl1.Text = GetLocalResourceObject("lblDeptNotFound").ToString()+ ".<br />";
@@ -100,11 +83,8 @@ namespace KIS.Configuration
                         frmEvWarning.idReparto = -1;
                         frmModoCalcoloTC.idReparto = -1;
                         frmModoCalcoloTC.Visible = false;
-                        frmConfigAndonReparto.idReparto = -1;
-                        frmConfigAndonReparto.Visible = false;
                         frmAvvioTask.idReparto = -1;
                         frmAvvioTask.Visible = false;
-                        frmAndonViewFields.Visible = false;
                     }
                 }
                 else
@@ -120,8 +100,6 @@ namespace KIS.Configuration
                     frmEvWarning.idReparto = -1;
                     frmModoCalcoloTC.idReparto = -1;
                     frmModoCalcoloTC.Visible = false;
-                    frmConfigAndonReparto.idReparto = -1;
-                    frmConfigAndonReparto.Visible = false;
                     frmAvvioTask.idReparto = -1;
                     frmAvvioTask.Visible = false;
                 }
@@ -142,8 +120,6 @@ namespace KIS.Configuration
                 frmEvWarning.idReparto = -1;                
                 frmModoCalcoloTC.idReparto = -1;
                 frmModoCalcoloTC.Visible = false;
-                frmConfigAndonReparto.idReparto = -1;
-                frmConfigAndonReparto.Visible = false;
                 frmAvvioTask.idReparto = -1;
                 frmAvvioTask.Visible = false;
             }
