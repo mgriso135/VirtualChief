@@ -267,11 +267,11 @@ namespace KIS.App_Code
                 }
                 Boolean checkTimezone = this.fusoOrario.Length > 0 ? true : false;
 
-                AndonReparto aRep = new AndonReparto(this.Tenant, this.id);
+/*                AndonReparto aRep = new AndonReparto(this.Tenant, this.id);
                 aRep.loadCampiVisualizzati();
-                Boolean checkAndon = aRep.CampiVisualizzati.Count>0?true:false;
+                Boolean checkAndon = aRep.CampiVisualizzati.Count>0?true:false;*/
 
-                ret = checkTurni && checkIntervalli && checkTimezone && checkAndon;
+                ret = checkTurni && checkIntervalli && checkTimezone; // && checkAndon;
                 return ret;
             }
         }
