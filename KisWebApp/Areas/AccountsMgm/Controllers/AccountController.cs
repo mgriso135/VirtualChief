@@ -80,7 +80,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             //      else if user is member of some workspace, go to the default one
             string usrId = claimsIdentity?.FindFirst(c => c.Type.Contains("nameidentifier"))?.Value;
             MailAddress email = new MailAddress(claimsIdentity?.FindFirst(c => c.Type.Contains("emailaddress"))?.Value);
-            string firstname = claimsIdentity?.FindFirst(c => c.Type == "name")?.Value;
+            string firstname = claimsIdentity?.FindFirst(c => c.Type == "givenname")?.Value;
             string lastname = claimsIdentity?.FindFirst(c => c.Type.Contains("surname"))?.Value;
             string nickname = claimsIdentity?.FindFirst(c => c.Type == "nickname")?.Value;
             string picture_url = claimsIdentity?.FindFirst(c => c.Type == "picture")?.Value;
@@ -229,8 +229,12 @@ namespace KIS.Areas.AccountsMgm.Controllers
                     ret = usr.addWorkspace(ws_name);
                     if(ret > 0)
                     {
+                        Group grp = new Group("WorkspaceAdmin");
+                        Workspace ws = new Workspace(ret);
+                        grp.addUser(usr, ws);
                         Session["ActiveWorkspace_Name"] = ws_name;
                         Session["ActiveWorkspace_Id"] = ret;
+                        Session["IsWorkspaceAdmin"] = "1";
                     }
                 }
 

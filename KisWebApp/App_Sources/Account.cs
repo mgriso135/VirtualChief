@@ -104,6 +104,9 @@ namespace KIS.App_Sources
         }
         public List<UserEmail> Email;
 
+        private Boolean _GlobalAdmin;
+        public Boolean GlobalAdmin { get { return this._GlobalAdmin; } }
+
         /* Returns:
          * Object with data, if account exists in Virtual Chief
          * id = -1 otherwise
@@ -116,7 +119,8 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, lastlogin "
+            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
+                +" lastlogin, globaladmin "
                 + " FROM useraccounts WHERE userid=@userid";
             cmd.Parameters.AddWithValue("@userid", id);
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -125,7 +129,7 @@ namespace KIS.App_Sources
                 this._id = rdr.GetInt32(0);
                 this._userId = rdr.GetString(1);
                 this._email = new MailAddress(rdr.GetString(2));
-                this._firstname = rdr.GetString(3);
+                this._firstname = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
                 this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
                 this._nickname = rdr.GetString(5);
                 this._pictureUrl = rdr.GetString(6);
@@ -137,6 +141,7 @@ namespace KIS.App_Sources
                 this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
                 this._created_at = rdr.GetDateTime(13);
                 this._LastLogin = rdr.GetDateTime(14);
+                this._GlobalAdmin = rdr.GetBoolean(15);
             }
             rdr.Close();
             conn.Close();
@@ -154,7 +159,8 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, lastlogin "
+            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
+                + " lastlogin, globaladmin "
                 + " FROM useraccounts WHERE id=@userid";
             cmd.Parameters.AddWithValue("@userid", id);
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -175,6 +181,7 @@ namespace KIS.App_Sources
                 this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
                 this._created_at = rdr.GetDateTime(13);
                 this._LastLogin = rdr.GetDateTime(14);
+                this._GlobalAdmin = rdr.GetBoolean(15);
             }
             rdr.Close();
             conn.Close();
@@ -912,7 +919,7 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, nomegruppo, descrizione FROM groupss WHERE nomeGruppo = @GroupName";
+            cmd.CommandText = "SELECT id, name, description FROM groupss WHERE name=@GroupName";
             cmd.Parameters.AddWithValue("@GroupName", GroupName);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -1367,6 +1374,42 @@ namespace KIS.App_Sources
                     conn.Close();
                 }
                 return ret;
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if user added successfully
+         */
+        public int addUser(UserAccount usr, Workspace ws)
+        {
+            int ret = 0;
+            if(usr.id!=-1 && ws.id!=-1 && this.ID!=-1)
+            { 
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "INSERT INTO useraccountsgroups(groupid, userid, workspaceid) VALUES(@groupid, @userid, @workspaceid)";
+                cmd.Parameters.AddWithValue("@groupid", this.ID);
+                cmd.Parameters.AddWithValue("@userid", usr.id);
+                cmd.Parameters.AddWithValue("@workspaceid", ws.id);
+
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                }
+                catch(Exception ex)
+                {
+                    this.log = ex.Message;
+                    tr.Rollback();
+                }
+
+                conn.Close();
+            }
+            return ret;
         }
     }
 
