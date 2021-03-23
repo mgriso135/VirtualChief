@@ -22,6 +22,7 @@ namespace KIS.Areas.Customers.Controllers
          * 4 if user already exists
          * 5 if Group CustomerUser is not found
          */
+        [Authorize]
         public int addCustomerContact(String customer, String FirstName, String LastName, String Role,
             Boolean createUser, String username, String password, String password2, String language, String mailAddress)
         {
@@ -117,14 +118,5 @@ namespace KIS.Areas.Customers.Controllers
                 }
             return ret;
         }
-
-        private VCContext db = new VCContext("masterDB"/*ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString*/);
-        // GET: Test/CustomerTest
-        public ActionResult TestDBContext()
-        {
-            ViewBag.anagcli = db.Test.ToList();
-            return View(db.Test.ToList());
-        }
-
     }
 }

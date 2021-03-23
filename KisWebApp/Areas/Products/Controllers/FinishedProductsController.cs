@@ -13,6 +13,7 @@ namespace KIS.Areas.Products.Controllers
     public class FinishedProductsController : Controller
     {
         // GET: Products/FinishedProducts
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -29,7 +30,7 @@ namespace KIS.Areas.Products.Controllers
 
             return View();
         }
-
+        [Authorize]
         public ActionResult ProductDetails(int ProdID, int ProdYear)
         {
             // Register user action
@@ -71,7 +72,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult ProductParametersList(int ProdID, int ProdYear)
         {
             // Register user action
@@ -114,7 +115,7 @@ namespace KIS.Areas.Products.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public ActionResult ProductTasksParametersList(int ProdID, int ProdYear)
         {
             // Register user action
@@ -156,7 +157,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult BillingDetails(int ProdID, int ProdYear)
         {
             // Register user action

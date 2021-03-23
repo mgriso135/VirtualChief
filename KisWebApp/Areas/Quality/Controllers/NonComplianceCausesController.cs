@@ -11,6 +11,7 @@ namespace KIS.Areas.Quality.Controllers
     public class NonComplianceCausesController : Controller
     {
         // GET: Quality/NonComplianceCauses
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -51,7 +52,7 @@ namespace KIS.Areas.Quality.Controllers
                 return View();
             }
         }
-
+        [Authorize]
         public ActionResult Create()
         {
             // Register user action
@@ -116,7 +117,7 @@ namespace KIS.Areas.Quality.Controllers
 
 
         }
-
+        [Authorize]
         public ActionResult Delete(int id)
         {
             // Register user action
@@ -160,7 +161,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult Update(int id)
         {
             // Register user action

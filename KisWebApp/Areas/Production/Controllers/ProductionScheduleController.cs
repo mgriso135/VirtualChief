@@ -11,6 +11,7 @@ namespace KIS.Areas.Production.Controllers
     public class ProductionScheduleController : Controller
     {
         // GET: Production/ProductionSchedule
+        [Authorize]
         public ActionResult Index()
         {
             ViewBag.authR = false;
@@ -56,6 +57,7 @@ namespace KIS.Areas.Production.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult ProductionSchedulePanel(String customers, String departments, String TypeOfProducts, String status)
         {
             // Register user action

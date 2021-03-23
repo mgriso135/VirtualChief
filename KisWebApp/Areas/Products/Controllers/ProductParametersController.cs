@@ -11,6 +11,7 @@ namespace KIS.Areas.Products.Controllers
     public class ProductParametersController : Controller
     {
         // GET: Products/ProductParameters
+        [Authorize]
         public ActionResult Index(int processID, int processRev, int variantID)
         {
             // Register user action
@@ -90,7 +91,7 @@ namespace KIS.Areas.Products.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public Boolean AddParam(int processID, int processRev, int variantID, String ParamName, String ParamDescription,
             int ParamCategory, Boolean ParamIsFixed, Boolean ParamIsRequired)
         {
@@ -165,7 +166,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean DeleteParam(int processID, int processRev, int variantID, int ParamID)
         {
             // Register user action
@@ -213,7 +214,7 @@ namespace KIS.Areas.Products.Controllers
             }
                 return ret;
         }
-
+        [Authorize]
         public Boolean EditParam(int processID, int processRev, int variantID, int ParamID,
             String paramName, String paramDescription, int paramCategory, Boolean isFixed, Boolean isRequired)
         {

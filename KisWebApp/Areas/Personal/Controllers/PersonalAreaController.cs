@@ -11,6 +11,7 @@ namespace KIS.Areas.Personal.Controllers
     public class PersonalAreaController : Controller
     {
         // GET: Personal/PersonalArea
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -28,6 +29,7 @@ namespace KIS.Areas.Personal.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult EditDestinationURL()
         {
             // Register user action
@@ -57,6 +59,7 @@ namespace KIS.Areas.Personal.Controllers
          * 1 if all is ok
          * 2 if user not authorized
          */
+        [Authorize]
         public int SaveDestinationURL(String destUrl)
         {
             // Register user action

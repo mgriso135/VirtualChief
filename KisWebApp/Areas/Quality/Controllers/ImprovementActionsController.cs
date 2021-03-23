@@ -12,6 +12,7 @@ namespace KIS.Areas.Quality.Controllers
     public class ImprovementActionsController : Controller
     {
         // GET: Quality/ImprovementActions
+        [Authorize]
         public ActionResult Index(Char stat, String sortOrder)
         {
             // Register user action
@@ -172,7 +173,7 @@ namespace KIS.Areas.Quality.Controllers
 
             return View(iActsList);
         }
-
+        [Authorize]
         public ActionResult Create()
         {
             // Register user action
@@ -223,7 +224,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public Boolean Delete(int ID, int Year)
         {
             // Register user action
@@ -271,7 +272,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult Update(int ID, int Year)
         {
             // Register user action
@@ -345,7 +346,7 @@ namespace KIS.Areas.Quality.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public ActionResult ImprovementActionTeamMembers(int ID, int Year)
         {
             // Register user action
@@ -423,7 +424,7 @@ namespace KIS.Areas.Quality.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public Boolean TeamMemberRemove(int ID, int Year, int user)
         {
             // Register user action
@@ -491,7 +492,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean TeamMemberAdd(int ID, int Year, String user, Char role)
         {
             // Register user action
@@ -557,6 +558,7 @@ namespace KIS.Areas.Quality.Controllers
          * 1 if all goes right
          * 2 if tried to close improvement actions, but there are some opened corrective actions.
          */
+        [Authorize]
         public int UpdateImprovementAction(int ID, int Year, String CurrentSituation, String ExpectedResults, String RootCauses, DateTime ClosurePlannedDate, String ClosureNotes, Char Status)
         {
             // Register user action
@@ -661,7 +663,7 @@ namespace KIS.Areas.Quality.Controllers
             }
                 return ret;
         }
-
+        [Authorize]
         public ActionResult CorrectiveActionsList(int ImprovementActionID, int ImprovementActionYear)
         {
             // Register user action
@@ -738,7 +740,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public Boolean CorrectiveActionAdd(int ImprovementActionID, int ImprovementActionYear)
         {
             // Register user action
@@ -808,7 +810,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean CorrectiveActionDelete(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID)
         {
             // Register user action
@@ -872,7 +874,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult CorrectiveActionEdit(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID)
         {
             // Register user action
@@ -956,7 +958,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public Boolean CorrectiveActionEditUpdate(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID, 
             String Description, Double LeadTimeExpected, DateTime EndDateRequired, Char Status)
         {
@@ -1055,7 +1057,7 @@ namespace KIS.Areas.Quality.Controllers
             }
                 return ret;
         }
-
+        [Authorize]
         public ActionResult CorrectiveActionTeamMembers(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID)
         {
             // Register user action
@@ -1134,7 +1136,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public Boolean CorrectiveActionTeamMemberAdd(int ImprovementActionID, int ImprovementActionYear, 
             int CorrectiveActionID, String user, Char role)
         {
@@ -1199,7 +1201,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean CorrectiveActionTeamMemberRemove(int ImprovementActionID, int ImprovementActionYear,
             int CorrectiveActionID, int user)
         {
@@ -1267,7 +1269,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult ImprovementActionsProgress()
         {
             // Register user action
@@ -1319,7 +1321,7 @@ namespace KIS.Areas.Quality.Controllers
 
             return View();
         }
-
+        [Authorize]
         public ActionResult ImprovementActionsProgressAndon()
         {
             // Register user action
@@ -1378,7 +1380,7 @@ namespace KIS.Areas.Quality.Controllers
             var lstiActs = iActscActsList.ImprovementActionsList.OrderBy(x => x.EndDateExpected).ToList();
             return View(lstiActs);
         }
-
+        [Authorize]
         public ActionResult CorrectiveActionTasksList(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID)
         {
             // Register user action
@@ -1457,7 +1459,7 @@ namespace KIS.Areas.Quality.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public Boolean CorrectiveActionTaskAdd(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID, String Description, Char cActStatus)
         {
             // Register user action
@@ -1548,7 +1550,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
             }
-
+        [Authorize]
         public Boolean CorrectiveActionTaskRemove(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID, int TaskID)
         {
             // Register user action
@@ -1579,7 +1581,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult IAFileList(int ImprovementActionID, int ImprovementActionYear)
         {
             // Register user action
@@ -1783,7 +1785,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean IADeleteFile(int ImprovementActionID, int ImprovementActionYear, String fileName)
         {
             // Register user action
@@ -1810,7 +1812,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult CAFileList(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID)
         {
             // Register user action
@@ -2018,7 +2020,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean CADeleteFile(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID, String fileName)
         {
             // Register user action
@@ -2045,7 +2047,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult TaskCAFileList(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID)
         {
             // Register user action
@@ -2134,7 +2136,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View(fileList);
         }
-
+        [Authorize]
         public Boolean TaskCADeleteFile(int ImprovementActionID, int ImprovementActionYear, int CorrectiveActionID, String fileName)
         {
             // Register user action

@@ -11,6 +11,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class OperatorsAnalysisController : Controller
     {
         // GET: Analysis/OperatorsAnalysis
+        [Authorize]
         public ActionResult GetOperatorProductivity(String user, DateTime start, DateTime end)
         {
             // Register user action
@@ -53,6 +54,7 @@ namespace KIS.Areas.Analysis.Controllers
                 return View();
         }
 
+        [Authorize]
         public ActionResult GetOperatorOccupation(String user, DateTime start, DateTime end)
         {
             // Register user action

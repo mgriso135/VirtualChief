@@ -11,6 +11,7 @@ namespace KIS.Areas.Products.Controllers
     public class ProductsController : Controller
     {
         // GET: Products/Products
+        [Authorize]
         public ActionResult EditTaskPanel(int TaskID, int TaskRev, int VariantID)
         {
             // Register user action
@@ -49,7 +50,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public Boolean SaveTaskDetails(int TaskID, int TaskRev, int VariantID, String TaskName, String TaskDescription)
         {
             // Register user action
@@ -108,7 +109,7 @@ namespace KIS.Areas.Products.Controllers
             }
                 return ret;
         }
-
+        [Authorize]
         public Boolean AddWorkingTimeToTask(int TaskID, int TaskRev, int VariantID, int NumOps, int SetupTime, int CycleTime, Boolean def)
         {
             // Register user action
@@ -162,7 +163,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult TaskCycleTimesList(int TaskID, int TaskRev, int VariantID)
         {
             // Register user action
@@ -218,7 +219,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public Boolean TaskCycleTimeDelete(int TaskID, int TaskRev, int VariantID, int nOps)
         {
             // Register user action
@@ -256,7 +257,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean AddTaskParam(int TaskID, int TaskRev, int variantID, String ParamName, String ParamDescription,
             int ParamCategory, Boolean ParamIsFixed, Boolean ParamIsRequired)
         {
@@ -332,7 +333,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean DeleteTaskParam(int TaskID, int TaskRev, int variantID, int ParamID)
         {
             // Register user action
@@ -380,7 +381,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean EditTaskParam(int TaskID, int TaskRev, int variantID, int ParamID,
             String paramName, String paramDescription, int paramCategory, Boolean isFixed, Boolean isRequired)
         {
@@ -432,7 +433,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult TaskParametersList(int TaskID, int TaskRev, int VariantID)
         {
             // Register user action
@@ -515,6 +516,7 @@ namespace KIS.Areas.Products.Controllers
          * 2 if some task doesn't have default cycle time assigned
          * 3 if there are no tasks
          */
+        [Authorize]
         public int CheckProductIntegrityCycleTimes(int processID, int processRev, int variantID)
         {
             // Register user action
@@ -575,7 +577,8 @@ namespace KIS.Areas.Products.Controllers
          * 2 if user not authorized
          * 4 if WorkInstruction not found
          */
-         public int LinkTaskToWorkInstruction(int TaskID, int TaskRev, int variantID, int WorkInstructionID, int WorkInstructionVersion,
+        [Authorize]
+        public int LinkTaskToWorkInstruction(int TaskID, int TaskRev, int variantID, int WorkInstructionID, int WorkInstructionVersion,
              DateTime InitialValidity, DateTime EndValidity)
         {
             int ret = 0;
@@ -617,6 +620,7 @@ namespace KIS.Areas.Products.Controllers
          * 2 if user not authorized
          * 3 if TaskWorkstationNotFound
          */
+        [Authorize]
         public int DeleteTaskWorkInstruction(int TaskID, int TaskRev, int variantID, int WorkInstructionID, int WorkInstructionVersion)
         {
             int ret = 0;
@@ -655,7 +659,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
             }
-
+        [Authorize]
         public ActionResult TaskDefaultOperatorsList(int TaskID, int TaskRev, int variantID)
         {
             // Register user action
@@ -727,7 +731,8 @@ namespace KIS.Areas.Products.Controllers
          * 2 if user not autorized
          * 3 if error while adding the default user
          */
-         public int AddDefaultOperator(int TaskID, int TaskRev, int variantID, String user)
+        [Authorize]
+        public int AddDefaultOperator(int TaskID, int TaskRev, int variantID, String user)
         {
             int ret = 0;
             List<String[]> elencoPermessi = new List<String[]>();
@@ -768,6 +773,7 @@ namespace KIS.Areas.Products.Controllers
   * 2 if user not autorized
   * 3 if error while adding the default user
   */
+        [Authorize]
         public int DeleteDefaultOperator(int TaskID, int TaskRev, int variantID, String user)
         {
             int ret = 0;
@@ -809,6 +815,7 @@ namespace KIS.Areas.Products.Controllers
          * 2 if user not authorized
          * 3 if product not found
          */
+        [Authorize]
         public int CompleteProductBruteForce(int ProductID, int ProductYear)
         {
             int ret = 0;

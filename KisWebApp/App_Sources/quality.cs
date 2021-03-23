@@ -3635,6 +3635,7 @@ namespace KIS.App_Sources
 
         public ImprovementActionAnalysis(String Tenant)
         {
+            this.Tenant = Tenant;
             this.IAList = new List<ImprovementActionAnalysisStruct>();
         }
 

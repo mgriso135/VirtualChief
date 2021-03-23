@@ -14,6 +14,7 @@ namespace KIS.Areas.SalesOrders.Controllers
     public class SalesOrderController : Controller
     {
         // GET: SalesOrders/SalesOrder
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -31,6 +32,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult AddSalesOrder(int OrderID, int OrderYear)
         {
             // Register user action
@@ -94,6 +96,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return View();
         }
 
+        [Authorize]
         /*returns:
          * [OrderID, OrderYear] if ok
          * [-1, -1] if generic error
@@ -154,6 +157,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return ret;
         }
 
+        [Authorize]
         /* returns:
          * 0 if generic error
          * 1 if all is ok
@@ -209,6 +213,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return ret;
         }
 
+        [Authorize]
         public JsonResult GetProductDepartments(int ProdID, int ProdRev, int variant)
         {
             // Register user action
@@ -271,6 +276,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 5 if sales order not found
          * 6 if error while adding the product to the order
          */
+        [Authorize]
         public int AddProductToSalesOrder(int OrderID, int OrderYear, int ProdID, int ProdRev, int ProdVar, int Quantity, DateTime DeliveryDate)
         {
             // Register user action
@@ -346,6 +352,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult ListOrderProduct(int OrderID, int OrderYear)
         {
             // Register user action
@@ -411,6 +418,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 4 if invalid OrderID and OrderYear
          * 5 if Product not found
          */
+        [Authorize]
         public int DeleteProductFromSalesOrder(int OrderID, int OrderYear)
         {
             // Register user action
@@ -492,6 +500,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 4 if invalid OrderID and OrderYear
          * 5 if Product not found
          */
+        [Authorize]
         public int UndoProductSchedule(int ProductID, int ProductYear)
         {
             // Register user action
@@ -564,7 +573,7 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             return ret;
         }
-        
+
         /*Returns:
          * 0 if generic error
          * 1 if everything is ok
@@ -573,6 +582,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 4 if invalid quantity
          * 5 invalid delivery date
          */
+        [Authorize]
         public int EditProduct(int ProductID, int ProductYear, int Quantity, DateTime DeliveryDate)
         {
             // Register user action
@@ -652,6 +662,7 @@ namespace KIS.Areas.SalesOrders.Controllers
           * 7 se la data prevista di fine produzione non è reale
           * 8 if user is not authorized.
           */
+        [Authorize]
         public int PlanProduct(int ProductID, int ProductYear, int DepartmentID, DateTime EndProductionDate)
         {
             // Register user action
@@ -739,6 +750,7 @@ namespace KIS.Areas.SalesOrders.Controllers
         /* Returns:
          * String url for the .pdf document
          */
+        [Authorize]
         public String PrintMultipleSheetsBarcodes(int ProductID, int ProductYear)
         {
             // Register user action
@@ -884,6 +896,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return ret;
         }
 
+        [Authorize]
         public String PrintSingleSheetsBarcodes(int ProductID, int ProductYear)
         {
             // Register user action
@@ -1116,7 +1129,8 @@ namespace KIS.Areas.SalesOrders.Controllers
 
             }
         }
-
+        
+        [Authorize]
         public String PrintSingleA3SheetsBarcodes(int ProductID, int ProductYear)
         {
             // Register user action
@@ -1371,6 +1385,7 @@ namespace KIS.Areas.SalesOrders.Controllers
           * 7 se la data prevista di fine produzione non è reale
           * 8 if user is not authorized.
           */
+        [Authorize]
         public int ReprogramProduct(int ProductID, int ProductYear, int DepartmentID, DateTime EndProductionDate)
         {
             // Register user action
@@ -1424,6 +1439,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult ShowManageOperators(int ProductID, int ProductYear)
         {
             // Register user action
@@ -1465,7 +1481,8 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 0 if error
          * 1 if ok
          */
-         public int AssignOperatorToTask(int TaskID, String defOp)
+        [Authorize]
+        public int AssignOperatorToTask(int TaskID, String defOp)
         {
             int ret = 0;
             ViewBag.authW = false;
@@ -1492,6 +1509,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                 return ret;
         }
 
+        [Authorize]
         public ActionResult ListTasksDefOperators(int ProductID, int ProductYear)
         {
             ViewBag.authW = false;
@@ -1522,6 +1540,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 0 if error
          * 1 if ok
          */
+        [Authorize]
         public int DeleteAssignedOperator(int TaskID, String defOp)
         {
             int ret = 0;
@@ -1556,6 +1575,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 1970-1-2 if user not authorized
          * 1970-1-3 if task not found
          */
+        [Authorize]
         public DateTime RescheduleTaskGetEndDate(int TaskID, DateTime start)
         {
             DateTime ret = new DateTime(1970,1,1);
@@ -1605,7 +1625,8 @@ namespace KIS.Areas.SalesOrders.Controllers
 
         /*
          */
-         public ActionResult RescheduleTasksManually(int ProductID, int ProductYear)
+        [Authorize]
+        public ActionResult RescheduleTasksManually(int ProductID, int ProductYear)
         {
             ViewBag.authW = false;
             List<String[]> elencoPermessi = new List<String[]>();
@@ -1636,6 +1657,7 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 1970-1-1 if it is not possible to calculate the end date
          * Foreseen finish date at UTC time otherwise
          */
+        [Authorize]
         public DateTime GetFinishDateByStart(int TaskID, DateTime start)
         {
             DateTime ret = new DateTime(1970, 1, 1);
@@ -1666,7 +1688,8 @@ namespace KIS.Areas.SalesOrders.Controllers
          * 3 if error in input dates
          * 4 if task not found
          */
-         public int SaveTaskDates(int TaskID, DateTime start, DateTime end)
+        [Authorize]
+        public int SaveTaskDates(int TaskID, DateTime start, DateTime end)
         {
             int ret = 0;
             ViewBag.authW = false;

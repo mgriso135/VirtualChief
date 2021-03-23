@@ -17,8 +17,8 @@ namespace KIS.Areas.Config
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Config/AndonConfig/Index", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Config/AndonConfig/Index", "", ipAddr);
             }
             else
             {
@@ -34,8 +34,8 @@ namespace KIS.Areas.Config
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Config/AndonConfig/ScrollTypeView", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Config/AndonConfig/ScrollTypeView", "", ipAddr);
             }
             else
             {
@@ -76,8 +76,8 @@ namespace KIS.Areas.Config
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Config/AndonConfig/ScrollTypeEdit", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Config/AndonConfig/ScrollTypeEdit", "", ipAddr);
             }
             else
             {
@@ -113,8 +113,8 @@ namespace KIS.Areas.Config
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Config/AndonConfig/DepartmentScrollTypeView", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Config/AndonConfig/DepartmentScrollTypeView", "", ipAddr);
             }
             else
             {
@@ -156,8 +156,8 @@ namespace KIS.Areas.Config
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Config/AndonConfig/DepartmentScrollTypeEdit", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Config/AndonConfig/DepartmentScrollTypeEdit", "", ipAddr);
             }
             else
             {

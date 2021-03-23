@@ -32,7 +32,7 @@ namespace KIS.Admin
                 rb1.Visible = true;
                 if (!Page.IsPostBack && !Page.IsCallback)
                 {                    
-                    WizardConfig wizCfg = new WizardConfig();
+                    WizardConfig wizCfg = new WizardConfig(Session["ActiveWorkspace_Name"].ToString());
                     rb1.SelectedValue = wizCfg.interfacciaPERT;
                 }
             }
@@ -41,7 +41,7 @@ namespace KIS.Admin
 
         protected void rb1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            WizardConfig wizCfg = new WizardConfig();
+            WizardConfig wizCfg = new WizardConfig(Session["ActiveWorkspace_Name"].ToString());
             wizCfg.interfacciaPERT = rb1.SelectedValue;
         }
     }

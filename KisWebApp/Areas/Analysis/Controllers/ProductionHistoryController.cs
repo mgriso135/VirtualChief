@@ -11,6 +11,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class ProductionHistoryController : Controller
     {
         // GET: Analysis/ProductionHistory
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -52,6 +53,7 @@ namespace KIS.Areas.Analysis.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult HistoricDataPanel(DateTime startPeriod, DateTime endPeriod, String customers, String departments, String TypeOfProducts)
         {
             // Register user action
@@ -141,6 +143,7 @@ namespace KIS.Areas.Analysis.Controllers
 
         }
 
+        [Authorize]
         public ActionResult HistoricDataPanelSales(DateTime startPeriod, DateTime endPeriod, String customers, String departments, String TypeOfProducts)
         {
             // Register user action
@@ -277,6 +280,7 @@ namespace KIS.Areas.Analysis.Controllers
             return View();
         }
 
+        [Authorize]
         public Boolean ExhumateProduct(int ProdID, int ProdYear)
         {
             // Register user action
@@ -314,8 +318,6 @@ namespace KIS.Areas.Analysis.Controllers
             }
             return ret;
         }
-
-        
 
     }
 }

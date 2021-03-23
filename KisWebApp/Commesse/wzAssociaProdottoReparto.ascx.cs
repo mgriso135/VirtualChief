@@ -39,7 +39,7 @@ namespace KIS.Commesse
                 matricola = (String.IsNullOrEmpty(matricola) || matricola.Length == 0) ? "" : matricola;
 
                 String page = "wzEditPERT.aspx";
-                WizardConfig wizCfg = new WizardConfig();
+                WizardConfig wizCfg = new WizardConfig(Session["ActiveWorkspace_Name"].ToString());
                 if (wizCfg.interfacciaPERT == "Table")
                 {
                     page = "wzEditPERT_updtable.aspx";

@@ -11,6 +11,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class GlobalKPIsController : Controller
     {
         // GET: Analysis/GlobalKPIs
+        [Authorize]
         public ActionResult GetGlobalKPIs(DateTime startPeriod, DateTime endPeriod, int periodType)
         {
             // Register user action
@@ -314,6 +315,7 @@ namespace KIS.Areas.Analysis.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult GetWarningsKPIs()
         {
             // Register user action
@@ -384,6 +386,7 @@ namespace KIS.Areas.Analysis.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult GetNonCompliancesKPIs()
         {
             ViewBag.log = "";
@@ -391,8 +394,8 @@ namespace KIS.Areas.Analysis.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/GlobalKPIsController/GetNonCompliancesKPIs", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/GlobalKPIsController/GetNonCompliancesKPIs", "", ipAddr);
             }
             else
             {
@@ -456,14 +459,15 @@ namespace KIS.Areas.Analysis.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult GetImprovementActionsKPIs()
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/GlobalKPIsController/GetImprovementActionsKPIs", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/GlobalKPIsController/GetImprovementActionsKPIs", "", ipAddr);
             }
             else
             {
@@ -526,6 +530,7 @@ namespace KIS.Areas.Analysis.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult GetGlobalKPIs2(DateTime startPeriod, DateTime endPeriod, int periodType)
         {
             // Register user action

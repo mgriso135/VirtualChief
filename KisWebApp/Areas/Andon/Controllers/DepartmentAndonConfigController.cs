@@ -10,6 +10,7 @@ namespace KIS.Areas.Andon.Controllers
 {
     public class DepartmentAndonConfigController : Controller
     {
+        [Authorize]
         // GET: Andon/DepartmentAndonConfig
         public ActionResult GetDepartmentAndonConfig(int DepartmentID)
         {
@@ -54,6 +55,7 @@ namespace KIS.Areas.Andon.Controllers
          * 2 if user is not authorized
          * 3 if Department not found
          */
+        [Authorize]
         public int setShowProductivityIndicators(int DepartmentID, Boolean flag)
         {
             ViewBag.authW = false;
@@ -96,6 +98,7 @@ namespace KIS.Areas.Andon.Controllers
  * 2 if user is not authorized
  * 3 if Department not found
  */
+        [Authorize]
         public int setShowActiveUsers(int DepartmentID, Boolean flag)
         {
             int ret = 0;
@@ -137,6 +140,7 @@ namespace KIS.Areas.Andon.Controllers
  * 2 if user is not authorized
  * 3 if Department not found
  */
+        [Authorize]
         public int setUsernameFormat(int DepartmentID, char flag)
         {
             int ret = 0;

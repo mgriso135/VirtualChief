@@ -11,6 +11,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class ProductAnalysisController : Controller
     {
         // GET: Analysis/ProductAnalysis
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -64,6 +65,7 @@ namespace KIS.Areas.Analysis.Controllers
          * 3 = Average lead time
          * 4 = Average of delays
          */
+        [Authorize]
         public ActionResult ProductDataPanel(DateTime startPeriod, DateTime endPeriod, String customers, String departments, String TypeOfProducts, Boolean GroupProducts, int periodType, int graphType)
         {
             // Register user action

@@ -12,6 +12,7 @@ namespace KIS.Areas.Quality.Controllers
     public class NonCompliancesController : Controller
     {
         // GET: Quality/NonCompliances
+        [Authorize]
         public ActionResult Index(Char stat, String sortOrder)
         {
             // Register user action
@@ -129,6 +130,7 @@ namespace KIS.Areas.Quality.Controllers
             }
         }
 
+        [Authorize]
         public ActionResult Create()
         {
             // Register user action
@@ -177,6 +179,7 @@ namespace KIS.Areas.Quality.Controllers
                         return View();
         }
 
+        [Authorize]
         public ActionResult Update(int ID, int Year)
         {
             // Register user action
@@ -225,6 +228,7 @@ namespace KIS.Areas.Quality.Controllers
             }
         }
 
+        [Authorize]
         public Boolean Delete(int ID, int Year)
         {
             // Register user action
@@ -308,6 +312,7 @@ namespace KIS.Areas.Quality.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult NCFileList(int ID, int Year)
         {
             // Register user action
@@ -461,6 +466,7 @@ namespace KIS.Areas.Quality.Controllers
             return ret;
         }
 
+        [Authorize]
         public String NCDeleteFile(int ID, int Year, String fileName)
         {
             // Register user action
@@ -487,6 +493,7 @@ namespace KIS.Areas.Quality.Controllers
             return "Error while deleting";
         }
 
+        [Authorize]
         public ActionResult NCCategoriesList(int ID, int Year)
         {
             // Register user action
@@ -613,6 +620,7 @@ namespace KIS.Areas.Quality.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult NCCausesList(int ID, int Year)
         {
             // Register user action
@@ -738,7 +746,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult WarningList(int ID, int Year)
         {
             // Register user action
@@ -801,7 +809,7 @@ namespace KIS.Areas.Quality.Controllers
 
             return ret;
         }
-
+        [Authorize]
         public ActionResult NCProductsList(int ID, int Year)
         {
             // Register user action
@@ -962,7 +970,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public ActionResult ProductSearch(int ncID, int ncYear)
         {
             // Register user action
@@ -1010,7 +1018,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return PartialView();
         }
-
+        [Authorize]
         public JsonResult PortafoglioProdotti(String customer)
         {
             // Register user action
@@ -1053,7 +1061,7 @@ namespace KIS.Areas.Quality.Controllers
 
             return Json(clienti, JsonRequestBehavior.AllowGet);
         }
-
+        [Authorize]
         public ActionResult ProductsList(int ncID, int ncYear, String customer, int procID, int rev, int varID)
         {
             // Register user action
@@ -1142,7 +1150,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return PartialView(prodList);
         }
-
+        [Authorize]
         public Boolean NCProductAdd(int ID, int Year, int prodID, int prodYear)
         {
             // Register user action

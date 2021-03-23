@@ -11,6 +11,7 @@ namespace KIS.Areas.Quality.Controllers
     public class HomeController : Controller
     {
         // GET: Quality/Home
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action

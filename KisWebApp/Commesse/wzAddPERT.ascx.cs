@@ -358,7 +358,7 @@ namespace KIS.Commesse
                         if (retAddProcVar == true)
                         {
                             String page = "wzEditPERT.aspx";
-                            WizardConfig wizCfg = new WizardConfig();
+                            WizardConfig wizCfg = new WizardConfig(Session["ActiveWorkspace_Name"].ToString());
                             if (wizCfg.interfacciaPERT == "Table")
                             {
                                 page = "wzEditPERT_updtable.aspx";
@@ -500,7 +500,7 @@ namespace KIS.Commesse
                             if (newVarID != -1)
                             {
                                 String page = "wzEditPERT.aspx";
-                                WizardConfig wizCfg = new WizardConfig();
+                                WizardConfig wizCfg = new WizardConfig(Session["ActiveWorkspace_Name"].ToString());
                                 if (wizCfg.interfacciaPERT == "Table")
                                 {
                                     page = "wzEditPERT_updtable.aspx";

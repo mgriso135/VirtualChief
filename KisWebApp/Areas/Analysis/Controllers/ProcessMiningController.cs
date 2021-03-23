@@ -11,6 +11,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class ProcessMiningController : Controller
     {
         // GET: Analysis/ProcessMining
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action

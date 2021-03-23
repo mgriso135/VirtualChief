@@ -11,6 +11,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class TaskAnalysisController : Controller
     {
         // GET: Analysis/TaskAnalysis
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -69,6 +70,7 @@ namespace KIS.Areas.Analysis.Controllers
  * 4 = Sum of delays
  * 5 = Average of Productivity
  */
+        [Authorize]
         public ActionResult TaskDataPanel(DateTime startPeriod, DateTime endPeriod, String customers, String departments, String TypeOfProducts, int periodType, int graphType, String tasks, String workstations)
         {
             // Register user action

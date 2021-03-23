@@ -11,6 +11,7 @@ namespace KIS.Areas.Config.Controllers
     public class MeasurementUnitsController : Controller
     {
         // GET: Config/MeasurementUnits
+        [Authorize]
         public ActionResult Index()
         {
             // Check read permissions
@@ -51,6 +52,7 @@ namespace KIS.Areas.Config.Controllers
          * 1 if deleted successfully
          * 2 if user is not authorized
          * */
+        [Authorize]
         public int DeleteMeasurementUnit(int uID)
         {
             int ret = 0;
@@ -100,6 +102,7 @@ namespace KIS.Areas.Config.Controllers
          * 1 if ok
          * 2 if user is not authorized
          */
+        [Authorize]
         public int EditMeasurementUnits(int uID, String uType, String uDescription, Boolean uDefault)
         {
             int ret = 0;
@@ -136,6 +139,7 @@ namespace KIS.Areas.Config.Controllers
         * 1 if ok
         * 2 if user is not authorized
         */
+        [Authorize]
         public int AddMeasurementUnits(String uType, String uDescription, Boolean uDefault)
         {
             int ret = 0;

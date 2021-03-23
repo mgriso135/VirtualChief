@@ -16,6 +16,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
     public class WorkInstructionsController : Controller
     {
         // GET: WorkInstructions/WorkInstructions
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -70,6 +71,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult TestUpload()
         {
             return View();
@@ -80,6 +82,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
          * 0 if generic error
          * ManualID if all is ok
          */
+        [Authorize]
         public int AddWorkInstruction(String name, String description)
         {
             int ret = 0;
@@ -114,6 +117,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return ret;
         }
 
+        [Authorize]
         public JsonResult getJsonWorkInstructions(String param)
         {
             List<JsonManual> manualLst = new List<JsonManual>();
@@ -160,6 +164,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return Json(JsonConvert.SerializeObject(manualLst), JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public ActionResult WiEdit(int manualID, int manualRev)
         {
             KIS.App_Sources.WorkInstructions.WorkInstruction currWI = null;
@@ -204,6 +209,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
          * 2 if user not authorized
          * 3 if WorkInstruction not found
          */
+        [Authorize]
         public int EditWorkInstruction(int ID, int Version, String Name, String Description, DateTime ExpiryDate, Boolean IsActive)
         {
             int ret = 0;
@@ -247,6 +253,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
          * 0 if generic error
          * 1 if all is ok
          */
+        [Authorize]
         public int AddLabelById(int ID, int Version, int LabelID)
         {
             int ret = 0;
@@ -266,6 +273,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
  * -4 if WorkInstruction not found
  * LabelID if all is ok
  */
+        [Authorize]
         public int AddLabelByName(int ID, int Version, String LabelName)
         {
             int ret = 0;
@@ -307,13 +315,13 @@ namespace KIS.Areas.WorkInstructions.Controllers
             return ret;
         }
 
-
         /* Returns:
          * 0 if generic error
          * 1 if all is ok
          * 2 if user not authorized
          * 3 if error while deleting
          */
+        [Authorize]
         public int DeleteLabel(int ID, int Version, int LabelID)
         {
             int ret = 0;
@@ -342,35 +350,7 @@ namespace KIS.Areas.WorkInstructions.Controllers
                 return ret;
         }
 
-        /*public ActionResult EditTaskWorkInstruction(int TaskID, int TaskRev, int VariantID)
-        {
-            List<KIS.App_Sources.WorkInstructions.WorkInstruction> ret = new List<App_Sources.WorkInstructions.WorkInstruction>();
-            List<String[]> elencoPermessi = new List<String[]>();
-            String[] prmUser = new String[2];
-            prmUser[0] = "Task WorkInstructions";
-            prmUser[1] = "W";
-            elencoPermessi.Add(prmUser);
-            ViewBag.authW = false;
-            if (Session["user"] != null)
-            {
-                UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
-            }
-            ViewBag.showAdd = false;
-            if (ViewBag.authW)
-            {
-                TaskVariante tskVar = new TaskVariante(new App_Code.processo(TaskID, TaskRev), new App_Code.variante(VariantID));
-                if (tskVar != null && tskVar.Task != null && tskVar.variant != null &&
-                    tskVar.Task.processID != -1 && tskVar.variant.idVariante != -1)
-                {
-                    tskVar.loadWorkInstructions();
-                    ViewBag.showAdd = tskVar.WorkInstructions.Count == 0 ? true : false;
-                    ret = tskVar.WorkInstructions;
-                }
-            }
-            return View(ret);
-        }*/
-
+        [Authorize]
         public JsonResult getAllLabels()
         {
             List<WILabels> retW = new List<WILabels>();

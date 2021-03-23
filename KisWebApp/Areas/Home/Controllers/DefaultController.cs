@@ -15,6 +15,7 @@ namespace KIS.Areas.Home.Controllers
     public class DefaultController : Controller
     {
         // GET: Home/Default
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -32,6 +33,7 @@ namespace KIS.Areas.Home.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult HomeRandomTips()
         {
             ViewBag.log = "";
