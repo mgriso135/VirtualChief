@@ -11,7 +11,7 @@ namespace KIS.Areas.Workplace.Controllers
 {
     public class WebGembaController : Controller
     {
-
+        [Authorize]
         public ActionResult Index()
         { 
             ViewBag.authX = false;
@@ -48,6 +48,7 @@ namespace KIS.Areas.Workplace.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult ListWorkstationsComplete()
         {
             // Register user action
@@ -94,6 +95,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 3 if user not authorized
          * 4 if error while checking-in
          */
+        [Authorize]
         public int WorkstationCheckIn(int workstationID)
         {
             String ipAddr = Request.UserHostAddress;
@@ -143,6 +145,7 @@ namespace KIS.Areas.Workplace.Controllers
                 return ret;
         }
 
+        [Authorize]
         public ActionResult ListWorkstationsActives()
         {
             // Register user action
@@ -187,6 +190,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 3 if user not authorized
          * 4 if error while checking-out
          */
+        [Authorize]
         public int WorkstationCheckOut(int workstationID)
         {
             // Register user action
@@ -237,6 +241,7 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult ListWorkstationsTasks(int WorkstationID)
         {
             // Register user action
@@ -289,6 +294,7 @@ namespace KIS.Areas.Workplace.Controllers
             return View();
          }
 
+        [Authorize]
         public ActionResult ListTasksInExecution(int WorkstationID, String user)
         {
             // Register user action
@@ -357,6 +363,7 @@ namespace KIS.Areas.Workplace.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult ListTasksAvailable(int WorkstationID, String user)
         {
             // Register user action
@@ -430,7 +437,8 @@ namespace KIS.Areas.Workplace.Controllers
          * 2 if user has not the needed authorization
          * 3 if user exceeded the max number of tasks he can do simultaneously
          */
-         public int StartTask(int TaskID)
+        [Authorize]
+        public int StartTask(int TaskID)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
@@ -500,6 +508,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 2 if an error occured
          * 4 if user has not the needed authorization
          */
+        [Authorize]
         public int PauseTask(int TaskID)
         {
             // Register user action
@@ -559,6 +568,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 4 if user has not the needed authorization
          * 5 if there are some previous tasks that did not end
          */
+        [Authorize]
         public int CompleteTask(int TaskID)
         {
             // Register user action
@@ -632,6 +642,7 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult ListTaskParameters(int TaskID)
         {
             // Register user action
@@ -757,6 +768,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 4 if original parameter in product model does not exists
          * 5 if Error while adding parameter
          */
+        [Authorize]
         public int AddTaskParameters(int TaskID, int ParamID, int ParamCategory, String ParamName, String ParamValue)
         {
             // Register user action
@@ -867,6 +879,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 2 if user not authorized
          * 3 if error while deleting parameter
          */
+        [Authorize]
         public int DeleteTaskParameters(int TaskID, int ParamCategory, int ParamID)
         {
             // Register user action
@@ -918,13 +931,13 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
-
         /* Returns:
          * 0 if generic error
          * 1 if all is ok
          * 2 if user not authorized
          */
-       public int GenerateWarning(int TaskID)
+        [Authorize]
+        public int GenerateWarning(int TaskID)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
@@ -977,13 +990,13 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
-
         /* Returns:
          * 0 if generic error
          * 1 if all is ok
          * 2 if user not authorized
          * 3 if incorrect quantity
          */
+        [Authorize]
         public int ChangeQuantity(int TaskID, int Quantity)
         {
             // Register user action
@@ -1037,7 +1050,7 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
-
+        [Authorize]
         public ActionResult WorkstationKPI(int WorkstationID)
         {
             // Register user action
@@ -1160,6 +1173,7 @@ namespace KIS.Areas.Workplace.Controllers
         }
 
         // WebGemba version 2.0
+        [Authorize]
         public ActionResult ListWorkstationsTasks2(int WorkstationID)
         {
             // Register user action
@@ -1244,6 +1258,7 @@ namespace KIS.Areas.Workplace.Controllers
             return View();
         }
 
+        [Authorize]
         public JsonResult GetTasksAvailable(int WorkstationID, String user)
         {
             ViewBag.authX = false;
@@ -1340,6 +1355,7 @@ namespace KIS.Areas.Workplace.Controllers
             public String BgColor;
         }
 
+        [Authorize]
         public String GetWorkInstruction(int TaskID)
         {
             String ret = "";
@@ -1355,9 +1371,8 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
-
-
         /* Interface that shows user tasks */
+        [Authorize]
         public ActionResult ListUserTasks()
         {
             // Register user action
@@ -1417,11 +1432,12 @@ namespace KIS.Areas.Workplace.Controllers
             return View();
         }
 
-       /* Returns:
-        * 1 if task has started correctly
-        * 2 if user has not the needed authorization
-        * 3 if user exceeded the max number of tasks he can do simultaneously
-        */
+        /* Returns:
+         * 1 if task has started correctly
+         * 2 if user has not the needed authorization
+         * 3 if user exceeded the max number of tasks he can do simultaneously
+         */
+        [Authorize]
         public int StartTaskUser(int TaskID)
         {
             // Register user action
@@ -1495,6 +1511,7 @@ namespace KIS.Areas.Workplace.Controllers
  * 4 if user has not the needed authorization
  * 5 if there are some previous tasks that did not end
  */
+        [Authorize]
         public int CompleteTaskUser(int TaskID)
         {
             // Register user action
@@ -1572,6 +1589,7 @@ namespace KIS.Areas.Workplace.Controllers
             return ret;
         }
 
+        [Authorize]
         public JsonResult GetTasksAvailableUser(String user)
         {
             ViewBag.authX = false;
@@ -1638,6 +1656,7 @@ namespace KIS.Areas.Workplace.Controllers
             return Json(JsonConvert.SerializeObject(avTasks3), JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public ActionResult TaskOperatorNotesPanel(int TaskID)
         {
             // Register user action
@@ -1688,6 +1707,7 @@ namespace KIS.Areas.Workplace.Controllers
          * 1 if note added/edited successfully
          * 2 if user is not authorized
          */
+        [Authorize]
         public int AddTaskOperatorNote(int TaskID, int CommentID, String Note)
         {
             int ret = 0;

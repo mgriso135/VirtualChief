@@ -11,6 +11,7 @@ namespace KIS.Areas.Production.Controllers
     public class ProductDetailsController : Controller
     {
         // GET: Production/ProductDetail
+        [Authorize]
         public ActionResult Index(int ProductID, int ProductYear)
         {
             List<String[]> elencoPermessi = new List<String[]>();
@@ -44,6 +45,7 @@ namespace KIS.Areas.Production.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult ViewTaskParameters(int TaskID)
         {
             // Register user action
@@ -82,6 +84,7 @@ namespace KIS.Areas.Production.Controllers
                 return View();
         }
 
+        [Authorize]
         public ActionResult ViewTaskOperatorNotes(int TaskID)
         {
             // Register user action
@@ -120,6 +123,7 @@ namespace KIS.Areas.Production.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult ViewTaskOperationsDetails(int TaskID)
         {
             // Register user action
@@ -159,6 +163,7 @@ namespace KIS.Areas.Production.Controllers
             return View();
         }
 
+        [Authorize]
         public Boolean ExhumateTask(int TaskID)
         {
             // Register user action

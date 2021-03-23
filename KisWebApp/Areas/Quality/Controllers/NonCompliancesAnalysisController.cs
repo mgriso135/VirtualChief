@@ -14,6 +14,7 @@ namespace KIS.Areas.Quality.Controllers
     public class NonCompliancesAnalysisController : Controller
     {
         // GET: Quality/NonCompliancesAnalysis
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -35,6 +36,7 @@ namespace KIS.Areas.Quality.Controllers
          * End = Aalysis end date
          * format = { 'W' --> weekly view, 'M' --> monthly view, 'D' --> daily view }
          */
+        [Authorize]
         public ActionResult Number()
         {
             // Register user action
@@ -68,7 +70,7 @@ namespace KIS.Areas.Quality.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public ActionResult NCPerPeriod(DateTime start, DateTime end, Char format)
         {
             // Register user action
@@ -108,7 +110,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCPerPeriodList(DateTime start, DateTime end, Char format)
         {
             // Register user action
@@ -148,7 +150,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCCausesPerPeriodGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -187,7 +189,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCCausesPerPeriodList(DateTime start, DateTime end)
         {
             // Register user action
@@ -226,7 +228,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCParetoCategoriesChart(DateTime start, DateTime end)
         {
             // Register user action
@@ -265,7 +267,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCParetoCategoriesList(DateTime start, DateTime end)
         {
             // Register user action
@@ -315,6 +317,7 @@ namespace KIS.Areas.Quality.Controllers
             public double risk2;
         }
 
+        [Authorize]
         protected List<CategoryCost> CategoriesCostRegression(DateTime start, DateTime end)
         {
             // Register user action
@@ -405,7 +408,7 @@ namespace KIS.Areas.Quality.Controllers
             costCategories = costCategories.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
             return retCost;
         }
-
+        [Authorize]
         public ActionResult CategoriesCostList(DateTime start, DateTime end)
         {
             // Register user action
@@ -522,7 +525,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CategoriesCostGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -627,7 +630,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CategoriesProbabilityList(DateTime start, DateTime end)
         {
             // Register user action
@@ -682,7 +685,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CategoriesProbabilityGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -737,7 +740,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CategoriesRiskList(DateTime start, DateTime end)
         {
             // Register user action
@@ -819,7 +822,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CategoriesRiskGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -997,6 +1000,7 @@ namespace KIS.Areas.Quality.Controllers
             return retCost;
         }
 
+        [Authorize]
         public ActionResult CausesCostList(DateTime start, DateTime end)
         {
             // Register user action
@@ -1112,7 +1116,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CausesCostGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -1225,7 +1229,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CausesProbabilityList(DateTime start, DateTime end)
         {
             // Register user action
@@ -1280,7 +1284,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CausesProbabilityGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -1334,7 +1338,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CausesRiskList(DateTime start, DateTime end)
         {
             // Register user action
@@ -1410,7 +1414,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult CausesRiskGraph(DateTime start, DateTime end)
         {
             // Register user action
@@ -1486,7 +1490,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCCostList(DateTime start, DateTime end, char format)
         {
             // Register user action
@@ -1540,7 +1544,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult NCCostGraph(DateTime start, DateTime end, char format)
         {
             // Register user action
@@ -1590,7 +1594,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult ProductsNumberList(DateTime start, DateTime end)
         {
             // Register user action
@@ -1644,7 +1648,7 @@ namespace KIS.Areas.Quality.Controllers
             }
             return View();
         }
-
+        [Authorize]
         public ActionResult ProductsNumberGraph(DateTime start, DateTime end)
         {
             // Register user action

@@ -12,6 +12,7 @@ namespace KIS.Areas.Analysis.Controllers
     public class ProductionWorkloadController : Controller
     {
         // GET: Analysis/ProductAnalysis
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -67,6 +68,7 @@ namespace KIS.Areas.Analysis.Controllers
          * 3 = Average lead time
          * 4 = Average of delays
          */
+        [Authorize]
         public JsonResult ProductDataPanel(DateTime startPeriod, DateTime endPeriod, String DepartmentsOrWorkstations, String customers,
             String departments, String TypeOfProducts, int periodType, String workstations)
         {

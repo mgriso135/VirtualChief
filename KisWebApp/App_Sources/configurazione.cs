@@ -786,6 +786,11 @@ namespace KIS.App_Code
                 conn.Close();
             }
         }
+
+        public WizardConfig(String tenant)
+        {
+            this.Tenant = tenant;
+        }
     }
 
     public class CustomersControllerConfig : ConfigurationSection

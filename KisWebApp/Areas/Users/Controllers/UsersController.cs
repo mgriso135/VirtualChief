@@ -11,6 +11,7 @@ namespace KIS.Areas.Users.Controllers
     public class UsersController : Controller
     {
         // GET: Users/Users
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -28,6 +29,7 @@ namespace KIS.Areas.Users.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult ActivateUser(String usr, String checksum)
         {
             // Register user action
@@ -51,6 +53,7 @@ namespace KIS.Areas.Users.Controllers
             return View();
         }
 
+        [Authorize]
         public ActionResult WorkHoursManualRegistration(String usr)
         {
             // Register user action
@@ -115,6 +118,7 @@ namespace KIS.Areas.Users.Controllers
                 return View();
         }
 
+        [Authorize]
         public ActionResult ListUserWorkTimespans(String usr, DateTime date)
         {
             // Register user action
@@ -175,6 +179,7 @@ namespace KIS.Areas.Users.Controllers
          * 2 if start event not found
          * 3 if end event found
          */
+        [Authorize]
         public int DeleteUserWorkTimespan(String usr, int StartEventID, int EndEventID)
         {
             // Register user action
@@ -240,6 +245,7 @@ namespace KIS.Areas.Users.Controllers
          * 17 if there are some parameters that needs to be defined
          * 18 if there are problems during the insert into queries
          */
+        [Authorize]
         public int AddUserWorkTimespan(int TaskID, String usrID, bool completed, int producedQuantity, DateTime start, DateTime end)
         {
             // Register user action
@@ -291,6 +297,7 @@ namespace KIS.Areas.Users.Controllers
             return ret;
         }
 
+        [Authorize]
         public JsonResult OpenOrders(String customer)
         {
             // Register user action
@@ -333,6 +340,7 @@ namespace KIS.Areas.Users.Controllers
             return Json(orders, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public JsonResult OpenProducts(String customer, int OrderID, int OrderYear)
         {
             // Register user action
@@ -372,6 +380,7 @@ namespace KIS.Areas.Users.Controllers
             return Json(products, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public JsonResult OpenTasks(String customer, int OrderID, int OrderYear, int ProductID, int ProductYear)
         {
             // Register user action
@@ -438,6 +447,7 @@ namespace KIS.Areas.Users.Controllers
          * 1 if all is ok
          * 2 if user is not allowed
          */
+        [Authorize]
         public int DisableUser(String user)
         {
             // Register user action
@@ -489,6 +499,7 @@ namespace KIS.Areas.Users.Controllers
             return ret;
         }
 
+        [Authorize]
         public ActionResult DisabledUsers()
         {
             // Register user action
@@ -542,6 +553,7 @@ namespace KIS.Areas.Users.Controllers
   * 1 if all is ok
   * 2 if user is not allowed
   */
+        [Authorize]
         public int ReenableUser(String user)
         {
             // Register user action

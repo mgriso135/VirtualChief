@@ -12,6 +12,7 @@ namespace KIS.Areas.Andon.Controllers
     public class DepartmentAndonController : Controller
     {
         // GET: Andon/DepartmentAndon
+        [Authorize]
         public ActionResult Index(int DepartmentID)
         {
             ViewBag.DepartmentID = -1;
@@ -22,6 +23,7 @@ namespace KIS.Areas.Andon.Controllers
             return View();
         }
 
+        [Authorize]
         public JsonResult GetConfigurationParameters(int DepartmentID)
         {
             AndonConfigurationStruct aCfgStruct = new AndonConfigurationStruct();
@@ -83,6 +85,7 @@ namespace KIS.Areas.Andon.Controllers
             return Json(JsonConvert.SerializeObject(aCfgStruct), JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public JsonResult loadWIP(int DepartmentID)
         {
             List<KIS.App_Code.DepartmentAndonProductsStruct> wipList = new List<DepartmentAndonProductsStruct>();
@@ -96,6 +99,7 @@ namespace KIS.Areas.Andon.Controllers
             return Json(JsonConvert.SerializeObject(wipList), JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public JsonResult loadUserPanel(int DepartmentID)
         {
             AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
@@ -103,6 +107,7 @@ namespace KIS.Areas.Andon.Controllers
             return Json(JsonConvert.SerializeObject(currAndon.UserPanel), JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public JsonResult loadProductivityIndicators(int DepartmentID, DateTime endShift)
         {
             AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);
@@ -111,6 +116,7 @@ namespace KIS.Areas.Andon.Controllers
             return Json(JsonConvert.SerializeObject(prdIndStruct), JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize]
         public JsonResult loadOpenWarnings(int DepartmentID)
         {
             AndonReparto currAndon = new AndonReparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentID);

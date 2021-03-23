@@ -11,6 +11,7 @@ namespace KIS.Areas.Products.Controllers
     public class ProductParametersCategoriesController : Controller
     {
         // GET: Products/ProductParametersCategories
+        [Authorize]
         public ActionResult Index()
         {
             // Register user action
@@ -78,7 +79,7 @@ namespace KIS.Areas.Products.Controllers
             }
                 return View();
         }
-
+        [Authorize]
         public ActionResult Create()
         {
             // Register user action
@@ -117,7 +118,7 @@ namespace KIS.Areas.Products.Controllers
             }*/
                 return View();
         }
-
+        [Authorize]
         public Boolean Add(String CategoryName, String CategoryDescription)
         {
             // Register user action
@@ -158,7 +159,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean Delete(int catID)
         {
             // Register user action
@@ -199,7 +200,7 @@ namespace KIS.Areas.Products.Controllers
             }
             return ret;
         }
-
+        [Authorize]
         public Boolean Edit(int CategoryID, String CategoryName, String CategoryDescription)
         {
             // Register user action
