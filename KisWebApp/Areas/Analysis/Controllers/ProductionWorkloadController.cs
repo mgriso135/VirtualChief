@@ -46,7 +46,7 @@ namespace KIS.Areas.Analysis.Controllers
                 ViewBag.Customers = listCst.Elenco;
                 ElencoReparti listDepts = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Departments = listDepts.elenco;
-                ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 ViewBag.TypeOfProducts = TypeOfProductsList;
                 ElencoPostazioni elWorkstations = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());

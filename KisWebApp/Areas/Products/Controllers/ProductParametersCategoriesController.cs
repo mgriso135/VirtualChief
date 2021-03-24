@@ -37,11 +37,12 @@ namespace KIS.Areas.Products.Controllers
             elencoPermessi.Add(prmUser);
 
             ViewBag.authR = false;
-            if (Session["user"] != null)
+            ViewBag.Tenant = "";
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null && Session["ActiveWorkspace_Name"].ToString().Length >0)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
-                
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
             }
 
             elencoPermessi = new List<String[]>();

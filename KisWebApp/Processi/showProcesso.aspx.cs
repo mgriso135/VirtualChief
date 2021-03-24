@@ -125,7 +125,7 @@ namespace KIS.Processi
                         }
 
                         // Carico il dropdownlist di Copia PERT
-                        ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                        ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                         ddlCopiaPERT.DataSource = el.elencoFigli;
                         ddlCopiaPERT.DataValueField = "IDCombinato";
                         ddlCopiaPERT.DataTextField = "NomeCombinato";
@@ -468,101 +468,8 @@ namespace KIS.Processi
                 }
                 lblErr.Text = idProc.ToString() + " " + idVariante.ToString() + "<br/>";
 
-                /*if (idVariante != -1 && idProc!=-1)
-                {
-                    
-                    processo prc = new processo(idProc);
-                    variante var = new variante(idVariante);
-                    TaskVariante tsk = new TaskVariante(prc, var);
 
-                    bool controllo = true;
-                    
-                    // Controllo che non ci siano figli associati
-                    if (controllo == true)
-                    {
-                        tsk.Task.loadFigli();
-                        if (tsk.Task.subProcessi.Count == 0)
-                        {
-                            controllo = true;
-                        }
-                        else
-                        {
-                            controllo = false;
-                            lblErr.Text = "<span style='color: red'>Attenzione: ci sono dei sottoprocessi associati al task</span><br/>";
-                        }
-                    }
-
-                    // Controllo che non ci siano varianti associate
-                    if (controllo == true)
-                    {
-                        tsk.Task.loadVariantiFigli();
-                        if (tsk.Task.variantiFigli.Count == 0)
-                        {
-                            controllo = true;
-                        }
-                        else
-                        {
-                            controllo = false;
-                            lblErr.Text = "<span style='color: red'>Attenzione: ci sono delle varianti da cancellare</span><br/>";
-                        }
-                    }
-
-                    // Controllo che non ci siano tempi ciclo associati
-                    if (controllo == true)
-                    {
-                        tsk.loadTempiCiclo();
-                        if (tsk.Tempi.Tempi.Count > 0)
-                        {
-                            controllo = false;
-                            lblErr.Text = "<span style='color: red'>Prima di procedere devi cancellare i tempi ciclo associati al task</span><br/>";
-                        }
-                        else
-                        {
-                            controllo = true;
-                        }
-                    }
-
-                    if (controllo == true)
-                    {
-                        tsk.loadPostazioni();
-                        if (tsk.PostazioniDiLavoro.Count > 0)
-                        {
-                            lblErr.Text += "<span style='color: red'>Attenzione: il task è associato alle seguenti postazioni:<br/>";
-                            for (int i = 0; i < tsk.Task.elencoPostazioniTask.Count; i++)
-                            {
-                                lblErr.Text += "-&nbsp;" + tsk.Task.elencoPostazioniTask[i].name + "<br/>";
-                            }
-                            lblErr.Text += "Rimuovere l'associazione prima di cancellare il task</span><br/>";
-                            controllo = false;
-                        }
-                        else
-                        {
-
-                            controllo = true;
-                        }
-                    }
-
-                    // Se è tutto ok...
-                    if (controllo == true)
-                    {
-                        bool rt = tsk.Delete();
-                        if (rt == true)
-                        {
-                            int res = prc.delete();
-                            lblErr.Text += "<br/><span style=\"color:red;\">Task cancellato</span><br/>";
-
-                        }
-                        else
-                        {
-                            lblErr.Text += "<br/><span style=\"color:red;\">" + tsk.log + "</span><br/>";
-                        }
-                    }
-                    if (var.idVariante != -1)
-                    {
-                        
-                    }
-                }*/
-                            if (idProc != -1 && idVariante == -1)
+                if (idProc != -1 && idVariante == -1)
                 {
                     processo prc = new processo(Session["ActiveWorkspace_Name"].ToString(), idProc);
                     int rt = prc.delete();

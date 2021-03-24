@@ -181,7 +181,7 @@
 {
     if (Model != null && Model.Count() > 0)
     {
-        KIS.App_Code.ProductParametersCategories paramList = new KIS.App_Code.ProductParametersCategories();
+        KIS.App_Code.ProductParametersCategories paramList = new KIS.App_Code.ProductParametersCategories(ViewBag.Tenant);
         paramList.loadCategories();
         <div class="row-fluid">
             <div class="span12">

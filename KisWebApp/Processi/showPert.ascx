@@ -76,7 +76,7 @@
 
            $.ajax({
                type: "POST",
-               url: "../Processi/getProcessData.asmx/loadTempiCiclo",
+               url: "../Products/Products/loadTempiCiclo",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -207,7 +207,7 @@
        function loadAddTaskData() {
            $.ajax({
                type: "POST",
-               url: "../Processi/getProcessData.asmx/loadTempiCiclo",
+               url: "../Products/Products/loadTempiCiclo",
                contentType: "application/json; charset=utf-8",
                data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                dataType: "json",
@@ -367,7 +367,7 @@
               var rev = 0;
               $.ajax({
                   type: "POST",
-                  url: "../Processi/getProcessData.asmx/loadTempiCiclo",
+                  url: "../Products/Products/loadTempiCiclo",
                   contentType: "application/json; charset=utf-8",
                   data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':"+varID+"}",
                   dataType: "json",
@@ -403,7 +403,7 @@
               var rev = 0;
               $.ajax({
                   type: "POST",
-                  url: "../Processi/getProcessData.asmx/loadPrecedenze",
+                  url: "../Products/Products/loadPrecedenze",
                   contentType: "application/json; charset=utf-8",
                   data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                   dataType: "json",
@@ -440,7 +440,7 @@
               var rev = 0;
               $.ajax({
                   type: "POST",
-                  url: "../Processi/getProcessData.asmx/addDefaultSubProcess",
+                  url: "../Products/Products/addDefaultSubProcess",
                   contentType: "application/json; charset=utf-8",
                   data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
                   dataType: "json",
@@ -522,7 +522,7 @@
               var taskID = ddlTask.options[ddlTask.selectedIndex].value;
               $.ajax({
                   type: "POST",
-                  url: "../Processi/getProcessData.asmx/linkExistingSubProcess",
+                  url: "../Products/Products/linkExistingSubProcess",
                   contentType: "application/json; charset=utf-8",
                   data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + ", 'taskID':" + taskID + ", 'taskRev':0 }",
                   dataType: "json",
@@ -549,7 +549,7 @@
            var taskRev = 0;
               $.ajax({
                   type: "POST",
-                  url: "../Processi/getProcessData.asmx/deleteSubProcess",
+                  url: "../Products/Products/deleteSubProcess",
                   contentType: "application/json; charset=utf-8",
                   data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + ", 'taskID':" + taskID + ", 'taskRev':0 }",
                   dataType: "json",

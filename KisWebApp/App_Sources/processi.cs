@@ -4124,9 +4124,9 @@ namespace KIS.App_Code
         }
 
         /* Ritorna processivarianti solo per un tipo di processo */
-        public ElencoProcessiVarianti(bool isPert)
+        public ElencoProcessiVarianti(String tenant, bool isPert)
         {
-            this.Tenant = Tenant;
+            this.Tenant = tenant;
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -4145,9 +4145,9 @@ namespace KIS.App_Code
         }
 
         /* Ritorna processivarianti solo per un tipo di processo, realizzato per un certo cliente */
-        public ElencoProcessiVarianti(bool isPert, Cliente customer)
+        public ElencoProcessiVarianti(String tenant, bool isPert, Cliente customer)
         {
-            this.Tenant = Tenant;
+            this.Tenant = tenant;
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -4909,8 +4909,9 @@ namespace KIS.App_Code
         protected String Tenant;
         public List<processo> Elenco;
 
-        public ElencoTasks(String Tenant)
+        public ElencoTasks(String tenant)
         {
+            this.Tenant = tenant;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
@@ -4926,9 +4927,9 @@ namespace KIS.App_Code
         }
 
         /* eseguibili = true Ritorna solo i task eseguibili in produzione, cioè senza figli! */
-        public ElencoTasks(String Tenant, bool eseguibili)
+        public ElencoTasks(String tenant, bool eseguibili)
         {
-            this.Tenant = Tenant;
+            this.Tenant = tenant;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();

@@ -41,7 +41,7 @@ namespace KIS.Commesse
                         tblAddPERT.Visible = true;
                         if (!Page.IsPostBack)
                         {
-                            ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                            ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                             var sorted = el.elencoFigli.OrderBy(x => x.NomeCombinato);
 
                             ddlCopiaPERT.DataSource = sorted;
@@ -126,11 +126,11 @@ namespace KIS.Commesse
                 ElencoProcessiVarianti el = null;
                 if (customer.CodiceCliente.Length > 0)
                 {
-                    el = new ElencoProcessiVarianti(true, customer);
+                    el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true, customer);
                 }
                 else
                 {
-                     el = new ElencoProcessiVarianti(true);
+                     el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 }
                 var sorted = el.elencoFigli.OrderBy(x => x.process.processName).ThenBy(y => y.variant.nomeVariante);
 
@@ -143,7 +143,7 @@ namespace KIS.Commesse
             }
             else
             {
-                ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 var sorted = el.elencoFigli.OrderBy(x => x.process.processName).ThenBy(y => y.variant.nomeVariante);
 
                 ddlCopiaPERT.DataSource = sorted;
@@ -228,11 +228,11 @@ namespace KIS.Commesse
                 ElencoProcessiVarianti el = null;
                 if (customer.CodiceCliente.Length > 0)
                 {
-                    el = new ElencoProcessiVarianti(true, customer);
+                    el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true, customer);
                 }
                 else
                 {
-                     el = new ElencoProcessiVarianti(true);
+                     el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 }
 
                 var sorted = el.elencoFigli.OrderBy(x => x.process.processName).ThenBy(y => y.variant.nomeVariante);
@@ -245,7 +245,7 @@ namespace KIS.Commesse
             }
             else
             {
-                ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 var sorted = el.elencoFigli.OrderBy(x => x.process.processName).ThenBy(y => y.variant.nomeVariante);
 
                 ddlAddProdStandard.Items.Clear();
