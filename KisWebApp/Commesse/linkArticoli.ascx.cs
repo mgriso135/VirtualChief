@@ -33,7 +33,7 @@ namespace KIS.Commesse
                     if (!Page.IsPostBack)
                     {
                         Commessa comm = new Commessa(Session["ActiveWorkspace_Name"].ToString(), idComm, annoComm);
-                        ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                        ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                         ddlArticoli.DataSource = el.elencoFigli;
                         ddlArticoli.DataValueField = "IDCombinato";
                         ddlArticoli.DataTextField = "NomeCombinato";

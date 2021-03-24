@@ -44,7 +44,7 @@ namespace KIS.Analysis
                     ddlCliente.DataSource = lstClienti;
                     ddlCliente.DataBind();
 
-                    ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                    ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                     var sorted = el.elencoFigli.OrderBy(x => x.process.processName).ThenBy(y => y.variant.idVariante);
                     ddlTipoProdotto.DataSource = sorted;
                     ddlTipoProdotto.DataValueField = "IDCombinato2";

@@ -18,8 +18,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/ProductParameters/Index", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Products/ProductParameters/Index", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {
@@ -91,6 +91,7 @@ namespace KIS.Areas.Products.Controllers
             }
                 return View();
         }
+
         [Authorize]
         public Boolean AddParam(int processID, int processRev, int variantID, String ParamName, String ParamDescription,
             int ParamCategory, Boolean ParamIsFixed, Boolean ParamIsRequired)
@@ -99,8 +100,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/ProductParameters/AddParam", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/ProductParameters/AddParam", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {
@@ -173,8 +174,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/ProductParameters/DeleteParam", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/ProductParameters/DeleteParam", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {
@@ -222,8 +223,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/ProductParameters/EditParam", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/ProductParameters/EditParam", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {

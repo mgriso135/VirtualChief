@@ -31,7 +31,7 @@ namespace KIS.Analysis
             if (checkUser == true)
             {
                 rptTipiProdotto.Visible = true;
-                ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 List<ProcessoVariante> elProcVar = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 rptTipiProdotto.DataSource = elProcVar;
                 rptTipiProdotto.DataBind();

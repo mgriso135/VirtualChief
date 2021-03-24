@@ -49,7 +49,7 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.Departments = deptList.elenco;
                 PortafoglioClienti listCst = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
                 ViewBag.Customers = listCst.Elenco;
-                ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 var TypeOfProductsList = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 ViewBag.TypeOfProducts = TypeOfProductsList;
 

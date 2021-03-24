@@ -1008,7 +1008,7 @@ namespace KIS.Areas.Quality.Controllers
                 ViewBag.ncID = ncID;
                 ViewBag.ncYear = ncYear;
                 ViewBag.authenticated = true;
-                ElencoProcessiVarianti el = new ElencoProcessiVarianti(true);
+                ElencoProcessiVarianti el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                 ViewBag.listProdotti = el.elencoFigli.OrderBy(x => x.NomeCombinato);
                 List<ProcessoVariante> elP = el.elencoFigli.OrderBy(x => x.NomeCombinato).ToList();
                 //elP[0].IDCombinato2;
@@ -1043,12 +1043,12 @@ namespace KIS.Areas.Quality.Controllers
                 Cliente cust = new Cliente(Session["ActiveWorkspace_Name"].ToString(), customer);
                 if(cust.CodiceCliente.Length>0)
                 { 
-                    el = new ElencoProcessiVarianti(true, cust);
+                    el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true, cust);
                 }
             }
             else
             {
-                el = new ElencoProcessiVarianti(true);
+                el = new ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
             }
             
             for (int i = 0; i < el.elencoFigli.Count; i++)
