@@ -289,21 +289,24 @@ namespace KIS.Processi
         protected void timer1_Tick(object sender, EventArgs e)
         {
             lbl1.Text = "";
-            processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
+            if(Session["ActiveWorkspace_Name"]!=null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
+            { 
+                processo padre = new processo(Session["ActiveWorkspace_Name"].ToString(), procID);
 
-            int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
+                int controllo = padre.checkConsistencyPERT(new variante(Session["ActiveWorkspace_Name"].ToString(), varID));
 
-            if (controllo == 0)
-            {
-                lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblGenericError").ToString() + "</span>";
-            }
-            else if (controllo == 2)
-            {
-                lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotLinked").ToString() + "</span>";
-            }
-            else if (controllo == 5)
-            {
-                lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotTempoCiclo").ToString() + "</span>";
+                if (controllo == 0)
+                {
+                    lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblGenericError").ToString() + "</span>";
+                }
+                else if (controllo == 2)
+                {
+                    lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotLinked").ToString() + "</span>";
+                }
+                else if (controllo == 5)
+                {
+                    lbl1.Text = "<span style='color:red;'>" + GetLocalResourceObject("lblTaskNotTempoCiclo").ToString() + "</span>";
+                }
             }
         }
 

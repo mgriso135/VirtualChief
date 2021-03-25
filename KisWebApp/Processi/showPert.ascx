@@ -77,11 +77,17 @@
            $.ajax({
                type: "POST",
                url: "../Products/Products/loadTempiCiclo",
-               contentType: "application/json; charset=utf-8",
-               data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
-               dataType: "json",
+               //contentType: "application/json; charset=utf-8",
+               data: {
+                   procID: procID,
+                   rev: rev,
+                   varID: varID
+               },
+               // dataType: "json",
                success: function (response) {
-                   arrTasks = response.d;
+                   console.log(response);
+                   // console.log("Parsed: " + JSON.parse(response));
+                   arrTasks = response;
                    drawTasks();
                    printCycleTimes();
                    drawDeleteIcon();
@@ -90,8 +96,11 @@
                    drawChainImage();
                },
                error: function (response) {
+                   console.log("loadTempiCiclo error " + response);
                },
-               complete: function () {
+               complete: function (response)
+               {
+                   console.log("loadTempiCiclo complete " + response);
                }
            });
 
@@ -208,12 +217,16 @@
            $.ajax({
                type: "POST",
                url: "../Products/Products/loadTempiCiclo",
-               contentType: "application/json; charset=utf-8",
-               data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
-               dataType: "json",
+               // contentType: "application/json; charset=utf-8",
+               data: {
+               procID: procID,
+               rev: rev, 
+               varID: varID
+           },
+               // dataType: "json",
                success: function (response) {
                    arrTasks = [];
-                   arrTasks = response.d;
+                   arrTasks = response;
                    drawTasks();
                    printCycleTimes();
                    drawDeleteIcon();
@@ -365,13 +378,19 @@
               var procID = getQueryStringValue("id");
               var varID = getQueryStringValue("variante");
               var rev = 0;
-              $.ajax({
-                  type: "POST",
-                  url: "../Products/Products/loadTempiCiclo",
-                  contentType: "application/json; charset=utf-8",
-                  data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':"+varID+"}",
-                  dataType: "json",
-                  success: OnSuccess,
+           $.ajax({
+               type: "POST",
+               url: "../Products/Products/loadTempiCiclo",
+               // contentType: "application/json; charset=utf-8",
+               data: {
+                   procID: procID,
+                   rev: rev,
+                   varID: varID
+               },
+               // dataType: "json",
+               success: function(response) {
+                   arrTasks = response;
+               },
                   error: function (response) {
                       //alert(response.d);
                   },
@@ -392,11 +411,6 @@
               });  
           }          
 
-          function OnSuccess(response)   {
-              arrTasks = [];
-              arrTasks = response.d;
-          }
-
           function precedenze() {
               var procID = getQueryStringValue("id");
               var varID = getQueryStringValue("variante");
@@ -404,10 +418,26 @@
               $.ajax({
                   type: "POST",
                   url: "../Products/Products/loadPrecedenze",
-                  contentType: "application/json; charset=utf-8",
-                  data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
-                  dataType: "json",
-                  success: SuccessPrecedenze,
+                  // contentType: "application/json; charset=utf-8",
+                  data: {
+                      procID: procID,
+                      rev: rev,
+                      varID: varID
+                  },
+                  // dataType: "json",
+                  success: function(prec) {
+                      if (precSucc) {
+                          for (var i = 0; i < precSucc.length * 2; i++) {
+                              var tc = window.document.getElementById("line" + i);
+                              if (tc) {
+                                  window.document.getElementById("pertGraph").removeChild(tc);
+                              }
+                          }
+                      }
+                      precSucc = [];
+                      precSucc = prec;
+                      drawLines();
+                  },
                   error: function (response) {
                       //alert(response.d);
                   },
@@ -416,19 +446,7 @@
               });
           }
 
-          function SuccessPrecedenze(prec) {
-              if (precSucc) {
-                  for (var i = 0; i < precSucc.length * 2; i++) {
-                      var tc = window.document.getElementById("line" + i);
-                      if (tc) {
-                          window.document.getElementById("pertGraph").removeChild(tc);
-                      }
-                  }
-              }
-              precSucc = [];
-           precSucc = prec.d;
-           drawLines();
-       }
+          
 
           function getQueryStringValue(key) {
               return unescape(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + escape(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
@@ -441,9 +459,13 @@
               $.ajax({
                   type: "POST",
                   url: "../Products/Products/addDefaultSubProcess",
-                  contentType: "application/json; charset=utf-8",
-                  data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + "}",
-                  dataType: "json",
+                  // contentType: "application/json; charset=utf-8",
+                  data: {
+                  procID: procID, 
+                  rev: rev, 
+                  varID: varID
+              },
+                 // dataType: "json",
                   success: function (ret) {
                       clearTasks();
                       clearToolBox();
@@ -523,9 +545,15 @@
               $.ajax({
                   type: "POST",
                   url: "../Products/Products/linkExistingSubProcess",
-                  contentType: "application/json; charset=utf-8",
-                  data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + ", 'taskID':" + taskID + ", 'taskRev':0 }",
-                  dataType: "json",
+                  // contentType: "application/json; charset=utf-8",
+                  data: {
+                      procID: procID, 
+                      rev: rev, 
+                      varID: varID, 
+                      taskID: taskID, 
+                      taskRev: 0
+              },
+                  // dataType: "json",
                   success: function (ret) {
                       clearTasks();
                       clearToolBox();
@@ -550,11 +578,17 @@
               $.ajax({
                   type: "POST",
                   url: "../Products/Products/deleteSubProcess",
-                  contentType: "application/json; charset=utf-8",
-                  data: "{'procID':" + procID + ", 'rev':" + rev + ", 'varID':" + varID + ", 'taskID':" + taskID + ", 'taskRev':0 }",
-                  dataType: "json",
+                  // contentType: "application/json; charset=utf-8",
+                  data: {
+                      procID: procID,
+                      rev: rev,
+                      varID: varID,
+                      taskID: taskID,
+                      taskRev: 0
+                  },
+                  // dataType: "json",
                   success: function (ret) {
-                      if (ret.d == true) {
+                      if (ret == true) {
                           $('#task' + taskID).remove();
                           $('#txt' + taskID).remove();
                           $('#tx' + taskID).remove();

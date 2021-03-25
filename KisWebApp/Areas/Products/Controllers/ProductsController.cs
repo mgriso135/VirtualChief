@@ -865,7 +865,7 @@ namespace KIS.Areas.Products.Controllers
                 return ret;
         }
         [Authorize]
-        public List<String[]> loadTempiCiclo(int procID, int rev, int varID)
+        public JsonResult loadTempiCiclo(int procID, int rev, int varID)
         {
             List<String[]> ret = new List<String[]>();
             if (Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
@@ -890,12 +890,12 @@ namespace KIS.Areas.Products.Controllers
                     ret.Add(element);
                 }
             }
-            return ret;
+            return Json(ret);
 
         }
 
         [Authorize]
-        public List<int[]> loadPrecedenze(int procID, int rev, int varID)
+        public JsonResult loadPrecedenze(int procID, int rev, int varID)
         {
             List<int[]> ret = new List<int[]>();
             if (Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
@@ -919,7 +919,7 @@ namespace KIS.Areas.Products.Controllers
                     }
                 }
             }
-            return ret;
+            return Json(ret);
         }
 
         [Authorize]
