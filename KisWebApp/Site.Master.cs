@@ -8,6 +8,8 @@ namespace KIS
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if(Session["ActiveWorkspace_Name"]!=null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
+            { 
             lblLicenseExpired.Visible = false;
             KISConfig kisCfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
             DateTime licenseExpDate = kisCfg.ExpiryDate;
@@ -55,6 +57,7 @@ namespace KIS
             else
             {
                 Dati.Utilities.LogAction(Session.SessionID, "Page", page, Request.QueryString.ToString(), ipAddr);
+            }
             }
         }
     }
