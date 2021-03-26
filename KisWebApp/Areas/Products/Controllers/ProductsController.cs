@@ -18,8 +18,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/EditTaskPanel", "TaskID="+TaskID+"&TaskRev="+TaskRev+"&VariantID="+VariantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Products/Products/EditTaskPanel", "TaskID="+TaskID+"&TaskRev="+TaskRev+"&VariantID="+VariantID, ipAddr);
             }
             else
             {
@@ -57,8 +57,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/SaveTaskDetails", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/SaveTaskDetails", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
@@ -116,8 +116,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/AddWorkingTimeToTask", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/AddWorkingTimeToTask", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
@@ -170,8 +170,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Products/Products/TaskCycleTimesList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
@@ -226,8 +226,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/TaskCycleTimeDelete", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/TaskCycleTimeDelete", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
@@ -265,8 +265,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/AddTaskParam", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/AddTaskParam", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + variantID, ipAddr);
             }
             else
             {
@@ -340,8 +340,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/AddTaskParam", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/AddTaskParam", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + variantID, ipAddr);
             }
             else
             {
@@ -389,8 +389,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/AddTaskParam", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/AddTaskParam", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {
@@ -440,8 +440,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskParametersList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Products/Products/TaskParametersList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&VariantID=" + VariantID, ipAddr);
             }
             else
             {
@@ -523,8 +523,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/CheckProductIntegrityCycleTimes", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/CheckProductIntegrityCycleTimes", "processID=" + processID + "&processRev=" + processRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {
@@ -666,8 +666,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Products/Products/TaskDefaultOperatorsList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Products/Products/TaskDefaultOperatorsList", "TaskID=" + TaskID + "&TaskRev=" + TaskRev + "&variantID=" + variantID, ipAddr);
             }
             else
             {
@@ -823,8 +823,8 @@ namespace KIS.Areas.Products.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Products/Products/CompleteProductBruteForce", "ProductID=" + ProductID + "&ProductYear="+ProductYear, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Products/Products/CompleteProductBruteForce", "ProductID=" + ProductID + "&ProductYear="+ProductYear, ipAddr);
             }
             else
             {
