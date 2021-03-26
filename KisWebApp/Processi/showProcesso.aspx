@@ -31,14 +31,13 @@ CodeBehind="showProcesso.aspx.cs" Inherits="KIS.Processi.showProcesso" ValidateR
                         variantID: $('#<%=VariantID.ClientID%>').val() 
                     },
                     success: function (result) {
-                        console.log("ProductParameters/Index ok");
+                    // console.log("ProductParameters/Index ok");
                     $('#divProcessParams').html(result);
                     $('#imgLoadParams').hide();
                     },
                     error: function (result) {
-                        console.log("ProductParameters/Index error " + result.data);
+                       // console.log("ProductParameters/Index error " + result.data);
                     }
-                
                 });
                 }
                 else
