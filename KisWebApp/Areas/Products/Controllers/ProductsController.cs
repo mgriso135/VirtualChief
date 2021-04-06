@@ -14,6 +14,8 @@ namespace KIS.Areas.Products.Controllers
         [Authorize]
         public ActionResult EditTaskPanel(int TaskID, int TaskRev, int VariantID)
         {
+            ViewBag.Tenant = "";
+
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
@@ -42,7 +44,8 @@ namespace KIS.Areas.Products.Controllers
             }
             ViewBag.showAddWI = false;
             if (ViewBag.authW)
-            { 
+            {
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
                 TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new App_Code.processo(Session["ActiveWorkspace_Name"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace_Name"].ToString(), VariantID));
                 tskVar.loadWorkInstructions();
                 ViewBag.showAddWI = tskVar.WorkInstructions.Count == 0 ? true : false;
@@ -496,6 +499,7 @@ namespace KIS.Areas.Products.Controllers
 
             if (ViewBag.authR || ViewBag.authW || ViewBag.authX)
             {
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
                 TaskVariante tskVar = new TaskVariante(Session["ActiveWorkspace_Name"].ToString(), new processo(Session["ActiveWorkspace_Name"].ToString(), TaskID, TaskRev), new variante(Session["ActiveWorkspace_Name"].ToString(), VariantID));
                 if (tskVar != null && tskVar.Task != null && tskVar.Task.processID > -1 &&
                     tskVar.variant != null && tskVar.variant.idVariante > -1)
