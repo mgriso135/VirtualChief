@@ -64,8 +64,8 @@ namespace KIS.Eventi
                     // Invio l'e-mail
                     System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
 
-                    mMessage.From = new MailAddress("info@virtualchief.net", "Scheduler@KaizenIndicatorSystem");
-                    mMessage.To.Add(new MailAddress("info@virtualchief.net", "Scheduler@KaizenIndicatorSystem"));
+                    mMessage.From = new MailAddress("info@virtualchief.net", "Scheduler@VirtualChief");
+                    mMessage.To.Add(new MailAddress("info@virtualchief.net", "Scheduler@VirtualChief"));
                     for (int q = 0; q < MailList.Count; q++)
                     {
                         mMessage.CC.Add(MailList[q]);

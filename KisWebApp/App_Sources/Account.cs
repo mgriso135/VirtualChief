@@ -301,8 +301,10 @@ namespace KIS.App_Sources
                     rdr.Close();
                     if(wsid!=-1)
                     {
-                        cmd.CommandText = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_at, invitation_accepted, invitation_accepted_at, default_ws) "
-                            + " VALUES(@userid3, @workspaceid, @invite_sent, @invite_sent_at, @invitation_accepted, @invitation_accepted_at, @default)";
+                        cmd.CommandText = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invitation_accepted, invitation_accepted_date, "
+                            + " default_ws, invite_checksum) "
+                            + " VALUES(@userid3, @workspaceid, @invite_sent, @invite_sent_at, @invitation_accepted, @invitation_accepted_at, @default, @invite_checksum)";
+                        String chksum = Dati.Utilities.getRandomString(16);
                         cmd.Parameters.AddWithValue("@userid3", this.id);
                         cmd.Parameters.AddWithValue("@workspaceid", wsid);
                         cmd.Parameters.AddWithValue("@invite_sent", null);
@@ -310,6 +312,7 @@ namespace KIS.App_Sources
                         cmd.Parameters.AddWithValue("@invitation_accepted", false);
                         cmd.Parameters.AddWithValue("@invitation_accepted_at", null);
                         cmd.Parameters.AddWithValue("@default", defaultWS);
+                        cmd.Parameters.AddWithValue("@invite_checksum", chksum);
 
                         try
                         {
@@ -784,6 +787,15 @@ namespace KIS.App_Sources
         public int InviteUser(UserAccount usr)
         {
             int ret = 0;
+            if(usr.id!=-1)
+            {
+                this.loadUserAccounts();
+                Boolean findUsr = false;
+                foreach(var usrAcc in this.UserAccounts)
+                {
+
+                }
+            }
             return ret;
         }
     }
@@ -2082,5 +2094,82 @@ namespace KIS.App_Sources
             return rt;
         }
 
+    }
+
+    public class UserAccountWorkspace
+    {
+        public UserAccount UserAccount;
+        public Workspace workspace;
+
+        private int _WorkspaceId;
+        public int WorkspaceId { get { return this._WorkspaceId; } }
+
+        private int _UserId;
+        public int UserId { get { return this._UserId; } }
+
+        private String _destinationUrl;
+        public String destinationUrl { get { return this._destinationUrl; } }
+
+        private String _inviteSent;
+        public String inviteSent
+        {
+            get
+            {
+                return this._inviteSent;
+            }
+        }
+
+        private DateTime _inviteSentDate;
+        public DateTime inviteSentDate
+        {
+            get
+            {
+                return this._inviteSentDate;
+            }
+        }
+
+        private String _inviteChecksum;
+        public String inviteChecksum { get { return this._inviteChecksum; } }
+
+        public UserAccountWorkspace(UserAccount usr, Workspace ws)
+        {
+            this.UserAccount = null;
+            this._UserId = -1;
+            this._WorkspaceId = -1;
+            this.workspace = null;
+
+            if(usr.id!=-1 && ws.id!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT userid, workspaceid FROM useraccountworkspaces "
+                    + " INNER JOIN useraccounts ON(useraccountworkspaces.userid = useraccounts.id) "
+                    + " INNER JOIN workspaces ON(useraccountworkspaces.workspaceid = workspaces.id)"
+                    + " WHERE "
+                    + " useraccounts.id = @userid "
+                    + " AND workspaces.id = @wsid";
+                cmd.Parameters.AddWithValue("@userid", usr.id);
+                cmd.Parameters.AddWithValue("@wsid", ws.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+
+                Boolean alreadyPresent = false;
+                while(rdr.Read())
+                {
+                    alreadyPresent = true;
+                }
+
+                if(alreadyPresent)
+                {
+                    // Update checksum and re-send the invite
+                }
+                else
+                {
+                    // addd the user and send the invite
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
     }
 }

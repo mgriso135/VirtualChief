@@ -639,7 +639,7 @@
             <select id="ddlTaskParamCategory">
                 <option value="-1"></option>
                 @{ 
-                    KIS.App_Code.ProductParametersCategories parList = new KIS.App_Code.ProductParametersCategories();
+                    KIS.App_Code.ProductParametersCategories parList = new KIS.App_Code.ProductParametersCategories(ViewBag.Tenant);
                     parList.loadCategories();
                     foreach(var p in parList.Categories)
                     {
@@ -690,7 +690,7 @@
                             <td>
                                 <input list="ddlWorkIstructionsList" id="ddlWorkIstructions">
                                 <datalist id="ddlWorkIstructionsList">
-                                    @{KIS.App_Sources.WorkInstructions.WorkInstructionsList lstWI = new KIS.App_Sources.WorkInstructions.WorkInstructionsList();
+                                    @{KIS.App_Sources.WorkInstructions.WorkInstructionsList lstWI = new KIS.App_Sources.WorkInstructions.WorkInstructionsList(ViewBag.Tenant);
                                         lstWI.loadWorkInstructionList();
                                         foreach (var wi in lstWI.List)
                                         {
@@ -745,7 +745,7 @@
                     <select id="defaultOperator">
                     <option value=""></option>
                         @{
-                            KIS.App_Code.UserList usrList = new KIS.App_Code.UserList();
+                            KIS.App_Code.UserList usrList = new KIS.App_Code.UserList(ViewBag.Tenant);
                             foreach (var m in usrList.listUsers)
                             {
                                 <option value="@m.username">@m.name @m.cognome</option>
