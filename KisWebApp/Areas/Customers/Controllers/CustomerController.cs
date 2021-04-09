@@ -30,8 +30,8 @@ namespace KIS.Areas.Customers.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Customers/Customer/addCustomerContact", "Customer="+customer, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Customers/Customer/addCustomerContact", "Customer="+customer, ipAddr);
             }
             else
             {
@@ -45,8 +45,8 @@ namespace KIS.Areas.Customers.Controllers
             {
                 ret = 2;
             }
-            User usr = new App_Code.User(Session["ActiveWorkspace_Name"].ToString());
-            if(usr.UserExists(username) && ret == 0)
+            UserAccount usr = new UserAccount(Session["ActiveWorkspace_Name"].ToString());
+            if(usr.id != -1 && ret == 0)
             {
                 ret = 4;
             }
@@ -76,13 +76,13 @@ namespace KIS.Areas.Customers.Controllers
                 {
                     Contatto cont = new Contatto(Session["ActiveWorkspace_Name"].ToString(), contactID);
                         cont.addEmail(mail, "Default");
-                        if(createUser && password.Length>0 && password == password2)
+                        /*if(createUser && password.Length>0 && password == password2)
                         {
-                            User curr = new App_Code.User(Session["ActiveWorkspace_Name"].ToString());
+                            UserAccount curr = new UserAccount(Session["ActiveWorkspace_Name"].ToString());
                             KISConfig cfg = new KISConfig(Session["ActiveWorkspace_Name"].ToString());
                             String checkUsrAdd = curr.add(username, password, FirstName, LastName, "User", cfg.Language,
                                 false, mail);
-                        curr = new App_Code.User(username);
+                        curr = new UserAccount(username);
                         Boolean checkAddGrp = curr.addGruppo(grp);
                         curr.addEmail(mail.Address, "Default", true);
 
@@ -113,7 +113,7 @@ namespace KIS.Areas.Customers.Controllers
                             smtpcli.Send(mMessage);
                         }
                         catch { }
-                    }
+                    }*/
                     }
                 }
             return ret;

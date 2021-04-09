@@ -21,8 +21,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Controller", "/SalesOrders/SalesOrder/Index", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/Index", "", ipAddr);
             }
             else
             {
@@ -39,8 +39,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
             }
             else
             {
@@ -108,8 +108,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/AddSalesOrderHeader", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/AddSalesOrderHeader", "", ipAddr);
             }
             else
             {
@@ -170,8 +170,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/EditSalesOrderHeader", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/EditSalesOrderHeader", "", ipAddr);
             }
             else
             {
@@ -220,8 +220,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Controller", "/SalesOrders/SalesOrder/GetProductDepartments", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/GetProductDepartments", "", ipAddr);
             }
             else
             {
@@ -283,8 +283,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/AddProductToSalesOrder", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/AddProductToSalesOrder", "", ipAddr);
             }
             else
             {
@@ -359,8 +359,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Controller", "/SalesOrders/SalesOrder/ListOrderProduct", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/ListOrderProduct", "", ipAddr);
             }
             else
             {
@@ -425,8 +425,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/DeleteProductFromSalesOrder", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/DeleteProductFromSalesOrder", "", ipAddr);
             }
             else
             {
@@ -507,8 +507,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/UndoProductSchedule", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/UndoProductSchedule", "", ipAddr);
             }
             else
             {
@@ -589,8 +589,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/EditProduct", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/EditProduct", "", ipAddr);
             }
             else
             {
@@ -669,8 +669,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/PlanProduct", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/PlanProduct", "", ipAddr);
             }
             else
             {
@@ -757,8 +757,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/PrintMultipleSheetsBarcodes", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/PrintMultipleSheetsBarcodes", "", ipAddr);
             }
             else
             {
@@ -903,8 +903,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/PrintSingleSheetsBarcodes", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/PrintSingleSheetsBarcodes", "", ipAddr);
             }
             else
             {
@@ -1137,8 +1137,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/PrintSingleA3SheetsBarcodes", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/PrintSingleA3SheetsBarcodes", "", ipAddr);
             }
             else
             {
@@ -1392,8 +1392,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/ReprogramProduct", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/ReprogramProduct", "", ipAddr);
             }
             else
             {
@@ -1446,8 +1446,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
             }
             else
             {
@@ -1583,8 +1583,8 @@ namespace KIS.Areas.SalesOrders.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/SalesOrders/SalesOrder/RescheduleTaskGetEndDate", "TaskID="+ TaskID+"&start="+start.ToString("yyyy-MM-dd HH:mm:ss"), ipAddr);
+                UserAccount us1r = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Action", "/SalesOrders/SalesOrder/RescheduleTaskGetEndDate", "TaskID="+ TaskID+"&start="+start.ToString("yyyy-MM-dd HH:mm:ss"), ipAddr);
             }
             else
             {
