@@ -992,7 +992,7 @@ namespace KIS.Commesse
                 int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                 if (rt1 == 1)
                 {
-                    art.Planner = (User)Session["user"];
+                    art.Planner = (UserAccount)Session["user"];
                     int rt = prcCfg.LanciaInProduzione();
                     if (rt == 1)
                     {

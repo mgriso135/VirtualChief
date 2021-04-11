@@ -153,12 +153,15 @@
 
 </head>
 <body>
+    @if(Session["ActiveWorkspace_Name"]!= null&& Session["ActiveWorkspace_Name"].ToString().Length > 0)
+    {
+        String Tenant = Session["ActiveWorkspace_Name"].ToString();
     <div id="wrap">
         <!--<header>-->
         <!-- Fixed navbar -->
         <div class="masthead">
             <div class="container header">
-                @{ KIS.App_Code.Logo logo = new KIS.App_Code.Logo();
+                @{ KIS.App_Code.Logo logo = new KIS.App_Code.Logo(Tenant);
                     if (logo.filePath.Length > 0)
                     {
                         <img src="@Url.Content(logo.filePath)" alt="Company's logo" style="height:50px;" />
@@ -173,7 +176,7 @@
         </div>
         <div class="container">
             @{
-                KIS.App_Code.KISConfig kisCfg = new KIS.App_Code.KISConfig();
+                KIS.App_Code.KISConfig kisCfg = new KIS.App_Code.KISConfig(Tenant);
                 DateTime licenseExpDate = kisCfg.ExpiryDate;
                 if (licenseExpDate.AddDays(7) <= DateTime.UtcNow)
                 {
@@ -254,7 +257,7 @@
     <script src="../../Styles/assets/js/bootstrap-typeahead.js"></script>
     <script src="../../Scripts/moment.min.js"></script>
     <script src="../../Scripts/bootstrap-datetimepicker.js"></script>
-
+                }
 </body>
 </html>
 @{
@@ -269,9 +272,9 @@
     catch { path = Request.RawUrl; }
     if (Session["user"] != null)
     {
-        KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+        KIS.App_Sources.UserAccount curr = (KIS.App_Sources.UserAccount)Session["user"];
 
-        Dati.Utilities.LogAction(curr.username, "Page", path, Request.QueryString.ToString(), ipAddr);
+        Dati.Utilities.LogAction(curr.id.ToString(), "Page", path, Request.QueryString.ToString(), ipAddr);
     }
     else
     {

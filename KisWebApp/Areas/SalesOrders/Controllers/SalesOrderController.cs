@@ -35,6 +35,7 @@ namespace KIS.Areas.SalesOrders.Controllers
         [Authorize]
         public ActionResult AddSalesOrder(int OrderID, int OrderYear)
         {
+            ViewBag.Tenant = "";
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
@@ -73,6 +74,7 @@ namespace KIS.Areas.SalesOrders.Controllers
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authAddProductW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
             }
 
             if (ViewBag.authW)
@@ -718,7 +720,7 @@ namespace KIS.Areas.SalesOrders.Controllers
                     int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                     if (rt1 == 1)
                     {
-                        art.Planner = (User)Session["user"];
+                        art.Planner = (UserAccount)Session["user"];
                         ret = prcCfg.LanciaInProduzione();
                     }
                     else
@@ -1447,11 +1449,11 @@ namespace KIS.Areas.SalesOrders.Controllers
             if (Session["user"] != null)
             {
                 UserAccount us1r = (UserAccount)Session["user"];
-                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
+                Dati.Utilities.LogAction(us1r.id.ToString(), "Controller", "/SalesOrders/SalesOrder/ShowManageOperators", "", ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/SalesOrders/SalesOrder/AddSalesOrder", "", ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/SalesOrders/SalesOrder/ShowManageOperators", "", ipAddr);
             }
             ViewBag.authW = false;
             List<String[]> elencoPermessi = new List<String[]>();
