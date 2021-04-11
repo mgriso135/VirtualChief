@@ -1213,8 +1213,8 @@ namespace KIS.App_Code
             }
         }
 
-        private User _Planner;
-        public User Planner
+        private UserAccount _Planner;
+        public UserAccount Planner
         {
             get
             {
@@ -1229,7 +1229,7 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET planner = '" + value.username 
+                    cmd.CommandText = "UPDATE productionplan SET planner = '" + value.id.ToString() 
                         + "' WHERE id = " + this.ID.ToString()
                         + " AND anno = " + this.Year.ToString();
 
@@ -1490,7 +1490,7 @@ namespace KIS.App_Code
                 }
                 if (!rdr.IsDBNull(12))
                 {
-                    this._Planner = new User(rdr.GetString(12));
+                    this._Planner = new UserAccount(rdr.GetString(12));
                 }
                 else
                 {
@@ -1633,7 +1633,7 @@ namespace KIS.App_Code
                     }
                     if (!rdr.IsDBNull(12))
                     {
-                        this._Planner = new User(rdr.GetString(12));
+                        this._Planner = new UserAccount(rdr.GetString(12));
                     }
                     else
                     {

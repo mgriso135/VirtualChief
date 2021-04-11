@@ -775,6 +775,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\AccountsMgm\AccountsMgmAreaRegistration.cs" />
     <Compile Include="Areas\AccountsMgm\Controllers\AccountController.cs" />
+    <Compile Include="Areas\AccountsMgm\Controllers\WorkspacesController.cs" />
     <Compile Include="Areas\AccountsMgm\Views\Account\App_LocalResources\AddWorkspaceForm.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -784,6 +785,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>VerifyEmail.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\ListWorkspaces.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ListWorkspaces.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Analysis\AnalysisAreaRegistration.cs" />
     <Compile Include="Areas\Analysis\Controllers\GlobalKPIsController.cs" />
@@ -6333,6 +6339,7 @@
     <Content Include="Areas\Customers\Views\Customer\TestDBContext.cshtml" />
     <Content Include="Areas\AccountsMgm\Views\Account\Claims.cshtml" />
     <Content Include="Areas\AccountsMgm\Views\Account\VerifyEmail.cshtml" />
+    <Content Include="Areas\AccountsMgm\Views\Workspaces\ListWorkspaces.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -6654,6 +6661,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AddWorkspaceForm.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResAddWorkspaceForm</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\ListWorkspaces.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ListWorkspaces.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResAccountMgm</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Analysis\Views\GlobalKPIs\App_LocalResources\GetGlobalKPIs2.it.resx">
       <CustomToolNamespace>ResGetGlobalKPIs2</CustomToolNamespace>

@@ -181,7 +181,6 @@
                             var department = $("#ddlReparto_" + currProd[0] + "-" + currProd[1]).val();
                             if (endProductionDate <= deliveryDate) {
                                 if (endProductionDate >= (new Date())) {
-
                                     $.ajax({
                                         url: "@Url.Action("PlanProduct", "SalesOrder")",
                                         type: 'POST',

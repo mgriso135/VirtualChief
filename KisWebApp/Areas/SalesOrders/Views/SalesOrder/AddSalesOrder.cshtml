@@ -297,7 +297,7 @@
                                     <td style="vertical-align:middle">
                                         <input list="ddlProductsList" id="ddlProducts">
                                         <datalist id="ddlProductsList">
-                                            @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                                            @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(ViewBag.Tenant, true);
                                                 var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
                                                 foreach (var prd in sortedProducts)
                                                 {

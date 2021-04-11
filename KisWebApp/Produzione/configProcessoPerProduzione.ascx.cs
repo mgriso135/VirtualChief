@@ -349,7 +349,7 @@ namespace KIS.Produzione
                 int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
                 if (rt1 == 1)
                 {
-                    tobePlanned.Planner = (User)Session["user"];
+                    tobePlanned.Planner = (UserAccount)Session["user"];
                     int rt = prcCfg.LanciaInProduzione();
                     if (rt == 1)
                     {

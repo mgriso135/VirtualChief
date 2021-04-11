@@ -1,0 +1,31 @@
+﻿@model IEnumerable<KIS.App_Sources.Workspace>
+@{
+    ViewBag.Title = ResAccountMgm.ListWorkspaces.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAccountMgm.ListWorkspaces.lblTitle</h3>
+@if (ViewBag.authR)
+{
+    if(Model != null)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <ul class="list-group">
+                    @foreach (var m in Model)
+                    {
+                        <li class="list-group-item"><a href="WorkspaceDetail?id=@m.id">@m.Name</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAccountMgm.ListWorkspaces.lblNotAuthorized
+        </div>
+    </div>
+}
