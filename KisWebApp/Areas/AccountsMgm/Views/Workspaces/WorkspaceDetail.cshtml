@@ -1,0 +1,49 @@
+﻿@model KIS.App_Sources.Workspace
+
+@{
+    ViewBag.Title = ResAccountMgm.WorkspaceDetail.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAccountMgm.WorkspaceDetail.lblTitle</h3>
+
+@if (ViewBag.authR)
+{
+    if (Model != null && Model.id != -1)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <h4>@Model.Name</h4>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <ul>
+                    @{
+                        Model.loadUserAccounts();
+                        foreach (var m in Model.UserAccounts)
+                        {
+                            <li>@m.email.ToString() - @m.firstname @m.lastname - @m.LastLogin.ToString("dd/MM/yyyy HH:mm:ss")</li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                @ResAccountMgm.WorkspaceDetail.lblWsNotFound
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResAccountMgm.WorkspaceDetail.lblNotAuthorized
+        </div>
+    </div>
+}

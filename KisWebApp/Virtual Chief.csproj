@@ -791,6 +791,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ListWorkspaces.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\WorkspaceDetail.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkspaceDetail.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Analysis\AnalysisAreaRegistration.cs" />
     <Compile Include="Areas\Analysis\Controllers\GlobalKPIsController.cs" />
     <Compile Include="Areas\Analysis\Controllers\OperatorsAnalysisController.cs" />
@@ -6340,6 +6345,7 @@
     <Content Include="Areas\AccountsMgm\Views\Account\Claims.cshtml" />
     <Content Include="Areas\AccountsMgm\Views\Account\VerifyEmail.cshtml" />
     <Content Include="Areas\AccountsMgm\Views\Workspaces\ListWorkspaces.cshtml" />
+    <Content Include="Areas\AccountsMgm\Views\Workspaces\WorkspaceDetail.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -6661,6 +6667,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AddWorkspaceForm.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResAddWorkspaceForm</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\WorkspaceDetail.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkspaceDetail.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResAccountMgm</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\ListWorkspaces.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

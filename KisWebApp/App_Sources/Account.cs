@@ -708,6 +708,8 @@ namespace KIS.App_Sources
         private List<UserAccount> _UserAccounts;
         public List<UserAccount> UserAccounts { get { return this._UserAccounts; } }
 
+        public List<WorkspaceInvite> Invites;
+
         public Workspace(int wsid)
         {
             this._id = -1;
@@ -796,6 +798,36 @@ namespace KIS.App_Sources
 
                 }
             }
+            return ret;
+        }
+
+        public void loadInvites()
+        {
+            this.Invites = new List<WorkspaceInvite>();
+            if(this.id !=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT mail FROM workspacesinvites WHERE workspace=@wsid";
+                cmd.Parameters.AddWithValue("@wsid", this.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this.Invites.Add(new WorkspaceInvite(new MailAddress(rdr.GetString(0)), this));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if invite sent successfully
+         */
+        public int InviteUser(MailAddress mail)
+        {
+            int ret = 0;
             return ret;
         }
     }
@@ -2166,6 +2198,58 @@ namespace KIS.App_Sources
                 else
                 {
                     // addd the user and send the invite
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+    }
+
+    public class WorkspaceInvite
+    {
+        private int _WorkspaceId;
+        public int WorkspaceId
+        {
+            get { return this._WorkspaceId; }
+        }
+
+        private String _Email;
+        public String Email
+        {
+            get { return this._Email; }
+        }
+
+        private int _InvitedBy;
+        public int InvitedBy
+        {
+            get { return this._InvitedBy; }
+        }
+
+        private DateTime _SentDate;
+        public DateTime SentDate
+        {
+            get { return this._SentDate; }
+        }
+
+        public WorkspaceInvite(MailAddress mail, Workspace ws)
+        {
+            this._WorkspaceId = -1;
+            this._Email = "";
+            if(mail.Address.Length > 0 && ws.id!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT invited_by, sent_date FROM workspacesinvites WHERE mail LIKE @mail AND workspace=@wsid";
+                cmd.Parameters.AddWithValue("@mail", mail.Address);
+                cmd.Parameters.AddWithValue("@wsid", ws.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                if(rdr.Read())
+                {
+                    this._WorkspaceId = ws.id;
+                    this._Email = mail.Address;
+                    this._InvitedBy = rdr.GetInt32(0);
+                    this._SentDate = rdr.GetDateTime(1);
                 }
                 rdr.Close();
                 conn.Close();
