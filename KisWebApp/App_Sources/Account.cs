@@ -169,7 +169,7 @@ namespace KIS.App_Sources
                 this._id = rdr.GetInt32(0);
                 this._userId = rdr.GetString(1);
                 this._email = new MailAddress(rdr.GetString(2));
-                this._firstname = rdr.GetString(3);
+                this._firstname = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
                 this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
                 this._nickname = rdr.GetString(5);
                 this._pictureUrl = rdr.GetString(6);
@@ -684,6 +684,8 @@ namespace KIS.App_Sources
 
     public class Workspace
     {
+        public String log;
+
         private int _id;
         public int id
         {
@@ -784,19 +786,35 @@ namespace KIS.App_Sources
         /* Returns:
          * 0 if generic error
          * 1 if invitation sent successfully
-         * 2 if
+         * 2 if error while inserting record in the database
          */
-        public int InviteUser(UserAccount usr)
+        public int InviteUser(MailAddress email, UserAccount host)
         {
             int ret = 0;
-            if(usr.id!=-1)
+            if(email.Address.Length > 0 && this.id != -1)
             {
-                this.loadUserAccounts();
-                Boolean findUsr = false;
-                foreach(var usrAcc in this.UserAccounts)
-                {
-
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                cmd.CommandText = "INSERT INTO workspacesinvites(mail, workspace, invited_by) VALUES(@mail, @workspace, @invited_by)";
+                cmd.Parameters.AddWithValue("@mail", email.Address);
+                cmd.Parameters.AddWithValue("@workspace", this.id.ToString());
+                cmd.Parameters.AddWithValue("@invited_by", host.id);
+                try
+                { 
+                    cmd.ExecuteNonQuery();
+                    ret = 1;
+                    tr.Commit();
                 }
+                catch(Exception ex)
+                {
+                    this.log = ex.Message;
+                    ret = 2;
+                    tr.Rollback();
+                }
+                conn.Close();
             }
             return ret;
         }

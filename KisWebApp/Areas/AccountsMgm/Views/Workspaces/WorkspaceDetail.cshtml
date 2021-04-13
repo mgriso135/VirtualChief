@@ -11,6 +11,20 @@
 {
     if (Model != null && Model.id != -1)
     {
+        <script>
+            $(document).ready(function () {
+                $("#btnInvite").click(function () {
+                    if ($("#frmws")[0].checkValidity() && $("#txtmail").val().length > 0) {
+                        var mail = $("#txtmail").val();
+                        console.log("Invite user " + mail);
+                    }
+                    else {
+                        console.log("Form invalid");
+                        $("#frmws")[0].reportValidity();
+                    }
+                });
+            });
+        </script>
         <div class="row-fluid">
             <div class="span12">
                 <h4>@Model.Name</h4>
@@ -29,21 +43,43 @@
                 </ul>
             </div>
         </div>
-    }
-    else
-    {
         <div class="row-fluid">
             <div class="span12">
-                @ResAccountMgm.WorkspaceDetail.lblWsNotFound
+                <h4>@ResAccountMgm.WorkspaceDetail.lblInviteUser</h4>
+                <form id="frmws">
+                    @ResAccountMgm.WorkspaceDetail.lblInviteUserMail:&nbsp;<input type="email" id="txtmail" />
+                    <span class="material-icons" id="btnInvite" style="cursor: pointer;">save</span>
+                </form>
             </div>
         </div>
-    }
-}
-else
-{
-    <div class="row-fluid">
-        <div class="span12">
-            @ResAccountMgm.WorkspaceDetail.lblNotAuthorized
-        </div>
-    </div>
-}
+                <div class="row-fluid">
+                    <div class="span12">
+                        <ul>
+                            @{
+                                Model.loadInvites();
+                                foreach (var m in Model.Invites)
+                                {
+                                    <li>@m.Email - @m.SentDate.ToString("dd/MM/yyyy HH:mm:ss")</li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                }
+                else
+                {
+                <div class="row-fluid">
+                    <div class="span12">
+                        @ResAccountMgm.WorkspaceDetail.lblWsNotFound
+                    </div>
+                </div>
+                }
+                }
+                else
+                {
+                <div class="row-fluid">
+                    <div class="span12">
+                        @ResAccountMgm.WorkspaceDetail.lblNotAuthorized
+                    </div>
+                </div>
+                }
