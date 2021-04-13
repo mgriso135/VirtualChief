@@ -61,6 +61,24 @@ namespace ResAccountMgm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invite a user.
+        /// </summary>
+        public static string lblInviteUser {
+            get {
+                return ResourceManager.GetString("lblInviteUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail address.
+        /// </summary>
+        public static string lblInviteUserMail {
+            get {
+                return ResourceManager.GetString("lblInviteUserMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User not authorized.
         /// </summary>
         public static string lblNotAuthorized {
