@@ -11,12 +11,25 @@
 {
     if (Model != null && Model.id != -1)
     {
-        <script>
+<script>
             $(document).ready(function () {
                 $("#btnInvite").click(function () {
                     if ($("#frmws")[0].checkValidity() && $("#txtmail").val().length > 0) {
                         var mail = $("#txtmail").val();
                         console.log("Invite user " + mail);
+                        $.ajax({
+                            url: "@Url.Action("Invite", "Workspaces")",
+                            type: 'POST',
+                            data: {
+                                workspace: @Model.id.ToString(), 
+                                mail: mail
+                            },
+                            success: function (result) {
+                                console.log(result);
+                            },
+                            error: function (result) { alert("Error " + result); },
+                            warning: function (result) { alert("Warning " + result); },
+                        });
                     }
                     else {
                         console.log("Form invalid");
@@ -24,7 +37,7 @@
                     }
                 });
             });
-        </script>
+</script>
         <div class="row-fluid">
             <div class="span12">
                 <h4>@Model.Name</h4>

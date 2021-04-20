@@ -842,6 +842,8 @@ namespace KIS.App_Sources
         /* Returns:
          * 0 if generic error
          * 1 if invite sent successfully
+         * 2 if workspace not found
+         * 3 if mail is invalid
          */
         public int InviteUser(MailAddress mail)
         {
