@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using KIS.App_Sources;
+using System.Net.Mail;
 
 namespace KIS.Areas.AccountsMgm.Controllers
 {
@@ -39,6 +40,55 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 
             }
             return View();
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if invite sent successfully
+         * 2 if Workspace not found
+         * 3 if email not valid
+         */
+        [Authorize]
+        public int Invite(int workspace, String mail)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/Invite", "workspace=" + workspace + "&mail=" + mail, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/Invite", "workspace=" + workspace + "&mail=" + mail, ipAddr);
+            }
+
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Workspaces Invite";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+            if (ViewBag.authW)
+            {
+                Workspace ws = new Workspace(workspace);
+                if(ws.id!=-1)
+                {
+                    MailAddress ml = new MailAddress(mail);
+                    ret = ws.InviteUser(ml);
+                }
+                else
+                {
+                    ret = 2;
+                }
+            }
+                return ret;
         }
     }
 }
