@@ -848,6 +848,16 @@ namespace KIS.App_Sources
         public int InviteUser(MailAddress mail)
         {
             int ret = 0;
+            if(this.id!=-1)
+            {
+                // Invite
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "";
+                conn.Close();
+            // send e-mail
+            }
             return ret;
         }
     }

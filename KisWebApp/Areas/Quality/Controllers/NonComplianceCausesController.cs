@@ -18,8 +18,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonComplianceCauses/Index", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonComplianceCauses/Index", "", ipAddr);
             }
             else
             {
@@ -59,8 +59,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonComplianceCauses/Create", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonComplianceCauses/Create", "", ipAddr);
             }
             else
             {
@@ -124,8 +124,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonComplianceCauses/Delete", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonComplianceCauses/Delete", "", ipAddr);
             }
             else
             {
@@ -168,8 +168,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonComplianceCauses/Update", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonComplianceCauses/Update", "", ipAddr);
             }
             else
             {

@@ -19,8 +19,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/Index", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/Index", "", ipAddr);
             }
             else
             {
@@ -180,8 +180,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/Create", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/Create", "", ipAddr);
             }
             else
             {
@@ -231,8 +231,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/Delete", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/Delete", "", ipAddr);
             }
             else
             {
@@ -279,8 +279,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/Update", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/Update", "", ipAddr);
             }
             else
             {
@@ -353,8 +353,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/ImprovementActionTeamMembers", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/ImprovementActionTeamMembers", "", ipAddr);
             }
             else
             {
@@ -431,8 +431,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/TeamMemberRemove", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/TeamMemberRemove", "", ipAddr);
             }
             else
             {
@@ -499,8 +499,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/TeamMemberAdd", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/TeamMemberAdd", "", ipAddr);
             }
             else
             {
@@ -565,8 +565,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/UpdateImprovementAction", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/UpdateImprovementAction", "", ipAddr);
             }
             else
             {
@@ -670,8 +670,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/CorrectiveActionsList", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/CorrectiveActionsList", "", ipAddr);
             }
             else
             {
@@ -747,8 +747,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionAdd", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionAdd", "", ipAddr);
             }
             else
             {
@@ -817,8 +817,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionDelete", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionDelete", "", ipAddr);
             }
             else
             {
@@ -881,8 +881,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/CorrectiveActionEdit", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/CorrectiveActionEdit", "", ipAddr);
             }
             else
             {
@@ -966,8 +966,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionEditUpdate", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionEditUpdate", "", ipAddr);
             }
             else
             {
@@ -1064,8 +1064,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/CorrectiveActionTeamMembers", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/CorrectiveActionTeamMembers", "", ipAddr);
             }
             else
             {
@@ -1144,8 +1144,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionTeamMemberAdd", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionTeamMemberAdd", "", ipAddr);
             }
             else
             {
@@ -1209,8 +1209,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionTeamMemberRemove", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionTeamMemberRemove", "", ipAddr);
             }
             else
             {
@@ -1276,8 +1276,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/ImprovementActionsProgress", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/ImprovementActionsProgress", "", ipAddr);
             }
             else
             {
@@ -1328,8 +1328,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/ImprovementActionsProgressAndon", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/ImprovementActionsProgressAndon", "", ipAddr);
             }
             else
             {
@@ -1387,8 +1387,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/CorrectiveActionTasksList", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/CorrectiveActionTasksList", "", ipAddr);
             }
             else
             {
@@ -1466,8 +1466,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionTaskAdd", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionTaskAdd", "", ipAddr);
             }
             else
             {
@@ -1557,8 +1557,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CorrectiveActionTaskRemove", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CorrectiveActionTaskRemove", "", ipAddr);
             }
             else
             {
@@ -1588,8 +1588,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/IAFileList", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/IAFileList", "", ipAddr);
             }
             else
             {
@@ -1677,8 +1677,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/IAFileUpload", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/IAFileUpload", "", ipAddr);
             }
             else
             {
@@ -1792,8 +1792,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/IADeleteFile", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/IADeleteFile", "", ipAddr);
             }
             else
             {
@@ -1819,8 +1819,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/CAFileList", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/CAFileList", "", ipAddr);
             }
             else
             {
@@ -1909,8 +1909,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CAFileUpload", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CAFileUpload", "", ipAddr);
             }
             else
             {
@@ -2027,8 +2027,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/CADeleteFile", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/CADeleteFile", "", ipAddr);
             }
             else
             {
@@ -2054,8 +2054,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/ImprovementActions/TaskCAFileList", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/ImprovementActions/TaskCAFileList", "", ipAddr);
             }
             else
             {
@@ -2143,8 +2143,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/TaskCADeleteFile", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/TaskCADeleteFile", "", ipAddr);
             }
             else
             {
@@ -2171,8 +2171,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/ImprovementActions/TaskCAFileUpload", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/ImprovementActions/TaskCAFileUpload", "", ipAddr);
             }
             else
             {
