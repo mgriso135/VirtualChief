@@ -19,8 +19,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/Index", "stat=" + stat+"&sortOrder="+sortOrder, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/Index", "stat=" + stat+"&sortOrder="+sortOrder, ipAddr);
             }
             else
             {
@@ -137,8 +137,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/Create", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/Create", "", ipAddr);
             }
             else
             {
@@ -186,8 +186,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/Update", "ID=" + ID+"&Year="+Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/Update", "ID=" + ID+"&Year="+Year, ipAddr);
             }
             else
             {
@@ -235,8 +235,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/Delete", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/Delete", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -284,8 +284,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/UpdateNC", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/UpdateNC", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -319,8 +319,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/NCFileList", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/NCFileList", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -356,8 +356,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/FileUpload", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/FileUpload", "", ipAddr);
             }
             else
             {
@@ -473,8 +473,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCDeleteFile", "ID=" + ID + "&Year="+Year+"&fileName="+fileName, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCDeleteFile", "ID=" + ID + "&Year="+Year+"&fileName="+fileName, ipAddr);
             }
             else
             {
@@ -500,8 +500,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/NCCategoriesList", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/NCCategoriesList", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -543,8 +543,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCCategoriesAdd", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCCategoriesAdd", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -580,8 +580,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCCategoriesDel", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCCategoriesDel", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -627,8 +627,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/NCCausesList", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/NCCausesList", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -670,8 +670,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCCausesAdd", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCCausesAdd", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -707,8 +707,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCCauseDel", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCCauseDel", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -753,8 +753,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/WarningList", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/WarningList", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -795,8 +795,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCProductWarningAdd", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCProductWarningAdd", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -816,8 +816,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/NCProductsList", "ID=" + ID + "&Year=" + Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/NCProductsList", "ID=" + ID + "&Year=" + Year, ipAddr);
             }
             else
             {
@@ -869,8 +869,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCProductDel", "ID=" + ncID + "&Year=" + NCYear, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCProductDel", "ID=" + ncID + "&Year=" + NCYear, ipAddr);
             }
             else
             {
@@ -911,8 +911,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCProductUpd", "ncID="+ncID+"&NCYear="+NCYear+"&prdID="+prdID+"&prdYear="+prdYear, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCProductUpd", "ncID="+ncID+"&NCYear="+NCYear+"&prdID="+prdID+"&prdYear="+prdYear, ipAddr);
             }
             else
             {
@@ -977,8 +977,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/ProductSearch", "ncID=" + ncID+"&ncYear="+ncYear, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/ProductSearch", "ncID=" + ncID+"&ncYear="+ncYear, ipAddr);
             }
             else
             {
@@ -1025,8 +1025,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/PortafoglioProdotti", "customer=" + customer, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/PortafoglioProdotti", "customer=" + customer, ipAddr);
             }
             else
             {
@@ -1068,8 +1068,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/NonCompliances/ProductsList", "ncID=" + ncID+"&ncYear="+ncYear, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/NonCompliances/ProductsList", "ncID=" + ncID+"&ncYear="+ncYear, ipAddr);
             }
             else
             {
@@ -1157,8 +1157,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Action", "/Quality/NonCompliances/NCProductAdd", "ID=" + ID+"&Year="+Year, ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/Quality/NonCompliances/NCProductAdd", "ID=" + ID+"&Year="+Year, ipAddr);
             }
             else
             {

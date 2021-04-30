@@ -18,8 +18,8 @@ namespace KIS.Areas.Quality.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(usr.username, "Controller", "/Quality/Home/Index", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Controller", "/Quality/Home/Index", "", ipAddr);
             }
             else
             {
