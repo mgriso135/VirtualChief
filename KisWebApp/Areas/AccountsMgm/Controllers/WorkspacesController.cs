@@ -14,31 +14,79 @@ namespace KIS.Areas.AccountsMgm.Controllers
         // GET: AccountsMgm/Workspaces
         public ActionResult ListWorkspaces()
         {
-            ViewBag.authR = false;
-            if (Session["user"]!=null)
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
             {
-                ViewBag.authR = true;
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+            }
+
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Workspaces";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+
+            if (ViewBag.authR)
+            {
                 UserAccount usr = (UserAccount)Session["user"];
                 usr.loadWorkspaces();
                 return View(usr.workspaces);
             }
+
             return View();
         }
 
         [Authorize]
         public ActionResult WorkspaceDetail(int id)
         {
-            ViewBag.authR = false;
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                ViewBag.authR = true;
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+            }
+
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Workspaces Details";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+
+            if (ViewBag.authR)
+            {
                 Workspace ws = new Workspace(id);
-                if(ws.id!=-1)
+                if (ws.id != -1)
                 {
                     return View(ws);
                 }
-                
             }
+
+
             return View();
         }
 
@@ -77,11 +125,12 @@ namespace KIS.Areas.AccountsMgm.Controllers
             }
             if (ViewBag.authW)
             {
+                UserAccount curr = (UserAccount)Session["user"];
                 Workspace ws = new Workspace(workspace);
                 if(ws.id!=-1)
                 {
                     MailAddress ml = new MailAddress(mail);
-                    ret = ws.InviteUser(ml);
+                    ret = ws.InviteUser(ml, curr);
                 }
                 else
                 {

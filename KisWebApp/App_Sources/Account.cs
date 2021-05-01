@@ -7,7 +7,6 @@ using MySql.Data;
 using MySql.Data.MySqlClient;
 using KIS.App_Code;
 
-
 namespace KIS.App_Sources
 {
     public class UserAccount
@@ -107,6 +106,8 @@ namespace KIS.App_Sources
         private Boolean _GlobalAdmin;
         public Boolean GlobalAdmin { get { return this._GlobalAdmin; } }
 
+        public List<WorkspaceInvite> WorkspaceInvites;
+
         /* Returns:
          * Object with data, if account exists in Virtual Chief
          * id = -1 otherwise
@@ -163,6 +164,46 @@ namespace KIS.App_Sources
                 + " lastlogin, globaladmin "
                 + " FROM useraccounts WHERE id=@userid";
             cmd.Parameters.AddWithValue("@userid", id);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            if (rdr.Read())
+            {
+                this._id = rdr.GetInt32(0);
+                this._userId = rdr.GetString(1);
+                this._email = new MailAddress(rdr.GetString(2));
+                this._firstname = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
+                this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
+                this._nickname = rdr.GetString(5);
+                this._pictureUrl = rdr.GetString(6);
+                this._locale = rdr.IsDBNull(7) ? "en" : rdr.GetString(7);
+                this._updatedAt = rdr.GetDateTime(8);
+                this._iss = rdr.GetString(9);
+                this._nonce = rdr.GetString(10);
+                this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
+                this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
+                this._created_at = rdr.GetDateTime(13);
+                this._LastLogin = rdr.GetDateTime(14);
+                this._GlobalAdmin = rdr.GetBoolean(15);
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        /* Returns:
+          * Object with data, if account exists in Virtual Chief
+          * id = -1 otherwise
+          */
+        public UserAccount(MailAddress id)
+        {
+            this._id = -1;
+            this._userId = "";
+            this._Workspaces = new List<Workspace>();
+            MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
+                + " lastlogin, globaladmin "
+                + " FROM useraccounts WHERE email=@userid";
+            cmd.Parameters.AddWithValue("@userid", id.Address);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read())
             {
@@ -248,7 +289,6 @@ namespace KIS.App_Sources
                 conn.Close();
             }
         }
-
 
         /* Returns:
          * 0 if generic error
@@ -594,6 +634,28 @@ namespace KIS.App_Sources
             }
             return rt;
         }
+
+        public void loadWorkspaceInvites()
+        {
+            this.WorkspaceInvites = new List<WorkspaceInvite>();
+            if(this.id!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT DISTINCT(workspace) FROM workspacesinvites WHERE mail LIKE @mail AND accepted IS false" 
+                    + " AND sent_date >= NOW() - INTERVAL 2 DAY ORDER BY sent_date DESC";
+                cmd.Parameters.AddWithValue("@mail", this.email.Address.ToString());
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    WorkspaceInvite curr = new WorkspaceInvite(this.email, new Workspace(rdr.GetInt32(0)));
+                    this.WorkspaceInvites.Add(curr);
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
     }
 
     public class UserAccounts
@@ -787,34 +849,95 @@ namespace KIS.App_Sources
          * 0 if generic error
          * 1 if invitation sent successfully
          * 2 if error while inserting record in the database
+         * 3 if mail is not valid or workspace not valid
+         * 4 if error while sending mail
+         * 5 if user is already part of this workspace
          */
         public int InviteUser(MailAddress email, UserAccount host)
         {
             int ret = 0;
             if(email.Address.Length > 0 && this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO workspacesinvites(mail, workspace, invited_by) VALUES(@mail, @workspace, @invited_by)";
-                cmd.Parameters.AddWithValue("@mail", email.Address);
-                cmd.Parameters.AddWithValue("@workspace", this.id.ToString());
-                cmd.Parameters.AddWithValue("@invited_by", host.id);
+                UserAccount newUsr = new UserAccount(email);
+                this.loadUserAccounts();
+                bool alreadyInvited = false;
+
                 try
-                { 
-                    cmd.ExecuteNonQuery();
-                    ret = 1;
-                    tr.Commit();
+                {
+                    var found = this.UserAccounts.First(x => x.email.Address == email.Address);
+                    alreadyInvited = true;
                 }
                 catch(Exception ex)
                 {
-                    this.log = ex.Message;
-                    ret = 2;
-                    tr.Rollback();
+                    alreadyInvited = false;
                 }
-                conn.Close();
+
+                if (!alreadyInvited)
+                {
+                    String checksum = Dati.Utilities.getRandomString(16);
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "INSERT INTO workspacesinvites(mail, workspace, invited_by, checksum) VALUES(@mail, @workspace, @invited_by, @checksum)";
+                    cmd.Parameters.AddWithValue("@mail", email.Address);
+                    cmd.Parameters.AddWithValue("@workspace", this.id.ToString());
+                    cmd.Parameters.AddWithValue("@invited_by", host.id);
+                    cmd.Parameters.AddWithValue("@checksum", checksum);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        ret = 1;
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.log = ex.Message;
+                        ret = 2;
+                        tr.Rollback();
+                    }
+
+                    // Sends e-mail
+                    if (ret == 1)
+                    {
+                        // Invio l'e-mail
+                        System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
+
+                        mMessage.From = new MailAddress("matteo.griso@virtualchief.net", "Matteo@VirtualChief");
+                        mMessage.To.Add(new MailAddress(email.Address, email.DisplayName));
+                        mMessage.Subject = "[Virtual Chief] " + ResAccountMgm.Workspace.lblInviteMailTitle;
+                        mMessage.IsBodyHtml = true;
+                        mMessage.Body = "<html><body><div>"
+                            + ResAccountMgm.Workspace.lblInviteMailBody + " - "
+                            + "<a href='http://www.virtual-chief.com/AccountsMgm/Workspaces/ViewInvites'>" + this.Name + "</a>"
+                            + "</div></body></html>";
+
+                        SmtpClient smtpcli = new SmtpClient();
+                        smtpcli.DeliveryMethod = SmtpDeliveryMethod.Network;
+                        smtpcli.EnableSsl = true;
+
+                        try
+                        {
+                            smtpcli.Send(mMessage);
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
+                            ret = 4;
+                        }
+                    }
+
+                    conn.Close();
+                }
+                else
+                {
+                    ret = 5;
+                }
+            }
+            else
+            {
+                ret = 3;
             }
             return ret;
         }
@@ -839,27 +962,6 @@ namespace KIS.App_Sources
             }
         }
 
-        /* Returns:
-         * 0 if generic error
-         * 1 if invite sent successfully
-         * 2 if workspace not found
-         * 3 if mail is invalid
-         */
-        public int InviteUser(MailAddress mail)
-        {
-            int ret = 0;
-            if(this.id!=-1)
-            {
-                // Invite
-                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "";
-                conn.Close();
-            // send e-mail
-            }
-            return ret;
-        }
     }
 
     public class Workspaces
@@ -2243,6 +2345,12 @@ namespace KIS.App_Sources
             get { return this._WorkspaceId; }
         }
 
+        private String _WorkspaceName;
+        public String WorkspaceName
+        {
+            get { return this._WorkspaceName; }
+        }
+
         private String _Email;
         public String Email
         {
@@ -2261,6 +2369,24 @@ namespace KIS.App_Sources
             get { return this._SentDate; }
         }
 
+        private String _checksum;
+        public String checksum
+        {
+            get { return this._checksum; }
+        }
+
+        private Boolean _Accepted;
+        public Boolean Accepted
+        {
+            get { return this._Accepted; }
+        }
+
+        private DateTime _AcceptedDate;
+        public DateTime AcceptedDate
+        {
+            get { return this._AcceptedDate; }
+        }
+
         public WorkspaceInvite(MailAddress mail, Workspace ws)
         {
             this._WorkspaceId = -1;
@@ -2270,7 +2396,7 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT invited_by, sent_date FROM workspacesinvites WHERE mail LIKE @mail AND workspace=@wsid";
+                cmd.CommandText = "SELECT invited_by, sent_date, accepted, accepted_date FROM workspacesinvites WHERE mail LIKE @mail AND workspace=@wsid ORDER BY sent_date DESC";
                 cmd.Parameters.AddWithValue("@mail", mail.Address);
                 cmd.Parameters.AddWithValue("@wsid", ws.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -2280,10 +2406,24 @@ namespace KIS.App_Sources
                     this._Email = mail.Address;
                     this._InvitedBy = rdr.GetInt32(0);
                     this._SentDate = rdr.GetDateTime(1);
+                    this._Accepted = rdr.GetBoolean(2);
+                    this._AcceptedDate = rdr.IsDBNull(3) ? new DateTime(1970,1,1) : rdr.GetDateTime(3);
+                    this._WorkspaceName = ws.Name;
                 }
                 rdr.Close();
                 conn.Close();
             }
+        }
+
+        public WorkspaceInvite()
+        {
+            this._WorkspaceId = -1;
+            this._Email = "";
+            this._InvitedBy = -1;
+            this._SentDate = new DateTime(1970, 1, 1);
+            this._checksum = "";
+            this._Accepted = false;
+            this._AcceptedDate = new DateTime(1970, 1, 1);
         }
     }
 }
