@@ -1,20 +1,11 @@
 ﻿/* Copyright © 2013 Matteo Griso -  Tutti i diritti riservati */
 /* Copyright © 2017 Matteo Griso -  Tutti i diritti riservati */
 
+using MySql.Data.MySqlClient;
 using System;
 using System.Globalization;
 using System.Security.Claims;
-using MySql.Data.MySqlClient;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using System.Security.Claims;
 using System.Web;
-using System.Web.Mvc;
-using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using KIS.App_Sources;
-using System.Net.Mail;
-using System;
 
 /// <summary>
 /// Descrizione di riepilogo per Class1

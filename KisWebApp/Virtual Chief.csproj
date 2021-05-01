@@ -786,10 +786,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>VerifyEmail.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\AccountsMgm\Views\Account\App_LocalResources\ViewInvites.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewInvites.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\ListWorkspaces.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ListWorkspaces.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\Workspace.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Workspace.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\WorkspaceDetail.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -6346,6 +6356,7 @@
     <Content Include="Areas\AccountsMgm\Views\Account\VerifyEmail.cshtml" />
     <Content Include="Areas\AccountsMgm\Views\Workspaces\ListWorkspaces.cshtml" />
     <Content Include="Areas\AccountsMgm\Views\Workspaces\WorkspaceDetail.cshtml" />
+    <Content Include="Areas\AccountsMgm\Views\Account\ViewInvites.cshtml" />
     <None Include="Scripts\jquery-3.5.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.5.1.js" />
     <Content Include="Scripts\jquery-3.5.1.min.js" />
@@ -6658,6 +6669,11 @@
     <Content Include="App_LocalResources\Site.Master.es-AR.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.en-US.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.es-AR.resx" />
+    <EmbeddedResource Include="Areas\AccountsMgm\Views\Account\App_LocalResources\ViewInvites.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewInvites.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResAccountMgm</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Account\App_LocalResources\VerifyEmail.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>VerifyEmail.Designer.cs</LastGenOutput>
@@ -6667,6 +6683,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AddWorkspaceForm.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResAddWorkspaceForm</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\Workspace.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Workspace.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResAccountMgm</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\WorkspaceDetail.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

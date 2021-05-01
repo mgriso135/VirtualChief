@@ -7,6 +7,7 @@ using KIS.App_Sources;
 using System.Net.Mail;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace KIS.Areas.AccountsMgm.Controllers
 {
@@ -256,6 +257,47 @@ namespace KIS.Areas.AccountsMgm.Controllers
             HttpContext.GetOwinContext().Authentication.SignOut(CookieAuthenticationDefaults.AuthenticationType);
             HttpContext.GetOwinContext().Authentication.SignOut("Auth0");
             Session.Abandon();
+            return View();
+        }
+
+        /* Returns:
+
+       */
+        [Authorize]
+        public ActionResult ViewInvites()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+            }
+
+            int ret = 0;
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Workspaces Invite";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+            ViewBag.authW = true;
+
+            if (ViewBag.authW)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                curr.loadWorkspaceInvites();
+                return View(curr.WorkspaceInvites);
+            }
             return View();
         }
     }
