@@ -169,7 +169,30 @@
                 }
                 <a class="brand">Virtual Chief</a>
                 <div class="pull-right text-right">
-                    @{ Html.RenderPartial("~/Views/Shared/welcomeBox.ascx"); }
+                    <table style="vertical-align:middle;">
+                        <tr>
+                            <td>
+                                @{ Html.RenderPartial("~/Views/Shared/welcomeBox.ascx"); }
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                            style="vertical-align: middle; padding: 3px;">
+                                        <span class="material-icons" id="btnInvite" style="cursor: pointer;">settings</span>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    
+
+
+
                 </div>
             </div>
             @{ Html.RenderPartial("~/Views/Shared/menuBar.ascx"); }
