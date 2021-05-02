@@ -4,3 +4,10 @@ C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\Kanba
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.csprojResolveAssemblyReference.cache
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.exe
 C:\Users\Matteo\Documents\Visual Studio 2012\Projects\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.pdb
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\bin\Debug\KanbanBoxReaderScheduler.exe.config
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\bin\Debug\KanbanBoxReaderScheduler.exe
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\bin\Debug\KanbanBoxReaderScheduler.pdb
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.csprojAssemblyReference.cache
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.csproj.CoreCompileInputs.cache
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.exe
+C:\Users\mgris\source\repos\mgriso135\VirtualChief\VC-develop\KanbanBoxIntegration\KanbanBoxReaderScheduler\KanbanBoxReaderScheduler\obj\Debug\KanbanBoxReaderScheduler.pdb

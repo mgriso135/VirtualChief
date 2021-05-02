@@ -656,6 +656,65 @@ namespace KIS.App_Sources
                 conn.Close();
             }
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if invite accepted successfully
+         * 2 if no invite found
+         * 3 if error while updating the databases
+         */
+         public int AcceptWorkspaceInvite(Workspace ws)
+        {
+            int ret = 0;
+            if(this.id!=-1)
+            {
+                WorkspaceInvite wsinv = new WorkspaceInvite(this.email, ws);
+                if(!wsinv.Accepted && wsinv.SentDate >= DateTime.UtcNow.AddDays(-2))
+                {
+                    MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+
+                    try
+                    {
+                        cmd.CommandText = "UPDATE workspacesinvites SET accepted=true, accepted_date=NOW() WHERE workspace=@wsid "
+                            + " AND mail=@mail AND sent_date >= NOW() - INTERVAL 2 DAY";
+                        cmd.ExecuteNonQuery();
+
+                        cmd.CommandText = "INSERT INTO useraccountoworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invite_checksum, "
+                            + " invitation_accepted, invitation_accepted_date, default_ws, destinationUrl) "
+                            + "VALUES(@userid, @workspaceid, @invite_sent, @invite_sent_date, @invite_checksum, "
+                            + " @invitation_accepted, @invitation_accepted_date, @default_ws, @destinationUrl)";
+                        cmd.Parameters.AddWithValue("@userid", this.id.ToString());
+                        cmd.Parameters.AddWithValue("@workspaceid", ws.id.ToString());
+                        cmd.Parameters.AddWithValue("@invite_sent", true);
+                        cmd.Parameters.AddWithValue("@invite_sent_date", wsinv.SentDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@invite_checksum", wsinv.checksum);
+                        cmd.Parameters.AddWithValue("@invitation_accepted", true);
+                        cmd.Parameters.AddWithValue("@invitation_accepted_date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@default_ws", false);
+                        cmd.Parameters.AddWithValue("@destinationUrl", "");
+
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        ret = 3;
+                        tr.Rollback();
+                    }
+
+                    conn.Close();
+                }
+                else
+                {
+                    ret = 2;
+                }
+            }
+            return ret;
+        }
     }
 
     public class UserAccounts
