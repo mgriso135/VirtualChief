@@ -29,7 +29,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             int ret = 0;
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
-            prmUser[0] = "Workspaces";
+            prmUser[0] = "User Workspaces";
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
@@ -50,24 +50,24 @@ namespace KIS.Areas.AccountsMgm.Controllers
         }
 
         [Authorize]
-        public ActionResult WorkspaceDetail(int id)
+        public ActionResult WorkspaceDetail()
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/WorkspaceDetail", "", ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/WorkspaceDetail", "", ipAddr);
             }
 
             int ret = 0;
             List<String[]> elencoPermessi = new List<String[]>();
             String[] prmUser = new String[2];
-            prmUser[0] = "Workspaces Details";
+            prmUser[0] = "Workspace Details";
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
@@ -79,10 +79,38 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
             if (ViewBag.authR)
             {
-                Workspace ws = new Workspace(id);
-                if (ws.id != -1)
+                int wsid = -1;
+                try
                 {
-                    return View(ws);
+                    wsid = Int32.Parse(Session["ActiveWorkspace_Id"].ToString());
+                }
+                catch(Exception ex)
+                {
+                    wsid = -1;
+                }
+                if(wsid!=-1)
+                { 
+/*                    UserAccount curr = (UserAccount)Session["user"];
+                    curr.loadWorkspaces();
+                    Boolean owned = false;
+                    try
+                    {
+                        var first = curr.workspaces.Find(x => x.id == id);
+                        owned = true;
+                    }
+                    catch(Exception ex)
+                    {
+                        owned = false;
+                    }*/
+
+                    /*if(owned)
+                    { */
+                        Workspace ws = new Workspace(wsid);
+                        if (ws.id != -1)
+                        {
+                            return View(ws);
+                        }
+                    // }
                 }
             }
 

@@ -37,8 +37,8 @@ namespace KIS.Areas.Workplace.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/Index", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Workplace/WebGemba/Index", "", ipAddr);
             }
             else
             {

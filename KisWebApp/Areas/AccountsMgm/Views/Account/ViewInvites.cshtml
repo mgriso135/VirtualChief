@@ -13,15 +13,16 @@
         <script>
             $(document).ready(function(){
                 $("#btnAcceptInvite").click(function () {
-                    if ($("#frmws")[0].checkValidity() && $("#txtmail").val().length > 0) {
-                        var mail = $("#txtmail").val();
-                        console.log("Invite user " + mail);
+                    console.log($(this).val());
+                    var sid = $(this).val().split('_');
+                    if (sid.length == 2) {
+                        var wsid = sid[1];
                         $.ajax({
-                            url: "@Url.Action("AcceptInvite", "Workspaces")",
+                            url: "@Url.Action("AcceptWorkspaceInvitation", "Account")",
                             type: 'POST',
                             data: {
-                                workspace: 0, 
-                                mail: mail
+                                workspace: wsid, 
+                                user: @ViewBag.userid
                             },
                             success: function (result) {
                                 console.log(result);
@@ -29,10 +30,6 @@
                             error: function (result) { alert("Error " + result); },
                             warning: function (result) { alert("Warning " + result); },
                         });
-                    }
-                    else {
-                        console.log("Form invalid");
-                        $("#frmws")[0].reportValidity();
                     }
                 });
             });

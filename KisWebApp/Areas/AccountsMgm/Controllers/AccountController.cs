@@ -291,15 +291,33 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.authW = true;
-
+            ViewBag.userid = -1;
             if (ViewBag.authW)
             {
                 UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.userid = curr.id;
                 curr.loadWorkspaceInvites();
                 return View(curr.WorkspaceInvites);
             }
             return View();
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if accepted successfully
+         */
+         [Authorize]
+         public int AcceptWorkspaceInvitation(int workspace, int user)
+         {
+            int ret = 0;
+            UserAccount usr = new UserAccount(user);
+            Workspace ws = new Workspace(workspace);
+            if(usr.id != -1 && ws.id != -1)
+            {
+                ret = usr.AcceptWorkspaceInvite(ws);
+            }
+            return ret;
+         }
     }
 
 }
