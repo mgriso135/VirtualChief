@@ -19,7 +19,7 @@ namespace Resources {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class _Layout {
@@ -129,6 +129,33 @@ namespace Resources {
         public static string lblRightsReserved {
             get {
                 return ResourceManager.GetString("lblRightsReserved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account Settings.
+        /// </summary>
+        public static string lblSettingAccountSettings {
+            get {
+                return ResourceManager.GetString("lblSettingAccountSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        public static string lblSettingLogout {
+            get {
+                return ResourceManager.GetString("lblSettingLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your workspaces.
+        /// </summary>
+        public static string lblSettingYourWorkspaces {
+            get {
+                return ResourceManager.GetString("lblSettingYourWorkspaces", resourceCulture);
             }
         }
     }

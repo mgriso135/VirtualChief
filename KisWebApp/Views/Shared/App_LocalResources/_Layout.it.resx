@@ -141,4 +141,13 @@
   <data name="lblRightsReserved" xml:space="preserve">
     <value>tutti i diritti riservati</value>
   </data>
+  <data name="lblSettingAccountSettings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="lblSettingLogout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="lblSettingYourWorkspaces" xml:space="preserve">
+    <value>I tuoi workspaces</value>
+  </data>
 </root>
