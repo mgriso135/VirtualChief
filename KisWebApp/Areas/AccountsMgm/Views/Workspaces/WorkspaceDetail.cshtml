@@ -12,8 +12,13 @@
     if (Model != null && Model.id != -1)
     {
 <script>
-            $(document).ready(function () {
-                $("#btnInvite").click(function () {
+    $(document).ready(function () {
+        console.log($("#txtmail").val());
+        // matteo.griso@virtualchief.net
+        /*$(".btnInvite").click(function () { alert("Click...");});
+        */
+        $(".btnInvite").click(function () {
+                    console.log("Send invite...");
                     if ($("#frmws")[0].checkValidity() && $("#txtmail").val().length > 0) {
                         var mail = $("#txtmail").val();
                         console.log("Invite user " + mail);
@@ -61,7 +66,7 @@
                 <h4>@ResAccountMgm.WorkspaceDetail.lblInviteUser</h4>
                 <form id="frmws">
                     @ResAccountMgm.WorkspaceDetail.lblInviteUserMail:&nbsp;<input type="email" id="txtmail" />
-                    <span class="material-icons" id="btnInvite" style="cursor: pointer;">save</span>
+                    <span class="material-icons btnInvite" id="btnInvite" style="cursor: pointer;">save</span>
                 </form>
             </div>
         </div>

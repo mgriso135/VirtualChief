@@ -318,6 +318,24 @@ namespace KIS.Areas.AccountsMgm.Controllers
             }
             return ret;
          }
+
+        [Authorize]
+        public ActionResult AccountSettings()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/AccountSettings", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/AccountSettings", "", ipAddr);
+            }
+
+            return View();
+        }
     }
 
 }

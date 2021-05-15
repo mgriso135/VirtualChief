@@ -22,7 +22,7 @@
         @ObjectInfo.Print(User.Identity)
 
     </div>
-@if(Model.Length > 0)
+@if(Model !=null && Model.Length > 0)
 {
     <script>
         window.document.location = "@Model";
