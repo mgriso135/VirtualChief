@@ -7,6 +7,9 @@ using KIS.App_Code;
 using KIS.App_Sources;
 using Newtonsoft.Json;
 using MySql.Data.MySqlClient;
+using System.Web.Hosting;
+using jQuery_File_Upload.MVC5.Helpers;
+using System.IO;
 
 namespace KIS.Areas.FreeTimeMeasurement.Controllers
 {
@@ -961,6 +964,201 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 {
                     ret = fmev.SaveNote(note);
                 }
+            }
+            return ret;
+        }
+    }
+
+    public class FileUploadMeasurementController : Controller
+    {
+        public String log;
+
+        FilesHelper filesHelper;
+        String tempPath = "~/Data/Measurements/tmp";
+        String serverMapPath = "~/Data/Measurements";
+        private string StorageRoot
+        {
+            get { return Path.Combine(HostingEnvironment.MapPath(serverMapPath)); }
+        }
+        private string UrlBase = "/Data/Measurements/";
+        String DeleteURL = "/FileUpload/DeleteFile/?file=";
+        String DeleteType = "GET";
+        public FileUploadMeasurementController()
+        {
+            filesHelper = new FilesHelper(DeleteURL, DeleteType, StorageRoot, UrlBase, tempPath, serverMapPath);
+        }
+
+        /* Returns:
+         * 2 if user not logged in
+         * 3 if file extension is not .csv
+         */
+        [HttpPost]
+        public JsonResult Upload(String ddlBatchUploadProductsList)
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
+                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FileUploadMeasurement/Upload", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/FreeTimeMeasurement/FileUploadMeasurement/Upload", "", ipAddr);
+            }
+
+            if (Session["user"] != null)
+            {
+                User usr = (User)Session["user"];
+                var resultList = new List<ViewDataUploadFilesResult>();
+                var CurrentContext = HttpContext;
+
+                filesHelper.UploadAndShowResults(CurrentContext, resultList);
+                for (int i = 0; i < resultList.Count; i++)
+                {
+                    if(resultList[i].name.Substring(resultList[i].name.Length - 4, 4) == ".csv")
+                    { 
+                        String filename = usr.username + "_" + DateTime.UtcNow.Ticks + ".csv";
+                        System.IO.File.Move(HostingEnvironment.MapPath(serverMapPath) + "/" + resultList[i].name,
+                        HostingEnvironment.MapPath(serverMapPath) + "/" + filename);
+
+                        this.ProcessFile(filename);
+                    }
+                    else
+                    {
+                        // return Json("3");
+                    }
+                }
+                JsonFiles files = new JsonFiles(resultList);
+                return Json(files);
+            }
+            else
+            {
+                return Json("2");
+            }
+        }
+
+        public JsonResult GetFileList()
+        {
+            var list = filesHelper.GetFileList();
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public JsonResult DeleteFile(string file)
+        {
+            filesHelper.DeleteFile(file);
+            return Json("OK", JsonRequestBehavior.AllowGet);
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if everything is ok
+         * 2 if there is some error in the data
+         */
+        public int LoadMeasures(String fileName)
+        {
+            this.MeasurementBatchList = new List<FreeMeasurentsTasksJsonStruct>();
+            int ret = 0;
+            Boolean check = true;
+            using (var reader = new StreamReader(HostingEnvironment.MapPath(serverMapPath) + "/" + fileName))
+            {
+                var line = reader.ReadLine();
+                int lineNo = 1;
+                while (!reader.EndOfStream && check)
+                {
+                    line = reader.ReadLine();
+                    var values = line.Split(',');
+
+                    // Data rilievo,Prodotto,Reparto/Area,Ciclo, // 3
+                    // Operatore,Macrofase,Sequenza,    // 6
+                    // Tempo,Passo,Aciclico,            // 9
+                    // Quantità usata,Quantità a generatore,V/NV,   // 12
+                    // Ergonomia,Note,Tempo aciclico per ciclo,     // 15
+                    // Tempo con passo                              // 16
+                    FreeMeasurentsTasksJsonStruct curr = new FreeMeasurentsTasksJsonStruct();
+                    try
+                    {
+                        String measurementdate = values[0];
+                        curr.PlannedStartDate = DateTime.Parse(measurementdate);
+                        curr.PlannedEndDate = DateTime.Parse(measurementdate);
+                        curr.ProductName = values[1];
+                        curr.DepartmentName = values[2];
+                        curr.MeasurementName = values[3];
+                        curr.Operator = values[4];
+                        curr.TaskName = values[5];
+                        curr.Sequence = Int32.Parse(values[6]);
+                        curr.RealWorkingTime_Hour = Double.Parse(values[7]) / 3600;
+                        curr.step = Int32.Parse(values[8]);
+                        curr.isAcyclic = values[9].Length > 0 ? true : false;
+                        curr.Acyclic_QuantityUsed = Double.Parse(values[10]);
+                        curr.Acyclic_QuantityForEachProduct = values[11].ToString().Length == 0 ? 0 : Double.Parse(values[11]);
+                        curr.ValueOrWaste = Char.Parse(values[12]);
+                        curr.Ergonomy = Char.Parse(values[13]);
+                        curr.Notes = (values[14] == null || values[14] == "" || values[14].ToString().Length == 0) ? "" : values[14];
+                        curr.Acyclic_CycleTime = Double.Parse(values[15]) / 3600;
+                        curr.AdjustedTime = Double.Parse(values[16]) / 3600;
+
+                        this.MeasurementBatchList.Add(curr);
+                    }
+                    catch(Exception ex)
+                    {
+                        check = false;
+                        this.log = "Error on line " + lineNo.ToString() + " " + ex.Message;
+                        ret = 3;
+                    }
+                    lineNo++;
+                }
+
+                ret = 1;
+            }
+
+            if(!check)
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+
+        public int ValidateMeasures()
+        {
+            int ret = 0;
+            
+            return ret;
+        }
+
+        public List<FreeMeasurentsTasksJsonStruct> MeasurementBatchList;
+
+        public String ProcessFile(String filename)
+        {
+            User usr = (User)Session["user"];
+            String ret = "0";
+            int loadMeasures = this.LoadMeasures(filename);
+
+            if (loadMeasures == 1)
+            {
+                FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                var measurements = this.MeasurementBatchList.GroupBy(t => t.MeasurementName).Select(g => g.First()).ToList();
+                foreach (var m in measurements)
+                {
+                    int measure = fms.AddBatch(usr.username, m.PlannedStartDate, m.PlannedEndDate, m.MeasurementName, m.MeasurementDescription,
+                        m.SerialNumber, m.Quantity, 0, 0);
+                    KIS.App_Sources.FreeTimeMeasurement tm = new KIS.App_Sources.FreeTimeMeasurement(measure);
+                    if(tm.id!=-1)
+                    {
+                        var tasklist = this.MeasurementBatchList.Where(p => p.MeasurementName == tm.Name);
+                        KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(tm.id);
+                        foreach(var t in tasklist)
+                        {
+                            fm.addTask(t.TaskName, t.RealWorkingTime_Hour, t.step, t.isAcyclic,
+                                t.Acyclic_CycleTime, t.Acyclic_QuantityUsed, t.Acyclic_QuantityForEachProduct, t.ValueOrWaste, t.Ergonomy);
+                        }
+                    }
+                }
+                ret = "1";
+            }
+            else
+            {
+                ret = this.log;
             }
             return ret;
         }

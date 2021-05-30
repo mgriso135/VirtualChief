@@ -97,6 +97,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Seleziona file.
+        /// </summary>
+        public static string lblAddFiles {
+            get {
+                return ResourceManager.GetString("lblAddFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nome.
         /// </summary>
         public static string lblAddName {
@@ -156,6 +165,15 @@ namespace ResFreeMeasurements {
         public static string lblAllowRiexecuteTasks {
             get {
                 return ResourceManager.GetString("lblAllowRiexecuteTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel upload.
+        /// </summary>
+        public static string lblCancelUpload {
+            get {
+                return ResourceManager.GetString("lblCancelUpload", resourceCulture);
             }
         }
         
@@ -304,6 +322,15 @@ namespace ResFreeMeasurements {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Carica.
+        /// </summary>
+        public static string lblStartUpload {
+            get {
+                return ResourceManager.GetString("lblStartUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reparto.
         /// </summary>
         public static string lblTHDepartment {
@@ -372,6 +399,15 @@ namespace ResFreeMeasurements {
         public static string lblTitle {
             get {
                 return ResourceManager.GetString("lblTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Carica un batch di rilievi.
+        /// </summary>
+        public static string lblUploadBatchMeasurements {
+            get {
+                return ResourceManager.GetString("lblUploadBatchMeasurements", resourceCulture);
             }
         }
         

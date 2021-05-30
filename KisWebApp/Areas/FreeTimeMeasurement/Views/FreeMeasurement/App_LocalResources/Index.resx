@@ -129,6 +129,9 @@
   <data name="lblAddDescription" xml:space="preserve">
     <value>Descrizione</value>
   </data>
+  <data name="lblAddFiles" xml:space="preserve">
+    <value>Seleziona file</value>
+  </data>
   <data name="lblAddName" xml:space="preserve">
     <value>Nome</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="lblAllowRiexecuteTasks" xml:space="preserve">
     <value>Permetti di iniziare tasks terminati precedentemente</value>
+  </data>
+  <data name="lblCancelUpload" xml:space="preserve">
+    <value>Cancel upload</value>
   </data>
   <data name="lblError12" xml:space="preserve">
     <value>Errore nei dati di input: verifica il nome</value>
@@ -198,6 +204,9 @@
   <data name="lblFinishOk" xml:space="preserve">
     <value>Rilievo terminato con successo.</value>
   </data>
+  <data name="lblStartUpload" xml:space="preserve">
+    <value>Carica</value>
+  </data>
   <data name="lblTHDepartment" xml:space="preserve">
     <value>Reparto</value>
   </data>
@@ -221,6 +230,9 @@
   </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Rilievo tempi libero</value>
+  </data>
+  <data name="lblUploadBatchMeasurements" xml:space="preserve">
+    <value>Carica un batch di rilievi</value>
   </data>
   <data name="lblUserNotAuthorized" xml:space="preserve">
     <value>Utente non autorizzato</value>

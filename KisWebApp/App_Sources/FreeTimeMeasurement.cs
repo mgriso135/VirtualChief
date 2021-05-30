@@ -178,41 +178,43 @@ namespace KIS.App_Sources
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT "
-                        + " freemeasurements.id, "
-                        + " freemeasurements.creationdate,"
-                        + " freemeasurements.createdby,"
-                        + " freemeasurements.plannedstartdate, "
-                        + " freemeasurements.plannedenddate, "
-                        + " freemeasurements.departmentid, " // 5
-                        + " reparti.nome, "
-                        + " reparti.timezone, "
-                        + " freemeasurements.name, "
-                        + " freemeasurements.description, "
-                        + " freemeasurements.processid, " // 10
-                        + " freemeasurements.processrev, "
-                        + " freemeasurements.variantid, "
-                        + " processo.name, "
-                        + " processo.description, "
-                        + " varianti.nomevariante, " // 15
-                        + " freemeasurements.status, "
-                        + " freemeasurements.serialnumber, "
-                        + " freemeasurements.quantity, "
-                        + " freemeasurements.measurementunit, "
-                        + " measurementunits.type, " // 20
-                        + " freemeasurements.realenddate, "
-                        + " freemeasurements.realworkingtime_hours, "
-                        + " freemeasurements.realleadtime_hours, "
-                        + " freemeasurements.AllowCustomTasks, "
-                        + " freemeasurements.ExecuteFinishedTasks " // 25
-                        + "  FROM freemeasurements INNER JOIN "
-                        + " variantiprocessi ON(variantiprocessi.variante = freemeasurements.variantid "
-                        + " AND variantiprocessi.processo = freemeasurements.processid "
-                        + " AND variantiprocessi.revProc = freemeasurements.processrev) "
-                        + " INNER JOIN processo ON(variantiprocessi.processo = processo.processId and variantiprocessi.revProc = processo.revisione) "
-                        + " INNER JOIN varianti ON(variantiprocessi.variante = varianti.idvariante) "
-                        + " INNER JOIN reparti ON(freemeasurements.departmentid = reparti.idreparto) "
-                        + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
-                        + " WHERE freemeasurements.id = @id";
+                         + " freemeasurements.id,  "
+                         + " freemeasurements.creationdate, "
+                         + " freemeasurements.createdby, "
+                         + " freemeasurements.plannedstartdate,  "
+                         + " freemeasurements.plannedenddate,  "
+                         + " freemeasurements.departmentid,   "
+                         + " reparti.nome,  "
+                         + " reparti.timezone,  "
+                         + " freemeasurements.name,  "
+                         + " freemeasurements.description,  "
+                         + " freemeasurements.processid,   "
+                         + " freemeasurements.processrev,  "
+                         + " freemeasurements.variantid,  "
+                         + " varproc.name,  "
+                         + " varproc.description,  "
+                         + " varproc.nomevariante,   "
+                         + " freemeasurements.status,  "
+                         + " freemeasurements.serialnumber,  "
+                         + " freemeasurements.quantity,  "
+                         + " freemeasurements.measurementunit,  "
+                         + " measurementunits.type,   "
+                         + " freemeasurements.realenddate,  "
+                         + " freemeasurements.realworkingtime_hours, "
+                         + " freemeasurements.realleadtime_hours,  "
+                         + " freemeasurements.AllowCustomTasks,  "
+                         + " freemeasurements.ExecuteFinishedTasks "
+                         + "  FROM freemeasurements "
+                         + "  LEFT JOIN "
+                         + " (SELECT * FROM variantiprocessi "
+                         + " INNER JOIN processo ON(variantiprocessi.processo = processo.processId and variantiprocessi.revProc = processo.revisione) "
+                         + " INNER JOIN varianti ON(variantiprocessi.variante = varianti.idvariante)) varproc "
+                         + " ON(varproc.variante = freemeasurements.variantid "
+                         + " AND varproc.processo = freemeasurements.processid "
+                         + " AND varproc.revProc = freemeasurements.processrev) "
+                         + " LEFT JOIN reparti ON(freemeasurements.departmentid = reparti.idreparto) "
+                         + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
+                         + " WHERE freemeasurements.id = @id";
 
             cmd.Parameters.AddWithValue("@id", id);
             MySqlDataReader rdr = cmd.ExecuteReader();
@@ -223,19 +225,19 @@ namespace KIS.App_Sources
                 this._CreatedBy = rdr.GetString(2);
                 this._PlannedStartDate = rdr.GetDateTime(3);
                 this._PlannedEndDate = rdr.GetDateTime(4);
-                this._DepartmentId = rdr.GetInt32(5);
-                this._DepartmentName = rdr.GetString(6);
-                this._DepartmentTimeZone = rdr.GetString(7);
-                this._Name = rdr.GetString(8);
-                this._Description = rdr.GetString(9);
-                this._ProcessId = rdr.GetInt32(10);
-                this._ProcessRev = rdr.GetInt32(11);
-                this._VariantId = rdr.GetInt32(12);
-                this._ProcessName = rdr.GetString(13);
-                this._ProcessDescription = rdr.GetString(14);
-                this._VariantName = rdr.GetString(15);
-                this._Status = rdr.GetChar(16);
-                this._SerialNumber = rdr.GetString(17);
+                this._DepartmentId = rdr.IsDBNull(5) ? -1 : rdr.GetInt32(5);
+                this._DepartmentName = rdr.IsDBNull(6)? "" : rdr.GetString(6);
+                this._DepartmentTimeZone = rdr.IsDBNull(7) ? "" : rdr.GetString(7);
+                this._Name = rdr.IsDBNull(8) ? "" : rdr.GetString(8);
+                this._Description = rdr.IsDBNull(9) ? "" : rdr.GetString(9);
+                this._ProcessId = rdr.IsDBNull(10) ? -1 : rdr.GetInt32(10);
+                this._ProcessRev = rdr.IsDBNull(11) ? -1 : rdr.GetInt32(11);
+                this._VariantId = rdr.IsDBNull(12) ? -1 : rdr.GetInt32(12);
+                this._ProcessName = rdr.IsDBNull(13) ? "" : rdr.GetString(13);
+                this._ProcessDescription = rdr.IsDBNull(14) ? "" : rdr.GetString(14);
+                this._VariantName = rdr.IsDBNull(15) ? "" : rdr.GetString(15);
+                this._Status = rdr.IsDBNull(16) ? '\0' : rdr.GetChar(16);
+                this._SerialNumber = rdr.IsDBNull(17) ? "" : rdr.GetString(17);
                 this._Quantity = rdr.GetDouble(18);
                 this._MeasurementUnitId = rdr.GetInt32(19);
                 this._MeasurementUnitType = rdr.GetString(20);
@@ -405,6 +407,92 @@ namespace KIS.App_Sources
                     cmdTasks.Parameters.AddWithValue("@workstationid", null);
                     cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
                     cmdTasks.Parameters.AddWithValue("@status", 'N');
+
+                    try
+                    {
+                        cmdTasks.ExecuteNonQuery();
+                        tr.Commit();
+                        ret = tID;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = -1;
+                        tr.Rollback();
+                    }
+                }
+                else
+                {
+                }
+            }
+            return ret;
+        }
+
+        public int addTask(String TaskName, Double workingtime, int step, Boolean isAcyclic, Double Acyclic_CycleTime, Double Acyclic_QtyUsed, 
+            Double Acyclic_QtyForEachProduct, Char ValueOrWaste, Char Ergonomy)
+        {
+            int ret = 0;
+            if (this.id != -1 && TaskName.Length < 255)
+            {
+                this.loadTasks();
+                int found = -1;
+                try
+                {
+                    var itm = this.Tasks.First(x => x.Name == TaskName);
+                    found = 1;
+                    ret = itm.TaskId;
+                }
+                catch
+                {
+                    found = -1;
+                }
+
+                if (found == -1)
+                {
+                    int seq = this.Tasks.Count + 1;
+                    int tID = 0;
+                    if (this.Tasks.Count > 0)
+                    {
+                        tID = this.Tasks.Max(t => t.TaskId) + 1;
+                    }
+
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmdTasks = conn.CreateCommand();
+
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmdTasks.Transaction = tr;
+                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                        + " description, sequence, workstationid, quantity_planned, status, quantity_produced, task_startdatereal, task_enddatereal, "
+                        + " realleadtime_hours, realworkingtime_hours, step, isAcyclic, Acyclic_CycleTime, Acyclic_QtyUsed, Acyclic_QtyForEachProduct, ValueOrWaste, Ergonomy"
+                        + ") "
+                        + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
+                        + " @description, @sequence, @workstationid, @quantity_planned, @status, @quantityproduced, @task_startdatereal, @task_enddatereal, "
+                        + " @realleadtime_hours, @realworkingtime_hours, @step, @isAcyclic, @Acyclic_CycleTime, @Acyclic_QtyUsed, @Acyclic_QtyForEachProduct, @ValueOrWaste, @Ergonomy)";
+
+                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
+                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
+                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
+                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", null);
+                    cmdTasks.Parameters.AddWithValue("@name", TaskName);
+                    cmdTasks.Parameters.AddWithValue("@description", "");
+                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
+                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
+                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
+                    cmdTasks.Parameters.AddWithValue("@status", 'F');
+                    cmdTasks.Parameters.AddWithValue("@quantityproduced", this.Quantity);
+                    cmdTasks.Parameters.AddWithValue("@task_startdatereal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmdTasks.Parameters.AddWithValue("@task_enddatereal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmdTasks.Parameters.AddWithValue("@realleadtime_hours", 0);
+                    cmdTasks.Parameters.AddWithValue("@realworkingtime_hours", workingtime);
+                    cmdTasks.Parameters.AddWithValue("@step", step);
+                    cmdTasks.Parameters.AddWithValue("@isAcyclic", isAcyclic);
+                    cmdTasks.Parameters.AddWithValue("@Acyclic_CycleTime", Acyclic_CycleTime);
+                    cmdTasks.Parameters.AddWithValue("@Acyclic_QtyUsed", Acyclic_QtyUsed);
+                    cmdTasks.Parameters.AddWithValue("@Acyclic_QtyForEachProduct", Acyclic_QtyForEachProduct);
+                    cmdTasks.Parameters.AddWithValue("@ValueOrWaste", ValueOrWaste);
+                    cmdTasks.Parameters.AddWithValue("@Ergonomy", Ergonomy);
 
                     try
                     {
@@ -886,6 +974,78 @@ namespace KIS.App_Sources
                 {
                     ret = -2;
                 }
+            }
+            else
+            {
+                ret = -2;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * FreeMeasurementId if everything is ok
+         * -1 if generic error
+         * -2 if input error
+         * -3 if error while adding
+         */
+        public int AddBatch(String createdby, DateTime plannedstartdate, DateTime plannedenddate, String name, String description,
+             String serialnumber, Double quantity, Double realleadtime, Double realworkingtime,
+             int measurementUnitId = 0, Boolean AllowCustomTasks = true, Boolean AllowExecuteFinishedTasks = true)
+        {
+            int ret = -1;
+            if (name.Length < 255)
+            {
+                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    cmd.CommandText = "INSERT INTO freemeasurements(createdby, plannedstartdate, plannedenddate, departmentid, name, description,"
+                        + " processid, processrev, variantid, status, serialnumber, quantity, measurementunit, "
+                        + " AllowCustomTasks, ExecuteFinishedTasks, MeasurementType, realenddate, realleadtime_hours, realworkingtime_hours) "
+                        + " VALUES(@createdby, @plannedstartdate, @plannedenddate, @departmentid, @name, @description,"
+                        + " @processid, @processrev, @variantid, @status, @serialnumber, @quantity, @measurementunit, "
+                        + " @AllowCustomTasks, @ExecuteFinishedTasks, @MeasurementType, @realenddate, @realleadtime, @realworkingtime)";
+
+                    cmd.Parameters.AddWithValue("@createdby", createdby);
+                    cmd.Parameters.AddWithValue("@plannedstartdate", plannedstartdate);
+                    cmd.Parameters.AddWithValue("@plannedenddate", plannedenddate);
+                    cmd.Parameters.AddWithValue("@departmentid", null);
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@processid", null);
+                    cmd.Parameters.AddWithValue("@processrev", null);
+                    cmd.Parameters.AddWithValue("@variantid", null);
+                    cmd.Parameters.AddWithValue("@status", 'F');
+                    cmd.Parameters.AddWithValue("@serialnumber", serialnumber);
+                    cmd.Parameters.AddWithValue("@quantity", quantity);
+                    cmd.Parameters.AddWithValue("@measurementunit", measurementUnitId);
+                    cmd.Parameters.AddWithValue("@AllowCustomTasks", AllowCustomTasks);
+                    cmd.Parameters.AddWithValue("@ExecuteFinishedTasks", AllowExecuteFinishedTasks);
+                cmd.Parameters.AddWithValue("@MeasurementType", "B");
+                cmd.Parameters.AddWithValue("@realenddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@realleadtime", realleadtime);
+                cmd.Parameters.AddWithValue("@realworkingtime", realworkingtime);
+
+                try
+                    {
+                        cmd.ExecuteNonQuery();
+                        cmd.CommandText = "SELECT LAST_INSERT_ID()";
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        if (rdr.Read())
+                        {
+                            ret = rdr.GetInt32(0);
+                        }
+                        rdr.Close();
+
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        this.log = ex.Message;
+                        ret = -3;
+                    }
+                    conn.Close();
             }
             else
             {
@@ -1431,6 +1591,44 @@ namespace KIS.App_Sources
         private int _DepartmentId;
         public int DepartmentId { get { return this._DepartmentId; } }
 
+        /* Step is the pace used by the operator.
+         * Default = 60
+         * If > 60 the operator kept a fast pace
+         * if lower than 60 the operator kept a slower pace
+         */
+        private Double _Step;
+        public Double Step { get { return this._Step; } }
+
+        private Boolean _isAcyclic;
+        public Boolean isAcyclic { get { return this._isAcyclic; } }
+
+        /* Cycle Time expressed in HOURS */
+        private Double _Acyclic_CycleTime;
+        public double Acyclic_CycleTime { get { return this._Acyclic_CycleTime; } }
+
+        private Double _Acyclic_QuantityUsed;
+        public Double Acyclic_QuantityUsed { get { return this._Acyclic_QuantityUsed; } }
+
+        private Double _Acyclic_QuantityForEachProduct;
+        public Double Acyclic_QuantityForEachProduct { get { return this._Acyclic_QuantityForEachProduct; } }
+
+        /* Values admitted
+         * V = Value
+         * E = Evident Waste
+         * H = Hidden Waste
+         */
+        private Char _ValueOrWaste;
+        public Char ValueOrWaste { get { return this._ValueOrWaste; } }
+
+        /* Values admitted
+         * 1 = Normale, con tronco quasi fermo
+         * 2 = Normale, con tronco entro 45°
+         * 3 = Disagevole con movimenti entro i 45°
+         * 4 = Disagevole con movimenti del tronco molto ampi, > 45°
+         */
+        private int _Ergonomy;
+        public int Ergonomy { get { return this._Ergonomy; } }
+
         public List<FreeMeasurements_Tasks_Event> TaskEvents;
 
         public FreeMeasurement_Task(int measurementID, int taskID)
@@ -1461,7 +1659,14 @@ namespace KIS.App_Sources
                     + " freemeasurements_tasks.realworkingtime_hours, "  // 17
                     + " freemeasurements.AllowCustomTasks, "
                     + " freemeasurements.ExecuteFinishedTasks, " // 19
-                    + " freemeasurements.DepartmentId "         // 20
+                    + " freemeasurements.DepartmentId, "         // 20
+                    + " freemeasurements_tasks.step, "
+                    + " freemeasurements_tasks.isacyclic, "
+                    + " freemeasurements_tasks.acyclic_cycletime, "
+                    + " freemeasurements_tasks.acyclic_qtyused, "
+                    + " freemeasurements_tasks.acyclic_qtyforeachproduct, "  // 25
+                    + " freemeasurements_tasks.valueorwaste, "
+                    + " freemeasurements_tasks.ergonomy "           // 27
                     + "  FROM freemeasurements_tasks "
                     + " LEFT JOIN postazioni ON(postazioni.idpostazioni=freemeasurements_tasks.workstationid) "
                     + " INNER JOIN freemeasurements ON (freemeasurements_tasks.MeasurementId = freemeasurements.id)"
@@ -1492,7 +1697,12 @@ namespace KIS.App_Sources
                 this._RealWorkingTime_Hours = rdr.IsDBNull(17) ? 0 : rdr.GetDouble(17);
                 this._AllowCustomTasks = rdr.GetBoolean(18);
                 this._AllowExecuteFinishedTasks = rdr.GetBoolean(19);
-                this._DepartmentId = rdr.GetInt32(20);
+                this._DepartmentId = rdr.IsDBNull(20)?-1:rdr.GetInt32(20);
+                this._Step = rdr.IsDBNull(21) ? 60 : rdr.GetInt32(21);                this._isAcyclic = rdr.IsDBNull(22) ? false : rdr.GetBoolean(22);
+                this._Acyclic_CycleTime = rdr.IsDBNull(23) ? 0 : rdr.GetDouble(23);                this._Acyclic_QuantityUsed = rdr.IsDBNull(24) ? 0 : rdr.GetDouble(24);
+                this._Acyclic_QuantityForEachProduct = rdr.IsDBNull(25) ? 0 : rdr.GetDouble(25);
+                this._ValueOrWaste = rdr.IsDBNull(26) ? '\0' : rdr.GetChar(26);
+                this._Ergonomy = rdr.IsDBNull(27) ? -1 : rdr.GetInt32(27);
             }
             rdr.Close();
             conn.Close();
@@ -2246,11 +2456,13 @@ namespace KIS.App_Sources
         public DateTime PlannedStartDate;
         public DateTime PlannedEndDate;
         public int DepartmentId;
+        public String DepartmentName;
         public String MeasurementName;
         public String MeasurementDescription;
         public int ProcessId;
         public int ProcessRev;
         public int VariantId;
+        public String ProductName;
         public char Status;
         public String SerialNumber;
         public Double Quantity;
@@ -2272,5 +2484,17 @@ namespace KIS.App_Sources
         public Boolean AllowCustomTasks;
         public Boolean ExecuteFinishedTasks;
         public int LastTaskEventId;
+        public int step;
+        public Boolean isAcyclic;
+        public double Acyclic_CycleTime;
+        public double Acyclic_QuantityUsed;
+        public double Acyclic_QuantityForEachProduct;
+        public char ValueOrWaste;
+        public Char Ergonomy;
+        public String Operator;
+        public Double RealLeadTime_Hour;
+        public Double RealWorkingTime_Hour;
+        public String Notes;
+        public Double AdjustedTime; // Adjusted time considering the step: Acyclic_CycleTime * step / 60
     }
 }

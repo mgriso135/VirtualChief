@@ -1,0 +1,303 @@
+﻿Data rilievo,Prodotto,Reparto/Area,Ciclo,Operatore,Macrofase,Sequenza,Tempo,Passo,Aciclico,Quantità usata,Quantità a generatore,V/NV,Ergonomia,Note,Tempo aciclico per ciclo,Tempo con passo
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,etichettare schermo con posizionamento in maschera,1,16,60,,1,,E,3,,16.00,16
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,prelevare scheda,2,6,60,,1,,E,4,,6.00,6
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,barcode x 2,3,9,60,,1,,E,4,,9.00,9
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,strappare etichetta x2,4,14,60,,1,,E,1,,14.00,14
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,fissare scheda a pannello x5,5,25,60,,1,,O,2,,25.00,25
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,prelevare pre-assieme con posizionamento in sagoma,6,10,60,,1,,O,3,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,fissare cavo 1 vite + 2 rondelle,7,20,60,,1,,O,4,,20.00,20
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,fissare cavo con forcella,8,26,60,,1,,O,2,,26.00,26
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,collegare 1 cavo,9,6,60,,1,,O,3,,6.00,6
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,collegare 2 cavo,10,4,60,,1,,O,4,,4.00,4
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,collegare 2 faston,11,9,60,,1,,O,3,,9.00,9
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,applicazione fascetta + taglio,12,27,60,,1,,V,4,,27.00,27
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,prelevare 2 gusci con eliminazione del sacchetto,13,21,60,,1,,V,4,,21.00,21
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,inserire 8 dadi con cacciavite,14,45,60,,1,,V,1,,45.00,45
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,etichettare guscio retro,15,12,60,,1,,V,2,,12.00,12
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,etichettare etichetta con codice brevetto ,16,9,60,,1,,V,3,,9.00,9
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,appoggiare sagoma su guscio e posizionamento in maschera,17,15,60,,1,,V,4,,15.00,15
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,posizionare pre-assieme dentro a guscio con prova puntale fino al grilletto,18,35,60,,1,,V,2,,35.00,35
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,inserimento grilletto ,19,11,60,,1,,V,3,,11.00,11
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,posizionamento trigger,20,10,60,,1,,E,4,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,inserimento scheda contatti batteria con posizionamento in scheda,21,14,60,,1,,E,3,,14.00,14
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,aggiustamento sopra 2 guscio,22,21,60,,1,,E,4,,21.00,21
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,fissare gusci x8,23,37,60,,1,,E,4,,37.00,37
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,etichettare guscio con etichetta telwin,24,11,60,,1,,E,1,,11.00,11
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,prelievo da sagoma ed etichettare con codice matricola,25,11,60,,1,,E,2,,11.00,11
+04-03-2021,Saldatrice 1,Assemblaggio,T4,,spostamento verso collaudo,26,11,60,,1,,E,3,,11.00,11
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,etichettare schermo con posizionamento in maschera,1,12,60,,1,,E,4,,12.00,12
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,prelevare scheda,2,5,60,,1,,O,2,,5.00,5
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,barcode x 2,3,6,60,,1,,O,3,,6.00,6
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,strappare etichetta x2,4,10,60,,1,,O,4,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,fissare scheda a pannello x5,5,26,60,,1,,O,3,,26.00,26
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,prelevare pre-assieme con posizionamento in sagoma,6,12,60,,1,,O,4,,12.00,12
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,fissare cavo 1 vite + 2 rondelle,7,23,60,,1,,O,4,,23.00,23
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,fissare cavo con forcella,8,26,60,,1,,O,1,,26.00,26
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,collegare 1 cavo,9,5,60,,1,,V,2,,5.00,5
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,collegare 2 cavo,10,4,60,,1,,V,3,,4.00,4
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,collegare 2 faston,11,13,60,,1,,V,4,,13.00,13
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,applicazione fascetta + taglio,12,28,60,,1,,V,2,,28.00,28
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,prelevare 2 gusci con eliminazione del sacchetto,13,23,60,,1,,V,3,,23.00,23
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,inserire 8 dadi con cacciavite,14,48,60,,1,,V,4,,48.00,48
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,etichettare guscio retro,15,12,60,,1,,V,3,,12.00,12
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,etichettare etichetta con codice brevetto ,16,6,60,,1,,V,4,,6.00,6
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,appoggiare sagoma su guscio e posizionamento in maschera,17,18,60,,1,,E,4,,18.00,18
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,posizionare pre-assieme dentro a guscio con prova puntale fino al grilletto,18,40,60,,1,,E,1,,40.00,40
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,inserimento grilletto ,19,7,60,,1,,E,2,,7.00,7
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,posizionamento trigger,20,10,60,,1,,E,3,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,inserimento scheda contatti batteria con posizionamento in scheda,21,12,60,,1,,E,4,,12.00,12
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,aggiustamento sopra 2 guscio,22,17,60,,1,,E,2,,17.00,17
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,fissare gusci x8,23,31,60,,1,,E,3,,31.00,31
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,etichettare guscio con etichetta telwin,24,11,60,,1,,E,4,,11.00,11
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,prelievo da sagoma ed etichettare con codice matricola,25,15,60,,1,,O,3,,15.00,15
+04-03-2021,Saldatrice 1,Assemblaggio,T5,,spostamento verso collaudo,26,10,60,,1,,O,4,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,etichettare schermo con posizionamento in maschera,1,18,60,,1,,O,4,,18.00,18
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,prelevare scheda,2,5,60,,1,,O,1,,5.00,5
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,barcode x 2,3,8,60,,1,,O,2,,8.00,8
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,strappare etichetta x2,4,16,60,,1,,O,3,,16.00,16
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,fissare scheda a pannello x5,5,25,60,,1,,O,4,,25.00,25
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,prelevare pre-assieme con posizionamento in sagoma,6,10,60,,1,,V,2,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,fissare cavo 1 vite + 2 rondelle,7,20,60,,1,,V,3,,20.00,20
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,fissare cavo con forcella,8,39,60,,1,,V,4,,39.00,39
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,collegare 1 cavo,9,6,60,,1,,V,3,,6.00,6
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,collegare 2 cavo,10,5,60,,1,,V,4,,5.00,5
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,collegare 2 faston,11,8,60,,1,,V,4,,8.00,8
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,applicazione fascetta + taglio,12,25,60,,1,,V,1,,25.00,25
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,prelevare 2 gusci con eliminazione del sacchetto,13,28,60,,1,,V,2,,28.00,28
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,inserire 8 dadi con cacciavite,14,45,60,,1,,E,3,,45.00,45
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,etichettare guscio retro,15,10,60,,1,,E,4,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,etichettare etichetta con codice brevetto ,16,11,60,,1,,E,2,,11.00,11
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,appoggiare sagoma su guscio e posizionamento in maschera,17,13,60,,1,,E,3,,13.00,13
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,posizionare pre-assieme dentro a guscio con prova puntale fino al grilletto,18,44,60,,1,,E,4,,44.00,44
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,inserimento grilletto ,19,10,60,,1,,E,3,,10.00,10
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,posizionamento trigger,20,9,60,,1,,E,4,,9.00,9
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,inserimento scheda contatti batteria con posizionamento in scheda,21,13,60,,1,,E,4,,13.00,13
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,aggiustamento sopra 2 guscio,22,21,60,,1,,O,1,,21.00,21
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,fissare gusci x8,23,37,60,,1,,O,2,,37.00,37
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,etichettare guscio con etichetta telwin,24,12,60,,1,,O,3,,12.00,12
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,prelievo da sagoma ed etichettare con codice matricola,25,17,60,,1,,O,4,,17.00,17
+04-03-2021,Saldatrice 1,Assemblaggio,T6,,spostamento verso collaudo,26,5,60,,1,,O,2,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prelevare valigetta,1,5,60,,1,,V,1,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,etichettare valigetta,2,25,60,,1,,V,2,,25.00,25
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,fare sacchetto con chiave,3,13,60,,1,,V,3,,13.00,13
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,inserire sacchetto,4,5,60,,1,,V,4,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prelevare puller e posizionarlo in sagoma collaudo,5,13,60,,1,,V,2,,13.00,13
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prelevare batteria da caricare con eliminazione del sacchetto,6,15,60,,1,,V,3,,15.00,15
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,cambiare batteria in carica,7,9,60,,1,,V,4,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,etichettare batteria  ,8,16,60,,1,,V,3,,16.00,16
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,inserire batteria nel puller,9,7,60,,1,,E,4,,7.00,7
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,fissare batteria,10,8,60,,1,,E,4,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,pulitura banco collaudo,11,5,60,,1,,E,1,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,barcode x1,12,7,60,,1,,E,2,,7.00,7
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,etichettare scatola con codice matricola,13,14,60,,1,,E,3,,14.00,14
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,etichettare scatola con caution,14,12,60,,1,,E,4,,12.00,12
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,accendere puller,15,19,60,,1,,E,2,,19.00,19
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prova min 1,16,20,60,,1,,E,3,,20.00,20
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prova max,17,19,60,,1,,O,4,,19.00,19
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prova min 2,18,20,60,,1,,O,3,,20.00,20
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,prova batteria,19,20,60,,1,,O,4,,20.00,20
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,attaccare copricaricabatteria,20,9,60,,1,,O,4,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,inserire puller dentro valigetta,21,9,60,,1,,O,1,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,inserimento 2 manuali,22,7,60,,1,,O,2,,7.00,7
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,chiudere valigetta,23,4,60,,1,,O,3,,4.00,4
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,sagomare scatola,24,17,60,,1,,V,4,,17.00,17
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T2,,inserire valigetta in scatola senza chiuderla,25,9,60,,1,,V,2,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prelevare valigetta,1,6,60,,1,,V,3,,6.00,6
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,etichettare valigetta,2,20,60,,1,,V,4,,20.00,20
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,fare sacchetto con chiave,3,11,60,,1,,V,3,,11.00,11
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,inserire sacchetto,4,5,60,,1,,V,4,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prelevare puller e posizionarlo in sagoma collaudo,5,9,60,,1,,V,4,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prelevare batteria da caricare con eliminazione del sacchetto,6,15,60,,1,,V,1,,15.00,15
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,cambiare batteria in carica,7,12,60,,1,,E,2,,12.00,12
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,etichettare batteria  ,8,12,60,,1,,E,3,,12.00,12
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,inserire batteria nel puller,9,5,60,,1,,E,4,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,fissare batteria,10,11,60,,1,,E,2,,11.00,11
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,pulitura banco collaudo,11,5,60,,1,,E,3,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,barcode x1,12,5,60,,1,,E,4,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,etichettare scatola con codice matricola,13,10,60,,1,,E,3,,10.00,10
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,etichettare scatola con caution,14,9,60,,1,,E,4,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,accendere puller,15,14,60,,1,,O,4,,14.00,14
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prova min 1,16,22,60,,1,,O,1,,22.00,22
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prova max,17,21,60,,1,,O,2,,21.00,21
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prova min 2,18,22,60,,1,,O,3,,22.00,22
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,prova batteria,19,18,60,,1,,O,4,,18.00,18
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,attaccare copricaricabatteria,20,9,60,,1,,O,2,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,inserire puller dentro valigetta,21,9,60,,1,,O,3,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,inserimento 2 manuali,22,8,60,,1,,V,4,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,chiudere valigetta,23,5,60,,1,,V,3,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,sagomare scatola,24,16,60,,1,,V,4,,16.00,16
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T3,,inserire valigetta in scatola senza chiuderla,25,11,60,,1,,V,4,,11.00,11
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prelevare valigetta,1,7,60,,1,,V,1,,7.00,7
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,etichettare valigetta,2,28,60,,1,,V,2,,28.00,28
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,fare sacchetto con chiave,3,15,60,,1,,V,3,,15.00,15
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,inserire sacchetto,4,6,60,,1,,V,4,,6.00,6
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prelevare puller e posizionarlo in sagoma collaudo,5,13,60,,1,,E,2,,13.00,13
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prelevare batteria da caricare con eliminazione del sacchetto,6,18,60,,1,,E,3,,18.00,18
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,cambiare batteria in carica,7,8,60,,1,,E,4,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,etichettare batteria  ,8,18,60,,1,,E,3,,18.00,18
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,inserire batteria nel puller,9,6,60,,1,,E,4,,6.00,6
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,fissare batteria,10,9,60,,1,,E,4,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,pulitura banco collaudo,11,5,60,,1,,E,1,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,barcode x1,12,5,60,,1,,E,2,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,etichettare scatola con codice matricola,13,9,60,,1,,O,3,,9.00,9
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,etichettare scatola con caution,14,11,60,,1,,O,4,,11.00,11
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,accendere puller,15,13,60,,1,,O,2,,13.00,13
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prova min 1,16,21,60,,1,,O,3,,21.00,21
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prova max,17,21,60,,1,,O,4,,21.00,21
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prova min 2,18,20,60,,1,,O,3,,20.00,20
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,prova batteria,19,22,60,,1,,O,4,,22.00,22
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,attaccare copricaricabatteria,20,8,60,,1,,V,4,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,inserire puller dentro valigetta,21,8,60,,1,,V,1,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,inserimento 2 manuali,22,8,60,,1,,V,2,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,chiudere valigetta,23,5,60,,1,,V,3,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,sagomare scatola,24,17,60,,1,,V,4,,17.00,17
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T4,,inserire valigetta in scatola senza chiuderla,25,8,60,,1,,V,2,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prelevare valigetta,1,5,60,,1,,V,3,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,etichettare valigetta,2,21,60,,1,,V,4,,21.00,21
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,fare sacchetto con chiave,3,14,60,,1,,E,3,,14.00,14
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,inserire sacchetto,4,5,60,,1,,E,4,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prelevare puller e posizionarlo in sagoma collaudo,5,10,60,,1,,E,4,,10.00,10
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prelevare batteria da caricare con eliminazione del sacchetto,6,14,60,,1,,E,1,,14.00,14
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,cambiare batteria in carica,7,6,60,,1,,E,2,,6.00,6
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,etichettare batteria  ,8,13,60,,1,,E,3,,13.00,13
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,inserire batteria nel puller,9,8,60,,1,,E,4,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,fissare batteria,10,10,60,,1,,E,2,,10.00,10
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,pulitura banco collaudo,11,5,60,,1,,O,3,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,barcode x1,12,6,60,,1,,O,4,,6.00,6
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,etichettare scatola con codice matricola,13,10,60,,1,,O,3,,10.00,10
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,etichettare scatola con caution,14,11,60,,1,,O,4,,11.00,11
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,accendere puller,15,15,60,,1,,O,4,,15.00,15
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prova min 1,16,21,60,,1,,O,1,,21.00,21
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prova max,17,22,60,,1,,O,2,,22.00,22
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prova min 2,18,16,60,,1,,V,3,,16.00,16
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,prova batteria,19,21,60,,1,,V,4,,21.00,21
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,attaccare copricaricabatteria,20,5,60,,1,,V,2,,5.00,5
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,inserire puller dentro valigetta,21,7,60,,1,,V,3,,7.00,7
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,inserimento 2 manuali,22,8,60,,1,,V,4,,8.00,8
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,chiudere valigetta,23,4,60,,1,,V,3,,4.00,4
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,sagomare scatola,24,18,60,,1,,V,4,,18.00,18
+05-03-2021,Saldatrice 1,Collaudo e confezionamento,T5,,inserire valigetta in scatola senza chiuderla,25,7,60,,1,,V,4,,7.00,7
+05-03-2021,Saldatrice 1,Imballo,T1,,piegare cartone imballo valigette,1,30,60,1,5,1,E,1,,6.00,30
+05-03-2021,Saldatrice 1,Imballo,T1,,portar via imballo valigette ,2,30,60,1,10,1,E,2,,3.00,30
+05-03-2021,Saldatrice 1,Imballo,T1,,avvolgere bancale con nylon,3,25,60,1,11,1,E,3,,2.27,25
+05-03-2021,Saldatrice 1,Imballo,T1,,etichetta a bancale,4,15,60,1,11,1,E,4,,1.36,15
+05-03-2021,Saldatrice 1,Imballo,T1,,portar fuori bancale ,5,45,60,1,11,1,E,2,,4.09,45
+05-03-2021,Saldatrice 1,Imballo,T1,,ricaricare manuali su contenitore,6,25,60,1,10,1,E,3,,2.50,25
+05-03-2021,Saldatrice 1,Imballo,T1,,ripristinare scatole cartone,7,15,60,1,25,1,E,4,,0.60,15
+05-03-2021,Saldatrice 1,Imballo,T1,,tagliare reggia scatola di cartone,8,10,60,1,25,1,E,3,,0.40,10
+05-03-2021,Saldatrice 1,Imballo,T1,,eliminare scatola caricabatteria,9,30,60,1,40,1,O,4,,0.75,30
+05-03-2021,Saldatrice 1,Imballo,T1,,ripristino scatola batterie,10,15,60,1,40,1,O,4,,0.38,15
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,cambio carrello valigette,1,60,60,1,30,1,O,1,,2.00,60
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,portar via imballo valigette ,2,30,60,1,10,1,O,2,,3.00,30
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,avvolgere bancale con nylon,3,25,60,1,11,1,O,3,,2.27,25
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,etichetta a bancale,4,15,60,1,11,1,O,4,,1.36,15
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,portar fuori bancale ,5,45,60,1,11,1,O,2,,4.09,45
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,ripristino contenitore manuali,6,7,60,1,50,1,V,3,,0.14,7
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,ripristino scatola caricabatterie,7,8,60,1,40,1,E,4,,0.20,8
+05-03-2021,Saldatrice 1,Imballo kanban kitting,T1,,ripristino scatola batterie,8,8,60,1,40,1,O,3,,0.20,8
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,etichettare schermo con posizionamento in maschera,1,15,60,,0,1,V,1,,15.00,15
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,eliminare tramezza ogni strato e portar via cartone schede,2,50,60,1,81,1,V,2,,0.62,50
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,prelevare scheda,3,5,60,1,1,1,V,3,,5.00,5
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,barcode x 2,4,8,60,1,1,1,V,4,,8.00,8
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,strappare etichetta x2,5,11,60,1,1,1,V,1,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,fissare scheda a pannello x5,6,36,60,1,1,1,V,2,,36.00,36
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,prelevare pre-assieme con posizionamento in sagoma,7,10,60,1,1,1,V,3,,10.00,10
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,fissare cavo 1 vite + 2 rondelle,8,15,60,1,1,1,V,4,,15.00,15
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,fissare cavo con forcella,9,42,60,1,1,1,E,1,,42.00,42
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,collegare 1 cavo,10,4,60,1,1,1,E,2,,4.00,4
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,collegare 2 cavo,11,6,60,1,1,1,E,3,,6.00,6
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,collegare 2 faston,12,10,60,1,1,1,E,4,,10.00,10
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,applicazione fascetta + taglio,13,18,60,1,1,1,E,1,,18.00,18
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,prelevare 2 gusci con eliminazione del sacchetto,14,12,60,1,1,1,E,2,,12.00,12
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,inserire 8 dadi con cacciavite,15,43,60,1,1,1,E,3,,43.00,43
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,etichettare guscio retro,16,11,60,1,1,1,E,4,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,etichettare etichetta con codice brevetto ,17,11,60,1,1,1,O,1,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,appoggiare sagoma su guscio e posizionamento in maschera,18,14,60,,1,1,O,2,,14.00,14
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,posizionare pre-assieme dentro a guscio con prova puntale fino al grilletto,19,40,60,,1,1,O,3,,40.00,40
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,inserimento grilletto ,20,7,60,,1,1,O,4,,7.00,7
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,posizionamento trigger,21,11,60,,1,1,O,1,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,inserimento scheda contatti batteria con posizionamento in scheda,22,16,60,,1,1,O,2,,16.00,16
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,aggiustamento sopra 2 guscio,23,15,60,,1,1,O,3,,15.00,15
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,fissare gusci x8,24,39,60,,1,1,V,4,,39.00,39
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,etichettare guscio con etichetta telwin,25,13,60,,1,1,V,1,,13.00,13
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,prelievo da sagoma ed etichettare con codice matricola,26,19,60,,1,1,V,2,,19.00,19
+28-02-21,Saldatrice 1,Assemblaggio,T1,Geronimo,spostamento verso collaudo,27,5,60,,1,1,V,3,,5.00,5
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,etichettare schermo con posizionamento in maschera,1,18,60,,1,1,V,4,,18.00,18
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,prelevare scheda,2,6,60,,1,1,V,2,,6.00,6
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,barcode x 2,3,6,60,,1,1,V,3,,6.00,6
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,strappare etichetta x2,4,10,60,,1,1,V,4,,10.00,10
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,fissare scheda a pannello x5,5,26,60,,1,1,E,3,,26.00,26
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,prelevare pre-assieme con posizionamento in sagoma,6,9,60,,1,1,E,4,,9.00,9
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,fissare cavo 1 vite + 2 rondelle,7,20,60,,1,1,E,4,,20.00,20
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,fissare cavo con forcella,8,35,60,,1,1,E,1,,35.00,35
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,collegare 1 cavo,9,5,60,,1,1,E,2,,5.00,5
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,collegare 2 cavo,10,4,60,,1,1,E,3,,4.00,4
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,collegare 2 faston,11,11,60,,1,1,E,4,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,applicazione fascetta + taglio,12,25,60,,1,1,E,2,,25.00,25
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,prelevare 2 gusci con eliminazione del sacchetto,13,17,60,,1,1,O,3,,17.00,17
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,inserire 8 dadi con cacciavite,14,50,60,,1,1,O,4,,50.00,50
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,etichettare guscio retro,15,12,60,,1,1,O,3,,12.00,12
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,etichettare etichetta con codice brevetto ,16,8,60,,1,1,O,4,,8.00,8
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,appoggiare sagoma su guscio e posizionamento in maschera,17,16,60,,1,1,O,4,,16.00,16
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,posizionare pre-assieme dentro a guscio con prova puntale fino al grilletto,18,40,60,,1,1,O,1,,40.00,40
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,inserimento grilletto ,19,8,60,,1,1,O,2,,8.00,8
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,posizionamento trigger,20,8,60,,1,1,V,3,,8.00,8
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,inserimento scheda contatti batteria con posizionamento in scheda,21,12,60,,1,1,V,4,,12.00,12
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,aggiustamento sopra 2 guscio,22,25,60,,1,1,V,2,,25.00,25
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,fissare gusci x8,23,40,60,,1,1,V,3,,40.00,40
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,etichettare guscio con etichetta telwin,24,15,60,,1,1,V,4,,15.00,15
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,prelievo da sagoma ed etichettare con codice matricola,25,16,60,,1,1,V,3,,16.00,16
+28-02-21,Saldatrice 1,Assemblaggio,T2,Giovanni,spostamento verso collaudo,26,8,60,,1,1,V,4,,8.00,8
+28-02-21,Saldatrice 1,Assemblaggio,T2,,portar via cartone gusci,27,20,60,1,12,1,V,4,,1.67,20
+28-02-21,Saldatrice 1,Assemblaggio,T3,,etichettare schermo con posizionamento in maschera,1,21,60,,1,,E,1,,21.00,21
+28-02-21,Saldatrice 1,Assemblaggio,T3,,prelevare scheda,2,7,60,,1,,E,2,,7.00,7
+28-02-21,Saldatrice 1,Assemblaggio,T3,,barcode x 2,3,8,60,,1,,E,3,,8.00,8
+28-02-21,Saldatrice 1,Assemblaggio,T3,,strappare etichetta x2,4,11,60,,1,,E,4,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T3,,fissare scheda a pannello x5,5,27,60,,1,,E,2,,27.00,27
+28-02-21,Saldatrice 1,Assemblaggio,T3,,prelevare pre-assieme con posizionamento in sagoma,6,11,60,,1,,E,3,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T3,,fissare cavo 1 vite + 2 rondelle,7,16,60,,1,,E,4,,16.00,16
+28-02-21,Saldatrice 1,Assemblaggio,T3,,fissare cavo con forcella,8,32,60,,1,,E,3,,32.00,32
+28-02-21,Saldatrice 1,Assemblaggio,T3,,collegare 1 cavo,9,5,60,,1,,O,4,,5.00,5
+28-02-21,Saldatrice 1,Assemblaggio,T3,,collegare 2 cavo,10,5,60,,1,,O,4,,5.00,5
+28-02-21,Saldatrice 1,Assemblaggio,T3,,collegare 2 faston,11,12,60,,1,,O,1,,12.00,12
+28-02-21,Saldatrice 1,Assemblaggio,T3,,applicazione fascetta + taglio,12,26,60,,1,,O,2,,26.00,26
+28-02-21,Saldatrice 1,Assemblaggio,T3,,prelevare 2 gusci con eliminazione del sacchetto,13,24,60,,1,,O,3,,24.00,24
+28-02-21,Saldatrice 1,Assemblaggio,T3,,inserire 8 dadi con cacciavite,14,44,60,,1,,O,4,,44.00,44
+28-02-21,Saldatrice 1,Assemblaggio,T3,,etichettare guscio retro,15,9,60,,1,,O,2,,9.00,9
+28-02-21,Saldatrice 1,Assemblaggio,T3,,etichettare etichetta con codice brevetto ,16,10,60,,1,,V,3,,10.00,10
+28-02-21,Saldatrice 1,Assemblaggio,T3,,appoggiare sagoma su guscio e posizionamento in maschera,17,15,60,,1,,V,4,,15.00,15
+28-02-21,Saldatrice 1,Assemblaggio,T3,,posizionare pre-assieme dentro a guscio con prova puntale fino al grilletto,18,45,60,,1,,V,3,,45.00,45
+28-02-21,Saldatrice 1,Assemblaggio,T3,,inserimento grilletto ,19,10,60,,1,,V,4,,10.00,10
+28-02-21,Saldatrice 1,Assemblaggio,T3,,posizionamento trigger,20,9,60,,1,,V,4,,9.00,9
+28-02-21,Saldatrice 1,Assemblaggio,T3,,inserimento scheda contatti batteria con posizionamento in scheda,21,10,60,,1,,V,1,,10.00,10
+28-02-21,Saldatrice 1,Assemblaggio,T3,,aggiustamento sopra 2 guscio,22,12,60,,1,,V,2,,12.00,12
+28-02-21,Saldatrice 1,Assemblaggio,T3,,fissare gusci x8,23,33,60,,1,,V,3,,33.00,33
+28-02-21,Saldatrice 1,Assemblaggio,T3,,etichettare guscio con etichetta telwin,24,11,60,,1,,E,4,,11.00,11
+28-02-21,Saldatrice 1,Assemblaggio,T3,,prelievo da sagoma ed etichettare con codice matricola,25,20,60,,1,,E,2,,20.00,20
+28-02-21,Saldatrice 1,Assemblaggio,T3,,spostamento verso collaudo,26,5,60,,1,,E,3,,5.00,5
+28-02-21,Saldatrice 1,Assemblaggio,T3,,eliminare tramezza e portar via contenitore pre-assieme,27,35,60,1,32,1,E,4,,1.09,35
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prelevare valigetta,1,4,60,,1,,O,3,,4.00,4
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,etichettare valigetta,2,24,60,,1,,O,4,,24.00,24
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,fare sacchetto con chiave,3,12,60,,1,,V,3,,12.00,12
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,inserire sacchetto,4,5,60,,1,,V,4,,5.00,5
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prelevare puller e posizionarlo in sagoma collaudo,5,13,60,,1,,V,4,,13.00,13
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prelevare batteria da caricare con eliminazione del sacchetto,6,12,60,,1,,V,1,,12.00,12
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,cambiare batteria in carica,7,11,60,,1,,V,2,,11.00,11
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,etichettare batteria  ,8,12,60,,1,,V,3,,12.00,12
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,inserire batteria nel puller,9,9,60,,1,,V,4,,9.00,9
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,fissare batteria,10,7,60,,1,,V,2,,7.00,7
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,pulitura banco collaudo,11,5,60,,1,,E,3,,5.00,5
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,barcode x1,12,4,60,,1,,E,4,,4.00,4
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,etichettare scatola con codice matricola,13,15,60,,1,,E,3,,15.00,15
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,etichettare scatola con caution,14,10,60,,1,,E,4,,10.00,10
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,accendere puller,15,12,60,,1,,E,4,,12.00,12
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prova min 1,16,22,60,,1,,E,1,,22.00,22
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prova max,17,22,60,,1,,E,2,,22.00,22
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prova min 2,18,19,60,,1,,E,3,,19.00,19
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,prova batteria,19,21,60,,1,,O,4,,21.00,21
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,attaccare copricaricabatteria,20,7,60,,1,,O,2,,7.00,7
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,inserire puller dentro valigetta,21,9,60,,1,,O,3,,9.00,9
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,inserimento 2 manuali,22,8,60,,1,,O,4,,8.00,8
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,chiudere valigetta,23,4,60,,1,,O,3,,4.00,4
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,sagomare scatola,24,16,60,,1,,O,4,,16.00,16
+28-02-21,Saldatrice 1,Collaudo e confezionamento,T1,,inserire valigetta in scatola senza chiuderla,25,9,60,,1,,O,4,,9.00,9
