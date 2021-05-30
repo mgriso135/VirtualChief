@@ -804,6 +804,7 @@
     <Compile Include="App_Sources\Analysis.cs" />
     <Compile Include="App_Sources\FilesHelper.cs" />
     <Compile Include="App_Sources\FilesViewModel.cs" />
+    <Compile Include="App_Sources\FreeTimeMeasurement.cs" />
     <Compile Include="App_Sources\ImageHandler.cs" />
     <Compile Include="App_Sources\iTextSharpEventHandler.cs" />
     <Compile Include="App_Sources\KanbanBox.cs" />
@@ -1410,6 +1411,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GetAutoPauseTaskConfig.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\FreeTimeMeasurement\Controllers\FreeMeasurementController.cs" />
+    <Compile Include="Areas\FreeTimeMeasurement\FreeTimeMeasurementAreaRegistration.cs" />
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ChooseDepartment.Designer.cs" />
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Execute.Designer.cs" />
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index.Designer.cs" />
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.Designer.cs" />
     <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
     <Compile Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.Designer.cs">
@@ -6394,6 +6401,11 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="Areas\AccountsMgm\Views\Account\AccountSettings.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ChooseDepartment.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Execute.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Index.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ViewMeasurementDetails.cshtml" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\web.config" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -7284,6 +7296,10 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GetAutoPauseTaskConfig.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ChooseDepartment.resx" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Execute.resx" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index.resx" />
+    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.resx" />
     <EmbeddedResource Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>HomeRandomTips.it.Designer.cs</LastGenOutput>
@@ -12047,6 +12063,8 @@
     <Folder Include="Areas\Customers\Views\Shared\" />
     <Folder Include="Areas\Departments\Models\" />
     <Folder Include="Areas\Departments\Views\Shared\" />
+    <Folder Include="Areas\FreeTimeMeasurement\Data\" />
+    <Folder Include="Areas\FreeTimeMeasurement\Views\Shared\" />
     <Folder Include="Areas\Home\Models\" />
     <Folder Include="Areas\Personal\Models\" />
     <Folder Include="Areas\Personal\Views\Shared\" />

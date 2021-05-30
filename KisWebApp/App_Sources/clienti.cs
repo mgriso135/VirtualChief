@@ -1590,20 +1590,22 @@ namespace KIS.App_Code
 
     public class Providers
     {
+        protected String Tenant;
+
         public String log;
 
         public List<Cliente> List;
-        public Providers()
+        public Providers(String Tenant)
         {
             this.List = new List<Cliente>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE provider IS TRUE ORDER BY ragsociale";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.List.Add(new Cliente(rdr.GetString(0)));
+                this.List.Add(new Cliente(Tenant, rdr.GetString(0)));
             }
             rdr.Close();
             conn.Close();
@@ -1641,7 +1643,7 @@ namespace KIS.App_Code
 
             if (validateCodice == true && validatePIvacFisc == true && validateRagSociale == true && validateEmail == true)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
