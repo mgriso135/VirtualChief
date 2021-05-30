@@ -71,37 +71,25 @@ namespace KIS.Areas.AccountsMgm.Controllers
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && id != -1)
             {
-                UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                Workspace ws1 = new Workspace(id);
+                if(ws1.id!=-1)
+                { 
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.authR = curr.ValidatePermissions(/*Session["ActiveWorkspace_Name"].ToString()*/ws1.Name, elencoPermessi);
+                }
             }
 
             if (ViewBag.authR)
             {
                 if(id != -1)
                 { 
-/*                    UserAccount curr = (UserAccount)Session["user"];
-                    curr.loadWorkspaces();
-                    Boolean owned = false;
-                    try
-                    {
-                        var first = curr.workspaces.Find(x => x.id == id);
-                        owned = true;
-                    }
-                    catch(Exception ex)
-                    {
-                        owned = false;
-                    }*/
-
-                    /*if(owned)
-                    { */
                         Workspace ws1 = new Workspace(id);
                         if (ws1.id != -1)
                         {
                             return View(ws1);
                         }
-                    // }
                 }
             }
 
