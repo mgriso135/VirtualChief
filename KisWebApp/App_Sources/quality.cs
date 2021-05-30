@@ -329,6 +329,18 @@ namespace KIS.App_Sources
 
         public List<String> Files;
 
+        /* I = Internal
+         * P = Provider
+         */
+        private Char _Source;
+        public Char Source { get { return this._Source; } }
+
+        /* Severity — is tied to alerts and describes how impacted a specific service or piece of infrastructure is (critical, warning, error, etc.
+         * 1 = Critical
+         * 2 = Error
+         * 3 = Warning
+         * 4 = Info
+         */
         private Char _Severity;
         public Char Severity { get { return this._Severity; }
             set
@@ -359,6 +371,13 @@ namespace KIS.App_Sources
                 }
             }
         }
+
+        /* Urgency — is tied to incidents and determines how you should be notified should the incident be assigned to you (high or low)
+         * 1 = Critical
+         * 2 = High
+         * 3 = Medium
+         * 4 = Low
+         */
         private Char _Urgency;
         public Char Urgency { get { return this._Urgency; }
             set
@@ -389,6 +408,13 @@ namespace KIS.App_Sources
                 }
             }
         }
+
+        /* Priority — is tied to incidents and specifies the order in which incidents should be addressed (P1, Sev-1, etc.)
+         * 1 = Critical
+         * 2 = High
+         * 3 = Medium
+         * 4 = Low
+         */
         private Char _Priority;
         public Char Priority { get { return this._Priority; }
             set
@@ -483,6 +509,15 @@ namespace KIS.App_Sources
                 }
             }
         }
+
+        private List<Cliente> _Providers;
+        public List<Cliente> Providers { get { return this._Providers; } }
+
+        private List<Reparto> _Departments;
+        public List<Reparto> Departments { get { return this._Departments; } }
+
+        private List<Part> _Parts;
+        public List<Part> Parts { get { return this._Parts; } }
 
         public NonCompliance(int NCID, int NCYear)
         {
@@ -954,6 +989,333 @@ namespace KIS.App_Sources
             }
             return ret;
         }
+
+        public void loadProviders()
+        {
+            this._Providers = new List<Cliente>();
+            if(this.ID!=-1 && this.Year!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT ProviderId FROM noncompliances_providers WHERE NonComplianceId=@ncid AND NonComplianceYear=@ncyear";
+                cmd.Parameters.AddWithValue("@ncid", this.ID);
+                cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    Cliente provider = new Cliente(rdr.GetString(0));
+                    this.Providers.Add(provider);
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        /* Returns:
+         * -2 if error while adding row to database
+         * -1 if non compliance not found or provider not found
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int addProvider(Cliente provider, String CreatedBy)
+        {
+            int ret = 0;
+            if(this.ID!=-1 && this.Year!=-1 && provider.CodiceCliente.Length > 0)
+            { 
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "INSERT INTO noncompliances_providers(noncomplianceid, noncomplianceyear, providerid, createddate, createdby) "
+                    + " VALUES(@noncomplianceid, @noncomplianceyear, @providerid, @createddate, @createdby)";
+                cmd.Parameters.AddWithValue("@noncomplianceid", this.ID);
+                cmd.Parameters.AddWithValue("@noncomplianceyear", this.Year);
+                cmd.Parameters.AddWithValue("@providerid", provider.CodiceCliente);
+                cmd.Parameters.AddWithValue("@createddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@createdby", CreatedBy);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                    this.Providers.Add(provider);
+                }
+                catch(Exception ex)
+                {
+                    tr.Rollback();
+                    ret = -2;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = -1;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * -2 if error while adding row to database
+         * -1 if non compliance not found or provider not found
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int deleteProvider(Cliente provider)
+        {
+            int ret = 0;
+            if (this.ID != -1 && this.Year != -1 && provider.CodiceCliente.Length > 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM noncompliances_providers WHERE "
+                    + " noncomplianceid=@noncomplianceid "
+                    + " AND noncomplianceyear=@noncomplianceyear AND providerid=@providerid";
+                cmd.Parameters.AddWithValue("@noncomplianceid", this.ID);
+                cmd.Parameters.AddWithValue("@noncomplianceyear", this.Year);
+                cmd.Parameters.AddWithValue("@providerid", provider.CodiceCliente);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                    this.loadProviders();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    ret = -2;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = -1;
+            }
+            return ret;
+        }
+
+        public void loadDepartments()
+        {
+            this._Providers = new List<Cliente>();
+            if (this.ID != -1 && this.Year != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT DepartmentId FROM noncompliances_departments WHERE NonComplianceId=@ncid AND NonComplianceYear=@ncyear";
+                cmd.Parameters.AddWithValue("@ncid", this.ID);
+                cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Reparto dept = new Reparto(rdr.GetString(0));
+                    this._Departments.Add(dept);
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        /* Returns:
+         * -2 if error while adding row to database
+         * -1 if non compliance not found or provider not found
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int addDepartment(Reparto department, String CreatedBy)
+        {
+            int ret = 0;
+            if (this.ID != -1 && this.Year != -1 && department.id != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "INSERT INTO noncompliances_departments(noncomplianceid, noncomplianceyear, departmentid, createddate, createdby) "
+                    + " VALUES(@noncomplianceid, @noncomplianceyear, @departmentid, @createddate, @createdby)";
+                cmd.Parameters.AddWithValue("@noncomplianceid", this.ID);
+                cmd.Parameters.AddWithValue("@noncomplianceyear", this.Year);
+                cmd.Parameters.AddWithValue("@departmentid", department.id);
+                cmd.Parameters.AddWithValue("@createddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@createdby", CreatedBy);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                    this.Departments.Add(department);
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    ret = -2;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = -1;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * -2 if error while adding row to database
+         * -1 if non compliance not found or provider not found
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int deleteDepartment(Reparto department)
+        {
+            int ret = 0;
+            if (this.ID != -1 && this.Year != -1 && department.id!=-1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM noncompliances_departments WHERE "
+                    + " noncomplianceid=@noncomplianceid "
+                    + " AND noncomplianceyear=@noncomplianceyear AND departmentid=@departmentid";
+                cmd.Parameters.AddWithValue("@noncomplianceid", this.ID);
+                cmd.Parameters.AddWithValue("@noncomplianceyear", this.Year);
+                cmd.Parameters.AddWithValue("@departmentid", department.id);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                    this.loadDepartments();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    ret = -2;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = -1;
+            }
+            return ret;
+        }
+
+        public void loadParts()
+        {
+            this._Parts = new List<Part>();
+            if (this.ID != -1 && this.Year != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT PartId FROM noncompliances_parts WHERE NonComplianceId=@ncid AND NonComplianceYear=@ncyear";
+                cmd.Parameters.AddWithValue("@ncid", this.ID);
+                cmd.Parameters.AddWithValue("@ncyear", this.Year);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    Part prt = new Part(rdr.GetString(0));
+                    this._Parts.Add(prt);
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        /* Returns:
+         * -2 if error while adding row to database
+         * -1 if non compliance not found or part not found
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int addPart(Part part, String CreatedBy)
+        {
+            int ret = 0;
+            if (this.ID != -1 && this.Year != -1 && part.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "INSERT INTO noncompliances_parts(noncomplianceid, noncomplianceyear, partid, createddate, createdby) "
+                    + " VALUES(@noncomplianceid, @noncomplianceyear, @partid, @createddate, @createdby)";
+                cmd.Parameters.AddWithValue("@noncomplianceid", this.ID);
+                cmd.Parameters.AddWithValue("@noncomplianceyear", this.Year);
+                cmd.Parameters.AddWithValue("@partid", part.ID);
+                cmd.Parameters.AddWithValue("@createddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@createdby", CreatedBy);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                    this.Parts.Add(part);
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    ret = -2;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = -1;
+            }
+            return ret;
+        }
+
+        /* Returns:
+         * -2 if error while adding row to database
+         * -1 if non compliance not found or provider not found
+         * 0 if generic error
+         * 1 if ok
+         */
+        public int deletePart(Part part)
+        {
+            int ret = 0;
+            if (this.ID != -1 && this.Year != -1 && part.ID != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM noncompliances_parts WHERE "
+                    + " noncomplianceid=@noncomplianceid "
+                    + " AND noncomplianceyear=@noncomplianceyear AND partid=@partid";
+                cmd.Parameters.AddWithValue("@noncomplianceid", this.ID);
+                cmd.Parameters.AddWithValue("@noncomplianceyear", this.Year);
+                cmd.Parameters.AddWithValue("@partid", part.ID);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                    this.loadParts();
+                }
+                catch (Exception ex)
+                {
+                    tr.Rollback();
+                    ret = -2;
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = -1;
+            }
+            return ret;
+        }
     }
 
     public class NonCompliances
@@ -983,7 +1345,8 @@ namespace KIS.App_Sources
             conn.Close();
         }
 
-        public Boolean Add(int qty, DateTime opDate, String usr, String desc, String immAction, Double cst, char stat, DateTime closure)
+        public Boolean Add(int qty, DateTime opDate, String usr, String desc, String immAction, Double cst, char stat, DateTime closure, 
+            Char Source='\0', Char Urgency= '\0', Char Priority = '\0', Char Severity = '\0')
         {
             Boolean ret = false;
             MySqlConnection conn = (new Dati.Dati()).mycon();
@@ -999,17 +1362,23 @@ namespace KIS.App_Sources
             rdr.Close();
 
             cmd.CommandText = "INSERT INTO NonCompliances(ID, Year, Quantity, OpeningDate, User, Description, "
-                + " ImmediateAction, Cost, Status, ClosureDate) VALUES("
-                + maxID.ToString() + ", "
-                + DateTime.UtcNow.Year.ToString()
-                + "'" + opDate.ToString() +"', "
-                + "'" + usr.ToString() + "', "
-                + "'" + desc + "', "
-                + "'" + immAction + "', "
-                + cst.ToString() + ", "
-                + "'" + stat + "', "
-                + "'" + closure.ToString() + "'"
-                +")";
+                + " ImmediateAction, Cost, Status, ClosureDate, Source, Urgency, Priority, Severity) "
+                +" VALUES(@ID, @Year, @Quantity, @OpeningDate, @User, @Description, "
+                + " @ImmediateAction, @Cost, @Status, @ClosureDate, )";
+            cmd.Parameters.AddWithValue("@ID", maxID.ToString());
+            cmd.Parameters.AddWithValue("@Year", DateTime.UtcNow.Year);
+            cmd.Parameters.AddWithValue("@Quantity", qty.ToString());
+            cmd.Parameters.AddWithValue("@OpeningDate", opDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@User", usr.ToString());
+            cmd.Parameters.AddWithValue("@Description", desc);
+            cmd.Parameters.AddWithValue("@ImmediateAction", immAction);
+            cmd.Parameters.AddWithValue("@Cost", cst.ToString());
+            cmd.Parameters.AddWithValue("@Status", stat);
+            cmd.Parameters.AddWithValue("@ClosureDate", closure.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@Source", Source);
+            cmd.Parameters.AddWithValue("@Severity", Severity);
+            cmd.Parameters.AddWithValue("@Urgency", Urgency);
+            cmd.Parameters.AddWithValue("@Priority", Priority);
             MySqlTransaction tr = conn.BeginTransaction();
 
             try
@@ -1022,7 +1391,7 @@ namespace KIS.App_Sources
             {
                 ret = false;
                 tr.Rollback();
-                log = ex.Message + "<br />" + cmd.CommandText;
+                log = ex.Message;
             }
 
             conn.Close();

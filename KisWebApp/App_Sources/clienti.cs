@@ -1,5 +1,6 @@
 ﻿/* Copyright © 2013 Matteo Griso -  Tutti i diritti riservati */
 /* Copyright © 2017 Matteo Griso -  Tutti i diritti riservati */
+/* Copyright © 2021 Matteo Griso -  Tutti i diritti riservati */
 
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,14 @@ namespace KIS.App_Code
     public class Cliente
     {
         public String log;
+
+        public String ID
+        {
+            get
+            {
+                return this._CodiceCliente;
+            }
+        }
 
         private String _CodiceCliente;
         public String CodiceCliente
@@ -789,7 +798,7 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT codice FROM anagraficaclienti ORDER BY ragsociale";
+            cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE customer IS TRUE ORDER BY ragsociale";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -813,6 +822,7 @@ namespace KIS.App_Code
                 + " WHERE registroeventitaskproduzione.data >= '" + inizio.ToString("yyyy/MM/dd") + "' "
                 //+ " AND earlyStart <= '" + fine.ToString("yyyy/MM/dd") + "' "
                 + " AND registroeventitaskproduzione.data <= '" + fine.ToString("yyyy/MM/dd") + "'"
+                + "  AND customer IS TRUE "
                 + "ORDER BY ragsociale";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -1556,6 +1566,101 @@ namespace KIS.App_Code
                 tr.Rollback();
             }
             conn.Close();
+            return rt;
+        }
+    }
+
+    public class Providers
+    {
+        public String log;
+
+        public List<Cliente> List;
+        public Providers()
+        {
+            this.List = new List<Cliente>();
+            MySqlConnection conn = (new Dati.Dati()).mycon();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE provider IS TRUE ORDER BY ragsociale";
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            while (rdr.Read())
+            {
+                this.List.Add(new Cliente(rdr.GetString(0)));
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public bool Add(String codice, String ragSoc, String pIva, String codFiscale, String indirizzo, String citta, String provincia, String CAP, String stato, String telefono, String email, Boolean kanban)
+        {
+            bool rt = false;
+            bool validatePIvacFisc = false;
+            validatePIvacFisc = (codFiscale.Length < 255 && pIva.Length < 255) ? true : false;
+            bool validateCodice = (codice.Length > 0 && codice.Length < 255) ? true : false;
+            bool validateRagSociale = (ragSoc.Length > 0 && ragSoc.Length < 255) ? true : false;
+            bool validateEmail = false;
+            MailAddress mail;
+            String strMail = "";
+            if (email.Length > 0)
+            {
+                try
+                {
+                    mail = new MailAddress(email);
+                    strMail = mail.Address;
+                    validateEmail = true;
+                }
+                catch
+                {
+                    strMail = "";
+                    validateEmail = false;
+                }
+            }
+            else
+            {
+                validateEmail = true;
+                strMail = "";
+            }
+
+            if (validateCodice == true && validatePIvacFisc == true && validateRagSociale == true && validateEmail == true)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon();
+                conn.Open();
+                MySqlTransaction tr = conn.BeginTransaction();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.Transaction = tr;
+                cmd.CommandText = "INSERT INTO anagraficaclienti(codice, ragsociale, partitaiva, codfiscale, indirizzo, "
+                + "citta, provincia, CAP, stato, telefono, email, kanbanManaged) VALUES("
+                    + "'" + codice + "', "
+                    + "'" + ragSoc + "', ";
+                cmd.CommandText += (pIva.Length > 0 ? "'" + pIva + "', " : "null, ");
+                cmd.CommandText += (codFiscale.Length > 0 ? "'" + codFiscale + "', " : "null, ");
+                cmd.CommandText += "'" + indirizzo + "', "
+                    + "'" + citta + "', "
+                    + "'" + provincia + "', "
+                    + "'" + CAP + "', "
+                    + "'" + stato + "', "
+                    + "'" + telefono + "', ";
+                cmd.CommandText += (strMail.Length > 0 ? "'" + email + "', " : "null, ");
+                cmd.CommandText += kanban.ToString()
+                    + ")";
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    rt = true;
+                    tr.Commit();
+                }
+                catch (Exception ex)
+                {
+                    log = ex.Message + cmd.CommandText;
+                    rt = false;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            else
+            {
+                rt = false;
+            }
             return rt;
         }
     }
