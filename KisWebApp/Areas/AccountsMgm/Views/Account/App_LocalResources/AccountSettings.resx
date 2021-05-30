@@ -117,19 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lblBtnCreateWorkspace" xml:space="preserve">
-    <value>Crea il tuo workspace</value>
-  </data>
-  <data name="lblPendingInvites" xml:space="preserve">
-    <value>Pending invites</value>
+  <data name="lblNoPendingInvites" xml:space="preserve">
+    <value>There are no pending invites</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
-    <value>Add a new workspace</value>
-  </data>
-  <data name="lblWorkspaceName" xml:space="preserve">
-    <value>Nome workspace</value>
-  </data>
-  <data name="lblWorkspaceName_Invalid" xml:space="preserve">
-    <value>Sono permesse solo lettere</value>
+    <value>Account settings</value>
   </data>
 </root>

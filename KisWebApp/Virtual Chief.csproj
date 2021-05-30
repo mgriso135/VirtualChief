@@ -814,6 +814,11 @@
     <Compile Include="Areas\AccountsMgm\AccountsMgmAreaRegistration.cs" />
     <Compile Include="Areas\AccountsMgm\Controllers\AccountController.cs" />
     <Compile Include="Areas\AccountsMgm\Controllers\WorkspacesController.cs" />
+    <Compile Include="Areas\AccountsMgm\Views\Account\App_LocalResources\AccountSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AccountSettings.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\AccountsMgm\Views\Account\App_LocalResources\AddWorkspaceForm.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -6395,6 +6400,7 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <Content Include="Areas\AccountsMgm\Views\Account\AccountSettings.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -6707,20 +6713,25 @@
     <Content Include="App_LocalResources\Site.Master.es-AR.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.en-US.resx" />
     <Content Include="App_LocalResources\whatsnew.ascx.es-AR.resx" />
+    <EmbeddedResource Include="Areas\AccountsMgm\Views\Account\App_LocalResources\AccountSettings.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>AccountSettings.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResAccountsMgm</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Account\App_LocalResources\ViewInvites.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ViewInvites.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>ResAccountMgm</CustomToolNamespace>
+      <CustomToolNamespace>ResAccountsMgm</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Account\App_LocalResources\VerifyEmail.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>VerifyEmail.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>ResAccountMgm</CustomToolNamespace>
+      <CustomToolNamespace>ResAccountsMgm</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Account\App_LocalResources\AddWorkspaceForm.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>AddWorkspaceForm.Designer.cs</LastGenOutput>
-      <CustomToolNamespace>ResAddWorkspaceForm</CustomToolNamespace>
+      <CustomToolNamespace>ResAccountsMgm</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\AccountsMgm\Views\Workspaces\App_LocalResources\Workspace.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

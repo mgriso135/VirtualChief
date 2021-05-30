@@ -88,11 +88,74 @@ namespace ResAccountMgm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Accepted Date.
+        /// </summary>
+        public static string lblSentInvitesTHAcceptedDate {
+            get {
+                return ResourceManager.GetString("lblSentInvitesTHAcceptedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sent date.
+        /// </summary>
+        public static string lblSentInvitesTHSentDate {
+            get {
+                return ResourceManager.GetString("lblSentInvitesTHSentDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workspace details.
         /// </summary>
         public static string lblTitle {
             get {
                 return ResourceManager.GetString("lblTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User accounts.
+        /// </summary>
+        public static string lblUserAccounts {
+            get {
+                return ResourceManager.GetString("lblUserAccounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail.
+        /// </summary>
+        public static string lblUserAccountsTHEmail {
+            get {
+                return ResourceManager.GetString("lblUserAccountsTHEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Groups.
+        /// </summary>
+        public static string lblUserAccountsTHGroups {
+            get {
+                return ResourceManager.GetString("lblUserAccountsTHGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last Login.
+        /// </summary>
+        public static string lblUserAccountsTHLastLogin {
+            get {
+                return ResourceManager.GetString("lblUserAccountsTHLastLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string lblUserAccountsTHName {
+            get {
+                return ResourceManager.GetString("lblUserAccountsTHName", resourceCulture);
             }
         }
         

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ResAccountMgm {
+namespace ResAccountsMgm {
     using System;
     
     

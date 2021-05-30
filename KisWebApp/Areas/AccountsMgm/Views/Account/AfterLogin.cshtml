@@ -22,11 +22,16 @@
         @ObjectInfo.Print(User.Identity)
 
     </div>
-@if(Model !=null && Model.Length > 0)
-{
-    <script>
+    @if (Model != null && Model.Length > 0)
+    {
+        <div>@Model AAAAAAAAAAAAAA</div>
+        <script>
         window.document.location = "@Model";
-    </script>
-}
+        </script>
+    }
+    else
+    {
+        <div>Afterlogin - Model is null</div>
+    }
 </body>
 </html>
