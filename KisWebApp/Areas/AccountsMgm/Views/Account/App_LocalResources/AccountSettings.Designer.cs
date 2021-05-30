@@ -22,14 +22,14 @@ namespace ResAccountsMgm {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class AddWorkspaceForm {
+    public class AccountSettings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal AddWorkspaceForm() {
+        internal AccountSettings() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace ResAccountsMgm {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.AccountsMgm.Views.Account.App_LocalResources.AddWorkspaceForm", typeof(AddWorkspaceForm).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("KIS.Areas.AccountsMgm.Views.Account.App_LocalResources.AccountSettings", typeof(AccountSettings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,20 @@ namespace ResAccountsMgm {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Crea il tuo workspace.
+        ///   Looks up a localized string similar to There are no pending invites.
         /// </summary>
-        public static string lblBtnCreateWorkspace {
+        public static string lblNoPendingInvites {
             get {
-                return ResourceManager.GetString("lblBtnCreateWorkspace", resourceCulture);
+                return ResourceManager.GetString("lblNoPendingInvites", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pending invites.
-        /// </summary>
-        public static string lblPendingInvites {
-            get {
-                return ResourceManager.GetString("lblPendingInvites", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add a new workspace.
+        ///   Looks up a localized string similar to Account settings.
         /// </summary>
         public static string lblTitle {
             get {
                 return ResourceManager.GetString("lblTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Nome workspace.
-        /// </summary>
-        public static string lblWorkspaceName {
-            get {
-                return ResourceManager.GetString("lblWorkspaceName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sono permesse solo lettere.
-        /// </summary>
-        public static string lblWorkspaceName_Invalid {
-            get {
-                return ResourceManager.GetString("lblWorkspaceName_Invalid", resourceCulture);
             }
         }
     }

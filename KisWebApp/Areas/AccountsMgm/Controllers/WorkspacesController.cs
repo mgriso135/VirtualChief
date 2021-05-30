@@ -33,7 +33,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["User"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
@@ -41,7 +41,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
             if (ViewBag.authR)
             {
-                UserAccount usr = (UserAccount)Session["user"];
+                UserAccount usr = (UserAccount)Session["User"];
                 usr.loadWorkspaces();
                 return View(usr.workspaces);
             }
@@ -50,13 +50,13 @@ namespace KIS.Areas.AccountsMgm.Controllers
         }
 
         [Authorize]
-        public ActionResult WorkspaceDetail()
+        public ActionResult WorkspaceDetail(int id)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null)
+            if (Session["User"] != null)
             {
-                UserAccount curr = (UserAccount)Session["user"];
+                UserAccount curr = (UserAccount)Session["User"];
                 Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/WorkspaceDetail", "", ipAddr);
             }
             else
@@ -79,16 +79,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
             if (ViewBag.authR)
             {
-                int wsid = -1;
-                try
-                {
-                    wsid = Int32.Parse(Session["ActiveWorkspace_Id"].ToString());
-                }
-                catch(Exception ex)
-                {
-                    wsid = -1;
-                }
-                if(wsid!=-1)
+                if(id != -1)
                 { 
 /*                    UserAccount curr = (UserAccount)Session["user"];
                     curr.loadWorkspaces();
@@ -105,10 +96,10 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
                     /*if(owned)
                     { */
-                        Workspace ws = new Workspace(wsid);
-                        if (ws.id != -1)
+                        Workspace ws1 = new Workspace(id);
+                        if (ws1.id != -1)
                         {
-                            return View(ws);
+                            return View(ws1);
                         }
                     // }
                 }
@@ -166,6 +157,46 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 }
             }
                 return ret;
+        }
+
+        /*
+         * Returns: 
+         * 0 if generic error
+         * 1 if user not authorized
+         */
+        [Authorize]
+        public int DeleteUserGroup(int workspace, int userid, int groupid)
+        {
+            int ret = 0;
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/DeleteUserGroup", "workspaceid=" + workspace + "&userid=" + userid + "&groupid=" + groupid, ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/DeleteUserGroup", "workspaceid=" + workspace + "&userid=" + userid + "&groupid=" + groupid, ipAddr);
+            }
+
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Workspaces UserAccountsGroups";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+            if (ViewBag.authW)
+            {
+                UserAccount usr = new UserAccount(userid);
+                ret = usr.DeleteWorkspaceGroup(workspace, groupid);
+            }
+            return ret;
         }
     }
 }

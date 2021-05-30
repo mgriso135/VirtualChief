@@ -100,6 +100,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             ViewBag.log += "curr.userId = " + curr.userId + "<br />";
             if (curr.id == -1)
             {
+                Session["User"] = curr;
                 UserAccounts lst = new UserAccounts();
                 int added_user = lst.Add(usrId, email, firstname, lastname, nickname, picture_url, locale, update_at, iss, nonce, idtoken, access_token, refresh_token);
                 ViewBag.log += "Added user: " + added_user;
@@ -153,7 +154,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
                             Session["ActiveWorkspace_Name"] = curr.DefaultWorkspace.Name;
                             Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
-                            Session["user"] = curr;
+                            Session["User"] = curr;
                             redirectUrl = "~/HomePage/Default.aspx";
                         }
                         else if (curr.workspaces.Count > 0)
@@ -161,7 +162,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
                             //Session["ActiveWorkspace_Name"] = curr.workspaces[0];
                             Session["ActiveWorkspace_Name"] = curr.workspaces[0].Name;
                             Session["ActiveWorkspace_Id"] = curr.workspaces[0].id;
-                            Session["user"] = curr;
+                            Session["User"] = curr;
                             curr.loadGroups(curr.workspaces[0].id);
                             bool isWsAdmin = false;
                             try
@@ -179,17 +180,20 @@ namespace KIS.Areas.AccountsMgm.Controllers
                         }
                         else
                         {
+                            Session["User"] = curr;
                             redirectUrl = "AddWorkspaceForm";
                         }
                     }
                     else
                     {
                         // Go to home
+                        Session["User"] = curr;
+                        redirectUrl = "AddWorkspaceForm";
                     }
                 }
                 else
                 {
-                    
+                    Session["User"] = curr;
                     redirectUrl = "VerifyEmail";
                     ViewBag.log = redirectUrl;
                 }
@@ -202,7 +206,24 @@ namespace KIS.Areas.AccountsMgm.Controllers
         public ActionResult AddWorkspaceForm()
         {
             ViewBag.log = "";
-            var claimsIdentity = User.Identity as ClaimsIdentity;
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["User"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/AddWorkspaceForm", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/AddWorkspaceForm", "", ipAddr);
+            }
+
+            if(Session["User"] !=null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                return View(curr);
+            }
+
             return View();
         }
 
@@ -334,7 +355,13 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/AccountSettings", "", ipAddr);
             }
 
-            return View();
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                return View(curr);
+            }
+
+                return View();
         }
     }
 

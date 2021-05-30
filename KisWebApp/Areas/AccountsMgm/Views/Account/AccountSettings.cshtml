@@ -1,0 +1,86 @@
+﻿@model KIS.App_Sources.UserAccount
+
+@{
+    ViewBag.Title = ResAccountsMgm.AccountSettings.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResAccountsMgm.AccountSettings.lblTitle</h3>
+
+@if (Model != null)
+{
+<script>
+        $(document).ready(function () {
+            $(".btnAcceptInvite").click(function () {
+                console.log("Accepting invite...");
+                var swsid = $(this).prop("id");
+                var awsid = swsid.split('_');
+                var wsid = awsid[1];
+                console.log("wsid " + wsid);
+
+                if (wsid != "") {
+                    $.ajax({
+                        url: "@Url.Action("AcceptWorkspaceInvitation", "Account")",
+                        type: 'POST',
+                        data: {
+                            workspace: wsid,
+                            user: @Model.id
+                        },
+                        success: function (result) {
+                            console.log(result);
+                            if (result == "1") {
+                                console.log("Ok!");
+                            }
+                        },
+                        error: function (result) { alert("Error " + result); },
+                        warning: function (result) { alert("Warning " + result); },
+                    });
+                }
+            });
+        });
+</script>
+    @Model.firstname @Model.lastname
+
+    <div class="row-fluid">
+        <div class="span12"><h3>@ResAccountsMgm.AddWorkspaceForm.lblPendingInvites</h3></div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12" id="frmInvites">
+            @{
+                Model.loadWorkspaceInvites();
+                if (Model.WorkspaceInvites.Count > 0)
+                {
+            <table class="table">
+                @{
+
+                    foreach (var invite in Model.WorkspaceInvites)
+                    {
+                        <tr>
+                            <td>@invite.WorkspaceName</td>
+                            <td>@invite.SentDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td><span class="material-icons btnAcceptInvite" id="btnAcceptInvite_@invite.WorkspaceId" style="cursor: pointer;">done</span></td>
+                        </tr>
+                    }
+                }
+            </table>
+                    }
+                    else
+                    {
+                        <div class="row-fluid">
+                            <div class="span12">
+                                @ResAccountsMgm.AccountSettings.lblNoPendingInvites
+                            </div>
+                        </div>
+                    }
+                    }
+        </div>
+    </div>
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            No model found
+        </div>
+    </div>
+}

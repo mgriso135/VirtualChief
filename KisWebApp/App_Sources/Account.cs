@@ -95,7 +95,6 @@ namespace KIS.App_Sources
         }
 
         public List<Group> groups;
-        //public List<Group> groups { get { return this._Groups; } }
 
         private String _DestinationURL;
         public String DestinationURL { get { return this._DestinationURL; } 
@@ -460,6 +459,47 @@ namespace KIS.App_Sources
             }
         }
 
+        /* Returns:
+         * 0 if generic error
+         * 1 if delete successfully
+         * 2 if workspace not found or group not found
+         * 3 if error while deleting
+         */
+        public int DeleteWorkspaceGroup(int workspace, int group)
+        {
+            int ret = 0;
+            if(this.id!=-1 && workspace>=0 && group>=0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM useraccountsgroups WHERE groupid=@group AND workspaceid=@ws AND userid=@usr";
+                cmd.Parameters.AddWithValue("@group", group);
+                cmd.Parameters.AddWithValue("@ws", workspace);
+                cmd.Parameters.AddWithValue("@usr", this.id);
+
+                MySqlTransaction tr = conn.BeginTransaction();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch(Exception ex)
+                {
+                    ret = 3;
+                    tr.Rollback();
+                }
+
+                conn.Close();
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
+
         public bool ValidatePermissions(String workspace, List<String[]> elencoPrm)
         {
             bool rt = false;
@@ -681,9 +721,11 @@ namespace KIS.App_Sources
                     {
                         cmd.CommandText = "UPDATE workspacesinvites SET accepted=true, accepted_date=NOW() WHERE workspace=@wsid "
                             + " AND mail=@mail AND sent_date >= NOW() - INTERVAL 2 DAY";
+                        cmd.Parameters.AddWithValue("@wsid", ws.id.ToString());
+                        cmd.Parameters.AddWithValue("@mail", this.email.Address.ToString());
                         cmd.ExecuteNonQuery();
 
-                        cmd.CommandText = "INSERT INTO useraccountoworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invite_checksum, "
+                        cmd.CommandText = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invite_checksum, "
                             + " invitation_accepted, invitation_accepted_date, default_ws, destinationUrl) "
                             + "VALUES(@userid, @workspaceid, @invite_sent, @invite_sent_date, @invite_checksum, "
                             + " @invitation_accepted, @invitation_accepted_date, @default_ws, @destinationUrl)";
@@ -696,13 +738,19 @@ namespace KIS.App_Sources
                         cmd.Parameters.AddWithValue("@invitation_accepted_date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.Parameters.AddWithValue("@default_ws", false);
                         cmd.Parameters.AddWithValue("@destinationUrl", "");
-
                         cmd.ExecuteNonQuery();
+
+                        cmd.CommandText = "INSERT INTO useraccountsgroups(groupid, userid, workspaceid) "
+                            + "VALUES(@groupid, @userid, @workspaceid)";
+                        cmd.Parameters.AddWithValue("@groupid", 14);
+                        cmd.ExecuteNonQuery();
+
                         tr.Commit();
                     }
                     catch(Exception ex)
                     {
                         ret = 3;
+                        this.log = ex.Message;
                         tr.Rollback();
                     }
 

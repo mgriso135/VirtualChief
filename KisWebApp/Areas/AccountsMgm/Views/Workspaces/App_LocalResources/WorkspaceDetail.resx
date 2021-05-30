@@ -126,8 +126,29 @@
   <data name="lblNotAuthorized" xml:space="preserve">
     <value>User not authorized</value>
   </data>
+  <data name="lblSentInvitesTHAcceptedDate" xml:space="preserve">
+    <value>Accepted Date</value>
+  </data>
+  <data name="lblSentInvitesTHSentDate" xml:space="preserve">
+    <value>Sent date</value>
+  </data>
   <data name="lblTitle" xml:space="preserve">
     <value>Workspace details</value>
+  </data>
+  <data name="lblUserAccounts" xml:space="preserve">
+    <value>User accounts</value>
+  </data>
+  <data name="lblUserAccountsTHEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="lblUserAccountsTHGroups" xml:space="preserve">
+    <value>Groups</value>
+  </data>
+  <data name="lblUserAccountsTHLastLogin" xml:space="preserve">
+    <value>Last Login</value>
+  </data>
+  <data name="lblUserAccountsTHName" xml:space="preserve">
+    <value>Name</value>
   </data>
   <data name="lblWsNotFound" xml:space="preserve">
     <value>Workspace not found</value>

@@ -1,4 +1,5 @@
-﻿
+﻿@model KIS.App_Sources.UserAccount
+
 @{
     Layout = null;
 }
@@ -8,7 +9,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>@ResAddWorkspaceForm.AddWorkspaceForm.lblTitle</title>
+    <title>@ResAccountsMgm.AddWorkspaceForm.lblTitle</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
 
@@ -20,6 +21,10 @@
     <link href="~/Styles/assets/css/bootstrap.css" rel="stylesheet" />
     <link href="~/Styles/assets/css/bootstrap-responsive.css" rel="stylesheet" />
 
+</head>
+<body>
+    @if (Model != null)
+    {
     <script>
         $(document).ready(function () {
             $("#btnCreateWs").click(function () {
@@ -46,22 +51,75 @@
                 }
                 return false;
             });
+
+            $(".btnAcceptInvite").click(function () {
+                console.log("Accepting invite...");
+                var swsid = $(this).prop("id");
+                var awsid = swsid.split('_');
+                var wsid = awsid[1];
+                console.log("wsid " + wsid);
+
+                if (wsid != "") {
+                    $.ajax({
+                        url: "@Url.Action("AcceptWorkspaceInvitation", "Account")",
+                        type: 'POST',
+                        data: {
+                            workspace: wsid,
+                            user: @Model.id
+                        },
+                        success: function (result) {
+                            console.log(result);
+                            if (result == "1") {
+                                console.log("Ok!");
+                            }
+                        },
+                        error: function (result) { alert("Error " + result); },
+                        warning: function (result) { alert("Warning " + result); },
+                    });
+                }
+
+                });
+
+
         });
     </script>
 
-</head>
-<body>
     <div class="row-fluid">
-        <div class="span12"><h3>@ResAddWorkspaceForm.AddWorkspaceForm.lblTitle</h3></div>
+        <div class="span12"><h3>@ResAccountsMgm.AddWorkspaceForm.lblPendingInvites</h3></div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table">
+                @{ 
+                    Model.loadWorkspaceInvites();
+                    foreach(var invite in Model.WorkspaceInvites)
+                    {
+                        <tr>
+                            <td>@invite.WorkspaceName</td>
+                            <td>@invite.SentDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td><span class="material-icons btnAcceptInvite" id="btnAcceptInvite_@invite.WorkspaceId" style="cursor: pointer;">done</span></td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+    <div class="row-fluid">
+        <div class="span12"><h3>@ResAccountsMgm.AddWorkspaceForm.lblTitle</h3></div>
     </div>
     <div class="row-fluid">
         <div class="span12">
             <form id="frmws">
-                @ResAddWorkspaceForm.AddWorkspaceForm.lblWorkspaceName&nbsp;
-                <input type="text" pattern="[A-Za-z]+" class="form-control" id="wsname" placeholder="@ResAddWorkspaceForm.AddWorkspaceForm.lblWorkspaceName" required />
-                <input type="submit" id="btnCreateWs" value="@ResAddWorkspaceForm.AddWorkspaceForm.lblBtnCreateWorkspace" />
+                @ResAccountsMgm.AddWorkspaceForm.lblWorkspaceName&nbsp;
+                <input type="text" pattern="[A-Za-z]+" class="form-control" id="wsname" placeholder="@ResAccountsMgm.AddWorkspaceForm.lblWorkspaceName" required />
+                <input type="submit" id="btnCreateWs" value="@ResAccountsMgm.AddWorkspaceForm.lblBtnCreateWorkspace" />
             </form>
         </div>
     </div>
+    }
+    else
+    {
+        <div>Model is null</div>
+    }
 </body>
 </html>
