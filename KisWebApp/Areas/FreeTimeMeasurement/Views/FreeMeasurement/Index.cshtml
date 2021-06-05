@@ -296,7 +296,7 @@
                                 <td>
                                     <input list="ddlProductsList" id="frmAddProduct" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddProduct" required>
                                     <datalist id="ddlProductsList">
-                                        @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(true);
+                                        @{KIS.App_Code.ElencoProcessiVarianti el = new KIS.App_Code.ElencoProcessiVarianti(Session["ActiveWorkspace_Name"].ToString(), true);
                                             var sortedProducts = el.elencoFigli.OrderBy(x => x.NomeCombinato);
                                             foreach (var prd in sortedProducts)
                                             {
@@ -309,7 +309,7 @@
                                 <td>
                                     <input list="ddlDepartments" id="frmAddDepartment" class="form-text" placeholder="@ResFreeMeasurements.Index.lblAddDepartment" required>
                                     <datalist id="ddlDepartments">
-                                        @{KIS.App_Code.ElencoReparti elRep = new KIS.App_Code.ElencoReparti();
+                                        @{KIS.App_Code.ElencoReparti elRep = new KIS.App_Code.ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                                             var sortedDepartments = elRep.elenco.OrderBy(x => x.name);
                                             foreach (var dept in sortedDepartments)
                                             {
@@ -325,7 +325,7 @@
                                     <input type="number" step=".01" value="1" placeholder="@ResFreeMeasurements.Index.lblAddQuantity" id="txtAddQuantity" class="form-text" min="0.01" style="width:120px;" required />
                                     <select id="ddlAddMU" style="width:80px;">
                                         @{
-                                            KIS.App_Code.MeasurementUnits muList = new KIS.App_Code.MeasurementUnits();
+                                            KIS.App_Code.MeasurementUnits muList = new KIS.App_Code.MeasurementUnits(Session["ActiveWorkspace_Name"].ToString());
                                             muList.loadMeasurementUnits();
                                             var muListOrd = muList.UnitsList.OrderByDescending(x => x.IsDefault).ThenBy(y => y.Type);
                                             foreach (var mu in muListOrd)
@@ -589,7 +589,7 @@
         default: break;
     }
 
-    KIS.App_Sources.FreeTimeMeasurements tobeclosed = new KIS.App_Sources.FreeTimeMeasurements();
+    KIS.App_Sources.FreeTimeMeasurements tobeclosed = new KIS.App_Sources.FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
     tobeclosed.loadMeasurementsToBeClosed();
 
     <div class="row-fluid">

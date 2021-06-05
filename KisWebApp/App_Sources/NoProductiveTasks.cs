@@ -8,14 +8,17 @@ namespace KIS.App_Sources
 {
     public class NoProductiveTasks
     {
+        protected String Tenant; 
+
         public String log;
 
         public List<NoProductiveTask> TaskList;
 
-        public NoProductiveTasks()
+        public NoProductiveTasks(String tenant)
         {
+            this.Tenant = tenant;
             this.TaskList = new List<NoProductiveTask>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM noproductivetasks WHERE enabled=true ORDER BY isdefault DESC, name";
@@ -45,7 +48,7 @@ namespace KIS.App_Sources
                     def = true;
                 }
 
-                MySqlConnection conn = (new Dati.Dati()).mycon();
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -86,7 +89,7 @@ namespace KIS.App_Sources
         public void loadArchived()
         {
             this.TaskList = new List<NoProductiveTask>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM noproductivetasks WHERE enabled=false ORDER BY isdeault DESC, name";
@@ -102,7 +105,7 @@ namespace KIS.App_Sources
         public void loadAll()
         {
             this.TaskList = new List<NoProductiveTask>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM noproductivetasks ORDER BY isdefault DESC, name";
@@ -119,6 +122,8 @@ namespace KIS.App_Sources
     public class NoProductiveTask
     {
         public String log;
+
+        protected String Tenant;
 
         private int _ID;
         private String _Name;
@@ -145,7 +150,7 @@ namespace KIS.App_Sources
             {
                 if(this.ID != -1 && value.Length < 255)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE noproductivetasks SET name=@name WHERE id=@id";
@@ -178,7 +183,7 @@ namespace KIS.App_Sources
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE noproductivetasks SET description=@description WHERE id=@id";
@@ -211,7 +216,7 @@ namespace KIS.App_Sources
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "UPDATE noproductivetasks SET enabled=@enabled WHERE id=@id";
@@ -254,7 +259,7 @@ namespace KIS.App_Sources
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -288,7 +293,7 @@ namespace KIS.App_Sources
             this._Enabled = false;
             this._CreationDate = new DateTime(1970,1,1);
             this._IsDefault = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, name, description, enabled, creationdate, isdefault FROM noproductivetasks WHERE id=@id";

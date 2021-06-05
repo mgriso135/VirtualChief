@@ -808,6 +808,8 @@
     <Compile Include="App_Sources\ImageHandler.cs" />
     <Compile Include="App_Sources\iTextSharpEventHandler.cs" />
     <Compile Include="App_Sources\KanbanBox.cs" />
+    <Compile Include="App_Sources\NoProductiveTasks.cs" />
+    <Compile Include="App_Sources\parts.cs" />
     <Compile Include="App_Sources\quality.cs" />
     <Compile Include="App_Sources\WorkInstructions.cs" />
     <Compile Include="App_Start\Routeconfig.cs" />
@@ -1413,10 +1415,26 @@
     </Compile>
     <Compile Include="Areas\FreeTimeMeasurement\Controllers\FreeMeasurementController.cs" />
     <Compile Include="Areas\FreeTimeMeasurement\FreeTimeMeasurementAreaRegistration.cs" />
-    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ChooseDepartment.Designer.cs" />
-    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Execute.Designer.cs" />
-    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index.Designer.cs" />
-    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.Designer.cs" />
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ChooseDepartment1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChooseDepartment.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Execute1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Execute.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ViewMeasurementDetails.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Home\Controllers\DefaultController.cs" />
     <Compile Include="Areas\Home\HomeAreaRegistration.cs" />
     <Compile Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.Designer.cs">
@@ -7296,10 +7314,26 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>GetAutoPauseTaskConfig.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ChooseDepartment.resx" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Execute.resx" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index.resx" />
-    <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.resx" />
+    <EmbeddedResource Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ChooseDepartment.resx">
+      <CustomToolNamespace>ResFreeMeasurements</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ChooseDepartment1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Execute.resx">
+      <CustomToolNamespace>ResFreeMeasurements</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Execute1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\Index.resx">
+      <CustomToolNamespace>ResFreeMeasurements</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\App_LocalResources\ViewMeasurementDetails.resx">
+      <CustomToolNamespace>ResFreeMeasurements</CustomToolNamespace>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>ViewMeasurementDetails1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\Home\Views\Default\App_LocalResources\HomeRandomTips.it.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>HomeRandomTips.it.Designer.cs</LastGenOutput>

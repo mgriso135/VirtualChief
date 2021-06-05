@@ -8,6 +8,8 @@ namespace KIS.App_Sources
 {
     public class Parts
     {
+        protected String Tenant;
+
         public String log;
         private List<Part> _List;
         public List<Part> List
@@ -15,22 +17,23 @@ namespace KIS.App_Sources
             get { return this._List; }
         }
 
-        public Parts()
+        public Parts(String tenant)
         {
             this._List = new List<Part>();
+            this.Tenant = tenant;
         }
 
         public void loadParts()
         {
             this._List = new List<Part>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM parts ORDER BY partnumber";
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this._List.Add(new Part(rdr.GetInt32(0)));
+                this._List.Add(new Part(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -39,7 +42,7 @@ namespace KIS.App_Sources
         public void loadParts(Boolean actives)
         {
             this._List = new List<Part>();
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM parts WHERE enabled=@enabled ORDER BY partnumber";
@@ -47,7 +50,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this._List.Add(new Part(rdr.GetInt32(0)));
+                this._List.Add(new Part(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -61,12 +64,12 @@ namespace KIS.App_Sources
         public int add(String partnumber, String name, String description, String createdby, Boolean enabled)
         {
             int ret = -1;
-            Part exists = new Part(partnumber);
+            Part exists = new Part(this.Tenant, partnumber);
             if(exists.ID == -1)
             { 
                 if(name.Length < 255)
                 { 
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
@@ -118,6 +121,9 @@ namespace KIS.App_Sources
 
     public class Part
     {
+
+        protected String Tenant;
+
         public String log;
 
         private int _ID;
@@ -132,7 +138,7 @@ namespace KIS.App_Sources
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -162,7 +168,7 @@ namespace KIS.App_Sources
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -204,7 +210,7 @@ namespace KIS.App_Sources
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon();
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
@@ -228,8 +234,9 @@ namespace KIS.App_Sources
             }
         }
 
-        public Part(int id)
+        public Part(String tenant, int id)
         {
+            this.Tenant = tenant;
             this._ID = -1;
             this._PartNumber = "";
             this._Name = "";
@@ -240,7 +247,7 @@ namespace KIS.App_Sources
             this._LastModifiedBy = "";
             this._Enabled = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled "
@@ -263,8 +270,10 @@ namespace KIS.App_Sources
             conn.Close();
         }
 
-        public Part(String partnumber)
+        public Part(String tenant, String partnumber)
         {
+            this.Tenant = tenant;
+
             this._ID = -1;
             this._PartNumber = "";
             this._Name = "";
@@ -275,7 +284,7 @@ namespace KIS.App_Sources
             this._LastModifiedBy = "";
             this._Enabled = false;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled "

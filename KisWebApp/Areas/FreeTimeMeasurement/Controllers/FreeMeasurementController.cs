@@ -22,8 +22,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Index", "Status=" + Status, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/Index", "Status=" + Status, ipAddr);
             }
             else
             {
@@ -37,10 +37,10 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!=null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             elencoPermessi = new List<String[]>();
@@ -51,15 +51,15 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ViewBag.Status = "";
             if (ViewBag.authR || ViewBag.authW)
             {
                 ViewBag.Status = Status;
-                FreeTimeMeasurements measList = new FreeTimeMeasurements();
+                FreeTimeMeasurements measList = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
                 measList.loadMeasurements(Status);
                 return View(measList.MeasurementsList);
             }
@@ -87,8 +87,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Add", 
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/Add", 
                     "plannedstartdate=" + plannedstartdate.ToString("dd/MM/yyyy HH:mm:ss") 
                     + "&plannedenddate="+ plannedenddate.ToString("dd/MM/yyyy HH:mm:ss") 
                     + "&DepartmentId="+DepartmentId
@@ -131,14 +131,14 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -149,9 +149,9 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 ret = quantity <= 0 ? -18 : -1;
                 if (ret >= -1)
                 {
-                    FreeTimeMeasurements measList = new FreeTimeMeasurements();
-                    User currUser = (User)Session["user"];
-                    ret = measList.Add(currUser.username.ToString(), plannedstartdate, plannedenddate, DepartmentId, name, description, processid, processrev, variantid,
+                    FreeTimeMeasurements measList = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
+                    UserAccount currUser = (UserAccount)Session["user"];
+                    ret = measList.Add(currUser.id.ToString(), plannedstartdate, plannedenddate, DepartmentId, name, description, processid, processrev, variantid,
                         serialnumber, quantity, measurementUnitId, AllowCustomTasks, AllowExecuteFinishedTasks);
                 }
                 
@@ -177,8 +177,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Finish", "MeasurementId=" + MeasurementId, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/Finish", "MeasurementId=" + MeasurementId, ipAddr);
             }
             else
             {
@@ -193,21 +193,21 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(MeasurementId);
+                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), MeasurementId);
                 ret = fm.Finish();
             }
             else
@@ -224,8 +224,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/ChooseDepartment", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/ChooseDepartment", "", ipAddr);
             }
             else
             {
@@ -241,13 +241,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                ElencoReparti deptLst = new ElencoReparti();
+                ElencoReparti deptLst = new ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                 return View(deptLst.elenco);
             }
             return View();
@@ -259,8 +259,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/Execute", "DepartmentId="+ DepartmentId, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/Execute", "DepartmentId="+ DepartmentId, ipAddr);
             }
             else
             {
@@ -276,15 +276,15 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             ViewBag.DepartmentName = "";
             ViewBag.DepartmentId = -1;
             if (ViewBag.authW)
             {
-                Reparto dept = new Reparto(DepartmentId);
+                Reparto dept = new Reparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentId);
                 if(dept.id!=-1)
                 { 
                     ViewBag.DepartmentId = DepartmentId;
@@ -309,8 +309,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetFreeMeasurentsTasksJson", "departmentId=" + departmentId, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetFreeMeasurentsTasksJson", "departmentId=" + departmentId, ipAddr);
             }
             else
             {
@@ -327,13 +327,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                FreeTimeMeasurements fms = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
                 List<FreeMeasurentsTasksJsonStruct> fmStruct = fms.GetFreeMeasurentsTasksJson(departmentId);
                 res = Json(fmStruct);
             }
@@ -350,8 +350,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask", 
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask", 
                     "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
             }
             else
@@ -370,16 +370,16 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                User usr = new App_Code.User(user) ;
+                UserAccount usr = new UserAccount(user) ;
                 FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
                 // To-do: check that user it not 
-                if(frmTask.TaskId !=-1 && usr.username.Length > 0)
+                if(frmTask.TaskId !=-1 && usr.id != -1)
                 {
                     ret = frmTask.Start(usr);
                 }
@@ -403,8 +403,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartProductiveTask",
                     "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskName=" + TaskName, ipAddr);
             }
             else
@@ -423,14 +423,14 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                User usr = new App_Code.User(user);
-                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(MeasurementId);
+                UserAccount usr = new UserAccount(user);
+                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), MeasurementId);
                  
                 if(fm.id!=-1 && TaskName.Length < 255)
                 {
@@ -439,7 +439,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                         int TaskId = fm.addTask(TaskName);
                         FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
 
-                        if (frmTask.TaskId != -1 && usr.username.Length > 0)
+                        if (frmTask.TaskId != -1 && usr.id != -1)
                         {
                             ret = frmTask.Start(usr);
                         }
@@ -465,8 +465,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartNoProductiveTask",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/StartNoProductiveTask",
                     "user=" + user + "&MeasurementId=" + MeasurementId + "&NpTaskId=" + NpTaskId, ipAddr);
             }
             else
@@ -485,20 +485,20 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                User usr = new App_Code.User(user);
-                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(MeasurementId);
+                UserAccount usr = new UserAccount(user);
+                KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), MeasurementId);
                 NoProductiveTask npTask = new NoProductiveTask(NpTaskId);
                 if (fm.id != -1 && npTask.ID != -1)
                 {
                     int TaskId = fm.addTask(npTask);
                     FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
-                    if (frmTask.TaskId != -1 && usr.username.Length > 0)
+                    if (frmTask.TaskId != -1 && usr.id != -1)
                     {
                         ret = frmTask.Start(usr);
                     }
@@ -517,8 +517,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/PauseTask",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/PauseTask",
                     "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
             }
             else
@@ -537,15 +537,15 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                User usr = new App_Code.User(user);
+                UserAccount usr = new UserAccount(user);
                 FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
-                if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.username.Length > 0)
+                if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.id != -1)
                 {
                     ret = frmTask.Pause(usr);
                 }
@@ -559,8 +559,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/FinishTask",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/FinishTask",
                     "user=" + user + "&MeasurementId=" + MeasurementId + "&TaskId=" + TaskId + "&ProducedQuantity=" + ProducedQuantity, ipAddr);
             }
             else
@@ -579,8 +579,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -608,8 +608,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetRunningTasks",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetRunningTasks",
                     "username=" + username + "&deptId=" + deptId, ipAddr);
             }
             else
@@ -628,17 +628,17 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                Reparto rp = new Reparto(deptId);
+                Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), deptId);
                 User usr = new User(username);
                 if (rp.id != -1 && usr.username.Length > 0)
                 {
-                    FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                    FreeTimeMeasurements fms = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
                     List<FreeMeasurentsTasksJsonStruct> fmStruct = fms.GetRunningTasks(rp, usr);
                     res = Json(fmStruct);
                 }
@@ -660,8 +660,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/ViewMeasurementDetails",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/ViewMeasurementDetails",
                     "MeasurementId=" + MeasurementId, ipAddr);
             }
             else
@@ -679,13 +679,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)
             {
-                KIS.App_Sources.FreeTimeMeasurement fm = new App_Sources.FreeTimeMeasurement(MeasurementId);
+                KIS.App_Sources.FreeTimeMeasurement fm = new App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), MeasurementId);
                 if(fm.id!= -1)
                 {
                     ViewBag.MeasurementId = fm.id;
@@ -706,8 +706,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents",
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents",
                     "MeasurementId=" + MeasurementId + "&TaskId=" + TaskId, ipAddr);
             }
             else
@@ -726,8 +726,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
@@ -758,8 +758,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/FreeTimeMeasurement/FreeMeasurement/GetTaskEvents", "", ipAddr);
             }
             else
             {
@@ -776,13 +776,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                KIS.App_Sources.FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                KIS.App_Sources.FreeTimeMeasurements fms = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
                 ret = fms.TransformEventsToTimespans();
             }
             else
@@ -798,8 +798,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "", ipAddr);
+                UserAccount usr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(usr.id.ToString(), "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "", ipAddr);
             }
             else
             {
@@ -816,8 +816,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
@@ -850,7 +850,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                     + "\"VariantId\", "
                     + "\"VariantName\" "
                     + "\n";
-                FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                FreeTimeMeasurements fms = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
                 fms.loadMeasurements('A');
                 foreach(var m in fms.MeasurementsList)
                 {
@@ -898,8 +898,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "EventId="+ EventId, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/FreeTimeMeasurement/FreeMeasurement/FreeMeasurementDownload", "EventId="+ EventId, ipAddr);
             }
             else
             {
@@ -915,13 +915,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                FreeMeasurements_Tasks_Event ev = new FreeMeasurements_Tasks_Event(EventId);
+                FreeMeasurements_Tasks_Event ev = new FreeMeasurements_Tasks_Event(Session["ActiveWorkspace_Name"].ToString(), EventId);
                 if(ev.id!=-1)
                 {
                     ret = ev.notes;
@@ -936,8 +936,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FreeMeasurement/SaveTaskEventNote", "EventId=" + EventId + "&note="+ note, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/FreeTimeMeasurement/FreeMeasurement/SaveTaskEventNote", "EventId=" + EventId + "&note="+ note, ipAddr);
             }
             else
             {
@@ -953,13 +953,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             ViewBag.authW = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authW = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authW)
             {
-                FreeMeasurements_Tasks_Event fmev = new FreeMeasurements_Tasks_Event(EventId);
+                FreeMeasurements_Tasks_Event fmev = new FreeMeasurements_Tasks_Event(Session["ActiveWorkspace_Name"].ToString(), EventId);
                 if(fmev.id != -1)
                 {
                     ret = fmev.SaveNote(note);
@@ -999,8 +999,8 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User us1r = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(us1r.username, "Action", "/FreeTimeMeasurement/FileUploadMeasurement/Upload", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/FreeTimeMeasurement/FileUploadMeasurement/Upload", "", ipAddr);
             }
             else
             {
@@ -1130,23 +1130,23 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
         public String ProcessFile(String filename)
         {
-            User usr = (User)Session["user"];
+            UserAccount usr = (UserAccount)Session["user"];
             String ret = "0";
             int loadMeasures = this.LoadMeasures(filename);
 
             if (loadMeasures == 1)
             {
-                FreeTimeMeasurements fms = new FreeTimeMeasurements();
+                FreeTimeMeasurements fms = new FreeTimeMeasurements(Session["ActiveWorkspace_Name"].ToString());
                 var measurements = this.MeasurementBatchList.GroupBy(t => t.MeasurementName).Select(g => g.First()).ToList();
                 foreach (var m in measurements)
                 {
-                    int measure = fms.AddBatch(usr.username, m.PlannedStartDate, m.PlannedEndDate, m.MeasurementName, m.MeasurementDescription,
+                    int measure = fms.AddBatch(usr.id.ToString(), m.PlannedStartDate, m.PlannedEndDate, m.MeasurementName, m.MeasurementDescription,
                         m.SerialNumber, m.Quantity, 0, 0);
-                    KIS.App_Sources.FreeTimeMeasurement tm = new KIS.App_Sources.FreeTimeMeasurement(measure);
+                    KIS.App_Sources.FreeTimeMeasurement tm = new KIS.App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), measure);
                     if(tm.id!=-1)
                     {
                         var tasklist = this.MeasurementBatchList.Where(p => p.MeasurementName == tm.Name);
-                        KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(tm.id);
+                        KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), tm.id);
                         foreach(var t in tasklist)
                         {
                             fm.addTask(t.TaskName, t.RealWorkingTime_Hour, t.step, t.isAcyclic,
