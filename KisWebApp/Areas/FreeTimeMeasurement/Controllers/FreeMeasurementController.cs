@@ -377,7 +377,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             if (ViewBag.authW)
             {
                 UserAccount usr = new UserAccount(user) ;
-                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(Session["ActiveWorkspace_Name"].ToString(), MeasurementId, TaskId);
                 // To-do: check that user it not 
                 if(frmTask.TaskId !=-1 && usr.id != -1)
                 {
@@ -437,7 +437,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                     if (fm.AllowCustomTasks)
                     {
                         int TaskId = fm.addTask(TaskName);
-                        FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+                        FreeMeasurement_Task frmTask = new FreeMeasurement_Task(Session["ActiveWorkspace_Name"].ToString(), MeasurementId, TaskId);
 
                         if (frmTask.TaskId != -1 && usr.id != -1)
                         {
@@ -497,7 +497,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
                 if (fm.id != -1 && npTask.ID != -1)
                 {
                     int TaskId = fm.addTask(npTask);
-                    FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+                    FreeMeasurement_Task frmTask = new FreeMeasurement_Task(Session["ActiveWorkspace_Name"].ToString(), MeasurementId, TaskId);
                     if (frmTask.TaskId != -1 && usr.id != -1)
                     {
                         ret = frmTask.Start(usr);
@@ -544,7 +544,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             if (ViewBag.authW)
             {
                 UserAccount usr = new UserAccount(user);
-                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(Session["ActiveWorkspace_Name"].ToString(), MeasurementId, TaskId);
                 if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.id != -1)
                 {
                     ret = frmTask.Pause(usr);
@@ -586,7 +586,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             if (ViewBag.authW)
             {
                 User usr = new App_Code.User(user);
-                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(MeasurementId, TaskId);
+                FreeMeasurement_Task frmTask = new FreeMeasurement_Task(Session["ActiveWorkspace_Name"].ToString(), MeasurementId, TaskId);
                 if (frmTask.TaskId != -1 && frmTask.Status == 'I' && usr.username.Length > 0)
                 {
                     if(ProducedQuantity > 0)
@@ -680,7 +680,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if(ViewBag.authR)
@@ -732,7 +732,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
             if (ViewBag.authW)
             {
-                FreeMeasurement_Task tsk = new FreeMeasurement_Task(MeasurementId, TaskId);
+                FreeMeasurement_Task tsk = new FreeMeasurement_Task(Session["ActiveWorkspace_Name"].ToString(), MeasurementId, TaskId);
                 if(tsk.TaskId!=-1 && tsk.MeasurementId!=-1)
                 {
                     tsk.loadEvents();

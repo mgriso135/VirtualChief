@@ -9,12 +9,49 @@
 {
     if(Model != null)
     {
+        <script>
+            $(document).ready(function () {
+                $("#wslist").on("click", ".btnSwitchWs", function () {
+                    var wsid = $(this).prop("id").split('_');
+                    console.log("Change to " + wsid[1]);
+                    $("#imgLoadScrollView").fadeIn();
+                    $.ajax({
+                        url: "@Url.Action("changeWorkspace", "Account")",
+                        type: 'GET',
+                        data: {
+                            wsid: wsid[1],
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            console.log(result);
+                            if (result == "1") {
+                                window.location.href = window.location.href;
+                            }
+                        },
+                        error: function (result) { $("#imgLoadScrollView").fadeOut(); alert("Error loadScrollTypeView" + result); },
+                        warning: function (result) { $("#imgLoadScrollView").fadeOut(); alert("Warning loadScrollTypeView" + result); },
+                    });
+                });
+            });
+        </script>
         <div class="row-fluid">
             <div class="span12">
-                <ul class="list-group">
+                <ul class="list-group" id="wslist">
                     @foreach (var m in Model)
                     {
-                        <li class="list-group-item"><a href="WorkspaceDetail?id=@m.id">@m.Name</a></li>
+                        if (ViewBag.ActiveWorkspace != m.Name)
+                        {
+                            <li class="list-group-item">
+                                <a href="WorkspaceDetail?id=@m.id">@m.Name</a> -
+                                <span class="material-icons btnSwitchWs" style="cursor:pointer;" id="btnSwitchWs_@m.id">login</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="list-group-item">
+                                <a href="WorkspaceDetail?id=@m.id">@m.Name</a>
+                            </li>
+                        }
                     }
                 </ul>
             </div>

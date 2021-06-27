@@ -363,6 +363,52 @@ namespace KIS.Areas.AccountsMgm.Controllers
 
                 return View();
         }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if change is ok
+         * 2 if session user is null
+         * 3 if workspace not found
+         */
+        [Authorize]
+        public int changeWorkspace(int wsid)
+        {
+            int ret = 0;
+            if(Session["user"]!=null)
+            {
+                Workspace ws = new Workspace(wsid);
+                if (ws.id != -1)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    Session["ActiveWorkspace_Name"] = ws.Name;
+                    Session["ActiveWorkspace_Id"] = ws.id;
+
+                    curr.loadGroups(ws.id);
+                    bool isWsAdmin = false;
+                    try
+                    {
+                        var wsAdm = curr.groups.First(i => i.Nome == "WorkspaceAdmin");
+                        isWsAdmin = true;
+                        Session["IsWorkspaceAdmin"] = "1";
+                    }
+                    catch
+                    {
+                        isWsAdmin = false;
+                        Session["IsWorkspaceAdmin"] = "0";
+                    }
+                    ret = 1;
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
     }
 
 }

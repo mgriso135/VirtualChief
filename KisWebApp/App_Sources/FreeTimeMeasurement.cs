@@ -175,6 +175,7 @@ namespace KIS.App_Sources
         public FreeTimeMeasurement(String Tenant, int id)
         {
             this._id = -1;
+            this.Tenant = Tenant;
             this.Tasks = new List<FreeMeasurement_Task>();
             MySqlConnection conn = (new Dati.Dati()).mycon(Tenant);
             conn.Open();
@@ -270,7 +271,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    FreeMeasurement_Task curr = new FreeMeasurement_Task(this.id, rdr.GetInt32(1));
+                    FreeMeasurement_Task curr = new FreeMeasurement_Task(this.Tenant, this.id, rdr.GetInt32(1));
                     this.Tasks.Add(curr);
                 }
                 rdr.Close();
@@ -1638,8 +1639,9 @@ namespace KIS.App_Sources
 
         public List<FreeMeasurements_Tasks_Event> TaskEvents;
 
-        public FreeMeasurement_Task(int measurementID, int taskID)
+        public FreeMeasurement_Task(String tenant, int measurementID, int taskID)
         {
+            this.Tenant = tenant;
             this._MeasurementId = -1;
             this._TaskId = -1;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -1822,7 +1824,7 @@ namespace KIS.App_Sources
                         // Eventually, change the status of the default no productive task
                         if (PauseDefaultNoProductiveTask)
                         {
-                            FreeMeasurement_Task defTask = new FreeMeasurement_Task(npTaskMeasurentId, npTask);
+                            FreeMeasurement_Task defTask = new FreeMeasurement_Task(this.Tenant, npTaskMeasurentId, npTask);
                             defTask.loadActiveUsers();
                             if (prevMeas.Status == 'F')
                             {
@@ -2121,7 +2123,7 @@ namespace KIS.App_Sources
                     }
                     if (nptask != -1)
                     {
-                        FreeMeasurement_Task npTsk = new FreeMeasurement_Task(this.MeasurementId, nptask);
+                        FreeMeasurement_Task npTsk = new FreeMeasurement_Task(this.Tenant, this.MeasurementId, nptask);
 
                         foreach (var usr in this.Users)
                         {

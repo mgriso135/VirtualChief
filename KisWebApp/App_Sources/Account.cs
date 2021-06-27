@@ -792,7 +792,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
@@ -842,7 +842,7 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
-                    this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
                 }
                 rdr.Close();
                 conn.Close();
