@@ -72,7 +72,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             prmUser[0] = "Workspace Details";
             prmUser[1] = "R";
             elencoPermessi.Add(prmUser);
-            ViewBag.authW = false;
+            ViewBag.authR = false;
             if (Session["user"] != null && id != -1)
             {
                 Workspace ws1 = new Workspace(id);
@@ -80,6 +80,23 @@ namespace KIS.Areas.AccountsMgm.Controllers
                 { 
                     UserAccount curr = (UserAccount)Session["user"];
                     ViewBag.authR = curr.ValidatePermissions(/*Session["ActiveWorkspace_Name"].ToString()*/ws1.Name, elencoPermessi);
+                }
+            }
+
+            // Workspaces UserAccountsGroups
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Workspaces UserAccountsGroups";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authGroupsW = false;
+            if (Session["user"] != null && id != -1)
+            {
+                Workspace ws1 = new Workspace(id);
+                if (ws1.id != -1)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.authGroupsW = curr.ValidatePermissions(/*Session["ActiveWorkspace_Name"].ToString()*/ws1.Name, elencoPermessi);
                 }
             }
 

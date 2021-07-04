@@ -1792,7 +1792,7 @@ namespace KIS.App_Sources
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM groupss ORDER BY nomeGruppo";
+            cmd.CommandText = "SELECT id FROM groupss ORDER BY name";
             MySqlDataReader rdr = cmd.ExecuteReader();
             Elenco = new List<Group>();
             while (rdr.Read())

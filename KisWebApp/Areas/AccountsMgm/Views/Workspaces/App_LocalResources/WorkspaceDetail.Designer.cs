@@ -61,6 +61,15 @@ namespace ResAccountMgm {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choose group.
+        /// </summary>
+        public static string lblChooseGroup {
+            get {
+                return ResourceManager.GetString("lblChooseGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invite a user.
         /// </summary>
         public static string lblInviteUser {
@@ -120,6 +129,15 @@ namespace ResAccountMgm {
         public static string lblUserAccounts {
             get {
                 return ResourceManager.GetString("lblUserAccounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add group.
+        /// </summary>
+        public static string lblUserAccountsTHAddGroup {
+            get {
+                return ResourceManager.GetString("lblUserAccountsTHAddGroup", resourceCulture);
             }
         }
         
