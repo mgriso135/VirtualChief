@@ -848,6 +848,47 @@ namespace KIS.App_Sources
                 conn.Close();
             }
         }
+
+        /* Returns:
+          * 0 if generic error
+          * 1 if delete successfully
+          * 2 if workspace not found or group not found
+          * 3 if error while adding
+          */
+        public int AddWorkspaceGroup(int workspace, int group)
+        {
+            int ret = 0;
+            if (this.id != -1 && workspace >= 0 && group >= 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).VCMainConn();
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "INSERT INTO useraccountsgroups(groupid, workspaceid, userid) VALUES(@group, @ws, @usr)";
+                cmd.Parameters.AddWithValue("@group", group);
+                cmd.Parameters.AddWithValue("@ws", workspace);
+                cmd.Parameters.AddWithValue("@usr", this.id);
+
+                MySqlTransaction tr = conn.BeginTransaction();
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch (Exception ex)
+                {
+                    ret = 3;
+                    tr.Rollback();
+                }
+
+                conn.Close();
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
     }
 
     public class UserAccounts

@@ -196,7 +196,11 @@ namespace KIS.Areas.AccountsMgm.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                Workspace ws = new Workspace(workspace);
+                if(ws.id!=-1)
+                { 
+                    ViewBag.authW = curr.ValidatePermissions(ws.Name, elencoPermessi);
+                }
             }
             if (ViewBag.authW)
             {
@@ -236,12 +240,13 @@ namespace KIS.Areas.AccountsMgm.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                Workspace ws = new Workspace(workspace);
+                ViewBag.authW = curr.ValidatePermissions(ws.Name, elencoPermessi);
             }
             if (ViewBag.authW)
             {
                 UserAccount usr = new UserAccount(userid);
-//                ret = usr.DeleteWorkspaceGroup(workspace, groupid);
+                ret = usr.AddWorkspaceGroup(workspace, groupid);
             }
             return ret;
         }

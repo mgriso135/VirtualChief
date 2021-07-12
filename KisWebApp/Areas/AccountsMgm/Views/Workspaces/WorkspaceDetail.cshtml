@@ -11,7 +11,7 @@
 {
     if (Model != null && Model.id != -1)
     {
-        <script>
+<script>
     $(document).ready(function () {
         console.log($("#txtmail").val());
 
@@ -71,7 +71,7 @@
                     }
                 }
 
-            }); 
+            });
 
                 //$("#frmAddGroup").hide();
                 $("#tblUsers").on("click", ".btnAddGroup", function() {
@@ -91,12 +91,29 @@
                     var grpid = $("#addgroup_groups").val();
                     if (usrid >= 0 && grpid >= 0) {
                         console.log(usrid + " " + grpid);
+                        $.ajax({
+                            url: "@Url.Action("AddUserAccountGroup", "Workspaces")",
+                            type: 'POST',
+                            data: {
+                                workspace: @Model.id.ToString(),
+                                userid: usrid,
+                                groupid: grpid
+                            },
+                            success: function (result) {
+                                    console.log(result);
+                                    if (result == "1") {
+                                        window.location.href = window.location.href;
+                                    }
+                                },
+                            error: function (result) { alert("Error " + result); },
+                            warning: function (result) { alert("Warning " + result); },
+                        });
                     }
                 });
 
 
         });
-        </script>
+</script>
         <div class="row-fluid">
             <div class="span12">
                 <h4>@Model.Name</h4>
