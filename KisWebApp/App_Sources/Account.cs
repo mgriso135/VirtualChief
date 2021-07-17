@@ -1143,7 +1143,7 @@ namespace KIS.App_Sources
                         mMessage.IsBodyHtml = true;
                         mMessage.Body = "<html><body><div>"
                             + ResAccountMgm.Workspace.lblInviteMailBody + " - "
-                            + "<a href='http://www.virtual-chief.com/AccountsMgm/Workspaces/ViewInvites'>" + this.Name + "</a>"
+                            + "<a href='http://www.virtual-chief.com/AccountsMgm/Accounts/ViewInvites'>" + this.Name + "</a>"
                             + "</div></body></html>";
 
                         SmtpClient smtpcli = new SmtpClient();

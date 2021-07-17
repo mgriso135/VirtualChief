@@ -1,6 +1,4 @@
-﻿@model string
-
-@{
+﻿@{
     Layout = null;
 }
 
@@ -22,11 +20,11 @@
         @ObjectInfo.Print(User.Identity)
 
     </div>
-    @if (Model != null && Model.Length > 0)
+    @if (ViewBag.redirectUrl != null)
     {
-        <div>@Model AAAAAAAAAAAAAA</div>
+        <div>@Model</div>
         <script>
-        window.document.location = "@Model";
+         window.location.href = "@ViewBag.redirectUrl";
         </script>
     }
     else

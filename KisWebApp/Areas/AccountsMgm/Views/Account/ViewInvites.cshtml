@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<KIS.App_Sources.WorkspaceInvite>
 @{
-    ViewBag.Title = ResAccountMgm.ViewInvites.lblTitle;
+    ViewBag.Title =  ResAccountsMgm.ViewInvites.lblTitle;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h3>@ResAccountMgm.ViewInvites.lblTitle</h3>
+<h3>@ResAccountsMgm.ViewInvites.lblTitle</h3>
 
 @if(ViewBag.authW && Model!=null)
 {
@@ -62,7 +62,7 @@
     {
         <div class="row-fluid">
             <div class="span12">
-                @ResAccountMgm.ViewInvites.lblNoPendingInvites
+                @ResAccountsMgm.ViewInvites.lblNoPendingInvites
             </div>
         </div>
     }
@@ -71,7 +71,7 @@ else
 {
 <div class="row-fluid">
     <div class="span12">
-        @ResAccountMgm.ViewInvites.lblErrorAuth
+        @ResAccountsMgm.ViewInvites.lblErrorAuth
     </div>
 </div>    
 }

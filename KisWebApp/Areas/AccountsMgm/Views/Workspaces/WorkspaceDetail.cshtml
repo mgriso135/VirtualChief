@@ -41,6 +41,7 @@
         });
 
         $("#tblUsers").on("click", ".btnDeleteGroup", function () {
+            var currEl = $(this);
                 var id = $(this).prop("id");
                 console.log("Delete group " + id);
                 var aid = id.split('_');
@@ -61,7 +62,8 @@
                             success: function (result) {
                                     console.log(result);
                                     if (result == "1") {
-                                    $("#dvUserGroup_" + usrId + ";" + groupId).remove();
+                                        // currEl.remove();
+                                        window.location.href = window.location.href;
                                     }
                                 },
                             error: function (result) { alert("Error " + result); },

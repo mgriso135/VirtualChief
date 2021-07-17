@@ -112,12 +112,12 @@ namespace KIS.Areas.AccountsMgm.Controllers
                     {
                         ViewBag.log += "Redirecting1...";
                         // Then go to add a new workspace
-                        redirectUrl = "AddWorkspaceForm";
+                        ViewBag.redirectUrl = "AddWorkspaceForm";
                     }
                     else
                     {
                         // Please, verify e-mail...
-                        redirectUrl = "VerifyEmail";
+                        ViewBag.redirectUrl = "VerifyEmail";
                     }
                 }
                 else
@@ -155,7 +155,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
                             Session["ActiveWorkspace_Name"] = curr.DefaultWorkspace.Name;
                             Session["ActiveWorkspace_Id"] = curr.DefaultWorkspace.id;
                             Session["User"] = curr;
-                            redirectUrl = "~/HomePage/Default.aspx";
+                            ViewBag.redirectUrl = "/HomePage/Default.aspx";
                         }
                         else if (curr.workspaces.Count > 0)
                         {
@@ -176,30 +176,30 @@ namespace KIS.Areas.AccountsMgm.Controllers
                                 isWsAdmin = false;
                                 Session["IsWorkspaceAdmin"] = "0";
                             }
-                            redirectUrl = "~/HomePage/Default.aspx";
+                            ViewBag.redirectUrl = "/HomePage/Default.aspx";
                         }
                         else
                         {
                             Session["User"] = curr;
-                            redirectUrl = "AddWorkspaceForm";
+                            ViewBag.redirectUrl = "AddWorkspaceForm";
                         }
                     }
                     else
                     {
                         // Go to home
                         Session["User"] = curr;
-                        redirectUrl = "AddWorkspaceForm";
+                        ViewBag.redirectUrl = "AddWorkspaceForm";
                     }
                 }
                 else
                 {
                     Session["User"] = curr;
-                    redirectUrl = "VerifyEmail";
+                    ViewBag.redirectUrl = "VerifyEmail";
                     ViewBag.log = redirectUrl;
                 }
             }
             ViewBag.log = redirectUrl;
-            return View(redirectUrl);
+            return View();
         }
 
         [Authorize]
@@ -287,16 +287,18 @@ namespace KIS.Areas.AccountsMgm.Controllers
         [Authorize]
         public ActionResult ViewInvites()
         {
+            UserAccount curr = null;
+
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                UserAccount curr = (UserAccount)Session["user"];
-                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+                curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/AccountsMgm/Account/ViewInvites", "", ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/AccountsMgm/Account/ViewInvites", "", ipAddr);
             }
 
             int ret = 0;
@@ -306,16 +308,17 @@ namespace KIS.Areas.AccountsMgm.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
+            
             if (Session["user"] != null)
             {
-                UserAccount curr = (UserAccount)Session["user"];
+                curr = (UserAccount)Session["user"];
                 ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.authW = true;
             ViewBag.userid = -1;
-            if (ViewBag.authW)
+            if (curr!=null && ViewBag.authW)
             {
-                UserAccount curr = (UserAccount)Session["user"];
+                curr = (UserAccount)Session["user"];
                 ViewBag.userid = curr.id;
                 curr.loadWorkspaceInvites();
                 return View(curr.WorkspaceInvites);

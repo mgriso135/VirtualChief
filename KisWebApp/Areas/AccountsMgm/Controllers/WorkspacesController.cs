@@ -20,11 +20,11 @@ namespace KIS.Areas.AccountsMgm.Controllers
             if (Session["user"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workspaces/Workspaces/ListWorkspaces", "", ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ViewInvites", "", ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Workspaces/Workspaces/ListWorkspaces", "", ipAddr);
             }
 
             int ret = 0;
@@ -37,7 +37,10 @@ namespace KIS.Areas.AccountsMgm.Controllers
             if (Session["User"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                if(curr!=null)
+                { 
+                    ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                }
             }
 
             if (ViewBag.authR)
