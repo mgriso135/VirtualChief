@@ -25,7 +25,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
-                this.TaskList.Add(new NoProductiveTask(rdr.GetInt32(0)));
+                this.TaskList.Add(new NoProductiveTask(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -96,7 +96,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.TaskList.Add(new NoProductiveTask(rdr.GetInt32(0)));
+                this.TaskList.Add(new NoProductiveTask(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -112,7 +112,7 @@ namespace KIS.App_Sources
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
-                this.TaskList.Add(new NoProductiveTask(rdr.GetInt32(0)));
+                this.TaskList.Add(new NoProductiveTask(this.Tenant, rdr.GetInt32(0)));
             }
             rdr.Close();
             conn.Close();
@@ -285,8 +285,9 @@ namespace KIS.App_Sources
             }
         }
 
-        public NoProductiveTask(int id)
+        public NoProductiveTask(String tenant, int id)
         {
+            this.Tenant = tenant;
             this._ID = -1;
             this._Name = "";
             this._Description = "";

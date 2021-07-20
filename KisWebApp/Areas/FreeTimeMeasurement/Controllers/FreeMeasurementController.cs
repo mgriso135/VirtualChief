@@ -274,7 +274,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Id"] != null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
@@ -282,11 +282,13 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
 
             ViewBag.DepartmentName = "";
             ViewBag.DepartmentId = -1;
+            ViewBag.WorkspaceId = -1;
             if (ViewBag.authW)
             {
                 Reparto dept = new Reparto(Session["ActiveWorkspace_Name"].ToString(), DepartmentId);
                 if(dept.id!=-1)
-                { 
+                {
+                    ViewBag.WorkspaceId = Int32.Parse(Session["ActiveWorkspace_Id"].ToString());
                     ViewBag.DepartmentId = DepartmentId;
                     ViewBag.DepartmentName = dept.name;
                 }
@@ -483,7 +485,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             prmUser[1] = "W";
             elencoPermessi.Add(prmUser);
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] !=null)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
@@ -493,7 +495,7 @@ namespace KIS.Areas.FreeTimeMeasurement.Controllers
             {
                 UserAccount usr = new UserAccount(user);
                 KIS.App_Sources.FreeTimeMeasurement fm = new KIS.App_Sources.FreeTimeMeasurement(Session["ActiveWorkspace_Name"].ToString(), MeasurementId);
-                NoProductiveTask npTask = new NoProductiveTask(NpTaskId);
+                NoProductiveTask npTask = new NoProductiveTask(Session["ActiveWorkspace_Name"].ToString(), NpTaskId);
                 if (fm.id != -1 && npTask.ID != -1)
                 {
                     int TaskId = fm.addTask(npTask);

@@ -13,7 +13,8 @@ namespace KIS.Processi
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (!String.IsNullOrEmpty(Request.QueryString["id"]) && !String.IsNullOrEmpty(Request.QueryString["act"]) && !String.IsNullOrEmpty(Request.QueryString["variante"]))
+            if (!String.IsNullOrEmpty(Request.QueryString["id"]) && !String.IsNullOrEmpty(Request.QueryString["act"]) && !String.IsNullOrEmpty(Request.QueryString["variante"])
+                && Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
                 int varID = Int32.Parse(Request.QueryString["variante"]);
                 // Action: update position

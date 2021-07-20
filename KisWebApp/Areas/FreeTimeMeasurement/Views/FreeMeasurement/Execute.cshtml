@@ -6,7 +6,7 @@
 
 @if (ViewBag.authW)
 {
-    if (ViewBag.DepartmentId != -1)
+    if (ViewBag.DepartmentId != -1 && ViewBag.WorkspaceId!=-1)
     {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jinq/1.6.1/jinqjs.js" integrity="sha512-uui/aXrsWdhhxCo039xxseWZN5yLYjMJMQc8azPYAYOFmB5BtHy/jRWy2SEkFq6IYeSrQBIqfLIhX5cRdRG68w==" crossorigin="anonymous"></script>
         <script>
@@ -626,10 +626,10 @@
                 <select id="ddlOperator" class="form-control">
                     <option></option>
                     @{
-                        KIS.App_Code.Group opsGrp = new KIS.App_Code.Group("Operatori");
+                        KIS.App_Sources.Group opsGrp = new KIS.App_Sources.Group("Operatori");
                         if (opsGrp.ID != -1)
                         {
-                            opsGrp.loadUtenti();
+                            opsGrp.loadUtenti(ViewBag.WorkspaceId);
                             foreach (var u in opsGrp.Utenti)
                             {
                                 <option value="@u">@u</option>
@@ -685,7 +685,7 @@
                             <select id="ddlNoProductiveTasks" style="width: 100%" class="form-control">
                                 <option value=""></option>
                                 @{
-                                    KIS.App_Sources.NoProductiveTasks npList = new KIS.App_Sources.NoProductiveTasks();
+                                    KIS.App_Sources.NoProductiveTasks npList = new KIS.App_Sources.NoProductiveTasks(Session["ActiveWorkspace_Name"].ToString());
                                     foreach (var m in npList.TaskList)
                                     {
                                         <option value="@m.ID">@m.Name</option>

@@ -1602,7 +1602,7 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT user FROM useraccountsgroups WHERE groupID = @ID AND workspaceid=@workspaceid";
+                cmd.CommandText = "SELECT userid FROM useraccountsgroups WHERE groupID = @ID AND workspaceid=@workspaceid";
                 cmd.Parameters.AddWithValue("@ID", this.ID);
                 cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
                 MySqlDataReader rdr = cmd.ExecuteReader();
