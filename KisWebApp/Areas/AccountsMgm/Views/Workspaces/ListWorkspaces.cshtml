@@ -9,7 +9,7 @@
 {
     if(Model != null)
     {
-        <script>
+<script>
             $(document).ready(function () {
                 $("#wslist").on("click", ".btnSwitchWs", function () {
                     var wsid = $(this).prop("id").split('_');
@@ -32,8 +32,26 @@
                         warning: function (result) { $("#imgLoadScrollView").fadeOut(); alert("Warning loadScrollTypeView" + result); },
                     });
                 });
+
+                function loadAddWorkspaceForm() {
+                    $.ajax({
+                        url: "@Url.Action("AddWorkspaceForm", "Account")",
+                        type: 'POST',
+                        data: {
+                        },
+                        dataType: 'html',
+                        success: function (result) {
+                            console.log(result);
+                            $("#dvWsForm").html(result);
+                        },
+                        error: function (result) { console.log("Error loadAddWorkspaceForm" + result); },
+                        warning: function (result) { console.log("Warning loadAddWorkspaceForm" + result); },
+                    });
+                }
+
+                loadAddWorkspaceForm();
             });
-        </script>
+</script>
         <div class="row-fluid">
             <div class="span12">
                 <ul class="list-group" id="wslist">
@@ -54,6 +72,11 @@
                         }
                     }
                 </ul>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div id="dvWsForm"></div>
             </div>
         </div>
     }
