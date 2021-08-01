@@ -139,7 +139,7 @@
     <value>Huso horario</value>
   </data>
   <data name="lblTitleCfgKIS" xml:space="preserve">
-    <value>Estado de la configuración de Virtual Chief</value>
+    <value>Estado de la configuración</value>
   </data>
   <data name="lblTTCfgKo" xml:space="preserve">
     <value>Atención: completar la configuración!</value>

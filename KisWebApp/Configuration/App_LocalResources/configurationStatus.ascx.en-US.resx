@@ -139,7 +139,7 @@
     <value>Time Zone</value>
   </data>
   <data name="lblTitleCfgKIS" xml:space="preserve">
-    <value>Configuration status of Kaizen Indicator System</value>
+    <value>Configuration status</value>
   </data>
   <data name="lblTTCfgKo" xml:space="preserve">
     <value>Warning: complete the configuration!</value>

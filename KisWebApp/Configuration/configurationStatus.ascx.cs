@@ -15,6 +15,8 @@ namespace KIS.Configuration
         {
             if(Session["ActiveWorkspace_Id"]!=null && Session["IsWorkspaceAdmin"]!=null && Session["IsWorkspaceAdmin"].ToString() == "1")
             {
+                lblTitleCfgKIS.Text += " - " + Session["ActiveWorkspace_Name"].ToString();
+
                 Workspace ws = new Workspace(Int32.Parse(Session["ActiveWorkspace_Id"].ToString())); ;
                 KISConfig kisCfg = new KISConfig(ws.Name);
 

@@ -88,7 +88,7 @@ namespace KIS.Clienti
                         Server.HtmlEncode(txtIndirizzo.Text), Server.HtmlEncode(txtCitta.Text),
                         Server.HtmlEncode(txtProvincia.Text), Server.HtmlEncode(txtCAP.Text),
                         Server.HtmlEncode(txtStato.Text), Server.HtmlEncode(txtTelefono.Text),
-                        Server.HtmlEncode(txtEmail.Text), kanban);
+                        Server.HtmlEncode(txtEmail.Text), kanban, true, true);
                     if (rt == true)
                     {
                         Response.Redirect("Clienti.aspx");

@@ -156,7 +156,7 @@
                             Provider: <input list="providers" name="txtProvider" id="txtProvider" type="text" />
                             <datalist id="providers">
                                 @{
-                                    KIS.App_Code.Providers provs = new KIS.App_Code.Providers();
+                                    KIS.App_Code.Providers provs = new KIS.App_Code.Providers(Session["ActiveWorkspace_Name"].ToString());
                                     foreach (var prov in provs.List)
                                     {
                                         <option id="@prov.ID" value="@Server.HtmlDecode(prov.RagioneSociale)" />
@@ -167,7 +167,7 @@
                             Departments: <input list="departments" name="txtDepartment" id="txtDepartment" type="text" />
                             <datalist id="departments">
                                 @{
-                                    KIS.App_Code.ElencoReparti depts = new KIS.App_Code.ElencoReparti();
+                                    KIS.App_Code.ElencoReparti depts = new KIS.App_Code.ElencoReparti(Session["ActiveWorkspace_Name"].ToString());
                                     foreach (var dept in depts.elenco)
                                     {
                                         <option id="@dept.id" value="@Server.HtmlDecode(dept.name)" />

@@ -56,7 +56,7 @@ namespace KIS.Controllers
                     if(!customerExists)
                     {
                         PortafoglioClienti pcli = new PortafoglioClienti(tenant);
-                        customerExists = pcli.Add(customer, customerName, vatNumber, codFiscale, address, city, province, zipcode, country, phone, email, false);
+                        customerExists = pcli.Add(customer, customerName, vatNumber, codFiscale, address, city, province, zipcode, country, phone, email, false, true, true);
                     }
 
                     if(!customerExists)

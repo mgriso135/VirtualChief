@@ -840,7 +840,7 @@ namespace KIS.App_Code
             conn.Close();
         }
 
-        public bool Add(String codice, String ragSoc, String pIva, String codFiscale, String indirizzo, String citta, String provincia, String CAP, String stato, String telefono, String email, Boolean kanban)
+        public bool Add(String codice, String ragSoc, String pIva, String codFiscale, String indirizzo, String citta, String provincia, String CAP, String stato, String telefono, String email, Boolean kanban, Boolean provider, Boolean customer)
         {
             bool rt = false;
             bool validatePIvacFisc = false;
@@ -872,13 +872,17 @@ namespace KIS.App_Code
 
             if (validateCodice == true && validatePIvacFisc == true && validateRagSociale == true && validateEmail == true)
             {
+                String strProvider = "false";
+                String strCustomer = "false";
+                strProvider = provider ? "true" : "false";
+                strCustomer = customer ? "true" : "false";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO anagraficaclienti(codice, ragsociale, partitaiva, codfiscale, indirizzo, "
-                + "citta, provincia, CAP, stato, telefono, email, kanbanManaged) VALUES("
+                + "citta, provincia, CAP, stato, telefono, email, kanbanManaged, customer, provider) VALUES("
                     + "'" + codice + "', "
                     + "'" + ragSoc + "', ";
                 cmd.CommandText += (pIva.Length > 0 ? "'" + pIva + "', " : "null, ");
@@ -890,7 +894,9 @@ namespace KIS.App_Code
                     + "'" + stato + "', "
                     + "'" + telefono + "', ";
                 cmd.CommandText += (strMail.Length > 0 ? "'" + email + "', " : "null, ");
-                cmd.CommandText += kanban.ToString()
+                cmd.CommandText += kanban.ToString() + ", "
+                    + strCustomer + ", "
+                    + strProvider
                     + ")";
                 try
                 {

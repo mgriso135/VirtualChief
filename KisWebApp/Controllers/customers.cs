@@ -113,7 +113,9 @@ namespace KIS.Controllers
                 value.Stato,
                 value.Telefono,
                 value.Email,
-                false);
+                false,
+                true,
+                true);
             string uri;
             if (ret == true)
             {
