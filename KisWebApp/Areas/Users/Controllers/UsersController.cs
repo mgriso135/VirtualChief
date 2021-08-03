@@ -447,7 +447,7 @@ namespace KIS.Areas.Users.Controllers
          * 1 if all is ok
          * 2 if user is not allowed
          */
-        [Authorize]
+        /*[Authorize]
         public int DisableUser(String user)
         {
             // Register user action
@@ -497,9 +497,9 @@ namespace KIS.Areas.Users.Controllers
             }
                 
             return ret;
-        }
+        }*/
 
-        [Authorize]
+        /*[Authorize]
         public ActionResult DisabledUsers()
         {
             // Register user action
@@ -546,14 +546,14 @@ namespace KIS.Areas.Users.Controllers
                 return View(lstDisabledUsers.UserList);
             }
                 return View();
-        }
+        }*/
 
         /* Returns:
   * 0 if generic error
   * 1 if all is ok
   * 2 if user is not allowed
   */
-        [Authorize]
+       /* [Authorize]
         public int ReenableUser(String user)
         {
             // Register user action
@@ -603,6 +603,6 @@ namespace KIS.Areas.Users.Controllers
             }
 
             return ret;
-        }
+        }*/
     }
 }

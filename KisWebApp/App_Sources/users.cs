@@ -3529,7 +3529,7 @@ namespace KIS.App_Code
     
 
 
-
+    /*
     public class DisabledUser
     {
         protected String Tenant;
@@ -3614,8 +3614,8 @@ namespace KIS.App_Code
             rdr1.Close();
             conn.Close();
         }
-    }
-
+    }*/
+    /*
     public class DisabledUsers
     {
         protected String Tenant;
@@ -3637,5 +3637,5 @@ namespace KIS.App_Code
             rdr.Close();
             conn.Close();
         }
-    }
+    }*/
 }

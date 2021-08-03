@@ -806,6 +806,7 @@
     <Compile Include="App_Sources\FilesViewModel.cs" />
     <Compile Include="App_Sources\FreeTimeMeasurement.cs" />
     <Compile Include="App_Sources\ImageHandler.cs" />
+    <Compile Include="App_Sources\inputpoints.cs" />
     <Compile Include="App_Sources\iTextSharpEventHandler.cs" />
     <Compile Include="App_Sources\KanbanBox.cs" />
     <Compile Include="App_Sources\NoProductiveTasks.cs" />
@@ -6359,7 +6360,7 @@
     <Content Include="Areas\Workplace\Views\WebGemba\ListUserTasks.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\ShowManageOperators.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\ListTasksDefOperators.cshtml" />
-    <Content Include="Areas\Users\Views\Users\DisabledUsers.cshtml" />
+    <Content Include="Areas\Users\Views\Users\Old_DisabledUsers.cshtml" />
     <Content Include="Areas\SalesOrders\Views\SalesOrder\RescheduleTasksManually.cshtml" />
     <Content Include="Areas\Workplace\Views\WebGemba\TaskOperatorNotesPanel.cshtml" />
     <Content Include="Areas\Production\Views\web.config" />
