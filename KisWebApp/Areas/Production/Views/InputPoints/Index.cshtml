@@ -1,0 +1,124 @@
+﻿@model IEnumerable<KIS.App_Sources.InputPoint>
+@{
+    ViewBag.Title = ResInputPoints.Index.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResInputPoints.Index.lblTitle</h3>
+
+@if (Model != null && (ViewBag.authR || ViewBag.authW))
+{
+    if (ViewBag.authW)
+    {
+<script>
+            $(document).ready(function () {
+                $("#frmAddIP").hide();
+
+                $("#btnAddIP").click(function () {
+                    if ($("#frmAddIP").is(":visible")) {
+                        $("#frmAddIP").hide();
+                    }
+                    else {
+                        $("#frmAddIP").show();
+                    }
+                });
+
+                $("#btnSaveNewIP").click(function () {
+                    var name = $("#NewIP_Name").val();
+                    var description = $("#NewIP_Description").val();
+                    if (name.length > 0) {
+                        $.ajax({
+                            url: "@Url.Action("AddInputPoint", "InputPoints")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                name: name,
+                                description: description
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                if (result >= 0) {
+                                    window.location.href = window.location.href;
+                                }
+                                else {
+                                    alert("En error occured");
+                                }
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                    }
+                });
+            });
+</script>
+        <div class="row-fluid">
+            <div class="span12" id="btnAddIP" style="cursor:pointer">
+                <span class="material-icons">new_label</span>@ResInputPoints.Index.lblAddNewInputPoint
+            </div>
+        </div>
+        <div class="row-fluid" id="frmAddIP">
+            <div class="span12">
+                <h4>@ResInputPoints.Index.lblAddNewInputPoint</h4>
+                <table class="table">
+                    <tr>
+                        <td>@ResInputPoints.Index.lblNewIPName</td>
+                        <td><input type="text" id="NewIP_Name" /></td>
+                    </tr>
+                    <tr>
+                        <td>@ResInputPoints.Index.lblNewIPDescription</td>
+                        <td><input type="text" id="NewIP_Description" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="material-icons" id="btnSaveNewIP" style="cursor:pointer;">save</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            </div>
+    }
+    else
+    {
+        <div>NO W</div>
+    }
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>@ResInputPoints.Index.lblNewIPName</th>
+                                <th>@ResInputPoints.Index.lblNewIPDescription</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="InputPointDetail?id=@m.id">
+                                            <span class="material-icons" style="cursor:pointer">mode_edit</span>
+                                        </a>
+                                    </td>
+                                    <td>@m.name</td>
+                                    <td>@m.description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            }
+            else
+            {
+            <div class="row-fluid">
+                <div class="span12">
+                    @ResInputPoints.Index.lblNotAuthorized
+                </div>
+            </div>
+            }

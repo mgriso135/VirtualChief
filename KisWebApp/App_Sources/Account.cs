@@ -2137,9 +2137,9 @@ namespace KIS.App_Sources
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
-                    this._R = rdr.GetBoolean(0);
-                    this._W = rdr.GetBoolean(1);
-                    this._X = rdr.GetBoolean(2);
+                    this._R = rdr.IsDBNull(0) ? false : rdr.GetBoolean(0);
+                    this._W = rdr.IsDBNull(1) ? false : rdr.GetBoolean(1);
+                    this._X = rdr.IsDBNull(2) ? false : rdr.GetBoolean(2);
                 }
                 else
                 {

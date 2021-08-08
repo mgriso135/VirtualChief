@@ -1475,9 +1475,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>EditDestinationURL.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Production\Controllers\InputPointsController.cs" />
     <Compile Include="Areas\Production\Controllers\ProductDetailController.cs" />
     <Compile Include="Areas\Production\Controllers\ProductionScheduleController.cs" />
     <Compile Include="Areas\Production\ProductionAreaRegistration.cs" />
+    <Compile Include="Areas\Production\Views\InputPoints\App_LocalResources\Index.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Index.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Production\Views\InputPoints\App_LocalResources\InputPointDetail.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InputPointDetail.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -6425,6 +6436,8 @@
     <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\Index.cshtml" />
     <Content Include="Areas\FreeTimeMeasurement\Views\FreeMeasurement\ViewMeasurementDetails.cshtml" />
     <Content Include="Areas\FreeTimeMeasurement\Views\web.config" />
+    <Content Include="Areas\Production\Views\InputPoints\Index.cshtml" />
+    <Content Include="Areas\Production\Views\InputPoints\InputPointDetail.cshtml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
     <Content Include="Scripts\jquery-3.6.0.min.js" />
@@ -7369,6 +7382,16 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EditDestinationURL.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResPersonalArea</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\InputPoints\App_LocalResources\InputPointDetail.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>InputPointDetail.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResInputPoints</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Production\Views\InputPoints\App_LocalResources\Index.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Index.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResInputPoints</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Production\Views\ProductDetails\App_LocalResources\Index.it.resx">
       <CustomToolNamespace>ResProductDetails</CustomToolNamespace>

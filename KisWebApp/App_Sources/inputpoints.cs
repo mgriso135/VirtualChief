@@ -31,6 +31,7 @@ namespace KIS.App_Sources
             if (this.Tenant.Length > 0)
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT id FROM inputpoints";
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -81,7 +82,10 @@ namespace KIS.App_Sources
                 {
                     cmd.CommandText = "SELECT LAST_INSERT_ID()";
                     MySqlDataReader rdr = cmd.ExecuteReader();
-                    ret = rdr.GetInt32(0);
+                    if(rdr.Read())
+                    { 
+                        ret = rdr.GetInt32(0);
+                    }
                     rdr.Close();
                 }
                 conn.Close();
@@ -136,15 +140,60 @@ namespace KIS.App_Sources
                 if(rdr.Read())
                 {
                     this._id = rdr.GetInt32(0);
-                    this._name = rdr.GetString(1);
-                    this._description = rdr.GetString(2);
-                    this._CreationDate = rdr.GetDateTime(3);
-                    this._CreatorId = rdr.GetInt32(4);
-                    this._notes = rdr.GetString(5);
+                    this._name = rdr.IsDBNull(1) ? "" : rdr.GetString(1);
+                    this._description = rdr.IsDBNull(2) ? "" : rdr.GetString(2);
+                    this._CreationDate = rdr.IsDBNull(3) ? new DateTime(1970,1,1) : rdr.GetDateTime(3);
+                    this._CreatorId = rdr.IsDBNull(4) ? -1 : rdr.GetInt32(4);
+                    this._notes = rdr.IsDBNull(5) ? "" : rdr.GetString(5);
                 }
                 rdr.Close();
                 conn.Close();
             }
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 2 if id not valid or tenant not defined
+         * 3 if there are workstations or departments linked
+         */
+        public int delete()
+        {
+            int ret = 0;
+            if(this.id>=0 && this.Tenant.Length > 0)
+            {
+                this.loadDepartments();
+                this.loadWorkstations();
+                if(this.departments.Count == 0 && this.workstations.Count == 0)
+                {
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "DELETE FROm inputpoints WHERE id=@id";
+                    cmd.Parameters.AddWithValue("@id", this.id);
+                    MySqlTransaction tr = conn.BeginTransaction();
+                    cmd.Transaction = tr;
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        tr.Commit();
+                    }
+                    catch(Exception ex)
+                    {
+                        this.log = ex.Message;
+                        tr.Rollback();
+                    }
+                    conn.Close();
+                }
+                else
+                {
+                    ret = 3;
+                }
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
         }
 
         public void loadDepartments()
@@ -389,6 +438,44 @@ namespace KIS.App_Sources
             }
         }
 
+        /* Returns:
+         * 0 if generic error
+         * 1 if InputPointDepartment delete successfully
+         * 2 if tenant, department or input point not set
+         * 3 if error while deleting
+         */
+        public int delete()
+        {
+            int ret = 0;
+            if(this.Tenant.Length >0 && this.departmentId>=0 && this.inputpointId >=0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM inputpoints_departments WHERE inputpointid=@ipid AND departmentid=@deptid";
+                cmd.Parameters.AddWithValue("@ipid", this.inputpointId);
+                cmd.Parameters.AddWithValue("@deptid", this.departmentId);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch(Exception ex)
+                {
+                    ret = 3;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
+        }
     }
 
     public class InputPointWorkstation
@@ -460,6 +547,45 @@ namespace KIS.App_Sources
                 rdr.Close();
                 conn.Close();
             }
+        }
+
+        /* Returns:
+         * 0 if generic error
+         * 1 if InputPointDepartment delete successfully
+         * 2 if tenant, department or input point not set
+         * 3 if error while deleting
+         */
+        public int delete()
+        {
+            int ret = 0;
+            if (this.Tenant.Length > 0 && this.workstationId >= 0 && this.inputpointId >= 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "DELETE FROM inputpoints_workstations WHERE inputpointid=@ipid AND workstationid=@wstid";
+                cmd.Parameters.AddWithValue("@ipid", this.inputpointId);
+                cmd.Parameters.AddWithValue("@wsttid", this.workstationId);
+                MySqlTransaction tr = conn.BeginTransaction();
+                cmd.Transaction = tr;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    tr.Commit();
+                    ret = 1;
+                }
+                catch (Exception ex)
+                {
+                    ret = 3;
+                    tr.Rollback();
+                }
+                conn.Close();
+            }
+            else
+            {
+                ret = 2;
+            }
+            return ret;
         }
     }
 }

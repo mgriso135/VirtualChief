@@ -1,0 +1,59 @@
+﻿@model KIS.App_Sources.InputPoint
+
+@{
+    ViewBag.Title = ResInputPoints.InputPointDetail.lblTitle;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3>@ResInputPoints.InputPointDetail.lblTitle</h3>
+@if (Model != null && ViewBag.authR)
+{
+    if (ViewBag.authW)
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table">
+                    <tr>
+                        <td>@ResInputPoints.InputPointDetail.lblIPName</td>
+                        <td><input type="text" id="IPName" value="@Model.name" /></td>
+                    </tr>
+                    <tr>
+                        <td>@ResInputPoints.InputPointDetail.lblIPDescription</td>
+                        <td><textarea id="IPDescription">@Model.description</textarea></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <span class="material-icons" id="btnSaveIP" style="cursor:pointer;">save</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row-fluid">
+            <div class="span12">
+                <table class="table">
+                    <tr>
+                        <td>@ResInputPoints.InputPointDetail.lblIPName</td>
+                        <td>@Model.name</td>
+                    </tr>
+                    <tr>
+                        <td>@ResInputPoints.InputPointDetail.lblIPDescription</td>
+                        <td>@Model.description</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="row-fluid">
+        <div class="span12">
+            @ResInputPoints.InputPointDetail.lblNotAuthorized
+        </div>
+    </div>
+}
+
