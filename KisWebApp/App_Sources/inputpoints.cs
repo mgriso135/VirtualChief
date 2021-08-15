@@ -108,10 +108,59 @@ namespace KIS.App_Sources
         public int id { get { return this._id; } }
 
         private String _name;
-        public String name { get { return this._name; } }
+        public String name { get { return this._name; } 
+            set
+            {
+                if(this.id>-1 && this.Tenant.Length > 0)
+                {
+                    String name = value.Length >= 255 ? value.Substring(0, 255) : value;
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "UPDATE inputpoints SET name=@name WHERE id=@id";
+                    cmd.Parameters.AddWithValue("@name", name);
+                    cmd.Parameters.AddWithValue("@id", this.id);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        this._name = name;
+                    }
+                    catch(Exception ex)
+                    {
+                        this.log = ex.Message;
+                    }
+                    conn.Close();
+                }
+            }
+        }
 
         private String _description;
-        public String description { get { return this._description; } }
+        public String description { 
+            get { return this._description; }
+            set
+            {
+                if (this.id > -1 && this.Tenant.Length > 0)
+                {
+                    String description = value.Length >= 255 ? value.Substring(0, 255) : value;
+                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                    conn.Open();
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "UPDATE inputpoints SET description=@description WHERE id=@id";
+                    cmd.Parameters.AddWithValue("@description", description);
+                    cmd.Parameters.AddWithValue("@id", this.id);
+                    try
+                    {
+                        cmd.ExecuteNonQuery();
+                        this._description = description;
+                    }
+                    catch (Exception ex)
+                    {
+                        this.log = ex.Message;
+                    }
+                    conn.Close();
+                }
+            }
+        }
 
         private DateTime _CreationDate;
         public DateTime CreationDate { get { return this._CreationDate; } }
@@ -228,7 +277,7 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT departmentid, creationdate FROM inputpoints_workstations WHERE inputpointId=@inputpointid";
+                cmd.CommandText = "SELECT workstationid, creationdate FROM inputpoints_workstations WHERE inputpointId=@inputpointid";
                 cmd.Parameters.AddWithValue("@inputpointid", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -260,7 +309,7 @@ namespace KIS.App_Sources
                 bool found = false;
                 try
                 { 
-                    var currdept = this.departments.FirstOrDefault(x => x.departmentId == dept.id);
+                    var currdept = this.departments.First(x => x.departmentId == dept.id);
                     found = true;
                 }
                 catch(Exception ex)
@@ -275,13 +324,14 @@ namespace KIS.App_Sources
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO inputpoints_departments(inputpointid, departmentid) VALES(@ipid, @deptid)";
+                    cmd.CommandText = "INSERT INTO inputpoints_departments(inputpointid, departmentid) VALUES(@ipid, @deptid)";
                     cmd.Parameters.AddWithValue("@ipid", this.id);
                     cmd.Parameters.AddWithValue("@deptid", dept.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
                         tr.Commit();
+                        ret = 1;
                     }
                     catch(Exception ex)
                     {
@@ -422,16 +472,16 @@ namespace KIS.App_Sources
                 if (rdr.Read())
                 {
                     this._inputpointId = rdr.GetInt32(0);
-                    this._inputpointName = rdr.GetString(1);
-                    this._departmentDescription = rdr.GetString(2);
-                    this._inputpointCreationDate = rdr.GetDateTime(3);
+                    this._inputpointName = rdr.IsDBNull(1) ? "" : rdr.GetString(1);
+                    this._departmentDescription = rdr.IsDBNull(2) ?"": rdr.GetString(2);
+                    this._inputpointCreationDate = rdr.IsDBNull(3) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(3);
                     this._inputpointCreatorId = rdr.GetInt32(4);
-                    this._inputpointNotes = rdr.GetString(5);
+                    this._inputpointNotes = rdr.IsDBNull(5) ? "" : rdr.GetString(5);
                     // linkCreationDate 6
                     this._departmentId = rdr.GetInt32(7);
                     this._departmentName = rdr.GetString(8);
-                    this._departmentDescription = rdr.GetString(9);
-                    this._departmentTimezone = rdr.GetString(10);
+                    this._departmentDescription = rdr.IsDBNull(9) ? "" : rdr.GetString(9);
+                    this._departmentTimezone = rdr.IsDBNull(10) ? "" : rdr.GetString(10);
                 }
                 rdr.Close();
                 conn.Close();

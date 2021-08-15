@@ -312,7 +312,7 @@ namespace KIS.Areas.AccountsMgm.Controllers
             if (Session["user"] != null)
             {
                 curr = (UserAccount)Session["user"];
-                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                // ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
             ViewBag.authW = true;
             ViewBag.userid = -1;

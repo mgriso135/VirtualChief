@@ -129,4 +129,28 @@
   <data name="lblIPName" xml:space="preserve">
     <value>Name</value>
   </data>
+  <data name="lblAddDepartment" xml:space="preserve">
+    <value>Connect input point to a department</value>
+  </data>
+  <data name="lblDepartments" xml:space="preserve">
+    <value>Departments</value>
+  </data>
+  <data name="lblWorkstations" xml:space="preserve">
+    <value>Workstations</value>
+  </data>
+  <data name="lblTHDepartmentName" xml:space="preserve">
+    <value>Department</value>
+  </data>
+  <data name="lblTHWorkstationName" xml:space="preserve">
+    <value>Workstation</value>
+  </data>
+  <data name="lblChangesSavedError" xml:space="preserve">
+    <value>An error occured while saving changes.</value>
+  </data>
+  <data name="lblChangesSavedSuccessfully" xml:space="preserve">
+    <value>Changes saved successfully</value>
+  </data>
+  <data name="lblChangesSavedTItle" xml:space="preserve">
+    <value>Saving changes...</value>
+  </data>
 </root>

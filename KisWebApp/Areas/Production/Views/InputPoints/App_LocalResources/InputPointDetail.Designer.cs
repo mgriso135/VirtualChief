@@ -61,6 +61,51 @@ namespace ResInputPoints {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connect input point to a department.
+        /// </summary>
+        public static string lblAddDepartment {
+            get {
+                return ResourceManager.GetString("lblAddDepartment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured while saving changes..
+        /// </summary>
+        public static string lblChangesSavedError {
+            get {
+                return ResourceManager.GetString("lblChangesSavedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changes saved successfully.
+        /// </summary>
+        public static string lblChangesSavedSuccessfully {
+            get {
+                return ResourceManager.GetString("lblChangesSavedSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saving changes....
+        /// </summary>
+        public static string lblChangesSavedTItle {
+            get {
+                return ResourceManager.GetString("lblChangesSavedTItle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Departments.
+        /// </summary>
+        public static string lblDepartments {
+            get {
+                return ResourceManager.GetString("lblDepartments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Description.
         /// </summary>
         public static string lblIPDescription {
@@ -88,11 +133,38 @@ namespace ResInputPoints {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Department.
+        /// </summary>
+        public static string lblTHDepartmentName {
+            get {
+                return ResourceManager.GetString("lblTHDepartmentName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workstation.
+        /// </summary>
+        public static string lblTHWorkstationName {
+            get {
+                return ResourceManager.GetString("lblTHWorkstationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input Points.
         /// </summary>
         public static string lblTitle {
             get {
                 return ResourceManager.GetString("lblTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workstations.
+        /// </summary>
+        public static string lblWorkstations {
+            get {
+                return ResourceManager.GetString("lblWorkstations", resourceCulture);
             }
         }
     }
