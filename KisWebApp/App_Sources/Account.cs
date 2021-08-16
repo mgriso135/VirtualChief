@@ -766,7 +766,7 @@ namespace KIS.App_Sources
             return ret;
         }
 
-        public List<FreeMeasurement_Task> FreeMeasurementTasks;
+       /* public List<FreeMeasurement_Task> FreeMeasurementTasks;
         public void loadFreeMeasurementRunningTasks(Reparto dept)
         {
             this.FreeMeasurementTasks = new List<FreeMeasurement_Task>();
@@ -847,7 +847,7 @@ namespace KIS.App_Sources
                 rdr.Close();
                 conn.Close();
             }
-        }
+        }*/
 
         /* Returns:
           * 0 if generic error

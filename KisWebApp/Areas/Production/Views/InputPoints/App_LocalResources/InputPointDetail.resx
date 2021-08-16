@@ -153,4 +153,7 @@
   <data name="lblChangesSavedTItle" xml:space="preserve">
     <value>Saving changes...</value>
   </data>
+  <data name="lblDepartmentAlreadyAdded" xml:space="preserve">
+    <value>Department already added</value>
+  </data>
 </root>

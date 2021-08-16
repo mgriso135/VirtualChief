@@ -6,7 +6,7 @@
 
 @if (ViewBag.authW)
 {
-    if (ViewBag.DepartmentId != -1 && ViewBag.WorkspaceId!=-1)
+    if (ViewBag.DepartmentId != -1 && ViewBag.WorkspaceId!=-1 && ViewBag.Tenant.Length > 0)
     {
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jinq/1.6.1/jinqjs.js" integrity="sha512-uui/aXrsWdhhxCo039xxseWZN5yLYjMJMQc8azPYAYOFmB5BtHy/jRWy2SEkFq6IYeSrQBIqfLIhX5cRdRG68w==" crossorigin="anonymous"></script>
         <script>
@@ -146,20 +146,20 @@
 
             }
 
-                function loadRunningTasks(operator) {
-                    console.log("loadRunningTasks: " + operator);
+                function loadRunningTasks(inputpoint) {
+                    console.log("loadRunningTasks: " + inputpoint);
                     var selected_measurement = $("#ddlMeasurements").val();
                 $.ajax({
                     url: "@Url.Action("GetRunningTasks", "FreeMeasurement")",
                     type: 'POST',
                     async: true,
                     data: {
-                                    username: operator,
+                        inputpointid: inputpoint,
                                     deptId: @ViewBag.DepartmentId
                                 },
                     success: function (data) {
                                     console.log(data);
-                        $("#lblRunningTasks").html("<span style='font-size:48px;'>" + operator + "</span> @ResFreeMeasurements.Execute.lblRunningTasks");
+                        $("#lblRunningTasks").html("<span style='font-size:48px;'>" + inputpoint + "</span> @ResFreeMeasurements.Execute.lblRunningTasks");
                                     if (data.length > 0) {
                                         var strTable = "<table class='table table-hover table-striped' style='width:100%; vertical-align: middle;'>"
                                             + "<thead><tr>"
@@ -217,7 +217,7 @@
                 $("#lblRunningTasksList").on("click", ".endtask", function () {
                     var itmId = $(this).prop("id");
                     console.log("Finish " + itmId);
-                    var operator = $("#ddlOperator option:selected").val();
+                    var inputpoint = $("#ddlOperator option:selected").val();
                     var aItm = itmId.split('_');
                     var measurement = aItm[1];
                     var task = aItm[2];
@@ -229,14 +229,14 @@
                         producedquantity = txtQuantity.val().replace('.', ',');
                     }
 
-                    console.log(measurement + " " + task + " " + operator + " " + producedquantity);
+                    console.log(measurement + " " + task + " " + inputpoint + " " + producedquantity);
 
                     $.ajax({
                                 url: "@Url.Action("FinishTask", "FreeMeasurement")",
                                 type: 'POST',
                                 async: false,
                                 data: {
-                                    user: operator,
+                                    inputpoint: inputpoint,
                                     MeasurementId: measurement,
                                     TaskId: task,
                                     ProducedQuantity: producedquantity
@@ -244,7 +244,7 @@
                                 success: function (result) {
                                     console.log("Result: " + result);
                                     $("#ddlMeasurements").val('');
-                                    loadRunningTasks(operator);
+                                    loadRunningTasks(inputpoint);
                                     loadFreeMeasurements();
                                     $("#ddlTasks").empty();
                                     $("#ddlTasks").val('');
@@ -263,25 +263,25 @@
                 $("#lblRunningTasksList").on("click", ".pausetask", function () {
                     var itmId = $(this).prop("id");
                     console.log("Pause " + itmId);
-                    var operator = $("#ddlOperator option:selected").val();
+                    var inputpoint = $("#ddlOperator option:selected").val();
                     var aItm = itmId.split('_');
                     var measurement = aItm[1];
                     var task = aItm[2];
 
-                    console.log(measurement + " " + task + " " + operator)
+                    console.log(measurement + " " + task + " " + inputpoint)
 
                     $.ajax({
                                 url: "@Url.Action("PauseTask", "FreeMeasurement")",
                                 type: 'POST',
                                 async: false,
                                 data: {
-                                    user: operator,
+                                    inputpoint: inputpoint,
                                     MeasurementId: measurement,
                                     TaskId: task
                                 },
                                 success: function (result) {
                                     console.log("Result: " + result);
-                                    loadRunningTasks(operator);
+                                    loadRunningTasks(inputpoint);
                                     loadFreeMeasurements();
                                 },
                                 statusCode: {
@@ -309,7 +309,7 @@
                     var measurement = $("#ddlMeasurements").val();
                     var task = $("#ddlTasks").val();
                     var newTask = $('<div/>').text($('#txtNewTask').val()).html();
-                    var operator = $("#ddlOperator option:selected").val();
+                    var inputpoint = $("#ddlOperator option:selected").val();
 
                     console.log(measurement);
                     console.log(task);
@@ -351,7 +351,7 @@
                                 type: 'POST',
                                 async: false,
                                 data: {
-                                    user: operator,
+                                    inputpoint: inputpoint,
                                     MeasurementId: measurement,
                                     TaskId: task
                                 },
@@ -376,7 +376,7 @@
                                             });
                                     }
                                     loadFreeMeasurements();
-                                    loadRunningTasks(operator);
+                                    loadRunningTasks(inputpoint);
                                     $("#ddlMeasurements").val('');
                                     $("#ddlTasks").val('');
                                     $('#txtNewTask').val("");
@@ -399,7 +399,7 @@
                                 type: 'POST',
                                 async: true,
                                 data: {
-                                    user: operator,
+                                    inputpoint: inputpoint,
                                     MeasurementId: measurement,
                                     TaskName: newTask
                                 },
@@ -424,7 +424,7 @@
                                             });
                                     }
                                     loadFreeMeasurements();
-                                    loadRunningTasks(operator);
+                                    loadRunningTasks(inputpoint);
                                     $("#ddlMeasurements").val("");
                                     $("#ddlTasks").val("");
                                     $('#txtNewTask').val("");
@@ -448,7 +448,7 @@
                 $("#startNoProductiveTask").click(function () {
                     $("#startNoProductiveTask").hide();
                     var npTaskId = $("#ddlNoProductiveTasks").val();
-                    var operator = $("#ddlOperator option:selected").val();
+                    var inputpoint = $("#ddlOperator option:selected").val();
                     var measurement = $("#ddlMeasurements").val();
                     if (measurement == "" || measurement.length == 0) {
                         $("#ddlMeasurements > option").each(function (index, element) {
@@ -474,7 +474,7 @@
                                 type: 'POST',
                                 async: true,
                                 data: {
-                                    user: operator,
+                                    inputpoint: inputpoint,
                                     MeasurementId: measurement,
                                     NpTaskId: npTaskId
                                 },
@@ -501,7 +501,7 @@
                                     }
 
                                     $("#ddlNoProductiveTasks").val('');
-                                    loadRunningTasks(operator);
+                                    loadRunningTasks(inputpoint);
                                     $("#startNoProductiveTask").show();
                                 },
                                 statusCode: {
@@ -626,15 +626,12 @@
                 <select id="ddlOperator" class="form-control">
                     <option></option>
                     @{
-                        KIS.App_Sources.Group opsGrp = new KIS.App_Sources.Group("Operatori");
-                        if (opsGrp.ID != -1)
+                        KIS.App_Code.Reparto dept = new KIS.App_Code.Reparto(ViewBag.Tenant, ViewBag.DepartmentId);
+                        dept.loadInputPoints();
+                        foreach (var u in dept.inputpoints)
                         {
-                            opsGrp.loadUtenti(ViewBag.WorkspaceId);
-                            foreach (var u in opsGrp.Utenti)
-                            {
-                                <option value="@u">@u</option>
+                                <option value="@u.inputpointId">@u.inputpointName</option>
                             }
-                        }
                     }
                 </select>
                 <span class="material-icons" style="cursor:pointer;" id="btnChooseOperator">arrow_forward_ios</span>

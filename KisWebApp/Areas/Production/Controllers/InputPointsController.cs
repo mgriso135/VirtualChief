@@ -267,7 +267,8 @@ namespace KIS.Areas.Production.Controllers
                     InputPointDepartment ip = new InputPointDepartment(Session["ActiveWorkspace_Name"].ToString(), InputPointId, DepartmentId);
                     if (ip!=null && ip.departmentId > -1 && ip.inputpointId>-1)
                     {
-                        ret = ip.delete();
+                        ip.enabled = false;
+                        ret = 1;
                     }
                     else
                     {
@@ -282,6 +283,110 @@ namespace KIS.Areas.Production.Controllers
             else
             {
                 ret=2;
+            }
+            return ret;
+        }
+
+        [Authorize]
+        public String AddWorkstation(int InputPointId, int WorkstationId)
+        {
+            String[] ret = new String[3];
+            if (Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
+            {
+                ViewBag.authW = false;
+                List<String[]> elencoPermessi = new List<String[]>();
+                String[] prmUser = new String[2];
+                prmUser[0] = "InoutPoint Details";
+                prmUser[1] = "W";
+                elencoPermessi.Add(prmUser);
+
+                if (Session["user"] != null)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                }
+
+                if (ViewBag.authW)
+                {
+                    InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                    if (ip.id > -1)
+                    {
+                        Postazione wst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), WorkstationId);
+                        if (wst.id != -1)
+                        {
+                            ret[0] = ip.addWorkstation(wst).ToString();
+                            ret[1] = wst.name;
+                            ret[2] = wst.id.ToString();
+                        }
+                        else
+                        {
+                            ret[0] = "2";
+                        }
+                    }
+                    else
+                    {
+                        ret[0] = "-1";
+                    }
+                }
+                else
+                {
+                    ret[0] = "5";
+                }
+            }
+            else
+            {
+                ret[0] = "2";
+            }
+            return JsonConvert.SerializeObject(ret);
+        }
+
+        /* Returns:
+        * 0 if generic error
+        * 1 if InputPointDepartment delete successfully
+        * 2 if tenant, department or input point not set
+        * 3 if error while deleting
+        * 9 if user not authorized
+        */
+        [Authorize]
+        public int UnlinkWorkstation(int InputPointId, int WorkstationId)
+        {
+            int ret = 0;
+            if (Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0 && InputPointId > -1 && WorkstationId > -1)
+            {
+                ViewBag.authW = false;
+                List<String[]> elencoPermessi = new List<String[]>();
+                String[] prmUser = new String[2];
+                prmUser[0] = "InoutPoint Details";
+                prmUser[1] = "W";
+                elencoPermessi.Add(prmUser);
+
+                if (Session["user"] != null)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                }
+
+                if (ViewBag.authW)
+                {
+                    InputPointWorkstation ip = new InputPointWorkstation(Session["ActiveWorkspace_Name"].ToString(), InputPointId, WorkstationId);
+                    if (ip != null && ip.workstationId > -1 && ip.inputpointId > -1)
+                    {
+                        ip.enabled = false;
+                        ret = 1;
+                    }
+                    else
+                    {
+                        ret = 2;
+                    }
+                }
+                else
+                {
+                    ret = 9;
+                }
+            }
+            else
+            {
+                ret = 2;
             }
             return ret;
         }

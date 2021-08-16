@@ -546,14 +546,18 @@ namespace KIS.App_Code
             }
         }
 
+        public List<KIS.App_Sources.InputPointDepartment> inputpoints;
+
         public Reparto(String tenant)
         {
+            this.inputpoints = new List<App_Sources.InputPointDepartment>();
             this.Tenant = tenant;
             this._id = -1;
         }
 
         public Reparto(String tenant, int repID)
         {
+            this.inputpoints = new List<App_Sources.InputPointDepartment>();
             this.Tenant = tenant;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -605,6 +609,7 @@ namespace KIS.App_Code
 
         public Reparto(String tenant, String name)
         {
+            this.inputpoints = new List<App_Sources.InputPointDepartment>();
             this.Tenant = tenant;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -1411,6 +1416,26 @@ namespace KIS.App_Code
             }
             rdr.Close();
             conn.Close();
+        }
+
+        public void loadInputPoints()
+        {
+            this.inputpoints = new List<App_Sources.InputPointDepartment>();
+            if(this.id> -1 && this.Tenant.Length > 0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT inputpointid FROM inputpoints_departments WHERE departmentid=@deptid AND enabled is true";
+                cmd.Parameters.AddWithValue("@deptid", this.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this.inputpoints.Add(new App_Sources.InputPointDepartment(this.Tenant, rdr.GetInt32(0), this.id));
+                }
+                rdr.Close();
+                conn.Close();
+            }
         }
     }
 

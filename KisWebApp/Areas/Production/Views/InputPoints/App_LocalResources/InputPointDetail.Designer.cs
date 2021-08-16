@@ -97,6 +97,15 @@ namespace ResInputPoints {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Department already added.
+        /// </summary>
+        public static string lblDepartmentAlreadyAdded {
+            get {
+                return ResourceManager.GetString("lblDepartmentAlreadyAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Departments.
         /// </summary>
         public static string lblDepartments {

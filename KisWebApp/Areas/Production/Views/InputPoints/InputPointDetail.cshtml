@@ -108,6 +108,90 @@
                                     //$("#modal").modal('show');
                                     $("#deptRow_" + deptid).remove();
                                 }
+                                else if (result == "4")
+                                {
+                                    $("#lblChangesResult").html("@ResInputPoints.InputPointDetail.lblDepartmentAlreadyAdded");
+                                    $("#modal").modal('show');
+                                }
+                                else {
+                                    $("#lblChangesResult").html("@ResInputPoints.InputPointDetail.lblChangesSavedError");
+                                    $("#modal").modal('show');
+                                }
+
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                });
+
+                $("#btnAddWorkstation").click(function () {
+                    console.log("Saving changes");
+                    var deptid = $("#ddlAddWorkstation").val();
+                    if (deptid.length > 0) {
+                        $.ajax({
+                            url: "@Url.Action("AddWorkstation", "InputPoints")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                InputPointId: @ViewBag.InputPointId,
+                                WorkstationId: deptid
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                result = JSON.parse(result);
+                                console.log(result[0]);
+                                if (result[0] == "1") {
+                                    var newrow = "<tr id='wstRow_"+result[2]+"'>"
+                                        + "<td><span class='material-icons delWst' id='delWst_" + result[2] + "' style='cursor: pointer;'>delete</span></td>"
+                                        + "<td>" + result[1] + "</td></tr>";
+                                    $("#tblWorkstations tbody").append(newrow);
+                                }
+                                else {
+                                    $("#lblChangesResult").html("@ResInputPoints.InputPointDetail.lblChangesSavedError");
+                                    $("#modal").modal('show');
+                                }
+
+                            },
+                            statusCode: {
+                                404: function (content) { console.log('cannot find resource ' + content); },
+                                500: function (content) { console.log('internal server error ' + content); }
+                            },
+                            error: function (data) {
+                                console.log("Error " + data);
+                            }
+                        });
+                    }
+                });
+
+                $("#tblWorkstations").on("click", ".delWst", function () {
+                    console.log("Click " + $(this).prop("id"));
+                    var sid = $(this).prop("id");
+                    var deptid = sid.split('_')[1];
+                    $.ajax({
+                            url: "@Url.Action("UnlinkWorkstation", "InputPoints")",
+                            type: 'POST',
+                            async: true,
+                            data: {
+                                InputPointId: @ViewBag.InputPointId,
+                                WorkstationId: deptid
+                            },
+                            success: function (result) {
+                                console.log(result);
+                                if (result == "1") {
+                                    //$("#lblChangesResult").html("@ResInputPoints.InputPointDetail.lblChangesSavedSuccessfully");
+                                    //$("#modal").modal('show');
+                                    $("#wstRow_" + deptid).remove();
+                                }
+                                else if (result == "4")
+                                {
+                                    $("#lblChangesResult").html("@ResInputPoints.InputPointDetail.lblDepartmentAlreadyAdded");
+                                    $("#modal").modal('show');
+                                }
                                 else {
                                     $("#lblChangesResult").html("@ResInputPoints.InputPointDetail.lblChangesSavedError");
                                     $("#modal").modal('show');
@@ -202,7 +286,18 @@
         </div>
         <div class="span6">
             <h4>@ResInputPoints.InputPointDetail.lblWorkstations</h4>
-            <table class="table table-hover table-striped">
+            <select id="ddlAddWorkstation">
+                <option value="" />
+                @{
+                    KIS.App_Code.ElencoPostazioni wsts = new KIS.App_Code.ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
+                    foreach (var d in wsts.elenco)
+                    {
+                        <option id="dept_@d.id" value="@d.id">@d.name</option>
+                    }
+                }
+            </select>
+            <span class="material-icons" id="btnAddWorkstation" style="cursor:pointer;">save</span>
+            <table class="table table-hover table-striped" id="tblWorkstations">
                 <thead>
                     <tr>
                         <th></th>
@@ -212,8 +307,8 @@
                 <tbody>
                     @foreach (var d in Model.workstations)
                     {
-                        <tr>
-                            <td></td>
+                        <tr id="wstRow_@d.workstationId">
+                            <td><span class="material-icons delWst" id="delDept_@d.workstationId" style="cursor: pointer;">delete</span></td>
                             <td>@d.workstationName</td>
                         </tr>
                     }
