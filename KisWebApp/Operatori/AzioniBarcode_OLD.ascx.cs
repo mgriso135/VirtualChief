@@ -17,7 +17,7 @@ namespace KIS.Operatori
             }
         }
 
-        protected void box1_TextChanged(object sender, EventArgs e)
+        /*protected void box1_TextChanged(object sender, EventArgs e)
         {
             if (box1.Text.Length > 0 && box2.Text.Length > 0)
             {
@@ -40,7 +40,8 @@ namespace KIS.Operatori
                 box2.Focus();
             }
         }
-
+        */
+        /*
         protected void box2_TextChanged(object sender, EventArgs e)
         {
             if (box1.Text.Length > 0 && box2.Text.Length > 0)
@@ -64,7 +65,8 @@ namespace KIS.Operatori
                 box1.Focus();
             }
         }
-
+        */
+        /*
         protected bool elabora()
         {
             bool rt = false;
@@ -207,6 +209,6 @@ namespace KIS.Operatori
                 rt = false;
             }
             return rt;
-        }
+        }*/
     }
 }

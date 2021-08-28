@@ -820,7 +820,7 @@ namespace KIS.Areas.Products.Controllers
          * 3 if product not found
          */
         [Authorize]
-        public int CompleteProductBruteForce(int ProductID, int ProductYear)
+        public int CompleteProductBruteForce(int ProductID, int ProductYear, int InputPointId)
         {
             int ret = 0;
             // Register user action
@@ -853,8 +853,8 @@ namespace KIS.Areas.Products.Controllers
                 Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), ProductID, ProductYear);
                 if(art!=null && art.ID!=-1 && art.Year > 2010)
                 {
-                    User curr1 = (User)Session["user"];
-                    ret = art.CompleteProductBruteForce(curr1);
+                    InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                    ret = art.CompleteProductBruteForce(ip);
                 }
                 else
                 {

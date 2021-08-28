@@ -174,6 +174,12 @@ namespace KIS.App_Sources
         public List<InputPointDepartment> departments;
         public List<InputPointWorkstation> workstations;
 
+        private List<int> _RunningTasks;
+        public List<int> RunningTasks { get { return this._RunningTasks; } }
+
+        private List<int> _RunnableTasks;
+        public List<int> RunnableTasks { get { return this._RunnableTasks; } }
+
         public InputPoint(String tenant, int id)
         {
             this._Tenant = tenant;
@@ -578,6 +584,116 @@ namespace KIS.App_Sources
                 while (rdr.Read())
                 {
                     this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                }
+                rdr.Close();
+                conn.Close();
+            }
+        }
+
+        public void loadTaskAvviati()
+        {
+            this._RunningTasks = new List<int>();
+            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
+                + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' "
+                + " AND registroeventitaskproduzione.inputpoint=@ip ORDER BY registroeventitaskproduzione.data DESC";
+            cmd.Parameters.AddWithValue("@ip", this.id);
+            MySqlDataReader rdr = cmd.ExecuteReader();
+            List<int> DaNonInserire = new List<int>();
+            while (rdr.Read())
+            {
+                log += "Task: " + rdr.GetInt32(0).ToString() + " " + rdr.GetChar(1);
+                if (rdr.GetChar(1) == 'P' || rdr.GetChar(1) == 'F')
+                {
+                    log += " da non inserire<br/>";
+                    DaNonInserire.Add(rdr.GetInt32(0));
+                }
+                else if (rdr.GetChar(1) == 'I')
+                {
+                    log += " da verificare --> ";
+                    // Verifico che non sia nella lista di quelli da non inserire, e nemmeno in quella dei già inseriti!
+                    bool checkN = false;
+                    bool checkI = false;
+                    for (int q = 0; q < DaNonInserire.Count; q++)
+                    {
+                        if (DaNonInserire[q] == rdr.GetInt32(0))
+                        {
+                            log += " da non inserire";
+                            checkN = true;
+                        }
+                    }
+                    for (int q = 0; q < this._RunningTasks.Count; q++)
+                    {
+                        if (this._RunningTasks[q] == rdr.GetInt32(0))
+                        {
+                            log += " già inserito";
+                            checkI = true;
+                        }
+                    }
+                    if (checkN == false && checkI == false)
+                    {
+                        log += "aggiunto.<br/>";
+                        this._RunningTasks.Add(rdr.GetInt32(0));
+                    }
+                    else
+                    {
+                        log += "<br/>";
+                    }
+                }
+            }
+            rdr.Close();
+            conn.Close();
+        }
+
+        public void loadTaskProduzioneAvviabili()
+        {
+            this._RunnableTasks = new List<int>();
+            if (this.id != -1)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT taskID FROM tasksproduzione " 
+                    + " INNER JOIN inputpoints_workstations ON(tasksproduzione.postazione = inputpoints_workstations.workstationid) "
+                + " WHERE(status = 'N' OR status = 'I' OR status = 'P') AND inputpoints_workstations.inputpointid=@ipid ORDER BY lateStart, earlyStart, idArticolo";
+                cmd.Parameters.AddWithValue("@ipid", this.id);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+
+                    // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
+
+                    if (tsk.TaskProduzioneID != -1)
+                    {
+
+                        tsk.loadPrecedenti();
+                        bool controllo = true;
+                        for (int i = 0; i < tsk.PreviousTasks.Count; i++)
+                        {
+                            TaskProduzione prec = new TaskProduzione(this.Tenant, tsk.PreviousTasks[i].NearTaskID);
+                            if (tsk.PreviousTasks[i].ConstraintType == 0)
+                            {
+                                if (prec.Status == 'N')
+                                {
+                                    controllo = false;
+                                }
+                            }
+                            else
+                            {
+                                if (prec.Status != 'F')
+                                {
+                                    controllo = false;
+                                }
+                            }
+                        }
+                        if (controllo == true)
+                        {
+                            this._RunnableTasks.Add(rdr.GetInt32(0));
+                        }
+                    }
                 }
                 rdr.Close();
                 conn.Close();

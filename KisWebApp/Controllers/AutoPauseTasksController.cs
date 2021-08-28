@@ -92,13 +92,13 @@ namespace KIS.Controllers
                             {
                                 log += "Task " + openTask.Name + " " + openTask.TaskProduzioneID.ToString() + "\n";
                                 openTask.loadUtentiAttivi();
-                                foreach(var usr in openTask.UtentiAttivi)
+                                foreach(var usr in openTask.ActiveInputPoints)
                                 {
                                     log += "Active user: " + usr;
-                                    User curr = new User(usr);
-                                    if(curr!=null)
+                                    InputPoint ip = new InputPoint(tenant, usr);
+                                    if(ip != null)
                                     { 
-                                        Boolean ret = openTask.Pause(curr);
+                                        Boolean ret = openTask.Pause(ip);
                                         log += "Paused " + ret.ToString() + "\n";
                                     }
                                 }

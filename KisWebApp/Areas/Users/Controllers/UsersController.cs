@@ -245,7 +245,7 @@ namespace KIS.Areas.Users.Controllers
          * 17 if there are some parameters that needs to be defined
          * 18 if there are problems during the insert into queries
          */
-        [Authorize]
+        /*[Authorize]
         public int AddUserWorkTimespan(int TaskID, String usrID, bool completed, int producedQuantity, DateTime start, DateTime end)
         {
             // Register user action
@@ -261,7 +261,7 @@ namespace KIS.Areas.Users.Controllers
             }
 
             int ret = 100;
-            String retS = ret.ToString();
+            /*String retS = ret.ToString();
 
             retS = "AddUserWorkTimespan: " + ret;
             List<String[]> elencoPermessi = new List<String[]>();
@@ -295,7 +295,7 @@ namespace KIS.Areas.Users.Controllers
                 retS += "User NOT authenticated";
             }
             return ret;
-        }
+        }*/
 
         [Authorize]
         public JsonResult OpenOrders(String customer)

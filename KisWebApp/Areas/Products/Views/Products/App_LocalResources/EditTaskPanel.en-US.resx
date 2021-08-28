@@ -198,7 +198,9 @@
   <data name="lblDefaultOperators" xml:space="preserve">
     <value>Operators assigned to tasks by default</value>
   </data>
-  <data name="lblMicrosteps" xml:space="preserve">
+  <data name="lbl
+        
+  s" xml:space="preserve">
     <value>Microsteps</value>
   </data>
   <data name="lblAddMicrostepCycleTime" xml:space="preserve">

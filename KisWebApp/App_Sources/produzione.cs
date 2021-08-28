@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using KIS.App_Code;
+using KIS.App_Sources;
 
 namespace KIS.App_Code
 {
@@ -626,16 +627,21 @@ namespace KIS.App_Code
         }
 
         // Utenti attivi
-        private List<String> _UtentiAttivi;
-        public List<String> UtentiAttivi
+        private List<int> _UtentiAttivi;
+        public List<int> UtentiAttivi
         {
             get { return this._UtentiAttivi; }
         }
 
+        public List<int> ActiveInputPoints
+        {
+            get { return this.UtentiAttivi; }
+        }
+
         public void loadUtentiAttivi()
         {
-            this._UtentiAttivi = new List<String>();
-            List<String> utentiNonAttivi = new List<String>();
+            this._UtentiAttivi = new List<int>();
+            List<int> utentiNonAttivi = new List<int>();
             this.loadEventi();
 
             for (int i = this.Eventi.Count - 1; i >= 0; i--)
@@ -643,7 +649,7 @@ namespace KIS.App_Code
 
                 if (this.Eventi[i].Evento == 'P')
                 {
-                    utentiNonAttivi.Add(this.Eventi[i].User);
+                    utentiNonAttivi.Add(this.Eventi[i].InputPoint);
                 }
                 else if (this.Eventi[i].Evento == 'I')
                 {
@@ -651,7 +657,7 @@ namespace KIS.App_Code
                     // Ricerco tra la lista degli inattivi
                     for (int j = 0; j < utentiNonAttivi.Count; j++)
                     {
-                        if (this.Eventi[i].User == utentiNonAttivi[j])
+                        if (this.Eventi[i].InputPoint == utentiNonAttivi[j])
                         {
                             found = true;
                         }
@@ -659,7 +665,7 @@ namespace KIS.App_Code
                     // Se non l'ho trovato, aggiungo a lista utenti attivi
                     if (found == false)
                     {
-                        this._UtentiAttivi.Add(this.Eventi[i].User);
+                        this._UtentiAttivi.Add(this.Eventi[i].InputPoint);
                     }
                 }
             }
@@ -768,10 +774,10 @@ namespace KIS.App_Code
         }
 
         // Utenti che hanno lavorato o stanno lavorato su questo task
-        private List<String> _Operatori;
-        public List<String> Operatori
+        private List<int> _InputPoints;
+        public List<int> InputPoints
         {
-            get { return this._Operatori; }
+            get { return this._InputPoints; }
         }
 
         public List<TaskParameter> Parameters;
@@ -784,42 +790,32 @@ namespace KIS.App_Code
             get { return this._AssignedOperators; }
         }
 
-        public void loadOperatori()
+        public void loadInputPoints()
         {
-            this._Operatori = new List<String>();
-            List<String> utentiNonAttivi = new List<String>();
+            this._InputPoints = new List<int>();
+            List<int> utentiNonAttivi = new List<int>();
             this.loadEventi();
 
             for (int i = 0; i < this.Eventi.Count; i++)
             {
-                utentiNonAttivi.Add(this.Eventi[i].User);
+                utentiNonAttivi.Add(this.Eventi[i].InputPoint);
             }
-            this._Operatori = new List<String>(utentiNonAttivi.Distinct());
+            this._InputPoints = new List<int>(utentiNonAttivi.Distinct());
         }
 
-        public bool Start(User usr)
+        public bool Start(InputPoint inputpoint)
         {
             bool rt = false;
-            if (this.TaskProduzioneID != -1 && this.Status != 'F')
+            if (this.TaskProduzioneID != -1 && this.Status != 'F' && inputpoint!=null && inputpoint.id>=0)
             {
-                // Controllo che l'utente sia in postazione...
-                Postazione p = new Postazione(this.Tenant, this.PostazioneID);
-                p.loadUtentiLoggati();
-                bool controlloUtente = false;
-                for (int i = 0; i < p.UtentiLoggati.Count; i++)
-                {
-                    if (p.UtentiLoggati[i] == usr.username)
-                    {
-                        controlloUtente = true;
-                    }
-                }
-
                 bool controlloUltimaAzione = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND user = '" + usr.username + "' ORDER BY data desc";
+                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task=@taskid "
+                + " AND inputpoint=@ipid ORDER BY data desc";
+                cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID.ToString());
+                cmd.Parameters.AddWithValue("@ipid", inputpoint.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -837,19 +833,10 @@ namespace KIS.App_Code
                     controlloUltimaAzione = true;
                 }
                 rdr.Close();
-                log += "Controllo utente: " + controlloUtente.ToString() + " Controllo ultima azione: " + controlloUltimaAzione.ToString() + "<br />";
 
                 // Controllo che tutti i precedenti siano terminati
                 bool checkPrecedenti = true;
                 this.loadPrecedenti();
-                /*for (int i = 0; i < this.IdPrecedenti.Count; i++)
-                {
-                    TaskProduzione precedente = new TaskProduzione(this.IdPrecedenti[i]);
-                    if (precedente.Status != 'F')
-                    {
-                        checkPrecedenti = false;
-                    }
-                }*/
                 for (int i = 0; i < this.PreviousTasks.Count; i++)
                 {
                     TaskProduzione precedente = new TaskProduzione(this.Tenant, this.PreviousTasks[i].NearTaskID);
@@ -878,8 +865,8 @@ namespace KIS.App_Code
                 }
                 else
                 {
-                    usr.loadTaskAvviati();
-                    if (usr.TaskAvviati.Count < rp.TasksAvviabiliContemporaneamenteDaOperatore)
+                    inputpoint.loadTaskAvviati();
+                    if (inputpoint.RunningTasks.Count < rp.TasksAvviabiliContemporaneamenteDaOperatore)
                     {
                         controlloTasksAvviatiUtente = true;
                     }
@@ -889,9 +876,9 @@ namespace KIS.App_Code
                     }
                 }
 
-                log += controlloUtente.ToString() + " " + controlloUltimaAzione.ToString() + " " + checkPrecedenti.ToString() + " " + controlloTasksAvviatiUtente.ToString();
+                log += controlloUltimaAzione.ToString() + " " + checkPrecedenti.ToString() + " " + controlloTasksAvviatiUtente.ToString();
 
-                if (controlloUtente == true && controlloUltimaAzione == true && checkPrecedenti == true && controlloTasksAvviatiUtente == true)
+                if (controlloUltimaAzione == true && checkPrecedenti == true && controlloTasksAvviatiUtente == true)
                 {
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
@@ -905,17 +892,23 @@ namespace KIS.App_Code
                     rdr.Close();
                     try
                     {
-                        cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
-                            + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
-                            + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', 'I', '')";
+                        cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@id, @ipid, @taskid, @date, @statusI, @note)";
+                        cmd.Parameters.AddWithValue("@id", maxID.ToString());
+                        /*cmd.Parameters.AddWithValue("@ipid", inputpoint.id.ToString());
+                        cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);*/
+                        cmd.Parameters.AddWithValue("@date", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@statusI", 'I');
+                        cmd.Parameters.AddWithValue("@note", "");
+
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'I' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status =@statusI WHERE taskID = @taskid";
                         cmd.ExecuteNonQuery();
                         Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
                         if (art.Status == 'P')
                         {
-                            cmd.CommandText = "UPDATE productionplan SET status='I' WHERE id = " + art.ID.ToString() +
-                                " AND anno = " + art.Year.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET status=@statusI WHERE id=@prodid AND anno=@prodYear";
+                            cmd.Parameters.AddWithValue("@prodid", art.ID);
+                            cmd.Parameters.AddWithValue("@prodYear", art.Year);
                             cmd.ExecuteNonQuery();
                         }
 
@@ -1097,7 +1090,7 @@ namespace KIS.App_Code
             return rt;
         }
 
-        public bool Pause(User usr)
+        public bool Pause(InputPoint usr)
         {
             bool rt = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -1107,8 +1100,10 @@ namespace KIS.App_Code
             cmd.Transaction = tr;
             // Verifico che l'ultima azione per questo utente sia di Inizio del task
             bool check = false;
-            cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND user = '" + usr.username + "' ORDER BY data desc";
+            cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task=@taskid"
+                + " AND inputpoint=@ipid ORDER BY data desc";
+            cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
+            cmd.Parameters.AddWithValue("@ipid", usr.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
 
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -1131,12 +1126,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 try
                 {
-                    cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
-                            + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
-                            + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', 'P', '')";
+                    cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@maxid, @ipid, @taskid, @date, @event, @notes)";
+                    cmd.Parameters.AddWithValue("@maxid", maxID);
+                    // cmd.Parameters.AddWithValue("@ipid", usr.id);
+                    // cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
+                    cmd.Parameters.AddWithValue("@date", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@event", 'P');
+                    cmd.Parameters.AddWithValue("@notes", "");
                     cmd.ExecuteNonQuery();
                     this.loadUtentiAttivi();
-                    if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.username))
+                    if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
                     {
                         cmd.CommandText = "UPDATE tasksproduzione SET status = 'P' WHERE taskID = " + this.TaskProduzioneID.ToString();
                         cmd.ExecuteNonQuery();
@@ -1161,7 +1160,7 @@ namespace KIS.App_Code
          * 2 if the user not currently working on the task
          * 4 if error while insert into query
          */
-        public int Pause(User usr, DateTime regDate)
+        public int Pause(InputPoint usr, DateTime regDate)
         {
             int rt = 0;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -1196,14 +1195,18 @@ namespace KIS.App_Code
                 try
                 {
                     Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                    cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
-                            + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
-                            + TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") + "', 'P', '')";
+                    cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@maxid, @ipid, @taskid, @date, @event, @notes)";
+                    cmd.Parameters.AddWithValue("@maxid", maxID);
+                    cmd.Parameters.AddWithValue("@ipid", usr.id);
+                    cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
+                    cmd.Parameters.AddWithValue("@date", TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@event", 'P');
+                    cmd.Parameters.AddWithValue("@notes", "");
                     cmd.ExecuteNonQuery();
                     this.loadUtentiAttivi();
-                    if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.username))
+                    if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
                     {
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'P' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE taskID = " + this.TaskProduzioneID.ToString();
                         cmd.ExecuteNonQuery();
                     }
                     tr.Commit();
@@ -1223,7 +1226,7 @@ namespace KIS.App_Code
             return rt;
         }
 
-        public Boolean Complete(User usr)
+        public Boolean Complete(InputPoint usr)
         {
             this.log = "";
             Boolean rt = false;
@@ -1234,7 +1237,7 @@ namespace KIS.App_Code
                 bool checkUtenteAttivo = false;
                 for (int i = 0; i < this.UtentiAttivi.Count; i++)
                 {
-                    if (usr.username == this.UtentiAttivi[i])
+                    if (usr.id == this.UtentiAttivi[i])
                     {
                         checkUtenteAttivo = true;
                     }
@@ -1244,7 +1247,7 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND user = '" + usr.username + "' ORDER BY data desc";
+                + " AND inputpoint = " + usr.id + " ORDER BY data desc";
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1303,8 +1306,8 @@ namespace KIS.App_Code
                                 idEv = rdr.GetInt32(0) + 1;
                             }
                             rdr.Close();
-                            cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
-                                + idEv.ToString() + ", '" + this.UtentiAttivi[i] + "', " + this.TaskProduzioneID.ToString()
+                            cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES("
+                                + idEv.ToString() + ", " + this.ActiveInputPoints[i] + ", " + this.TaskProduzioneID.ToString()
                                 + ", '" + endDate.ToString("yyyy/MM/dd HH:mm:ss") + "', 'F', '')";
                             cmd.ExecuteNonQuery();
                         }
@@ -1465,7 +1468,7 @@ namespace KIS.App_Code
          * 5 if there are some parameters that needs to be defined
          * 6 if there are problems during the insert into queries
          */
-        public int Complete(User usr, DateTime regDate)
+        public int Complete(InputPoint usr, DateTime regDate)
         {
             this.log = regDate.ToString();
             int rt = 0;
@@ -1476,7 +1479,7 @@ namespace KIS.App_Code
                 bool checkUtenteAttivo = false;
                 for (int i = 0; i < this.UtentiAttivi.Count; i++)
                 {
-                    if (usr.username == this.UtentiAttivi[i])
+                    if (usr.id == this.ActiveInputPoints[i])
                     {
                         checkUtenteAttivo = true;
                     }
@@ -1486,7 +1489,7 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND user = '" + usr.username + "' ORDER BY data desc";
+                + " AND inputpoint = " + usr.id + " ORDER BY data desc";
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1720,8 +1723,8 @@ namespace KIS.App_Code
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                            + " ORDER BY user, data";
+                        cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                            + " ORDER BY inputpoint, data";
                         MySqlDataReader rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
@@ -2095,7 +2098,7 @@ namespace KIS.App_Code
             conn.Close();
         }
 
-        public bool generateWarning(User usr)
+        public bool generateWarning(InputPoint usr)
         {
             bool rt = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
@@ -2113,9 +2116,9 @@ namespace KIS.App_Code
                     maxID = rdr.GetInt32(0) + 1;
                 }
                 rdr.Close();
-                cmd.CommandText = "INSERT INTO warningproduzione(id, dataChiamata, task, user) VALUES("
+                cmd.CommandText = "INSERT INTO warningproduzione(id, dataChiamata, task, inputpoint) VALUES("
                     + maxID.ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', " + this.TaskProduzioneID.ToString()
-                    + ", '" + usr.username + "')";
+                    + ", " + usr.id + ")";
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = "DELETE FROM registroeventiproduzione WHERE TipoEvento='Warning' AND taskID = " + this.TaskProduzioneID.ToString();
@@ -3088,7 +3091,7 @@ namespace KIS.App_Code
         }
 
         public Boolean addParameter(String name, String description, ProductParametersCategory category, Boolean isFixed,
-            Boolean isRequired, String user)
+            Boolean isRequired, int inputpoint)
         {
             Boolean ret = false;
             if (this.TaskProduzioneID != -1)
@@ -3116,9 +3119,9 @@ namespace KIS.App_Code
                     + "'" + name + "', '" + description + "', " + isFixed.ToString() + ", "
                     + isRequired.ToString() + ", "
                     + maxSequence.ToString() + ", ";
-                if (user.Length > 0)
+                if (inputpoint >= 0)
                 {
-                    cmd.CommandText += "'" + user + "', ";
+                    cmd.CommandText += "'" + inputpoint + "', ";
                 }
                 else
                 {
@@ -3287,7 +3290,7 @@ namespace KIS.App_Code
                             prcVar.Parameters[i].ParameterCategory,
                             prcVar.Parameters[i].isFixed,
                             prcVar.Parameters[i].isRequired,
-                            "");
+                            -1);
                     }
                     this.log += "<br />";
                 }
@@ -3528,11 +3531,11 @@ namespace KIS.App_Code
   * 5 if Error while adding parameter
   * 6 if task not found
   */
-        public int CompileParameter(User usr, /*int ParamID,*/ int ParamCategory, String ParamName, String ParamValue)
+        public int CompileParameter(InputPoint usr, /*int ParamID,*/ int ParamCategory, String ParamName, String ParamValue)
         {
 
             int ret = 0;
-            if (usr != null && usr.username.Length > 0)
+            if (usr != null && usr.id >= 0)
             {
                 if (this.TaskProduzioneID != -1)
                 {
@@ -3577,7 +3580,7 @@ namespace KIS.App_Code
                                 new ProductParametersCategory(this.Tenant, ParamCategory),
                                 origParam.isFixed,
                                 origParam.isRequired,
-                                usr.username);
+                                usr.id);
                             ret = checkAdd ? 1 : 5;
                         }
                         else
@@ -5318,10 +5321,10 @@ namespace KIS.App_Code
         public String Tenant;
 
         public Reparto rp;
-        private String _User;
-        public String User
+        private int _InputPoint;
+        public int InputPoint
         {
-            get { return this._User; }
+            get { return this._InputPoint; }
         }
         private DateTime _Data;
         public DateTime Data
@@ -5365,12 +5368,12 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT user, task, data, evento, note FROM registroeventitaskproduzione WHERE id = " + evID.ToString();
+            cmd.CommandText = "SELECT inputpoint, task, data, evento, note FROM registroeventitaskproduzione WHERE id = " + evID.ToString();
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
                 this._IdEvento = evID;
-                this._User = rdr.GetString(0);
+                this._InputPoint = rdr.GetInt32(0);
                 this._TaskProduzioneID = rdr.GetInt32(1);
                 this._Data = rdr.GetDateTime(2);
                 this._Evento = rdr.GetChar(3);

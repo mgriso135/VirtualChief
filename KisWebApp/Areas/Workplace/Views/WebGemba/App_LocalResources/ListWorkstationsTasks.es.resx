@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="lblErrNoAuth" xml:space="preserve">
-    <value>Advertencia: no tienes permiso para realizar las tareas de esta estación</value>
+    <value>Advertencia: no tienes permiso para realizar las tareas de este Input Point</value>
   </data>
   <data name="lblErrWINotFound" xml:space="preserve">
     <value>Instrucción de trabajo no presente para esta tarea</value>
   </data>
   <data name="lblErrWorkstationNotFound" xml:space="preserve">
-    <value>Estación de trabajo no encontrada.</value>
+    <value>Input Point no encontrado.</value>
   </data>
   <data name="lblTitle" xml:space="preserve">
-    <value>Tareas de la estación</value>
+    <value>Tareas del Input Point</value>
   </data>
 </root>

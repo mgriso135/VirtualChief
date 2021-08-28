@@ -280,10 +280,10 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE commesse set ConfirmedBy = '"
-                            + value.userId
-                            + "' WHERE idcommesse = " + this.ID.ToString()
-                            + " AND anno = " + this.Year.ToString();
+                    cmd.CommandText = "UPDATE commesse set ConfirmedBy = @user WHERE idcommesse = @salesorderid AND anno = @year";
+                    cmd.Parameters.AddWithValue("@user", value.id);
+                    cmd.Parameters.AddWithValue("@year", this.Year.ToString());
+                    cmd.Parameters.AddWithValue("@salesorderid", this.ID.ToString());
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -680,7 +680,7 @@ namespace KIS.App_Code
                 + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '"
                 + notes + "', "
                 + "false, "
-                + "'', "
+                + "-1, "
                 + "null,"
                 + "'" + externalID + "'"
                 + ")";
@@ -2521,12 +2521,12 @@ namespace KIS.App_Code
          * 2 if user not found
          * 3 if product not found
          */
-         public int CompleteProductBruteForce(User usr)
+         public int CompleteProductBruteForce(InputPoint usr)
         {
             int ret = 0;
             if(this.ID!=-1 && this.Year > 2010)
             { 
-            if(usr!=null && usr.username.Length>0)
+            if(usr!=null && usr.id >= 0)
             {
                     this.loadTasksProduzione();
                     var lstTasks = this.Tasks.Where(z=>z.Status != 'F').OrderBy(x => x.LateFinish);
@@ -2535,9 +2535,9 @@ namespace KIS.App_Code
                         Postazione currWS = new Postazione(this.Tenant, tsk.PostazioneID);
                         if(currWS!=null)
                         {
-                            Boolean checkCheckIn = usr.DoCheckIn(currWS);
-                            if(checkCheckIn)
-                            { 
+                            // Boolean checkCheckIn = usr.DoCheckIn(currWS);
+                            // if(checkCheckIn)
+                            // { 
                                 Boolean checkStart = tsk.Start(usr);
                                 if(checkStart)
                                 {
@@ -2550,15 +2550,15 @@ namespace KIS.App_Code
                                         { 
                                         int paramret = tsk.CompileParameter(usr, 
                                             prm.ParameterCategory.ID, 
-                                            prm.Name, "Brute force completed by " + usr.username + " on " + DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")
+                                            prm.Name, "Brute force completed by " + usr.name + " (" + usr.id + ") on " + DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss")
                                             + " (UTC)");
                                         }
                                     }
                                 }
 
                                 Boolean checkComplete = tsk.Complete(usr);
-                            }
-                            Boolean checkOut = usr.DoCheckOut(currWS);
+                            // }
+                            // Boolean checkOut = usr.DoCheckOut(currWS);
                         }
                     }
                         ret = 1;

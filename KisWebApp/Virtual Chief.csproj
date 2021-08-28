@@ -1468,6 +1468,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HomeRandomTips.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Parts\Controllers\PartsController.cs" />
+    <Compile Include="Areas\Parts\PartsAreaRegistration.cs" />
     <Compile Include="Areas\Personal\Controllers\PersonalAreaController.cs" />
     <Compile Include="Areas\Personal\PersonalAreaRegistration.cs" />
     <Compile Include="Areas\Personal\Views\PersonalArea\App_LocalResources\EditDestinationURL.Designer.cs">
@@ -6438,6 +6440,8 @@
     <Content Include="Areas\FreeTimeMeasurement\Views\web.config" />
     <Content Include="Areas\Production\Views\InputPoints\Index.cshtml" />
     <Content Include="Areas\Production\Views\InputPoints\InputPointDetail.cshtml" />
+    <Content Include="Areas\Workplace\Views\WebGemba\ListInputPoints.cshtml" />
+    <Content Include="Areas\Parts\Views\web.config" />
     <None Include="Properties\PublishProfiles\virtualchief - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -7788,11 +7792,13 @@
       <CustomToolNamespace>ResProducts</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EditTaskPanel.en-US.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\EditTaskPanel.en.resx">
       <CustomToolNamespace>ResProducts</CustomToolNamespace>
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>EditTaskPanel.en.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Products\Views\Products\App_LocalResources\EditTaskPanel.es-AR.resx">
       <CustomToolNamespace>ResProducts</CustomToolNamespace>
@@ -12125,6 +12131,9 @@
     <Folder Include="Areas\FreeTimeMeasurement\Data\" />
     <Folder Include="Areas\FreeTimeMeasurement\Views\Shared\" />
     <Folder Include="Areas\Home\Models\" />
+    <Folder Include="Areas\Parts\Data\" />
+    <Folder Include="Areas\Parts\Views\Parts\" />
+    <Folder Include="Areas\Parts\Views\Shared\" />
     <Folder Include="Areas\Personal\Models\" />
     <Folder Include="Areas\Personal\Views\Shared\" />
     <Folder Include="Areas\Production\Models\" />

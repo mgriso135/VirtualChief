@@ -18,8 +18,8 @@ namespace KIS.Areas.Analysis.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/ProductionHistory/Index", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/ProductionHistory/Index", "", ipAddr);
             }
             else
             {
@@ -150,8 +150,8 @@ namespace KIS.Areas.Analysis.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/ProductionHistory/HistoricDataPanelSales", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/ProductionHistory/HistoricDataPanelSales", "", ipAddr);
             }
             else
             {

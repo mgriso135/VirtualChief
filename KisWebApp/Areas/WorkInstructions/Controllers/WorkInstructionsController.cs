@@ -23,8 +23,8 @@ namespace KIS.Areas.WorkInstructions.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/WorkInstructions/WorkInstructions/Index", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/WorkInstructions/WorkInstructions/Index", "", ipAddr);
             }
             else
             {

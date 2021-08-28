@@ -36,13 +36,13 @@ namespace KIS.Areas.Parts.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
-                KIS.App_Sources.Parts prlist = new KIS.App_Sources.Parts();
+                KIS.App_Sources.Parts prlist = new KIS.App_Sources.Parts(Session["ActiveWorkspace_Name"].ToString());
                 prlist.loadParts(true);
                 ret = Json(prlist.List);
             }
@@ -81,14 +81,14 @@ namespace KIS.Areas.Parts.Controllers
             ViewBag.authR = false;
             if (Session["user"] != null)
             {
-                User curr = (User)Session["user"];
-                ViewBag.authR = curr.ValidatePermessi(elencoPermessi);
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
             if (ViewBag.authR)
             {
                 User usr = (User)Session["user"];
-                KIS.App_Sources.Parts prlist = new KIS.App_Sources.Parts();
+                KIS.App_Sources.Parts prlist = new KIS.App_Sources.Parts(Session["ActiveWorkspace_Name"].ToString());
                 ret = prlist.add(PartNumber, Name, Description, usr.username, true);
             }
             else

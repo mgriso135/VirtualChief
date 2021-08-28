@@ -395,7 +395,7 @@
                         <select id="lstTeamMember">
                             <option value="">@ResImprovementActions.Update.ddlUserSelect</option>
                             @{
-                                KIS.App_Sources.ImprovementAction iAct = new KIS.App_Sources.ImprovementAction(Model.ImprovementActionID, Model.ImprovementActionYear);
+                                KIS.App_Sources.ImprovementAction iAct = new KIS.App_Sources.ImprovementAction(ViewBag.Tenant, Model.ImprovementActionID, Model.ImprovementActionYear);
                                 iAct.loadTeamMembers();
                                 foreach (var usr in iAct.TeamMembers)
                                 {

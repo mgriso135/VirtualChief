@@ -143,7 +143,7 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.authW = false;
                 List<String[]> elencoPermessi = new List<String[]>();
                 String[] prmUser = new String[2];
-                prmUser[0] = "InoutPoint Details";
+                prmUser[0] = "InputPoint Details";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
 
@@ -192,7 +192,7 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.authW = false;
                 List<String[]> elencoPermessi = new List<String[]>();
                 String[] prmUser = new String[2];
-                prmUser[0] = "InoutPoint Details";
+                prmUser[0] = "InputPoint Details";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
 
@@ -252,7 +252,7 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.authW = false;
                 List<String[]> elencoPermessi = new List<String[]>();
                 String[] prmUser = new String[2];
-                prmUser[0] = "InoutPoint Details";
+                prmUser[0] = "InputPoint Details";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
 
@@ -296,7 +296,7 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.authW = false;
                 List<String[]> elencoPermessi = new List<String[]>();
                 String[] prmUser = new String[2];
-                prmUser[0] = "InoutPoint Details";
+                prmUser[0] = "InputPoint Details";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
 
@@ -356,7 +356,7 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.authW = false;
                 List<String[]> elencoPermessi = new List<String[]>();
                 String[] prmUser = new String[2];
-                prmUser[0] = "InoutPoint Details";
+                prmUser[0] = "InputPoint Details";
                 prmUser[1] = "W";
                 elencoPermessi.Add(prmUser);
 

@@ -896,7 +896,7 @@ namespace KIS.Areas.Quality.Controllers
             elencoPermessi.Add(prmUser);
 
             ViewBag.authW = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
@@ -909,7 +909,7 @@ namespace KIS.Areas.Quality.Controllers
             elencoPermessi.Add(prmUser);
 
             ViewBag.authR = false;
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"]!= null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
@@ -918,6 +918,7 @@ namespace KIS.Areas.Quality.Controllers
             ImprovementAction currImpAct = new ImprovementAction(Session["ActiveWorkspace_Name"].ToString(), ImprovementActionID, ImprovementActionYear);
             if ((!ViewBag.authR || !ViewBag.authW) && Session["user"] != null)
             {
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
                 UserAccount curr = (UserAccount)Session["user"];
                 currImpAct.loadTeamMembers();
                 for (int i = 0; i < currImpAct.TeamMembers.Count; i++)

@@ -16,19 +16,18 @@
 {
     <script>
         $(document).ready(function () {
-            loadWorkstationsActives();
-            loadWorkstationsComplete();
+            listInputPoints();
 
-            function loadWorkstationsComplete()
+            function listInputPoints()
             {
                 $.ajax({
-                    url: "@Url.Action("ListWorkstationsComplete", "WebGemba")",
+                    url: "@Url.Action("ListInputPoints", "WebGemba")",
                     type: 'GET',
                     dataType: "html",
                     data: {
                     },
                     success: function (result) {
-                        $("#frmListWorkstations").html(result);
+                        $("#frmListInputPoints").html(result);
                     },
                     error: function (result) {
                         //alert("Error");
@@ -40,40 +39,14 @@
                     }
                 });
 
-                var loadWstCmpl = setTimeout(loadWorkstationsComplete, 6000);
+                // var loadWstCmpl = setTimeout(loadWorkstationsComplete, 6000);
             }
 
-            function loadWorkstationsActives()
-            {
-                $.ajax({
-                    url: "@Url.Action("ListWorkstationsActives", "WebGemba")",
-                    type: 'GET',
-                dataType: "html",
-                data: {
-                },
-                success: function (result) {
-                    $("#frmListActiveWorkstations").html(result);
-                },
-                error: function (result) {
-                    //alert("Error");
-                    //$("#frmListActiveWorkstations").html("Error");
-                },
-                warning: function (result) {
-                    //alert("Warning");
-                    //$("#frmListActiveWorkstations").html("Warning");
-                }
-            });
-
-                var loadWstAct = setTimeout(loadWorkstationsActives, 6000);
-        }
         });
     </script>
     <div class="row-fluid">
-        <div class="span6">
-            <div id="frmListWorkstations"></div>
-        </div>
-        <div class="span6">
-            <div id="frmListActiveWorkstations"></div>
+        <div class="span12">
+            <div id="frmListInputPoints"></div>
         </div>
     </div>
 }

@@ -68,7 +68,7 @@ namespace KIS.Produzione
                     EventoTaskProduzione ev = new EventoTaskProduzione(Session["ActiveWorkspace_Name"].ToString(), evtID);
                     if (ev.IdEvento != -1)
                     {
-                        User usr = new User(ev.User);
+                        User usr = new User(Session["ActiveWorkspace_Name"].ToString(), ev.InputPoint);
                         lblNomeUser.Text = "(" + usr.name + " " + usr.cognome + ")";
                     }
                 }

@@ -2894,7 +2894,7 @@ namespace KIS.App_Code
          * 17 if there are some parameters that needs to be defined
          * 18 if there are problems during the insert into queries
          */
-        public int addIntervalloDiLavoroOperatore(TaskProduzione tsk, User usr, bool completed, int producedQuantity, DateTime start, DateTime end)
+        /*public int addIntervalloDiLavoroOperatore(TaskProduzione tsk, InputPoint ip, bool completed, int producedQuantity, DateTime start, DateTime end)
         {
             int ret = 0;
             this.log = "Entro 1";
@@ -2904,7 +2904,7 @@ namespace KIS.App_Code
                 if (start < end)
                 {
                     Postazione p = new Postazione(this.Tenant, tsk.PostazioneID);
-                    p.loadTaskAvviati(usr);
+                    p.loadTaskAvviati(ip);
                     Boolean currentlyWorking = false;
                     for (int i = 0; i < p.TaskAvviatiUtente.Count; i++)
                     {
@@ -2943,7 +2943,7 @@ namespace KIS.App_Code
 
 
                                     this.log += " Entro 7";
-                                    usr.DoCheckIn(p);
+                                    // usr.DoCheckIn(p);
                                     int retS = tsk.Start(usr, start);
                                     switch (retS)
                                     {
@@ -2977,7 +2977,7 @@ namespace KIS.App_Code
                                         else
                                         {
                                             this.log = " Pause: ";
-                                            retE = tsk.Pause(usr, end);
+                                            retE = tsk.Pause(ip, end);
                                             this.log += retE.ToString();
                                         }
                                     }
@@ -2986,7 +2986,7 @@ namespace KIS.App_Code
                                         //this.log += " retS: " + retS.ToString();
                                     }
                                     tsk.QuantitaProdotta = tsk.QuantitaPrevista;
-                                    usr.DoCheckOut(p);
+                                    // usr.DoCheckOut(p);
 
                                     if (retS == 1 && retE == 1)
                                     {
@@ -3024,7 +3024,7 @@ namespace KIS.App_Code
                 ret = 7;
             }
             return ret;
-        }
+        }*/
 
         /*Returns:
          * 0 if generic error

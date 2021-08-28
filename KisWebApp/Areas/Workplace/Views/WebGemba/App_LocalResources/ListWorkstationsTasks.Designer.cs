@@ -61,7 +61,7 @@ namespace ResWebGemba {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attenzione: non hai il permesso di eseguire i tasks di questa postazione.
+        ///   Looks up a localized string similar to Attenzione: non hai il permesso di eseguire i tasks di questo Input Point.
         /// </summary>
         public static string lblErrNoAuth {
             get {
@@ -79,7 +79,7 @@ namespace ResWebGemba {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Postazione di lavoro non trovata..
+        ///   Looks up a localized string similar to Input Point non trovato.
         /// </summary>
         public static string lblErrWorkstationNotFound {
             get {
@@ -88,7 +88,7 @@ namespace ResWebGemba {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Task della postazione.
+        ///   Looks up a localized string similar to Task dell&apos;Input Point.
         /// </summary>
         public static string lblTitle {
             get {

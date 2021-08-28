@@ -61,8 +61,8 @@
                     <tbody>
                         @foreach (var m in Model)
                         {
-                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ArticoloID, m.ArticoloAnno);
-                            KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(art.Reparto);
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(ViewBag.Tenant, m.ArticoloID, m.ArticoloAnno);
+                            KIS.App_Code.Reparto rp = new KIS.App_Code.Reparto(ViewBag.Tenant, art.Reparto);
                             var bgcolor = "";
                             DateTime EarlyStart = m.EarlyStart;
                             DateTime LateStart = m.LateStart;

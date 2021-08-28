@@ -48,20 +48,20 @@ namespace KIS.Areas.Workplace.Controllers
             return View();
         }
 
-        [Authorize]
+/*        [Authorize]
         public ActionResult ListWorkstationsComplete()
         {
             // Register user action
             /*String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ListWorkstationsComplete", "", ipAddr);
             }
             else
             {
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Workplace/WebGemba/ListWorkstationsComplete", "", ipAddr);
-            }*/
+            }
 
             ViewBag.authX = false;
 
@@ -80,13 +80,13 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 ElencoPostazioni elPost = new ElencoPostazioni(Session["ActiveWorkspace_Name"].ToString());
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
+                UserAccount usr = (UserAccount)Session["user"];
                 usr.loadPostazioniAttive();
                 List<Postazione> results = elPost.elenco.Where(f => !usr.PostazioniAttive.Any(t => t.id == f.id)).ToList();
                 return View(results);
             }
             return View();
-        }
+        }*/
 
         /*Returns:
          * 0 if generic error
@@ -95,13 +95,13 @@ namespace KIS.Areas.Workplace.Controllers
          * 3 if user not authorized
          * 4 if error while checking-in
          */
-        [Authorize]
+        /*[Authorize]
         public int WorkstationCheckIn(int workstationID)
         {
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/WorkstationCheckIn", "workstationID=" + workstationID, ipAddr);
             }
             else
@@ -143,22 +143,22 @@ namespace KIS.Areas.Workplace.Controllers
                 ret = 3;
             }
                 return ret;
-        }
+        }*/
 
-        [Authorize]
+        /*[Authorize]
         public ActionResult ListWorkstationsActives()
         {
             // Register user action
-            /*String ipAddr = Request.UserHostAddress;
+            String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ListWorkstationsActives","", ipAddr);
             }
             else
             {
                 Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Workplace/WebGemba/ListWorkstationsActives","", ipAddr);
-            }*/
+            }
 
             ViewBag.authX = false;
 
@@ -176,12 +176,12 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authX)
             {
-                KIS.App_Code.User usr = (KIS.App_Code.User)Session["user"];
+                UserAccount usr = (UserAccount)Session["user"];
                 usr.loadPostazioniAttive();
                 return View(usr.PostazioniAttive);
             }
             return View();
-        }
+        }*/
 
         /*Returns:
          * 0 if generic error
@@ -190,14 +190,14 @@ namespace KIS.Areas.Workplace.Controllers
          * 3 if user not authorized
          * 4 if error while checking-out
          */
-        [Authorize]
+       /* [Authorize]
         public int WorkstationCheckOut(int workstationID)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/WorkstationCheckOut", "workstationID"+ workstationID, ipAddr);
             }
             else
@@ -239,16 +239,16 @@ namespace KIS.Areas.Workplace.Controllers
                 ret = 3;
             }
             return ret;
-        }
+        }*/
 
-        [Authorize]
+        /*[Authorize]
         public ActionResult ListWorkstationsTasks(int WorkstationID)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Page", "/Workplace/WebGemba/ListWorkstationsTasks", "workstationID=" + WorkstationID, ipAddr);
             }
             else
@@ -292,16 +292,16 @@ namespace KIS.Areas.Workplace.Controllers
             }
 
             return View();
-         }
+         }*/
 
         [Authorize]
-        public ActionResult ListTasksInExecution(int WorkstationID, String user)
+        public ActionResult ListTasksInExecution(int InputPointId)
         {
             // Register user action
             /*String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ListTasksInExecution", "WorkstationID="+WorkstationID+"&user="+user, ipAddr);
             }
             else
@@ -323,39 +323,26 @@ namespace KIS.Areas.Workplace.Controllers
                 ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
-            ViewBag.WorkstationID = -1;
-            ViewBag.workstationName = "";
+            ViewBag.InputPointId = -1;
             
             if (ViewBag.authX)
             {
-                User curr = (User)Session["user"];
-                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), WorkstationID);
-                bool controlloLogin = false;
-                p.loadUtentiLoggati();
-                for (int i = 0; i < p.UtentiLoggati.Count; i++)
-                {
-                    if (p.UtentiLoggati[i] == curr.username)
-                    {
-                        controlloLogin = true;
-                    }
-                }
+                InputPoint p = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
 
-                if (p.id != -1 && controlloLogin)
+                if (p.id != -1)
                 {
-                    ViewBag.WorkstationID = p.id;
-                    ViewBag.workstationName = p.name;
-                    p.loadTaskAvviati(curr);
+                    ViewBag.InputPointId = p.id;
+                    p.loadTaskAvviati();
                     List<TaskProduzione> tasks = new List<TaskProduzione>();
-                    for(int i =0; i < p.TaskAvviatiUtente.Count; i++)
+                    for(int i =0; i < p.RunningTasks.Count; i++)
                     {
-                        tasks.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), p.TaskAvviatiUtente[i]));
+                        tasks.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), p.RunningTasks[i]));
                     }
                     tasks = tasks.OrderBy(x => x.LateFinish).ToList();
                     return View(tasks);
                 }
                 else
                 {
-                    ViewBag.WorkstationID = -1;
                     ViewBag.workstationName = "";
                 }
             }
@@ -364,71 +351,68 @@ namespace KIS.Areas.Workplace.Controllers
         }
 
         [Authorize]
-        public ActionResult ListTasksAvailable(int WorkstationID, String user)
+        public ActionResult ListTasksAvailable(int InputPointId)
         {
-            // Register user action
-            /*String ipAddr = Request.UserHostAddress;
-            if (Session["user"] != null)
+            ViewBag.Tenant = "";
+            if (Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ListTasksAvailable", "WorkstationID=" + WorkstationID + "&user=" + user, ipAddr);
-            }
-            else
-            {
-                Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Workplace/WebGemba/ListTasksAvailable", "WorkstationID=" + WorkstationID + "&user=" + user, ipAddr);
-            }*/
-
-            ViewBag.authX = false;
-
-            List<String[]> elencoPermessi = new List<String[]>();
-            String[] prmUser = new String[2];
-            prmUser[0] = "Task Produzione";
-            prmUser[1] = "X";
-            elencoPermessi.Add(prmUser);
-
-            if (Session["user"] != null)
-            {
-                UserAccount curr = (UserAccount)Session["user"];
-                ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
-            }
-
-            ViewBag.WorkstationID = -1;
-            ViewBag.workstationName = "";
-            if (ViewBag.authX)
-            {
-                User curr = (User)Session["user"];
-                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), WorkstationID);
-                bool controlloLogin = false;
-                p.loadUtentiLoggati();
-                for (int i = 0; i < p.UtentiLoggati.Count; i++)
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
+                // Register user action
+                /*String ipAddr = Request.UserHostAddress;
+                if (Session["user"] != null)
                 {
-                    if (p.UtentiLoggati[i] == curr.username)
-                    {
-                        controlloLogin = true;
-                    }
-                }
-                if (p.id != -1 && controlloLogin)
-                {
-                    ViewBag.WorkstationID = p.id;
-                    ViewBag.workstationName = p.name;
-                    p.loadTaskAvviati(curr);
-                    p.loadTaskProduzioneAvviabili();
-                    List<int> results = p.IdTaskProduzioneAvviabili.Where(f => !p.TaskAvviatiUtente.Any(t => t == f)).ToList();
-                    List<TaskProduzione> tasks = new List<TaskProduzione>();
-                    for (int i = 0; i < results.Count; i++)
-                    {
-                        tasks.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), results[i]));
-                    }
-                    tasks = tasks.OrderBy(x => x.LateStart).ToList();
-                    return View(tasks);
+                    UserAccount curr = (UserAccount)Session["user"];
+                    Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ListTasksAvailable", "WorkstationID=" + WorkstationID + "&user=" + user, ipAddr);
                 }
                 else
                 {
-                    ViewBag.WorkstationID = -1;
-                    ViewBag.workstationName = "";
+                    Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Workplace/WebGemba/ListTasksAvailable", "WorkstationID=" + WorkstationID + "&user=" + user, ipAddr);
+                }*/
+
+                ViewBag.authX = false;
+
+                List<String[]> elencoPermessi = new List<String[]>();
+                String[] prmUser = new String[2];
+                prmUser[0] = "Task Produzione";
+                prmUser[1] = "X";
+                elencoPermessi.Add(prmUser);
+
+                if (Session["user"] != null)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                }
+
+                //ViewBag.WorkstationID = -1;
+                //ViewBag.workstationName = "";
+                ViewBag.InputPointId = -1;
+                if (ViewBag.authX)
+                {
+                    InputPoint p = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                    if (p.id >= 0)
+                    {
+                        ViewBag.InputPointId = p.id;
+                        // ViewBag.WorkstationID = p.id;
+                        // ViewBag.workstationName = p.name;
+                        p.loadTaskAvviati();
+                        p.loadTaskProduzioneAvviabili();
+                        List<int> results = p.RunnableTasks.Where(f => !p.RunningTasks.Any(t => t == f)).ToList();
+                        List<TaskProduzione> tasks = new List<TaskProduzione>();
+                        for (int i = 0; i < results.Count; i++)
+                        {
+                            tasks.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), results[i]));
+                        }
+                        tasks = tasks.OrderBy(x => x.LateStart).ToList();
+                        return View(tasks);
+                    }
+                    else
+                    {
+                        ViewBag.InputPointId = -1;
+                        ViewBag.WorkstationID = -1;
+                        ViewBag.workstationName = "";
+                    }
                 }
             }
-
             return View();
         }
 
@@ -438,14 +422,14 @@ namespace KIS.Areas.Workplace.Controllers
          * 3 if user exceeded the max number of tasks he can do simultaneously
          */
         [Authorize]
-        public int StartTask(int TaskID)
+        public int StartTask(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/StartTask", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/StartTask", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -470,9 +454,10 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
-                if (tsk.TaskProduzioneID != -1)
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                if (tsk.TaskProduzioneID >= 0 && ip.id >= 0)
                 {
-                    bool rt = tsk.Start((User)Session["user"]);
+                    bool rt = tsk.Start(ip);
                     if (rt)
                     {
                         ret = 1;
@@ -480,9 +465,8 @@ namespace KIS.Areas.Workplace.Controllers
                     else
                     {
                         Reparto rp = new Reparto(Session["ActiveWorkspace_Name"].ToString(), tsk.RepartoID);
-                        User curr = (User)Session["user"];
-                        curr.loadTaskAvviati();
-                        if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && curr.TaskAvviati.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
+                        ip.loadTaskAvviati();
+                        if (rp.TasksAvviabiliContemporaneamenteDaOperatore > 0 && ip.RunningTasks.Count >= rp.TasksAvviabiliContemporaneamenteDaOperatore)
                         {
                             ret = 3;
                         }
@@ -509,14 +493,14 @@ namespace KIS.Areas.Workplace.Controllers
          * 4 if user has not the needed authorization
          */
         [Authorize]
-        public int PauseTask(int TaskID)
+        public int PauseTask(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/PauseTask", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/PauseTask", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -541,9 +525,10 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
-                if (tsk.TaskProduzioneID != -1)
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                if (tsk.TaskProduzioneID != -1 && ip.id >= 0)
                 {
-                    bool rt = tsk.Pause((User)Session["user"]);
+                    bool rt = tsk.Pause(ip);
                     if (rt == true)
                     {
                         ret = 1;
@@ -569,14 +554,14 @@ namespace KIS.Areas.Workplace.Controllers
          * 5 if there are some previous tasks that did not end
          */
         [Authorize]
-        public int CompleteTask(int TaskID)
+        public int CompleteTask(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/CompleteTask", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/CompleteTask", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -601,10 +586,11 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
-                if (tsk.TaskProduzioneID != -1)
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                if (tsk.TaskProduzioneID != -1 && ip.id >= 0)
                 {
                     Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
-                    bool rt = tsk.Complete((User)Session["user"]);
+                    bool rt = tsk.Complete(ip);
                     if (rt == true)
                     {
                         ret = 1;
@@ -649,8 +635,8 @@ namespace KIS.Areas.Workplace.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ListTaskParameters", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Workplace/WebGemba/ListTaskParameters", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -769,17 +755,17 @@ namespace KIS.Areas.Workplace.Controllers
          * 5 if Error while adding parameter
          */
         [Authorize]
-        public int AddTaskParameters(int TaskID, int ParamID, int ParamCategory, String ParamName, String ParamValue)
+        public int AddTaskParameters(int TaskID, int ParamID, int ParamCategory, String ParamName, String ParamValue, int InputPointId=-1)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
+                UserAccount curr = (UserAccount)Session["user"];
                 String logprms = ("TaskID=" + TaskID + "&ParamID=" + ParamID + "&ParamCategory=" + ParamCategory + "&ParamName=" + ParamName + "&ParamValue=" + ParamValue);
                 int substr = logprms.Length < 254 ? logprms.Length : 254;
 
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/AddTaskParameters", logprms.Substring(0,substr), ipAddr);
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/AddTaskParameters", logprms.Substring(0,substr), ipAddr);
             }
             else
             {
@@ -845,13 +831,14 @@ namespace KIS.Areas.Workplace.Controllers
                         if(existsOriginal && origParam!=null && origParam.ParameterID!=-1)
                         {
                             ret = 1;
-                            UserAccount curr = (UserAccount)Session["user"];
+                            // UserAccount curr = (UserAccount)Session["user"];
+                            InputPoint inputpoint = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
                             Boolean checkAdd = tskProduzione.addParameter(ParamName,
                                 Server.HtmlEncode(ParamValue),
                                 new ProductParametersCategory(Session["ActiveWorkspace_Name"].ToString(), ParamCategory),
                                 origParam.isFixed,
                                 origParam.isRequired,
-                                curr.userId);
+                                inputpoint.id);
                             ret = checkAdd ? 1 : 5;
                             retS = tskProduzione.log;
                         }
@@ -886,8 +873,8 @@ namespace KIS.Areas.Workplace.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/DeleteTaskParameters", ("TaskID="+TaskID+ "&ParamCategory=" + ParamCategory + "&ParamID="+ParamID).Substring(0, 254), ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/DeleteTaskParameters", ("TaskID="+TaskID+ "&ParamCategory=" + ParamCategory + "&ParamID="+ParamID).Substring(0, 254), ipAddr);
             }
             else
             {
@@ -937,14 +924,14 @@ namespace KIS.Areas.Workplace.Controllers
          * 2 if user not authorized
          */
         [Authorize]
-        public int GenerateWarning(int TaskID)
+        public int GenerateWarning(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/GenerateWarning", "TaskID="+ TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/GenerateWarning", "TaskID="+ TaskID, ipAddr);
             }
             else
             {
@@ -969,9 +956,10 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authW)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
                 if (tsk.TaskProduzioneID != -1)
                 {
-                    bool rt = tsk.generateWarning((User)Session["user"]);
+                    bool rt = tsk.generateWarning(ip);
                     if (rt)
                     {
                         ret = 1;
@@ -1003,8 +991,8 @@ namespace KIS.Areas.Workplace.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/ChangeQuantity", "TaskID="+TaskID+"&Quantity="+Quantity, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/ChangeQuantity", "TaskID="+TaskID+"&Quantity="+Quantity, ipAddr);
             }
             else
             {
@@ -1057,8 +1045,8 @@ namespace KIS.Areas.Workplace.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/WorkstationKPI", "WorkstationID="+ WorkstationID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Workplace/WebGemba/WorkstationKPI", "WorkstationID="+ WorkstationID, ipAddr);
             }
             else
             {
@@ -1174,18 +1162,18 @@ namespace KIS.Areas.Workplace.Controllers
 
         // WebGemba version 2.0
         [Authorize]
-        public ActionResult ListWorkstationsTasks2(int WorkstationID)
+        public ActionResult ListWorkstationsTasks2(int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Page", "/Workplace/WebGemba/ListWorkstationsTasks", "workstationID=" + WorkstationID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Page", "/Workplace/WebGemba/ListWorkstationsTasks", "InputPointId=" + InputPointId, ipAddr);
             }
             else
             {
-                Dati.Utilities.LogAction(Session.SessionID, "Page", "/Workplace/WebGemba/ListWorkstationsTasks", "workstationID=" + WorkstationID, ipAddr);
+                Dati.Utilities.LogAction(Session.SessionID, "Page", "/Workplace/WebGemba/ListWorkstationsTasks", "InputPointId=" + InputPointId, ipAddr);
             }
 
             ViewBag.authX = false;
@@ -1196,7 +1184,7 @@ namespace KIS.Areas.Workplace.Controllers
             prmUser[1] = "X";
             elencoPermessi.Add(prmUser);
 
-            if (Session["user"] != null)
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
@@ -1209,28 +1197,19 @@ namespace KIS.Areas.Workplace.Controllers
             ViewBag.TasksInExecution = new List<TaskProduzione>();
             ViewBag.TasksExecutable = new List<TaskProduzione>();
 
-            if (ViewBag.authX)
+            if (ViewBag.authX && Session["ActiveWorkspace_Name"]!= null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
-                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), WorkstationID);
-                User curr = (User)Session["user"];
-                bool controlloLogin = false;
-                p.loadUtentiLoggati();
-                for (int i = 0; i < p.UtentiLoggati.Count; i++)
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
+                InputPoint p = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                //User curr = (User)Session["user"];
+                if (p.id >= 0)
                 {
-                    if (p.UtentiLoggati[i] == curr.username)
-                    {
-                        controlloLogin = true;
-                    }
-                }
-                if (p.id != -1 && controlloLogin)
-                {
-                    ViewBag.WorkstationID = p.id;
-                    ViewBag.workstationName = p.name;
+                    ViewBag.InputPointID = p.id;
+                    ViewBag.InputPointName = p.name;
 
-                    ViewBag.user = curr.username;
-                    p.loadTaskAvviati(curr);
+                    p.loadTaskAvviati();
                     p.loadTaskProduzioneAvviabili();
-                    List<int> results = p.IdTaskProduzioneAvviabili.Where(f => !p.TaskAvviatiUtente.Any(t => t == f)).ToList();
+                    List<int> results = p.RunnableTasks.Where(f => !p.RunningTasks.Any(t => t == f)).ToList();
                     List<TaskProduzione> tasks = new List<TaskProduzione>();
                     for (int i = 0; i < results.Count; i++)
                     {
@@ -1240,9 +1219,9 @@ namespace KIS.Areas.Workplace.Controllers
 
                     ViewBag.TasksExecutable = tasks;
                     List<TaskProduzione> TasksInExecution = new List<TaskProduzione>();
-                    for(int i =0; i < p.TaskAvviatiUtente.Count; i++)
+                    for(int i =0; i < p.RunningTasks.Count; i++)
                     {
-                        TasksInExecution.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), p.TaskAvviatiUtente[i]));
+                        TasksInExecution.Add(new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), p.RunningTasks[i]));
                     }
 
                     ViewBag.TasksInExecution = TasksInExecution;
@@ -1259,7 +1238,7 @@ namespace KIS.Areas.Workplace.Controllers
         }
 
         [Authorize]
-        public JsonResult GetTasksAvailable(int WorkstationID, String user)
+        public JsonResult GetTasksAvailable(int InputPointId)
         {
             ViewBag.authX = false;
             List<JsonAvailableTasks> avTasks = new List<JsonAvailableTasks>();
@@ -1277,22 +1256,22 @@ namespace KIS.Areas.Workplace.Controllers
 
             if (ViewBag.authX)
             {
-                User curr = (User)Session["user"];
-                Postazione p = new Postazione(Session["ActiveWorkspace_Name"].ToString(), WorkstationID);
-                bool controlloLogin = false;
+                UserAccount curr = (UserAccount)Session["user"];
+                InputPoint p = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                /*bool controlloLogin = false;
                 p.loadUtentiLoggati();
                 for (int i = 0; i < p.UtentiLoggati.Count; i++)
                 {
-                    if (p.UtentiLoggati[i] == curr.username)
+                    if (p.UtentiLoggati[i] == curr.id)
                     {
                         controlloLogin = true;
                     }
-                }
-                if (p.id != -1 && controlloLogin)
+                }*/
+                if (p.id >= 0 /*&& controlloLogin*/)
                 {
-                    p.loadTaskAvviati(curr);
+                    p.loadTaskAvviati();
                     p.loadTaskProduzioneAvviabili();
-                    List<int> results = p.IdTaskProduzioneAvviabili.Where(f => !p.TaskAvviatiUtente.Any(t => t == f)).ToList();
+                    List<int> results = p.RunnableTasks.Where(f => !p.RunningTasks.Any(t => t == f)).ToList();
                     for (int i = 0; i < results.Count; i++)
                     {
                         TaskProduzione currTask = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), results[i]);
@@ -1379,8 +1358,8 @@ namespace KIS.Areas.Workplace.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Page", "/Workplace/WebGemba/ListUsersTasks", "user=" + Session["user"], ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Page", "/Workplace/WebGemba/ListUsersTasks", "user=" + Session["user"], ipAddr);
             }
             else
             {
@@ -1438,14 +1417,14 @@ namespace KIS.Areas.Workplace.Controllers
          * 3 if user exceeded the max number of tasks he can do simultaneously
          */
         [Authorize]
-        public int StartTaskUser(int TaskID)
+        public int StartTaskUser(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/StartTaskUser", "TaskID=" + TaskID +"&user="+Session["user"], ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/StartTaskUser", "TaskID=" + TaskID +"&user="+Session["user"], ipAddr);
             }
             else
             {
@@ -1470,11 +1449,12 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
-                if (tsk.TaskProduzioneID != -1)
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                if (tsk.TaskProduzioneID != -1 && ip.id >= 0)
                 {
                     User curr = (User)Session["user"];
                     curr.DoCheckIn(new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID));
-                    bool rt = tsk.Start((User)Session["user"]);
+                    bool rt = tsk.Start(ip);
                     if (rt)
                     {
                         ret = 1;
@@ -1505,21 +1485,21 @@ namespace KIS.Areas.Workplace.Controllers
         }
 
         /*Returns:
- * 1 if task has started correctly
- * 2 if an error occured
- * 3 if there are some mandatory parameters missing
- * 4 if user has not the needed authorization
- * 5 if there are some previous tasks that did not end
- */
+         * 1 if task has started correctly
+         * 2 if an error occured
+         * 3 if there are some mandatory parameters missing
+         * 4 if user has not the needed authorization
+         * 5 if there are some previous tasks that did not end
+         */
         [Authorize]
-        public int CompleteTaskUser(int TaskID)
+        public int CompleteTaskUser(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/CompleteTaskUser", "TaskID=" + TaskID+"&user="+Session["user"], ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/CompleteTaskUser", "TaskID=" + TaskID+"&user="+Session["user"], ipAddr);
             }
             else
             {
@@ -1544,13 +1524,14 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authX)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
-                if (tsk.TaskProduzioneID != -1)
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                if (tsk.TaskProduzioneID != -1 && ip.id >= 0)
                 {
                     Articolo art = new Articolo(Session["ActiveWorkspace_Name"].ToString(), tsk.ArticoloID, tsk.ArticoloAnno);
                     User curr = (User)Session["user"];
                     Postazione pst = new Postazione(Session["ActiveWorkspace_Name"].ToString(), tsk.PostazioneID);
                     curr.DoCheckIn(pst);
-                    bool rt = tsk.Complete((User)Session["user"]);
+                    bool rt = tsk.Complete(ip);
                     if (rt == true)
                     {
                         ret = 1;
@@ -1590,7 +1571,7 @@ namespace KIS.Areas.Workplace.Controllers
         }
 
         [Authorize]
-        public JsonResult GetTasksAvailableUser(String user)
+        public JsonResult GetTasksAvailableInputPoint(int InputPointId)
         {
             ViewBag.authX = false;
             List<JsonAvailableTasks> avTasks = new List<JsonAvailableTasks>();
@@ -1605,8 +1586,8 @@ namespace KIS.Areas.Workplace.Controllers
                 UserAccount curr = (UserAccount)Session["user"];
                 ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
-
-            if (ViewBag.authX)
+            InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+            if (Session["ActiveWorkspace_Name"]!= null && Session["ActiveWorkspace_Name"].ToString().Length > 0 && ViewBag.authX && ip.id>= 0)
             {
                 User curr = (User)Session["user"];
 
@@ -1657,14 +1638,14 @@ namespace KIS.Areas.Workplace.Controllers
         }
 
         [Authorize]
-        public ActionResult TaskOperatorNotesPanel(int TaskID)
+        public ActionResult TaskOperatorNotesPanel(int TaskID, int InputPointId)
         {
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Workplace/WebGemba/TaskOperatorNotesPanel", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Workplace/WebGemba/TaskOperatorNotesPanel", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -1690,12 +1671,12 @@ namespace KIS.Areas.Workplace.Controllers
             if (ViewBag.authW)
             {
                 TaskProduzione tsk = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
-                if(tsk!=null && tsk.TaskProduzioneID!=-1)
+                InputPoint ip = new InputPoint(Session["ActiveWorkspace_Name"].ToString(), InputPointId);
+                if(tsk!=null && tsk.TaskProduzioneID!=-1 && ip.id >= 0)
                 {
                     ViewBag.TaskID = tsk.TaskProduzioneID;
                     tsk.loadTaskOperatorNotes();
-                    User curr = (User)Session["user"];
-                    ViewBag.user = curr.username;
+                    ViewBag.user = ip.id;
                     return View(tsk.TaskOperatorNotes);
                 }
             }
@@ -1737,6 +1718,47 @@ namespace KIS.Areas.Workplace.Controllers
                 ret = 2;
             }
                 return ret;
+        }
+
+        public ActionResult ListInputPoints()
+        {
+            if(Session["ActiveWorkspace_Name"]!=null && Session["ActiveWorkspace_Name"].ToString().Length> 0)
+            {
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
+                // Register user action
+                String ipAddr = Request.UserHostAddress;
+                if (Session["user"] != null)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Workplace/WebGemba/ListInputPoints", "", ipAddr);
+                }
+                else
+                {
+                    Dati.Utilities.LogAction(Session.SessionID, "Controller", "/Workplace/WebGemba/ListInputPoints", "", ipAddr);
+                }
+
+                ViewBag.authX = false;
+
+                List<String[]> elencoPermessi = new List<String[]>();
+                String[] prmUser = new String[2];
+                prmUser[0] = "InputPoint check-in";
+                prmUser[1] = "X";
+                elencoPermessi.Add(prmUser);
+
+                if (Session["user"] != null)
+                {
+                    UserAccount curr = (UserAccount)Session["user"];
+                    ViewBag.authX = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+                }
+
+                if (ViewBag.authX)
+                {
+                    InputPoints iplist = new InputPoints(Session["ActiveWorkspace_Name"].ToString());
+                    iplist.loadInputPoints();
+                    return View(iplist.list);
+                }
+            }
+            return View();
         }
     }
             
