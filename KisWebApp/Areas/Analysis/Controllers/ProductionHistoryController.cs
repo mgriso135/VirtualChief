@@ -60,8 +60,8 @@ namespace KIS.Areas.Analysis.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/ProductionHistory/HistoricDataPanel", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/ProductionHistory/HistoricDataPanel", "", ipAddr);
             }
             else
             {

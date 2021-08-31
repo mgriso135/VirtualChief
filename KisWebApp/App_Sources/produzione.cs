@@ -2614,19 +2614,19 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                         + " ORDER BY user, data";
+                    cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                         + " ORDER BY inputpoint, data";
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
                         log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
                         DateTime inizio = rdr.GetDateTime(1);
-                        String usrI = rdr.GetString(0);
+                        int usrI = rdr.GetInt32(0);
                         Char EventoI = rdr.GetChar(2);
                         if (rdr.Read())
                         {
                             log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                            String usrF = rdr.GetString(0);
+                            int usrF = rdr.GetInt32(0);
                             Char EventoF = rdr.GetChar(2);
                             DateTime fine = rdr.GetDateTime(1);
                             if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
@@ -2664,19 +2664,19 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                         + " ORDER BY user, data";
+                    cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                         + " ORDER BY inputpoint, data";
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
                         log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
                         DateTime inizio = rdr.GetDateTime(1);
-                        String usrI = rdr.GetString(0);
+                        int usrI = rdr.GetInt32(0);
                         Char EventoI = rdr.GetChar(2);
                         if (rdr.Read())
                         {
                             log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                            String usrF = rdr.GetString(0);
+                            int usrF = rdr.GetInt32(0);
                             Char EventoF = rdr.GetChar(2);
                             DateTime fine = rdr.GetDateTime(1);
                             if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
@@ -2726,7 +2726,7 @@ namespace KIS.App_Code
                                 //   tc += (rp.CalendarioRep.Intervalli[j].Fine - rp.CalendarioRep.Intervalli[j].Inizio);
                                 //   log += "if3 " + tc.TotalHours.ToString() + "<br />";
                                 IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
-                                curr.user = elenco[i].Username;
+                                curr.user = elenco[i].user;
                                 curr.Inizio = rp.CalendarioRep.Intervalli[j].Inizio;
                                 curr.Fine = rp.CalendarioRep.Intervalli[j].Fine;
                                 curr.Intervallo = rp.CalendarioRep.Intervalli[j].Fine - rp.CalendarioRep.Intervalli[j].Inizio;
@@ -2747,7 +2747,7 @@ namespace KIS.App_Code
                                 //tc += (elenco[i].Fine - rp.CalendarioRep.Intervalli[j].Inizio);
                                 //log += "if4 " + tc.TotalHours.ToString() + "<br />";
                                 IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
-                                curr.user = elenco[i].Username;
+                                curr.user = elenco[i].user;
                                 curr.Inizio = rp.CalendarioRep.Intervalli[j].Inizio;
                                 curr.Fine = elenco[i].Fine;
                                 curr.Intervallo = elenco[i].Fine - rp.CalendarioRep.Intervalli[j].Inizio;
@@ -2768,7 +2768,7 @@ namespace KIS.App_Code
                                 //tc += (rp.CalendarioRep.Intervalli[j].Fine - elenco[i].Inizio);
                                 //log += "if5 " + tc.TotalHours.ToString() + "<br />";
                                 IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
-                                curr.user = elenco[i].Username;
+                                curr.user = elenco[i].user;
                                 curr.Inizio = elenco[i].Inizio;
                                 curr.Fine = rp.CalendarioRep.Intervalli[j].Fine;
                                 curr.Intervallo = rp.CalendarioRep.Intervalli[j].Fine - elenco[i].Inizio;
@@ -2789,7 +2789,7 @@ namespace KIS.App_Code
                                 //tc += (elenco[i].Fine - elenco[i].Inizio);
                                 //log += "if6 " + tc.TotalHours.ToString() + "<br />";
                                 IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
-                                curr.user = elenco[i].Username;
+                                curr.user = elenco[i].user;
                                 curr.Inizio = elenco[i].Inizio;
                                 curr.Fine = elenco[i].Fine;
                                 curr.Intervallo = elenco[i].Fine - elenco[i].Inizio;
@@ -5721,7 +5721,7 @@ namespace KIS.App_Code
     {
         public String Tenant;
 
-        public String user;
+        public int user;
         public TimeSpan Intervallo;
         public DateTime Inizio;
         public DateTime Fine;
@@ -5773,13 +5773,25 @@ namespace KIS.App_Code
                 return this.Intervallo;
             }
         }
-        public String Username
+        /*public String Username
+        {
+            get
+            {
+                return this.user;
+            }
+        }*/
+
+        public int InputPointId
         {
             get
             {
                 return this.user;
             }
         }
+
+        private String _InputPointName;
+
+        public String InputPointName { get { return this._InputPointName; } }
         public int IDPostazione
         {
             get

@@ -130,8 +130,8 @@ namespace KIS.Areas.Production.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Workplace/WebGemba/ViewTaskOperationsDetails", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Workplace/WebGemba/ViewTaskOperationsDetails", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -156,7 +156,7 @@ namespace KIS.Areas.Production.Controllers
                 if (tsk != null && tsk.TaskProduzioneID != -1)
                 {
                     tsk.loadIntervalliDiLavoroEffettivi();
-                    var ints = tsk.Intervalli.OrderBy(x => x.Username);
+                    var ints = tsk.Intervalli.OrderBy(x => x.InputPointId);
                     return View(ints);
                 }
             }
@@ -170,8 +170,8 @@ namespace KIS.Areas.Production.Controllers
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Action", "/Analysis/ProductionHistory/ExhumateTask", "TaskID=" + TaskID, ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Analysis/ProductionHistory/ExhumateTask", "TaskID=" + TaskID, ipAddr);
             }
             else
             {
@@ -191,7 +191,7 @@ namespace KIS.Areas.Production.Controllers
                 ckUser = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
-            if (ckUser == true)
+            if (ckUser == true && Session["ActiveWorkspace_Name"] != null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
                 TaskProduzione tskProd = new TaskProduzione(Session["ActiveWorkspace_Name"].ToString(), TaskID);
                 if (tskProd.Status == 'F')

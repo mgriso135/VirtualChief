@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<KIS.App_Code.ProductionOrderStruct>
 
-@if (Model != null && Model.Count() > 0)
+@if (Model != null && Model.Count() > 0 && ViewBag.Tenant!= null)
 {
 
     <script type="text/javascript">
@@ -181,7 +181,8 @@
                                         type: 'POST',
                                         data: {
                                             ProductID: currProd[0],
-                                            ProductYear: currProd[1]
+                                            ProductYear: currProd[1],
+                                            InputPointId: 0
                                         },
                                 success: function (data) {
                                     if (data == "1") {
@@ -614,7 +615,7 @@
                 <td>
                     <select id="ddlReparto_@m.ProductionOrderID-@m.ProductionOrderYear">
                         @{
-                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(m.ProductionOrderID, m.ProductionOrderYear);
+                            KIS.App_Code.Articolo art = new KIS.App_Code.Articolo(ViewBag.Tenant, m.ProductionOrderID, m.ProductionOrderYear);
                             art.Proc.loadReparto();
                             foreach (var rp in art.Proc.RepartiProduttivi)
                             {

@@ -60,12 +60,14 @@ namespace KIS.Areas.Production.Controllers
         [Authorize]
         public ActionResult ProductionSchedulePanel(String customers, String departments, String TypeOfProducts, String status)
         {
+            ViewBag.Tenant = "";
+
             // Register user action
             String ipAddr = Request.UserHostAddress;
             if (Session["user"] != null)
             {
-                KIS.App_Code.User curr = (KIS.App_Code.User)Session["user"];
-                Dati.Utilities.LogAction(curr.username, "Controller", "/Analysis/ProductionHistory/ProductionSchedulePanel", "", ipAddr);
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Controller", "/Analysis/ProductionHistory/ProductionSchedulePanel", "", ipAddr);
             }
             else
             {
@@ -107,8 +109,9 @@ namespace KIS.Areas.Production.Controllers
                 ViewBag.authUndoSchedule = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
             }
 
-            if(ViewBag.authR)
+            if(ViewBag.authR && Session["ActiveWorkspace_Name"]!= null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
             {
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
                 ProductionSchedule schdl = new ProductionSchedule(Session["ActiveWorkspace_Name"].ToString());
                 schdl.loadProductionSchedule();
                 List<ProductionOrderStruct> curr = schdl.ScheduledProducts;

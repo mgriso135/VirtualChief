@@ -2386,12 +2386,12 @@ namespace KIS.App_Code
                         {
                             log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
                             DateTime inizio = rdr.GetDateTime(1);
-                            String usrI = rdr.GetString(0);
+                            int usrI = rdr.GetInt32(0);
                             Char EventoI = rdr.GetChar(2);
                             if (rdr.Read())
                             {
                                 log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                String usrF = rdr.GetString(0);
+                                int usrF = rdr.GetInt32(0);
                                 Char EventoF = rdr.GetChar(2);
                                 DateTime fine = rdr.GetDateTime(1);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
@@ -2466,13 +2466,13 @@ namespace KIS.App_Code
                         {
                             log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
                             DateTime inizio = rdr.GetDateTime(1);
-                            String usrI = rdr.GetString(0);
+                            int usrI = rdr.GetInt32(0);
                             Char EventoI = rdr.GetChar(2);
                             int IDEventoI = rdr.GetInt32(3);
                             if (rdr.Read())
                             {
                                 log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                String usrF = rdr.GetString(0);
+                                int usrF = rdr.GetInt32(0);
                                 Char EventoF = rdr.GetChar(2);
                                 DateTime fine = rdr.GetDateTime(1);
                                 int IDEventoF = rdr.GetInt32(3);
@@ -2542,13 +2542,13 @@ namespace KIS.App_Code
                         {
                             log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
                             DateTime inizio = rdr.GetDateTime(1);
-                            String usrI = rdr.GetString(0);
+                            int usrI = rdr.GetInt32(0);
                             Char EventoI = rdr.GetChar(2);
                             int IDEventoI = rdr.GetInt32(3);
                             if (rdr.Read())
                             {
                                 log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                String usrF = rdr.GetString(0);
+                                int usrF = rdr.GetInt32(0);
                                 Char EventoF = rdr.GetChar(2);
                                 DateTime fine = rdr.GetDateTime(1);
                                 int IDEventoF = rdr.GetInt32(3);
@@ -2630,12 +2630,12 @@ namespace KIS.App_Code
                         {
                             log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
                             DateTime inizio = rdr.GetDateTime(1);
-                            String usrI = rdr.GetString(0);
+                            int usrI = rdr.GetInt32(0);
                             Char EventoI = rdr.GetChar(2);
                             if (rdr.Read())
                             {
                                 log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                String usrF = rdr.GetString(0);
+                                int usrF = rdr.GetInt32(0);
                                 Char EventoF = rdr.GetChar(2);
                                 DateTime fine = rdr.GetDateTime(1);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
@@ -2710,12 +2710,12 @@ namespace KIS.App_Code
                         while (rdr.Read())
                         {
                             DateTime inizio = rdr.GetDateTime(1);
-                            String usrI = rdr.GetString(0);
+                            int usrI = rdr.GetInt32(0);
                             Char EventoI = rdr.GetChar(2);
                             int IDEventoI = rdr.GetInt32(3);
                             if (rdr.Read())
                             {
-                                String usrF = rdr.GetString(0);
+                                int usrF = rdr.GetInt32(0);
                                 Char EventoF = rdr.GetChar(2);
                                 DateTime fine = rdr.GetDateTime(1);
                                 int IDEventoF = rdr.GetInt32(3);

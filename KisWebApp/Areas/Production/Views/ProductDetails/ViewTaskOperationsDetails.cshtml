@@ -20,7 +20,7 @@
                         @foreach (var m in Model)
                         {
                             <tr>
-                                <td>@m.Username</td>
+                                <td>@m.user</td>
                                 <td>@m.DataInizio.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                 <td>@m.DataFine.ToString("dd/MM/yyyy HH:mm:ss")</td>
                                 <td>@Math.Round(m.DurataIntervallo.TotalHours, 2)</td>
