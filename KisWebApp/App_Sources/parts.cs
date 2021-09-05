@@ -121,7 +121,6 @@ namespace KIS.App_Sources
 
     public class Part
     {
-
         protected String Tenant;
 
         public String log;
@@ -234,6 +233,8 @@ namespace KIS.App_Sources
             }
         }
 
+        public List<PartSupplier> Suppliers;
+
         public Part(String tenant, int id)
         {
             this.Tenant = tenant;
@@ -246,6 +247,7 @@ namespace KIS.App_Sources
             this._LastModifiedDate = new DateTime(1970, 1, 1);
             this._LastModifiedBy = "";
             this._Enabled = false;
+            this.Suppliers = new List<PartSupplier>();
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -283,6 +285,7 @@ namespace KIS.App_Sources
             this._LastModifiedDate = new DateTime(1970, 1, 1);
             this._LastModifiedBy = "";
             this._Enabled = false;
+            this.Suppliers = new List<PartSupplier>();
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
@@ -305,6 +308,78 @@ namespace KIS.App_Sources
             }
             rdr.Close();
             conn.Close();
+        }
+
+        public void loadSuppliers()
+        {
+            this.Suppliers = new List<PartSupplier>();
+            if(this.Tenant.Length > 0 && this.ID>=0)
+            {
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT supplierid FROM parts_suppliers WHERE parts_suppliers.partid=@partid";
+                cmd.Parameters.AddWithValue("@partid", this.ID);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while (rdr.Read())
+                {
+                    this.Suppliers.Add(new PartSupplier(this.Tenant, this.ID, rdr.GetString(0)));
+                }
+                rdr.Read();
+                conn.Close();
+            }
+        }
+    }
+
+    public class PartSupplier
+    {
+        private String Tenant;
+
+        private int _PartId;
+        public int PartId { get { return this._PartId; } }
+
+        private String _SupplierId;
+        public String SupplierId { get { return this._SupplierId; } }
+
+        private DateTime _CreationDate;
+        public DateTime CreationDate { get { return this._CreationDate; } }
+
+        private Boolean _Enabled;
+        public Boolean Enabled { get { return this._Enabled; } }
+
+        private String _BusinessName;
+        public String BusinessName { get { return this._BusinessName; } }
+
+        public PartSupplier(String tenant, int partId, String supplierId)
+        {
+            
+            this._PartId = -1;
+            this._SupplierId = "";
+            this._CreationDate = new DateTime(1970, 1, 1);
+            this._Enabled = false;
+            if(tenant .Length > 0 && partId >= 0 && supplierId.Length > 0)
+            {
+                this.Tenant = tenant;
+                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
+                conn.Open();
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT partid, supplierid, creationdate, enabled, anagraficaclienti.ragsociale FROM parts_suppliers INNER JOIN anagraficaclienti "
+                    + " ON (parts_suppliers.supplierid = anagraficaclienti.codice) WHERE anagraficaclienti.provider = true "
+                    + " AND parts_suppliers.partid=@partid AND parts_suppliers.supplierid=@supplierid";
+                cmd.Parameters.AddWithValue("@partid", partId);
+                cmd.Parameters.AddWithValue("@supplierid", supplierId);
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                while(rdr.Read())
+                {
+                    this._PartId = rdr.GetInt32(0);
+                    this._SupplierId = rdr.GetString(1);
+                    this._CreationDate = rdr.GetDateTime(2);
+                    this._Enabled = rdr.GetBoolean(3);
+                    this._BusinessName = rdr.GetString(4);
+                }
+                rdr.Read();
+                conn.Close();
+            }
         }
     }
 }

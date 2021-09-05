@@ -118,5 +118,55 @@ namespace KIS.Areas.Customers.Controllers
                 }
             return ret;
         }
+
+        [Authorize]
+        public ActionResult List()
+        {
+            // Register user action
+            String ipAddr = Request.UserHostAddress;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                Dati.Utilities.LogAction(curr.id.ToString(), "Action", "/Customers/Customer/List", "", ipAddr);
+            }
+            else
+            {
+                Dati.Utilities.LogAction(Session.SessionID, "Action", "/Customers/Customer/List", "", ipAddr);
+            }
+
+            // Check write permissions
+            List<String[]> elencoPermessi = new List<String[]>();
+            String[] prmUser = new String[2];
+            prmUser[0] = "Anagrafica Clienti";
+            prmUser[1] = "W";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authW = false;
+            if (Session["user"] != null && Session["ActiveWorkspace_Name"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authW = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+
+            elencoPermessi = new List<String[]>();
+            prmUser = new String[2];
+            prmUser[0] = "Anagrafica Clienti";
+            prmUser[1] = "R";
+            elencoPermessi.Add(prmUser);
+            ViewBag.authR = false;
+            if (Session["user"] != null)
+            {
+                UserAccount curr = (UserAccount)Session["user"];
+                ViewBag.authR = curr.ValidatePermissions(Session["ActiveWorkspace_Name"].ToString(), elencoPermessi);
+            }
+
+            ViewBag.Tenant = "";
+            if ((ViewBag.authR || ViewBag.authW) && Session["ActiveWorkspace_Name"] !=null && Session["ActiveWorkspace_Name"].ToString().Length > 0)
+            {
+                ViewBag.Tenant = Session["ActiveWorkspace_Name"].ToString();
+                PortafoglioClienti customers = new PortafoglioClienti(Session["ActiveWorkspace_Name"].ToString());
+                return View(customers.Elenco);
+            }
+            return View();
+        }
     }
 }

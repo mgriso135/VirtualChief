@@ -1407,6 +1407,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>addCustomerContact.it.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Customers\Views\Customer\App_LocalResources\List.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>List.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Departments\Controllers\DepartmentsConfigController.cs" />
     <Compile Include="Areas\Departments\DepartmentsAreaRegistration.cs" />
     <Compile Include="Areas\Departments\Views\DepartmentsConfig\App_LocalResources\GetAutoPauseTaskConfig.Designer.cs">
@@ -6442,6 +6447,7 @@
     <Content Include="Areas\Production\Views\InputPoints\InputPointDetail.cshtml" />
     <Content Include="Areas\Workplace\Views\WebGemba\ListInputPoints.cshtml" />
     <Content Include="Areas\Parts\Views\web.config" />
+    <Content Include="Areas\Customers\Views\Customer\List.cshtml" />
     <None Include="Properties\PublishProfiles\virtualchief - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.6.0.intellisense.js" />
     <Content Include="Scripts\jquery-3.6.0.js" />
@@ -7297,6 +7303,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.Designer.cs</LastGenOutput>
       <CustomToolNamespace>ResMeasurementUnits</CustomToolNamespace>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Customers\Views\Customer\App_LocalResources\List.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>List.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ResCustomer</CustomToolNamespace>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Customers\Views\Customer\App_LocalResources\addCustomerContact.en-US.resx">
       <CustomToolNamespace>ResCustomer</CustomToolNamespace>
