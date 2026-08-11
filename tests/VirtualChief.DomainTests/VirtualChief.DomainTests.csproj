@@ -1,0 +1,56 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CS0618;CS0649;CS0169</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
+    <PackageReference Include="MySql.Data" Version="26.7.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.11" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+  <!--
+    The legacy business layer (KisWebApp/App_Sources, namespace KIS.App_Code /
+    KIS.App_Sources) is compiled straight into this test assembly. Only the
+    .NET Framework System.Web surface is shimmed (Shims/SystemWeb.cs). This is
+    exactly how the Tier-1 domain tests run WITHOUT Windows/IIS.
+    Add/remove files as the covered business flows grow.
+  -->
+  <ItemGroup>
+    <Compile Include="..\..\KisWebApp\App_Sources\data.cs" Link="App_Sources\data.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\clienti.cs" Link="App_Sources\clienti.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\commesse.cs" Link="App_Sources\commesse.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\configurazione.cs" Link="App_Sources\configurazione.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\eventi.cs" Link="App_Sources\eventi.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\processi.cs" Link="App_Sources\processi.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\produzione.cs" Link="App_Sources\produzione.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\reparti.cs" Link="App_Sources\reparti.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\postazioni.cs" Link="App_Sources\postazioni.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\users.cs" Link="App_Sources\users.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\Account.cs" Link="App_Sources\Account.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\inputpoints.cs" Link="App_Sources\inputpoints.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\KanbanBox.cs" Link="App_Sources\KanbanBox.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\kpi.cs" Link="App_Sources\kpi.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\relazioni.cs" Link="App_Sources\relazioni.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\WorkInstructions.cs" Link="App_Sources\WorkInstructions.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\menu.cs" Link="App_Sources\menu.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\permessi.cs" Link="App_Sources\permessi.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\FreeTimeMeasurement.cs" Link="App_Sources\FreeTimeMeasurement.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\NoProductiveTasks.cs" Link="App_Sources\NoProductiveTasks.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\andon.cs" Link="App_Sources\andon.cs" />
+  </ItemGroup>
+
+</Project>
