@@ -15,6 +15,21 @@ namespace SIAV_GetDotFile
 {
     class Program
     {
+        static String SiavUsername()
+        {
+            return System.Environment.GetEnvironmentVariable("VC_SIAV_USER") ?? ConfigurationManager.AppSettings["username"];
+        }
+
+        static String SiavPassword()
+        {
+            return System.Environment.GetEnvironmentVariable("VC_SIAV_PASS") ?? ConfigurationManager.AppSettings["password"];
+        }
+
+        static String SiavCustomer()
+        {
+            return System.Environment.GetEnvironmentVariable("VC_SIAV_CUSTOMER") ?? ConfigurationManager.AppSettings["customer"];
+        }
+
         static void Main(string[] args)
         {
             String token = getToken().Result;
@@ -64,11 +79,11 @@ namespace SIAV_GetDotFile
 
             HttpClient client = new HttpClient(handler);
             Uri u = new Uri("https://tstdemocpm.siav.net:9443/login");
-            var payload = "{\"username\": \"kaizenkey\",\"password\": \"kk\"}";
+            var payload = "{\"username\": \"" + SiavUsername() + "\",\"password\": \"" + SiavPassword() + "\"}";
             var c = new StringContent(payload, Encoding.UTF8, "application/json");
 
-            client.DefaultRequestHeaders.Add("username", "kaizenkey");
-            client.DefaultRequestHeaders.Add("password", "kk");
+            client.DefaultRequestHeaders.Add("username", SiavUsername());
+            client.DefaultRequestHeaders.Add("password", SiavPassword());
             System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
             using (var result = await client.PostAsync(u, c))
@@ -99,11 +114,11 @@ namespace SIAV_GetDotFile
                 handler.ClientCertificates.Add(cert);
 
                 HttpClient client = new HttpClient(handler);
-                var payload = "{\"username\": \"kaizenkey\",\"password\": \"kk\"}";
+                var payload = "{\"username\": \"" + SiavUsername() + "\",\"password\": \"" + SiavPassword() + "\"}";
                 var c = new StringContent(payload, Encoding.UTF8, "application/json");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                client.DefaultRequestHeaders.Add("username", "kaizenkey");
-                client.DefaultRequestHeaders.Add("password", "kk");
+                client.DefaultRequestHeaders.Add("username", SiavUsername());
+                client.DefaultRequestHeaders.Add("password", SiavPassword());
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph
@@ -135,12 +150,12 @@ namespace SIAV_GetDotFile
                 handler.ClientCertificates.Add(cert);
 
                 HttpClient client = new HttpClient(handler);
-                var payload = "{\"username\": \"kaizenkey\",\"password\": \"kk\"}";
+                var payload = "{\"username\": \"" + SiavUsername() + "\",\"password\": \"" + SiavPassword() + "\"}";
                 var c = new StringContent(payload, Encoding.UTF8, "application/json");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                client.DefaultRequestHeaders.Add("username", "kaizenkey");
-                client.DefaultRequestHeaders.Add("password", "kk");
+                client.DefaultRequestHeaders.Add("username", SiavUsername());
+                client.DefaultRequestHeaders.Add("password", SiavPassword());
                 System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph

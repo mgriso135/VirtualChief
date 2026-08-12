@@ -24,7 +24,7 @@ namespace KIS.App_Sources
             // Configure Auth0 parameters
             string auth0Domain = ConfigurationManager.AppSettings["auth0:Domain"];
             string auth0ClientId = ConfigurationManager.AppSettings["auth0:ClientId"];
-            string auth0ClientSecret = ConfigurationManager.AppSettings["auth0:ClientSecret"];
+            string auth0ClientSecret = KIS.App_Code.Secrets.Get("VC_AUTH0_CLIENT_SECRET", "auth0:ClientSecret");
             string auth0Audience = ConfigurationManager.AppSettings["auth0:Audience"];
             string auth0RedirectUri = ConfigurationManager.AppSettings["auth0:RedirectUri"];
             string auth0PostLogoutRedirectUri = ConfigurationManager.AppSettings["auth0:PostLogoutRedirectUri"];

@@ -453,3 +453,54 @@ against PostgreSQL after the migration.
   update the clients in the same commit.
 - Keep **MySQL 8** and the schema untouched.
 - Any NuGet bump must preserve Bootstrap / jQuery UI rendering exactly.
+
+---
+
+## 6. v2.0 Working Plan
+
+> **Versioning:** all work for the new version of VirtualChief happens on the
+> **`v2.0` branch**, created off `master` and pushed to `origin`. `master` remains
+> the stable product baseline. This session covers **branch setup + Phase 0
+> (stabilize) + Phase 1 (same-stack modernization)**; later phases follow the
+> roadmap in §4 either on `v2.0` in subsequent sessions or on their own branches.
+
+### 6.1 Branch setup
+1. `git checkout -b v2.0` off `master` (clean tree), then `git push -u origin v2.0`.
+2. All commits and the eventual PR target `v2.0`.
+
+### 6.2 Phase 0 — Stabilize (no architectural change)
+1. **Secrets → config store:** extract hardcoded SMTP/API/DB/SIAV/Auth0
+   credentials (e.g. `Controllers/DelaysAlarmController.cs`,
+   `App_Sources/Account.cs`, `KanbanBox/*.asmx.cs`, `Eventi/*.asmx.cs`) into
+   `Web.config` appSettings / an external secrets source; nothing printed or
+   committed.
+2. **Parameterize concatenated SQL** in `App_Sources` — remove the string-concat
+   injection surface without changing query semantics.
+3. **Harden API:** remove `TypeNameHandling.All`
+   (`KisWebApp/App_Start/WebApiConfig.cs:23`); restore SSL validation in the SIAV
+   tool.
+4. **Delete orphans/artifacts:** `ConsoleApp1`, `VCAlarmEvents` (netcoreapp2.0),
+   `VCAlarmsEvents` (broken duplicate), `UpgradeLog.*`, `_UpgradeReport_Files/`,
+   `Kaizen Indicator System.v11.suo`, `Packages.dgml` — update the solution file
+   accordingly.
+
+### 6.3 Phase 1 — Same-stack modernization
+1. `packages.config` → **PackageReference**, pin versions compatible with .NET
+   Framework 4.8 (preserve Bootstrap/jQuery UI rendering).
+2. **Dapper** over the existing SQL in `App_Sources` (same queries, less ADO.NET
+   boilerplate).
+3. Extract duplicated logic (delays/warnings, SIAV export DTOs, EventsExport)
+   into a **shared class library** used by both ASMX and Web API paths.
+4. Typed config reader over `Web.config` (same values); **Serilog** structured
+   logging in `data.cs`, controllers, console agents.
+
+### 6.4 Verification for this session
+- `tests/provision-db.sh` (once per machine), then `dotnet test
+  tests/VirtualChief.Tests` (22 green) and `dotnet test
+  tests/VirtualChief.DomainTests` (8 green).
+- Confirm the DomainTests still compile the unmodified `App_Sources` (the Dapper
+  swap must not break the class-level tests) and that no project fails to build.
+
+### 6.5 Guardrails
+- No UI or business-function change; MySQL 8 schema untouched.
+- Each phase committed separately, tests green before moving on.

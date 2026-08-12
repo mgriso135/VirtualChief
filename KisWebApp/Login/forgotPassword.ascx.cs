@@ -41,7 +41,7 @@ namespace KIS.Login
 
                         mMessage.Body = GetLocalResourceObject("lblMailBody1").ToString()
                             +GetLocalResourceObject("lblMailBody2").ToString() +": " + newPass + "<br/><br/><br/>KIS Robot";
-                        SmtpClient smtpcli = new SmtpClient();
+                        SmtpClient smtpcli = KIS.App_Code.Secrets.ConfigureSmtp(new SmtpClient());
                         try
                         {
                             smtpcli.Send(mMessage);

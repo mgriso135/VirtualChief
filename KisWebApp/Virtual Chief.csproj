@@ -812,6 +812,7 @@
     <Compile Include="App_Sources\NoProductiveTasks.cs" />
     <Compile Include="App_Sources\parts.cs" />
     <Compile Include="App_Sources\quality.cs" />
+    <Compile Include="App_Sources\Secrets.cs" />
     <Compile Include="App_Sources\WorkInstructions.cs" />
     <Compile Include="App_Start\Routeconfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />

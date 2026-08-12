@@ -1146,7 +1146,7 @@ namespace KIS.App_Sources
                             + "<a href='http://www.virtual-chief.com/AccountsMgm/Account/ViewInvites'>" + this.Name + "</a>"
                             + "</div></body></html>";
 
-                        SmtpClient smtpcli = new SmtpClient();
+                        SmtpClient smtpcli = KIS.App_Code.Secrets.ConfigureSmtp(new SmtpClient());
                         smtpcli.DeliveryMethod = SmtpDeliveryMethod.Network;
                         smtpcli.EnableSsl = true;
 

@@ -39,7 +39,7 @@ namespace Dati
                 var claimsIdentity = user.Identity as ClaimsIdentity;
                 activeWorkspace = claimsIdentity?.FindFirst(c => c.Type.Contains("workspace"))?.Value;
             }*/
-            string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["masterDB"].ConnectionString);
+            string connStr = KIS.App_Code.Secrets.GetConnectionString("VC_MASTERDB_CONN", "masterDB");
             connStr = connStr.Replace("database=", "database=" + tenant);
             return connStr;
         }
@@ -51,7 +51,7 @@ namespace Dati
 
         public String GetMainConnectionString()
         {
-            string connStr = String.Format(System.Configuration.ConfigurationManager.ConnectionStrings["vcmain"].ConnectionString);
+            string connStr = KIS.App_Code.Secrets.GetConnectionString("VC_VCMAIN_CONN", "vcmain");
             return connStr;
         }
 
@@ -168,9 +168,14 @@ namespace Dati
             conn.Open();
             Boolean ret = false;
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO userslog(time, user, type, detail, querystring, ip) VALUES('" +
-                DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff")
-                + "', '" + user + "', '"+type+"', '" + detail + "', '" + querystring + "', '"+ipAddr+"')";
+            cmd.CommandText = "INSERT INTO userslog(time, user, type, detail, querystring, ip) VALUES(@time, "
+                +"@usr, @type, @detail, @querystring, @ip)";
+            cmd.Parameters.AddWithValue("@time", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+            cmd.Parameters.AddWithValue("@usr", user);
+            cmd.Parameters.AddWithValue("@type", type);
+            cmd.Parameters.AddWithValue("@detail", detail);
+            cmd.Parameters.AddWithValue("@querystring", querystring);
+            cmd.Parameters.AddWithValue("@ip", ipAddr);
             try
             {
                 cmd.ExecuteNonQuery();

@@ -202,8 +202,6 @@ namespace ThirdPartySalesOrders_Finestra3000
                         String strErrors = "";
                             for (int j = 0; j < lstProducts.Count; j++)
                             {
-                                HttpClient client2 = new HttpClient();
-                                client2.DefaultRequestHeaders.Add("X-API-KEY", "zk6eNbKHmlq=M1xMS");
                             String qryAddProd = "?OrderID=" + SalesOrderID.ToString()
                                 + "&OrderYear=" + SalesOrderYear.ToString()
                                 + "&ProductID=" + lstProducts[j].ProductID
@@ -278,7 +276,7 @@ namespace ThirdPartySalesOrders_Finestra3000
             HttpClient _httpClient = new HttpClient();
             string sBaseUrl = ConfigurationManager.AppSettings["baseurl"];
             string url = sBaseUrl + "api/ThirdPartySalesOrders/CheckIfProductExists?ExternalID=";
-             _httpClient.DefaultRequestHeaders.Add("X-API-KEY", "dhqUTLJsLCtq047F");
+             _httpClient.DefaultRequestHeaders.Add("X-API-KEY", System.Environment.GetEnvironmentVariable("VC_THIRDPARTY_API_KEY") ?? ConfigurationManager.AppSettings["x-api-key"]);
 
             // The actual Get method
             using (var result = await _httpClient.GetAsync($"{url}{ExternalID}"))
@@ -296,7 +294,7 @@ namespace ThirdPartySalesOrders_Finestra3000
             string sBaseUrl = ConfigurationManager.AppSettings["baseurl"];
             string url = sBaseUrl + "api/ThirdPartySalesOrders/GetRemoteAddSalesOrderHeader";
 
-            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", "dhqUTLJsLCtq047F");
+            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", System.Environment.GetEnvironmentVariable("VC_THIRDPARTY_API_KEY") ?? ConfigurationManager.AppSettings["x-api-key"]);
 
             // The actual Get method
             using (var result = await _httpClient.GetAsync($"{url}{QueryString}"))
@@ -313,7 +311,7 @@ namespace ThirdPartySalesOrders_Finestra3000
             string sBaseUrl = ConfigurationManager.AppSettings["baseurl"];
             string url = sBaseUrl + "api/ThirdPartySalesOrders/AddProductToSalesOrderAndPlan";
 
-            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", "dhqUTLJsLCtq047F");
+            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", System.Environment.GetEnvironmentVariable("VC_THIRDPARTY_API_KEY") ?? ConfigurationManager.AppSettings["x-api-key"]);
 
             // The actual Get method
             using (var result = await _httpClient.GetAsync($"{url}{QueryString}"))
@@ -335,8 +333,8 @@ namespace ThirdPartySalesOrders_Finestra3000
                 smtpport = Int32.Parse(ssmtpport);
             }
             catch { smtpport = 587; }
-            string smtpUsername = ConfigurationManager.AppSettings["smtpUsername"];
-            string smtpPassword = ConfigurationManager.AppSettings["smtpPassword"];
+            string smtpUsername = System.Environment.GetEnvironmentVariable("VC_SMTP_USER") ?? ConfigurationManager.AppSettings["smtpUsername"];
+            string smtpPassword = System.Environment.GetEnvironmentVariable("VC_SMTP_PASS") ?? ConfigurationManager.AppSettings["smtpPassword"];
 
             System.Net.Mail.MailMessage mMessage = new System.Net.Mail.MailMessage();
             mMessage.From = new MailAddress("matteo.griso@virtualchief.net", "Scheduler@VirtualChief");

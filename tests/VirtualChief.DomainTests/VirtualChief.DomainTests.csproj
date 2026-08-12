@@ -38,6 +38,7 @@
     <Compile Include="..\..\KisWebApp\App_Sources\processi.cs" Link="App_Sources\processi.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\produzione.cs" Link="App_Sources\produzione.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\reparti.cs" Link="App_Sources\reparti.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\Secrets.cs" Link="App_Sources\Secrets.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\postazioni.cs" Link="App_Sources\postazioni.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\users.cs" Link="App_Sources\users.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\Account.cs" Link="App_Sources\Account.cs" />

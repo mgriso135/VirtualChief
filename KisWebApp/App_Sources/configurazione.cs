@@ -693,6 +693,11 @@ namespace KIS.App_Code
         {
             get
             {
+                string v = System.Environment.GetEnvironmentVariable("VC_KANBANBOX_API_KEY");
+                if (!string.IsNullOrEmpty(v))
+                {
+                    return v;
+                }
                 return (String)this["x-api-key"];
             }
             set

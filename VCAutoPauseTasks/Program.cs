@@ -28,7 +28,12 @@ namespace VCAutoPauseTasks
             string sBaseUrl = ConfigurationManager.AppSettings["baseurl"];
             string url = sBaseUrl + "api/AutoPauseTasks/AutoPauseTasks";
 
-            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", "PlO9qMULFJOPKJ6D");
+            string v = System.Environment.GetEnvironmentVariable("VC_AUTO_PAUSE_API_KEY");
+            if (string.IsNullOrEmpty(v))
+            {
+                v = ConfigurationManager.AppSettings["x-api-key"];
+            }
+            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", v);
 
             // The actual Get method
             using (var result = await _httpClient.GetAsync($"{url}"))

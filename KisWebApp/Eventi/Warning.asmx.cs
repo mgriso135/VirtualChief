@@ -128,7 +128,7 @@ namespace KIS.Eventi
                         + ResEvents.Warning.lblTask + ": " + tskList[i].Name + " (" + tskList[i].TaskProduzioneID.ToString() + ")"
                         + "</div></body></html>";
 
-                    SmtpClient smtpcli = new SmtpClient();
+                    SmtpClient smtpcli = KIS.App_Code.Secrets.ConfigureSmtp(new SmtpClient());
                     smtpcli.Send(mMessage);
                 }
                 // Metto lo warning come già segnalato

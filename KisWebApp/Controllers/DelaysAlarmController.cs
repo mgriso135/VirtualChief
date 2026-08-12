@@ -200,7 +200,7 @@ namespace KIS.Controllers
                         + "</a></div>"
                         + "</body></html>";
 
-                    SmtpClient smtpcli = new SmtpClient();
+                    SmtpClient smtpcli = KIS.App_Code.Secrets.ConfigureSmtp(new SmtpClient());
                     smtpcli.DeliveryMethod = SmtpDeliveryMethod.Network;
                     smtpcli.EnableSsl = true;
                     smtpcli.Send(mMessage);

@@ -48,7 +48,7 @@ namespace VCProductionEventsExport_SIAV
             string sBaseUrl = ConfigurationManager.AppSettings["baseurl"];
             string url = sBaseUrl + "api/EventsExport/ExportFinishedTasksEvents";
 
-            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", "TEST");
+            _httpClient.DefaultRequestHeaders.Add("X-API-KEY", System.Environment.GetEnvironmentVariable("VC_EXPORTEVENTS_API_KEY") ?? ConfigurationManager.AppSettings["x-api-key"]);
 
             // The actual Get method
             using (var result = await _httpClient.GetAsync($"{url}{QueryString}"))
@@ -586,7 +586,7 @@ namespace VCProductionEventsExport_SIAV
             Console.WriteLine("Writing events to db...\n");
             String db = ConfigurationManager.AppSettings["exportdbname"];
             String dbuser = ConfigurationManager.AppSettings["exportdbuser"];
-            String dbpass = ConfigurationManager.AppSettings["exportdbpassword"];
+            String dbpass = System.Environment.GetEnvironmentVariable("VC_EXPORT_DB_PASSWORD") ?? ConfigurationManager.AppSettings["exportdbpassword"];
             String dbtable = ConfigurationManager.AppSettings["exportdbtable"];
             String sqlConn = "server=localhost; user id=" + dbuser + "; password=" + dbpass + "; database=" + db + ";pooling=true;SslMode=none;";
             MySqlConnection conn = new MySqlConnection(sqlConn);

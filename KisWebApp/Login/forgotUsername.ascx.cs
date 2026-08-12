@@ -50,7 +50,7 @@ namespace KIS.Login
                             mMessage.Body = GetLocalResourceObject("lblMail1").ToString()
                                 +GetLocalResourceObject("lblMail2").ToString()
                                 + ": " + lista.elencoUtenti[i].username + "<br/><br/><br/>KIS Robot";
-                            SmtpClient smtpcli = new SmtpClient();
+                            SmtpClient smtpcli = KIS.App_Code.Secrets.ConfigureSmtp(new SmtpClient());
                             try
                             {
                                 smtpcli.Send(mMessage);

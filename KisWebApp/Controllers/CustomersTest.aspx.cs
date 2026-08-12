@@ -28,7 +28,7 @@ namespace KIS.Controllers
             tblCustomerData.Visible = false;
             rptCustomerList.Visible = true;
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", "zk6eNbKHmlq=M1xMS");
+            client.DefaultRequestHeaders.Add("X-API-KEY", KIS.App_Code.Secrets.Get("VC_CUSTOMERS_TEST_API_KEY", "customersTestApiKey"));
             CustomersControllerConfig cControllerCfg = (CustomersControllerConfig)System.Configuration.ConfigurationManager.GetSection("controllersConfig");
             client.BaseAddress = new Uri(cControllerCfg.BaseUrl + "customers");
             HttpResponseMessage response = null;
@@ -84,7 +84,7 @@ namespace KIS.Controllers
             tblCustomerData.Visible = true;
             rptCustomerList.Visible = false;
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", "zk6eNbKHmlq=M1xMS");
+            client.DefaultRequestHeaders.Add("X-API-KEY", KIS.App_Code.Secrets.Get("VC_CUSTOMERS_TEST_API_KEY", "customersTestApiKey"));
             CustomersControllerConfig cControllerCfg = (CustomersControllerConfig)System.Configuration.ConfigurationManager.GetSection("controllersConfig");
             client.BaseAddress = new Uri(cControllerCfg.BaseUrl + "customers");
             String urlParameters = "?id="+custID;
@@ -142,7 +142,7 @@ namespace KIS.Controllers
             nCli.email = txtemail.Text;
 
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", "zk6eNbKHmlq=M1xMS");
+            client.DefaultRequestHeaders.Add("X-API-KEY", KIS.App_Code.Secrets.Get("VC_CUSTOMERS_TEST_API_KEY", "customersTestApiKey"));
             CustomersControllerConfig cControllerCfg = (CustomersControllerConfig)System.Configuration.ConfigurationManager.GetSection("controllersConfig");
             client.BaseAddress = new Uri(cControllerCfg.BaseUrl + "customers");
 
@@ -176,7 +176,7 @@ namespace KIS.Controllers
             nCli.email = txtemail.Text;
 
             HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", "zk6eNbKHmlq=M1xMS");
+            client.DefaultRequestHeaders.Add("X-API-KEY", KIS.App_Code.Secrets.Get("VC_CUSTOMERS_TEST_API_KEY", "customersTestApiKey"));
             CustomersControllerConfig cControllerCfg = (CustomersControllerConfig)System.Configuration.ConfigurationManager.GetSection("controllersConfig");
             client.BaseAddress = new Uri(cControllerCfg.BaseUrl + "customers");
 
@@ -198,7 +198,7 @@ namespace KIS.Controllers
             HttpClient client = new HttpClient();
             CustomersControllerConfig cControllerCfg = (CustomersControllerConfig)System.Configuration.ConfigurationManager.GetSection("controllersConfig");
             client.BaseAddress = new Uri(cControllerCfg.BaseUrl + "customers");
-            client.DefaultRequestHeaders.Add("X-API-KEY", "zk6eNbKHmlq=M1xMS");
+            client.DefaultRequestHeaders.Add("X-API-KEY", KIS.App_Code.Secrets.Get("VC_CUSTOMERS_TEST_API_KEY", "customersTestApiKey"));
             var response = client.DeleteAsync(client.BaseAddress + "?id=" + txtCodClienteDelete.Text);
 
             if (response.Result.IsSuccessStatusCode)
