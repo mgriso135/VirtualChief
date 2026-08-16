@@ -84,7 +84,6 @@ namespace SIAV_GetDotFile
 
             client.DefaultRequestHeaders.Add("username", SiavUsername());
             client.DefaultRequestHeaders.Add("password", SiavPassword());
-            System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
             using (var result = await client.PostAsync(u, c))
             {
@@ -119,10 +118,9 @@ namespace SIAV_GetDotFile
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 client.DefaultRequestHeaders.Add("username", SiavUsername());
                 client.DefaultRequestHeaders.Add("password", SiavPassword());
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph
-               /*String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString()
+                /*String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString()
                     +"&statisticFunction="+metric;*/
                String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotPerformanceFromCustomerAndPidFiltered?customer=kaizenkey&PID=" + processID.ToString()
                     + "&statisticFunction=" + metric;
@@ -156,7 +154,6 @@ namespace SIAV_GetDotFile
 
                 client.DefaultRequestHeaders.Add("username", SiavUsername());
                 client.DefaultRequestHeaders.Add("password", SiavPassword());
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = (senderX, certificate, chain, sslPolicyErrors) => { return true; };
 
                 // Gets normal graph
                 //String u = "https://tstdemocpm.siav.net:9443/FileSystemManager/getDotFrequenceFromCustomerAndPid?customer=kaizenkey&PID=" + processID.ToString();

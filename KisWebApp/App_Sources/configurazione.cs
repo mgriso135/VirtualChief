@@ -245,14 +245,15 @@ namespace KIS.App_Code
                     rdr.Close();
                 if(exists)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET parametro = '"+expDate+"' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET parametro = @p WHERE "
                         + "Sezione = 'Main' AND parametro = 'ExpiryDate'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'Main', -1, 'ExpiryDate', '"+ expDate + "')";
+                        + "'Main', -1, 'ExpiryDate', @p)";
                 }
+                cmd.Parameters.AddWithValue("@p", expDate);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -417,14 +418,15 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (exists)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET `valore` = '"+value.ToString()+"' WHERE(`Sezione` = 'Main') and(`ID` = '-1') and(`parametro` = 'SalesOrderImportFrom3PartySystemEnabled')";
+                    cmd.CommandText = "UPDATE configurazione SET `valore` = @valore WHERE(`Sezione` = 'Main') and(`ID` = '-1') and(`parametro` = 'SalesOrderImportFrom3PartySystemEnabled')";
                     ;
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'Main', -1, 'SalesOrderImportFrom3PartySystemEnabled', '" + value + "')";
+                        + "'Main', -1, 'SalesOrderImportFrom3PartySystemEnabled', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -488,14 +490,14 @@ namespace KIS.App_Code
 
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString()
-                        + "' WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore"
+                        + " WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', '"
-                        + value + "')";
+                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
 
                 try
                 {
@@ -555,14 +557,14 @@ namespace KIS.App_Code
 
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString()
-                        + "' WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore"
+                        + " WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', '"
-                        + value + "')";
+                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
 
                 try
                 {
@@ -614,8 +616,8 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (res)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '"
-                        + value + "' WHERE Sezione ='Main' AND ID =-1 AND parametro = 'TimeZone'";
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore"
+                        + " WHERE Sezione ='Main' AND ID =-1 AND parametro = 'TimeZone'";
                 }
                 else
                 {
@@ -623,9 +625,10 @@ namespace KIS.App_Code
                         + "'Main', "
                         + "-1, "
                         + "'TimeZone', "
-                        + "'" + value.ToString() + "'"
+                        + "@valore"
                         +")";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -766,18 +769,19 @@ namespace KIS.App_Code
                 String sqlString = "";
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
-                    sqlString = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                    sqlString = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'";
                 }
                 else
                 {
                     sqlString = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'Wizard', -1, 'TipoPERT', '" + value + "')";
+                        + "'Wizard', -1, 'TipoPERT', @valore)";
                 }
                 rdr.Close();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 cmd.CommandText = sqlString;
+                cmd.Parameters.AddWithValue("@valore", value);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -906,15 +910,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '"+value.ToString()+"' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_IDCommessa'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        +"'OrderStatusCustomerReport base', -1, 'Commessa_IDCommessa', '"+value.ToString()+"')";
+                        +"'OrderStatusCustomerReport base', -1, 'Commessa_IDCommessa', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -951,15 +956,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_Cliente'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Commessa_Cliente', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Commessa_Cliente', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -995,15 +1001,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_DataInserimento'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Commessa_DataInserimento', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Commessa_DataInserimento', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1039,15 +1046,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_Note'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Commessa_Note', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Commessa_Note', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1083,15 +1091,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_IDProdotto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_IDProdotto', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_IDProdotto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1127,15 +1136,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_NomeProdotto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_NomeProdotto', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_NomeProdotto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1171,15 +1181,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_NomeVariante'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_NomeVariante', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_NomeVariante', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1215,15 +1226,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Matricola'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Matricola', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Matricola', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1259,15 +1271,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Status'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Status', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Status', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1303,15 +1316,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Reparto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Reparto', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Reparto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1347,15 +1361,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_DataPrevistaConsegna', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_DataPrevistaConsegna', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1391,15 +1406,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_DataPrevistaFineProduzione', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_DataPrevistaFineProduzione', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1435,15 +1451,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_EarlyStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_EarlyStart', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_EarlyStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1479,15 +1496,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_EarlyFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_EarlyFinish', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_EarlyFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1523,15 +1541,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_LateStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_LateStart', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_LateStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1567,15 +1586,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_LateFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_LateFinish', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_LateFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1611,15 +1631,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Quantita'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Quantita', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Quantita', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1655,15 +1676,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_QuantitaProdotta', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_QuantitaProdotta', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1699,15 +1721,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Ritardo'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Ritardo', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_Ritardo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1743,15 +1766,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_TempoDiLavoroTotale', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_TempoDiLavoroTotale', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1787,15 +1811,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_LeadTime'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_LeadTime', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_LeadTime', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1831,15 +1856,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_TempoDiLavoroPrevisto', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_TempoDiLavoroPrevisto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1875,15 +1901,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_IndicatoreCompletamentoTasks', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_IndicatoreCompletamentoTasks', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1919,15 +1946,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_IndicatoreCompletamentoTempoPrevisto', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_IndicatoreCompletamentoTempoPrevisto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -1963,15 +1991,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_ViewGanttTasks', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_ViewGanttTasks', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2007,15 +2036,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_ViewElencoTasks', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Prodotto_ViewElencoTasks', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2051,15 +2081,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_ID'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_ID', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_ID', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2095,15 +2126,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Nome'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_Nome', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_Nome', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2139,15 +2171,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Descrizione'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_Descrizione', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_Descrizione', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2183,15 +2216,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Postazione'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_Postazione', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_Postazione', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2227,15 +2261,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_EarlyStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_EarlyStart', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_EarlyStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2271,15 +2306,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_LateStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_LateStart', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_LateStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2315,15 +2351,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_EarlyFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_EarlyFinish', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_EarlyFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2359,15 +2396,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_LateFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_LateFinish', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_LateFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2403,15 +2441,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_NOperatori'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_NOperatori', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_NOperatori', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2447,15 +2486,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_TempoCiclo'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_TempoCiclo', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_TempoCiclo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2491,15 +2531,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_TempoDiLavoroPrevisto', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_TempoDiLavoroPrevisto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2535,15 +2576,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_TempoDiLavoroEffettivo', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_TempoDiLavoroEffettivo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2579,15 +2621,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Status'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_Status', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_Status', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -2623,15 +2666,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_QuantitaProdotta'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport base', -1, 'Task_QuantitaProdotta', '" + value.ToString() + "')";
+                        + "'OrderStatusCustomerReport base', -1, 'Task_QuantitaProdotta', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3128,23 +3172,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Commessa_IDCommessa'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_IDCommessa'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Commessa_IDCommessa', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Commessa_IDCommessa', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3171,23 +3217,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Commessa_Cliente'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_Cliente'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Commessa_Cliente', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Commessa_Cliente', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3213,23 +3261,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Commessa_DataInserimento'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_DataInserimento'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Commessa_DataInserimento', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Commessa_DataInserimento', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3255,23 +3305,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Commessa_Note'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_Note'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Commessa_Note', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Commessa_Note', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3297,23 +3349,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_IDProdotto'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_IDProdotto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_IDProdotto', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_IDProdotto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3339,23 +3393,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_NomeProdotto'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_NomeProdotto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_NomeProdotto', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_NomeProdotto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3381,23 +3437,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_NomeVariante'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_NomeVariante'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_NomeVariante', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_NomeVariante', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3423,23 +3481,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_Matricola'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Matricola'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_Matricola', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_Matricola', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3465,23 +3525,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_Status'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Status'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_Status', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_Status', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3507,23 +3569,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_Reparto'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Reparto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_Reparto', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_Reparto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3549,23 +3613,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_DataPrevistaConsegna', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_DataPrevistaConsegna', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3591,23 +3657,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_DataPrevistaFineProduzione', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_DataPrevistaFineProduzione', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3633,23 +3701,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_EarlyStart'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_EarlyStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_EarlyStart', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_EarlyStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3675,23 +3745,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_EarlyFinish'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_EarlyFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_EarlyFinish', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_EarlyFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3717,23 +3789,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_LateStart'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_LateStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_LateStart', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_LateStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3759,23 +3833,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_LateFinish'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_LateFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_LateFinish', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_LateFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3801,23 +3877,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_Quantita'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Quantita'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_Quantita', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_Quantita', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3843,23 +3921,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_QuantitaProdotta', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_QuantitaProdotta', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3885,23 +3965,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_Ritardo'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Ritardo'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_Ritardo', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_Ritardo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3927,23 +4009,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_TempoDiLavoroTotale', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_TempoDiLavoroTotale', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -3969,23 +4053,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_LeadTime'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_LeadTime'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_LeadTime', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_LeadTime', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4011,23 +4097,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_TempoDiLavoroPrevisto', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_TempoDiLavoroPrevisto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4053,23 +4141,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_IndicatoreCompletamentoTasks', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_IndicatoreCompletamentoTasks', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4095,23 +4185,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_IndicatoreCompletamentoTempoPrevisto', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_IndicatoreCompletamentoTempoPrevisto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4137,23 +4229,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_ViewGanttTasks', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_ViewGanttTasks', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4179,23 +4273,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Prodotto_ViewElencoTasks', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Prodotto_ViewElencoTasks', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4221,23 +4317,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_ID'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_ID'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_ID', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_ID', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4263,23 +4361,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_Nome'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Nome'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_Nome', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_Nome', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4305,23 +4405,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_Descrizione'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Descrizione'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_Descrizione', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_Descrizione', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4347,23 +4449,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_Postazione'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Postazione'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_Postazione', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_Postazione', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4389,23 +4493,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_EarlyStart'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_EarlyStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_EarlyStart', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_EarlyStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4431,23 +4537,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_LateStart'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_LateStart'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_LateStart', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_LateStart', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4473,23 +4581,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_EarlyFinish'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_EarlyFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_EarlyFinish', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_EarlyFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4515,23 +4625,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_LateFinish'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_LateFinish'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_LateFinish', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_LateFinish', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4557,23 +4669,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_NOperatori'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_NOperatori'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_NOperatori', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_NOperatori', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4599,23 +4713,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_TempoCiclo'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_TempoCiclo'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_TempoCiclo', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_TempoCiclo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4641,23 +4757,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_TempoDiLavoroPrevisto', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_TempoDiLavoroPrevisto', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4683,23 +4801,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_TempoDiLavoroEffettivo', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_TempoDiLavoroEffettivo', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4725,23 +4845,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_Status'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Status'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_Status', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_Status', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4767,23 +4889,25 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
-                + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                + "Sezione LIKE @sezione "
                 + "AND parametro LIKE 'Task_QuantitaProdotta'";
+                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 bool check = false;
                 check = (rdr.Read() && !rdr.IsDBNull(0));
                 rdr.Close();
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString() + "' WHERE "
-                        + "Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "' "
+                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                        + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_QuantitaProdotta'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                        + "'OrderStatusCustomerReport " + this.codCliente + "', -1, 'Task_QuantitaProdotta', '" + value.ToString() + "')";
+                        + "@sezione, -1, 'Task_QuantitaProdotta', @valore)";
                 }
+                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -4808,7 +4932,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'OrderStatusCustomerReport "+idCliente+"'";
+            cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE @p";
+            cmd.Parameters.AddWithValue("@p", "OrderStatusCustomerReport " + idCliente);
             this.codCliente = idCliente;
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -5232,7 +5357,8 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM configurazione WHERE Sezione LIKE 'OrderStatusCustomerReport " + this.codCliente + "'";
+            cmd.CommandText = "DELETE FROM configurazione WHERE Sezione LIKE @sezione";
+            cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -5289,7 +5415,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idHomeBox, nome, descrizione, path FROM homeboxesregistro WHERE "
-                + " idHomeBox = " + boxId.ToString();
+                + " idHomeBox = @p0";
+            cmd.Parameters.AddWithValue("@p0", boxId);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -5371,9 +5498,12 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE homeboxesuser SET ordine = " + value + " WHERE "
-                        + " idHomeBox = " + this.homeBox.ID.ToString()
-                        + " AND user = '" + user.username + "'";
+                    cmd.CommandText = "UPDATE homeboxesuser SET ordine = @p0 WHERE "
+                        + " idHomeBox = @p1"
+                        + " AND user = @p2";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.homeBox.ID);
+                    cmd.Parameters.AddWithValue("@p2", user.username);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -5397,7 +5527,9 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idHomeBox, user, ordine FROM homeboxesuser WHERE "
-                + " idHomeBox = " + hBox.ID.ToString() + " AND user = '"+usr.username+"'";
+                + " idHomeBox = @p0 AND user = @p1";
+            cmd.Parameters.AddWithValue("@p0", hBox.ID);
+            cmd.Parameters.AddWithValue("@p1", usr.username);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -5439,7 +5571,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idHomeBox FROM homeboxesuser WHERE user = '"+usr.username+"' ORDER BY ordine";
+                cmd.CommandText = "SELECT idHomeBox FROM homeboxesuser WHERE user = @p0 ORDER BY ordine";
+                cmd.Parameters.AddWithValue("@p0", usr.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -5474,7 +5607,9 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE measurementunits SET Type = '" + value + "' WHERE ID = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE measurementunits SET Type = @p0 WHERE ID = @p1";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ID);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -5502,7 +5637,9 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE measurementunits SET Description = '" + value + "' WHERE ID = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE measurementunits SET Description = @p0 WHERE ID = @p1";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ID);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -5554,9 +5691,10 @@ namespace KIS.App_Code
                     cmd.Transaction = tr;
                     try
                     {
-                            cmd.CommandText = "UPDATE measurementunits SET isDefault = FALSE WHERE ID <> " + defUnit.ToString();
+                            cmd.CommandText = "UPDATE measurementunits SET isDefault = FALSE WHERE ID <> @p0";
+                            cmd.Parameters.AddWithValue("@p0", defUnit);
                             cmd.ExecuteNonQuery();
-                            cmd.CommandText = "UPDATE measurementunits SET isDefault = TRUE WHERE ID = " + defUnit.ToString();
+                            cmd.CommandText = "UPDATE measurementunits SET isDefault = TRUE WHERE ID = @p0";
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                     }
@@ -5592,7 +5730,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID, Type, Description, isdefault FROM measurementunits WHERE ID = " + uID.ToString();
+            cmd.CommandText = "SELECT ID, Type, Description, isdefault FROM measurementunits WHERE ID = @p0";
+            cmd.Parameters.AddWithValue("@p0", uID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -5647,11 +5786,14 @@ namespace KIS.App_Code
             }
             rdr.Close();
             cmd.CommandText = "INSERT INTO measurementunits(ID, Type, Description, isDefault) VALUES("
-                + maxID.ToString() +", "
-                + "'" + uType + "', "
-                +"'" + uDescription + "', "
+                + "@p0, "
+                + "@p1, "
+                + "@p2, "
                 + " FALSE"
                 +")";
+            cmd.Parameters.AddWithValue("@p0", maxID);
+            cmd.Parameters.AddWithValue("@p1", uType);
+            cmd.Parameters.AddWithValue("@p2", uDescription);
             MySqlTransaction tr = conn.BeginTransaction();
             cmd.Transaction = tr;
             try
@@ -5687,7 +5829,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "DELETE FROM measurementunits WHERE ID = " + uID.ToString();
+            cmd.CommandText = "DELETE FROM measurementunits WHERE ID = @p0";
+            cmd.Parameters.AddWithValue("@p0", uID);
             MySqlTransaction tr = conn.BeginTransaction();
             cmd.Transaction = tr;
             try

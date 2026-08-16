@@ -857,10 +857,14 @@ namespace KIS.App_Sources
                 }
                 else
                 {
-                    strWhere = " WHERE status = '" + Status + "'";
+                    strWhere = " WHERE status = @status";
                 }
             }
             cmd.CommandText = "SELECT id FROM freemeasurements  " + strWhere + " ORDER BY plannedstartdate, plannedenddate";
+            if (Status != 'A' && Status != 'O')
+            {
+                cmd.Parameters.AddWithValue("@status", Status.ToString());
+            }
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {

@@ -46,7 +46,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE anagraficaclienti SET ragsociale = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "UPDATE anagraficaclienti SET ragsociale = @ragsoc WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@ragsoc", value);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -77,7 +79,9 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE anagraficaclienti SET partitaiva = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                    cmd.CommandText = "UPDATE anagraficaclienti SET partitaiva = @piva WHERE codice = @codice";
+                    cmd.Parameters.AddWithValue("@piva", value);
+                    cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -110,7 +114,9 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE anagraficaclienti SET codfiscale = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                    cmd.CommandText = "UPDATE anagraficaclienti SET codfiscale = @codfiscale WHERE codice = @codice";
+                    cmd.Parameters.AddWithValue("@codfiscale", value);
+                    cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -141,7 +147,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE anagraficaclienti SET indirizzo = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "UPDATE anagraficaclienti SET indirizzo = @indirizzo WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@indirizzo", value);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -170,7 +178,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE anagraficaclienti SET citta = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "UPDATE anagraficaclienti SET citta = @citta WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@citta", value);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -202,7 +212,9 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE anagraficaclienti SET provincia = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                    cmd.CommandText = "UPDATE anagraficaclienti SET provincia = @provincia WHERE codice = @codice";
+                    cmd.Parameters.AddWithValue("@provincia", value);
+                    cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -237,7 +249,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE anagraficaclienti SET CAP = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "UPDATE anagraficaclienti SET CAP = @cap WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@cap", value);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -267,7 +281,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE anagraficaclienti SET stato = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "UPDATE anagraficaclienti SET stato = @stato WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@stato", value);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -299,7 +315,9 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE anagraficaclienti SET telefono = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                    cmd.CommandText = "UPDATE anagraficaclienti SET telefono = @telefono WHERE codice = @codice";
+                    cmd.Parameters.AddWithValue("@telefono", value);
+                    cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -330,7 +348,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE anagraficaclienti SET email = '" + value + "' WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "UPDATE anagraficaclienti SET email = @email WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@email", value);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -355,8 +375,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idContatto FROM contatticlienti WHERE cliente = '" + this.CodiceCliente +
-                    "' ORDER BY lastname, firstname";
+                cmd.CommandText = "SELECT idContatto FROM contatticlienti WHERE cliente = @codice"
+                    + " ORDER BY lastname, firstname";
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -383,8 +404,10 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE anagraficaclienti SET kanbanManaged = " + value +
-                        " WHERE codice ='"+this.CodiceCliente+"'";
+                    cmd.CommandText = "UPDATE anagraficaclienti SET kanbanManaged = @kanban"
+                        + " WHERE codice = @codice";
+                    cmd.Parameters.AddWithValue("@kanban", value);
+                    cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -407,7 +430,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT codice, ragsociale, partitaiva, codfiscale, indirizzo, citta, provincia, CAP, "
-            + "stato, telefono, email, kanbanManaged FROM anagraficaclienti WHERE codice = '" + cod + "'";
+            + "stato, telefono, email, kanbanManaged FROM anagraficaclienti WHERE codice = @cod";
+            cmd.Parameters.AddWithValue("@cod", cod);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -518,12 +542,17 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO contatticlienti(idContatto, cliente, firstname, lastname, ruolo) VALUES("
-                    + maxID.ToString() + ", "
-                    + "'" + this.CodiceCliente + "', "
-                    + "'" + firstname + "', "
-                    + "'" + lastname + "', "
-                    + "'" + role + "'"
+                    + "@maxID, "
+                    + "@codice, "
+                    + "@firstname, "
+                    + "@lastname, "
+                    + "@role"
                     + ")";
+                cmd.Parameters.AddWithValue("@maxID", maxID);
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
+                cmd.Parameters.AddWithValue("@firstname", firstname);
+                cmd.Parameters.AddWithValue("@lastname", lastname);
+                cmd.Parameters.AddWithValue("@role", role);
 
                 try
                 {
@@ -561,11 +590,14 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT commesse.idcommesse, commesse.anno FROM commesse "
                     + " INNER JOIN tasksproduzione ON (commesse.idcommesse = tasksproduzione.idcommessa AND commesse.anno = tasksproduzione.annocommessa) "
-                    + " WHERE commesse.cliente = '" + this.CodiceCliente + "'"
-                    + " AND tasksproduzione.lateFinish >= '" + inizio.ToString("yyyy/MM/dd") + "'"
-                    + " AND earlyStart <= '" + fine.ToString("yyyy/MM/dd") + "' "
+                    + " WHERE commesse.cliente = @codice"
+                    + " AND tasksproduzione.lateFinish >= @inizio"
+                    + " AND earlyStart <= @fine "
                     + " GROUP by commesse.idcommesse, commesse.anno "
                     + "ORDER BY commesse.anno, commesse.idcommesse";
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
+                cmd.Parameters.AddWithValue("@inizio", inizio.ToString("yyyy/MM/dd"));
+                cmd.Parameters.AddWithValue("@fine", fine.ToString("yyyy/MM/dd"));
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -659,7 +691,8 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM anagraficaclienti WHERE codice = '" + this.CodiceCliente + "'";
+                cmd.CommandText = "DELETE FROM anagraficaclienti WHERE codice = @codice";
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -701,7 +734,9 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM productionplan INNER JOIN commesse ON "
                     + "(productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa=commesse.anno) "
-                    + " WHERE commesse.cliente = '" + this.CodiceCliente + "' AND productionplan.status = '" + artStatus + "'";
+                    + " WHERE commesse.cliente = @codice AND productionplan.status = @artStatus";
+                cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
+                cmd.Parameters.AddWithValue("@artStatus", artStatus.ToString());
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 ret = true;
                 while (rdr.Read())
@@ -729,26 +764,30 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM "
                     + " productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa = commesse.anno) "
-                    + " WHERE productionplan.status = '" + prodStatus + "' AND ";
+                    + " WHERE productionplan.status = @prodStatus AND ";
+                cmd.Parameters.AddWithValue("@prodStatus", prodStatus.ToString());
                 String condOrigProc = "", condCustomer = "", condTime = "";
                 if (origProc != null && origProc.process != null && origProc.variant != null && origProc.process.processID != -1 && origProc.variant.idVariante != -1)
                 {
-                    condOrigProc = " productionplan.processo = " + origProc.process.processID.ToString()
-                        + " AND productionplan.revisione = " + origProc.process.revisione.ToString()
-                        + " AND productionplan.variante = " + origProc.variant.idVariante.ToString();
+                    condOrigProc = " productionplan.processo = @processID"
+                        + " AND productionplan.revisione = @revisione"
+                        + " AND productionplan.variante = @idVariante";
                 }
 
-                condCustomer = " commesse.cliente = '" + this.CodiceCliente + "'";
+                condCustomer = " commesse.cliente = @codice";
 
                 if (start != null && end != null && start < end)
                 {
-                    condTime = " productionplan.dataPrevistaFineProduzione >= '" + start.ToString("yyyy/MM/dd") + "' "
-                        + " AND productionplan.dataPrevistaFineProduzione <= '" + end.ToString("yyyy/MM/dd") + "'";
+                    condTime = " productionplan.dataPrevistaFineProduzione >= @start "
+                        + " AND productionplan.dataPrevistaFineProduzione <= @end";
                 }
 
                 if (condOrigProc.Length > 0)
                 {
                     cmd.CommandText += condOrigProc;
+                    cmd.Parameters.AddWithValue("@processID", origProc.process.processID);
+                    cmd.Parameters.AddWithValue("@revisione", origProc.process.revisione);
+                    cmd.Parameters.AddWithValue("@idVariante", origProc.variant.idVariante);
                 }
 
                 if (condCustomer.Length > 0)
@@ -758,6 +797,7 @@ namespace KIS.App_Code
                         cmd.CommandText += " AND ";
                     }
                     cmd.CommandText += condCustomer;
+                    cmd.Parameters.AddWithValue("@codice", this.CodiceCliente);
                 }
                 if (condTime.Length > 0)
                 {
@@ -766,6 +806,8 @@ namespace KIS.App_Code
                         cmd.CommandText += " AND ";
                     }
                     cmd.CommandText += condTime;
+                    cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
+                    cmd.Parameters.AddWithValue("@end", end.ToString("yyyy/MM/dd"));
                 }
 
                 cmd.CommandText += " ORDER BY dataPrevistaFineProduzione";
@@ -826,11 +868,13 @@ namespace KIS.App_Code
                 + " INNER JOIN tasksproduzione ON (commesse.idcommesse = tasksproduzione.idcommessa AND commesse.anno = tasksproduzione.annocommessa) "
                 + " INNER JOIN registroeventitaskproduzione ON (tasksproduzione.taskID = registroeventitaskproduzione.task)"
                 //+ " WHERE tasksproduzione.lateFinish >= '"+ inizio.ToString("yyyy/MM/dd") +"'"
-                + " WHERE registroeventitaskproduzione.data >= '" + inizio.ToString("yyyy/MM/dd") + "' "
+                + " WHERE registroeventitaskproduzione.data >= @inizio "
                 //+ " AND earlyStart <= '" + fine.ToString("yyyy/MM/dd") + "' "
-                + " AND registroeventitaskproduzione.data <= '" + fine.ToString("yyyy/MM/dd") + "'"
+                + " AND registroeventitaskproduzione.data <= @fine"
                 + "  AND customer IS TRUE "
                 + "ORDER BY ragsociale";
+            cmd.Parameters.AddWithValue("@inizio", inizio.ToString("yyyy/MM/dd"));
+            cmd.Parameters.AddWithValue("@fine", fine.ToString("yyyy/MM/dd"));
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -883,21 +927,35 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO anagraficaclienti(codice, ragsociale, partitaiva, codfiscale, indirizzo, "
                 + "citta, provincia, CAP, stato, telefono, email, kanbanManaged, customer, provider) VALUES("
-                    + "'" + codice + "', "
-                    + "'" + ragSoc + "', ";
-                cmd.CommandText += (pIva.Length > 0 ? "'" + pIva + "', " : "null, ");
-                cmd.CommandText += (codFiscale.Length > 0 ? "'" + codFiscale + "', " : "null, ");
-                cmd.CommandText += "'" + indirizzo + "', "
-                    + "'" + citta + "', "
-                    + "'" + provincia + "', "
-                    + "'" + CAP + "', "
-                    + "'" + stato + "', "
-                    + "'" + telefono + "', ";
-                cmd.CommandText += (strMail.Length > 0 ? "'" + email + "', " : "null, ");
-                cmd.CommandText += kanban.ToString() + ", "
-                    + strCustomer + ", "
-                    + strProvider
+                    + "@codice, "
+                    + "@ragSoc, ";
+                cmd.CommandText += "@pIva, ";
+                cmd.CommandText += "@codFiscale, ";
+                cmd.CommandText += "@indirizzo, "
+                    + "@citta, "
+                    + "@provincia, "
+                    + "@CAP, "
+                    + "@stato, "
+                    + "@telefono, ";
+                cmd.CommandText += "@email, ";
+                cmd.CommandText += "@kanban, "
+                    + "@customer, "
+                    + "@provider"
                     + ")";
+                cmd.Parameters.AddWithValue("@codice", codice);
+                cmd.Parameters.AddWithValue("@ragSoc", ragSoc);
+                cmd.Parameters.AddWithValue("@pIva", pIva.Length > 0 ? pIva : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@codFiscale", codFiscale.Length > 0 ? codFiscale : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@indirizzo", indirizzo);
+                cmd.Parameters.AddWithValue("@citta", citta);
+                cmd.Parameters.AddWithValue("@provincia", provincia);
+                cmd.Parameters.AddWithValue("@CAP", CAP);
+                cmd.Parameters.AddWithValue("@stato", stato);
+                cmd.Parameters.AddWithValue("@telefono", telefono);
+                cmd.Parameters.AddWithValue("@email", strMail.Length > 0 ? email : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@kanban", kanban.ToString());
+                cmd.Parameters.AddWithValue("@customer", strCustomer);
+                cmd.Parameters.AddWithValue("@provider", strProvider);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -985,7 +1043,9 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti SET firstname = '" + value + "' WHERE idContatto = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE contatticlienti SET firstname = @firstname WHERE idContatto = @idContatto";
+                    cmd.Parameters.AddWithValue("@firstname", value);
+                    cmd.Parameters.AddWithValue("@idContatto", this.ID);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1018,7 +1078,9 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti SET lastname = '" + value + "' WHERE idContatto = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE contatticlienti SET lastname = @lastname WHERE idContatto = @idContatto";
+                    cmd.Parameters.AddWithValue("@lastname", value);
+                    cmd.Parameters.AddWithValue("@idContatto", this.ID);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1051,7 +1113,9 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti SET ruolo = '" + value + "' WHERE idContatto = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE contatticlienti SET ruolo = @ruolo WHERE idContatto = @idContatto";
+                    cmd.Parameters.AddWithValue("@ruolo", value);
+                    cmd.Parameters.AddWithValue("@idContatto", this.ID);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1076,7 +1140,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT email FROM contatticlienti_email WHERE idContatto = " + this.ID.ToString();
+                cmd.CommandText = "SELECT email FROM contatticlienti_email WHERE idContatto = @idContatto";
+                cmd.Parameters.AddWithValue("@idContatto", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -1098,7 +1163,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT phone FROM contatticlienti_phone WHERE idContatto = " + this.ID.ToString();
+                cmd.CommandText = "SELECT phone FROM contatticlienti_phone WHERE idContatto = @idContatto";
+                cmd.Parameters.AddWithValue("@idContatto", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -1124,8 +1190,10 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE contatticlienti SET user = '" + value.username + "' WHERE "
-                        + " idcontatto = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE contatticlienti SET user = @user WHERE "
+                        + " idcontatto = @idContatto";
+                    cmd.Parameters.AddWithValue("@user", value.username);
+                    cmd.Parameters.AddWithValue("@idContatto", this.ID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -1155,7 +1223,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT idContatto, cliente, firstname, lastname, ruolo, user "
-                    +" FROM contatticlienti WHERE idContatto = " + idC.ToString();
+                    +" FROM contatticlienti WHERE idContatto = @idContatto";
+                cmd.Parameters.AddWithValue("@idContatto", idC);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read())
                 {
@@ -1194,10 +1263,13 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO contatticlienti_phone(idContatto, phone, note) VALUES("
-                    + this.ID.ToString() + ", "
-                    + "'" + number + "', "
-                    + "'" + notes + "'"
+                    + "@idContatto, "
+                    + "@phone, "
+                    + "@note"
                     +")";
+                cmd.Parameters.AddWithValue("@idContatto", this.ID);
+                cmd.Parameters.AddWithValue("@phone", number);
+                cmd.Parameters.AddWithValue("@note", notes);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1226,10 +1298,13 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO contatticlienti_email(idContatto, email, note) VALUES("
-                    + this.ID.ToString() + ", "
-                    + "'" + mail.Address + "', "
-                    + "'" + notes + "'"
+                    + "@idContatto, "
+                    + "@email, "
+                    + "@note"
                     + ")";
+                cmd.Parameters.AddWithValue("@idContatto", this.ID);
+                cmd.Parameters.AddWithValue("@email", mail.Address);
+                cmd.Parameters.AddWithValue("@note", notes);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1268,7 +1343,8 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM contatticlienti WHERE idContatto = " + this.ID.ToString();
+                cmd.CommandText = "DELETE FROM contatticlienti WHERE idContatto = @idContatto";
+                cmd.Parameters.AddWithValue("@idContatto", this.ID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1328,8 +1404,11 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti_email SET email = '" + value.Address + "' WHERE idContatto = " + this.idContatto.ToString()
-                        + " AND email = '" + this.Email.Address.ToString() + "'";
+                    cmd.CommandText = "UPDATE contatticlienti_email SET email = @email WHERE idContatto = @idContatto"
+                        + " AND email = @oldEmail";
+                    cmd.Parameters.AddWithValue("@email", value.Address);
+                    cmd.Parameters.AddWithValue("@idContatto", this.idContatto);
+                    cmd.Parameters.AddWithValue("@oldEmail", this.Email.Address.ToString());
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1362,8 +1441,11 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti_email SET note = '" + value + "' WHERE idContatto = " + this.idContatto.ToString()
-                        + " AND email ='"+this.Email.Address.ToString()+"'";
+                    cmd.CommandText = "UPDATE contatticlienti_email SET note = @note WHERE idContatto = @idContatto"
+                        + " AND email = @email";
+                    cmd.Parameters.AddWithValue("@note", value);
+                    cmd.Parameters.AddWithValue("@idContatto", this.idContatto);
+                    cmd.Parameters.AddWithValue("@email", this.Email.Address.ToString());
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1390,8 +1472,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT email, note FROM contatticlienti_email WHERE idContatto = " + idCont.ToString()
-                    + " AND email LIKE '" + mail.Address + "'";
+                cmd.CommandText = "SELECT email, note FROM contatticlienti_email WHERE idContatto = @idContatto"
+                    + " AND email LIKE @email";
+                cmd.Parameters.AddWithValue("@idContatto", idCont);
+                cmd.Parameters.AddWithValue("@email", mail.Address);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read())
                 {
@@ -1427,8 +1511,10 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM contatticlienti_email WHERE idContatto = " + this.idContatto.ToString()
-                + " AND email LIKE '" + this.Email.Address + "'";
+            cmd.CommandText = "DELETE FROM contatticlienti_email WHERE idContatto = @idContatto"
+                + " AND email LIKE @email";
+            cmd.Parameters.AddWithValue("@idContatto", this.idContatto);
+            cmd.Parameters.AddWithValue("@email", this.Email.Address);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -1477,8 +1563,11 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti_phone SET phone = '" + value + "' WHERE idContatto = " + this.idContatto.ToString()
-                        + " AND phone = '"+this.Phone+"'";
+                    cmd.CommandText = "UPDATE contatticlienti_phone SET phone = @phone WHERE idContatto = @idContatto"
+                        + " AND phone = @oldPhone";
+                    cmd.Parameters.AddWithValue("@phone", value);
+                    cmd.Parameters.AddWithValue("@idContatto", this.idContatto);
+                    cmd.Parameters.AddWithValue("@oldPhone", this.Phone);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1511,8 +1600,11 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE contatticlienti_phone SET note = '" + value + "' WHERE idContatto = " + this.idContatto.ToString() +
-                        " AND phone = '"+this.Phone+"'";
+                    cmd.CommandText = "UPDATE contatticlienti_phone SET note = @note WHERE idContatto = @idContatto" +
+                        " AND phone = @phone";
+                    cmd.Parameters.AddWithValue("@note", value);
+                    cmd.Parameters.AddWithValue("@idContatto", this.idContatto);
+                    cmd.Parameters.AddWithValue("@phone", this.Phone);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1538,8 +1630,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT phone, note FROM contatticlienti_phone WHERE idContatto = " + idCont.ToString()
-                    + " AND phone LIKE '" + tel + "'";
+                cmd.CommandText = "SELECT phone, note FROM contatticlienti_phone WHERE idContatto = @idContatto"
+                    + " AND phone LIKE @phone";
+                cmd.Parameters.AddWithValue("@idContatto", idCont);
+                cmd.Parameters.AddWithValue("@phone", tel);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read())
                 {
@@ -1575,8 +1669,10 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM contatticlienti_phone WHERE idContatto = " + this.idContatto.ToString()
-                + " AND phone LIKE '" + this.Phone + "'";
+            cmd.CommandText = "DELETE FROM contatticlienti_phone WHERE idContatto = @idContatto"
+                + " AND phone LIKE @phone";
+            cmd.Parameters.AddWithValue("@idContatto", this.idContatto);
+            cmd.Parameters.AddWithValue("@phone", this.Phone);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -1656,19 +1752,31 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO anagraficaclienti(codice, ragsociale, partitaiva, codfiscale, indirizzo, "
                 + "citta, provincia, CAP, stato, telefono, email, kanbanManaged) VALUES("
-                    + "'" + codice + "', "
-                    + "'" + ragSoc + "', ";
-                cmd.CommandText += (pIva.Length > 0 ? "'" + pIva + "', " : "null, ");
-                cmd.CommandText += (codFiscale.Length > 0 ? "'" + codFiscale + "', " : "null, ");
-                cmd.CommandText += "'" + indirizzo + "', "
-                    + "'" + citta + "', "
-                    + "'" + provincia + "', "
-                    + "'" + CAP + "', "
-                    + "'" + stato + "', "
-                    + "'" + telefono + "', ";
-                cmd.CommandText += (strMail.Length > 0 ? "'" + email + "', " : "null, ");
-                cmd.CommandText += kanban.ToString()
+                    + "@codice, "
+                    + "@ragSoc, ";
+                cmd.CommandText += "@pIva, ";
+                cmd.CommandText += "@codFiscale, ";
+                cmd.CommandText += "@indirizzo, "
+                    + "@citta, "
+                    + "@provincia, "
+                    + "@CAP, "
+                    + "@stato, "
+                    + "@telefono, ";
+                cmd.CommandText += "@email, ";
+                cmd.CommandText += "@kanban"
                     + ")";
+                cmd.Parameters.AddWithValue("@codice", codice);
+                cmd.Parameters.AddWithValue("@ragSoc", ragSoc);
+                cmd.Parameters.AddWithValue("@pIva", pIva.Length > 0 ? pIva : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@codFiscale", codFiscale.Length > 0 ? codFiscale : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@indirizzo", indirizzo);
+                cmd.Parameters.AddWithValue("@citta", citta);
+                cmd.Parameters.AddWithValue("@provincia", provincia);
+                cmd.Parameters.AddWithValue("@CAP", CAP);
+                cmd.Parameters.AddWithValue("@stato", stato);
+                cmd.Parameters.AddWithValue("@telefono", telefono);
+                cmd.Parameters.AddWithValue("@email", strMail.Length > 0 ? email : (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@kanban", kanban.ToString());
                 try
                 {
                     cmd.ExecuteNonQuery();

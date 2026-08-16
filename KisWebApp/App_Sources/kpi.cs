@@ -22,10 +22,13 @@ namespace KIS.App_Code
             set
             {
                 // Code to change name of kpi
-                String strSQL = "UPDATE kpi_description SET name = '" + value + "' WHERE id = " + this.id.ToString();
+                String strSQL = "UPDATE kpi_description SET name = @pName WHERE id = @pId";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = strSQL;
+                cmd.Parameters.AddWithValue("@pName", value);
+                cmd.Parameters.AddWithValue("@pId", this.id);
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
@@ -38,10 +41,13 @@ namespace KIS.App_Code
             set
             {
                 // Code to change description of kpi
-                String strSQL = "UPDATE kpi_description SET description = '" + value + "' WHERE id = " + this.id.ToString();
+                String strSQL = "UPDATE kpi_description SET description = @pDescription WHERE id = @pId";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = strSQL;
+                cmd.Parameters.AddWithValue("@pDescription", value);
+                cmd.Parameters.AddWithValue("@pId", this.id);
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
@@ -75,8 +81,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    String strSQL = "UPDATE kpi_description SET baseval = " + value.ToString() + " WHERE id = " + this.id;
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    String strSQL = "UPDATE kpi_description SET baseval = @pBaseVal WHERE id = @pId";
+                    MySqlCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = strSQL;
+                    cmd.Parameters.AddWithValue("@pBaseVal", value);
+                    cmd.Parameters.AddWithValue("@pId", this.id);
                     cmd.ExecuteNonQuery();
                     conn.Close();
                     _baseVal = value;
@@ -103,10 +112,12 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
 
-            string strSQL = "SELECT id, name, description, idprocesso, revisione, attivo, baseVal FROM kpi_description WHERE id = " + kpiID.ToString();
+            string strSQL = "SELECT id, name, description, idprocesso, revisione, attivo, baseVal FROM kpi_description WHERE id = @pId";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
+            MySqlCommand cmd1 = conn.CreateCommand();
+            cmd1.CommandText = strSQL;
+            cmd1.Parameters.AddWithValue("@pId", kpiID);
             MySqlDataReader rdr1 = cmd1.ExecuteReader();
             if (rdr1.Read())
             {
@@ -136,8 +147,10 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                String strSQL = "SELECT COUNT(kpiID) FROM kpi_record WHERE kpiID = " + this.id;
-                MySqlCommand cmdCount = new MySqlCommand(strSQL, conn);
+                String strSQL = "SELECT COUNT(kpiID) FROM kpi_record WHERE kpiID = @pId";
+                MySqlCommand cmdCount = conn.CreateCommand();
+                cmdCount.CommandText = strSQL;
+                cmdCount.Parameters.AddWithValue("@pId", this.id);
                 MySqlDataReader rdCount = cmdCount.ExecuteReader();
                 rdCount.Read();
                 this._numData = rdCount.GetInt32(0);
@@ -146,8 +159,10 @@ namespace KIS.App_Code
                 if (this._numData > 0)
                 {
                     this._data = new KpiRecord[this.numData];
-                    strSQL = "SELECT * FROM kpi_record WHERE kpiID = " + this.id + " ORDER BY data";
-                    MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
+                    strSQL = "SELECT * FROM kpi_record WHERE kpiID = @pId ORDER BY data";
+                    MySqlCommand cmd1 = conn.CreateCommand();
+                    cmd1.CommandText = strSQL;
+                    cmd1.Parameters.AddWithValue("@pId", this.id);
                     MySqlDataReader rdr = cmd1.ExecuteReader();
                     int i = 0;
                     while (rdr.Read() && i < this._numData)
@@ -252,9 +267,15 @@ namespace KIS.App_Code
                 }
                 rdr1.Close();
                 strSQL = "INSERT INTO kpi_description(id, name, description, idprocesso, revisione, attivo, baseval) VALUES("
-                    + this._id.ToString() + ", '" + name + "', '" + Description + "', " + proc.processID.ToString() + ", " 
-                    + proc.revisione.ToString() + ", 1, " + baseVal.ToString() + ")";
-                MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
+                    + "@pId, @pName, @pDescription, @pProcID, @pRevProc, 1, @pBaseVal)";
+                MySqlCommand cmd2 = conn.CreateCommand();
+                cmd2.CommandText = strSQL;
+                cmd2.Parameters.AddWithValue("@pId", this._id);
+                cmd2.Parameters.AddWithValue("@pName", name);
+                cmd2.Parameters.AddWithValue("@pDescription", Description);
+                cmd2.Parameters.AddWithValue("@pProcID", proc.processID);
+                cmd2.Parameters.AddWithValue("@pRevProc", proc.revisione);
+                cmd2.Parameters.AddWithValue("@pBaseVal", baseVal);
                 cmd2.ExecuteNonQuery();
                 conn.Close();
                 return true;
@@ -292,9 +313,15 @@ namespace KIS.App_Code
                 }
                 rdr1.Close();
                 strSQL = "INSERT INTO kpi_description(id, name, description, idprocesso, revisione, attivo, baseval) VALUES("
-                    + this._id.ToString() + ", '" + name + "', '" + Description + "', " + procID.ToString() + ", "
-                    + revProc.ToString() + ", 1, " + baseVal.ToString() + ")";
-                MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
+                    + "@pId, @pName, @pDescription, @pProcID, @pRevProc, 1, @pBaseVal)";
+                MySqlCommand cmd2 = conn.CreateCommand();
+                cmd2.CommandText = strSQL;
+                cmd2.Parameters.AddWithValue("@pId", this._id);
+                cmd2.Parameters.AddWithValue("@pName", name);
+                cmd2.Parameters.AddWithValue("@pDescription", Description);
+                cmd2.Parameters.AddWithValue("@pProcID", procID);
+                cmd2.Parameters.AddWithValue("@pRevProc", revProc);
+                cmd2.Parameters.AddWithValue("@pBaseVal", baseVal);
                 cmd2.ExecuteNonQuery();
                 conn.Close();
                 return true;
@@ -310,10 +337,12 @@ namespace KIS.App_Code
         {
             if (this.id != -1)
             {
-                String strSQL = "UPDATE kpi_description SET attivo=1 WHERE id=" + this.id.ToString();
+                String strSQL = "UPDATE kpi_description SET attivo=1 WHERE id=@pId";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = strSQL;
+                cmd.Parameters.AddWithValue("@pId", this.id);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 return true;
@@ -328,10 +357,12 @@ namespace KIS.App_Code
         {
             if (this.id != -1)
             {
-                String strSQL = "UPDATE kpi_description SET attivo=0 WHERE id=" + this.id.ToString();
+                String strSQL = "UPDATE kpi_description SET attivo=0 WHERE id=@pId";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                MySqlCommand cmd = conn.CreateCommand();
+                cmd.CommandText = strSQL;
+                cmd.Parameters.AddWithValue("@pId", this.id);
                 cmd.ExecuteNonQuery();
                 conn.Close();
                 return true;
@@ -347,10 +378,14 @@ namespace KIS.App_Code
             bool ret = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            String strSQL = "DELETE FROM kpi_record WHERE kpiID = " + this.id.ToString();
-            MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
-            String strSQL2 = "DELETE FROM kpi_description WHERE id = " + this.id.ToString();
-            MySqlCommand cmd = new MySqlCommand(strSQL2, conn);
+            String strSQL = "DELETE FROM kpi_record WHERE kpiID = @pId";
+            MySqlCommand cmd1 = conn.CreateCommand();
+            cmd1.CommandText = strSQL;
+            cmd1.Parameters.AddWithValue("@pId", this.id);
+            String strSQL2 = "DELETE FROM kpi_description WHERE id = @pId";
+            MySqlCommand cmd = conn.CreateCommand();
+            cmd.CommandText = strSQL2;
+            cmd.Parameters.AddWithValue("@pId", this.id);
             try
             {
                 cmd1.ExecuteNonQuery();
@@ -373,8 +408,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 string val = valore.ToString().Replace(",", ".");
-                String strSQL = "INSERT INTO kpi_record(kpiID, data, valore, task) VALUES(" + this.id + ", '" + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + "', " + val + ", " + task + ")";
-                MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
+                String strSQL = "INSERT INTO kpi_record(kpiID, data, valore, task) VALUES(@pId, @pData, @pValore, @pTask)";
+                MySqlCommand cmd1 = conn.CreateCommand();
+                cmd1.CommandText = strSQL;
+                cmd1.Parameters.AddWithValue("@pId", this.id);
+                cmd1.Parameters.AddWithValue("@pData", DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+                cmd1.Parameters.AddWithValue("@pValore", val);
+                cmd1.Parameters.AddWithValue("@pTask", task);
                 cmd1.ExecuteNonQuery();
                 conn.Close();
                 rt = true;
@@ -392,8 +432,12 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                String strSQL = "SELECT COUNT(kpiID) FROM kpi_record WHERE kpiID = " + this.id + " AND data >= '" + start.ToString("yyyy-MM-dd") + "' AND data <= '" + end.ToString("yyyy-MM-dd") + "'";
-                MySqlCommand cmdCount = new MySqlCommand(strSQL, conn);
+                String strSQL = "SELECT COUNT(kpiID) FROM kpi_record WHERE kpiID = @pId AND data >= @pStart AND data <= @pEnd";
+                MySqlCommand cmdCount = conn.CreateCommand();
+                cmdCount.CommandText = strSQL;
+                cmdCount.Parameters.AddWithValue("@pId", this.id);
+                cmdCount.Parameters.AddWithValue("@pStart", start.ToString("yyyy-MM-dd"));
+                cmdCount.Parameters.AddWithValue("@pEnd", end.ToString("yyyy-MM-dd"));
                 MySqlDataReader rdCount = cmdCount.ExecuteReader();
                 rdCount.Read();
                 this._numData = rdCount.GetInt32(0);
@@ -402,8 +446,12 @@ namespace KIS.App_Code
                 if (this._numData > 0)
                 {
                     this._data = new KpiRecord[this.numData];
-                    strSQL = "SELECT * FROM kpi_record WHERE kpiID = " + this.id + " AND data >= '" + start.ToString("yyyy-MM-dd") + "' AND data <= '" + end.ToString("yyyy-MM-dd") + "' ORDER BY data";
-                    MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
+                    strSQL = "SELECT * FROM kpi_record WHERE kpiID = @pId AND data >= @pStart AND data <= @pEnd ORDER BY data";
+                    MySqlCommand cmd1 = conn.CreateCommand();
+                    cmd1.CommandText = strSQL;
+                    cmd1.Parameters.AddWithValue("@pId", this.id);
+                    cmd1.Parameters.AddWithValue("@pStart", start.ToString("yyyy-MM-dd"));
+                    cmd1.Parameters.AddWithValue("@pEnd", end.ToString("yyyy-MM-dd"));
                     MySqlDataReader rdr = cmd1.ExecuteReader();
                     int i = 0;
                     while (rdr.Read() && i < this._numData)

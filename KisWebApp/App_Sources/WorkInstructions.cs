@@ -45,7 +45,10 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET Name='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        cmd.CommandText = "UPDATE manuals SET Name=@name WHERE ID = @id AND Version = @version";
+                        cmd.Parameters.AddWithValue("@name", value);
+                        cmd.Parameters.AddWithValue("@id", this.ID);
+                        cmd.Parameters.AddWithValue("@version", this.Version);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -74,7 +77,10 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET Description='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        cmd.CommandText = "UPDATE manuals SET Description=@description WHERE ID = @id AND Version = @version";
+                        cmd.Parameters.AddWithValue("@description", value);
+                        cmd.Parameters.AddWithValue("@id", this.ID);
+                        cmd.Parameters.AddWithValue("@version", this.Version);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -100,7 +106,10 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET path='" + value + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        cmd.CommandText = "UPDATE manuals SET path=@path WHERE ID = @id AND Version = @version";
+                        cmd.Parameters.AddWithValue("@path", value);
+                        cmd.Parameters.AddWithValue("@id", this.ID);
+                        cmd.Parameters.AddWithValue("@version", this.Version);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -138,7 +147,10 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET expirydate='" + value.ToString("yyyy-MM-dd") + "' WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        cmd.CommandText = "UPDATE manuals SET expirydate=@expirydate WHERE ID = @id AND Version = @version";
+                        cmd.Parameters.AddWithValue("@expirydate", value.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@id", this.ID);
+                        cmd.Parameters.AddWithValue("@version", this.Version);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -170,7 +182,10 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET isActive=" + value + " WHERE ID = " + this.ID.ToString() + " AND Version = " + this.Version.ToString();
+                        cmd.CommandText = "UPDATE manuals SET isActive=@isActive WHERE ID = @id AND Version = @version";
+                        cmd.Parameters.AddWithValue("@isActive", value);
+                        cmd.Parameters.AddWithValue("@id", this.ID);
+                        cmd.Parameters.AddWithValue("@version", this.Version);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -225,8 +240,10 @@ namespace KIS.App_Sources
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
-                    + "ID = " + id.ToString()
-                    + " AND Version = " + version.ToString();
+                    + "ID = @id"
+                    + " AND Version = @version";
+                cmd.Parameters.AddWithValue("@id", id);
+                cmd.Parameters.AddWithValue("@version", version);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -265,8 +282,9 @@ namespace KIS.App_Sources
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
-                    + "ID = " + id.ToString()
+                    + "ID = @id"
                     + " ORDER BY version DESC";
+                cmd.Parameters.AddWithValue("@id", id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -291,7 +309,9 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT LabelID FROM manualswilabels WHERE ManualID = " + this.ID.ToString() + " AND ManualVersion = " + this.Version.ToString();
+                cmd.CommandText = "SELECT LabelID FROM manualswilabels WHERE ManualID = @id AND ManualVersion = @version";
+                cmd.Parameters.AddWithValue("@id", this.ID);
+                cmd.Parameters.AddWithValue("@version", this.Version);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
@@ -695,7 +715,8 @@ namespace KIS.App_Sources
                         }
                         else
                         { 
-                            strFilter += "manualswilabels.LabelID = " + idLabels[i].ToString();
+                            strFilter += "manualswilabels.LabelID = @labelId" + i;
+                            cmd.Parameters.AddWithValue("@labelId" + i, idLabels[i]);
                         }
                         if (i < idLabels.Count-1)
                         {
@@ -707,7 +728,7 @@ namespace KIS.App_Sources
                     String strOnlyActives = "";
                     if (onlyActives)
                     {
-                        strOnlyActives = " AND (isActive = true AND expiryDate >= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "')";
+                        strOnlyActives = " AND (isActive = true AND expiryDate >= @today)";
                     }
 
                     
@@ -717,6 +738,7 @@ namespace KIS.App_Sources
                     if (onlyActives)
                     {
                         cmd.CommandText += strOnlyActives;
+                        cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy-MM-dd"));
                     }
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
@@ -737,9 +759,13 @@ namespace KIS.App_Sources
                 String strOnlyActives = "";
                 if(onlyActives)
                 {
-                    strOnlyActives = "WHERE isActive = true AND expiryDate >= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "'";
+                    strOnlyActives = "WHERE isActive = true AND expiryDate >= @today";
                 }
                 cmd.CommandText = "SELECT ID, Version FROM Manuals "+strOnlyActives+" ORDER BY Name";
+                if (onlyActives)
+                {
+                    cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                }
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -835,7 +861,8 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT wiLabelName FROM workinstructionslabel WHERE wiLabelID = " + LabelID.ToString();
+                cmd.CommandText = "SELECT wiLabelName FROM workinstructionslabel WHERE wiLabelID = @labelID";
+                cmd.Parameters.AddWithValue("@labelID", LabelID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -856,7 +883,8 @@ namespace KIS.App_Sources
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
                         + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
-                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=" + this.WILabelID.ToString();
+                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=@labelID";
+                    cmd.Parameters.AddWithValue("@labelID", this.WILabelID);
 
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while(rdr.Read())
@@ -884,7 +912,8 @@ namespace KIS.App_Sources
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
                         + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
-                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=" + this.WILabelID.ToString();
+                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=@labelID";
+                    cmd.Parameters.AddWithValue("@labelID", this.WILabelID);
 
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     Boolean delete = false;
@@ -900,7 +929,7 @@ namespace KIS.App_Sources
 
                     if (delete)
                     {
-                        cmd.CommandText = "DELETE FROM workinstructionslabel WHERE wilabelID = " + this.WILabelID.ToString();
+                        cmd.CommandText = "DELETE FROM workinstructionslabel WHERE wilabelID = @labelID";
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -1039,12 +1068,17 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE tasksmanuals SET validityInitialDate='" + value.ToString("yyyy-MM-dd") 
-                            + "' WHERE taskid = " + this.TaskID.ToString() + " AND TaskRev = " + this.TaskVersion.ToString()
-                            +" AND taskVarianti = " + this.VariantID
-                            + " AND manualID = " + this.ManualID.ToString()
-                            + " AND manualVersion = " + this.ManualVersion.ToString()
-                            ;
+                        cmd.CommandText = "UPDATE tasksmanuals SET validityInitialDate=@initialDate"
+                            + " WHERE taskid = @taskid AND TaskRev = @taskRev"
+                            +" AND taskVarianti = @taskVarianti"
+                            + " AND manualID = @manualID"
+                            + " AND manualVersion = @manualVersion";
+                        cmd.Parameters.AddWithValue("@initialDate", value.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@taskid", this.TaskID);
+                        cmd.Parameters.AddWithValue("@taskRev", this.TaskVersion);
+                        cmd.Parameters.AddWithValue("@taskVarianti", this.VariantID);
+                        cmd.Parameters.AddWithValue("@manualID", this.ManualID);
+                        cmd.Parameters.AddWithValue("@manualVersion", this.ManualVersion);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -1073,12 +1107,17 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE tasksmanuals SET expiryDate='" + value.ToString("yyyy-MM-dd")
-                            + "' WHERE taskid = " + this.TaskID.ToString() + " AND TaskRev = " + this.TaskVersion.ToString()
-                            + " AND taskVarianti = " + this.VariantID
-                            + " AND manualID = " + this.ManualID.ToString()
-                            + " AND manualVersion = " + this.ManualVersion.ToString()
-                            ;
+                        cmd.CommandText = "UPDATE tasksmanuals SET expiryDate=@expiryDate"
+                            + " WHERE taskid = @taskid AND TaskRev = @taskRev"
+                            + " AND taskVarianti = @taskVarianti"
+                            + " AND manualID = @manualID"
+                            + " AND manualVersion = @manualVersion";
+                        cmd.Parameters.AddWithValue("@expiryDate", value.ToString("yyyy-MM-dd"));
+                        cmd.Parameters.AddWithValue("@taskid", this.TaskID);
+                        cmd.Parameters.AddWithValue("@taskRev", this.TaskVersion);
+                        cmd.Parameters.AddWithValue("@taskVarianti", this.VariantID);
+                        cmd.Parameters.AddWithValue("@manualID", this.ManualID);
+                        cmd.Parameters.AddWithValue("@manualVersion", this.ManualVersion);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -1108,12 +1147,17 @@ namespace KIS.App_Sources
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE tasksmanuals SET IsActive=" + value
-                            + " WHERE taskid = " + this.TaskID.ToString() + " AND TaskRev = " + this.TaskVersion.ToString()
-                            + " AND taskVarianti = " + this.VariantID
-                            + " AND manualID = " + this.ManualID.ToString()
-                            + " AND manualVersion = " + this.ManualVersion.ToString()
-                            ;
+                        cmd.CommandText = "UPDATE tasksmanuals SET IsActive=@isActive"
+                            + " WHERE taskid = @taskid AND TaskRev = @taskRev"
+                            + " AND taskVarianti = @taskVarianti"
+                            + " AND manualID = @manualID"
+                            + " AND manualVersion = @manualVersion";
+                        cmd.Parameters.AddWithValue("@isActive", value);
+                        cmd.Parameters.AddWithValue("@taskid", this.TaskID);
+                        cmd.Parameters.AddWithValue("@taskRev", this.TaskVersion);
+                        cmd.Parameters.AddWithValue("@taskVarianti", this.VariantID);
+                        cmd.Parameters.AddWithValue("@manualID", this.ManualID);
+                        cmd.Parameters.AddWithValue("@manualVersion", this.ManualVersion);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try

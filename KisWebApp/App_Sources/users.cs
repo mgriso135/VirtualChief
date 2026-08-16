@@ -175,7 +175,7 @@ namespace KIS.App_Code
                     cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
                     cmd.Parameters.AddWithValue("@ID", this.ID);
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM groupss WHERE id = " + this.ID.ToString();
+                    cmd.CommandText = "DELETE FROM groupss WHERE id = @ID";
                     cmd.ExecuteNonQuery();
                     trn.Commit();
                     rt = true;
@@ -1797,7 +1797,7 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE registrooperatoripostazioni SET logout='" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "'"
+                cmd.CommandText = "UPDATE registrooperatoripostazioni SET logout=@logout"
                     + " WHERE logout IS null AND username = @username AND postazione = @postazione";
                 cmd.Parameters.AddWithValue("@logout", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
                 cmd.Parameters.AddWithValue("@username", this.username);
@@ -2438,9 +2438,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user='" + this.username + "' "
+                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@userID "
                     + " AND data >= @start AND data <= @end"
                     + " ORDER BY data";
+                cmd.Parameters.AddWithValue("@userID", this.username);
                 cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
                 cmd.Parameters.AddWithValue("@end", end.AddDays(1).ToString("yyyy/MM/dd"));
 

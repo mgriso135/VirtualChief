@@ -126,14 +126,15 @@ namespace KIS.App_Code
                     if (add == true)
                     {
                         cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', "
-                            + "-1, 'FormatoUsername', '" + value.ToString() + "')";
+                            + "-1, 'FormatoUsername', @value)";
                     }
                     else
                     {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
+                        cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
                         + " Sezione = 'Andon Completo' AND ID = -1" +
                         " AND parametro LIKE 'FormatoUsername'";
                     }
+                    cmd.Parameters.AddWithValue("@value", value.ToString());
 
                     try
                     {
@@ -237,13 +238,14 @@ namespace KIS.App_Code
             if (CreateOrUpdate)
             {
                 // Update
-                cmd.CommandText = "UPDATE configurazione SET valore ='" + val + "' WHERE Sezione = 'Andon Completo' AND parametro = 'ScrollType'";
+                cmd.CommandText = "UPDATE configurazione SET valore =@val WHERE Sezione = 'Andon Completo' AND parametro = 'ScrollType'";
             }
             else
             {
                 // Create
-                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', -1, 'ScrollType', '" + val + "')";
+                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', -1, 'ScrollType', @val)";
             }
+            cmd.Parameters.AddWithValue("@val", val);
 
             try
             {
@@ -332,9 +334,11 @@ namespace KIS.App_Code
             cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                 + "'Andon ViewFields',"
                 + "-1, "
-                + "'" + field + "', "
-                + "'" + prog.ToString() + "'"
+                + "@field, "
+                + "@prog"
                 +")";
+            cmd.Parameters.AddWithValue("@field", field);
+            cmd.Parameters.AddWithValue("@prog", prog.ToString());
 
             try
             {
@@ -366,7 +370,8 @@ namespace KIS.App_Code
             cmd.CommandText = "DELETE FROM configurazione WHERE "
             + "Sezione='Andon ViewFields'"
             + " AND ID=-1"
-            + " AND parametro = '"+field+"'";
+            + " AND parametro = @field";
+            cmd.Parameters.AddWithValue("@field", field);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -404,8 +409,10 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "UPDATE configurazione SET valore = " + ordine.ToString()
-                + " WHERE Sezione='Andon ViewFields' AND ID=-1 AND parametro='"+field+"'";
+            cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
+                + " WHERE Sezione='Andon ViewFields' AND ID=-1 AND parametro=@field";
+            cmd.Parameters.AddWithValue("@ordine", ordine);
+            cmd.Parameters.AddWithValue("@field", field);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -493,9 +500,11 @@ namespace KIS.App_Code
             cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                 + "'Andon ViewFieldsTasks',"
                 + "-1, "
-                + "'" + field + "', "
-                + "'" + prog.ToString() + "'"
+                + "@field, "
+                + "@prog"
                 + ")";
+            cmd.Parameters.AddWithValue("@field", field);
+            cmd.Parameters.AddWithValue("@prog", prog.ToString());
 
             try
             {
@@ -527,7 +536,8 @@ namespace KIS.App_Code
             cmd.CommandText = "DELETE FROM configurazione WHERE "
             + "Sezione='Andon ViewFieldsTasks'"
             + " AND ID=-1"
-            + " AND parametro = '" + field + "'";
+            + " AND parametro = @field";
+            cmd.Parameters.AddWithValue("@field", field);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -565,8 +575,10 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "UPDATE configurazione SET valore = " + ordine.ToString()
-                + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=-1 AND parametro='" + field + "'";
+            cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
+                + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=-1 AND parametro=@field";
+            cmd.Parameters.AddWithValue("@ordine", ordine);
+            cmd.Parameters.AddWithValue("@field", field);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -708,8 +720,9 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
-                    + " AND ID = " + this.RepartoID.ToString()
+                    + " AND ID = @repartoID"
                     + " AND parametro LIKE 'MaxViewDays'";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -739,8 +752,9 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
-                        + " AND ID = " + this.RepartoID.ToString()
+                        + " AND ID = @repartoID"
                         + " AND parametro LIKE 'MaxViewDays'";
+                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     bool found = false;
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -755,18 +769,19 @@ namespace KIS.App_Code
 
                     if (found == true)
                     {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '"+value.ToString()
-                            +"' WHERE Sezione LIKE 'Andon Reparto' "
-                        + " AND ID = " + this.RepartoID.ToString()
+                        cmd.CommandText = "UPDATE configurazione SET valore = @value"
+                            +" WHERE Sezione LIKE 'Andon Reparto' "
+                        + " AND ID = @repartoID"
                         + " AND parametro LIKE 'MaxViewDays'";
                     }
                     else
                     {
                         cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('"
-                        + "Andon Reparto', " 
-                        + this.RepartoID.ToString()
-                        + ", 'MaxViewDays', '" + value.ToString() + "')";
+                        + "Andon Reparto', "
+                        + "@repartoID"
+                        + ", 'MaxViewDays', @value)";
                     }
+                    cmd.Parameters.AddWithValue("@value", value.ToString());
 
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
@@ -807,7 +822,8 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = " + this.RepartoID;
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = @repartoID";
+                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                     bool CreateOrUpdate = false;
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -822,15 +838,16 @@ namespace KIS.App_Code
 
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
+                    cmd.Parameters.AddWithValue("@cValue", cValue.ToString());
                     if (CreateOrUpdate)
                     {
-                        // Update
-                        cmd.CommandText = "UPDATE configurazione SET valore ='" + cValue + "' WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowActiveUsers' AND ID = " + this.RepartoID.ToString();
+// Update
+                    cmd.CommandText = "UPDATE configurazione SET valore =@cValue WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowActiveUsers' AND ID = @repartoID";
                     }
                     else
                     {
                         // Create
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', " + this.RepartoID + ", 'ShowActiveUsers', '" + cValue + "')";
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ShowActiveUsers', @cValue)";
                     }
 
                     try
@@ -860,7 +877,8 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = " + this.RepartoID;
+                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = @repartoID";
+                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                     bool CreateOrUpdate = false;
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -875,15 +893,16 @@ namespace KIS.App_Code
 
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
+                    cmd.Parameters.AddWithValue("@cValue", cValue.ToString());
                     if (CreateOrUpdate)
                     {
                         // Update
-                        cmd.CommandText = "UPDATE configurazione SET valore ='" + cValue + "' WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowProductionIndicator' AND ID = " + this.RepartoID.ToString();
+                        cmd.CommandText = "UPDATE configurazione SET valore =@cValue WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowProductionIndicator' AND ID = @repartoID";
                     }
                     else
                     {
                         // Create
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', " + this.RepartoID + ", 'ShowProductionIndicator', '" + cValue + "')";
+                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ShowProductionIndicator', @cValue)";
                     }
 
                     try
@@ -915,7 +934,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = " + this.RepartoID;
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = @repartoID";
+            cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -966,7 +986,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = " + this.RepartoID;
+            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = @repartoID";
+            cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
             bool CreateOrUpdate = false;
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
@@ -986,15 +1007,16 @@ namespace KIS.App_Code
             {
                 val = ScrollType.ToString() + ";" + Params;
             }
+            cmd.Parameters.AddWithValue("@val", val);
             if (CreateOrUpdate)
             {
                 // Update
-                cmd.CommandText = "UPDATE configurazione SET valore ='" + val + "' WHERE Sezione = 'Andon Reparto' AND parametro = 'ScrollType' AND ID = " + this.RepartoID.ToString();
+                cmd.CommandText = "UPDATE configurazione SET valore =@val WHERE Sezione = 'Andon Reparto' AND parametro = 'ScrollType' AND ID = @repartoID";
             }
             else
             {
                 // Create
-                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', " + this.RepartoID+", 'ScrollType', '" + val + "')";
+                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ScrollType', @val)";
             }
 
             try
@@ -1024,8 +1046,9 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
-                    + " AND ID = " + this.RepartoID.ToString()
+                    + " AND ID = @repartoID"
                     + " ORDER BY valore";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1065,10 +1088,13 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                     + "'Andon ViewFields',"
-                    + this.RepartoID.ToString() + ", "
-                    + "'" + field + "', "
-                    + "'" + prog.ToString() + "'"
+                    + "@repartoID, "
+                    + "@field, "
+                    + "@prog"
                     + ")";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@field", field);
+                cmd.Parameters.AddWithValue("@prog", prog.ToString());
 
                 try
                 {
@@ -1102,8 +1128,10 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 cmd.CommandText = "DELETE FROM configurazione WHERE "
                 + "Sezione='Andon ViewFields'"
-                + " AND ID=" + this.RepartoID.ToString()
-                + " AND parametro = '" + field + "'";
+                + " AND ID=@repartoID"
+                + " AND parametro = @field";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@field", field);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1144,9 +1172,12 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE configurazione SET valore = " + ordine.ToString()
-                    + " WHERE Sezione='Andon ViewFields' AND ID=" + this.RepartoID.ToString()
-                    + " AND parametro='" + field + "'";
+                cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
+                    + " WHERE Sezione='Andon ViewFields' AND ID=@repartoID"
+                    + " AND parametro=@field";
+                cmd.Parameters.AddWithValue("@ordine", ordine);
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@field", field);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1174,8 +1205,9 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
-                    + " AND ID = " + this.RepartoID.ToString()
+                    + " AND ID = @repartoID"
                     + " ORDER BY valore";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1215,10 +1247,13 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                     + "'Andon ViewFieldsTasks',"
-                    + this.RepartoID.ToString() + ", "
-                    + "'" + field + "', "
-                    + "'" + prog.ToString() + "'"
+                    + "@repartoID, "
+                    + "@field, "
+                    + "@prog"
                     + ")";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@field", field);
+                cmd.Parameters.AddWithValue("@prog", prog.ToString());
 
                 try
                 {
@@ -1252,8 +1287,10 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 cmd.CommandText = "DELETE FROM configurazione WHERE "
                 + "Sezione='Andon ViewFieldsTasks'"
-                + " AND ID=" + this.RepartoID.ToString()
-                + " AND parametro = '" + field + "'";
+                + " AND ID=@repartoID"
+                + " AND parametro = @field";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@field", field);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1294,8 +1331,11 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE configurazione SET valore = " + ordine.ToString()
-                    + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=" + this.RepartoID.ToString() + " AND parametro='" + field + "'";
+                cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
+                    + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=@repartoID AND parametro=@field";
+                cmd.Parameters.AddWithValue("@ordine", ordine);
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@field", field);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1321,7 +1361,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = " + this.RepartoID;
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = @repartoID";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
                 if (rdr.Read() && !rdr.IsDBNull(0))
@@ -1354,7 +1395,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = " + this.RepartoID;
+                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = @repartoID";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1480,9 +1522,10 @@ namespace KIS.App_Code
  + " INNER JOIN postazioni ON(postazioni.idpostazioni = tasksproduzione.postazione)"
  + " INNER JOIN tempiciclo ON(tempiciclo.processo = tasksproduzione.origTask AND tempiciclo.revisione= tasksproduzione.revOrigTask AND tasksproduzione.variante = tempiciclo.variante)"
  + " LEFT JOIN taskuser on (tasksproduzione.taskID = taskuser.taskid) "
- + " WHERE productionplan.status <> 'F' AND productionplan.status <> 'N' AND reparti.idreparto = "+this.RepartoID.ToString()
+ + " WHERE productionplan.status <> 'F' AND productionplan.status <> 'N' AND reparti.idreparto = @repartoID"
  + " order by productionplan.dataPrevistaFineProduzione";
 
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 List<DepartmentAndonFullStruct> fullList = new List<DepartmentAndonFullStruct>();
 
@@ -1671,7 +1714,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                    + "AND ID = " + this.RepartoID.ToString() + " AND parametro LIKE 'Andon FormatoUsername'";
+                    + "AND ID = @repartoID AND parametro LIKE 'Andon FormatoUsername'";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1696,8 +1740,9 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                        + "AND ID = " + this.RepartoID.ToString() + " AND parametro LIKE 'Andon FormatoUsername'";
+cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+    + "AND ID = @repartoID AND parametro LIKE 'Andon FormatoUsername'";
+                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     bool add = false;
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -1711,15 +1756,16 @@ namespace KIS.App_Code
                     rdr.Close();
 
                     cmd.Transaction = tr;
+                    cmd.Parameters.AddWithValue("@value", value.ToString());
                     if (add == true)
                     {
                         cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                            + this.RepartoID.ToString() + ", 'Andon FormatoUsername', '" + value.ToString() + "')";
+                            + "@repartoID, 'Andon FormatoUsername', @value)";
                     }
                     else
                     {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
-                        + " Sezione = 'Reparto' AND ID = " + this.RepartoID.ToString() +
+                        cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
+                        + " Sezione = 'Reparto' AND ID = @repartoID" +
                         " AND parametro LIKE 'Andon FormatoUsername'";
                     }
 
@@ -1767,8 +1813,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT COUNT(id) FROM productionplan WHERE (status = 'I' OR status='P') AND reparto = "+this.RepartoID.ToString()
-                    +" AND dataPrevistaFineProduzione <= '" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "'";
+                cmd.CommandText = "SELECT COUNT(id) FROM productionplan WHERE (status = 'I' OR status='P') AND reparto = @repartoID"
+                    +" AND dataPrevistaFineProduzione <= @endDate";
+                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
+                cmd.Parameters.AddWithValue("@endDate", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read() && !rdr.IsDBNull(0))
                 {

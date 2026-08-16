@@ -240,7 +240,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE permissions SET nome = '" + value + "' WHERE id = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE permissions SET nome = @pNome WHERE id = @pID";
+                    cmd.Parameters.AddWithValue("@pNome", value);
+                    cmd.Parameters.AddWithValue("@pID", this.ID);
                     MySqlTransaction trn = conn.BeginTransaction();
                     cmd.Transaction = trn;
                     try
@@ -269,7 +271,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE permissions SET descrizione = '" + value + "' WHERE idpermesso = " + this.ID.ToString();
+                    cmd.CommandText = "UPDATE permissions SET descrizione = @pDescrizione WHERE idpermesso = @pID";
+                    cmd.Parameters.AddWithValue("@pDescrizione", value);
+                    cmd.Parameters.AddWithValue("@pID", this.ID);
                     MySqlTransaction trn = conn.BeginTransaction();
                     cmd.Transaction = trn;
                     try
@@ -293,7 +297,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, name, description FROM permissions WHERE id = " + idPerm.ToString();
+            cmd.CommandText = "SELECT id, name, description FROM permissions WHERE id = @pID";
+            cmd.Parameters.AddWithValue("@pID", idPerm);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -316,7 +321,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, name, description FROM permissions WHERE nome = '" + nomePerm + "'";
+            cmd.CommandText = "SELECT id, name, description FROM permissions WHERE nome = @pNome";
+            cmd.Parameters.AddWithValue("@pNome", nomePerm);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -344,7 +350,8 @@ namespace KIS.App_Code
                 MySqlTransaction trn = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = trn;
-                cmd.CommandText = "DELETE FROM permissions WHERE id = " + this.ID.ToString();
+                cmd.CommandText = "DELETE FROM permissions WHERE id = @pID";
+                cmd.Parameters.AddWithValue("@pID", this.ID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -405,7 +412,10 @@ namespace KIS.App_Code
                 maxID = 0;
             }
             rdr.Close();
-            cmd.CommandText = "INSERT INTO permissions(id, name, description) VALUES (" + maxID.ToString() + ", '" + nomeP + "', '" + descP + "')";
+            cmd.CommandText = "INSERT INTO permissions(id, name, description) VALUES (@pID, @pNome, @pDescrizione)";
+            cmd.Parameters.AddWithValue("@pID", maxID);
+            cmd.Parameters.AddWithValue("@pNome", nomeP);
+            cmd.Parameters.AddWithValue("@pDescrizione", descP);
             MySqlTransaction trn = conn.BeginTransaction();
             cmd.Transaction = trn;
             try

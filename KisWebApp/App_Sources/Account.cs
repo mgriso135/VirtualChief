@@ -1364,7 +1364,7 @@ namespace KIS.App_Sources
                     cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
                     cmd.Parameters.AddWithValue("@ID", this.ID);
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM groupss WHERE id = " + this.ID.ToString();
+                    cmd.CommandText = "DELETE FROM groupss WHERE id = @ID";
                     cmd.ExecuteNonQuery();
                     trn.Commit();
                     rt = true;

@@ -255,8 +255,10 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventorepartoconfig WHERE "
-                    + " TipoEvento LIKE '" + this.TipoEvento.Nome + "'"
-                    + " AND Reparto = " + this.RepartoID.ToString();
+                    + " TipoEvento LIKE @pTipoEvento"
+                    + " AND Reparto = @pReparto";
+                cmd.Parameters.AddWithValue("@pTipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@pReparto", this.RepartoID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -271,18 +273,15 @@ namespace KIS.App_Code
 
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
+                cmd.Parameters.AddWithValue("@pRitardo", value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString());
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE eventorepartoconfig set RitardoMinimoDaSegnalare = '" 
-                        + value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString()
-                        + "' WHERE tipoevento LIKE '" + this.TipoEvento.Nome + "' AND reparto = " + this.RepartoID.ToString();
+                    cmd.CommandText = "UPDATE eventorepartoconfig set RitardoMinimoDaSegnalare = @pRitardo"
+                        + " WHERE tipoevento LIKE @pTipoEvento AND reparto = @pReparto";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO eventorepartoconfig(TipoEvento, Reparto, RitardoMinimoDaSegnalare) VALUES('"
-                        + this.TipoEvento.Nome + "', "
-                        + this.RepartoID.ToString() 
-                        + ", '" + value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString() + "')";
+                    cmd.CommandText = "INSERT INTO eventorepartoconfig(TipoEvento, Reparto, RitardoMinimoDaSegnalare) VALUES(@pTipoEvento, @pReparto, @pRitardo)";
                 }
 
                 try
@@ -309,8 +308,10 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = " + repID.ToString()
-                + " AND TipoEvento LIKE '" + this.TipoEvento.Nome + "'";
+            cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = @pReparto"
+                + " AND TipoEvento LIKE @pTipoEvento";
+            cmd.Parameters.AddWithValue("@pReparto", repID);
+            cmd.Parameters.AddWithValue("@pTipoEvento", this.TipoEvento.Nome);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(2))
             {

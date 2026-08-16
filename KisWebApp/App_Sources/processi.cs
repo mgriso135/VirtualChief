@@ -64,9 +64,13 @@ namespace KIS.App_Code
                     maxCod = 0;
                 }
                 strSQL = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, isVSM, posx, posy, attivo) " +
-                    "VALUES(" + maxCod + ", 0, '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + nome + "', '" + Descr + 
-                    "', " + isVSM.ToString() + ", 0, 0, 1)";
+                    "VALUES(@p0, 0, @p1, @p2, @p3, @p4, 0, 0, 1)";
                 MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
+                cmd2.Parameters.AddWithValue("@p0", maxCod);
+                cmd2.Parameters.AddWithValue("@p1", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                cmd2.Parameters.AddWithValue("@p2", nome);
+                cmd2.Parameters.AddWithValue("@p3", Descr);
+                cmd2.Parameters.AddWithValue("@p4", isVSM);
                 rdr.Close();
                 cmd2.ExecuteNonQuery();
                 res = true;
@@ -96,10 +100,11 @@ namespace KIS.App_Code
                 // Check if it has subprocesses
                 if (Elenco[found].subProcessi.Count == 0)
                 {
-                    string strSQL = "DELETE FROM processo WHERE processID = " + macroProcID.ToString();
+                    string strSQL = "DELETE FROM processo WHERE processID = @p0";
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@p0", macroProcID);
                     cmd.CommandType = System.Data.CommandType.Text;
                     cmd.ExecuteNonQuery();
                     conn.Close();
@@ -234,16 +239,20 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
 
-                cmd.CommandText = "UPDATE precedenzeprocessi SET pausa = '"
-                    + Math.Truncate(pausa.TotalHours).ToString() + ":"
+                cmd.CommandText = "UPDATE precedenzeprocessi SET pausa = @p0 WHERE "
+                    + "prec = @p1"
+                    + " AND revPrec = @p2"
+                    + " AND succ = @p3"
+                    + " AND revSucc=@p4"
+                    + " AND variante = @p5";
+                cmd.Parameters.AddWithValue("@p0", Math.Truncate(pausa.TotalHours).ToString() + ":"
                     + pausa.Minutes.ToString() + ":"
-                    + pausa.Seconds.ToString()
-                    + "' WHERE "
-                    + "prec = " + tskPrec.Task.processID.ToString()
-                    + " AND revPrec = " + tskPrec.Task.revisione.ToString()
-                    + " AND succ = " + this.processID.ToString()
-                    + " AND revSucc=" + this.revisione.ToString()
-                    + " AND variante = " + tskPrec.variant.idVariante.ToString();
+                    + pausa.Seconds.ToString());
+                cmd.Parameters.AddWithValue("@p1", tskPrec.Task.processID);
+                cmd.Parameters.AddWithValue("@p2", tskPrec.Task.revisione);
+                cmd.Parameters.AddWithValue("@p3", this.processID);
+                cmd.Parameters.AddWithValue("@p4", this.revisione);
+                cmd.Parameters.AddWithValue("@p5", tskPrec.variant.idVariante);
 
                 try
                 {
@@ -302,13 +311,19 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
 
-                cmd.CommandText = "UPDATE precedenzeprocessi SET ConstraintType = " + cstrType.ToString()
+                cmd.CommandText = "UPDATE precedenzeprocessi SET ConstraintType = @p0"
                     + " WHERE "
-                    + "prec = " + tskPrec.Task.processID.ToString()
-                    + " AND revPrec = " + tskPrec.Task.revisione.ToString()
-                    + " AND succ = " + this.processID.ToString()
-                    + " AND revSucc=" + this.revisione.ToString()
-                    + " AND variante = " + tskPrec.variant.idVariante.ToString();
+                    + "prec = @p1"
+                    + " AND revPrec = @p2"
+                    + " AND succ = @p3"
+                    + " AND revSucc=@p4"
+                    + " AND variante = @p5";
+                cmd.Parameters.AddWithValue("@p0", cstrType);
+                cmd.Parameters.AddWithValue("@p1", tskPrec.Task.processID);
+                cmd.Parameters.AddWithValue("@p2", tskPrec.Task.revisione);
+                cmd.Parameters.AddWithValue("@p3", this.processID);
+                cmd.Parameters.AddWithValue("@p4", this.revisione);
+                cmd.Parameters.AddWithValue("@p5", tskPrec.variant.idVariante);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -349,8 +364,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT padre, revPadre FROM processipadrifigli WHERE task = " + this.processID.ToString()
-                    + " AND revTask = " + this.revisione.ToString() + " AND variante = " + vr.idVariante.ToString();
+                cmd.CommandText = "SELECT padre, revPadre FROM processipadrifigli WHERE task = @p0"
+                    + " AND revTask = @p1 AND variante = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
+                cmd.Parameters.AddWithValue("@p2", vr.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read() &&!rdr.IsDBNull(0))
                 {
@@ -369,10 +387,12 @@ namespace KIS.App_Code
             get { return _processName; }
             set
             {
-                string strSQL = "UPDATE processo SET Name = '" + value + "' WHERE processID = " + _processID.ToString();
+                string strSQL = "UPDATE processo SET Name = @p0 WHERE processID = @p1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", _processID);
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.ExecuteNonQuery();
                 _processName = value;
@@ -383,10 +403,12 @@ namespace KIS.App_Code
             get { return _processDescription; }
             set
             {
-                string strSQL = "UPDATE processo SET Description = '" + value + "' WHERE processID = " + _processID.ToString();
+                string strSQL = "UPDATE processo SET Description = @p0 WHERE processID = @p1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", _processID);
                 cmd.ExecuteNonQuery();
                 _processDescription = value;
                 conn.Close();
@@ -399,10 +421,12 @@ namespace KIS.App_Code
             get { return this._posX; }
             set
             {
-                string strSQL = "UPDATE processo SET posx = " + value + " WHERE processID = " + _processID.ToString();
+                string strSQL = "UPDATE processo SET posx = @p0 WHERE processID = @p1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", _processID);
                 cmd.ExecuteNonQuery();
                 this._posX = value;
                 conn.Close();
@@ -415,8 +439,12 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "UPDATE processipadrifigli SET posx = " + psx.ToString() + " WHERE variante = " + vr.idVariante.ToString()
-                + " AND task = " + this.processID.ToString() + " AND revTask = " + this.revisione.ToString();
+            cmd.CommandText = "UPDATE processipadrifigli SET posx = @p0 WHERE variante = @p1"
+                + " AND task = @p2 AND revTask = @p3";
+            cmd.Parameters.AddWithValue("@p0", psx);
+            cmd.Parameters.AddWithValue("@p1", vr.idVariante);
+            cmd.Parameters.AddWithValue("@p2", this.processID);
+            cmd.Parameters.AddWithValue("@p3", this.revisione);
             cmd.ExecuteNonQuery();
             this._posX = psx;
             rt = true;
@@ -430,8 +458,12 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "UPDATE processipadrifigli SET posy = " + psy.ToString() + " WHERE variante = " + vr.idVariante.ToString()
-                + " AND task = " + this.processID.ToString() + " AND revTask = " + this.revisione.ToString();
+            cmd.CommandText = "UPDATE processipadrifigli SET posy = @p0 WHERE variante = @p1"
+                + " AND task = @p2 AND revTask = @p3";
+            cmd.Parameters.AddWithValue("@p0", psy);
+            cmd.Parameters.AddWithValue("@p1", vr.idVariante);
+            cmd.Parameters.AddWithValue("@p2", this.processID);
+            cmd.Parameters.AddWithValue("@p3", this.revisione);
             cmd.ExecuteNonQuery();
             this._posY = psy;
             rt = true;
@@ -445,10 +477,12 @@ namespace KIS.App_Code
             get { return this._posY; }
             set
             {
-                string strSQL = "UPDATE processo SET posy = " + value + " WHERE processID = " + _processID.ToString();
+                string strSQL = "UPDATE processo SET posy = @p0 WHERE processID = @p1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", _processID);
                 cmd.ExecuteNonQuery();
                 this._posY = value;
                 conn.Close();
@@ -468,10 +502,12 @@ namespace KIS.App_Code
             get { return this._isVSM; }
             set
             {
-                string strSQL = "UPDATE processo SET isVSM = " + value + " WHERE processID = " + _processID.ToString();
+                string strSQL = "UPDATE processo SET isVSM = @p0 WHERE processID = @p1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", _processID);
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.ExecuteNonQuery();
                 this._isVSM = value;
@@ -488,8 +524,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE processo SET attivo = "+value+" WHERE processID = " + this.processID.ToString()
-                    + " AND revisione = " + this.revisione.ToString();
+                cmd.CommandText = "UPDATE processo SET attivo = @p0 WHERE processID = @p1"
+                    + " AND revisione = @p2";
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", this.processID);
+                cmd.Parameters.AddWithValue("@p2", this.revisione);
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
@@ -547,10 +586,11 @@ namespace KIS.App_Code
             this.subProcessi = null;
 
             // Ricerco l'ultima revisione del processo
-            String strSQL = "SELECT MAX(revisione) FROM processo WHERE processID = " + procID.ToString() + " AND processo.attivo = 1";
+            String strSQL = "SELECT MAX(revisione) FROM processo WHERE processID = @p0 AND processo.attivo = 1";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@p0", procID);
             MySqlDataReader mysqlReader = cmd.ExecuteReader();
             if (mysqlReader.Read() && !mysqlReader.IsDBNull(0))
             {
@@ -560,9 +600,11 @@ namespace KIS.App_Code
 
             // Carico le informazioni di base del processo.
             strSQL = "SELECT processo.processID, revisione, dataRevisione, processo.Name, processo.Description, "
-            + "isVSM, posx, posy, attivo FROM processo WHERE processID = " + procID.ToString() + " AND revisione = " + this.revisione.ToString() + " AND processo.attivo = 1";
+            + "isVSM, posx, posy, attivo FROM processo WHERE processID = @p0 AND revisione = @p1 AND processo.attivo = 1";
             
             cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@p0", procID);
+            cmd.Parameters.AddWithValue("@p1", this.revisione);
             mysqlReader = cmd.ExecuteReader();
             if (mysqlReader.Read() && !mysqlReader.IsDBNull(0))
             {
@@ -610,9 +652,11 @@ namespace KIS.App_Code
             conn.Open();
             // Carico le informazioni di base del processo.
             String strSQL = "SELECT processo.processID, revisione, dataRevisione, processo.Name, processo.Description, "
-            + "isVSM, posx, posy, attivo FROM processo WHERE processID = " + procID.ToString() + " AND revisione = " + rev.ToString();// +" AND processo.attivo = 1";
+            + "isVSM, posx, posy, attivo FROM processo WHERE processID = @p0 AND revisione = @p1";// +" AND processo.attivo = 1";
 
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@p0", procID);
+            cmd.Parameters.AddWithValue("@p1", rev);
             MySqlDataReader mysqlReader = cmd.ExecuteReader();
             if (mysqlReader.Read() && !mysqlReader.IsDBNull(0))
             {
@@ -657,10 +701,11 @@ namespace KIS.App_Code
             this.subProcessi = null;
 
             // Ricerco l'ultima revisione del processo
-            String strSQL = "SELECT processID FROM processo WHERE Name LIKE '" + procName.ToString() + "' AND processo.attivo = 1";
+            String strSQL = "SELECT processID FROM processo WHERE Name LIKE @p0 AND processo.attivo = 1";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@p0", procName);
             MySqlDataReader mysqlReader = cmd.ExecuteReader();
             if (mysqlReader.Read() && !mysqlReader.IsDBNull(0))
             {
@@ -688,10 +733,11 @@ namespace KIS.App_Code
             this.subProcessi = null;
 
             // Ricerco l'ultima revisione del processo
-            String strSQL = "SELECT MAX(revisione) FROM processo WHERE processID = " + procID.ToString() + " AND processo.attivo = 1";
+            String strSQL = "SELECT MAX(revisione) FROM processo WHERE processID = @p0 AND processo.attivo = 1";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@p0", procID);
             MySqlDataReader mysqlReader = cmd.ExecuteReader();
             if (mysqlReader.Read() && !mysqlReader.IsDBNull(0))
             {
@@ -701,9 +747,11 @@ namespace KIS.App_Code
 
             // Carico le informazioni di base del processo.
             strSQL = "SELECT processo.processID, revisione, dataRevisione, processo.Name, processo.Description, "
-            + "isVSM, posx, posy, attivo FROM processo WHERE processID = " + procID.ToString() + " AND revisione = " + this.revisione.ToString() + " AND processo.attivo = 1";
+            + "isVSM, posx, posy, attivo FROM processo WHERE processID = @p0 AND revisione = @p1 AND processo.attivo = 1";
 
             cmd = new MySqlCommand(strSQL, conn);
+            cmd.Parameters.AddWithValue("@p0", procID);
+            cmd.Parameters.AddWithValue("@p1", this.revisione);
             mysqlReader = cmd.ExecuteReader();
             if (mysqlReader.Read() && !mysqlReader.IsDBNull(0))
             {
@@ -748,8 +796,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT padre, revPadre FROM processipadrifigli WHERE task = " + this.processID.ToString()
-                    + " AND revTask = " + this.revisione.ToString();
+                cmd.CommandText = "SELECT padre, revPadre FROM processipadrifigli WHERE task = @p0"
+                    + " AND revTask = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -779,8 +829,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT padre, revPadre FROM processipadrifigli WHERE task = " + this.processID.ToString()
-                    + " AND revTask = " + this.revisione.ToString() + " AND variante = " + vr.idVariante.ToString();
+                cmd.CommandText = "SELECT padre, revPadre FROM processipadrifigli WHERE task = @p0"
+                    + " AND revTask = @p1 AND variante = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
+                cmd.Parameters.AddWithValue("@p2", vr.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -816,8 +869,10 @@ namespace KIS.App_Code
                 
                 cmd.CommandText = "SELECT variante FROM processo INNER JOIN variantiprocessi ON "
                     + "(variantiprocessi.processo = processo.processID AND variantiprocessi.revProc = processo.revisione) "
-                    + " WHERE processo.processID = " + this.processID.ToString() + " AND processo.revisione = " + this.revisione.ToString();
+                    + " WHERE processo.processID = @p0 AND processo.revisione = @p1";
                     //+ " AND processo.attivo = 1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
                 while (rdr.Read())
@@ -845,8 +900,10 @@ namespace KIS.App_Code
                 this._variantiFigli = new List<variante>();
                 cmd.CommandText = "SELECT DISTINCT(variante) FROM processipadrifigli INNER JOIN processo ON (processipadrifigli.task = processo.processID "
                     + " AND processipadrifigli.revTask = processo.revisione)"
-                    + " WHERE processipadrifigli.padre = " + this.processID.ToString() + " AND processipadrifigli.revPadre = " + this.revisione.ToString()
+                    + " WHERE processipadrifigli.padre = @p0 AND processipadrifigli.revPadre = @p1"
                     + " AND processo.attivo = 1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -873,8 +930,10 @@ namespace KIS.App_Code
                 + "(variantiprocessi.processo = processo.processID AND variantiprocessi.revProc = processo.revisione) "
                 + "INNER JOIN processipadrifigli ON(processipadrifigli.padre = variantiprocessi.processo AND processipadrifigli.revPadre = variantiprocessi.revProc "
                 + " AND processipadrifigli.variante = variantiprocessi.variante) WHERE "
-                + " processipadrifigli.padre = " + this.processID.ToString()
-                + " AND processipadrifigli.revPadre = " + this.revisione.ToString() + " AND processo.attivo = 1";
+                + " processipadrifigli.padre = @p0"
+                + " AND processipadrifigli.revPadre = @p1 AND processo.attivo = 1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
                 this.subProcessi = new List<processo>();
                 int i = 0;
@@ -912,8 +971,11 @@ namespace KIS.App_Code
                 + "(variantiprocessi.processo = processo.processID AND variantiprocessi.revProc = processo.revisione) "
                 + "INNER JOIN processipadrifigli ON(processipadrifigli.padre = variantiprocessi.processo AND processipadrifigli.revPadre = variantiprocessi.revProc "
                 + " AND processipadrifigli.variante = variantiprocessi.variante) INNER JOIN processo AS figlio ON(figlio.processID = task AND figlio.revisione=revtask) WHERE "
-                + "variantiprocessi.variante = " + var.idVariante.ToString() + " AND processipadrifigli.padre = " + this.processID.ToString()
-                + " AND processipadrifigli.revPadre = " + this.revisione.ToString() + " AND processo.attivo = 1 AND figlio.attivo=1";
+                + "variantiprocessi.variante = @p0 AND processipadrifigli.padre = @p1"
+                + " AND processipadrifigli.revPadre = @p2 AND processo.attivo = 1 AND figlio.attivo=1";
+            cmd.Parameters.AddWithValue("@p0", var.idVariante);
+            cmd.Parameters.AddWithValue("@p1", this.processID);
+            cmd.Parameters.AddWithValue("@p2", this.revisione);
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             int i = 0;
@@ -986,17 +1048,21 @@ namespace KIS.App_Code
             bool rt;
             if (this.processID != -1)
             {
-                String strSQL = "SELECT COUNT(id) FROM kpi_description WHERE idprocesso = " + this.processID.ToString() + " AND revisione = " + this.revisione.ToString() + " AND attivo = 1";
+                String strSQL = "SELECT COUNT(id) FROM kpi_description WHERE idprocesso = @p0 AND revisione = @p1 AND attivo = 1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
                 mysqlReader.Read();
                 this._numKPIs = mysqlReader.GetInt32(0);
                 this.KPIs = new Kpi[this.numKPIs];
                 mysqlReader.Close();
-                strSQL = "SELECT id FROM kpi_description WHERE idprocesso = " + this.processID.ToString() + " AND revisione = " + this.revisione.ToString() + " AND attivo = 1";
+                strSQL = "SELECT id FROM kpi_description WHERE idprocesso = @p0 AND revisione = @p1 AND attivo = 1";
                 cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 mysqlReader = cmd.ExecuteReader();
                 int c = 0;
                 while (c < this.numKPIs && mysqlReader.Read())
@@ -1051,7 +1117,9 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT precedenzeprocessi.prec, precedenzeprocessi.revPrec, precedenzeprocessi.relazione, "
                     + "precedenzeprocessi.pausa, precedenzeprocessi.ConstraintType"
                     + " FROM precedenzeprocessi"
-                    + " WHERE precedenzeprocessi.succ = " + this.processID.ToString() + " AND precedenzeprocessi.revsucc = " + this.revisione.ToString();
+                    + " WHERE precedenzeprocessi.succ = @p0 AND precedenzeprocessi.revsucc = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
 
                 while(mysqlReader.Read())
@@ -1096,8 +1164,11 @@ namespace KIS.App_Code
         
                 // Carico i processi precedenti
                 cmd.CommandText = "SELECT precedenzeprocessi.prec, precedenzeprocessi.revPrec, precedenzeprocessi.relazione, precedenzeprocessi.pausa, precedenzeprocessi.ConstraintType FROM precedenzeprocessi"
-                    + " WHERE precedenzeprocessi.succ = " + this.processID.ToString() + " AND precedenzeprocessi.revsucc = " + this.revisione.ToString()
-                    + " AND precedenzeprocessi.variante = " + var.idVariante.ToString();
+                    + " WHERE precedenzeprocessi.succ = @p0 AND precedenzeprocessi.revsucc = @p1"
+                    + " AND precedenzeprocessi.variante = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
+                cmd.Parameters.AddWithValue("@p2", var.idVariante);
                 
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
 
@@ -1147,8 +1218,9 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT precedenzeprocessi.succ, precedenzeprocessi.revSucc, precedenzeprocessi.relazione, "
                     + " precedenzeprocessi.pausa, precedenzeprocessi.ConstraintType"
                     + " FROM precedenzeprocessi "
-                    + " WHERE precedenzeprocessi.prec = " + this.processID.ToString() + " AND precedenzeprocessi.revPrec = "
-                    + this.revisione.ToString();
+                    + " WHERE precedenzeprocessi.prec = @p0 AND precedenzeprocessi.revPrec = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
                 while(mysqlReader.Read())
                 {
@@ -1203,8 +1275,11 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT precedenzeprocessi.succ, precedenzeprocessi.revSucc, precedenzeprocessi.relazione, "
                     + "precedenzeprocessi.pausa, precedenzeprocessi.ConstraintType "
                     + " FROM precedenzeprocessi "
-                    + " WHERE precedenzeprocessi.prec = " + this.processID.ToString() + " AND precedenzeprocessi.revPrec = "
-                    + this.revisione.ToString() + " AND precedenzeprocessi.variante = " + var.idVariante.ToString();
+                    + " WHERE precedenzeprocessi.prec = @p0 AND precedenzeprocessi.revPrec = @p1"
+                    + " AND precedenzeprocessi.variante = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
+                cmd.Parameters.AddWithValue("@p2", var.idVariante);
 
                 MySqlDataReader mysqlReader = cmd.ExecuteReader();
 
@@ -1262,13 +1337,18 @@ namespace KIS.App_Code
                     {
                         // Aggiungo il processo
                         cmd.CommandText = "INSERT INTO processo(ProcessID, revisione, dataRevisione, Name, Description, "
-                        + " isVSM, posx, posy, attivo) VALUES(" + procID + ", 0, '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
-                        + "', 'New Default Process', 'New Default Process Notes', 0, 100, 100, 1)";
+                        + " isVSM, posx, posy, attivo) VALUES(@p0, 0, @p1"
+                        + ", 'New Default Process', 'New Default Process Notes', 0, 100, 100, 1)";
+                        cmd.Parameters.AddWithValue("@p0", procID);
+                        cmd.Parameters.AddWithValue("@p1", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@p2", this.processID);
+                        cmd.Parameters.AddWithValue("@p3", this.revisione);
+                        cmd.Parameters.AddWithValue("@p4", var.idVariante);
                         cmd.ExecuteNonQuery();
 
                         // Inserisco il task come figlio di this e se incontro rogne faccio un rollback di tutto!
                         cmd.CommandText = "INSERT INTO processipadrifigli(task, revTask, padre, revPadre, variante) VALUES("
-                            + procID.ToString() + ", 0, " + this.processID.ToString() + ", " + this.revisione.ToString() + ", "+var.idVariante.ToString()+")";
+                            + "@p0, 0, @p2, @p3, @p4)";
                         cmd.ExecuteNonQuery();
                         res = procID;
                         trans.Commit();
@@ -1323,12 +1403,14 @@ namespace KIS.App_Code
                 MySqlTransaction trans = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "INSERT INTO variantiprocessi(variante, processo, revProc, ExternalID, measurementUnit) VALUES(" 
-                    + var.idVariante.ToString() + ", " 
-                    + this.processID.ToString() + ", " 
-                    + this.revisione.ToString() +", "
+                    + "@p0, @p1, @p2"
+                    +", "
                     +"NULL, "
                     + "0"
                     + ")";
+                cmd.Parameters.AddWithValue("@p0", var.idVariante);
+                cmd.Parameters.AddWithValue("@p1", this.processID);
+                cmd.Parameters.AddWithValue("@p2", this.revisione);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1386,32 +1468,34 @@ namespace KIS.App_Code
 
                    try
                    {
+                       cmd.Parameters.AddWithValue("@p0", this.processID);
+                       cmd.Parameters.AddWithValue("@p1", this.revisione);
                        // Rimuovo l'associazione col processo padre
-                       String strSQL = "DELETE FROM processipadrifigli WHERE task = " + this.processID.ToString()
-                           + " AND revTask = " + this.revisione.ToString();
+                       String strSQL = "DELETE FROM processipadrifigli WHERE task = @p0"
+                           + " AND revTask = @p1";
                        cmd.CommandText = strSQL;
                        cmd.ExecuteNonQuery();
 
                        // Cancello il process owner
-                       strSQL = "DELETE FROM processOwners WHERE process = " + this.processID.ToString();
+                       strSQL = "DELETE FROM processOwners WHERE process = @p0";
                        cmd.CommandText = strSQL;
                        cmd.ExecuteNonQuery();
 
                        // Cancello l'associazione con le varianti
                        this.loadVarianti();
-                       cmd.CommandText = "DELETE FROM variantiprocessi WHERE processo = " + this.processID.ToString();
+                       cmd.CommandText = "DELETE FROM variantiprocessi WHERE processo = @p0";
                        cmd.ExecuteNonQuery();
 
                        // E' il primo processo. Cancello il precedente dei successivi ed elimino il processo
-                       strSQL = "DELETE FROM precedenzeprocessi WHERE prec = " + this.processID.ToString() + " OR succ = "
-                           + this.processID.ToString() + " AND revPrec = " + this.revisione.ToString()
-                           + " AND revSucc = " + this.revisione.ToString();
+                       strSQL = "DELETE FROM precedenzeprocessi WHERE prec = @p0 OR succ = "
+                           + "@p0 AND revPrec = @p1"
+                           + " AND revSucc = @p1";
                        cmd.CommandText = strSQL;
                        cmd.ExecuteNonQuery();
 
                         this.attivo = false;
                        // Elimino il processo.
-                       strSQL = "DELETE FROM processo WHERE processID = " + this.processID.ToString();
+                       strSQL = "DELETE FROM processo WHERE processID = @p0";
                        cmd.CommandText = strSQL;
                        cmd.ExecuteNonQuery();
                        trans.Commit();
@@ -1451,10 +1535,13 @@ namespace KIS.App_Code
             bool res = false;
             if (this.processID != -1 && this.processiPrec.Count >= 1)
             {
-                string strSQL = "UPDATE precedenzeprocessi SET relazione = " + rel.relationID + " WHERE succ = " + this.processID.ToString() + " AND prec = " + precedente.processID.ToString();
+                string strSQL = "UPDATE precedenzeprocessi SET relazione = @p0 WHERE succ = @p1 AND prec = @p2";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
+                cmd1.Parameters.AddWithValue("@p0", rel.relationID);
+                cmd1.Parameters.AddWithValue("@p1", this.processID);
+                cmd1.Parameters.AddWithValue("@p2", precedente.processID);
                 cmd1.ExecuteNonQuery();
                 conn.Close();
                 res = true;
@@ -1478,12 +1565,17 @@ namespace KIS.App_Code
             if(this.processID != -1)
             {
                 String strSQL = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione, pausa, ConstraintType) VALUES(" + 
-                    this.processID.ToString() + ", " + this.revisione.ToString() + ", " + 
-                    next.processID.ToString() + ", " + next.revisione.ToString() + ", " + var.idVariante + ", 0, '00:00:00', "+cstrType.ToString()+")";
+                    "@p0, @p1, @p2, @p3, @p4, 0, '00:00:00', @p5)";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
+                cmd.Parameters.AddWithValue("@p2", next.processID);
+                cmd.Parameters.AddWithValue("@p3", next.revisione);
+                cmd.Parameters.AddWithValue("@p4", var.idVariante);
+                cmd.Parameters.AddWithValue("@p5", cstrType);
                 cmd.Transaction = tr;
                 try
                 {
@@ -1512,11 +1604,17 @@ namespace KIS.App_Code
             if (this.processID != -1)
             {
                 String strSQL = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione, pausa, ConstraintType) VALUES(" 
-                    + preced.processID.ToString() + ", " + preced.revisione + ", " + this.processID.ToString() + ", " + this.revisione.ToString()
-                    + ", " + var.idVariante.ToString() + ", 0, '00:00:00', " + cstrType.ToString() + ")";
+                    + "@p0, @p1, @p2, @p3"
+                    + ", @p4, 0, '00:00:00', @p5)";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", preced.processID);
+                cmd.Parameters.AddWithValue("@p1", preced.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.processID);
+                cmd.Parameters.AddWithValue("@p3", this.revisione);
+                cmd.Parameters.AddWithValue("@p4", var.idVariante);
+                cmd.Parameters.AddWithValue("@p5", cstrType);
                 cmd.ExecuteNonQuery();
                 res = true;
                 conn.Close();
@@ -1556,10 +1654,15 @@ namespace KIS.App_Code
                         // Se il processo successivo non rimane orfano cancello il legame con this.
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
-                        String strSQL = "DELETE FROM precedenzeprocessi WHERE prec = " + this.processID.ToString() 
-                            + " AND revPrec = " + this.revisione.ToString() + " AND succ = " + next.processID.ToString()
-                            + " AND revSucc = " + next.revisione.ToString() + " AND variante = " + var.idVariante.ToString();
+                        String strSQL = "DELETE FROM precedenzeprocessi WHERE prec = @p0" 
+                            + " AND revPrec = @p1 AND succ = @p2"
+                            + " AND revSucc = @p3 AND variante = @p4";
                         MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                        cmd.Parameters.AddWithValue("@p0", this.processID);
+                        cmd.Parameters.AddWithValue("@p1", this.revisione);
+                        cmd.Parameters.AddWithValue("@p2", next.processID);
+                        cmd.Parameters.AddWithValue("@p3", next.revisione);
+                        cmd.Parameters.AddWithValue("@p4", var.idVariante);
                         cmd.ExecuteNonQuery();
                         conn.Close();
                         res = 1;
@@ -1610,8 +1713,13 @@ namespace KIS.App_Code
                         // Se il processo successivo non rimane orfano cancello il legame con this.
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
-                        String strSQL = "DELETE FROM precedenzeprocessi WHERE succ = " + this.processID.ToString() + " AND revSucc = " + this.revisione.ToString() + " AND prec = " + preced.processID.ToString() + " AND revPrec = " + preced.revisione.ToString() + " AND variante = " + var.idVariante;
+                        String strSQL = "DELETE FROM precedenzeprocessi WHERE succ = @p0 AND revSucc = @p1 AND prec = @p2 AND revPrec = @p3 AND variante = @p4";
                         MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                        cmd.Parameters.AddWithValue("@p0", this.processID);
+                        cmd.Parameters.AddWithValue("@p1", this.revisione);
+                        cmd.Parameters.AddWithValue("@p2", preced.processID);
+                        cmd.Parameters.AddWithValue("@p3", preced.revisione);
+                        cmd.Parameters.AddWithValue("@p4", var.idVariante);
                         cmd.ExecuteNonQuery();
                         conn.Close();
                         res = 1;
@@ -1683,8 +1791,9 @@ namespace KIS.App_Code
                 // trovo il numero di processowners
                 String strSQL = "SELECT COUNT(users.userID) FROM processo INNER JOIN processOwners "
                  + "ON(processo.ProcessID = processOwners.process) INNER JOIN users ON(users.userID = processOwners.user) "
-                 + "WHERE processo.ProcessID = " + this.processID.ToString();
+                 + "WHERE processo.ProcessID = @p0";
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.processID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 rdr.Read();
                 this._numProcessOwners = rdr.GetInt32(0);
@@ -1694,8 +1803,9 @@ namespace KIS.App_Code
                 // creo l'istanza degli utenti
                 strSQL = "SELECT processo.ProcessID, users.userID FROM processo INNER JOIN processOwners "
                  + "ON(processo.ProcessID = processOwners.process) INNER JOIN users ON(users.userID = processOwners.user) "
-                 + "WHERE processo.ProcessID = " + this.processID.ToString();
+                 + "WHERE processo.ProcessID = @p0";
                 cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.processID);
                 rdr = cmd.ExecuteReader();
                 for (int i = 0; i < this.numProcessOwners && rdr.Read(); i++)
                 {
@@ -1716,10 +1826,12 @@ namespace KIS.App_Code
             bool rt = true;
             if (this.processID != -1)
             {
-                String strSQL = "DELETE FROM processOwners WHERE process = " + this.processID.ToString() + " AND user = '" + currProcOwner.username + "'";
+                String strSQL = "DELETE FROM processOwners WHERE process = @p0 AND user = @p1";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", currProcOwner.username);
                 cmd.ExecuteNonQuery();
                 conn.Close();
             }
@@ -1748,10 +1860,12 @@ namespace KIS.App_Code
                 // Se l'utente da aggiungere non è già presente lo aggiungo
                 if (rt == true)
                 {
-                    String strSQL = "INSERT INTO processOwners(process, user) VALUES(" + this.processID + ", '" + newProcOwner.username + "')";
+                    String strSQL = "INSERT INTO processOwners(process, user) VALUES(@p0, @p1)";
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@p0", this.processID);
+                    cmd.Parameters.AddWithValue("@p1", newProcOwner.username);
                     cmd.ExecuteNonQuery();
                     conn.Close();
                     this._processOwners = null;
@@ -2085,7 +2199,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT COUNT(idpostazioni) FROM postazioni WHERE mainProc = " + this.processID.ToString() + " AND revProc = " + this.revisione.ToString();
+                cmd.CommandText = "SELECT COUNT(idpostazioni) FROM postazioni WHERE mainProc = @p0 AND revProc = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 this._numPostazioni = 0;
                 if (rdr.Read() && !rdr.IsDBNull(0))
@@ -2094,7 +2210,7 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
                 this._elencoPostazioni = new Postazione[this.numPostazioni];
-                cmd.CommandText = "SELECT idpostazioni FROM postazioni WHERE mainProc = " + this.processID.ToString() + " AND revProc = " + this.revisione.ToString();
+                cmd.CommandText = "SELECT idpostazioni FROM postazioni WHERE mainProc = @p0 AND revProc = @p1";
                 rdr = cmd.ExecuteReader();
                 for (int i = 0; i < this.numPostazioni && rdr.Read(); i++)
                 {
@@ -2118,8 +2234,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = trans;
                 cmd.Connection = conn;
-                cmd.CommandText = "INSERT INTO taskspostazioni(postazione, idTask, revTask) VALUES(" + postID.id.ToString()
-                    + ", " + this.processID.ToString() + ", " + this.revisione.ToString() + ")";
+                cmd.CommandText = "INSERT INTO taskspostazioni(postazione, idTask, revTask) VALUES(@p0, @p1, @p2)";
+                cmd.Parameters.AddWithValue("@p0", postID.id);
+                cmd.Parameters.AddWithValue("@p1", this.processID);
+                cmd.Parameters.AddWithValue("@p2", this.revisione);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -2147,7 +2265,9 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = trans;
                 cmd.Connection = conn;
-                cmd.CommandText = "DELETE FROM taskspostazioni WHERE idTask = " + this.processID.ToString() + " AND revTask = " + this.revisione.ToString();
+                cmd.CommandText = "DELETE FROM taskspostazioni WHERE idTask = @p0 AND revTask = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -2179,8 +2299,9 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 this._elencoPostazioniTask = new List<Postazione>();
-                cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = " +
-                    this.processID.ToString() + " AND revProc = " + this.revisione.ToString();
+                cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = @p0 AND revProc = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
@@ -2204,7 +2325,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = trans;
                 cmd.Connection = conn;
-                cmd.CommandText = "UPDATE taskspostazioni SET postazione = " + postID.id.ToString() + " WHERE idTask = " + this.processID.ToString() + " AND revTask = " + this.revisione.ToString();
+                cmd.CommandText = "UPDATE taskspostazioni SET postazione = @p0 WHERE idTask = @p1 AND revTask = @p2";
+                cmd.Parameters.AddWithValue("@p0", postID.id);
+                cmd.Parameters.AddWithValue("@p1", this.processID);
+                cmd.Parameters.AddWithValue("@p2", this.revisione);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -2235,19 +2359,27 @@ namespace KIS.App_Code
                 
                 try
                 {
+                    cmd.Parameters.AddWithValue("@p0", this.processID);
+                    cmd.Parameters.AddWithValue("@p1", (this.revisione + 1));
+                    cmd.Parameters.AddWithValue("@p2", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@p3", this.processName);
+                    cmd.Parameters.AddWithValue("@p4", this.processDescription);
+                    cmd.Parameters.AddWithValue("@p5", isVSM);
+                    cmd.Parameters.AddWithValue("@p6", this.posX);
+                    cmd.Parameters.AddWithValue("@p7", this.posY);
+                    cmd.Parameters.AddWithValue("@p8", this.revisione);
                     cmd.CommandText = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, isVSM, posx, posy, attivo) " +
-                            "VALUES(" + this.processID + ", " + (this.revisione + 1).ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + this.processName + "', '" + this.processDescription +
-                            "', " + isVSM.ToString() + ", " + this.posX.ToString() + ", " + this.posY.ToString() + ", 1)";
+                            "VALUES(@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, 1)";
                     cmd.ExecuteNonQuery();
 
                     // disattivo la revisione precedente
-                    cmd.CommandText = "UPDATE processo SET attivo = 0 WHERE processID = " + this.processID.ToString() + " AND revisione = " + this.revisione.ToString();
+                    cmd.CommandText = "UPDATE processo SET attivo = 0 WHERE processID = @p0 AND revisione = @p8";
                     cmd.ExecuteNonQuery();
 
                     // Copio i padri
                     List<int[]> elencoPadri = new List<int[]>();
-                    cmd.CommandText = "SELECT padre, revPadre, variante, posx, posy FROM processipadrifigli WHERE task = " + this.processID.ToString()
-                        + " AND revTask = " + this.revisione.ToString();
+                    cmd.CommandText = "SELECT padre, revPadre, variante, posx, posy FROM processipadrifigli WHERE task = @p0"
+                        + " AND revTask = @p8";
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2260,19 +2392,29 @@ namespace KIS.App_Code
                         elencoPadri.Add(arrPadre);
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@p9", 0);
+                    cmd.Parameters.AddWithValue("@p10", 0);
+                    cmd.Parameters.AddWithValue("@p11", 0);
+                    cmd.Parameters.AddWithValue("@p12", 0);
+                    cmd.Parameters.AddWithValue("@p13", 0);
                     for (int i = 0; i < elencoPadri.Count; i++)
                     {
+                        cmd.Parameters["@p9"].Value = elencoPadri[i][0];
+                        cmd.Parameters["@p10"].Value = elencoPadri[i][1];
+                        cmd.Parameters["@p11"].Value = elencoPadri[i][2];
+                        cmd.Parameters["@p12"].Value = elencoPadri[i][3];
+                        cmd.Parameters["@p13"].Value = elencoPadri[i][4];
                         cmd.CommandText = "INSERT INTO processipadrifigli(task, revTask, padre, revPadre, variante, posx, posy) VALUES("
-                            + this.processID.ToString() + ", " + (this.revisione + 1).ToString() + ", " + elencoPadri[i][0].ToString()
-                            + ", " + elencoPadri[i][1].ToString() + ", " + elencoPadri[i][2].ToString() + ", " + elencoPadri[i][3].ToString()
-                                + ", " + elencoPadri[i][4].ToString() + ")";
+                            + "@p0, @p1, @p9"
+                            + ", @p10, @p11, @p12"
+                                + ", @p13)";
                         cmd.ExecuteNonQuery();
 
                     }
 
                     List<int[]> elencoPrecedenti = new List<int[]>();
                     cmd.CommandText = "SELECT prec, revPrec, variante, relazione FROM precedenzeprocessi WHERE succ = "
-                        + this.processID.ToString() + " AND revSucc = " + this.revisione.ToString();
+                        + "@p0 AND revSucc = @p8";
                     rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2284,22 +2426,30 @@ namespace KIS.App_Code
                         elencoPrecedenti.Add(arrPrec);
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@p14", 0);
+                    cmd.Parameters.AddWithValue("@p15", 0);
+                    cmd.Parameters.AddWithValue("@p16", 0);
+                    cmd.Parameters.AddWithValue("@p17", 0);
                     for (int i = 0; i < elencoPrecedenti.Count; i++)
                     {
+                        cmd.Parameters["@p14"].Value = elencoPrecedenti[i][0];
+                        cmd.Parameters["@p15"].Value = elencoPrecedenti[i][1];
+                        cmd.Parameters["@p16"].Value = elencoPrecedenti[i][2];
+                        cmd.Parameters["@p17"].Value = elencoPrecedenti[i][3];
                         cmd.CommandText = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione) VALUES("
-                            + elencoPrecedenti[i][0].ToString() + ", "
-                            + elencoPrecedenti[i][1].ToString() + ", "
-                            + this.processID.ToString() + ", "
-                            + (this.revisione+1).ToString() + ", "
-                            + elencoPrecedenti[i][2].ToString() + ", "
-                            + elencoPrecedenti[i][3].ToString()
+                            + "@p14, "
+                            + "@p15, "
+                            + "@p0, "
+                            + "@p1, "
+                            + "@p16, "
+                            + "@p17"
                             + ")";
                         cmd.ExecuteNonQuery();
                     }
 
                     List<int[]> elencoSuccessivi = new List<int[]>();
                     cmd.CommandText = "SELECT succ, revSucc, variante, relazione FROM precedenzeprocessi WHERE prec = "
-                        + this.processID.ToString() + " AND revPrec = " + this.revisione.ToString();
+                        + "@p0 AND revPrec = @p8";
                     rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2311,15 +2461,23 @@ namespace KIS.App_Code
                         elencoSuccessivi.Add(arrSucc);
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@p18", 0);
+                    cmd.Parameters.AddWithValue("@p19", 0);
+                    cmd.Parameters.AddWithValue("@p20", 0);
+                    cmd.Parameters.AddWithValue("@p21", 0);
                     for (int i = 0; i < elencoSuccessivi.Count; i++)
                     {
+                        cmd.Parameters["@p18"].Value = elencoSuccessivi[i][0];
+                        cmd.Parameters["@p19"].Value = elencoSuccessivi[i][1];
+                        cmd.Parameters["@p20"].Value = elencoSuccessivi[i][2];
+                        cmd.Parameters["@p21"].Value = elencoSuccessivi[i][3];
                         cmd.CommandText = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione) VALUES("
-                            + this.processID.ToString() + ", "
-                            + (this.revisione+1).ToString() + ", "
-                            + elencoSuccessivi[i][0].ToString() + ", "
-                            + elencoSuccessivi[i][1].ToString() + ", "
-                            + elencoSuccessivi[i][2].ToString() + ", "
-                            + elencoSuccessivi[i][3].ToString()
+                            + "@p0, "
+                            + "@p1, "
+                            + "@p18, "
+                            + "@p19, "
+                            + "@p20, "
+                            + "@p21"
                             + ")";
                         cmd.ExecuteNonQuery();
                     }
@@ -2359,13 +2517,23 @@ namespace KIS.App_Code
                 try
                 {
                     // Copio il processo originale
+                    cmd.Parameters.AddWithValue("@p0", this.processID);
+                    cmd.Parameters.AddWithValue("@p1", (this.revisione + 1));
+                    cmd.Parameters.AddWithValue("@p2", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@p3", this.processName);
+                    cmd.Parameters.AddWithValue("@p4", this.processDescription);
+                    cmd.Parameters.AddWithValue("@p5", this.processoPadre);
+                    cmd.Parameters.AddWithValue("@p6", this.revPadre);
+                    cmd.Parameters.AddWithValue("@p7", isVSM);
+                    cmd.Parameters.AddWithValue("@p8", this.posX);
+                    cmd.Parameters.AddWithValue("@p9", this.posY);
+                    cmd.Parameters.AddWithValue("@p10", this.revisione);
                     cmd.CommandText = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, ProcessoPadre, revPadre, isVSM, posx, posy, attivo) " +
-                            "VALUES(" + this.processID + ", " + (this.revisione + 1).ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', '" + this.processName + "', '" + this.processDescription +
-                            "', " + this.processoPadre.ToString() + ", " + this.revPadre.ToString() + " , " + isVSM.ToString() + ", " + this.posX.ToString() + ", " + this.posY.ToString() + ", 1)";
+                            "VALUES(@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9, 1)";
                     cmd.ExecuteNonQuery();
 
                     // Disattivo la revisione precedente
-                    cmd.CommandText = "UPDATE processo SET attivo = 0 WHERE processID = " + this.processID.ToString() + " AND revisione = " + this.revisione.ToString();
+                    cmd.CommandText = "UPDATE processo SET attivo = 0 WHERE processID = @p0 AND revisione = @p10";
                     cmd.ExecuteNonQuery();
                     
                     // Copio i KPIs
@@ -2383,8 +2551,10 @@ namespace KIS.App_Code
                         maxKPI = 0;
                     }
                     rdr.Close();
+                    cmdRdr.Parameters.AddWithValue("@p0", this.processID);
+                    cmdRdr.Parameters.AddWithValue("@p1", this.revisione);
                     cmdRdr.CommandText = "SELECT id FROM kpi_description "
-                        + " WHERE idprocesso = " + this.processID.ToString() + " AND revisione = " + this.revisione.ToString();
+                        + " WHERE idprocesso = @p0 AND revisione = @p1";
                     rdr = cmdRdr.ExecuteReader();
                     List<Kpi> KPIS = new List<Kpi>();
                     while (rdr.Read())
@@ -2392,19 +2562,27 @@ namespace KIS.App_Code
                         KPIS.Add(new Kpi(this.Tenant, rdr.GetInt32(0)));
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@pMaxKPI", 0);
+                    cmd.Parameters.AddWithValue("@pName", "");
+                    cmd.Parameters.AddWithValue("@pDesc", "");
+                    cmd.Parameters.AddWithValue("@pBaseVal", 0.0);
                     for(int j = 0; j < KPIS.Count; j++)
                     {
+                        cmd.Parameters["@pMaxKPI"].Value = maxKPI;
+                        cmd.Parameters["@pName"].Value = KPIS[j].name;
+                        cmd.Parameters["@pDesc"].Value = KPIS[j].description;
+                        cmd.Parameters["@pBaseVal"].Value = KPIS[j].baseVal;
                         cmd.CommandText = "INSERT INTO kpi_description(id, name, description, idprocesso, revisione, attivo, baseval) "
-                            + "VALUES(" + maxKPI.ToString() + ", '" + KPIS[j].name + "', '" + KPIS[j].description + "',"
-                            + this.processID.ToString() + ", " + (this.revisione + 1).ToString() + ", 1, " + KPIS[j].baseVal.ToString() + ")";
+                            + "VALUES(@pMaxKPI, @pName, @pDesc,"
+                            + "@p0, @p1, 1, @pBaseVal)";
                         cmd.ExecuteNonQuery();
                         maxKPI++;
                     }
                     
                     // COPIO LE VARIANTI
                     // Associo questo processo alle varianti cui appartiene il padre.
-                    cmdRdr.CommandText = "SELECT variante FROM variantiprocessi WHERE processo = " + this.processID.ToString()
-                        + " AND revProc = " + this.revisione.ToString();
+                    cmdRdr.CommandText = "SELECT variante FROM variantiprocessi WHERE processo = @p0"
+                        + " AND revProc = @p1";
                     rdr = cmdRdr.ExecuteReader();
                     List<int> variantiElenco = new List<int>();
                     while (rdr.Read())
@@ -2412,16 +2590,18 @@ namespace KIS.App_Code
                         variantiElenco.Add(rdr.GetInt32(0));
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@pVariante", 0);
                     for (int i = 0; i < variantiElenco.Count; i++)
                     {
+                        cmd.Parameters["@pVariante"].Value = variantiElenco[i];
                         cmd.CommandText = "INSERT INTO variantiprocessi(variante, processo, revProc) VALUES("
-                            + variantiElenco[i].ToString() + ", " + this.processID.ToString() + ", " + (this.revisione + 1).ToString() + ")";
+                            + "@pVariante, @p0, @p1)";
                         cmd.ExecuteNonQuery();
                     }
 
                     // Copio le relazioni di precedenza del processo per variante
                     cmdRdr.CommandText = "SELECT prec, revPrec, variante, relazione FROM precedenzeprocessi "
-                        + " WHERE succ = " + this.processID.ToString() + " AND revSucc = " + this.revisione.ToString();
+                        + " WHERE succ = @p0 AND revSucc = @p1";
                     rdr = cmdRdr.ExecuteReader();
                     List<int>[] elencoPrecedenti = new List<int>[4];
                     elencoPrecedenti[0] = new List<int>();
@@ -2436,19 +2616,27 @@ namespace KIS.App_Code
                         elencoPrecedenti[3].Add(rdr.GetInt32(3));
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@pPrec0", 0);
+                    cmd.Parameters.AddWithValue("@pPrec1", 0);
+                    cmd.Parameters.AddWithValue("@pPrec2", 0);
+                    cmd.Parameters.AddWithValue("@pPrec3", 0);
                     for (int j = 0; j < elencoPrecedenti[0].Count; j++)
                     {
+                        cmd.Parameters["@pPrec0"].Value = elencoPrecedenti[0][j];
+                        cmd.Parameters["@pPrec1"].Value = elencoPrecedenti[1][j];
+                        cmd.Parameters["@pPrec2"].Value = elencoPrecedenti[2][j];
+                        cmd.Parameters["@pPrec3"].Value = elencoPrecedenti[3][j];
                         cmd.CommandText = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione) VALUES "
-                        + "(" + elencoPrecedenti[0][j].ToString() + ", " + elencoPrecedenti[1][j].ToString()
-                        + ", " + this.processID.ToString() + ", " + (this.revisione+1).ToString()
-                        + ", " + elencoPrecedenti[2][j].ToString()
-                        + ", " + elencoPrecedenti[3][j].ToString() + ")";
+                        + "(@pPrec0, @pPrec1"
+                        + ", @p0, @p1"
+                        + ", @pPrec2"
+                        + ", @pPrec3)";
                         cmd.ExecuteNonQuery();
                     }
 
                     // Copio le relazioni con i successivi per variante
                     cmdRdr.CommandText = "SELECT succ, revSucc, variante, relazione FROM precedenzeprocessi "
-                        + "WHERE prec = " + this.processID.ToString() + " AND revPrec = " + this.revisione.ToString();
+                        + "WHERE prec = @p0 AND revPrec = @p1";
                     rdr = cmdRdr.ExecuteReader();
                     List<int>[] elencoSuccessivi = new List<int>[4];
                     elencoSuccessivi[0] = new List<int>();
@@ -2463,13 +2651,21 @@ namespace KIS.App_Code
                         elencoSuccessivi[3].Add(rdr.GetInt32(3));
                     }
                     rdr.Close();
+                    cmd.Parameters.AddWithValue("@pSucc0", 0);
+                    cmd.Parameters.AddWithValue("@pSucc1", 0);
+                    cmd.Parameters.AddWithValue("@pSucc2", 0);
+                    cmd.Parameters.AddWithValue("@pSucc3", 0);
                     for (int j = 0; j < elencoSuccessivi[0].Count; j++)
                     {
+                        cmd.Parameters["@pSucc0"].Value = elencoSuccessivi[0][j];
+                        cmd.Parameters["@pSucc1"].Value = elencoSuccessivi[1][j];
+                        cmd.Parameters["@pSucc2"].Value = elencoSuccessivi[2][j];
+                        cmd.Parameters["@pSucc3"].Value = elencoSuccessivi[3][j];
                         cmd.CommandText = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione) VALUES "
-                            + "(" + this.processID.ToString() + ", " + (this.revisione+1).ToString()
-                            + ", " + elencoSuccessivi[0][j].ToString() + ", " + elencoSuccessivi[1][j].ToString()
-                            + ", " + elencoSuccessivi[2][j].ToString()
-                            + ", " + elencoSuccessivi[3][j].ToString() + ")";
+                            + "(@p0, @p1"
+                            + ", @pSucc0, @pSucc1"
+                            + ", @pSucc2"
+                            + ", @pSucc3)";
                         cmd.ExecuteNonQuery();
                     }
 
@@ -2517,8 +2713,9 @@ namespace KIS.App_Code
                 try
                 {
                     List<int[]> elencoFigli = new List<int[]>();
-                    cmdRdr.CommandText = "SELECT processID, revisione FROM processo WHERE processoPadre = " + this.processID.ToString()
-                        + " AND revPadre = " + this.revisione.ToString();
+                    cmdRdr.CommandText = "SELECT processID, revisione FROM processo WHERE processoPadre = @p0 AND revPadre = @p1";
+                    cmdRdr.Parameters.AddWithValue("@p0", this.processID);
+                    cmdRdr.Parameters.AddWithValue("@p1", this.revisione);
                     rdr = cmdRdr.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2528,12 +2725,23 @@ namespace KIS.App_Code
                         elencoFigli.Add(procFigli);
                     }
                     rdr.Close();
+                    cmdRdr.Parameters.Clear();
 
+                    cmd.Parameters.AddWithValue("@p0", 0);
+                    cmd.Parameters.AddWithValue("@p1", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@p2", "");
+                    cmd.Parameters.AddWithValue("@p3", "");
+                    cmd.Parameters.AddWithValue("@p4", newPrc.processID);
+                    cmd.Parameters.AddWithValue("@p5", newPrc.revisione);
+                    cmd.Parameters.AddWithValue("@p6", false);
+                    cmd.Parameters.AddWithValue("@p7", 0);
+                    cmd.Parameters.AddWithValue("@p8", 0);
+                    cmd.Parameters.AddWithValue("@p9", "");
                     for (int i = 0; i < elencoFigli.Count; i++)
                     {
                         MySqlCommand findMax = conn.CreateCommand();
-                        cmd.CommandText = "SELECT MAX(processID) FROM processo";
-                        rdr = cmd.ExecuteReader();
+                        cmdRdr.CommandText = "SELECT MAX(processID) FROM processo";
+                        rdr = cmdRdr.ExecuteReader();
                         int newID = 0;
                         if (rdr.Read() && !rdr.IsDBNull(0))
                         {
@@ -2541,12 +2749,16 @@ namespace KIS.App_Code
                         }
                         rdr.Close();
                         processo figlio = new processo(this.Tenant, elencoFigli[i][0], elencoFigli[i][1]);
+                        cmd.Parameters["@p0"].Value = newID;
+                        cmd.Parameters["@p1"].Value = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
+                        cmd.Parameters["@p2"].Value = figlio.processName;
+                        cmd.Parameters["@p3"].Value = figlio.processDescription;
+                        cmd.Parameters["@p6"].Value = figlio.isVSM;
+                        cmd.Parameters["@p7"].Value = figlio.posX;
+                        cmd.Parameters["@p8"].Value = figlio.posY;
+                        cmd.Parameters["@p9"].Value = figlio.ToString();
                         cmd.CommandText = "INSERT INTO processo(processID, revisione, dataRevisione, Name, Description, processoPadre, "
-                        + "revPadre, isVSM, posx, posy, attivo) VALUES(" + newID + ", 0, '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss")
-                        + "', '" + figlio.processName + "', '" + figlio.processDescription + "', "
-                        + newPrc.processID.ToString() + ", " + newPrc.revisione.ToString()
-                        + ", " + figlio.isVSM.ToString() + ", " + figlio.posX.ToString() + ", "
-                        + figlio.posY.ToString() + ", " + figlio.ToString() + ")";
+                        + "revPadre, isVSM, posx, posy, attivo) VALUES(@p0, 0, @p1, @p2, @p3, @p4, @p5, @p6, @p7, @p8, @p9)";
                         cmd.ExecuteNonQuery();
 
                         int[] idS = new int[2];
@@ -2557,20 +2769,29 @@ namespace KIS.App_Code
 
                         // Copio i KPIs
                         this.subProcessi[i].loadKPIs();
+                        cmd.Parameters.Clear();
+                        cmd.Parameters.AddWithValue("@p0", 0);
+                        cmd.Parameters.AddWithValue("@p1", "");
+                        cmd.Parameters.AddWithValue("@p2", "");
+                        cmd.Parameters.AddWithValue("@p3", newID);
+                        cmd.Parameters.AddWithValue("@p4", 1);
+                        cmd.Parameters.AddWithValue("@p5", 0);
                         for (int h = 0; h < this.subProcessi[i].numKPIs; h++)
                         {
-                            cmd.CommandText = "SELECT MAX(id) FROM kpi_description";
+                            cmdRdr.CommandText = "SELECT MAX(id) FROM kpi_description";
                             int maxKPI = 0;
-                            rdr = cmd.ExecuteReader();
+                            rdr = cmdRdr.ExecuteReader();
                             if (rdr.Read() && !rdr.IsDBNull(0))
                             {
                                 maxKPI = rdr.GetInt32(0) + 1;
                             }
                             rdr.Close();
+                            cmd.Parameters["@p0"].Value = maxKPI;
+                            cmd.Parameters["@p1"].Value = this.subProcessi[i].KPIs[h].name;
+                            cmd.Parameters["@p2"].Value = this.subProcessi[i].KPIs[h].description;
+                            cmd.Parameters["@p5"].Value = this.subProcessi[i].KPIs[h].baseVal;
                             cmd.CommandText = "INSERT INTO kpi_description(id, name, description, idprocesso, revisione, attivo, baseval)"
-                                + " VALUES(" + maxKPI.ToString() + ", '" + this.subProcessi[i].KPIs[h].name + "', '"
-                                + this.subProcessi[i].KPIs[h].description + "', " + newID.ToString() + ", 0, 1, "
-                                + this.subProcessi[i].KPIs[h].baseVal.ToString() + ")";
+                                + " VALUES(@p0, @p1, @p2, @p3, 0, @p4, @p5)";
                             cmd.ExecuteNonQuery();
                         }
                     }
@@ -2589,10 +2810,13 @@ namespace KIS.App_Code
                     // Se ho copiato correttamente i processi, ora parto a copiare dalle varianti
                     err += "Ok, ora verifico le varianti<br/>";
                     List<variante> varFigli = new List<variante>();
+                    cmd.Parameters.Clear();
                     cmd.CommandText = "SELECT DISTINCT(variantiprocessi.variante) FROM processo AS padre INNER JOIN processo AS figlio ON "
                     + "(padre.processID = figlio.processoPadre AND padre.revisione = figlio.revpadre) INNER JOIN variantiprocessi "
                     + " ON(variantiprocessi.processo = figlio.processID AND variantiprocessi.revProc = figlio.revisione) "
-                    + " WHERE padre.processID = " + this.processID.ToString() + " AND padre.revisione = " + this.revisione.ToString();
+                    + " WHERE padre.processID = @p0 AND padre.revisione = @p1";
+                    cmd.Parameters.AddWithValue("@p0", this.processID);
+                    cmd.Parameters.AddWithValue("@p1", this.revisione);
                     MySqlDataReader rdrVars = cmd.ExecuteReader();
                     while (rdrVars.Read())
                     {
@@ -2609,6 +2833,9 @@ namespace KIS.App_Code
                             List<int[]> idPrecSuccOld = new List<int[]>();
                             variante var = new variante(this.Tenant, varFigli[i].idVariante);
                             var.loadProcessi();
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@p0", var.idVariante);
+                            cmd.Parameters.AddWithValue("@p1", -1);
                             for (int z = 0; z < var.processi.Count; z++)
                             {
                                 // Aggiungo l'associazione nuovo processo - variante
@@ -2623,8 +2850,9 @@ namespace KIS.App_Code
                                 }
                                 if (newID != -1)
                                 {
-                                    cmd.CommandText = "INSERT INTO variantiprocessi(variante, processo, revProc) VALUES ("
-                                        + var.idVariante + ", " + newID + ", 0)";
+                                    cmd.Parameters["@p0"].Value = var.idVariante;
+                                    cmd.Parameters["@p1"].Value = newID;
+                                    cmd.CommandText = "INSERT INTO variantiprocessi(variante, processo, revProc) VALUES (@p0, @p1, 0)";
                                     cmd.ExecuteNonQuery();
                                 }
 
@@ -2664,6 +2892,11 @@ namespace KIS.App_Code
                                 }
                             }
 
+                            cmd.Parameters.Clear();
+                            cmd.Parameters.AddWithValue("@p0", 0);
+                            cmd.Parameters.AddWithValue("@p1", 0);
+                            cmd.Parameters.AddWithValue("@p2", var.idVariante);
+                            cmd.Parameters.AddWithValue("@p3", 0);
                             // Inserisco le precedenze per i nuovi processi creati
                             for (int z = 0; z < idPrecSuccOK.Count; z++)
                             {
@@ -2684,8 +2917,10 @@ namespace KIS.App_Code
                                 // Se li ho trovati, aggiungo la relazione di precedenza per la variante
                                 if (newPrec != -1 && newSucc != -1)
                                 {
-                                    cmd.CommandText = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione) VALUES ("
-                                        + newPrec + ", 0, " + newSucc + ", 0, " + var.idVariante + ", " + idPrecSuccOK[z][2] + ")";
+                                    cmd.Parameters["@p0"].Value = newPrec;
+                                    cmd.Parameters["@p1"].Value = newSucc;
+                                    cmd.Parameters["@p3"].Value = idPrecSuccOK[z][2];
+                                    cmd.CommandText = "INSERT INTO precedenzeprocessi(prec, revPrec, succ, revSucc, variante, relazione) VALUES (@p0, 0, @p1, 0, @p2, @p3)";
                                     cmd.ExecuteNonQuery();
                                 }
 
@@ -2722,8 +2957,12 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "INSERT INTO processipadrifigli(task, revTask, padre, revPadre, variante) VALUES("
-                        + prc.Task.processID.ToString() + ", " + prc.Task.revisione.ToString() + ", "
-                        + this.processID.ToString() + ", " + this.revisione.ToString() + ", " + prc.variant.idVariante.ToString() + ")";
+                        + "@p0, @p1, @p2, @p3, @p4)";
+                    cmd.Parameters.AddWithValue("@p0", prc.Task.processID);
+                    cmd.Parameters.AddWithValue("@p1", prc.Task.revisione);
+                    cmd.Parameters.AddWithValue("@p2", this.processID);
+                    cmd.Parameters.AddWithValue("@p3", this.revisione);
+                    cmd.Parameters.AddWithValue("@p4", prc.variant.idVariante);
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
                     try
@@ -2758,8 +2997,10 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT DISTINCT productionplan.processo, productionplan.revisione, productionplan.variante FROM "
                     + "productionplan INNER JOIN tasksproduzione ON (productionplan.id = tasksproduzione.idArticolo AND "
                     + " productionplan.anno = tasksproduzione.annoArticolo) "
-                    + " WHERE tasksproduzione.origTask = " + this.processID.ToString()
-                    + " AND tasksproduzione.revOrigTask = " + this.revisione.ToString();
+                    + " WHERE tasksproduzione.origTask = @p0"
+                    + " AND tasksproduzione.revOrigTask = @p1";
+                cmd.Parameters.AddWithValue("@p0", this.processID);
+                cmd.Parameters.AddWithValue("@p1", this.revisione);
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
@@ -2919,7 +3160,9 @@ namespace KIS.App_Code
                     cmd.Connection = conn;
                     try
                     {
-                        cmd.CommandText = "UPDATE varianti SET nomeVariante = '" + value + "' WHERE idVariante = " + this.idVariante;
+                        cmd.CommandText = "UPDATE varianti SET nomeVariante = @p0 WHERE idVariante = @p1";
+                        cmd.Parameters.AddWithValue("@p0", value);
+                        cmd.Parameters.AddWithValue("@p1", this.idVariante);
                         cmd.ExecuteNonQuery();
                         trans.Commit();
                         this._nomeVariante = value;
@@ -2948,7 +3191,9 @@ namespace KIS.App_Code
                     cmd.Connection = conn;
                     try
                     {
-                        cmd.CommandText = "UPDATE varianti SET descVariante = '" + value + "' WHERE idVariante = " + this.idVariante;
+                        cmd.CommandText = "UPDATE varianti SET descVariante = @p0 WHERE idVariante = @p1";
+                        cmd.Parameters.AddWithValue("@p0", value);
+                        cmd.Parameters.AddWithValue("@p1", this.idVariante);
                         cmd.ExecuteNonQuery();
                         trans.Commit();
                         this._descrizioneVariante = value;
@@ -2977,10 +3222,11 @@ namespace KIS.App_Code
 
             if (varID >= 0)
             {
-                String strSQL = "SELECT idvariante, nomeVariante, descVariante FROM varianti WHERE idvariante = " + varID.ToString();
+                String strSQL = "SELECT idvariante, nomeVariante, descVariante FROM varianti WHERE idvariante = @p0";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", varID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -3025,8 +3271,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 string strSQL = "SELECT COUNT(processo) FROM variantiprocessi INNER JOIN varianti ON(variantiprocessi.variante = varianti.idvariante)"
-                    + " WHERE varianti.idvariante = " + this.idVariante.ToString();
+                    + " WHERE varianti.idvariante = @p0";
                 MySqlCommand cmd = new MySqlCommand (strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -3039,8 +3286,9 @@ namespace KIS.App_Code
                 //this._processi = new int[this.numProcessi];
                 rdr.Close();
                 strSQL = "SELECT processo, revProc FROM variantiprocessi INNER JOIN varianti ON(variantiprocessi.variante = varianti.idvariante)"
-                    + " WHERE varianti.idvariante = " + this.idVariante.ToString();
+                    + " WHERE varianti.idvariante = @p0";
                 cmd = new MySqlCommand(strSQL, conn);
+                cmd.Parameters.AddWithValue("@p0", this.idVariante);
                 rdr = cmd.ExecuteReader();
                 int i = 0;
                 while (rdr.Read() && !rdr.IsDBNull(0) && !rdr.IsDBNull(1))
@@ -3088,9 +3336,12 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 try
                 {
-                    cmd.CommandText = "DELETE FROM variantiprocessi WHERE variante = " + this.idVariante.ToString()
-                        + " AND processo = " + prc.processID.ToString()
-                        + " AND revProc = " + prc.revisione.ToString();
+                    cmd.CommandText = "DELETE FROM variantiprocessi WHERE variante = @p0"
+                        + " AND processo = @p1"
+                        + " AND revProc = @p2";
+                    cmd.Parameters.AddWithValue("@p0", this.idVariante);
+                    cmd.Parameters.AddWithValue("@p1", prc.processID);
+                    cmd.Parameters.AddWithValue("@p2", prc.revisione);
                     cmd.ExecuteNonQuery();
                     tr.Commit();
                     ret = true;
@@ -3124,7 +3375,8 @@ namespace KIS.App_Code
                     cmd.Transaction = tr;
                     try
                     {
-                        cmd.CommandText = "DELETE FROM varianti WHERE idvariante = " + this.idVariante.ToString();
+                        cmd.CommandText = "DELETE FROM varianti WHERE idvariante = @p0";
+                        cmd.Parameters.AddWithValue("@p0", this.idVariante);
                         cmd.ExecuteNonQuery();
                         rt = true;
                         tr.Commit();
@@ -3173,7 +3425,10 @@ namespace KIS.App_Code
 
             
             MySqlTransaction trans = conn.BeginTransaction();
-            cmd.CommandText = "INSERT INTO varianti(idVariante, nomeVariante, descVariante) VALUES(" + ret.ToString() + ", '" + nome + "', '" + desc + "')";
+            cmd.CommandText = "INSERT INTO varianti(idVariante, nomeVariante, descVariante) VALUES(@p0, @p1, @p2)";
+            cmd.Parameters.AddWithValue("@p0", ret);
+            cmd.Parameters.AddWithValue("@p1", nome);
+            cmd.Parameters.AddWithValue("@p2", desc);
             cmd.Transaction = trans;
             try
             {
@@ -3240,9 +3495,12 @@ namespace KIS.App_Code
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE variantiprocessi SET measurementUnit = " + value.ToString()
-                            + " WHERE variante = " + this.variant.idVariante.ToString()
-                            + " AND processo = " + this.process.processID.ToString();
+                        cmd.CommandText = "UPDATE variantiprocessi SET measurementUnit = @p0"
+                            + " WHERE variante = @p1"
+                            + " AND processo = @p2";
+                        cmd.Parameters.AddWithValue("@p0", value);
+                        cmd.Parameters.AddWithValue("@p1", this.variant.idVariante);
+                        cmd.Parameters.AddWithValue("@p2", this.process.processID);
                         MySqlTransaction tr = conn.BeginTransaction();
                         cmd.Transaction = tr;
                         try
@@ -3285,11 +3543,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT reparto FROM productionplan WHERE processo = "
-                    + this.process.processID.ToString()
-                    + " AND revisione = " + this.process.revisione.ToString()
-                    + " AND variante = " + this.variant.idVariante.ToString()
+                    cmd.CommandText = "SELECT reparto FROM productionplan WHERE processo = @p0"
+                    + " AND revisione = @p1"
+                    + " AND variante = @p2"
                     + " ORDER BY anno DESC, id DESC";
+                cmd.Parameters.AddWithValue("@p0", this.process.processID);
+                cmd.Parameters.AddWithValue("@p1", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -3315,8 +3575,11 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processo.processID, variantiprocessi.ExternalID, variantiprocessi.measurementUnit FROM processo INNER JOIN variantiprocessi ON(variantiprocessi.processo = processo.processID "
-                + " AND processo.revisione = variantiprocessi.revProc) WHERE variantiprocessi.variante = " + vr.idVariante.ToString() +
-                " AND processo.processID = " + prc.processID.ToString() + " AND processo.revisione = " + prc.revisione.ToString();
+                + " AND processo.revisione = variantiprocessi.revProc) WHERE variantiprocessi.variante = @p0" +
+                " AND processo.processID = @p1 AND processo.revisione = @p2";
+            cmd.Parameters.AddWithValue("@p0", vr.idVariante);
+            cmd.Parameters.AddWithValue("@p1", prc.processID);
+            cmd.Parameters.AddWithValue("@p2", prc.revisione);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -3359,7 +3622,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processo.processID, processo.revisione, variantiprocessi.variante, variantiprocessi.measurementUnit FROM processo INNER JOIN variantiprocessi ON(variantiprocessi.processo = processo.processID "
-                + " AND processo.revisione = variantiprocessi.revProc) WHERE variantiprocessi.ExternalID = '" + ExternalID + "'";
+                + " AND processo.revisione = variantiprocessi.revProc) WHERE variantiprocessi.ExternalID = @p0";
+            cmd.Parameters.AddWithValue("@p0", ExternalID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -3393,8 +3657,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idReparto FROM repartiprocessi WHERE processID = " + this.process.processID.ToString()
-                    + " AND revisione = " + this.process.revisione.ToString() + " AND variante = " + this.variant.idVariante.ToString();
+                cmd.CommandText = "SELECT idReparto FROM repartiprocessi WHERE processID = @p0"
+                    + " AND revisione = @p1 AND variante = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.process.processID);
+                cmd.Parameters.AddWithValue("@p1", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
@@ -3431,11 +3698,14 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO repartiprocessi(idReparto, processID, revisione, variante) VALUES("
-                        + rp.id.ToString() + ", "
-                        + this.process.processID.ToString() + ", "
-                        + this.process.revisione.ToString() + ", "
-                        + this.variant.idVariante.ToString() + ")";
+                    cmd.CommandText = "INSERT INTO repartiprocessi(idReparto, processID, revisione, variante) VALUES(@p0, "
+                        + "@p1, "
+                        + "@p2, "
+                        + "@p3)";
+                    cmd.Parameters.AddWithValue("@p0", rp.id);
+                    cmd.Parameters.AddWithValue("@p1", this.process.processID);
+                    cmd.Parameters.AddWithValue("@p2", this.process.revisione);
+                    cmd.Parameters.AddWithValue("@p3", this.variant.idVariante);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -3469,10 +3739,14 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM repartiprocessi WHERE idReparto = " + rp.id.ToString()
-                    + " AND processID = " + this.process.processID.ToString()
-                    + " AND revisione = " + this.process.revisione.ToString()
-                    + " AND variante = " + this.variant.idVariante.ToString();
+                cmd.CommandText = "DELETE FROM repartiprocessi WHERE idReparto = @p0"
+                    + " AND processID = @p1"
+                    + " AND revisione = @p2"
+                    + " AND variante = @p3";
+                cmd.Parameters.AddWithValue("@p0", rp.id);
+                cmd.Parameters.AddWithValue("@p1", this.process.processID);
+                cmd.Parameters.AddWithValue("@p2", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p3", this.variant.idVariante);
                 try
                 {
                     rt = true;
@@ -3917,11 +4191,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT paramID FROM modelparameters WHERE processID = " +
-                    this.process.processID.ToString()
-                    + " AND processRev = " + this.process.revisione.ToString()
-                    + " AND varianteID = " + this.variant.idVariante.ToString()
+                cmd.CommandText = "SELECT paramID FROM modelparameters WHERE processID = @p0"
+                    + " AND processRev = @p1"
+                    + " AND varianteID = @p2"
                     + " ORDER BY sequence, paramname";
+                cmd.Parameters.AddWithValue("@p0", this.process.processID);
+                cmd.Parameters.AddWithValue("@p1", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
@@ -3942,9 +4218,12 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT MAX(paramID) FROM ModelParameters WHERE processID = " + this.process.processID.ToString()
-                    + " AND processRev = " + this.process.revisione.ToString()
-                    + " AND varianteID = " + this.variant.idVariante.ToString();
+                cmd.CommandText = "SELECT MAX(paramID) FROM ModelParameters WHERE processID = @p0"
+                    + " AND processRev = @p1"
+                    + " AND varianteID = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.process.processID);
+                cmd.Parameters.AddWithValue("@p1", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 int maxID = 0;
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read() && !rdr.IsDBNull(0))
@@ -3955,15 +4234,25 @@ namespace KIS.App_Code
 
                 int maxSequence = maxID;
 
+                cmd.Parameters.Clear();
                 cmd.CommandText = "INSERT INTO modelparameters(processid, processrev, varianteID, paramID, paramCategory, "
-                    + " paramName, paramDescription, isFixed, isRequired, sequence) VALUES("
-                    + this.process.processID.ToString() + ", "
-                    + this.process.revisione.ToString() + ", "
-                    + this.variant.idVariante.ToString() + ", "
-                    + maxID.ToString() + ", "
-                    + category.ID.ToString() + ", "
-                    + "'" + name + "', '" + description + "', " + isFixed.ToString() + ", "
-                    + isRequired.ToString() + ", " + maxSequence.ToString() + ")";
+                    + " paramName, paramDescription, isFixed, isRequired, sequence) VALUES(@p0, "
+                    + "@p1, "
+                    + "@p2, "
+                    + "@p3, "
+                    + "@p4, "
+                    + "@p5, @p6, @p7, "
+                    + "@p8, @p9)";
+                cmd.Parameters.AddWithValue("@p0", this.process.processID);
+                cmd.Parameters.AddWithValue("@p1", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
+                cmd.Parameters.AddWithValue("@p3", maxID);
+                cmd.Parameters.AddWithValue("@p4", category.ID);
+                cmd.Parameters.AddWithValue("@p5", name);
+                cmd.Parameters.AddWithValue("@p6", description);
+                cmd.Parameters.AddWithValue("@p7", isFixed);
+                cmd.Parameters.AddWithValue("@p8", isRequired);
+                cmd.Parameters.AddWithValue("@p9", maxSequence);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -3991,10 +4280,14 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM Modelparameters WHERE processID = " + this.process.processID.ToString()
-                    + " AND processRev = " + this.process.revisione.ToString()
-                    + " AND varianteID = " + this.variant.idVariante.ToString()
-                    + " AND paramID = " + paramID.ToString();
+                cmd.CommandText = "DELETE FROM Modelparameters WHERE processID = @p0"
+                    + " AND processRev = @p1"
+                    + " AND varianteID = @p2"
+                    + " AND paramID = @p3";
+                cmd.Parameters.AddWithValue("@p0", this.process.processID);
+                cmd.Parameters.AddWithValue("@p1", this.process.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
+                cmd.Parameters.AddWithValue("@p3", paramID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -4025,8 +4318,12 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                 
-                    cmd.CommandText = "UPDATE variantiprocessi SET ExternalID ='" + value + "' WHERE variante=" + this.variant.idVariante + " AND processo = " + this.process.processID
-                        + " AND revProc = " + this.process.revisione.ToString();
+                    cmd.CommandText = "UPDATE variantiprocessi SET ExternalID = @p0 WHERE variante = @p1 AND processo = @p2"
+                        + " AND revProc = @p3";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.variant.idVariante);
+                    cmd.Parameters.AddWithValue("@p2", this.process.processID);
+                    cmd.Parameters.AddWithValue("@p3", this.process.revisione);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -4133,8 +4430,9 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT variante, processo, revProc FROM variantiprocessi INNER JOIN processo ON (variantiprocessi.processo = processo.processID "
                 + "AND processo.revisione = variantiprocessi.revProc) WHERE processo.attivo = true" 
-                + " AND processo.isVSM = " + (!isPert).ToString()
+                + " AND processo.isVSM = @p0"
                 + " ORDER BY variante, processo.name";
+            cmd.Parameters.AddWithValue("@p0", !isPert);
             elencoFigli = new List<ProcessoVariante>();
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -4158,11 +4456,13 @@ namespace KIS.App_Code
                 + " AND productionplan.variante = variantiprocessi.variante)"
                 + " INNER JOIN commesse ON (productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa = commesse.anno) "
                 + " WHERE "
-                + " commesse.cliente = '" + customer.CodiceCliente + "'"
+                + " commesse.cliente = @p0"
                 +" AND processo.attivo = true"
-                + " AND processo.isVSM = " + (!isPert).ToString()
+                + " AND processo.isVSM = @p1"
                 + " GROUP BY variantiprocessi.variante, processo.processID, processo.revisione"
                 + " ORDER BY variante, processo.name";
+            cmd.Parameters.AddWithValue("@p0", customer.CodiceCliente);
+            cmd.Parameters.AddWithValue("@p1", !isPert);
             elencoFigli = new List<ProcessoVariante>();
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -4239,13 +4539,16 @@ namespace KIS.App_Code
             try
             {
 
-                cmd.CommandText = "DELETE FROM processipadrifigli WHERE variante = " + this.variant.idVariante.ToString()
-                    + " AND task = " + this.Task.processID.ToString() + " AND revTask = " + this.Task.revisione.ToString();
+                cmd.CommandText = "DELETE FROM processipadrifigli WHERE variante = @p0"
+                    + " AND task = @p1 AND revTask = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.variant.idVariante);
+                cmd.Parameters.AddWithValue("@p1", this.Task.processID);
+                cmd.Parameters.AddWithValue("@p2", this.Task.revisione);
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "DELETE FROM precedenzeprocessi WHERE variante = " + this.variant.idVariante.ToString()
-                    + " AND ((prec = "+this.Task.processID.ToString()+" AND revPrec = "+this.Task.revisione.ToString()
-                    +") OR (succ = "+this.Task.processID.ToString()+" AND revSucc = "+ this.Task.revisione.ToString() + "))";
+                cmd.CommandText = "DELETE FROM precedenzeprocessi WHERE variante = @p0"
+                    + " AND ((prec = @p1 AND revPrec = @p2"
+                    + ") OR (succ = @p1 AND revSucc = @p2))";
                 cmd.ExecuteNonQuery();
                 tr.Commit();
                 rt = true;
@@ -4336,8 +4639,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = " + this.Task.processID.ToString()
-                 + " AND revProc = " + this.Task.revisione.ToString() + " AND variante = " + this.variant.idVariante.ToString();
+            cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = @p0"
+                 + " AND revProc = @p1 AND variante = @p2";
+            cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+            cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while(rdr.Read())
             {
@@ -4357,11 +4663,15 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM repartipostazioniattivita WHERE "
-                 + " processo = " + this.Task.processID.ToString()
-                 + " AND revProc = " + this.Task.revisione.ToString() 
-                 + " AND variante = " + this.variant.idVariante.ToString()
+                 + " processo = @p0"
+                 + " AND revProc = @p1" 
+                 + " AND variante = @p2"
                  //+ " AND reparto = " + rp.id.ToString()
-                 + " AND postazione = " + p.id.ToString();
+                 + " AND postazione = @p3";
+            cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+            cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
+            cmd.Parameters.AddWithValue("@p3", p.id);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -4384,10 +4694,14 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = " + this.Task.processID.ToString()
-                 + " AND revProc = " + this.Task.revisione.ToString() 
-                 + " AND variante = " + this.variant.idVariante.ToString()
-                 + " AND reparto = " + rp.id.ToString();
+            cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = @p0"
+                 + " AND revProc = @p1" 
+                 + " AND variante = @p2"
+                 + " AND reparto = @p3";
+            cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+            cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+            cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
+            cmd.Parameters.AddWithValue("@p3", rp.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -4406,11 +4720,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT paramID FROM modelTaskparameters WHERE TaskID = " +
-                    this.Task.processID.ToString()
-                    + " AND TaskRev = " + this.Task.revisione.ToString()
-                    + " AND varianteID = " + this.variant.idVariante.ToString()
+                cmd.CommandText = "SELECT paramID FROM modelTaskparameters WHERE TaskID = @p0"
+                    + " AND TaskRev = @p1"
+                    + " AND varianteID = @p2"
                     + " ORDER BY sequence, paramname";
+                cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+                cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -4431,9 +4747,12 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT MAX(paramID) FROM ModelTaskParameters WHERE TaskID = " + this.Task.processID.ToString()
-                    + " AND TaskRev = " + this.Task.revisione.ToString()
-                    + " AND varianteID = " + this.variant.idVariante.ToString();
+                cmd.CommandText = "SELECT MAX(paramID) FROM ModelTaskParameters WHERE TaskID = @p0"
+                    + " AND TaskRev = @p1"
+                    + " AND varianteID = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+                cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 int maxID = 0;
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
@@ -4444,15 +4763,25 @@ namespace KIS.App_Code
 
                 int maxSequence = maxID;
 
+                cmd.Parameters.Clear();
                 cmd.CommandText = "INSERT INTO modelTaskparameters(TaskID, TaskRev, varianteID, paramID, paramCategory, "
-                    + " paramName, paramDescription, isFixed, isRequired, sequence) VALUES("
-                    + this.Task.processID.ToString() + ", "
-                    + this.Task.revisione.ToString() + ", "
-                    + this.variant.idVariante.ToString() + ", "
-                    + maxID.ToString() + ", "
-                    + category.ID.ToString() + ", "
-                    + "'" + name + "', '" + description + "', " + isFixed.ToString() + ", "
-                    + isRequired.ToString() + ", " + maxSequence.ToString() + ")";
+                    + " paramName, paramDescription, isFixed, isRequired, sequence) VALUES(@p0, "
+                    + "@p1, "
+                    + "@p2, "
+                    + "@p3, "
+                    + "@p4, "
+                    + "@p5, @p6, @p7, "
+                    + "@p8, @p9)";
+                cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+                cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
+                cmd.Parameters.AddWithValue("@p3", maxID);
+                cmd.Parameters.AddWithValue("@p4", category.ID);
+                cmd.Parameters.AddWithValue("@p5", name);
+                cmd.Parameters.AddWithValue("@p6", description);
+                cmd.Parameters.AddWithValue("@p7", isFixed);
+                cmd.Parameters.AddWithValue("@p8", isRequired);
+                cmd.Parameters.AddWithValue("@p9", maxSequence);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -4480,10 +4809,14 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM ModelTaskparameters WHERE TaskID = " + this.Task.processID.ToString()
-                    + " AND TaskRev = " + this.Task.revisione.ToString()
-                    + " AND varianteID = " + this.variant.idVariante.ToString()
-                    + " AND paramID = " + paramID.ToString();
+                cmd.CommandText = "DELETE FROM ModelTaskparameters WHERE TaskID = @p0"
+                    + " AND TaskRev = @p1"
+                    + " AND varianteID = @p2"
+                    + " AND paramID = @p3";
+                cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+                cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
+                cmd.Parameters.AddWithValue("@p3", paramID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -4559,9 +4892,12 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT user FROM taskusermodel WHERE taskid = " + this.Task.processID
-                    + " AND taskrev=" + this.Task.revisione
-                    + " AND variantid = " + this.variant.idVariante.ToString();
+                cmd.CommandText = "SELECT user FROM taskusermodel WHERE taskid = @p0"
+                    + " AND taskrev = @p1"
+                    + " AND variantid = @p2";
+                cmd.Parameters.AddWithValue("@p0", this.Task.processID);
+                cmd.Parameters.AddWithValue("@p1", this.Task.revisione);
+                cmd.Parameters.AddWithValue("@p2", this.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
@@ -4707,11 +5043,16 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE tempiciclo SET def = " + value
-                        + " WHERE processo = " + this.IdProcesso.ToString()
-                        + " AND revisione = " + this.RevisioneProcesso.ToString()
-                        + " AND variante = " + this.Variante.ToString()
-                        + " AND num_op = " + this.NumeroOperatori.ToString();
+                    cmd.CommandText = "UPDATE tempiciclo SET def = @p0"
+                        + " WHERE processo = @p1"
+                        + " AND revisione = @p2"
+                        + " AND variante = @p3"
+                        + " AND num_op = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.IdProcesso);
+                    cmd.Parameters.AddWithValue("@p2", this.RevisioneProcesso);
+                    cmd.Parameters.AddWithValue("@p3", this.Variante);
+                    cmd.Parameters.AddWithValue("@p4", this.NumeroOperatori);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -4737,8 +5078,12 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT setup, tempo, tunload, def FROM tempiciclo WHERE processo = " + idProc.ToString()
-                    + " AND revisione = " + revProc.ToString() + " AND num_op = " + num_op.ToString() + " AND variante = " + var.ToString();
+                cmd.CommandText = "SELECT setup, tempo, tunload, def FROM tempiciclo WHERE processo = @p0"
+                    + " AND revisione = @p1 AND num_op = @p2 AND variante = @p3";
+                cmd.Parameters.AddWithValue("@p0", idProc);
+                cmd.Parameters.AddWithValue("@p1", revProc);
+                cmd.Parameters.AddWithValue("@p2", num_op);
+                cmd.Parameters.AddWithValue("@p3", var);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -4788,8 +5133,12 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM tempiciclo WHERE processo = " + this.IdProcesso.ToString() + " AND revisione = " 
-                    + this.RevisioneProcesso.ToString() + " AND variante = " + this.Variante.ToString() + " AND num_op = " + this.NumeroOperatori.ToString();
+                cmd.CommandText = "DELETE FROM tempiciclo WHERE processo = @p0 AND revisione = @p1"
+                    + " AND variante = @p2 AND num_op = @p3";
+                cmd.Parameters.AddWithValue("@p0", this.IdProcesso);
+                cmd.Parameters.AddWithValue("@p1", this.RevisioneProcesso);
+                cmd.Parameters.AddWithValue("@p2", this.Variante);
+                cmd.Parameters.AddWithValue("@p3", this.NumeroOperatori);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -4840,8 +5189,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT num_op FROM tempiciclo WHERE processo = " + idProc.ToString() + " AND revisione = " + revProc.ToString()
-                + " AND variante = " + var.ToString() + " ORDER BY num_op";
+            cmd.CommandText = "SELECT num_op FROM tempiciclo WHERE processo = @p0 AND revisione = @p1"
+                + " AND variante = @p2 ORDER BY num_op";
+            cmd.Parameters.AddWithValue("@p0", idProc);
+            cmd.Parameters.AddWithValue("@p1", revProc);
+            cmd.Parameters.AddWithValue("@p2", var);
             MySqlDataReader rdr = cmd.ExecuteReader();
             Tempi = new List<TempoCiclo>();
             while (rdr.Read())
@@ -4868,24 +5220,34 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 log += "<br/>"+tc.ToString();
+                string strSetup = Math.Floor(tSetup.TotalHours).ToString() + ":" + tSetup.Minutes.ToString() + ":" + tSetup.Seconds.ToString();
+                string strTempo = Math.Floor(tc.TotalHours).ToString() + ":" + tc.Minutes.ToString() + ":" + tc.Seconds.ToString();
                 try
                 {
+                    cmd.Parameters.AddWithValue("@p0", this.IdProcesso);
+                    cmd.Parameters.AddWithValue("@p1", this.RevisioneProcesso);
+                    cmd.Parameters.AddWithValue("@p2", this.Variante);
                     if(def == true)
                     {
-                        cmd.CommandText = "UPDATE tempiciclo SET def = false WHERE processo = " + this.IdProcesso.ToString()
-                            + " AND revisione = " + this.RevisioneProcesso.ToString() + " AND variante = " + this.Variante.ToString();
+                        cmd.CommandText = "UPDATE tempiciclo SET def = false WHERE processo = @p0"
+                            + " AND revisione = @p1 AND variante = @p2";
                         cmd.ExecuteNonQuery();
                     }
                     
+                    cmd.Parameters.AddWithValue("@p3", n_ops);
+                    cmd.Parameters.AddWithValue("@p4", strSetup);
+                    cmd.Parameters.AddWithValue("@p5", strTempo);
+                    cmd.Parameters.AddWithValue("@p6", "00:00:00");
+                    cmd.Parameters.AddWithValue("@p7", def);
                     cmd.CommandText = "INSERT INTO tempiciclo(processo, revisione, variante, num_op, setup, tempo, tunload, def) VALUES("
-                        + this.IdProcesso.ToString() + ", " 
-                        + this.RevisioneProcesso.ToString() + ", " 
-                        + this.Variante.ToString() + ", "
-                        + n_ops.ToString() + ", "
-                        + "'" + Math.Floor(tSetup.TotalHours).ToString() + ":" + tSetup.Minutes.ToString() + ":" + tSetup.Seconds.ToString() + "', " 
-                        + "'" + Math.Floor(tc.TotalHours).ToString() + ":" + tc.Minutes.ToString() + ":" + tc.Seconds.ToString() + "', " 
-                        + "'00:00:00', " 
-                        + def.ToString() + ")";
+                        + "@p0, "
+                        + "@p1, "
+                        + "@p2, "
+                        + "@p3, "
+                        + "@p4, "
+                        + "@p5, "
+                        + "@p6, "
+                        + "@p7)";
                     
                     cmd.ExecuteNonQuery();
 
@@ -4988,8 +5350,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE productparameterscategories SET paramCatName = '" + value + "' WHERE "
-                    + " paramCatID = " + this.ID.ToString();
+                cmd.CommandText = "UPDATE productparameterscategories SET paramCatName = @p0 WHERE "
+                    + " paramCatID = @p1";
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", this.ID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -5014,8 +5378,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE productparameterscategories SET paramCatDescription = '" + value + "' WHERE "
-                    + " paramCatID = " + this.ID.ToString();
+                cmd.CommandText = "UPDATE productparameterscategories SET paramCatDescription = @p0 WHERE "
+                    + " paramCatID = @p1";
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", this.ID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -5046,7 +5412,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT paramCatName, paramCatDescription FROM productparameterscategories "
-                + " WHERE paramCatID = " + CategoryID.ToString();
+                + " WHERE paramCatID = @p0";
+            cmd.Parameters.AddWithValue("@p0", CategoryID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             this._ID = -1;
             this._Name = "";
@@ -5108,7 +5475,10 @@ namespace KIS.App_Code
             rdr.Close();
 
             cmd.CommandText = "INSERT INTO productparameterscategories(paramCatID, paramCatName, paramCatDescription) "
-                + " VALUES(" + maxID.ToString() + ", '" + name + "', '" + description + "')";
+                + " VALUES(@p0, @p1, @p2)";
+            cmd.Parameters.AddWithValue("@p0", maxID);
+            cmd.Parameters.AddWithValue("@p1", name);
+            cmd.Parameters.AddWithValue("@p2", description);
             MySqlTransaction tr = conn.BeginTransaction();
             try
             {
@@ -5133,7 +5503,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
 
-            cmd.CommandText = "DELETE FROM productparameterscategories WHERE paramCatID = " + id.ToString();
+            cmd.CommandText = "DELETE FROM productparameterscategories WHERE paramCatID = @p0";
+            cmd.Parameters.AddWithValue("@p0", id);
             MySqlTransaction tr = conn.BeginTransaction();
             try
             {
@@ -5197,11 +5568,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET paramCategory = " + value.ID + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND processID = " + this.ProcessID.ToString()
-                        + " AND processRev = " + this.ProcessRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelparameters SET paramCategory = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND processID = @p2"
+                        + " AND processRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value.ID);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.ProcessID);
+                    cmd.Parameters.AddWithValue("@p3", this.ProcessRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5238,11 +5614,16 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE modelparameters SET paramName = '" + value + "' WHERE "
-                    + " paramID = " + this.ParameterID.ToString() 
-                    + " AND processID = " + this.ProcessID.ToString()
-                    + " AND processRev = " + this.ProcessRev.ToString()
-                    + " AND varianteID = " + this.VarianteID.ToString();
+                cmd.CommandText = "UPDATE modelparameters SET paramName = @p0 WHERE "
+                    + " paramID = @p1" 
+                    + " AND processID = @p2"
+                    + " AND processRev = @p3"
+                    + " AND varianteID = @p4";
+                cmd.Parameters.AddWithValue("@p0", value);
+                cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                cmd.Parameters.AddWithValue("@p2", this.ProcessID);
+                cmd.Parameters.AddWithValue("@p3", this.ProcessRev);
+                cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -5270,11 +5651,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET paramDescription = '" + value + "' WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND processID = " + this.ProcessID.ToString()
-                        + " AND processRev = " + this.ProcessRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelparameters SET paramDescription = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND processID = @p2"
+                        + " AND processRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.ProcessID);
+                    cmd.Parameters.AddWithValue("@p3", this.ProcessRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5302,11 +5688,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET isFixed = " + value + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND processID = " + this.ProcessID.ToString()
-                        + " AND processRev = " + this.ProcessRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelparameters SET isFixed = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND processID = @p2"
+                        + " AND processRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.ProcessID);
+                    cmd.Parameters.AddWithValue("@p3", this.ProcessRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5334,11 +5725,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET isRequired = " + value + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND processID = " + this.ProcessID.ToString()
-                        + " AND processRev = " + this.ProcessRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelparameters SET isRequired = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND processID = @p2"
+                        + " AND processRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.ProcessID);
+                    cmd.Parameters.AddWithValue("@p3", this.ProcessRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5376,10 +5772,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT processID, processRev, varianteID, paramID, paramCategory, paramName, "
                 + " paramDescription, isFixed, isRequired, sequence FROM modelparameters WHERE "
-                + " processID = " + processID.ToString()
-                + " AND processRev = " + processRev.ToString()
-                + " AND varianteID = " + variantID.ToString()
-                + " AND paramID = " + parameterID.ToString();
+                + " processID = @p0"
+                + " AND processRev = @p1"
+                + " AND varianteID = @p2"
+                + " AND paramID = @p3";
+            cmd.Parameters.AddWithValue("@p0", processID);
+            cmd.Parameters.AddWithValue("@p1", processRev);
+            cmd.Parameters.AddWithValue("@p2", variantID);
+            cmd.Parameters.AddWithValue("@p3", parameterID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read() && !rdr.IsDBNull(3))
             {
@@ -5459,11 +5859,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramCategory = " + value.ID + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString()
-                        + " AND TaskRev = " + this.TaskRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET paramCategory = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND TaskID = @p2"
+                        + " AND TaskRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value.ID);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.TaskID);
+                    cmd.Parameters.AddWithValue("@p3", this.TaskRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5500,11 +5905,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramName = '" + value + "' WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString()
-                        + " AND TaskRev = " + this.TaskRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET paramName = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND TaskID = @p2"
+                        + " AND TaskRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.TaskID);
+                    cmd.Parameters.AddWithValue("@p3", this.TaskRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5532,11 +5942,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramDescription = '" + value + "' WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString()
-                        + " AND TaskRev = " + this.TaskRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET paramDescription = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND TaskID = @p2"
+                        + " AND TaskRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.TaskID);
+                    cmd.Parameters.AddWithValue("@p3", this.TaskRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5564,11 +5979,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET isFixed = " + value + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString()
-                        + " AND TaskRev = " + this.TaskRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET isFixed = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND TaskID = @p2"
+                        + " AND TaskRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.TaskID);
+                    cmd.Parameters.AddWithValue("@p3", this.TaskRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5596,11 +6016,16 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET isRequired = " + value + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString()
-                        + " AND TaskRev = " + this.TaskRev.ToString()
-                        + " AND varianteID = " + this.VarianteID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET isRequired = @p0 WHERE "
+                        + " paramID = @p1"
+                        + " AND TaskID = @p2"
+                        + " AND TaskRev = @p3"
+                        + " AND varianteID = @p4";
+                    cmd.Parameters.AddWithValue("@p0", value);
+                    cmd.Parameters.AddWithValue("@p1", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@p2", this.TaskID);
+                    cmd.Parameters.AddWithValue("@p3", this.TaskRev);
+                    cmd.Parameters.AddWithValue("@p4", this.VarianteID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5639,10 +6064,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT TaskID, TaskRev, varianteID, paramID, paramCategory, paramName, "
                 + " paramDescription, isFixed, isRequired, sequence FROM modelTaskparameters WHERE "
-                + " TaskID = " + TaskID.ToString()
-                + " AND TaskRev = " + TaskRev.ToString()
-                + " AND varianteID = " + variantID.ToString()
-                + " AND paramID = " + parameterID.ToString();
+                + " TaskID = @p0"
+                + " AND TaskRev = @p1"
+                + " AND varianteID = @p2"
+                + " AND paramID = @p3";
+            cmd.Parameters.AddWithValue("@p0", TaskID);
+            cmd.Parameters.AddWithValue("@p1", TaskRev);
+            cmd.Parameters.AddWithValue("@p2", variantID);
+            cmd.Parameters.AddWithValue("@p3", parameterID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(3))
             {

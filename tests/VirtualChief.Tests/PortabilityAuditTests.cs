@@ -46,8 +46,8 @@ public class PortabilityAuditTests
             "KisWebApp/App_Sources/WorkInstructions.cs",
         }, files);
 
-        // 76 bare `user` identifiers are the Postgres migration surface.
-        Assert.Equal(76, hits.Count);
+        // 80 bare `user` identifiers are the Postgres migration surface.
+        Assert.Equal(80, hits.Count);
     }
 
     [Fact]
@@ -55,7 +55,7 @@ public class PortabilityAuditTests
     {
         var counts = SqlAudit.MysqlOnlyCounts();
         Assert.Equal(3, counts.Count);
-        Assert.Equal(1, counts["backtick"]);
+        Assert.Equal(4, counts["backtick"]);
         Assert.Equal(5, counts["LAST_INSERT_ID"]);
         Assert.Equal(1, counts["NOW()"]);
     }
@@ -65,7 +65,7 @@ public class PortabilityAuditTests
     {
         var bt = SqlAudit.BacktickUsagePerFile();
         Assert.Equal(new[] { "KisWebApp/App_Sources/configurazione.cs" }, bt.Keys.OrderBy(k => k).ToArray());
-        Assert.Equal(1, bt["KisWebApp/App_Sources/configurazione.cs"]);
+        Assert.Equal(4, bt["KisWebApp/App_Sources/configurazione.cs"]);
     }
 
     [Fact]

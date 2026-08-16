@@ -78,10 +78,12 @@ namespace KIS.App_Code
         public relazione(String tenant, int relID)
         {
             this.Tenant = tenant;
-            String strSQL = "SELECT * FROM relazioniprocessi WHERE relazioneID = " + relID.ToString();
+            String strSQL = "SELECT * FROM relazioniprocessi WHERE relazioneID = @pRelazioneID";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
+            MySqlCommand cmd1 = conn.CreateCommand();
+            cmd1.CommandText = strSQL;
+            cmd1.Parameters.AddWithValue("@pRelazioneID", relID);
             MySqlDataReader rdr = cmd1.ExecuteReader();
             if (rdr.Read())
             {

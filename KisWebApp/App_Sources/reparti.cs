@@ -47,7 +47,9 @@ namespace KIS.App_Code
                     MySqlTransaction trans = conn.BeginTransaction();
                     cmd.Transaction = trans;
                     int newCadenza = value.Seconds + value.Minutes * 60 + value.Hours * 3600;
-                    cmd.CommandText = "UPDATE reparti SET cadenza = " + newCadenza.ToString() + " WHERE idReparto = " + this.id.ToString();
+                    cmd.CommandText = "UPDATE reparti SET cadenza = @cadenza WHERE idReparto = @id";
+                    cmd.Parameters.AddWithValue("@cadenza", newCadenza);
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -91,7 +93,9 @@ namespace KIS.App_Code
                     MySqlTransaction trans = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = trans;
-                    cmd.CommandText = "UPDATE reparti SET splitTasks = " + value.ToString() + " WHERE idreparto = " + this.id.ToString();
+                    cmd.CommandText = "UPDATE reparti SET splitTasks = @splitTasks WHERE idreparto = @id";
+                    cmd.Parameters.AddWithValue("@splitTasks", value);
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -122,7 +126,9 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction trans = conn.BeginTransaction();
-                    cmd.CommandText = "UPDATE reparti SET anticipoTasks = " + value.TotalSeconds.ToString() + " WHERE idreparto = " + this.id.ToString();
+                    cmd.CommandText = "UPDATE reparti SET anticipoTasks = @anticipoTasks WHERE idreparto = @id";
+                    cmd.Parameters.AddWithValue("@anticipoTasks", value.TotalSeconds);
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -173,24 +179,26 @@ namespace KIS.App_Code
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione Like 'Reparto' AND "
-                            + " ID = " + this.id.ToString()
+                            + " ID = @id"
                             + " AND parametro LIKE 'KanbanManaged'";
+                        cmd.Parameters.AddWithValue("@id", this.id);
+                        cmd.Parameters.AddWithValue("@param", param);
                         MySqlDataReader rdr = cmd.ExecuteReader();
                         String strSQL = "";
                         if (rdr.Read() && !rdr.IsDBNull(0))
                         {
-                            strSQL = "UPDATE configurazione SET valore = " + param
+                            strSQL = "UPDATE configurazione SET valore = @param"
                                 + " WHERE Sezione LIKE 'Reparto' "
-                                + " AND ID = " + this.id.ToString()
+                                + " AND ID = @id"
                                 + " AND parametro LIKE 'KanbanManaged'";
                         }
                         else
                         {
                             strSQL = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                                 + "'Reparto', "
-                                + this.id.ToString() + ", "
+                                + "@id" + ", "
                                 + "'KanbanManaged'" + ", "
-                                + param.ToString() + ")";
+                                + "@param)";
                         }
                         rdr.Close();
                         cmd.CommandText = strSQL;
@@ -219,7 +227,9 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction trans = conn.BeginTransaction();
-                    cmd.CommandText = "UPDATE reparti SET timezone = '" + value.ToString() + "' WHERE idreparto = " + this.id.ToString();
+                    cmd.CommandText = "UPDATE reparti SET timezone = @timezone WHERE idreparto = @id";
+                    cmd.Parameters.AddWithValue("@timezone", value.ToString());
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -297,7 +307,8 @@ namespace KIS.App_Code
                         MySqlTransaction tr = conn.BeginTransaction();
                         MySqlCommand cmd = conn.CreateCommand();
                         cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                            + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'EndProductionDate Format'";
+                            + "AND ID = @id AND parametro LIKE 'EndProductionDate Format'";
+                        cmd.Parameters.AddWithValue("@id", this.id);
                         MySqlDataReader rdr = cmd.ExecuteReader();
                         bool add = false;
                         if (rdr.Read() && !rdr.IsDBNull(0))
@@ -314,14 +325,15 @@ namespace KIS.App_Code
                         if (add == true)
                         {
                             cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                                + this.id.ToString() + ", 'EndProductionDate Format', '" + value.ToString() + "')";
+                                + "@id, 'EndProductionDate Format', @value)";
                         }
                         else
                         {
-                            cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
-                            + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                            cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
+                            + " Sezione = 'Reparto' AND ID = @id" +
                             " AND parametro LIKE 'EndProductionDate Format'";
                         }
+                        cmd.Parameters.AddWithValue("@value", value.ToString());
 
                         try
                         {
@@ -359,36 +371,38 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'DeliveryDate Format'";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    bool add = false;
-                    if (rdr.Read() && !rdr.IsDBNull(0))
-                    {
-                        add = false;
-                    }
-                    else
-                    {
-                        add = true;
-                    }
-                    rdr.Close();
+cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                            + "AND ID = @id AND parametro LIKE 'DeliveryDate Format'";
+                        cmd.Parameters.AddWithValue("@id", this.id);
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        bool add = false;
+                        if (rdr.Read() && !rdr.IsDBNull(0))
+                        {
+                            add = false;
+                        }
+                        else
+                        {
+                            add = true;
+                        }
+                        rdr.Close();
 
-                    cmd.Transaction = tr;
-                    if (add == true)
-                    {
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                            + this.id.ToString() + ", 'DeliveryDate Format', '" + value.ToString() + "')";
-                    }
-                    else
-                    {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
-                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
-                        " AND parametro LIKE 'DeliveryDate Format'";
-                    }
+                        cmd.Transaction = tr;
+                        if (add == true)
+                        {
+                            cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                                + "@id, 'DeliveryDate Format', @value)";
+                        }
+                        else
+                        {
+                            cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
+                            + " Sezione = 'Reparto' AND ID = @id" +
+                            " AND parametro LIKE 'DeliveryDate Format'";
+                        }
+                        cmd.Parameters.AddWithValue("@value", value.ToString());
 
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -422,36 +436,38 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'Allow Tasks Operators Comments'";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    bool add = false;
-                    if (rdr.Read() && !rdr.IsDBNull(0))
-                    {
-                        add = false;
-                    }
-                    else
-                    {
-                        add = true;
-                    }
-                    rdr.Close();
+cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                            + "AND ID = @id AND parametro LIKE 'Allow Tasks Operators Comments'";
+                        cmd.Parameters.AddWithValue("@id", this.id);
+                        MySqlDataReader rdr = cmd.ExecuteReader();
+                        bool add = false;
+                        if (rdr.Read() && !rdr.IsDBNull(0))
+                        {
+                            add = false;
+                        }
+                        else
+                        {
+                            add = true;
+                        }
+                        rdr.Close();
 
-                    cmd.Transaction = tr;
-                    if (add == true)
-                    {
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                            + this.id.ToString() + ", 'Allow Tasks Operators Comments', '" + value.ToString() + "')";
-                    }
-                    else
-                    {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
-                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
-                        " AND parametro LIKE 'Allow Tasks Operators Comments'";
-                    }
+                        cmd.Transaction = tr;
+                        if (add == true)
+                        {
+                            cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                                + "@id, 'Allow Tasks Operators Comments', @value)";
+                        }
+                        else
+                        {
+                            cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
+                            + " Sezione = 'Reparto' AND ID = @id" +
+                            " AND parametro LIKE 'Allow Tasks Operators Comments'";
+                        }
+                        cmd.Parameters.AddWithValue("@value", value.ToString());
 
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -478,7 +494,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                    + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'AutoPauseTasks'";
+                    + "AND ID = @id AND parametro LIKE 'AutoPauseTasks'";
+                cmd.Parameters.AddWithValue("@id", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -504,7 +521,8 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'AutoPauseTasks'";
+                        + "AND ID = @id AND parametro LIKE 'AutoPauseTasks'";
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     bool add = false;
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -521,14 +539,15 @@ namespace KIS.App_Code
                     if (add == true)
                     {
                         cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                            + this.id.ToString() + ", 'AutoPauseTasks', '" + value.ToString() + "')";
+                            + "@id, 'AutoPauseTasks', @value)";
                     }
                     else
                     {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
-                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                        cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
+                        + " Sezione = 'Reparto' AND ID = @id" +
                         " AND parametro LIKE 'AutoPauseTasks'";
                     }
+                    cmd.Parameters.AddWithValue("@value", value.ToString());
 
                     try
                     {
@@ -562,7 +581,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone FROM reparti WHERE idReparto = " + repID.ToString();
+            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone FROM reparti WHERE idReparto = @repID";
+            cmd.Parameters.AddWithValue("@repID", repID);
             try
             {
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -614,7 +634,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone FROM reparti WHERE nome LIKE '" + name + "'";
+            cmd.CommandText = "SELECT idreparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone FROM reparti WHERE nome LIKE @name";
+            cmd.Parameters.AddWithValue("@name", name);
             try
             {
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -677,7 +698,11 @@ namespace KIS.App_Code
             cmd.Transaction = trans;
 
             cmd.CommandText = "INSERT INTO reparti(idReparto, nome, descrizione, cadenza, splitTasks, anticipoTasks, ModoCalcoloTC, timezone) VALUES(" 
-                + repID.ToString() + ", '" + nome + "', '" + descrizione + "', 0, 1, 0, false, '" + timeZone + "')";
+                + "@repID, @nome, @descrizione, 0, 1, 0, false, @timeZone)";
+            cmd.Parameters.AddWithValue("@repID", repID);
+            cmd.Parameters.AddWithValue("@nome", nome);
+            cmd.Parameters.AddWithValue("@descrizione", descrizione);
+            cmd.Parameters.AddWithValue("@timeZone", timeZone);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -703,7 +728,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id FROM turniproduzione WHERE reparto = " + this.id.ToString() + " ORDER BY nome";
+                cmd.CommandText = "SELECT id FROM turniproduzione WHERE reparto = @id ORDER BY nome";
+                cmd.Parameters.AddWithValue("@id", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -732,8 +758,12 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
                 MySqlTransaction trans = conn.BeginTransaction();
-                cmd.CommandText = "INSERT INTO turniproduzione(id, reparto, nome, colore) VALUES(" + turnoID.ToString()
-                    + ", " + this.id.ToString() + ", '" + nome + "', '" + colore + "')";
+                cmd.CommandText = "INSERT INTO turniproduzione(id, reparto, nome, colore) VALUES(@id"
+                    + ", @reparto, @nome, @colore)";
+                cmd.Parameters.AddWithValue("@id", turnoID);
+                cmd.Parameters.AddWithValue("@reparto", this.id);
+                cmd.Parameters.AddWithValue("@nome", nome);
+                cmd.Parameters.AddWithValue("@colore", colore);
                 try
                 {
                     rt = true;
@@ -778,9 +808,12 @@ namespace KIS.App_Code
 
                 try
                 {
-                    cmd.CommandText = "DELETE FROM straordinarifestivita WHERE turno = " + idTurno.id.ToString();
+                    cmd.CommandText = "DELETE FROM straordinarifestivita WHERE turno = @turno";
+                    cmd.Parameters.AddWithValue("@turno", idTurno.id);
+                    cmd.Parameters.AddWithValue("@id", idTurno.id);
+                    cmd.Parameters.AddWithValue("@reparto", this.id);
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM turniproduzione WHERE id = " + idTurno.id.ToString() + " AND reparto = " + this.id.ToString();
+                    cmd.CommandText = "DELETE FROM turniproduzione WHERE id = @id AND reparto = @reparto";
                     cmd.ExecuteNonQuery();
                     rt = true;
                     trans.Commit();
@@ -836,8 +869,12 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction trans = conn.BeginTransaction();
                 cmd.CommandText = "INSERT INTO repartiprocessi(idReparto, processID, revisione, variante) VALUES("
-                    + this.id.ToString() + ", " + prc.processID.ToString() + ", " + prc.revisione.ToString()
-                    + ", " + vr.idVariante.ToString() + ")";
+                    + "@idReparto, @processID, @revisione"
+                    + ", @variante)";
+                cmd.Parameters.AddWithValue("@idReparto", this.id);
+                cmd.Parameters.AddWithValue("@processID", prc.processID);
+                cmd.Parameters.AddWithValue("@revisione", prc.revisione);
+                cmd.Parameters.AddWithValue("@variante", vr.idVariante);
 
                 try
                 {
@@ -865,7 +902,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT repartiprocessi.processID, repartiprocessi.revisione, repartiprocessi.variante FROM repartiprocessi WHERE "
-                    + " idReparto = " + this.id.ToString();
+                    + " idReparto = @idReparto";
+                cmd.Parameters.AddWithValue("@idReparto", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
                 while (rdr.Read())
@@ -891,9 +929,13 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction trans = conn.BeginTransaction();
-                cmd.CommandText = "DELETE FROM repartiprocessi WHERE idReparto = " + this.id.ToString() + " AND "
-                    +" processID = " + prc.processID.ToString() + " AND revisione = " + prc.revisione.ToString()
-                    + " AND variante = " + vr.idVariante.ToString();
+                cmd.CommandText = "DELETE FROM repartiprocessi WHERE idReparto = @idReparto AND "
+                    +" processID = @processID AND revisione = @revisione"
+                    + " AND variante = @variante";
+                cmd.Parameters.AddWithValue("@idReparto", this.id);
+                cmd.Parameters.AddWithValue("@processID", prc.processID);
+                cmd.Parameters.AddWithValue("@revisione", prc.revisione);
+                cmd.Parameters.AddWithValue("@variante", vr.idVariante);
 
                 try
                 {
@@ -943,8 +985,13 @@ namespace KIS.App_Code
             MySqlTransaction trans = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "INSERT INTO repartipostazioniattivita(reparto, postazione, processo, revProc, variante) VALUES("
-                + this.id.ToString() + ", " + post.id.ToString() + ", " + prc.Task.processID.ToString()
-                + ", " + prc.Task.revisione.ToString() + ", " + prc.variant.idVariante + ")";
+                + "@reparto, @postazione, @processo"
+                + ", @revProc, @variante)";
+            cmd.Parameters.AddWithValue("@reparto", this.id);
+            cmd.Parameters.AddWithValue("@postazione", post.id);
+            cmd.Parameters.AddWithValue("@processo", prc.Task.processID);
+            cmd.Parameters.AddWithValue("@revProc", prc.Task.revisione);
+            cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -967,9 +1014,14 @@ namespace KIS.App_Code
             conn.Open();
             MySqlTransaction trans = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "DELETE FROM repartipostazioniattivita WHERE reparto = " + this.id.ToString()
-            + " AND postazione = " + post.id.ToString() + " AND processo = " + prc.Task.processID.ToString()
-            + " AND revProc = " + prc.Task.revisione.ToString() + " AND variante = " + prc.variant.idVariante.ToString();
+            cmd.CommandText = "DELETE FROM repartipostazioniattivita WHERE reparto = @reparto"
+            + " AND postazione = @postazione AND processo = @processo"
+            + " AND revProc = @revProc AND variante = @variante";
+            cmd.Parameters.AddWithValue("@reparto", this.id);
+            cmd.Parameters.AddWithValue("@postazione", post.id);
+            cmd.Parameters.AddWithValue("@processo", prc.Task.processID);
+            cmd.Parameters.AddWithValue("@revProc", prc.Task.revisione);
+            cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -994,9 +1046,13 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlTransaction trans = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM repartipostazioniattivita WHERE reparto = " + this.id.ToString()
-                + " AND processo = " + prc.Task.processID.ToString()
-                + " AND revProc = " + prc.Task.revisione.ToString() + " AND variante = " + prc.variant.idVariante.ToString();
+                cmd.CommandText = "DELETE FROM repartipostazioniattivita WHERE reparto = @reparto"
+                + " AND processo = @processo"
+                + " AND revProc = @revProc AND variante = @variante";
+                cmd.Parameters.AddWithValue("@reparto", this.id);
+                cmd.Parameters.AddWithValue("@processo", prc.Task.processID);
+                cmd.Parameters.AddWithValue("@revProc", prc.Task.revisione);
+                cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1043,8 +1099,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(postazione) FROM repartipostazioniattivita WHERE reparto = " + this.id.ToString()
+                cmd.CommandText = "SELECT DISTINCT(postazione) FROM repartipostazioniattivita WHERE reparto = @id"
                     + " ORDER BY postazione";
+                cmd.Parameters.AddWithValue("@id", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while(rdr.Read())
                 {
@@ -1093,7 +1150,9 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.CommandText = "UPDATE reparti SET ModoCalcoloTC = " + value + " WHERE idreparto = " + this.id.ToString();
+                    cmd.CommandText = "UPDATE reparti SET ModoCalcoloTC = @modoCalcoloTC WHERE idreparto = @id";
+                    cmd.Parameters.AddWithValue("@modoCalcoloTC", value);
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1125,7 +1184,8 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                    + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'Andon FormatoUsername'";
+                    + "AND ID = @id AND parametro LIKE 'Andon FormatoUsername'";
+                cmd.Parameters.AddWithValue("@id", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1151,7 +1211,8 @@ namespace KIS.App_Code
                     MySqlTransaction tr = conn.BeginTransaction();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                        + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'Andon FormatoUsername'";
+                        + "AND ID = @id AND parametro LIKE 'Andon FormatoUsername'";
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     bool add = false;
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -1168,14 +1229,15 @@ namespace KIS.App_Code
                     if (add == true)
                     {
                         cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                            + this.id.ToString() + ", 'Andon FormatoUsername', '" + value.ToString() + "')";
+                            + "@id, 'Andon FormatoUsername', @value)";
                     }
                     else
                     {
-                        cmd.CommandText = "UPDATE configurazione SET valore = '" + value + "' WHERE "
-                        + " Sezione = 'Reparto' AND ID = " + this.id.ToString() +
+                        cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
+                        + " Sezione = 'Reparto' AND ID = @id" +
                         " AND parametro LIKE 'Andon FormatoUsername'";
                     }
+                    cmd.Parameters.AddWithValue("@value", value.ToString());
 
                     try
                     {
@@ -1207,7 +1269,8 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' AND ID = "
-                        + this.id.ToString() + " AND parametro = 'AvvioTasks'";
+                        + "@id AND parametro = 'AvvioTasks'";
+                    cmd.Parameters.AddWithValue("@id", this.id);
 
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -1240,7 +1303,8 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 bool found = false;
                 cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' AND ID = "
-                    + this.id.ToString() + " AND parametro = 'AvvioTasks'";
+                    + "@id AND parametro = 'AvvioTasks'";
+                cmd.Parameters.AddWithValue("@id", this.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1257,14 +1321,15 @@ namespace KIS.App_Code
 
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = '" + value.ToString()
-                        + "' WHERE Sezione = 'Reparto' AND ID = " + this.id.ToString() + " AND parametro = 'AvvioTasks'";
+                    cmd.CommandText = "UPDATE configurazione SET valore = @value"
+                        + " WHERE Sezione = 'Reparto' AND ID = @id AND parametro = 'AvvioTasks'";
                 }
                 else
                 {
                     cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                        + this.id.ToString() + ", 'AvvioTasks', '" + value + "')";
+                        + "@id, 'AvvioTasks', @value)";
                 }
+                cmd.Parameters.AddWithValue("@value", value.ToString());
 
                 try
                 {
@@ -1301,8 +1366,9 @@ namespace KIS.App_Code
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione Like 'Reparto' AND "
-                        + " ID = " + this.id.ToString()
+                        + " ID = @id"
                         + " AND parametro LIKE 'KanbanManaged'";
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
                     {
@@ -1342,7 +1408,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'EndProductionDate Format'";
+                + "AND ID = @id AND parametro LIKE 'EndProductionDate Format'";
+            cmd.Parameters.AddWithValue("@id", this.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -1367,7 +1434,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'DeliveryDate Format'";
+                + "AND ID = @id AND parametro LIKE 'DeliveryDate Format'";
+            cmd.Parameters.AddWithValue("@id", this.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -1392,7 +1460,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                + "AND ID = " + this.id.ToString() + " AND parametro LIKE 'Allow Tasks Operators Comments'";
+                + "AND ID = @id AND parametro LIKE 'Allow Tasks Operators Comments'";
+            cmd.Parameters.AddWithValue("@id", this.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -1492,7 +1561,10 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE turniproduzione SET nome = '" + value + "' WHERE id = " + this.id + " AND reparto = " + this.idReparto;
+                    cmd.CommandText = "UPDATE turniproduzione SET nome = @nome WHERE id = @id AND reparto = @idReparto";
+                    cmd.Parameters.AddWithValue("@nome", value);
+                    cmd.Parameters.AddWithValue("@id", this.id);
+                    cmd.Parameters.AddWithValue("@idReparto", this.idReparto);
                     MySqlTransaction trans = conn.BeginTransaction();
                     cmd.Transaction = trans;
                     try
@@ -1533,7 +1605,9 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     cmd.Transaction = trn;
                     String strCol = "#" + value.R.ToString("X2") + value.G.ToString("X2") + value.B.ToString("X2");
-                    cmd.CommandText = "UPDATE turniproduzione SET colore = '" + strCol + "' WHERE id = " + this.id.ToString();
+                    cmd.CommandText = "UPDATE turniproduzione SET colore = @colore WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@colore", strCol);
+                    cmd.Parameters.AddWithValue("@id", this.id);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -1570,7 +1644,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT turniproduzione.id, turniproduzione.reparto, turniproduzione.nome, turniproduzione.colore "
-            + " FROM turniproduzione WHERE id = " + turnoID.ToString();
+            + " FROM turniproduzione WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", turnoID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -1591,8 +1666,9 @@ namespace KIS.App_Code
             this._Orari = new List<IntervalloLavorativoTurno>();
             if (this.id!=-1)
             { 
-            cmd.CommandText = "SELECT id FROM orarilavoroturni WHERE idTurno = " + this.id.ToString()
+            cmd.CommandText = "SELECT id FROM orarilavoroturni WHERE idTurno = @idTurno"
                 + " ORDER BY giornoInizio, oraInizio";
+            cmd.Parameters.AddWithValue("@idTurno", this.id);
             rdr = cmd.ExecuteReader();
             
             while (rdr.Read())
@@ -1626,11 +1702,16 @@ namespace KIS.App_Code
                 rdr.Close();
                 MySqlTransaction trans = conn.BeginTransaction();
                 cmd.Transaction = trans;
+                String strOraInizio = oInizio.Hours.ToString() + ":" + oInizio.Minutes.ToString() + ":" + oInizio.Seconds.ToString();
+                String strOraFine = oFine.Hours.ToString() + ":" + oFine.Minutes.ToString() + ":" + oFine.Seconds.ToString();
                 cmd.CommandText = "INSERT INTO orarilavoroturni(id, idTurno, giornoInizio, oraInizio, giornoFine, oraFine) VALUES"
-                    + "(" + newID.ToString() + ", " + this.id.ToString() + ", " + ((Int32)dInizio).ToString() + ", '"
-                    + oInizio.Hours.ToString() + ":" + oInizio.Minutes.ToString() + ":" + oInizio.Seconds.ToString() + "', "
-                    + ((Int32)dFine).ToString() + ", '" + oFine.Hours.ToString() + ":" + oFine.Minutes.ToString() + ":"
-                    + oFine.Seconds.ToString() + "')";
+                    + "(@id, @idTurno, @giornoInizio, @oraInizio, @giornoFine, @oraFine)";
+                cmd.Parameters.AddWithValue("@id", newID);
+                cmd.Parameters.AddWithValue("@idTurno", this.id);
+                cmd.Parameters.AddWithValue("@giornoInizio", ((Int32)dInizio));
+                cmd.Parameters.AddWithValue("@oraInizio", strOraInizio);
+                cmd.Parameters.AddWithValue("@giornoFine", ((Int32)dFine));
+                cmd.Parameters.AddWithValue("@oraFine", strOraFine);
                 try
                 {
                     rt = true;
@@ -1678,10 +1759,11 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
-                + "WHERE azione = 'S' AND straordinarifestivita.turno = " + this.id.ToString()
-                    + " AND datafine > '" 
-                    + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") 
-                    + "' ORDER BY datainizio";
+                + "WHERE azione = 'S' AND straordinarifestivita.turno = @idTurno"
+                    + " AND datafine > @today"
+                    + " ORDER BY datainizio";
+                cmd.Parameters.AddWithValue("@idTurno", this.id);
+                cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 MySqlDataReader rdr = cmd.ExecuteReader();
 
@@ -1707,10 +1789,11 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
-                    + "WHERE azione = 'F' AND straordinarifestivita.turno = " + this.id.ToString()
-                    + " AND datafine > '" 
-                    + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") 
-                    + "' ORDER BY datainizio";
+                    + "WHERE azione = 'F' AND straordinarifestivita.turno = @idTurno"
+                    + " AND datafine > @today"
+                    + " ORDER BY datainizio";
+                cmd.Parameters.AddWithValue("@idTurno", this.id);
+                cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
                 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
@@ -1830,7 +1913,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idTurno, giornoInizio, oraInizio, giornoFine, oraFine FROM orarilavoroturni WHERE "
-                + " id = " + intervallo.ToString();
+                + " id = @id";
+            cmd.Parameters.AddWithValue("@id", intervallo);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -1861,8 +1945,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction trans = conn.BeginTransaction();
                 cmd.Transaction = trans;
-                cmd.CommandText = "DELETE FROM orarilavoroturni WHERE id = " + this.idIntervallo.ToString() +
-                    " AND idTurno = " + this.idTurno.ToString();
+                cmd.CommandText = "DELETE FROM orarilavoroturni WHERE id = @id" +
+                    " AND idTurno = @idTurno";
+                cmd.Parameters.AddWithValue("@id", this.idIntervallo);
+                cmd.Parameters.AddWithValue("@idTurno", this.idTurno);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -1923,9 +2009,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE reparto = " + this.repID.ToString()
-                    + " AND processo = " + prc.Task.processID.ToString() + " AND revProc = " + prc.Task.revisione.ToString()
-                    + " AND variante = " + prc.variant.idVariante.ToString();
+                cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE reparto = @reparto"
+                    + " AND processo = @processo AND revProc = @revProc"
+                    + " AND variante = @variante";
+                cmd.Parameters.AddWithValue("@reparto", this.repID);
+                cmd.Parameters.AddWithValue("@processo", prc.Task.processID);
+                cmd.Parameters.AddWithValue("@revProc", prc.Task.revisione);
+                cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1972,8 +2062,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
                     + "INNER JOIN turniproduzione ON (turniproduzione.id = straordinarifestivita.turno) "
-                    + "WHERE azione = 'F' AND turniproduzione.reparto = " + rp.id.ToString()
-                    + " AND datafine > '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "' ORDER BY datainizio";
+                    + "WHERE azione = 'F' AND turniproduzione.reparto = @reparto"
+                    + " AND datafine > @today ORDER BY datainizio";
+                cmd.Parameters.AddWithValue("@reparto", rp.id);
+                cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
                 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
@@ -2007,11 +2099,15 @@ namespace KIS.App_Code
 
                     cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita INNER JOIN turniproduzione ON ("
                         + "turniproduzione.id = straordinarifestivita.turno)  "
-                        +" WHERE turniproduzione.reparto = " + this.idReparto.ToString() + " AND "
-                        + " turno = " + idTurno.ToString() + " AND "
-                        + " ((datainizio < '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "' < dataFine) " +
-                        " OR (datainizio < '" + f.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + f.ToString("yyyy-MM-dd HH:mm:ss") + "' < dataFine) " +
-                        " OR ('" + i.ToString("yyyy-MM-dd HH:mm:ss") + "' < datainizio AND datafine < '" + f.ToString("yyyy-MM-dd HH:mm:ss") + "'))";
+                        +" WHERE turniproduzione.reparto = @idReparto AND "
+                        + " turno = @idTurno AND "
+                        + " ((datainizio < @i AND @i < dataFine) "
+                        + " OR (datainizio < @f AND @f < dataFine) "
+                        + " OR (@i < datainizio AND datafine < @f))";
+                    cmd.Parameters.AddWithValue("@idReparto", this.idReparto);
+                    cmd.Parameters.AddWithValue("@idTurno", idTurno);
+                    cmd.Parameters.AddWithValue("@i", i.ToString("yyyy-MM-dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@f", f.ToString("yyyy-MM-dd HH:mm:ss"));
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     
                     bool check1 = true;
@@ -2055,8 +2151,9 @@ namespace KIS.App_Code
                         MySqlTransaction trn = conn.BeginTransaction();
                         cmd.Transaction = trn;
                         cmd.CommandText = "INSERT INTO straordinarifestivita(id, azione, datainizio, datafine, turno) VALUES("
-                            + maxId.ToString() + ", 'F', '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + f.ToString("yyyy-MM-dd HH:mm:ss")
-                            + "', " + idTurno.ToString() + ")";
+                            + "@id, 'F', @i, @f"
+                            + ", @idTurno)";
+                        cmd.Parameters.AddWithValue("@id", maxId);
                         try
                         {
                             cmd.ExecuteNonQuery();
@@ -2138,7 +2235,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT dataInizio, dataFine, turno, turniproduzione.reparto FROM straordinarifestivita "
                 + "INNER JOIN turniproduzione ON (turniproduzione.id = straordinarifestivita.turno) "
-                + "WHERE azione = 'F' AND straordinarifestivita.id = " + idFest.ToString();
+                + "WHERE azione = 'F' AND straordinarifestivita.id = @id";
+            cmd.Parameters.AddWithValue("@id", idFest);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -2169,7 +2267,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM straordinarifestivita WHERE id = " + this.idFestivita;
+                cmd.CommandText = "DELETE FROM straordinarifestivita WHERE id = @id";
+                cmd.Parameters.AddWithValue("@id", this.idFestivita);
                 MySqlTransaction trn = conn.BeginTransaction();
                 try
                 {
@@ -2241,7 +2340,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT dataInizio, dataFine, turno, turniproduzione.reparto FROM straordinarifestivita "
                 + "INNER JOIN turniproduzione ON (turniproduzione.id = straordinarifestivita.turno) "
-                + "WHERE azione = 'S' AND straordinarifestivita.id = " + idStraord.ToString();
+                + "WHERE azione = 'S' AND straordinarifestivita.id = @id";
+            cmd.Parameters.AddWithValue("@id", idStraord);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -2272,7 +2372,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM straordinarifestivita WHERE id = " + this.idStraordinario;
+                cmd.CommandText = "DELETE FROM straordinarifestivita WHERE id = @id";
+                cmd.Parameters.AddWithValue("@id", this.idStraordinario);
                 MySqlTransaction trn = conn.BeginTransaction();
                 try
                 {
@@ -2319,8 +2420,10 @@ namespace KIS.App_Code
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT straordinarifestivita.id FROM straordinarifestivita "
                 + "INNER JOIN turniproduzione ON (turniproduzione.id = straordinarifestivita.turno) "
-                + "WHERE azione = 'S' AND turniproduzione.reparto = " + rp.id.ToString()
-                    + " AND datafine > '" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "' ORDER BY datainizio";
+                + "WHERE azione = 'S' AND turniproduzione.reparto = @reparto"
+                    + " AND datafine > @today ORDER BY datainizio";
+                cmd.Parameters.AddWithValue("@reparto", rp.id);
+                cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 
@@ -2351,11 +2454,14 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
 
                     // Controllo che non ci sia sovrapposizione con altri intervalli
-                    cmd.CommandText = "SELECT id FROM straordinarifestivita WHERE turno = " + idTurno.ToString() + " AND "
-                        + " ((datainizio < '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "' < dataFine) " +
-                        " OR (datainizio < '" + f.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + f.ToString("yyyy-MM-dd HH:mm:ss") + "' < dataFine) " +
-                        " OR ('" + i.ToString("yyyy-MM-dd HH:mm:ss") + "' <= datainizio AND datafine <= '" + f.ToString("yyyy-MM-dd HH:mm:ss") + "'))";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
+                    cmd.CommandText = "SELECT id FROM straordinarifestivita WHERE turno = @idTurno AND "
+                        + " ((datainizio < @i AND @i < dataFine) "
+                        + " OR (datainizio < @f AND @f < dataFine) "
+                        + " OR (@i <= datainizio AND datafine <= @f))";
+                cmd.Parameters.AddWithValue("@idTurno", idTurno);
+                cmd.Parameters.AddWithValue("@i", i.ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@f", f.ToString("yyyy-MM-dd HH:mm:ss"));
+                MySqlDataReader rdr = cmd.ExecuteReader();
                     bool check1 = true;
 
                     if (rdr.Read() && !rdr.IsDBNull(0))
@@ -2408,8 +2514,11 @@ namespace KIS.App_Code
                         i = TimeZoneInfo.ConvertTimeToUtc(i, rp.tzFusoOrario);
                         f = TimeZoneInfo.ConvertTimeToUtc(f, rp.tzFusoOrario);
                         cmd.CommandText = "INSERT INTO straordinarifestivita(id, azione, datainizio, datafine, turno) VALUES("
-                            + maxId.ToString() + ", 'S', '" + i.ToString("yyyy-MM-dd HH:mm:ss") + "', '" + f.ToString("yyyy-MM-dd HH:mm:ss")
-                            + "', " + idTurno.ToString() + ")";
+                            + "@id, 'S', @iUtc, @fUtc"
+                            + ", @idTurno)";
+                        cmd.Parameters.AddWithValue("@id", maxId);
+                        cmd.Parameters.AddWithValue("@iUtc", i.ToString("yyyy-MM-dd HH:mm:ss"));
+                        cmd.Parameters.AddWithValue("@fUtc", f.ToString("yyyy-MM-dd HH:mm:ss"));
                         try
                         {
                             cmd.ExecuteNonQuery();
@@ -2687,9 +2796,10 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT MAX(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM tasksproduzione "
                 + " INNER JOIN productionplan ON (idArticolo=productionplan.id AND annoarticolo=productionplan.anno) "
-                + " WHERE productionplan.reparto = " + rp.id.ToString()
+                + " WHERE productionplan.reparto = @reparto"
                 + " GROUP BY idArticolo, annoArticolo "
                 + " ORDER BY dataFineProd DESC";
+            cmd.Parameters.AddWithValue("@reparto", rp.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -2716,7 +2826,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = 'F' AND reparto = " + rp.id.ToString();
+            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = 'F' AND reparto = @reparto";
+            cmd.Parameters.AddWithValue("@reparto", rp.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -3205,7 +3316,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT operatore FROM operatorireparto WHERE reparto = " + repID.ToString();
+                cmd.CommandText = "SELECT operatore FROM operatorireparto WHERE reparto = @reparto";
+                cmd.Parameters.AddWithValue("@reparto", repID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 this._Elenco = new List<User>();
                 while (rdr.Read())
@@ -3231,7 +3343,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO operatorireparto(operatore, reparto) VALUES('" + usr.username + "'," + this.idReparto.ToString() + ")";
+                cmd.CommandText = "INSERT INTO operatorireparto(operatore, reparto) VALUES(@operatore, @reparto)";
+                cmd.Parameters.AddWithValue("@operatore", usr.username);
+                cmd.Parameters.AddWithValue("@reparto", this.idReparto);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3259,7 +3373,9 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM operatorireparto WHERE operatore = '" + usr.username + "' AND reparto = " + this.idReparto.ToString();
+                cmd.CommandText = "DELETE FROM operatorireparto WHERE operatore = @operatore AND reparto = @reparto";
+                cmd.Parameters.AddWithValue("@operatore", usr.username);
+                cmd.Parameters.AddWithValue("@reparto", this.idReparto);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -3516,7 +3632,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idPostazione FROM risorseturnopostazione WHERE idTurno = " + trn.id.ToString();
+                cmd.CommandText = "SELECT idPostazione FROM risorseturnopostazione WHERE idTurno = @idTurno";
+                cmd.Parameters.AddWithValue("@idTurno", trn.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {

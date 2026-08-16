@@ -24,7 +24,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE menuvoci SET titolo = '" + value + "' WHERE id= " + this.ID.ToString();
+                cmd.CommandText = "UPDATE menuvoci SET titolo = @titolo WHERE id= @id";
+                cmd.Parameters.AddWithValue("@titolo", value);
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 try
                 {
                     this._Titolo = value;
@@ -46,7 +48,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE menuvoci SET descrizione = '" + value + "' WHERE id= " + this.ID.ToString();
+                cmd.CommandText = "UPDATE menuvoci SET descrizione = @descrizione WHERE id= @id";
+                cmd.Parameters.AddWithValue("@descrizione", value);
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 try
                 {
                     this._Descrizione = value;
@@ -68,7 +72,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE menuvoci SET URL = '" + value + "' WHERE id= " + this.ID.ToString();
+                cmd.CommandText = "UPDATE menuvoci SET URL = @url WHERE id= @id";
+                cmd.Parameters.AddWithValue("@url", value);
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 try
                 {
                     this._URL = value;
@@ -87,7 +93,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT name, description, url FROM menuvoci WHERE id = " + idVoce.ToString();
+            cmd.CommandText = "SELECT name, description, url FROM menuvoci WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", idVoce);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -118,8 +125,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idFiglio FROM menualbero WHERE idPadre = " + this.ID.ToString()
+                cmd.CommandText = "SELECT idFiglio FROM menualbero WHERE idPadre = @id"
                     + " ORDER BY ordinamento";
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -141,13 +149,14 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
+                    cmd.Parameters.AddWithValue("@id", this.ID);
                     try
                     {
-                        cmd.CommandText = "DELETE FROM menualbero WHERE idFiglio = " + this.ID.ToString();
+                        cmd.CommandText = "DELETE FROM menualbero WHERE idFiglio = @id";
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = "DELETE FROM menugruppi WHERE idVoce = " + this.ID.ToString();
+                        cmd.CommandText = "DELETE FROM menugruppi WHERE idVoce = @id";
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = "DELETE FROM menuvoci WHERE id = " + this.ID.ToString();
+                        cmd.CommandText = "DELETE FROM menuvoci WHERE id = @id";
                         cmd.ExecuteNonQuery();
                         rt = true;
                     }
@@ -184,17 +193,22 @@ namespace KIS.App_Code
                 rdr.Close();
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO menuvoci(id, titolo, descrizione, url) VALUES(" + maxID.ToString()
-                    + ", '" + ttl + "', '" + desc + "', '" + lnk + "')";
+                cmd.CommandText = "INSERT INTO menuvoci(id, titolo, descrizione, url) VALUES(@maxID"
+                    + ", @ttl, @desc, @lnk)";
                 this.loadFigli();
                 int maxOrd = this.VociFiglie.Count + 1;
+                cmd.Parameters.AddWithValue("@maxID", maxID);
+                cmd.Parameters.AddWithValue("@ttl", ttl);
+                cmd.Parameters.AddWithValue("@desc", desc);
+                cmd.Parameters.AddWithValue("@lnk", lnk);
+                cmd.Parameters.AddWithValue("@idPadre", this.ID);
+                cmd.Parameters.AddWithValue("@ordinamento", maxOrd);
                 try
                 {
                     cmd.ExecuteNonQuery();
-                    cmd.CommandText = "INSERT INTO menualbero(idPadre, idFiglio, ordinamento) VALUES(" 
-                        + this.ID.ToString() 
-                        + ", " + maxID.ToString() 
-                        + ", " + maxOrd.ToString() 
+                    cmd.CommandText = "INSERT INTO menualbero(idPadre, idFiglio, ordinamento) VALUES(@idPadre"
+                        + ", @maxID"
+                        + ", @ordinamento"
                         + ")";
                     cmd.ExecuteNonQuery();
 
@@ -251,15 +265,20 @@ namespace KIS.App_Code
                             MySqlTransaction tr = conn.BeginTransaction();
                             MySqlCommand cmd = conn.CreateCommand();
                             cmd.Transaction = tr;
+                            cmd.Parameters.AddWithValue("@ord1", indVM - 1);
+                            cmd.Parameters.AddWithValue("@idPadre", this.ID);
+                            cmd.Parameters.AddWithValue("@figlio1", this.VociFiglie[indVM].ID);
+                            cmd.Parameters.AddWithValue("@ord2", indVM);
+                            cmd.Parameters.AddWithValue("@figlio2", this.VociFiglie[indVM - 1].ID);
                             try
                             {
-                                cmd.CommandText = "UPDATE menualbero SET ordinamento = " + (indVM - 1).ToString()
-                                    + " WHERE idpadre = " + this.ID.ToString()
-                                    + " AND idFiglio = " + this.VociFiglie[indVM].ID.ToString();
+                                cmd.CommandText = "UPDATE menualbero SET ordinamento = @ord1"
+                                    + " WHERE idpadre = @idPadre"
+                                    + " AND idFiglio = @figlio1";
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menualbero SET ordinamento = " + indVM.ToString()
-                                    + " WHERE idpadre = " + this.ID.ToString()
-                                    + " AND idFiglio = " + this.VociFiglie[indVM - 1].ID.ToString();
+                                cmd.CommandText = "UPDATE menualbero SET ordinamento = @ord2"
+                                    + " WHERE idpadre = @idPadre"
+                                    + " AND idFiglio = @figlio2";
                                 cmd.ExecuteNonQuery();
                                 tr.Commit();
                                 ret = true;
@@ -284,15 +303,20 @@ namespace KIS.App_Code
                             MySqlTransaction tr = conn.BeginTransaction();
                             MySqlCommand cmd = conn.CreateCommand();
                             cmd.Transaction = tr;
+                            cmd.Parameters.AddWithValue("@ord1", indVM + 1);
+                            cmd.Parameters.AddWithValue("@idPadre", this.ID);
+                            cmd.Parameters.AddWithValue("@figlio1", this.VociFiglie[indVM].ID);
+                            cmd.Parameters.AddWithValue("@ord2", indVM);
+                            cmd.Parameters.AddWithValue("@figlio2", this.VociFiglie[indVM + 1].ID);
                             try
                             {
-                                cmd.CommandText = "UPDATE menualbero SET ordinamento = " + (indVM + 1).ToString()
-                                    + " WHERE idPadre = " + this.ID.ToString()
-                                    + " AND idFiglio = " + this.VociFiglie[indVM].ID.ToString();
+                                cmd.CommandText = "UPDATE menualbero SET ordinamento = @ord1"
+                                    + " WHERE idPadre = @idPadre"
+                                    + " AND idFiglio = @figlio1";
                                 cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menualbero SET ordinamento = " + indVM.ToString()
-                                    + " WHERE idPadre = " + this.ID.ToString()
-                                    + " AND idFiglio = " + this.VociFiglie[indVM + 1].ID.ToString();
+                                cmd.CommandText = "UPDATE menualbero SET ordinamento = @ord2"
+                                    + " WHERE idPadre = @idPadre"
+                                    + " AND idFiglio = @figlio2";
                                 cmd.ExecuteNonQuery();
                                 tr.Commit();
                                 ret = true;
@@ -380,8 +404,12 @@ namespace KIS.App_Code
             rdr.Close();
             MySqlTransaction tr = conn.BeginTransaction();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO menuvoci(id, titolo, descrizione, url) VALUES(" + maxID.ToString()
-                + ", '" + ttl + "', '"+ desc + "', '" + lnk + "')";
+            cmd.CommandText = "INSERT INTO menuvoci(id, titolo, descrizione, url) VALUES(@maxID"
+                + ", @ttl, @desc, @lnk)";
+            cmd.Parameters.AddWithValue("@maxID", maxID);
+            cmd.Parameters.AddWithValue("@ttl", ttl);
+            cmd.Parameters.AddWithValue("@desc", desc);
+            cmd.Parameters.AddWithValue("@lnk", lnk);
             try
             {
                 cmd.ExecuteNonQuery();

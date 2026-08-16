@@ -42,10 +42,12 @@ namespace KIS.App_Code
             {
                 if (this.matricola.Length > 0)
                 {
-                    string strSQL = "UPDATE productionPlan SET status = '" + value + "' WHERE matricola = '" + this.matricola + "'";
+                    string strSQL = "UPDATE productionPlan SET status = @status WHERE matricola = @matricola";
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = new MySqlCommand(strSQL, conn);
+                    cmd.Parameters.AddWithValue("@status", value.ToString());
+                    cmd.Parameters.AddWithValue("@matricola", this.matricola);
                     cmd.ExecuteNonQuery();
                     conn.Close();
                     this._status = value;
@@ -68,9 +70,13 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT matricola, processo, revisione, variante, status, reparto, startTime FROM productionPlan "
-                + "WHERE matricola LIKE '" + prodID + "' AND processo = " + mdl.process.processID.ToString()
-                + " AND revisione = " + mdl.process.revisione.ToString()
-                + " AND variante = " + mdl.variant.idVariante.ToString();
+                + "WHERE matricola LIKE @matricola AND processo = @processo"
+                + " AND revisione = @revisione"
+                + " AND variante = @variante";
+            cmd.Parameters.AddWithValue("@matricola", prodID);
+            cmd.Parameters.AddWithValue("@processo", mdl.process.processID);
+            cmd.Parameters.AddWithValue("@revisione", mdl.process.revisione);
+            cmd.Parameters.AddWithValue("@variante", mdl.variant.idVariante);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -184,9 +190,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET earlyStart = '"
-                    + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
-                    + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "UPDATE tasksproduzione SET earlyStart = @earlyStart"
+                    + " WHERE taskid = @taskid";
+                cmd.Parameters.AddWithValue("@earlyStart", TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -221,8 +228,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET lateStart = '" + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
-                    + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "UPDATE tasksproduzione SET lateStart = @lateStart"
+                    + " WHERE taskid = @taskid";
+                cmd.Parameters.AddWithValue("@lateStart", TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -259,9 +268,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET earlyFinish = '"
-                    + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
-                    + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "UPDATE tasksproduzione SET earlyFinish = @earlyFinish"
+                    + " WHERE taskid = @taskid";
+                cmd.Parameters.AddWithValue("@earlyFinish", TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -294,9 +304,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE tasksproduzione SET lateFinish = '"
-                    + TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss")
-                    + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "UPDATE tasksproduzione SET lateFinish = @lateFinish"
+                    + " WHERE taskid = @taskid";
+                cmd.Parameters.AddWithValue("@lateFinish", TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
                 try
                 {
                     cmd.ExecuteNonQuery();
@@ -443,8 +454,10 @@ namespace KIS.App_Code
                     MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
                     cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE tasksproduzione SET qtaProdotta = " + value.ToString() +
-                        " WHERE taskID= " + this.TaskProduzioneID.ToString();
+                    cmd.CommandText = "UPDATE tasksproduzione SET qtaProdotta = @qtaProdotta"
+                        + " WHERE taskID = @taskid";
+                    cmd.Parameters.AddWithValue("@qtaProdotta", value);
+                    cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
                     try
                     {
                         cmd.ExecuteNonQuery();
@@ -495,7 +508,8 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT taskID, name, description, earlyStart, lateStart, earlyFinish, lateFinish, "
                 + " origTask, revOrigTask, variante, reparto, postazione, status, idArticolo, annoArticolo, "
-                + " nOperatori, tempoCiclo, qtaPrevista, qtaProdotta, endDateReal, LeadTime, WorkingTime, Delay FROM tasksproduzione WHERE taskID = " + tskProdID.ToString();
+                + " nOperatori, tempoCiclo, qtaPrevista, qtaProdotta, endDateReal, LeadTime, WorkingTime, Delay FROM tasksproduzione WHERE taskID = @taskid";
+            cmd.Parameters.AddWithValue("@taskid", tskProdID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -588,7 +602,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT prec, ConstraintType FROM prectasksproduzione WHERE succ = " + this.TaskProduzioneID.ToString();
+            cmd.CommandText = "SELECT prec, ConstraintType FROM prectasksproduzione WHERE succ = @succ";
+            cmd.Parameters.AddWithValue("@succ", this.TaskProduzioneID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -615,8 +630,9 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+            cmd.CommandText = "SELECT id FROM registroeventitaskproduzione WHERE task = @task"
                 + " ORDER BY data";
+            cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -684,7 +700,8 @@ namespace KIS.App_Code
                     cmd.CommandText = "SELECT anagraficaclienti.ragsociale FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
                         + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
                         + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
-                        + " WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        + " WHERE taskID = @taskID";
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                     try
                     {
                         MySqlDataReader rdr = cmd.ExecuteReader();
@@ -718,7 +735,8 @@ namespace KIS.App_Code
                     cmd.CommandText = "SELECT anagraficaclienti.codice FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
                         + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
                         + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
-                        + " WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        + " WHERE taskID = @taskID";
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                     try
                     {
                         MySqlDataReader rdr = cmd.ExecuteReader();
@@ -752,7 +770,8 @@ namespace KIS.App_Code
                     cmd.CommandText = "SELECT commesse.ExternalID FROM commesse "
                         + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
                         + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno) "
-                        + " WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        + " WHERE taskID = @taskID";
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                     try
                     {
                         MySqlDataReader rdr = cmd.ExecuteReader();
@@ -964,8 +983,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND user = '" + usr.username + "' ORDER BY data desc";
+                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
+                + " AND user = @user ORDER BY data desc";
+                cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@user", usr.username);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1057,17 +1078,20 @@ namespace KIS.App_Code
                     rdr.Close();
                     try
                     {
-                        cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
-                            + maxID.ToString() + ", '" + usr.username + "', " + this.TaskProduzioneID.ToString() + ", '"
-                            + TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', 'I', '')";
+                        cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES(@id, @user, @task, @date, 'I', '')";
+                        cmd.Parameters.AddWithValue("@id", maxID);
+                        cmd.Parameters.AddWithValue("@user", usr.username);
+                        cmd.Parameters.AddWithValue("@date", TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"));
                         cmd.ExecuteNonQuery();
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'I' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'I' WHERE taskID = @task";
                         cmd.ExecuteNonQuery();
                         Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
                         if (art.Status == 'P')
                         {
-                            cmd.CommandText = "UPDATE productionplan SET status='I' WHERE id = " + art.ID.ToString() +
-                                " AND anno = " + art.Year.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET status='I' WHERE id = @artID" +
+                                " AND anno = @artYear";
+                            cmd.Parameters.AddWithValue("@artID", art.ID);
+                            cmd.Parameters.AddWithValue("@artYear", art.Year);
                             cmd.ExecuteNonQuery();
                         }
 
@@ -1137,7 +1161,7 @@ namespace KIS.App_Code
                     this.loadUtentiAttivi();
                     if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
                     {
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'P' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'P' WHERE taskID = @taskid";
                         cmd.ExecuteNonQuery();
                     }
                     tr.Commit();
@@ -1206,7 +1230,7 @@ namespace KIS.App_Code
                     this.loadUtentiAttivi();
                     if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
                     {
-                        cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE taskID = @taskid";
                         cmd.ExecuteNonQuery();
                     }
                     tr.Commit();
@@ -1246,8 +1270,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND inputpoint = " + usr.id + " ORDER BY data desc";
+                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
+                + " AND inputpoint = @inputpoint ORDER BY data desc";
+                cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@inputpoint", usr.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1296,6 +1322,8 @@ namespace KIS.App_Code
 
                         DateTime endDate = DateTime.UtcNow;
                         this.loadUtentiAttivi();
+                        cmd.Parameters.AddWithValue("@id", 0);
+                        cmd.Parameters.AddWithValue("@date", endDate.ToString("yyyy/MM/dd HH:mm:ss"));
                         for (int i = 0; i < this.UtentiAttivi.Count; i++)
                         {
                             int idEv = 0;
@@ -1306,13 +1334,14 @@ namespace KIS.App_Code
                                 idEv = rdr.GetInt32(0) + 1;
                             }
                             rdr.Close();
-                            cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES("
-                                + idEv.ToString() + ", " + this.ActiveInputPoints[i] + ", " + this.TaskProduzioneID.ToString()
-                                + ", '" + endDate.ToString("yyyy/MM/dd HH:mm:ss") + "', 'F', '')";
+                            cmd.Parameters["@id"].Value = idEv;
+                            cmd.Parameters["@inputpoint"].Value = this.ActiveInputPoints[i];
+                            cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@id, @inputpoint, @task, @date, 'F', '')";
                             cmd.ExecuteNonQuery();
                         }
                         // Imposto lo stato del task a terminato
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'F', endDateReal='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'F', endDateReal=@endDateReal WHERE taskID = @task";
+                        cmd.Parameters.AddWithValue("@endDateReal", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.ExecuteNonQuery();
                         this._Status = 'F';
                         this._RealEndDate = endDate;
@@ -1331,10 +1360,14 @@ namespace KIS.App_Code
                         if (controlloFineTasks == true)
                         {
 
-                            cmd.CommandText = "UPDATE productionplan SET status = 'F', quantitaProdotta=" + this.QuantitaProdotta.ToString()
-                                + ", EndProductionDateReal='" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET status = 'F', quantitaProdotta=@quantitaProdotta"
+                                + ", EndProductionDateReal=@endProductionDateReal"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@quantitaProdotta", this.QuantitaProdotta);
+                            cmd.Parameters.AddWithValue("@endProductionDateReal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
                             cmd.ExecuteNonQuery();
                             this._Status = 'F';
 
@@ -1375,7 +1408,10 @@ namespace KIS.App_Code
                         TimeSpan lt = this.getLeadTime();
                         lt = lt < new TimeSpan(838, 59, 59) ? this.getLeadTime() : new TimeSpan(838, 59, 58);
                         String ltStr = Math.Floor(lt.TotalHours).ToString() + ":" + lt.Minutes.ToString() + ":" + lt.Seconds.ToString();
-                        cmd.CommandText = "UPDATE tasksproduzione SET WorkingTime = '" + workingtimeStr + "', Delay='" + delaStr + "', LeadTime='" + ltStr + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET WorkingTime = @workingTime, Delay=@delay, LeadTime=@leadTime WHERE taskid = @task";
+                        cmd.Parameters.AddWithValue("@workingTime", workingtimeStr);
+                        cmd.Parameters.AddWithValue("@delay", delaStr);
+                        cmd.Parameters.AddWithValue("@leadTime", ltStr);
                         cmd.ExecuteNonQuery();
 
                         this.log = cmd.CommandText;
@@ -1393,9 +1429,10 @@ namespace KIS.App_Code
                             TimeSpan finalLt = art.CalculateLeadTime();
                             String leadtime = Math.Floor(finalLt.TotalHours).ToString()
                                 + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
-                            cmd.CommandText = "UPDATE productionplan SET leadtime='" + leadtime + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET leadtime=@leadtimeProd"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@leadtimeProd", leadtime);
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                         }
@@ -1415,9 +1452,10 @@ namespace KIS.App_Code
                             TimeSpan tLavTot = art.TempoDiLavoroTotale;
                             String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
                                 + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
-                            cmd.CommandText = "UPDATE productionplan SET WorkingTime='" + tLavTotStr + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET WorkingTime=@workingTimeProd"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@workingTimeProd", tLavTotStr);
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                         }
@@ -1435,9 +1473,10 @@ namespace KIS.App_Code
                             TimeSpan tRitTot = art.Ritardo;
                             String tRitTotStr = Math.Floor(tRitTot.TotalHours).ToString()
                                 + ":" + tRitTot.Minutes.ToString() + ":" + tRitTot.Seconds.ToString();
-                            cmd.CommandText = "UPDATE productionplan SET Delay='" + tRitTotStr + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET Delay=@delayProd"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@delayProd", tRitTotStr);
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                         }
@@ -1488,8 +1527,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND inputpoint = " + usr.id + " ORDER BY data desc";
+                cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
+                + " AND inputpoint = @inputpoint ORDER BY data desc";
+                cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@inputpoint", usr.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1554,6 +1595,9 @@ namespace KIS.App_Code
                         Reparto rp = new Reparto(this.Tenant, this.RepartoID);
                         DateTime endDate = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario);
                         this.loadUtentiAttivi();
+                        cmd.Parameters.AddWithValue("@id", 0);
+                        cmd.Parameters.AddWithValue("@user", "");
+                        cmd.Parameters.AddWithValue("@date", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
                         for (int i = 0; i < this.UtentiAttivi.Count; i++)
                         {
                             int idEv = 0;
@@ -1564,13 +1608,14 @@ namespace KIS.App_Code
                                 idEv = rdr.GetInt32(0) + 1;
                             }
                             rdr.Close();
-                            cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES("
-                                + idEv.ToString() + ", '" + this.UtentiAttivi[i] + "', " + this.TaskProduzioneID.ToString()
-                                + ", '" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "', 'F', '')";
+                            cmd.Parameters["@id"].Value = idEv;
+                            cmd.Parameters["@user"].Value = this.UtentiAttivi[i].ToString();
+                            cmd.CommandText = "INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES(@id, @user, @task, @date, 'F', '')";
                             cmd.ExecuteNonQuery();
                         }
                         // Imposto lo stato del task a terminato
-                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'F', endDateReal='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET status = 'F', endDateReal=@endDateReal WHERE taskID = @task";
+                        cmd.Parameters.AddWithValue("@endDateReal", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
                         cmd.ExecuteNonQuery();
                         this._Status = 'F';
                         this._RealEndDate = endDate;
@@ -1589,10 +1634,14 @@ namespace KIS.App_Code
                         if (controlloFineTasks == true)
                         {
 
-                            cmd.CommandText = "UPDATE productionplan SET status = 'F', quantitaProdotta=" + this.QuantitaProdotta.ToString()
-                                + ", EndProductionDateReal='" + endDate.ToString("yyyy-MM-dd HH:mm:ss") + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET status = 'F', quantitaProdotta=@quantitaProdotta"
+                                + ", EndProductionDateReal=@endProductionDateReal"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@quantitaProdotta", this.QuantitaProdotta);
+                            cmd.Parameters.AddWithValue("@endProductionDateReal", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
                             cmd.ExecuteNonQuery();
                             this._Status = 'F';
 
@@ -1629,7 +1678,10 @@ namespace KIS.App_Code
                         String workingtimeStr = Math.Floor(workingtime.TotalHours).ToString() + ":" + workingtime.Minutes.ToString() + ":" + workingtime.Seconds.ToString();
                         TimeSpan lt = this.getLeadTime();
                         String ltStr = Math.Floor(lt.TotalHours).ToString() + ":" + lt.Minutes.ToString() + ":" + lt.Seconds.ToString();
-                        cmd.CommandText = "UPDATE tasksproduzione SET WorkingTime = '" + workingtimeStr + "', Delay='" + delaStr + "', LeadTime='" + ltStr + "' WHERE taskid = " + this.TaskProduzioneID.ToString();
+                        cmd.CommandText = "UPDATE tasksproduzione SET WorkingTime = @workingTime, Delay=@delay, LeadTime=@leadTime WHERE taskid = @task";
+                        cmd.Parameters.AddWithValue("@workingTime", workingtimeStr);
+                        cmd.Parameters.AddWithValue("@delay", delaStr);
+                        cmd.Parameters.AddWithValue("@leadTime", ltStr);
                         cmd.ExecuteNonQuery();
 
                         this.log = cmd.CommandText;
@@ -1647,9 +1699,10 @@ namespace KIS.App_Code
                             TimeSpan finalLt = art.CalculateLeadTime();
                             String leadtime = Math.Floor(finalLt.TotalHours).ToString()
                                 + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
-                            cmd.CommandText = "UPDATE productionplan SET leadtime='" + leadtime + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET leadtime=@leadtimeProd"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@leadtimeProd", leadtime);
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                         }
@@ -1668,9 +1721,10 @@ namespace KIS.App_Code
                             TimeSpan tLavTot = art.TempoDiLavoroTotale;
                             String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
                                 + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
-                            cmd.CommandText = "UPDATE productionplan SET WorkingTime='" + tLavTotStr + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET WorkingTime=@workingTimeProd"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@workingTimeProd", tLavTotStr);
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                         }
@@ -1687,9 +1741,10 @@ namespace KIS.App_Code
                             TimeSpan tRitTot = art.Ritardo;
                             String tRitTotStr = Math.Floor(tRitTot.TotalHours).ToString()
                                 + ":" + tRitTot.Minutes.ToString() + ":" + tRitTot.Seconds.ToString();
-                            cmd.CommandText = "UPDATE productionplan SET Delay='" + tRitTotStr + "'"
-                                + " WHERE id = " + this.ArticoloID.ToString()
-                                + " AND anno = " + this.ArticoloAnno.ToString();
+                            cmd.CommandText = "UPDATE productionplan SET Delay=@delayProd"
+                                + " WHERE id = @articoloID"
+                                + " AND anno = @articoloAnno";
+                            cmd.Parameters.AddWithValue("@delayProd", tRitTotStr);
                             cmd.ExecuteNonQuery();
                             tr.Commit();
                         }
@@ -1723,8 +1778,9 @@ namespace KIS.App_Code
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                        cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                             + " ORDER BY inputpoint, data";
+                        cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
                         MySqlDataReader rdr = cmd.ExecuteReader();
                         while (rdr.Read())
                         {
@@ -1763,8 +1819,9 @@ namespace KIS.App_Code
                         conn.Open();
                         List<DateTime[]> elenco = new List<DateTime[]>();
                         MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                             + " ORDER BY user, data";
+                        cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
                         MySqlDataReader rdr = cmd.ExecuteReader();
                         log += "TENGO CONTO DEGLI INTERVALLI DI LAVORO<BR/>";
                         while (rdr.Read())
@@ -1881,10 +1938,13 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                        + " AND data >= '" + startDate.ToString("yyyy/MM/dd HH:mm:ss") + "' "
-                        + "AND data <='" + endDate.ToString("yyyy/MM/dd HH:mm:ss") + "'"
+                    cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                        + " AND data >= @startDate "
+                        + "AND data <= @endDate"
                         + " ORDER BY user, data";
+                    cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
+                    cmd.Parameters.AddWithValue("@startDate", startDate.ToString("yyyy/MM/dd HH:mm:ss"));
+                    cmd.Parameters.AddWithValue("@endDate", endDate.ToString("yyyy/MM/dd HH:mm:ss"));
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -1916,8 +1976,9 @@ namespace KIS.App_Code
                     conn.Open();
                     List<DateTime[]> elenco = new List<DateTime[]>();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                    cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                         + " ORDER BY user, data";
+                    cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     log += "TENGO CONTO DEGLI INTERVALLI DI LAVORO<BR/>";
                     while (rdr.Read())
@@ -2087,8 +2148,9 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM warningproduzione WHERE task = " + this.TaskProduzioneID.ToString() +
+            cmd.CommandText = "SELECT id FROM warningproduzione WHERE task = @task" +
                 " ORDER BY dataChiamata";
+            cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -2117,15 +2179,19 @@ namespace KIS.App_Code
                 }
                 rdr.Close();
                 cmd.CommandText = "INSERT INTO warningproduzione(id, dataChiamata, task, inputpoint) VALUES("
-                    + maxID.ToString() + ", '" + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") + "', " + this.TaskProduzioneID.ToString()
-                    + ", " + usr.id + ")";
+                    + "@maxID, @dataChiamata, @task, @inputpoint)";
+                cmd.Parameters.AddWithValue("@maxID", maxID);
+                cmd.Parameters.AddWithValue("@dataChiamata", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@inputpoint", usr.id);
                 cmd.ExecuteNonQuery();
 
-                cmd.CommandText = "DELETE FROM registroeventiproduzione WHERE TipoEvento='Warning' AND taskID = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "DELETE FROM registroeventiproduzione WHERE TipoEvento='Warning' AND taskID = @taskID";
+                cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                 cmd.ExecuteNonQuery();
 
                 cmd.CommandText = "INSERT INTO registroeventiproduzione(TipoEvento, taskID, segnalato) VALUES('Warning', "
-                    + this.TaskProduzioneID.ToString() + ", false)";
+                    + "@taskID, false)";
                 cmd.ExecuteNonQuery();
 
                 rt = true;
@@ -2153,7 +2219,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT warningproduzione.id FROM warningproduzione WHERE warningproduzione.dataRisoluzione IS NULL "
-                + " AND task = " + this.TaskProduzioneID.ToString() + " ORDER BY warningproduzione.dataChiamata";
+                + " AND task = @task ORDER BY warningproduzione.dataChiamata";
+            cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -2614,8 +2681,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                    cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                          + " ORDER BY inputpoint, data";
+                    cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -2664,8 +2732,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                    cmd.CommandText = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                          + " ORDER BY inputpoint, data";
+                    cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     while (rdr.Read())
                     {
@@ -3010,8 +3079,9 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.CommandText = "DELETE FROM registroeventiproduzione WHERE taskID=" + this.TaskProduzioneID.ToString()
+            cmd.CommandText = "DELETE FROM registroeventiproduzione WHERE taskID=@taskID"
                 + " AND TipoEvento LIKE 'Ritardo'";
+            cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -3042,17 +3112,21 @@ namespace KIS.App_Code
                 try
                 {
                     cmd.CommandText = "UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
-                    + "task = " + this.TaskProduzioneID.ToString()
+                    + "task = @task"
                     + " AND evento = 'F'";
+                    cmd.Parameters.AddWithValue("@task", this.TaskProduzioneID);
                     cmd.ExecuteNonQuery();
 
-                    cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE taskID = " + this.TaskProduzioneID.ToString();
+                    cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE taskID = @taskID";
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                     cmd.ExecuteNonQuery();
 
                     Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
                     if (art.Status == 'F')
                     {
-                        cmd.CommandText = "UPDATE productionplan SET status='I' WHERE id = " + this.ArticoloID.ToString() + " AND anno = " + this.ArticoloAnno.ToString();
+                        cmd.CommandText = "UPDATE productionplan SET status='I' WHERE id = @articoloID AND anno = @articoloAnno";
+                        cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                        cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
                         cmd.ExecuteNonQuery();
                     }
 
@@ -3079,7 +3153,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT paramID FROM taskparameters WHERE taskID = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "SELECT paramID FROM taskparameters WHERE taskID = @taskID";
+                cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -3099,7 +3174,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT MAX(paramID) FROM taskparameters WHERE TaskID = " + this.TaskProduzioneID.ToString();
+                cmd.CommandText = "SELECT MAX(paramID) FROM taskparameters WHERE TaskID = @taskID";
+                cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                 int maxID = 0;
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
@@ -3113,22 +3189,34 @@ namespace KIS.App_Code
                 cmd.CommandText = "INSERT INTO taskparameters(TaskID, paramID, paramCategory, "
                     + " paramName, paramDescription, isFixed, isRequired, sequence, CreatedBy, CreatedDate) "
                     + "VALUES("
-                    + this.TaskProduzioneID.ToString() + ", "
-                    + maxID.ToString() + ", "
-                    + category.ID.ToString() + ", "
-                    + "'" + name + "', '" + description + "', " + isFixed.ToString() + ", "
-                    + isRequired.ToString() + ", "
-                    + maxSequence.ToString() + ", ";
+                    + "@taskID, "
+                    + "@maxID, "
+                    + "@categoryID, "
+                    + "@name, @description, @isFixed, "
+                    + "@isRequired, "
+                    + "@maxSequence, ";
                 if (inputpoint >= 0)
                 {
-                    cmd.CommandText += "'" + inputpoint + "', ";
+                    cmd.CommandText += "@inputpoint, ";
                 }
                 else
                 {
                     cmd.CommandText += "null, ";
                 }
-                cmd.CommandText += "'" + DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + "'"
+                cmd.CommandText += "@createdDate"
                     + ")";
+                cmd.Parameters.AddWithValue("@maxID", maxID);
+                cmd.Parameters.AddWithValue("@categoryID", category.ID);
+                cmd.Parameters.AddWithValue("@name", (object)(name ?? ""));
+                cmd.Parameters.AddWithValue("@description", (object)(description ?? ""));
+                cmd.Parameters.AddWithValue("@isFixed", isFixed);
+                cmd.Parameters.AddWithValue("@isRequired", isRequired);
+                cmd.Parameters.AddWithValue("@maxSequence", maxSequence);
+                if (inputpoint >= 0)
+                {
+                    cmd.Parameters.AddWithValue("@inputpoint", inputpoint);
+                }
+                cmd.Parameters.AddWithValue("@createdDate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -3156,8 +3244,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM taskparameters WHERE TaskID = " + this.TaskProduzioneID.ToString()
-                    + " AND paramID = " + paramID.ToString() + " AND paramCategory = " + CategoryID.ToString();
+                cmd.CommandText = "DELETE FROM taskparameters WHERE TaskID = @taskID"
+                    + " AND paramID = @paramID AND paramCategory = @categoryID";
+                cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@paramID", paramID);
+                cmd.Parameters.AddWithValue("@categoryID", CategoryID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
@@ -3310,7 +3401,8 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' and TaskID = " + this.TaskProduzioneID.ToString();
+                    cmd.CommandText = "SELECT * FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' and TaskID = @taskID";
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskProduzioneID);
                     MySqlDataReader rdr = cmd.ExecuteReader();
                     if (rdr.Read() && !rdr.IsDBNull(0))
                     {
@@ -3332,7 +3424,9 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ManualID, ManualVersion FROM tasksmanuals WHERE taskid=@TaskID AND taskRev=@TaskVersion AND taskVarianti=@TaskVariant "
-                    + " AND isActive=true AND expiryDate >= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "' AND validityInitialDate <= '" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "'";
+                    + " AND isActive=true AND expiryDate >= @expiryDate AND validityInitialDate <= @validityDate";
+                cmd.Parameters.AddWithValue("@expiryDate", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                cmd.Parameters.AddWithValue("@validityDate", DateTime.UtcNow.ToString("yyyy-MM-dd"));
                 cmd.Parameters.AddWithValue("@TaskID", this.OriginalTask);
                 cmd.Parameters.AddWithValue("@TaskVersion", this.OriginalTaskRevisione);
                 cmd.Parameters.AddWithValue("@TaskVariant", this.VarianteID);
@@ -3619,8 +3713,10 @@ namespace KIS.App_Code
                 conn.Open();
                 // Check if a comment of the same user exists
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * FROM tasksproduzioneoperatornotes WHERE taskid = " + this.TaskProduzioneID.ToString()
-                    + " AND user LIKE '" + user + "'";
+                cmd.CommandText = "SELECT * FROM tasksproduzioneoperatornotes WHERE taskid = @taskid"
+                    + " AND user LIKE @user";
+                cmd.Parameters.AddWithValue("@taskid", this.TaskProduzioneID);
+                cmd.Parameters.AddWithValue("@user", user);
                 Boolean exists = false;
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if(rdr.Read() && !rdr.IsDBNull(0))
@@ -3634,12 +3730,13 @@ namespace KIS.App_Code
 
                 if(exists)
                 {
-                    cmd.CommandText = "UPDATE tasksproduzioneoperatornotes SET notes = '" + note + "' WHERE "
-                        + " taskid = " + this.TaskProduzioneID.ToString() + " AND user LIKE '" + user + "'";
+                    cmd.CommandText = "UPDATE tasksproduzioneoperatornotes SET notes = @note WHERE "
+                        + " taskid = @taskid AND user LIKE @user";
+                    cmd.Parameters.AddWithValue("@note", (object)(note ?? ""));
                 }
                 else
                 {
-                    cmd.CommandText = "SELECT MAX(CommentID) FROM tasksproduzioneoperatornotes WHERE taskid=" + this.TaskProduzioneID.ToString();
+                    cmd.CommandText = "SELECT MAX(CommentID) FROM tasksproduzioneoperatornotes WHERE taskid=@taskid";
                     rdr = cmd.ExecuteReader();
                     int maxID = 0;
                     if(rdr.Read() && !rdr.IsDBNull(0))
@@ -3648,11 +3745,9 @@ namespace KIS.App_Code
                     }
                     rdr.Close();
                     cmd.CommandText = "INSERT INTO tasksproduzioneoperatornotes(taskid, commentid, date, user, notes) VALUES(@TaskID, @CommentID, @Date, @User, @Notes)";
-                    cmd.Parameters.AddWithValue("@TaskID", this.TaskProduzioneID);
                     cmd.Parameters.AddWithValue("@commentid", maxID);
                     cmd.Parameters.AddWithValue("@date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@user", user);
-                    cmd.Parameters.AddWithValue("@Notes", note);
+                    cmd.Parameters.AddWithValue("@Notes", (object)(note ?? ""));
                 }
                 try
                 {
@@ -3727,7 +3822,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT matricola, processo, revisione, variante FROM ProductionPlan WHERE reparto = " + rp.id.ToString();
+                cmd.CommandText = "SELECT matricola, processo, revisione, variante FROM ProductionPlan WHERE reparto = @reparto";
+                cmd.Parameters.AddWithValue("@reparto", rp.id);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 _ElencoCommesse = new List<prodotto>();
                 while (rdr.Read())
@@ -4331,9 +4427,13 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = " + this.Task.Task.processID.ToString()
-                 + " AND revProc = " + this.Task.Task.revisione.ToString() + " AND variante = " + this.Task.variant.idVariante.ToString()
-                 + " AND reparto = " + repID.ToString();
+                cmd.CommandText = "SELECT postazione FROM repartipostazioniattivita WHERE processo = @processo"
+                 + " AND revProc = @revProc AND variante = @variante"
+                 + " AND reparto = @reparto";
+                cmd.Parameters.AddWithValue("@processo", this.Task.Task.processID);
+                cmd.Parameters.AddWithValue("@revProc", this.Task.Task.revisione);
+                cmd.Parameters.AddWithValue("@variante", this.Task.variant.idVariante);
+                cmd.Parameters.AddWithValue("@reparto", repID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -4923,6 +5023,26 @@ namespace KIS.App_Code
                 {
                     TimeSpan ProductPlannedLabor = new TimeSpan(0, 0, 0);
                     Articolo artcl = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                    cmd.Parameters.AddWithValue("@maxTaskID", maxTaskID);
+                    cmd.Parameters.AddWithValue("@processName", "");
+                    cmd.Parameters.AddWithValue("@processDescription", "");
+                    cmd.Parameters.AddWithValue("@earlyStart", "");
+                    cmd.Parameters.AddWithValue("@lateStart", "");
+                    cmd.Parameters.AddWithValue("@earlyFinish", "");
+                    cmd.Parameters.AddWithValue("@lateFinish", "");
+                    cmd.Parameters.AddWithValue("@processID", 0);
+                    cmd.Parameters.AddWithValue("@revisione", 0);
+                    cmd.Parameters.AddWithValue("@idVariante", this.MainProcess.variant.idVariante);
+                    cmd.Parameters.AddWithValue("@reparto", this.RepartoProduttivo.id);
+                    cmd.Parameters.AddWithValue("@postazione", 0);
+                    cmd.Parameters.AddWithValue("@commessa", artcl.Commessa);
+                    cmd.Parameters.AddWithValue("@annoCommessa", artcl.AnnoCommessa);
+                    cmd.Parameters.AddWithValue("@articoloID", artcl.ID);
+                    cmd.Parameters.AddWithValue("@annoArticolo", artcl.Year);
+                    cmd.Parameters.AddWithValue("@nOperatori", 0);
+                    cmd.Parameters.AddWithValue("@tempoCicloStr", "");
+                    cmd.Parameters.AddWithValue("@qtaPrevista", this.Quantita);
+                    cmd.Parameters.AddWithValue("@qtaProdotta", this.Quantita);
                     
                     // Inserisco i task nel piano di produzione
                     for (int i = 0; i < this.Processi.Count; i++)
@@ -4933,31 +5053,43 @@ namespace KIS.App_Code
                         String strSQL = "INSERT INTO tasksproduzione(taskID, name, description, earlyStart, LateStart, "
                             + "earlyFinish, LateFinish, origTask, revOrigTask, variante, reparto, postazione, status, idcommessa, "
                             + " annoCommessa, idArticolo, annoArticolo, nOperatori, tempoCiclo, qtaPrevista, qtaProdotta) VALUES("
-                            + maxTaskID.ToString() + ", "
-                            + "'" + this.Processi[i].Task.Task.processName + "', "
-                            + "'" + this.Processi[i].Task.Task.processDescription + "', "
-                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].EarlyStartDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].LateStartDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].EarlyFinishDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + "'" + TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].LateFinishDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") + "', "
-                            + this.Processi[i].Task.Task.processID.ToString() + ", "
-                            + this.Processi[i].Task.Task.revisione.ToString() + ", "
-                            + this.MainProcess.variant.idVariante.ToString() + ", "
-                            + this.RepartoProduttivo.id.ToString() + ", "
-                            + this.Processi[i].PostazioneDiLavoro.id.ToString() + ", "
+                            + "@maxTaskID, "
+                            + "@processName, "
+                            + "@processDescription, "
+                            + "@earlyStart, "
+                            + "@lateStart, "
+                            + "@earlyFinish, "
+                            + "@lateFinish, "
+                            + "@processID, "
+                            + "@revisione, "
+                            + "@idVariante, "
+                            + "@reparto, "
+                            + "@postazione, "
                             + "'N', "
-                            + artcl.Commessa.ToString() + ", "
-                            + artcl.AnnoCommessa.ToString() + ", "
-                            + artcl.ID.ToString() + ", "
-                            + artcl.Year.ToString() + ", "
-                            + this.Processi[i].Tempo.NumeroOperatori.ToString() + ", "
-                            + "'" + Math.Floor(tcTotale.TotalHours).ToString() //Math.Floor(this.Processi[i].Tempo.Tempo.TotalHours).ToString()
-                            + ":" + tcTotale.Minutes.ToString()//this.Processi[i].Tempo.Tempo.Minutes.ToString()
-                            + ":" + tcTotale.Seconds.ToString()//this.Processi[i].Tempo.Tempo.Seconds.ToString()
-                            + "'"
-                            + ", " + this.Quantita.ToString() + ", "
-                            + this.Quantita.ToString()
+                            + "@commessa, "
+                            + "@annoCommessa, "
+                            + "@articoloID, "
+                            + "@annoArticolo, "
+                            + "@nOperatori, "
+                            + "@tempoCicloStr"
+                            + ", @qtaPrevista, "
+                            + "@qtaProdotta"
                             + ")";
+
+                        cmd.Parameters["@maxTaskID"].Value = maxTaskID;
+                        cmd.Parameters["@processName"].Value = (object)(this.Processi[i].Task.Task.processName ?? "");
+                        cmd.Parameters["@processDescription"].Value = (object)(this.Processi[i].Task.Task.processDescription ?? "");
+                        cmd.Parameters["@earlyStart"].Value = TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].EarlyStartDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss");
+                        cmd.Parameters["@lateStart"].Value = TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].LateStartDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss");
+                        cmd.Parameters["@earlyFinish"].Value = TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].EarlyFinishDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss");
+                        cmd.Parameters["@lateFinish"].Value = TimeZoneInfo.ConvertTimeToUtc(this.Processi[i].LateFinishDate, this.RepartoProduttivo.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss");
+                        cmd.Parameters["@processID"].Value = this.Processi[i].Task.Task.processID;
+                        cmd.Parameters["@revisione"].Value = this.Processi[i].Task.Task.revisione;
+                        cmd.Parameters["@postazione"].Value = this.Processi[i].PostazioneDiLavoro.id;
+                        cmd.Parameters["@nOperatori"].Value = this.Processi[i].Tempo.NumeroOperatori;
+                        cmd.Parameters["@tempoCicloStr"].Value = Math.Floor(tcTotale.TotalHours).ToString() //Math.Floor(this.Processi[i].Tempo.Tempo.TotalHours).ToString()
+                            + ":" + tcTotale.Minutes.ToString()//this.Processi[i].Tempo.Tempo.Minutes.ToString()
+                            + ":" + tcTotale.Seconds.ToString();//this.Processi[i].Tempo.Tempo.Seconds.ToString()
 
                         cmd.CommandText = strSQL;
                         cmd.ExecuteNonQuery();
@@ -4976,11 +5108,11 @@ namespace KIS.App_Code
 
                     
 
-                    cmd.CommandText = "UPDATE productionplan SET status = 'P', WorkingTimePlanned = '"                        
-                         + Math.Floor(ProductPlannedLabor.TotalHours).ToString() //Math.Floor(this.Processi[i].Tempo.Tempo.TotalHours).ToString()
+                    cmd.CommandText = "UPDATE productionplan SET status = 'P', WorkingTimePlanned = @workingTimePlanned"                        
+                         + " WHERE id = @articoloID AND anno = @annoArticolo";
+                    cmd.Parameters.AddWithValue("@workingTimePlanned", Math.Floor(ProductPlannedLabor.TotalHours).ToString() //Math.Floor(this.Processi[i].Tempo.Tempo.TotalHours).ToString()
                             + ":" + ProductPlannedLabor.Minutes.ToString()//this.Processi[i].Tempo.Tempo.Minutes.ToString()
-                            + ":" + ProductPlannedLabor.Seconds.ToString()//this.Processi[i].Tempo.Tempo.Seconds.ToString()
-                       + "' WHERE id = " + artcl.ID.ToString() + " AND anno = " + artcl.Year.ToString();
+                            + ":" + ProductPlannedLabor.Seconds.ToString());//this.Processi[i].Tempo.Tempo.Seconds.ToString()
 
                     cmd.ExecuteNonQuery();
 
@@ -5057,7 +5189,10 @@ namespace KIS.App_Code
                                 MySqlCommand cmd2 = conn.CreateCommand();
                                 //log += "&nbsp;&nbsp;&nbsp;&nbsp;Precedente inserito: " + newPrecID.ToString() + " - " + newCurrID + "<br/>";
                                 cmd2.CommandText = "INSERT INTO prectasksproduzione(prec, succ, relazione, pausa, ConstraintType) VALUES("
-                                    + newPrecID.ToString() + ", " + newCurrID.ToString() + ", 0, '00:00:00', " + this.Processi[i].PrecedentiConstraintType[q].ToString() + ")";
+                                    + "@prec, @succ, 0, '00:00:00', @constraintType)";
+                                cmd2.Parameters.AddWithValue("@prec", newPrecID);
+                                cmd2.Parameters.AddWithValue("@succ", newCurrID);
+                                cmd2.Parameters.AddWithValue("@constraintType", this.Processi[i].PrecedentiConstraintType[q]);
                                 cmd2.ExecuteNonQuery();
                             }
 
@@ -5126,9 +5261,11 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE 'F' "
-                    + " AND origTask = " + origProc.processID.ToString()
-                    + " AND revOrigTask = " + origProc.revisione.ToString()
+                    + " AND origTask = @origTask"
+                    + " AND revOrigTask = @revOrigTask"
                     + " ORDER BY lateStart";
+                cmd.Parameters.AddWithValue("@origTask", origProc.processID);
+                cmd.Parameters.AddWithValue("@revOrigTask", origProc.revisione);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -5149,11 +5286,15 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE 'F' "
-                    + " AND origTask = " + origProc.processID.ToString()
-                    + " AND revOrigTask = " + origProc.revisione.ToString()
-                    + " AND earlyStart > '"+ start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString() +"'"
-                    + " AND earlyStart < '" + end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString() + "'"
+                    + " AND origTask = @origTask"
+                    + " AND revOrigTask = @revOrigTask"
+                    + " AND earlyStart > @startDate"
+                    + " AND earlyStart < @endDate"
                     + " ORDER BY lateStart";
+                cmd.Parameters.AddWithValue("@origTask", origProc.processID);
+                cmd.Parameters.AddWithValue("@revOrigTask", origProc.revisione);
+                cmd.Parameters.AddWithValue("@startDate", start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString());
+                cmd.Parameters.AddWithValue("@endDate", end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString());
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -5176,12 +5317,17 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione INNER JOIN productionplan ON"
                     + "(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
                     + " WHERE tasksproduzione.status LIKE 'F' "
-                    + " AND tasksproduzione.origTask = " + origProc.processID.ToString()
-                    + " AND tasksproduzione.revOrigTask = " + origProc.revisione.ToString()
-                    + " AND productionplan.processo = " + ProdottoPadre.process.processID.ToString()
-                    + " AND productionplan.revisione = " + ProdottoPadre.process.revisione.ToString()
-                    + " AND productionplan.variante = " + ProdottoPadre.variant.idVariante.ToString()
+                    + " AND tasksproduzione.origTask = @origTask"
+                    + " AND tasksproduzione.revOrigTask = @revOrigTask"
+                    + " AND productionplan.processo = @processo"
+                    + " AND productionplan.revisione = @revisione"
+                    + " AND productionplan.variante = @variante"
                     + " ORDER BY lateStart";
+                cmd.Parameters.AddWithValue("@origTask", origProc.processID);
+                cmd.Parameters.AddWithValue("@revOrigTask", origProc.revisione);
+                cmd.Parameters.AddWithValue("@processo", ProdottoPadre.process.processID);
+                cmd.Parameters.AddWithValue("@revisione", ProdottoPadre.process.revisione);
+                cmd.Parameters.AddWithValue("@variante", ProdottoPadre.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -5204,14 +5350,21 @@ namespace KIS.App_Code
                 cmd.CommandText = "SELECT taskID FROM tasksproduzione INNER JOIN productionplan ON"
                     + "(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
                     + " WHERE tasksproduzione.status LIKE 'F' "
-                    + " AND tasksproduzione.origTask = " + origProc.processID.ToString()
-                    + " AND tasksproduzione.revOrigTask = " + origProc.revisione.ToString()
-                    + " AND earlyStart > '" + start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString() + "'"
-                    + " AND earlyStart < '" + end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString() + "'"
-                    + " AND productionplan.processo = " + ProdottoPadre.process.processID.ToString()
-                    + " AND productionplan.revisione = " + ProdottoPadre.process.revisione.ToString()
-                    + " AND productionplan.variante = " + ProdottoPadre.variant.idVariante.ToString()
+                    + " AND tasksproduzione.origTask = @origTask"
+                    + " AND tasksproduzione.revOrigTask = @revOrigTask"
+                    + " AND earlyStart > @startDate"
+                    + " AND earlyStart < @endDate"
+                    + " AND productionplan.processo = @processo"
+                    + " AND productionplan.revisione = @revisione"
+                    + " AND productionplan.variante = @variante"
                     + " ORDER BY lateStart";
+                cmd.Parameters.AddWithValue("@origTask", origProc.processID);
+                cmd.Parameters.AddWithValue("@revOrigTask", origProc.revisione);
+                cmd.Parameters.AddWithValue("@startDate", start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString());
+                cmd.Parameters.AddWithValue("@endDate", end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString());
+                cmd.Parameters.AddWithValue("@processo", ProdottoPadre.process.processID);
+                cmd.Parameters.AddWithValue("@revisione", ProdottoPadre.process.revisione);
+                cmd.Parameters.AddWithValue("@variante", ProdottoPadre.variant.idVariante);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
@@ -5229,13 +5382,18 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE '" + status + "' "
+            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE @status "
                 + " AND ("
-                + "(earlyStart < '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "' AND lateFinish > '" + end.ToString("yyyy-MM-dd HH:mm:ss") + "')"
-                + "OR (earlyStart > '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "' AND lateFinish > '" + end.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + end.ToString("yyyy-MM-dd  HH:mm:ss") + "' > lateStart" + ")"
-                + "OR (earlyStart < '" + start.ToString("yyyy-MM-dd HH:mm:ss") + "' AND lateFinish < '" + end.ToString("yyyy-MM-dd HH:mm:ss") + "' AND '" + start.ToString("yyyy-MM-dd  HH:mm:ss") + "' < lateFinish" + ")"
-                + "OR ('" + start.ToString("yyyy-MM-dd HH:mm:ss") + "' < earlyStart AND '" + end.ToString("yyyy-MM-dd HH:mm:ss") + "' > lateFinish" + ")"
+                + "(earlyStart < @startFull AND lateFinish > @endFull)"
+                + "OR (earlyStart > @startFull AND lateFinish > @endFull AND @endDouble > lateStart)"
+                + "OR (earlyStart < @startFull AND lateFinish < @endFull AND @startDouble < lateFinish)"
+                + "OR (@startFull < earlyStart AND @endFull > lateFinish)"
                 + ")";
+            cmd.Parameters.AddWithValue("@status", status.ToString());
+            cmd.Parameters.AddWithValue("@startFull", start.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@endFull", end.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@startDouble", start.ToString("yyyy-MM-dd  HH:mm:ss"));
+            cmd.Parameters.AddWithValue("@endDouble", end.ToString("yyyy-MM-dd  HH:mm:ss"));
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -5253,7 +5411,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE '" + status + "' ";
+            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status LIKE @status ";
+            cmd.Parameters.AddWithValue("@status", status.ToString());
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -5271,7 +5430,9 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE reparto = "+ dept.id +" AND status LIKE '" + status + "' ";
+            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE reparto = @reparto AND status LIKE @status ";
+            cmd.Parameters.AddWithValue("@reparto", dept.id);
+            cmd.Parameters.AddWithValue("@status", status.ToString());
 
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
@@ -5368,7 +5529,8 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT inputpoint, task, data, evento, note FROM registroeventitaskproduzione WHERE id = " + evID.ToString();
+            cmd.CommandText = "SELECT inputpoint, task, data, evento, note FROM registroeventitaskproduzione WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", evID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -5441,9 +5603,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET dataRisoluzione = '" 
-                    + DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss") 
-                    + "' WHERE id = " + this.ID.ToString();
+                cmd.CommandText = "UPDATE warningproduzione SET dataRisoluzione = @dataRisoluzione "
+                    + " WHERE id = @id";
+                cmd.Parameters.AddWithValue("@dataRisoluzione", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -5469,7 +5632,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET motivo = '" + value + "' WHERE id = " + this.ID.ToString();
+                cmd.CommandText = "UPDATE warningproduzione SET motivo = @motivo WHERE id = @id";
+                cmd.Parameters.AddWithValue("@motivo", (object)(value ?? ""));
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -5495,7 +5660,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET risoluzione = '" + value + "' WHERE id = " + this.ID.ToString();
+                cmd.CommandText = "UPDATE warningproduzione SET risoluzione = @risoluzione WHERE id = @id";
+                cmd.Parameters.AddWithValue("@risoluzione", (object)(value ?? ""));
+                cmd.Parameters.AddWithValue("@id", this.ID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -5533,7 +5700,8 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id, dataChiamata, task, user, dataRisoluzione, motivo, risoluzione FROM warningproduzione "
-                + "WHERE id = " + wrnID.ToString();
+                + "WHERE id = @id";
+            cmd.Parameters.AddWithValue("@id", wrnID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(0))
             {
@@ -5626,8 +5794,9 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM warningproduzione INNER JOIN tasksproduzione ON(warningproduzione.task = tasksproduzione.taskID) "
                 + " WHERE dataRisoluzione IS NULL "
-                + " AND reparto = " + rp.id.ToString()
+                + " AND reparto = @reparto"
                 + " ORDER BY dataChiamata";
+            cmd.Parameters.AddWithValue("@reparto", rp.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -5675,8 +5844,9 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT id FROM warningproduzione INNER JOIN tasksproduzione ON(warningproduzione.task = tasksproduzione.taskID) "
-                + " WHERE reparto = " + rp.id.ToString()
+                + " WHERE reparto = @reparto"
                 + " ORDER BY dataChiamata";
+            cmd.Parameters.AddWithValue("@reparto", rp.id);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -5906,9 +6076,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramCategory = " + value.ID + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET paramCategory = @paramCategory WHERE "
+                        + " paramID = @paramID"
+                        + " AND TaskID = @taskID";
+                    cmd.Parameters.AddWithValue("@paramCategory", value.ID);
+                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5945,9 +6118,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramName = '" + value + "' WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString();
+                    cmd.CommandText = "UPDATE modelTaskparameters SET paramName = @paramName WHERE "
+                        + " paramID = @paramID"
+                        + " AND TaskID = @taskID";
+                    cmd.Parameters.AddWithValue("@paramName", (object)(value ?? ""));
+                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -5975,9 +6151,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE taskparameters SET paramDescription = '" + value + "' WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString();
+                    cmd.CommandText = "UPDATE taskparameters SET paramDescription = @paramDescription WHERE "
+                        + " paramID = @paramID"
+                        + " AND TaskID = @taskID";
+                    cmd.Parameters.AddWithValue("@paramDescription", (object)(value ?? ""));
+                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -6005,9 +6184,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE taskparameters SET isFixed = " + value + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString();
+                    cmd.CommandText = "UPDATE taskparameters SET isFixed = @isFixed WHERE "
+                        + " paramID = @paramID"
+                        + " AND TaskID = @taskID";
+                    cmd.Parameters.AddWithValue("@isFixed", value);
+                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -6035,9 +6217,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE taskparameters SET isRequired = " + value + " WHERE "
-                        + " paramID = " + this.ParameterID.ToString()
-                        + " AND TaskID = " + this.TaskID.ToString();
+                    cmd.CommandText = "UPDATE taskparameters SET isRequired = @isRequired WHERE "
+                        + " paramID = @paramID"
+                        + " AND TaskID = @taskID";
+                    cmd.Parameters.AddWithValue("@isRequired", value);
+                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
+                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
@@ -6086,8 +6271,10 @@ namespace KIS.App_Code
             cmd.CommandText = "SELECT TaskID, paramID, paramCategory, paramName, "
                 + " paramDescription, isFixed, isRequired, sequence, CreatedBy, CreatedDate "
                 +" FROM taskparameters WHERE "
-                + " TaskID = " + TaskID.ToString()
-                + " AND paramID = " + parameterID.ToString();
+                + " TaskID = @taskID"
+                + " AND paramID = @paramID";
+            cmd.Parameters.AddWithValue("@taskID", TaskID);
+            cmd.Parameters.AddWithValue("@paramID", parameterID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(3))
             {
@@ -6135,8 +6322,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM taskparameters WHERE taskID = " + this.TaskID.ToString()
-                    + " AND paramID = " + this.ParameterID.ToString();
+                cmd.CommandText = "DELETE FROM taskparameters WHERE taskID = @taskID"
+                    + " AND paramID = @paramID";
+                cmd.Parameters.AddWithValue("@taskID", this.TaskID);
+                cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
                 MySqlTransaction tr = conn.BeginTransaction();
                 cmd.Transaction = tr;
                 try
@@ -6226,8 +6415,10 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT date, user, notes FROM tasksproduzioneoperatornotes WHERE "
-                + " TaskID = " + TaskID.ToString()
-                + " AND CommentID = " + CommentID.ToString();
+                + " TaskID = @taskID"
+                + " AND CommentID = @commentID";
+            cmd.Parameters.AddWithValue("@taskID", TaskID);
+            cmd.Parameters.AddWithValue("@commentID", CommentID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if(rdr.Read() && !rdr.IsDBNull(0))
             {

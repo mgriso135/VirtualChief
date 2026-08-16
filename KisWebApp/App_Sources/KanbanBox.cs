@@ -46,7 +46,8 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupid FROM groupspermissions WHERE permissionid = " + prm.ID.ToString();
+                cmd.CommandText = "SELECT groupid FROM groupspermissions WHERE permissionid = @p0";
+                cmd.Parameters.AddWithValue("@p0", prm.ID);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 while (rdr.Read())
                 {
