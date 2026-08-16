@@ -74,7 +74,7 @@ public class PortabilityAuditTests
         var mt = SqlAudit.MysqlTypeUsagePerFile();
 
         Assert.Equal(28, mt.Count);
-        Assert.Equal(3080, mt.Values.Sum());
+        Assert.Equal(3028, mt.Values.Sum());
 
         Assert.Equal(199, mt["KisWebApp/App_Sources/Account.cs"]);
         Assert.Equal(24, mt["KisWebApp/App_Sources/Analysis.cs"]);
@@ -87,16 +87,16 @@ public class PortabilityAuditTests
         Assert.Equal(119, mt["KisWebApp/App_Sources/FreeTimeMeasurement.cs"]);
         Assert.Equal(63, mt["KisWebApp/App_Sources/inputpoints.cs"]);
         Assert.Equal(15, mt["KisWebApp/App_Sources/KanbanBox.cs"]);
-        Assert.Equal(53, mt["KisWebApp/App_Sources/kpi.cs"]);
-        Assert.Equal(33, mt["KisWebApp/App_Sources/menu.cs"]);
+        Assert.Equal(38, mt["KisWebApp/App_Sources/kpi.cs"]);
+        Assert.Equal(15, mt["KisWebApp/App_Sources/menu.cs"]);
         Assert.Equal(28, mt["KisWebApp/App_Sources/NoProductiveTasks.cs"]);
         Assert.Equal(31, mt["KisWebApp/App_Sources/parts.cs"]);
-        Assert.Equal(44, mt["KisWebApp/App_Sources/permessi.cs"]);
+        Assert.Equal(33, mt["KisWebApp/App_Sources/permessi.cs"]);
         Assert.Equal(71, mt["KisWebApp/App_Sources/postazioni.cs"]);
         Assert.Equal(363, mt["KisWebApp/App_Sources/processi.cs"]);
         Assert.Equal(228, mt["KisWebApp/App_Sources/produzione.cs"]);
         Assert.Equal(293, mt["KisWebApp/App_Sources/quality.cs"]);
-        Assert.Equal(10, mt["KisWebApp/App_Sources/relazioni.cs"]);
+        Assert.Equal(2, mt["KisWebApp/App_Sources/relazioni.cs"]);
         Assert.Equal(182, mt["KisWebApp/App_Sources/reparti.cs"]);
         Assert.Equal(246, mt["KisWebApp/App_Sources/users.cs"]);
         Assert.Equal(82, mt["KisWebApp/App_Sources/WorkInstructions.cs"]);

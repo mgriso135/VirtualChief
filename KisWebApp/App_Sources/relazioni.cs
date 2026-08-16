@@ -2,6 +2,8 @@
 /* Copyright © 2017 Matteo Griso -  Tutti i diritti riservati */
 
 using System;
+using System.Linq;
+using Dapper;
 using MySql.Data.MySqlClient;
 
 namespace KIS.App_Code
@@ -23,20 +25,13 @@ namespace KIS.App_Code
             string strSQL = "SELECT COUNT(*) FROM relazioniprocessi ORDER BY name";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd1 = new MySqlCommand(strSQL, conn);
-            MySqlDataReader rdr = cmd1.ExecuteReader();
-            rdr.Read();
-            this._numRelations = rdr.GetInt32(0);
+            this._numRelations = conn.ExecuteScalar<int>(strSQL);
             list = new relazione[this._numRelations];
-            rdr.Close();
             strSQL = "SELECT RelazioneID FROM relazioniprocessi ORDER BY name";
-            MySqlCommand cmd2 = new MySqlCommand(strSQL, conn);
-            rdr = cmd2.ExecuteReader();
-            int i = 0;
-            while(rdr.Read())
+            int[] ids = conn.Query<int>(strSQL).ToArray();
+            for (int i = 0; i < ids.Length && i < list.Length; i++)
             {
-                list[i] = new relazione(this.Tenant, rdr.GetInt32(0));
-                i++;
+                list[i] = new relazione(this.Tenant, ids[i]);
             }
             conn.Close();
         }
@@ -81,16 +76,13 @@ namespace KIS.App_Code
             String strSQL = "SELECT * FROM relazioniprocessi WHERE relazioneID = @pRelazioneID";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd1 = conn.CreateCommand();
-            cmd1.CommandText = strSQL;
-            cmd1.Parameters.AddWithValue("@pRelazioneID", relID);
-            MySqlDataReader rdr = cmd1.ExecuteReader();
-            if (rdr.Read())
+            RelazioneRow row = conn.QueryFirstOrDefault<RelazioneRow>(strSQL, new { pRelazioneID = relID });
+            if (row != null)
             {
-                this._relationID = rdr.GetInt32(0);
-                this._name = rdr.GetString(1);
-                this._description = rdr.GetString(2);
-                this._imgURL = rdr.GetString(3);
+                this._relationID = row.RelazioneID;
+                this._name = row.Name;
+                this._description = row.Description;
+                this._imgURL = row.imgUrl;
             }
             else
             {
@@ -100,6 +92,14 @@ namespace KIS.App_Code
                 this._imgURL = "";   
             }
             conn.Close();
+        }
+
+        private class RelazioneRow
+        {
+            public int RelazioneID { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string imgUrl { get; set; }
         }
 
     }

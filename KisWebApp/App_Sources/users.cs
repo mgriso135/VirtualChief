@@ -2007,7 +2007,7 @@ namespace KIS.App_Code
             String newPass = "";
             if (this.username != "" && this.username.Length > 0)
             {
-                newPass = System.Web.Security.Membership.GeneratePassword(16, 2);
+                newPass = KIS.App_Code.WebEnv.GeneratePassword(16, 2);
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();

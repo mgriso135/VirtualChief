@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4" />
+    <PackageReference Include="Dapper" Version="2.1.79" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="MySql.Data" Version="26.7.0" />
@@ -52,6 +53,8 @@
     <Compile Include="..\..\KisWebApp\App_Sources\FreeTimeMeasurement.cs" Link="App_Sources\FreeTimeMeasurement.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\NoProductiveTasks.cs" Link="App_Sources\NoProductiveTasks.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\andon.cs" Link="App_Sources\andon.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\AppConfig.cs" Link="App_Sources\AppConfig.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\WebEnv.cs" Link="App_Sources\WebEnv.cs" />
   </ItemGroup>
 
 </Project>

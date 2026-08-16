@@ -28,7 +28,7 @@ External integrations:
 - **Google SMTP** — transactional e-mail (delays, warnings, license, quality, integration errors)
 
 Deployment model: IIS-hosted ASP.NET app + Windows Task Scheduler invoking the
-console agents.
+console agents. (The Linux migration runbook is **§7**.)
 
 ---
 
@@ -238,6 +238,8 @@ Main domain areas (from `kaizenkey`):
    routes/contracts via compatibility endpoints so the console agents keep working.
 
 ### Phase 3 — Modern runtime, same behavior
+> The end-to-end procedure for running everything on Linux is **§7** (runbook).
+
 1. Re-target the web app to **.NET 8 / ASP.NET Core** using official MVC5→Core
    migration guidance (WebForms pages → Razor Pages). Keep the same HTML/CSS/JS
    assets (Bootstrap, jQuery, Google Charts, D3 — all cross-platform).
@@ -359,7 +361,7 @@ MariaDB instance populated from the checked-in dumps — no Windows/IIS required
 On top of that, the **Tier 1 domain-layer tests** from §5.2 are also deployed: the
 real (unmodified) `App_Sources` business classes are compiled directly into a test
 assembly via Linux compile-shims for the few `.NET Framework System.Web` symbols
-they touch, and run against the same private MariaDB — **8 business-flow tests green
+they touch, and run against the same private MariaDB — **23 business-flow tests green
 without Windows/IIS** (the "no Windows/IIS at our disposal" scenario).
 
 | Artifact | Location |
@@ -373,7 +375,7 @@ Run with:
 ```
 tests/provision-db.sh     # once, per machine
 dotnet test tests/VirtualChief.Tests        # 22 characterization tests
-dotnet test tests/VirtualChief.DomainTests  # 8 Tier-1 business-flow tests
+dotnet test tests/VirtualChief.DomainTests  # 23 Tier-1 business-flow tests
 ```
 
 The three characterization suites in `tests/VirtualChief.Tests/`:
@@ -385,7 +387,8 @@ The three characterization suites in `tests/VirtualChief.Tests/`:
     `Analysis.cs` `loadTaskEvents` (`registroeventitaskproduzione.user`);
   - MySQL-only constructs: **1 backtick** (`configurazione.cs:420`),
     **5 `LAST_INSERT_ID`**, **1 `NOW()`**;
-  - **3,080 `MySql*` concrete-type usages in 28 files**.
+  - **3,028 `MySql*` concrete-type usages in 28 files** (Dapper has replaced the
+    boilerplate in `relazioni.cs`, `menu.cs`, `permessi.cs` — see §6.3).
 - **`SchemaIntegrityTests`** (live DB) — dumps load cleanly; workspaces seeded;
   `configurazione` `Main` rows present; every C# table reference resolves; the
   `masterDB` empty-`database=` tenancy swap is consistent with `data.cs:43`.
@@ -477,30 +480,223 @@ against PostgreSQL after the migration.
 2. **Parameterize concatenated SQL** in `App_Sources` — remove the string-concat
    injection surface without changing query semantics.
 3. **Harden API:** remove `TypeNameHandling.All`
-   (`KisWebApp/App_Start/WebApiConfig.cs:23`); restore SSL validation in the SIAV
-   tool.
+   (`KisWebApp/App_Start/WebApiConfig.cs:23`); restore SSL validation in the SIAV tool.
 4. **Delete orphans/artifacts:** `ConsoleApp1`, `VCAlarmEvents` (netcoreapp2.0),
    `VCAlarmsEvents` (broken duplicate), `UpgradeLog.*`, `_UpgradeReport_Files/`,
-   `Kaizen Indicator System.v11.suo`, `Packages.dgml` — update the solution file
-   accordingly.
+   `Kaizen Indicator System.v11.suo`, `Packages.dgml` — update the solution file accordingly.
+
+**Phase 0 status (on `v2.0`):** items 1–2 ✅ (`Secrets.cs`, SQL parameterization —
+see §5.5 baselines), item 3 ✅ (`WebApiConfig.cs:23` `TypeNameHandling.None`, SIAV
+`ServerCertificateValidationCallback` bypass removed), item 4 ✅ (orphan projects +
+`UpgradeLog*`/`_UpgradeReport_Files/`/`.suo`/`Packages.dgml` deleted; 278 tracked
+build artifacts — `packages/`, `bin/`, `obj/`, `.vs/`, `.suo`, `.user` — removed
+from the index; solution references only existing projects), item 5 ✅ (the two
+broken `VCAlarmsEvents` `Main`/`MainAsync` entry points were removed with the orphan
+project in item 4 — nothing to fix), item 6 ✅ (`.github/workflows/dotnet.yml`
+rewritten as a real CI: `setup-dotnet@v4` .NET 10, MariaDB installed on the runner,
+`tests/provision-db.sh`, then both Linux test suites — needs a push to verify on
+GitHub; the web/console `.NET Framework` projects are not part of the pipeline until
+§7 Step 4).
 
 ### 6.3 Phase 1 — Same-stack modernization
-1. `packages.config` → **PackageReference**, pin versions compatible with .NET
-   Framework 4.8 (preserve Bootstrap/jQuery UI rendering).
-2. **Dapper** over the existing SQL in `App_Sources` (same queries, less ADO.NET
-   boilerplate).
-3. Extract duplicated logic (delays/warnings, SIAV export DTOs, EventsExport)
-   into a **shared class library** used by both ASMX and Web API paths.
-4. Typed config reader over `Web.config` (same values); **Serilog** structured
-   logging in `data.cs`, controllers, console agents.
+1. `packages.config` → **PackageReference**, pin versions compatible with .NET Framework 4.8 (preserve Bootstrap/jQuery UI rendering).
+2. **Dapper** over the existing SQL in `App_Sources` (same queries, less ADO.NET boilerplate).
+3. Extract duplicated logic (delays/warnings, SIAV export DTOs, EventsExport) into a **shared class library** used by both ASMX and Web API paths.
+4. Typed config reader over `Web.config` (same values); **Serilog** structured logging in `data.cs`, controllers, console agents.
+
+**Phase 1 status (on `v2.0`):** items 1–4 started. **Item 2 (Dapper)** is the
+verifiable core: `Dapper 2.1.79` is a dependency of the test harness
+(`VirtualChief.DomainTests`) and of `KisWebApp` (`Virtual Chief.csproj` reference +
+`packages.config` entry — Windows/VS build check pending). Converted so far:
+`relazioni.cs` (ExecuteScalar/Query/QueryFirstOrDefault), `menu.cs`
+(`VoceMenu`/`MainMenu`, incl. transaction writes), `permessi.cs`
+(`Permission`/`PermissionsList`, incl. transactional setters) — same SQL text,
+same public API; 16 new DomainTests lock the behavior against the seeded DB.
+Baseline counters moved down: `MysqlConcreteTypes_MatchesBaseline` 3064→3028
+(`relazioni.cs` 9→2, `menu.cs` 33→15, `permessi.cs` 44→33). **Item 4** started: a
+typed config reader `App_Sources/AppConfig.cs` (same Web.config keys, env-first via
+`Secrets`, 3 tests) — Serilog wiring still needs the web project (Windows verify).
+**Items 1 and 3** are NOT committed blind because they require a Windows/VS build:
+(1) `packages.config` → **PackageReference** touches content packages
+(Bootstrap/jQuery UI) whose render must be preserved; (3) the shared class library
+for delays/warnings/SIAV export DTOs/EventsExport means refactoring the 954-line
+`VCProductionEventsExport-SIAV/Program.cs` + `EventsExportController` and re-pointing
+ASMX + Web API at it. Both are queued as Windows-verified follow-ups.
 
 ### 6.4 Verification for this session
 - `tests/provision-db.sh` (once per machine), then `dotnet test
   tests/VirtualChief.Tests` (22 green) and `dotnet test
-  tests/VirtualChief.DomainTests` (8 green).
+  tests/VirtualChief.DomainTests` (23 green).
 - Confirm the DomainTests still compile the unmodified `App_Sources` (the Dapper
   swap must not break the class-level tests) and that no project fails to build.
 
 ### 6.5 Guardrails
 - No UI or business-function change; MySQL 8 schema untouched.
 - Each phase committed separately, tests green before moving on.
+- The end-to-end procedure for running the product on Linux is **§7**.
+
+---
+
+## 7. Migrating VirtualChief to Linux — end-to-end runbook
+
+> **Goal:** run the entire product on Linux (no Windows, no IIS, no Windows Task
+> Scheduler), with the UI and business behavior unchanged. The web app and the
+> scheduler agents must be re-platformed (Phases 2–3 of §4); the database, domain
+> logic and front-end assets are already Linux-compatible.
+>
+> **Current status:** the test/verification net already runs on Linux (§5.5) and the
+> data-access layer is being made cross-platform (Phase 1 item 2, `relazioni.cs`
+> converted; §6.3). Everything below is the concrete, ordered procedure.
+
+### 7.1 Why "just run it" on Linux is impossible today (hard blockers)
+
+| Blocker | Detail | How it is resolved |
+|---|---|---|
+| **WebForms + MVC5 + Web API2 on .NET Framework 4.8** | Depends on `System.Web`/IIS. Mono/XSP is a **dead end** for this app: `<asp:Chart>` (Microsoft chart controls, `System.Web.DataVisualization`) is used in 10 WebForms views, plus AjaxControlToolkit, the OWIN/Katana pipeline and the WebForms view-state engine. | Re-platform the web app (Step 4): WebForms→Razor + MVC5→ASP.NET Core. |
+| **7 ASMX SOAP services** | Consumed by console agents through WCF `basicHttpBinding` at `http://localhost:3358/Eventi/*.asmx` (`KISScheduler`, `KISLicenseCheck`, `KISQualityEventsCheck`). WCF SOAP clients do not exist in .NET Core. | Convert ASMX→Web API controllers (§4 Phase 2 item 3) and point the agents at the new endpoints (Step 4.3 / Step 5). |
+| **Console agents + Windows Task Scheduler** | 8 run-once EXEs scheduled by Task Scheduler; fixed `C:\temp` log paths; `baseurl=http://localhost:89/vc_dev/` + `x-api-key` (`VCAutoPauseTasks`, `VCProductionEventsExport-SIAV`, `ThirdPartySalesOrders_Finestra3000`, ...). | Replace with one .NET 8 **worker service** (Step 5), run by `systemd`; base URLs and keys come from config/env. |
+| **EF6 + MySql.Data 8.0.24** | EF6 is not cross-platform; MySql.Data 8.0.24 is fine on .NET Framework only (managed path is unreliable on Linux). | Phase 1 item 2: **Dapper** (already started) with `MySqlConnector`; optionally Pomelo EF Core later. Queries unchanged. |
+
+**What is NOT a blocker:** MySQL 8 runs natively on Linux (the MariaDB used by the
+tests is only a stand-in — the dialect deltas are already locked by
+`SchemaIntegrityTests`/`QueryCharacterizationTests`, §5.5 findings 1–3); the ADO.NET
+layer already compiles and runs on Linux (the DomainTests compile the **real**
+`App_Sources` against a live DB — §5.5); all front-end assets (Bootstrap, jQuery,
+Google Charts, D3, graphviz) are cross-platform.
+
+### 7.2 Target architecture (after the migration)
+
+- **Web app:** ASP.NET Core (Kestrel) behind an **nginx** reverse proxy with TLS;
+  Razor Pages/Views rendering the same HTML/CSS/JS; Auth0 OIDC via ASP.NET Core
+  middleware; Web API controllers replace ASMX.
+- **Scheduler:** a single .NET 8 **worker service** hosting all the jobs the console
+  agents used to run, driven by `systemd` timers or cron; logs to stdout/journald +
+  Serilog.
+- **Database:** MySQL 8 on Linux; access via Dapper + MySqlConnector (or Pomelo EF
+  Core); **no query rewrite, schema untouched** (~98 tables).
+- **Config/secrets:** `appsettings.json` + the existing `VC_*` env-var pattern
+  (`Secrets.cs`, §6.2 item 1) — no localhost ports, no hardcoded credentials.
+
+### 7.3 Prerequisites on the Linux host
+
+- Debian/Ubuntu (or any distro), `.NET SDK 8.0+` (tested box: `10.0.400`), `git`.
+- **MySQL 8** server for production; for development/tests the private MariaDB
+  provisioned by `tests/provision-db.sh` (127.0.0.1:3307) is sufficient.
+- `nginx` (reverse proxy + TLS), `systemd` (services/timers).
+- The 3 schema dumps from the repo root loaded into MySQL:
+  `kaizenkey.sql`, `vcmain.sql`, `vc_dev.sql`.
+
+### 7.4 Step-by-step plan
+
+> Every step must leave the Linux test suite green before the next one starts
+> (§5.5: `dotnet test tests/VirtualChief.Tests` + `dotnet test
+> tests/VirtualChief.DomainTests`).
+
+**Step 1 — Linux test net (✅ done).** `tests/provision-db.sh` + the two test
+projects (22 static/DB + 23 Tier-1 business-flow). This is the safety net that
+verifies every porting step on Linux without Windows/IIS.
+
+**Step 2 — Cross-platform data layer (Phase 1 item 2; in progress).** Replace raw
+`MySqlCommand`/`MySqlDataReader` boilerplate in `App_Sources` with **Dapper**
+(same SQL, same semantics). `relazioni.cs`, `menu.cs` and `permessi.cs` are
+converted and verified by 16 new DomainTests; the audit baselines track the
+remaining surface (`MysqlConcreteTypes_MatchesBaseline`, currently 3028 `MySql*`
+usages in 28 files). The DomainTests keep compiling `App_Sources` on Linux, so
+every subsequent conversion is machine-verified.
+
+**Step 3 — Decouple `App_Sources` from `System.Web` (in progress).** 11 files
+reference `System.Web` at runtime: `Account.cs`, `Analysis.cs`, `data.cs`,
+`FilesHelper.cs`, `FreeTimeMeasurement.cs`, `inputpoints.cs`,
+`NoProductiveTasks.cs`, `parts.cs`, `quality.cs`, `users.cs`,
+`WorkInstructions.cs`. The test compile already shims them
+(`tests/VirtualChief.DomainTests/Shims/SystemWeb.cs`); for the web app they must
+become host-agnostic seams:
+- `HttpContext.Current` → injected request context (`IHttpContextAccessor`),
+- `Server.MapPath` → `IWebHostEnvironment` / `IFileProvider`,
+- `Session` → injected session abstraction.
+
+Started: a `WebEnv` seam (`App_Sources/WebEnv.cs`) now carries the tenancy reads —
+`ActiveWorkspaceName` / `ActiveWorkspaceId` (session, else Owin claims; null-guarded
+so it is safe outside web requests) — and a cross-platform `GeneratePassword`
+(`#if NETFRAMEWORK` → the real `Membership.GeneratePassword`). `data.cs`
+`getActiveWorkspaceId`/`getActiveWorkspaceName` and `users.cs` `ResetPassword` call
+it; 3 DomainTests cover the non-web paths (this also fixed a latent NRE when
+`HttpContext.Current` was null). Remaining: `FilesHelper`/`quality.cs`
+`MapPath`+`MimeMapping` (Tier-3 glue, replaced in Step 4 anyway), and the
+`HttpContext`/`Session` uses in the other 7 files.
+
+This is the precondition that lets the same domain code run under ASP.NET Core.
+
+**Step 4 — Re-platform the web app (Phases 2–3).**
+1. **WebForms → Razor** (`114` `.aspx`, `172` `.ascx`) page-by-page, identical
+   markup; verify each page with a screenshot/visual-regression diff (§5.1).
+2. **Replace `<asp:Chart>`** (chart controls) with the already-used Google Charts /
+   D3 in these views: `Produzione/wlReparto.ascx`, `Produzione/wlSimReparto.ascx`,
+   `Postazioni/viewCalendarioPostazione.ascx`,
+   `Reparti/manageCalendarFesteStraordinari.aspx`, `Reparti/processoWorkLoad.ascx`,
+   `Reparti/showCalendarFesteStraordinari.aspx`, `Reparti/postazioneWorkLoad.ascx`,
+   `OLD_kpi/showKPIRecords.ascx`, `Commesse/wzCheckWorkLoadReparto.ascx`,
+   `Analysis/DetailAnalysisCustomer.ascx`.
+3. **ASMX → Web API controllers** for the 7 services (§2.1.3), keeping the
+   routes/contracts so the scheduler clients can be updated in the same commit.
+4. **MVC5 → Core MVC, Web API2 → Core Web API, OWIN → Core OIDC** with the same
+   Auth0 client config and claims (login UX unchanged).
+5. **`Web.config` → `appsettings.json` + env.** Map: `vcmain`/`masterDB` →
+   `VC_VCMAIN_CONN`/`VC_MASTERDB_CONN` (already the pattern in `Web.config`),
+   `smtpUsername`/`smtpPassword` → `VC_SMTP_USER`/`VC_SMTP_PASS` (already in
+   `Secrets.cs`), `auth0:ClientSecret` → `VC_AUTH0_CLIENT_SECRET`, plus the
+   `customersTestApiKey` / X-API-KEY values from the per-tenant `configurazione`
+   table (§6.2 item 1 / Phase 0 item 3). No localhost, no credentials in source.
+6. **Host on Kestrel behind nginx** (TLS termination); drop the
+   `baseurl=http://localhost:81/api/` coupling in `Web.config`.
+
+**Step 5 — Replace the console agents with one .NET 8 worker service.** Current
+deployable agents (§2.2): `KISScheduler`, `KISLicenseCheck`,
+`KISQualityEventsCheck`, `KanbanBoxIntegration`
+(`KanbanBoxReaderScheduler` + `KanbanBoxCheckHealthScheduler`), `VCAutoPauseTasks`,
+`ThirdPartySalesOrders_Finestra3000`, `VCProductionEventsExport-SIAV`,
+`SIAV-GetDotFile` (`VCAlarmsEvents`/`ConsoleApp1`/`VCAlarmEvents` are already
+deleted). Map each to a job inside the worker:
+- SOAP-calling jobs → call the new Web API endpoints (Step 4.3): the same
+  `Ritardi`/`Warning`/`Licensing`/`QualityModuleEvents` logic, same e-mails.
+- HTTP jobs → `HttpClient` + X-API-KEY from config; `baseurl` from env/appsettings
+  (no more `localhost:89`).
+- `KanbanBox*` polling, `Finestra3000` XML import, `SIAV` export/.dot download →
+  the same logic as worker jobs (SIAV keeps the restored SSL validation, Phase 0).
+- Run via `systemd` timers (or cron) with restart policies; log to
+  stdout/journald + Serilog (no `C:\temp`).
+
+**Step 6 — Database on Linux.** Install MySQL 8; load the 3 dumps; point the
+connection strings at the Linux MySQL via `VC_*` env. Re-run the full test suite to
+confirm the seeded schema behaves identically (the characterization tests catch
+dialect differences — alias case-sensitivity, backticks, `LAST_INSERT_ID`).
+
+**Step 7 — Operations.** nginx reverse proxy + TLS (replaces IIS bindings);
+`systemd` units for Kestrel and the worker; backups (mysqldump/cron) and log
+rotation; health checks and centralized logging (Phase 4). CI (`dotnet.yml`):
+the web build needs Windows runners until Step 4 lands, after which the whole
+pipeline builds on Linux runners (Phase 0 item 6).
+
+### 7.5 Per-step verification
+
+| Step | Gate |
+|---|---|
+| 1 | `tests/provision-db.sh`; `dotnet test tests/VirtualChief.Tests` (22) and `tests/VirtualChief.DomainTests` (23) green |
+| 2 | Audit baselines still green (`MysqlConcreteTypes_MatchesBaseline` moves down only); all DomainTests green |
+| 3 | DomainTests still compile unmodified `App_Sources` against the shims; no `System.Web` at runtime in domain layer |
+| 4 | Visual-regression diff per converted page; endpoint contract tests (Tier B, §5.3) re-run green; scheduler clients updated in the same commit |
+| 5 | Jobs run on a timer and produce the same e-mails/exports as the old agents (re-run Tier B contract tests) |
+| 6 | `SchemaIntegrityTests` + `QueryCharacterizationTests` green against the Linux MySQL |
+| 7 | `curl` the app through nginx over TLS; journald shows healthy startup; CI builds on Linux runners |
+
+### 7.6 Guardrails
+
+- **Do not** attempt Mono/XSP to run the WebForms app on Linux — the chart
+  controls, AjaxControlToolkit, OWIN/Katana and the WebForms engine make it a dead
+  end. Re-platform, don't emulate.
+- Keep **MySQL 8 and the schema untouched**; only the client data-access layer
+  changes (Dapper/MySqlConnector or Pomelo — no query rewrite).
+- UI and business behavior stay byte-identical; each step is verified by the test
+  net (Steps 1–2) and by visual-regression/contract tests (Steps 4–5).
+- Never rewrite domain logic; the ~98-table schema and all business rules remain
+  as-is (§4 Phase 4 item 4).

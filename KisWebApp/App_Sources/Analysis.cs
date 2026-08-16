@@ -2064,7 +2064,8 @@ namespace KIS.App_Sources
             cmd.CommandText = "SELECT user, data, evento, id, task FROM registroeventitaskproduzione";
             if(!AllEvents)
             {
-                cmd.CommandText += " WHERE data > '" + DateTime.UtcNow.AddMonths(-6).ToString("yyyy-MM-dd") + "'";
+                cmd.CommandText += " WHERE data > @data";
+                cmd.Parameters.AddWithValue("@data", DateTime.UtcNow.AddMonths(-6).ToString("yyyy-MM-dd"));
             }
             cmd.CommandText += " ORDER BY task, user, data";
             rdr = cmd.ExecuteReader();

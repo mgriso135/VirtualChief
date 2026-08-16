@@ -1,25 +1,40 @@
-name: .NET
+name: CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, v2.0 ]
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
-
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 5.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # The characterization suites (tests/VirtualChief.Tests,
+      # tests/VirtualChief.DomainTests) run against a PRIVATE MariaDB on
+      # 127.0.0.1:3307 started by tests/provision-db.sh. Install the server so
+      # the script's binaries (mariadbd, mariadb-install-db, mysqladmin) exist.
+      # This removes the MySQL server that ships with the runner image.
+      - name: Install MariaDB
+        run: |
+          sudo systemctl stop mysql 2>/dev/null || true
+          sudo apt-get update
+          sudo DEBIAN_FRONTEND=noninteractive apt-get install -y mariadb-server mariadb-client
+
+      - name: Provision test database
+        run: tests/provision-db.sh
+
+      - name: Test (characterization + domain)
+        run: |
+          dotnet test tests/VirtualChief.Tests
+          dotnet test tests/VirtualChief.DomainTests

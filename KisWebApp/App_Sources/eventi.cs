@@ -337,8 +337,10 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventorepartogruppi WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND idReparto = " + this.RepartoID.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND idReparto = @idReparto";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -355,8 +357,10 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventorepartoutenti WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND RepartoID = " + this.RepartoID.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND RepartoID = @idReparto";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -375,10 +379,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES('"
-                    + this.TipoEvento.Nome + "', "
-                    + this.RepartoID.ToString() + ", "
-                    + "'" + curr.username + "')";
+                cmd.CommandText = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES(@tipoEvento, @idReparto, @userID)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+                cmd.Parameters.AddWithValue("@userID", curr.username);
                 log = cmd.CommandText;
                 try
                 {
@@ -405,10 +409,10 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES('"
-                    + this.TipoEvento.Nome + "', "
-                    + this.RepartoID.ToString() + ", "
-                    + grp.ID.ToString() + ")";
+                cmd.CommandText = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES(@tipoEvento, @idReparto, @idGruppo)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
                 log = cmd.CommandText;
                 try
                 {
@@ -437,9 +441,12 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventorepartogruppi WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "idReparto = " + this.RepartoID.ToString() + " AND "
-                + "idGruppo = " + grp.ID.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "idReparto = @idReparto AND "
+                + "idGruppo = @idGruppo";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
             log = cmd.CommandText;
             try
             {
@@ -468,9 +475,12 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventorepartoutenti WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "RepartoID = " + this.RepartoID.ToString() + " AND "
-                + "userID LIKE '" + usr.username.ToString() + "'";
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "RepartoID = @idReparto AND "
+                + "userID LIKE @userID";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+            cmd.Parameters.AddWithValue("@userID", usr.username);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -524,8 +534,10 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = " + repID.ToString()
-                + " AND TipoEvento LIKE '" + this.TipoEvento.Nome + "'";
+            cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = @repID"
+                + " AND TipoEvento LIKE @tipoEvento";
+            cmd.Parameters.AddWithValue("@repID", repID);
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(2))
             {
@@ -549,8 +561,10 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventorepartogruppi WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND idReparto = " + this.RepartoID.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND idReparto = @idReparto";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -567,8 +581,10 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventorepartoutenti WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND RepartoID = " + this.RepartoID.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND RepartoID = @idReparto";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -587,10 +603,10 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.RepartoID.ToString() + ", "
-                + "'" + curr.username + "')";
+            cmd.CommandText = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES(@tipoEvento, @idReparto, @userID)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+                cmd.Parameters.AddWithValue("@userID", curr.username);
             log = cmd.CommandText;
             try
             {
@@ -617,10 +633,10 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.RepartoID.ToString() + ", "
-                + grp.ID.ToString() + ")";
+            cmd.CommandText = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES(@tipoEvento, @idReparto, @idGruppo)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
             log = cmd.CommandText;
             try
             {
@@ -649,9 +665,12 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventorepartogruppi WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "idReparto = " + this.RepartoID.ToString() + " AND "
-                + "idGruppo = " + grp.ID.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "idReparto = @idReparto AND "
+                + "idGruppo = @idGruppo";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
             log = cmd.CommandText;
             try
             {
@@ -680,9 +699,12 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventorepartoutenti WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "RepartoID = " + this.RepartoID.ToString() + " AND "
-                + "userID LIKE '" + usr.username.ToString() + "'";
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "RepartoID = @idReparto AND "
+                + "userID LIKE @userID";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
+            cmd.Parameters.AddWithValue("@userID", usr.username);
 
             try
             {
@@ -732,9 +754,12 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventocommessaconfig WHERE "
-                    + " TipoEvento LIKE '" + this.TipoEvento.Nome + "'"
-                    + " AND CommessaID = " + this.CommessaID.ToString()
-                    + " AND CommessaAnno = " + this.CommessaAnno.ToString();
+                    + " TipoEvento LIKE @tipoEvento"
+                    + " AND CommessaID = @commessaID"
+                    + " AND CommessaAnno = @commessaAnno";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -750,19 +775,21 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE eventocommessaconfig set RitardoMinimoDaSegnalare = '" 
-                        + value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString()
-                        + "' WHERE tipoevento LIKE '" + this.TipoEvento.Nome 
-                        + "' AND commessaID = " + this.CommessaID.ToString()
-                        + " AND commessaAnno = " + this.CommessaAnno.ToString();
+                    cmd.CommandText = "UPDATE eventocommessaconfig set RitardoMinimoDaSegnalare = @ritardoMinimo"
+                        + " WHERE tipoevento LIKE @tipoEvento"
+                        + " AND commessaID = @commessaID"
+                        + " AND commessaAnno = @commessaAnno";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO eventocommessaconfig(TipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare) VALUES('"
-                        + this.TipoEvento.Nome + "', "
-                        + this.CommessaID.ToString() + ", " + this.CommessaAnno.ToString() + ", '"
-                            + value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString() + "')";
+                    cmd.CommandText = "INSERT INTO eventocommessaconfig(TipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare) VALUES("
+                        + "@tipoEvento, @commessaID, @commessaAnno, @ritardoMinimo)";
                 }
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
+                cmd.Parameters.AddWithValue("@ritardoMinimo",
+                    value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString());
 
                 try
                 {
@@ -789,8 +816,11 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
-                + comm.ID.ToString() + " AND CommessaAnno = " + comm.Year.ToString()
-                + " AND TipoEvento LIKE '" + this.TipoEvento.Nome + "'";
+                + "@commessaID AND CommessaAnno = @commessaAnno"
+                + " AND TipoEvento LIKE @tipoEvento";
+            cmd.Parameters.AddWithValue("@commessaID", comm.ID);
+            cmd.Parameters.AddWithValue("@commessaAnno", comm.Year);
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(2))
             {
@@ -818,9 +848,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventocommessagruppi WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND CommessaID = " + this.CommessaID.ToString()
-                + " AND CommessaAnno = " + this.CommessaAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND CommessaID = @commessaID"
+                + " AND CommessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -837,9 +870,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventocommessautenti WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND CommessaID = " + this.CommessaID.ToString()
-                + " AND CommessaAnno = " + this.CommessaAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND CommessaID = @commessaID"
+                + " AND CommessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -858,11 +894,11 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES('"
-                    + this.TipoEvento.Nome + "', "
-                    + this.CommessaID.ToString() + ", " 
-                    + this.CommessaAnno.ToString() + ", "
-                    + "'" + curr.username + "')";
+                cmd.CommandText = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES(@tipoEvento, @commessaID, @commessaAnno, @userID)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
+                cmd.Parameters.AddWithValue("@userID", curr.username);
                 log = cmd.CommandText;
                 try
                 {
@@ -889,11 +925,11 @@ namespace KIS.App_Code
                 MySqlTransaction tr = conn.BeginTransaction();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES('"
-                    + this.TipoEvento.Nome + "', "
-                    + this.CommessaID.ToString() + ", "
-                    + this.CommessaAnno.ToString() + ", "
-                    + grp.ID.ToString() + ")";
+                cmd.CommandText = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES(@tipoEvento, @commessaID, @commessaAnno, @idGruppo)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
+                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
                 log = cmd.CommandText;
                 try
                 {
@@ -922,10 +958,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventocommessagruppi WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "commessaID = " + this.CommessaID.ToString() + " AND "
-                + "idGruppo = " + grp.ID.ToString() 
-                + " AND commessaAnno = " + this.CommessaAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "commessaID = @commessaID AND "
+                + "idGruppo = @idGruppo"
+                + " AND commessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             log = cmd.CommandText;
             try
             {
@@ -954,9 +994,13 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventocommessautenti WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "CommessaID = " + this.CommessaID.ToString() + " AND "
-                + "userID LIKE '" + usr.username.ToString() + "' AND CommessaAnno = " + this.CommessaAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "CommessaID = @commessaID AND "
+                + "userID LIKE @userID AND CommessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@userID", usr.username);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -1002,9 +1046,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
-                + cm.ID.ToString()
-                + " AND CommessaAnno = " + cm.Year.ToString()
-                + " AND TipoEvento LIKE '" + this.TipoEvento.Nome + "'";
+                + "@commessaID"
+                + " AND CommessaAnno = @commessaAnno"
+                + " AND TipoEvento LIKE @tipoEvento";
+            cmd.Parameters.AddWithValue("@commessaID", cm.ID);
+            cmd.Parameters.AddWithValue("@commessaAnno", cm.Year);
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(2))
             {
@@ -1030,9 +1077,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventocommessagruppi WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND CommessaID = " + this.CommessaID.ToString()
-                + " AND CommessaAnno = " + this.CommessaAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND CommessaID = @commessaID"
+                + " AND CommessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1049,9 +1099,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventocommessautenti WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND CommessaID = " + this.CommessaID.ToString()
-                + " AND CommessaAnno = " + this.CommessaAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND CommessaID = @commessaID"
+                + " AND CommessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1070,11 +1123,11 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.CommessaID.ToString() + ", "
-                + this.CommessaAnno.ToString() + ", "
-                + "'" + curr.username + "')";
+            cmd.CommandText = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES(@tipoEvento, @commessaID, @commessaAnno, @userID)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
+                cmd.Parameters.AddWithValue("@userID", curr.username);
             log = cmd.CommandText;
             try
             {
@@ -1101,11 +1154,11 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.CommessaID.ToString() + ", "
-                + this.CommessaAnno.ToString() + ", "
-                + grp.ID.ToString() + ")";
+            cmd.CommandText = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES(@tipoEvento, @commessaID, @commessaAnno, @idGruppo)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
+                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
             log = cmd.CommandText;
             try
             {
@@ -1134,10 +1187,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventocommessagruppi WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "commessaID = " + this.CommessaID.ToString() + " AND "
-                + "idGruppo = " + grp.ID.ToString()
-                + " AND commessaAnno = " + this.CommessaAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "commessaID = @commessaID AND "
+                + "idGruppo = @idGruppo"
+                + " AND commessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             log = cmd.CommandText;
             try
             {
@@ -1166,10 +1223,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventocommessautenti WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "CommessaID = " + this.CommessaID.ToString() + " AND "
-                + "userID LIKE '" + usr.username.ToString() + "'"
-                + " AND CommessaAnno = " + this.CommessaAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "CommessaID = @commessaID AND "
+                + "userID LIKE @userID"
+                + " AND CommessaAnno = @commessaAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
+            cmd.Parameters.AddWithValue("@userID", usr.username);
+            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
 
             try
             {
@@ -1219,9 +1280,12 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlCommand cmd = conn.CreateCommand();
                 cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventoarticoloconfig WHERE "
-                    + " TipoEvento LIKE '" + this.TipoEvento.Nome + "'"
-                    + " AND ArticoloID = " + this.ArticoloID.ToString()
-                    + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                    + " TipoEvento LIKE @tipoEvento"
+                    + " AND ArticoloID = @articoloID"
+                    + " AND ArticoloAnno = @articoloAnno";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
                 MySqlDataReader rdr = cmd.ExecuteReader();
                 if (rdr.Read() && !rdr.IsDBNull(0))
                 {
@@ -1237,19 +1301,21 @@ namespace KIS.App_Code
                 cmd.Transaction = tr;
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE eventoarticoloconfig set RitardoMinimoDaSegnalare = '"
-                        + value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString()
-                        + "' WHERE tipoevento LIKE '" + this.TipoEvento.Nome
-                        + "' AND ArticoloID = " + this.ArticoloID.ToString()
-                        + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                    cmd.CommandText = "UPDATE eventoarticoloconfig set RitardoMinimoDaSegnalare = @ritardoMinimo"
+                        + " WHERE tipoevento LIKE @tipoEvento"
+                        + " AND ArticoloID = @articoloID"
+                        + " AND ArticoloAnno = @articoloAnno";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO eventoarticoloconfig(TipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare) VALUES('"
-                        + this.TipoEvento.Nome + "', "
-                        + this.ArticoloID.ToString() + ", " + this.ArticoloAnno.ToString() + ", '"
-                            + value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString() + "')";
+                    cmd.CommandText = "INSERT INTO eventoarticoloconfig(TipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare) VALUES("
+                        + "@tipoEvento, @articoloID, @articoloAnno, @ritardoMinimo)";
                 }
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
+                cmd.Parameters.AddWithValue("@ritardoMinimo",
+                    value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString());
 
                 try
                 {
@@ -1276,8 +1342,11 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
-                + art.ID.ToString() + " AND ArticoloAnno = " + art.Year.ToString()
-                + " AND TipoEvento LIKE '" + this.TipoEvento.Nome + "'";
+                + "@articoloID AND ArticoloAnno = @articoloAnno"
+                + " AND TipoEvento LIKE @tipoEvento";
+            cmd.Parameters.AddWithValue("@articoloID", art.ID);
+            cmd.Parameters.AddWithValue("@articoloAnno", art.Year);
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(2))
             {
@@ -1305,9 +1374,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventoarticologruppi WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND ArticoloID = " + this.ArticoloID.ToString()
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND ArticoloID = @articoloID"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1324,9 +1396,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventoarticoloutenti WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND ArticoloID = " + this.ArticoloID.ToString()
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND ArticoloID = @articoloID"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1345,11 +1420,11 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.ArticoloID.ToString() + ", "
-                + this.ArticoloAnno.ToString() + ", "
-                + "'" + curr.username + "')";
+            cmd.CommandText = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES(@tipoEvento, @articoloID, @articoloAnno, @userID)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
+                cmd.Parameters.AddWithValue("@userID", curr.username);
             log = cmd.CommandText;
             try
             {
@@ -1376,11 +1451,11 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.ArticoloID.ToString() + ", "
-                + this.ArticoloAnno.ToString() + ", "
-                + grp.ID.ToString() + ")";
+            cmd.CommandText = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES(@tipoEvento, @articoloID, @articoloAnno, @idGruppo)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
+                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
             log = cmd.CommandText;
             try
             {
@@ -1409,10 +1484,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventoarticologruppi WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "ArticoloID = " + this.ArticoloID.ToString() + " AND "
-                + "idGruppo = " + grp.ID.ToString()
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "ArticoloID = @articoloID AND "
+                + "idGruppo = @idGruppo"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             log = cmd.CommandText;
             try
             {
@@ -1441,9 +1520,13 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventoarticoloutenti WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "ArticoloID = " + this.ArticoloID.ToString() + " AND "
-                + "userID LIKE '" + usr.username.ToString() + "' AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "ArticoloID = @articoloID AND "
+                + "userID LIKE @userID AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@userID", usr.username);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             try
             {
                 cmd.ExecuteNonQuery();
@@ -1489,9 +1572,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
-                + art.ID.ToString()
-                + " AND ArticoloAnno = " + art.Year.ToString()
-                + " AND TipoEvento LIKE '" + this.TipoEvento.Nome + "'";
+                + "@articoloID"
+                + " AND ArticoloAnno = @articoloAnno"
+                + " AND TipoEvento LIKE @tipoEvento";
+            cmd.Parameters.AddWithValue("@articoloID", art.ID);
+            cmd.Parameters.AddWithValue("@articoloAnno", art.Year);
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
             MySqlDataReader rdr = cmd.ExecuteReader();
             if (rdr.Read() && !rdr.IsDBNull(2))
             {
@@ -1517,9 +1603,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT idGruppo FROM eventoarticologruppi WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND ArticoloID = " + this.ArticoloID.ToString()
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND ArticoloID = @articoloID"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1536,9 +1625,12 @@ namespace KIS.App_Code
             conn.Open();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.CommandText = "SELECT userID FROM eventoarticoloutenti WHERE "
-                + " tipoevento = '" + this.TipoEvento.Nome + "' "
-                + " AND ArticoloID = " + this.ArticoloID.ToString()
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + " tipoevento = @tipoEvento"
+                + " AND ArticoloID = @articoloID"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read())
             {
@@ -1557,11 +1649,11 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.ArticoloID.ToString() + ", "
-                + this.ArticoloAnno.ToString() + ", "
-                + "'" + curr.username + "')";
+            cmd.CommandText = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES(@tipoEvento, @articoloID, @articoloAnno, @userID)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
+                cmd.Parameters.AddWithValue("@userID", curr.username);
             log = cmd.CommandText;
             try
             {
@@ -1588,11 +1680,11 @@ namespace KIS.App_Code
             MySqlTransaction tr = conn.BeginTransaction();
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES('"
-                + this.TipoEvento.Nome + "', "
-                + this.ArticoloID.ToString() + ", "
-                + this.ArticoloAnno.ToString() + ", "
-                + grp.ID.ToString() + ")";
+            cmd.CommandText = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES(@tipoEvento, @articoloID, @articoloAnno, @idGruppo)";
+                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
+                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
             log = cmd.CommandText;
             try
             {
@@ -1621,10 +1713,14 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventoarticologruppi WHERE "
-                + "TipoEvento LIKE '" + this.TipoEvento.Nome + "' AND "
-                + "ArticoloID = " + this.ArticoloID.ToString() + " AND "
-                + "idGruppo = " + grp.ID.ToString()
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + "TipoEvento LIKE @tipoEvento AND "
+                + "ArticoloID = @articoloID AND "
+                + "idGruppo = @idGruppo"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             log = cmd.CommandText;
             try
             {
@@ -1653,9 +1749,12 @@ namespace KIS.App_Code
             MySqlCommand cmd = conn.CreateCommand();
             cmd.Transaction = tr;
             cmd.CommandText = "DELETE FROM eventoarticoloutenti WHERE "
-                + "ArticoloID = " + this.ArticoloID.ToString() + " AND "
-                + "userID LIKE '" + usr.username.ToString() + "'"
-                + " AND ArticoloAnno = " + this.ArticoloAnno.ToString();
+                + "ArticoloID = @articoloID AND "
+                + "userID LIKE @userID"
+                + " AND ArticoloAnno = @articoloAnno";
+            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
+            cmd.Parameters.AddWithValue("@userID", usr.username);
+            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
 
             try
             {
