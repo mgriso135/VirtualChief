@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using KIS.App_Sources;
 using MySql.Data.MySqlClient;
+using Dapper;
 //using KIS.Commesse;
 
 namespace KIS.App_Code
@@ -253,14 +254,11 @@ namespace KIS.App_Code
                 bool found = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventorepartoconfig WHERE "
+                string sqlSel = "SELECT ritardominimodasegnalare FROM eventorepartoconfig WHERE "
                     + " TipoEvento LIKE @pTipoEvento"
                     + " AND Reparto = @pReparto";
-                cmd.Parameters.AddWithValue("@pTipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@pReparto", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                TimeSpan? r = conn.QueryFirstOrDefault<TimeSpan?>(sqlSel, new { pTipoEvento = this.TipoEvento.Nome, pReparto = this.RepartoID });
+                if (r.HasValue)
                 {
                     found = true;
                 }
@@ -268,25 +266,23 @@ namespace KIS.App_Code
                 {
                     found = false;
                 }
-                rdr.Close();
-
 
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.Parameters.AddWithValue("@pRitardo", value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString());
+                string ritardo = value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString();
+                string sql;
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE eventorepartoconfig set RitardoMinimoDaSegnalare = @pRitardo"
+                    sql = "UPDATE eventorepartoconfig set RitardoMinimoDaSegnalare = @pRitardo"
                         + " WHERE tipoevento LIKE @pTipoEvento AND reparto = @pReparto";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO eventorepartoconfig(TipoEvento, Reparto, RitardoMinimoDaSegnalare) VALUES(@pTipoEvento, @pReparto, @pRitardo)";
+                    sql = "INSERT INTO eventorepartoconfig(TipoEvento, Reparto, RitardoMinimoDaSegnalare) VALUES(@pTipoEvento, @pReparto, @pRitardo)";
                 }
 
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { pTipoEvento = this.TipoEvento.Nome, pReparto = this.RepartoID, pRitardo = ritardo }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -307,16 +303,13 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = @pReparto"
+            string sql = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = @pReparto"
                 + " AND TipoEvento LIKE @pTipoEvento";
-            cmd.Parameters.AddWithValue("@pReparto", repID);
-            cmd.Parameters.AddWithValue("@pTipoEvento", this.TipoEvento.Nome);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(2))
+            var rows = conn.Query<(string, int, TimeSpan?)>(sql, new { pReparto = repID, pTipoEvento = this.TipoEvento.Nome }).ToList();
+            if (rows.Count > 0 && rows[0].Item3.HasValue)
             {
-                this._repartoID = rdr.GetInt32(1);
-                this._RitardoMinimoDaSegnalare = rdr.GetTimeSpan(2);
+                this._repartoID = rows[0].Item2;
+                this._RitardoMinimoDaSegnalare = rows[0].Item3.Value;
             }
             else
             {
@@ -326,7 +319,6 @@ namespace KIS.App_Code
 
             this.loadGruppi();
             this.loadUsers();
-            rdr.Close();
             conn.Close();
         }
 
@@ -335,18 +327,14 @@ namespace KIS.App_Code
             this.ListGroupsID = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idGruppo FROM eventorepartogruppi WHERE "
+            string sql = "SELECT idGruppo FROM eventorepartogruppi WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND idReparto = @idReparto";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID });
+            foreach (var r in rows)
             {
-                this.ListGroupsID.Add(rdr.GetInt32(0));
+            this.ListGroupsID.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -355,18 +343,14 @@ namespace KIS.App_Code
             this.ListUsers = new List<String>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID FROM eventorepartoutenti WHERE "
+            string sql = "SELECT userID FROM eventorepartoutenti WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND RepartoID = @idReparto";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<string>(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID });
+            foreach (var r in rows)
             {
-                this.ListUsers.Add(rdr.GetString(0));
+            this.ListUsers.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -377,16 +361,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES(@tipoEvento, @idReparto, @userID)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-                cmd.Parameters.AddWithValue("@userID", curr.username);
-                log = cmd.CommandText;
+                string sql = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES(@tipoEvento, @idReparto, @userID)";
+                log = sql;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, userID = curr.username }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -407,16 +386,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES(@tipoEvento, @idReparto, @idGruppo)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-                log = cmd.CommandText;
+                string sql = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES(@tipoEvento, @idReparto, @idGruppo)";
+                log = sql;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, idGruppo = grp.ID }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -438,19 +412,14 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventorepartogruppi WHERE "
+            string sql = "DELETE FROM eventorepartogruppi WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "idReparto = @idReparto AND "
                 + "idGruppo = @idGruppo";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            log = cmd.CommandText;
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, idGruppo = grp.ID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -472,18 +441,13 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventorepartoutenti WHERE "
+            string sql = "DELETE FROM eventorepartoutenti WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "RepartoID = @idReparto AND "
                 + "userID LIKE @userID";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            cmd.Parameters.AddWithValue("@userID", usr.username);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, userID = usr.username }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -533,15 +497,12 @@ namespace KIS.App_Code
         {
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = @repID"
+            string sql = "SELECT tipoEvento, Reparto, RitardoMinimoDaSegnalare FROM eventorepartoconfig WHERE Reparto = @repID"
                 + " AND TipoEvento LIKE @tipoEvento";
-            cmd.Parameters.AddWithValue("@repID", repID);
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(2))
+            var rows = conn.Query<(string, int, TimeSpan?)>(sql, new { repID = repID, tipoEvento = this.TipoEvento.Nome }).ToList();
+            if (rows.Count > 0 && rows[0].Item3.HasValue)
             {
-                this._repartoID = rdr.GetInt32(1);
+                this._repartoID = rows[0].Item2;
             }
             else
             {
@@ -550,7 +511,6 @@ namespace KIS.App_Code
 
             this.loadGruppi();
             this.loadUsers();
-            rdr.Close();
             conn.Close();
         }
 
@@ -559,18 +519,14 @@ namespace KIS.App_Code
             this.ListGroupsID = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idGruppo FROM eventorepartogruppi WHERE "
+            string sql = "SELECT idGruppo FROM eventorepartogruppi WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND idReparto = @idReparto";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID });
+            foreach (var r in rows)
             {
-                this.ListGroupsID.Add(rdr.GetInt32(0));
+            this.ListGroupsID.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -579,18 +535,14 @@ namespace KIS.App_Code
             this.ListUsers = new List<String>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID FROM eventorepartoutenti WHERE "
+            string sql = "SELECT userID FROM eventorepartoutenti WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND RepartoID = @idReparto";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<string>(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID });
+            foreach (var r in rows)
             {
-                this.ListUsers.Add(rdr.GetString(0));
+            this.ListUsers.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -601,16 +553,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES(@tipoEvento, @idReparto, @userID)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-                cmd.Parameters.AddWithValue("@userID", curr.username);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventorepartoutenti(TipoEvento, repartoID, userID) VALUES(@tipoEvento, @idReparto, @userID)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, userID = curr.username }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -631,16 +578,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES(@tipoEvento, @idReparto, @idGruppo)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventorepartogruppi(TipoEvento, idReparto, idGruppo) VALUES(@tipoEvento, @idReparto, @idGruppo)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, idGruppo = grp.ID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -662,19 +604,14 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventorepartogruppi WHERE "
+            string sql = "DELETE FROM eventorepartogruppi WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "idReparto = @idReparto AND "
                 + "idGruppo = @idGruppo";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            log = cmd.CommandText;
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, idGruppo = grp.ID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -696,19 +633,14 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventorepartoutenti WHERE "
+            string sql = "DELETE FROM eventorepartoutenti WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "RepartoID = @idReparto AND "
                 + "userID LIKE @userID";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@idReparto", this.RepartoID);
-            cmd.Parameters.AddWithValue("@userID", usr.username);
 
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, idReparto = this.RepartoID, userID = usr.username }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -752,16 +684,12 @@ namespace KIS.App_Code
                 bool found = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventocommessaconfig WHERE "
+                string sqlSel = "SELECT ritardominimodasegnalare FROM eventocommessaconfig WHERE "
                     + " TipoEvento LIKE @tipoEvento"
                     + " AND CommessaID = @commessaID"
                     + " AND CommessaAnno = @commessaAnno";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                TimeSpan? r = conn.QueryFirstOrDefault<TimeSpan?>(sqlSel, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno });
+                if (r.HasValue)
                 {
                     found = true;
                 }
@@ -769,31 +697,24 @@ namespace KIS.App_Code
                 {
                     found = false;
                 }
-                rdr.Close();
 
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
+                string sql;
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE eventocommessaconfig set RitardoMinimoDaSegnalare = @ritardoMinimo"
+                    sql = "UPDATE eventocommessaconfig set RitardoMinimoDaSegnalare = @ritardoMinimo"
                         + " WHERE tipoevento LIKE @tipoEvento"
                         + " AND commessaID = @commessaID"
                         + " AND commessaAnno = @commessaAnno";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO eventocommessaconfig(TipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare) VALUES("
+                    sql = "INSERT INTO eventocommessaconfig(TipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare) VALUES("
                         + "@tipoEvento, @commessaID, @commessaAnno, @ritardoMinimo)";
                 }
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-                cmd.Parameters.AddWithValue("@ritardoMinimo",
-                    value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString());
-
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno, ritardoMinimo = value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString() }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -814,19 +735,15 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
+            string sql = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
                 + "@commessaID AND CommessaAnno = @commessaAnno"
                 + " AND TipoEvento LIKE @tipoEvento";
-            cmd.Parameters.AddWithValue("@commessaID", comm.ID);
-            cmd.Parameters.AddWithValue("@commessaAnno", comm.Year);
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(2))
+            var rows = conn.Query<(string, int, int?, TimeSpan?)>(sql, new { commessaID = comm.ID, commessaAnno = comm.Year, tipoEvento = this.TipoEvento.Nome }).ToList();
+            if (rows.Count > 0 && rows[0].Item3.HasValue)
             {
-                this._CommessaID = rdr.GetInt32(1);
-                this._CommessaAnno = rdr.GetInt32(2);
-                this._RitardoMinimoDaSegnalare = rdr.GetTimeSpan(3);
+                this._CommessaID = rows[0].Item2;
+                this._CommessaAnno = rows[0].Item3.Value;
+                this._RitardoMinimoDaSegnalare = rows[0].Item4.Value;
             }
             else
             {
@@ -837,7 +754,6 @@ namespace KIS.App_Code
 
             this.loadGruppi();
             this.loadUsers();
-            rdr.Close();
             conn.Close();
         }
 
@@ -846,20 +762,15 @@ namespace KIS.App_Code
             this.ListGroupsID = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idGruppo FROM eventocommessagruppi WHERE "
+            string sql = "SELECT idGruppo FROM eventocommessagruppi WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND CommessaID = @commessaID"
                 + " AND CommessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno });
+            foreach (var r in rows)
             {
-                this.ListGroupsID.Add(rdr.GetInt32(0));
+            this.ListGroupsID.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -868,20 +779,15 @@ namespace KIS.App_Code
             this.ListUsers = new List<String>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID FROM eventocommessautenti WHERE "
+            string sql = "SELECT userID FROM eventocommessautenti WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND CommessaID = @commessaID"
                 + " AND CommessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<string>(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno });
+            foreach (var r in rows)
             {
-                this.ListUsers.Add(rdr.GetString(0));
+            this.ListUsers.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -892,17 +798,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES(@tipoEvento, @commessaID, @commessaAnno, @userID)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-                cmd.Parameters.AddWithValue("@userID", curr.username);
-                log = cmd.CommandText;
+                string sql = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES(@tipoEvento, @commessaID, @commessaAnno, @userID)";
+                log = sql;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno, userID = curr.username }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -923,17 +823,11 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES(@tipoEvento, @commessaID, @commessaAnno, @idGruppo)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-                log = cmd.CommandText;
+                string sql = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES(@tipoEvento, @commessaID, @commessaAnno, @idGruppo)";
+                log = sql;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno, idGruppo = grp.ID }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -955,21 +849,15 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventocommessagruppi WHERE "
+            string sql = "DELETE FROM eventocommessagruppi WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "commessaID = @commessaID AND "
                 + "idGruppo = @idGruppo"
                 + " AND commessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-            log = cmd.CommandText;
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, idGruppo = grp.ID, commessaAnno = this.CommessaAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -991,19 +879,13 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventocommessautenti WHERE "
+            string sql = "DELETE FROM eventocommessautenti WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "CommessaID = @commessaID AND "
                 + "userID LIKE @userID AND CommessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@userID", usr.username);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, userID = usr.username, commessaAnno = this.CommessaAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1044,19 +926,15 @@ namespace KIS.App_Code
         {
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
+            string sql = "SELECT tipoEvento, CommessaID, CommessaAnno, RitardoMinimoDaSegnalare FROM eventocommessaconfig WHERE CommessaID = "
                 + "@commessaID"
                 + " AND CommessaAnno = @commessaAnno"
                 + " AND TipoEvento LIKE @tipoEvento";
-            cmd.Parameters.AddWithValue("@commessaID", cm.ID);
-            cmd.Parameters.AddWithValue("@commessaAnno", cm.Year);
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(2))
+            var rows = conn.Query<(string, int, int?, TimeSpan?)>(sql, new { commessaID = cm.ID, commessaAnno = cm.Year, tipoEvento = this.TipoEvento.Nome }).ToList();
+            if (rows.Count > 0 && rows[0].Item3.HasValue)
             {
-                this._CommessaID = rdr.GetInt32(1);
-                this._CommessaAnno = rdr.GetInt32(2);
+                this._CommessaID = rows[0].Item2;
+                this._CommessaAnno = rows[0].Item3.Value;
             }
             else
             {
@@ -1066,7 +944,6 @@ namespace KIS.App_Code
 
             this.loadGruppi();
             this.loadUsers();
-            rdr.Close();
             conn.Close();
         }
 
@@ -1075,20 +952,15 @@ namespace KIS.App_Code
             this.ListGroupsID = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idGruppo FROM eventocommessagruppi WHERE "
+            string sql = "SELECT idGruppo FROM eventocommessagruppi WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND CommessaID = @commessaID"
                 + " AND CommessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno });
+            foreach (var r in rows)
             {
-                this.ListGroupsID.Add(rdr.GetInt32(0));
+            this.ListGroupsID.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1097,20 +969,15 @@ namespace KIS.App_Code
             this.ListUsers = new List<String>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID FROM eventocommessautenti WHERE "
+            string sql = "SELECT userID FROM eventocommessautenti WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND CommessaID = @commessaID"
                 + " AND CommessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<string>(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno });
+            foreach (var r in rows)
             {
-                this.ListUsers.Add(rdr.GetString(0));
+            this.ListUsers.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1121,17 +988,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES(@tipoEvento, @commessaID, @commessaAnno, @userID)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-                cmd.Parameters.AddWithValue("@userID", curr.username);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventocommessautenti(TipoEvento, commessaID, commessaAnno, userID) VALUES(@tipoEvento, @commessaID, @commessaAnno, @userID)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno, userID = curr.username }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1152,17 +1013,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES(@tipoEvento, @commessaID, @commessaAnno, @idGruppo)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-                cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventocommessagruppi(TipoEvento, commessaID, commessaAnno, idGruppo) VALUES(@tipoEvento, @commessaID, @commessaAnno, @idGruppo)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, commessaAnno = this.CommessaAnno, idGruppo = grp.ID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1184,21 +1039,15 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventocommessagruppi WHERE "
+            string sql = "DELETE FROM eventocommessagruppi WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "commessaID = @commessaID AND "
                 + "idGruppo = @idGruppo"
                 + " AND commessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
-            log = cmd.CommandText;
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, idGruppo = grp.ID, commessaAnno = this.CommessaAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1220,21 +1069,15 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventocommessautenti WHERE "
+            string sql = "DELETE FROM eventocommessautenti WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "CommessaID = @commessaID AND "
                 + "userID LIKE @userID"
                 + " AND CommessaAnno = @commessaAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@commessaID", this.CommessaID);
-            cmd.Parameters.AddWithValue("@userID", usr.username);
-            cmd.Parameters.AddWithValue("@commessaAnno", this.CommessaAnno);
 
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, commessaID = this.CommessaID, userID = usr.username, commessaAnno = this.CommessaAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1278,16 +1121,12 @@ namespace KIS.App_Code
                 bool found = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ritardominimodasegnalare FROM eventoarticoloconfig WHERE "
+                string sqlSel = "SELECT ritardominimodasegnalare FROM eventoarticoloconfig WHERE "
                     + " TipoEvento LIKE @tipoEvento"
                     + " AND ArticoloID = @articoloID"
                     + " AND ArticoloAnno = @articoloAnno";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                TimeSpan? r = conn.QueryFirstOrDefault<TimeSpan?>(sqlSel, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno });
+                if (r.HasValue)
                 {
                     found = true;
                 }
@@ -1295,31 +1134,24 @@ namespace KIS.App_Code
                 {
                     found = false;
                 }
-                rdr.Close();
 
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
+                string sql;
                 if (found == true)
                 {
-                    cmd.CommandText = "UPDATE eventoarticoloconfig set RitardoMinimoDaSegnalare = @ritardoMinimo"
+                    sql = "UPDATE eventoarticoloconfig set RitardoMinimoDaSegnalare = @ritardoMinimo"
                         + " WHERE tipoevento LIKE @tipoEvento"
                         + " AND ArticoloID = @articoloID"
                         + " AND ArticoloAnno = @articoloAnno";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO eventoarticoloconfig(TipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare) VALUES("
+                    sql = "INSERT INTO eventoarticoloconfig(TipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare) VALUES("
                         + "@tipoEvento, @articoloID, @articoloAnno, @ritardoMinimo)";
                 }
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-                cmd.Parameters.AddWithValue("@ritardoMinimo",
-                    value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString());
-
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno, ritardoMinimo = value.Hours.ToString() + ":" + value.Minutes.ToString() + ":" + value.Seconds.ToString() }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -1340,19 +1172,15 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
+            string sql = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
                 + "@articoloID AND ArticoloAnno = @articoloAnno"
                 + " AND TipoEvento LIKE @tipoEvento";
-            cmd.Parameters.AddWithValue("@articoloID", art.ID);
-            cmd.Parameters.AddWithValue("@articoloAnno", art.Year);
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(2))
+            var rows = conn.Query<(string, int, int?, TimeSpan?)>(sql, new { articoloID = art.ID, articoloAnno = art.Year, tipoEvento = this.TipoEvento.Nome }).ToList();
+            if (rows.Count > 0 && rows[0].Item3.HasValue)
             {
-                this._ArticoloID = rdr.GetInt32(1);
-                this._ArticoloAnno = rdr.GetInt32(2);
-                this._RitardoMinimoDaSegnalare = rdr.GetTimeSpan(3);
+                this._ArticoloID = rows[0].Item2;
+                this._ArticoloAnno = rows[0].Item3.Value;
+                this._RitardoMinimoDaSegnalare = rows[0].Item4.Value;
             }
             else
             {
@@ -1363,7 +1191,6 @@ namespace KIS.App_Code
 
             this.loadGruppi();
             this.loadUsers();
-            rdr.Close();
             conn.Close();
         }
 
@@ -1372,20 +1199,15 @@ namespace KIS.App_Code
             this.ListGroupsID = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idGruppo FROM eventoarticologruppi WHERE "
+            string sql = "SELECT idGruppo FROM eventoarticologruppi WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND ArticoloID = @articoloID"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno });
+            foreach (var r in rows)
             {
-                this.ListGroupsID.Add(rdr.GetInt32(0));
+            this.ListGroupsID.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1394,20 +1216,15 @@ namespace KIS.App_Code
             this.ListUsers = new List<String>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID FROM eventoarticoloutenti WHERE "
+            string sql = "SELECT userID FROM eventoarticoloutenti WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND ArticoloID = @articoloID"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<string>(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno });
+            foreach (var r in rows)
             {
-                this.ListUsers.Add(rdr.GetString(0));
+            this.ListUsers.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1418,17 +1235,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES(@tipoEvento, @articoloID, @articoloAnno, @userID)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-                cmd.Parameters.AddWithValue("@userID", curr.username);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES(@tipoEvento, @articoloID, @articoloAnno, @userID)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno, userID = curr.username }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1449,17 +1260,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES(@tipoEvento, @articoloID, @articoloAnno, @idGruppo)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES(@tipoEvento, @articoloID, @articoloAnno, @idGruppo)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno, idGruppo = grp.ID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1481,21 +1286,15 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventoarticologruppi WHERE "
+            string sql = "DELETE FROM eventoarticologruppi WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "ArticoloID = @articoloID AND "
                 + "idGruppo = @idGruppo"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-            log = cmd.CommandText;
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, idGruppo = grp.ID, articoloAnno = this.ArticoloAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1517,19 +1316,13 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventoarticoloutenti WHERE "
+            string sql = "DELETE FROM eventoarticoloutenti WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "ArticoloID = @articoloID AND "
                 + "userID LIKE @userID AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@userID", usr.username);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, userID = usr.username, articoloAnno = this.ArticoloAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1570,19 +1363,15 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
+            string sql = "SELECT tipoEvento, ArticoloID, ArticoloAnno, RitardoMinimoDaSegnalare FROM eventoarticoloconfig WHERE ArticoloID = "
                 + "@articoloID"
                 + " AND ArticoloAnno = @articoloAnno"
                 + " AND TipoEvento LIKE @tipoEvento";
-            cmd.Parameters.AddWithValue("@articoloID", art.ID);
-            cmd.Parameters.AddWithValue("@articoloAnno", art.Year);
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(2))
+            var rows = conn.Query<(string, int, int?, TimeSpan?)>(sql, new { articoloID = art.ID, articoloAnno = art.Year, tipoEvento = this.TipoEvento.Nome }).ToList();
+            if (rows.Count > 0 && rows[0].Item3.HasValue)
             {
-                this._ArticoloID = rdr.GetInt32(1);
-                this._ArticoloAnno = rdr.GetInt32(2);
+                this._ArticoloID = rows[0].Item2;
+                this._ArticoloAnno = rows[0].Item3.Value;
             }
             else
             {
@@ -1592,7 +1381,6 @@ namespace KIS.App_Code
 
             this.loadGruppi();
             this.loadUsers();
-            rdr.Close();
             conn.Close();
         }
 
@@ -1601,20 +1389,15 @@ namespace KIS.App_Code
             this.ListGroupsID = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idGruppo FROM eventoarticologruppi WHERE "
+            string sql = "SELECT idGruppo FROM eventoarticologruppi WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND ArticoloID = @articoloID"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno });
+            foreach (var r in rows)
             {
-                this.ListGroupsID.Add(rdr.GetInt32(0));
+            this.ListGroupsID.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1623,20 +1406,15 @@ namespace KIS.App_Code
             this.ListUsers = new List<String>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID FROM eventoarticoloutenti WHERE "
+            string sql = "SELECT userID FROM eventoarticoloutenti WHERE "
                 + " tipoevento = @tipoEvento"
                 + " AND ArticoloID = @articoloID"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<string>(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno });
+            foreach (var r in rows)
             {
-                this.ListUsers.Add(rdr.GetString(0));
+            this.ListUsers.Add(r);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1647,17 +1425,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES(@tipoEvento, @articoloID, @articoloAnno, @userID)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-                cmd.Parameters.AddWithValue("@userID", curr.username);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventoarticoloutenti(TipoEvento, ArticoloID, ArticoloAnno, userID) VALUES(@tipoEvento, @articoloID, @articoloAnno, @userID)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno, userID = curr.username }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1678,17 +1450,11 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES(@tipoEvento, @articoloID, @articoloAnno, @idGruppo)";
-                cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-                cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-                cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-                cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            log = cmd.CommandText;
+            string sql = "INSERT INTO eventoarticologruppi(TipoEvento, ArticoloID, ArticoloAnno, idGruppo) VALUES(@tipoEvento, @articoloID, @articoloAnno, @idGruppo)";
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno, idGruppo = grp.ID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1710,21 +1476,15 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventoarticologruppi WHERE "
+            string sql = "DELETE FROM eventoarticologruppi WHERE "
                 + "TipoEvento LIKE @tipoEvento AND "
                 + "ArticoloID = @articoloID AND "
                 + "idGruppo = @idGruppo"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@tipoEvento", this.TipoEvento.Nome);
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@idGruppo", grp.ID);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
-            log = cmd.CommandText;
+            log = sql;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { tipoEvento = this.TipoEvento.Nome, articoloID = this.ArticoloID, idGruppo = grp.ID, articoloAnno = this.ArticoloAnno }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -1746,19 +1506,14 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM eventoarticoloutenti WHERE "
+            string sql = "DELETE FROM eventoarticoloutenti WHERE "
                 + "ArticoloID = @articoloID AND "
                 + "userID LIKE @userID"
                 + " AND ArticoloAnno = @articoloAnno";
-            cmd.Parameters.AddWithValue("@articoloID", this.ArticoloID);
-            cmd.Parameters.AddWithValue("@userID", usr.username);
-            cmd.Parameters.AddWithValue("@articoloAnno", this.ArticoloAnno);
 
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { articoloID = this.ArticoloID, userID = usr.username, articoloAnno = this.ArticoloAnno }, tr);
                 tr.Commit();
                 rt = true;
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
+using Dapper;
 
 namespace KIS.App_Sources
 {
@@ -28,14 +29,11 @@ namespace KIS.App_Sources
             this._List = new List<Part>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM parts ORDER BY partnumber";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+            var rows = conn.Query<int>("SELECT id FROM parts ORDER BY partnumber");
+            foreach (var id in rows)
             {
-                this._List.Add(new Part(this.Tenant, rdr.GetInt32(0)));
+                this._List.Add(new Part(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -44,15 +42,11 @@ namespace KIS.App_Sources
             this._List = new List<Part>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM parts WHERE enabled=@enabled ORDER BY partnumber";
-            cmd.Parameters.AddWithValue("@enabled", actives);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>("SELECT id FROM parts WHERE enabled=@enabled ORDER BY partnumber", new { enabled = actives });
+            foreach (var id in rows)
             {
-                this._List.Add(new Part(this.Tenant, rdr.GetInt32(0)));
+                this._List.Add(new Part(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -72,29 +66,13 @@ namespace KIS.App_Sources
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO parts(partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled) "
+                    string sql = "INSERT INTO parts(partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled) "
                         + " VALUES(@partnumber, @name, @description, @creationdate, @createdby, @lastmodifieddate, @lastmodifiedby, @enabled)";
-                    cmd.Parameters.AddWithValue("@partnumber", partnumber);
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@description", description);
-                    cmd.Parameters.AddWithValue("@creationdate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@createdby", createdby);
-                    cmd.Parameters.AddWithValue("@lastmodifieddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@lastmodifiedby", createdby);
-                    cmd.Parameters.AddWithValue("@enabled", enabled);
 
                     try
                     {
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                        MySqlDataReader rdr = cmd.ExecuteReader();
-                        if(rdr.Read())
-                        {
-                            ret = rdr.GetInt32(0);
-                        }
-                        rdr.Close();
+                        conn.Execute(sql, new { partnumber = partnumber, name = name, description = description, creationdate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), createdby = createdby, lastmodifieddate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), lastmodifiedby = createdby, enabled = enabled }, tr);
+                        ret = conn.QueryFirstOrDefault<int?>("SELECT LAST_INSERT_ID()", transaction: tr) ?? 0;
                         tr.Commit();
                     }
                     catch(Exception ex)
@@ -125,6 +103,19 @@ namespace KIS.App_Sources
 
         public String log;
 
+        private class PartRow
+        {
+            public int ID { get; set; }
+            public String PartNumber { get; set; }
+            public String Name { get; set; }
+            public String Description { get; set; }
+            public DateTime CreationDate { get; set; }
+            public String CreatedBy { get; set; }
+            public DateTime? LastModifiedDate { get; set; }
+            public String LastModifiedBy { get; set; }
+            public Boolean Enabled { get; set; }
+        }
+
         private int _ID;
         public int ID { get { return this._ID; } }
 
@@ -139,15 +130,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
+                    string sql = "UPDATE parts SET name=@value WHERE ID=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-
-                        cmd.CommandText = "UPDATE parts SET name=@value WHERE ID=@id";
-                        cmd.Parameters.AddWithValue("@value", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { value = value, id = this.ID }, tr);
                         tr.Commit();
                         this._Name = value;
                     }
@@ -169,15 +156,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
+                    string sql = "UPDATE parts SET description=@value WHERE ID=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-
-                        cmd.CommandText = "UPDATE parts SET description=@value WHERE ID=@id";
-                        cmd.Parameters.AddWithValue("@value", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { value = value, id = this.ID }, tr);
                         tr.Commit();
                         this._Description = value;
                     }
@@ -211,15 +194,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
+                    string sql = "UPDATE parts SET enabled=@value WHERE ID=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-
-                        cmd.CommandText = "UPDATE parts SET enabled=@value WHERE ID=@id";
-                        cmd.Parameters.AddWithValue("@value", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { value = value, id = this.ID }, tr);
                         tr.Commit();
                         this._Enabled = value;
                     }
@@ -251,24 +230,20 @@ namespace KIS.App_Sources
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled "
-                + " FROM parts WHERE id=@id";
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+            var row = conn.QueryFirstOrDefault<PartRow>("SELECT id, partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled "
+                + " FROM parts WHERE id=@id", new { id = id });
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._PartNumber = rdr.GetString(1);
-                this._Name = rdr.GetString(2);
-                this._Description = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                this._CreationDate = rdr.GetDateTime(4);
-                this._CreatedBy = rdr.GetString(5);
-                this._LastModifiedDate = rdr.IsDBNull(6) ? new DateTime(1970,1,1) : rdr.GetDateTime(6);
-                this._LastModifiedBy = rdr.IsDBNull(7) ? "" : rdr.GetString(7);
-                this._Enabled = rdr.GetBoolean(8);
+                this._ID = row.ID;
+                this._PartNumber = row.PartNumber;
+                this._Name = row.Name;
+                this._Description = row.Description ?? "";
+                this._CreationDate = row.CreationDate;
+                this._CreatedBy = row.CreatedBy;
+                this._LastModifiedDate = row.LastModifiedDate.HasValue ? row.LastModifiedDate.Value : new DateTime(1970, 1, 1);
+                this._LastModifiedBy = row.LastModifiedBy ?? "";
+                this._Enabled = row.Enabled;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -289,24 +264,20 @@ namespace KIS.App_Sources
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled "
-                + " FROM parts WHERE partnumber=@id";
-            cmd.Parameters.AddWithValue("@id", partnumber);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var row = conn.QueryFirstOrDefault<PartRow>("SELECT id, partnumber, name, description, creationdate, createdby, lastmodifieddate, lastmodifiedby, enabled "
+                + " FROM parts WHERE partnumber=@id", new { id = partnumber });
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._PartNumber = rdr.GetString(1);
-                this._Name = rdr.GetString(2);
-                this._Description = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                this._CreationDate = rdr.GetDateTime(4);
-                this._CreatedBy = rdr.GetString(5);
-                this._LastModifiedDate = rdr.IsDBNull(6) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(6);
-                this._LastModifiedBy = rdr.IsDBNull(7) ? "" : rdr.GetString(7);
-                this._Enabled = rdr.GetBoolean(8);
+                this._ID = row.ID;
+                this._PartNumber = row.PartNumber;
+                this._Name = row.Name;
+                this._Description = row.Description ?? "";
+                this._CreationDate = row.CreationDate;
+                this._CreatedBy = row.CreatedBy;
+                this._LastModifiedDate = row.LastModifiedDate.HasValue ? row.LastModifiedDate.Value : new DateTime(1970, 1, 1);
+                this._LastModifiedBy = row.LastModifiedBy ?? "";
+                this._Enabled = row.Enabled;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -317,15 +288,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT supplierid FROM parts_suppliers WHERE parts_suppliers.partid=@partid";
-                cmd.Parameters.AddWithValue("@partid", this.ID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<String>("SELECT supplierid FROM parts_suppliers WHERE parts_suppliers.partid=@partid", new { partid = this.ID });
+                foreach (var supplierId in rows)
                 {
-                    this.Suppliers.Add(new PartSupplier(this.Tenant, this.ID, rdr.GetString(0)));
+                    this.Suppliers.Add(new PartSupplier(this.Tenant, this.ID, supplierId));
                 }
-                rdr.Read();
                 conn.Close();
             }
         }
@@ -334,6 +301,15 @@ namespace KIS.App_Sources
     public class PartSupplier
     {
         private String Tenant;
+
+        private class PartSupplierRow
+        {
+            public int partid { get; set; }
+            public String supplierid { get; set; }
+            public DateTime creationdate { get; set; }
+            public Boolean enabled { get; set; }
+            public String ragsociale { get; set; }
+        }
 
         private int _PartId;
         public int PartId { get { return this._PartId; } }
@@ -362,22 +338,17 @@ namespace KIS.App_Sources
                 this.Tenant = tenant;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT partid, supplierid, creationdate, enabled, anagraficaclienti.ragsociale FROM parts_suppliers INNER JOIN anagraficaclienti "
+                var row = conn.QueryFirstOrDefault<PartSupplierRow>("SELECT partid, supplierid, creationdate, enabled, anagraficaclienti.ragsociale FROM parts_suppliers INNER JOIN anagraficaclienti "
                     + " ON (parts_suppliers.supplierid = anagraficaclienti.codice) WHERE anagraficaclienti.provider = true "
-                    + " AND parts_suppliers.partid=@partid AND parts_suppliers.supplierid=@supplierid";
-                cmd.Parameters.AddWithValue("@partid", partId);
-                cmd.Parameters.AddWithValue("@supplierid", supplierId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                    + " AND parts_suppliers.partid=@partid AND parts_suppliers.supplierid=@supplierid", new { partid = partId, supplierid = supplierId });
+                if (row != null)
                 {
-                    this._PartId = rdr.GetInt32(0);
-                    this._SupplierId = rdr.GetString(1);
-                    this._CreationDate = rdr.GetDateTime(2);
-                    this._Enabled = rdr.GetBoolean(3);
-                    this._BusinessName = rdr.GetString(4);
+                    this._PartId = row.partid;
+                    this._SupplierId = row.supplierid;
+                    this._CreationDate = row.creationdate;
+                    this._Enabled = row.enabled;
+                    this._BusinessName = row.ragsociale;
                 }
-                rdr.Read();
                 conn.Close();
             }
         }

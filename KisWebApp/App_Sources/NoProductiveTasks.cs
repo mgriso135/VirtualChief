@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
+using Dapper;
 
 namespace KIS.App_Sources
 {
@@ -20,14 +21,11 @@ namespace KIS.App_Sources
             this.TaskList = new List<NoProductiveTask>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM noproductivetasks WHERE enabled=true ORDER BY isdefault DESC, name";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+            var rows = conn.Query<int>("SELECT id FROM noproductivetasks WHERE enabled=true ORDER BY isdefault DESC, name");
+            foreach (var id in rows)
             {
-                this.TaskList.Add(new NoProductiveTask(this.Tenant, rdr.GetInt32(0)));
+                this.TaskList.Add(new NoProductiveTask(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -50,25 +48,13 @@ namespace KIS.App_Sources
 
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO noproductivetasks(name, description, enabled, creationdate) VALUES(@name, @description, @enabled, @creationdate)";
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@description", description);
-                cmd.Parameters.AddWithValue("@enabled", true);
-                cmd.Parameters.AddWithValue("@creationdate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                string sql = "INSERT INTO noproductivetasks(name, description, enabled, creationdate) VALUES(@name, @description, @enabled, @creationdate)";
 
                 try
                 {
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if(rdr.Read())
-                    {
-                        ret = rdr.GetInt32(0); 
-                    }
-                    rdr.Close();
+                    conn.Execute(sql, new { name = name, description = description, enabled = true, creationdate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") }, tr);
+                    ret = conn.QueryFirstOrDefault<int?>("SELECT LAST_INSERT_ID()", transaction: tr) ?? 0;
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -91,14 +77,11 @@ namespace KIS.App_Sources
             this.TaskList = new List<NoProductiveTask>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM noproductivetasks WHERE enabled=false ORDER BY isdeault DESC, name";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>("SELECT id FROM noproductivetasks WHERE enabled=false ORDER BY isdeault DESC, name");
+            foreach (var id in rows)
             {
-                this.TaskList.Add(new NoProductiveTask(this.Tenant, rdr.GetInt32(0)));
+                this.TaskList.Add(new NoProductiveTask(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -107,14 +90,11 @@ namespace KIS.App_Sources
             this.TaskList = new List<NoProductiveTask>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM noproductivetasks ORDER BY isdefault DESC, name";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>("SELECT id FROM noproductivetasks ORDER BY isdefault DESC, name");
+            foreach (var id in rows)
             {
-                this.TaskList.Add(new NoProductiveTask(this.Tenant, rdr.GetInt32(0)));
+                this.TaskList.Add(new NoProductiveTask(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -131,6 +111,16 @@ namespace KIS.App_Sources
         private Boolean _Enabled;
         private DateTime _CreationDate;
         private Boolean _IsDefault;
+
+        private class NoProductiveTaskRow
+        {
+            public int ID { get; set; }
+            public String Name { get; set; }
+            public String Description { get; set; }
+            public Boolean Enabled { get; set; }
+            public DateTime CreationDate { get; set; }
+            public Boolean IsDefault { get; set; }
+        }
 
         public int ID
         {
@@ -152,15 +142,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE noproductivetasks SET name=@name WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@name", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
+                    string sql = "UPDATE noproductivetasks SET name=@name WHERE id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { name = value, id = this.ID }, tr);
                         tr.Commit();
                         this._Name = value;
                     }
@@ -185,15 +171,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE noproductivetasks SET description=@description WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@description", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
+                    string sql = "UPDATE noproductivetasks SET description=@description WHERE id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { description = value, id = this.ID }, tr);
                         tr.Commit();
                         this._Description = value;
                     }
@@ -218,15 +200,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE noproductivetasks SET enabled=@enabled WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@enabled", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
+                    string sql = "UPDATE noproductivetasks SET enabled=@enabled WHERE id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { enabled = value, id = this.ID }, tr);
                         tr.Commit();
                         this._Enabled = value;
 
@@ -261,18 +239,13 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
+                    string sqlF = "UPDATE noproductivetasks SET isdefault=@isdefaultF";
+                    string sqlT = "UPDATE noproductivetasks SET isdefault=@isdefaultT WHERE id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.CommandText = "UPDATE noproductivetasks SET isdefault=@isdefaultF";
-                        cmd.Parameters.AddWithValue("@isdefaultF", false);
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = "UPDATE noproductivetasks SET isdefault=@isdefaultT WHERE id=@id";
-                        cmd.Parameters.AddWithValue("@isdefaultT", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sqlF, new { isdefaultF = false }, tr);
+                        conn.Execute(sqlT, new { isdefaultT = value, id = this.ID }, tr);
                         tr.Commit();
                         this._IsDefault = value;
                     }
@@ -296,20 +269,16 @@ namespace KIS.App_Sources
             this._IsDefault = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, name, description, enabled, creationdate, isdefault FROM noproductivetasks WHERE id=@id";
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read())
+            var row = conn.QueryFirstOrDefault<NoProductiveTaskRow>("SELECT id, name, description, enabled, creationdate, isdefault FROM noproductivetasks WHERE id=@id", new { id = id });
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._Name = rdr.GetString(1);
-                this._Description = rdr.GetString(2);
-                this._Enabled = rdr.GetBoolean(3);
-                this._CreationDate = rdr.GetDateTime(4);
-                this._IsDefault = rdr.GetBoolean(5);
+                this._ID = row.ID;
+                this._Name = row.Name;
+                this._Description = row.Description;
+                this._Enabled = row.Enabled;
+                this._CreationDate = row.CreationDate;
+                this._IsDefault = row.IsDefault;
             }
-            rdr.Close();
             conn.Close();
         }
 

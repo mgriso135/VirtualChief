@@ -6,6 +6,7 @@ using System;
 using System.Globalization;
 using System.Security.Claims;
 using System.Web;
+using Dapper;
 
 /// <summary>
 /// Descrizione di riepilogo per Class1
@@ -131,18 +132,11 @@ namespace Dati
             MySqlConnection conn = (new Dati()).VCMainConn();
             conn.Open();
             Boolean ret = false;
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO userslog(time, user, type, detail, querystring, ip) VALUES(@time, "
+            string sql = "INSERT INTO userslog(time, user, type, detail, querystring, ip) VALUES(@time, "
                 +"@usr, @type, @detail, @querystring, @ip)";
-            cmd.Parameters.AddWithValue("@time", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-            cmd.Parameters.AddWithValue("@usr", user);
-            cmd.Parameters.AddWithValue("@type", type);
-            cmd.Parameters.AddWithValue("@detail", detail);
-            cmd.Parameters.AddWithValue("@querystring", querystring);
-            cmd.Parameters.AddWithValue("@ip", ipAddr);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { time = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"), usr = user, type = type, detail = detail, querystring = querystring, ip = ipAddr });
                 ret = true;
             }
             catch { }
@@ -155,25 +149,13 @@ namespace Dati
             MySqlConnection conn = (new Dati()).mycon(Tenant);
             conn.Open();
             Boolean ret = false;
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "INSERT INTO syslog(date, user, module, itemtype, parameter, itemid, oldvalue, newvalue, notes) VALUES(@datetime, "
+            string sql = "INSERT INTO syslog(date, user, module, itemtype, parameter, itemid, oldvalue, newvalue, notes) VALUES(@datetime, "
                 + "@user, @module, @itemtype, @parameter, @itemid, @oldvalue, @newvalue, @notes)";
 
-            cmd.Parameters.AddWithValue("@datetime", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-            cmd.Parameters.AddWithValue("@user", user);
-            cmd.Parameters.AddWithValue("@module", module);
-            cmd.Parameters.AddWithValue("@itemtype", itemtype);
-            cmd.Parameters.AddWithValue("@parameter", parameter);
-            cmd.Parameters.AddWithValue("@itemid", itemid);
-            cmd.Parameters.AddWithValue("@oldvalue", oldvalue);
-            cmd.Parameters.AddWithValue("@newvalue", newvalue);
-            cmd.Parameters.AddWithValue("@notes", notes);
-
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { datetime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"), user = user, module = module, itemtype = itemtype, parameter = parameter, itemid = itemid, oldvalue = oldvalue, newvalue = newvalue, notes = notes }, tr);
                 tr.Commit();
                 ret = true;
             }

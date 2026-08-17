@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using MySql.Data.MySqlClient;
+using Dapper;
 using KIS.App_Code;
 using KIS.App_Sources;
 
@@ -45,15 +46,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements SET name=@name WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@name", value);
-                    cmd.Parameters.AddWithValue("@id", this.id);
+                    string sql = "UPDATE freemeasurements SET name=@name WHERE id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { name = value, id = this.id }, tr);
                         tr.Commit();
                         this._Name = value;
                     }
@@ -75,15 +72,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements SET description=@name description id=@id";
-                    cmd.Parameters.AddWithValue("@description", value);
-                    cmd.Parameters.AddWithValue("@id", this.id);
+                    string sql = "UPDATE freemeasurements SET description=@name description id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { description = value, id = this.id }, tr);
                         tr.Commit();
                         this._Name = value;
                     }
@@ -122,15 +115,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements SET status=@status WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@status", value);
-                    cmd.Parameters.AddWithValue("@id", this.id);
+                    string sql = "UPDATE freemeasurements SET status=@status WHERE id=@id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { status = value.ToString(), id = this.id }, tr);
                         tr.Commit();
                         this._Status = value;
                     }
@@ -179,8 +168,7 @@ namespace KIS.App_Sources
             this.Tasks = new List<FreeMeasurement_Task>();
             MySqlConnection conn = (new Dati.Dati()).mycon(Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT "
+            string sql = "SELECT "
                          + " freemeasurements.id,  "
                          + " freemeasurements.creationdate, "
                          + " freemeasurements.createdby, "
@@ -219,38 +207,37 @@ namespace KIS.App_Sources
                          + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
                          + " WHERE freemeasurements.id = @id";
 
-            cmd.Parameters.AddWithValue("@id", id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read())
+            var rows = conn.Query<(int id, DateTime creationdate, String createdby, DateTime plannedstartdate, DateTime plannedenddate, int? departmentid, String nome, String timezone, String fname, String fdesc, int? processid, int? processrev, int? variantid, String vname, String vdesc, String nomevariante, String status, String serialnumber, double quantity, int measurementunit, String unittype, DateTime? realenddate, double? realworkingtime_hours, double? realleadtime_hours, Boolean AllowCustomTasks, Boolean ExecuteFinishedTasks)>(sql, new { id = id }).ToList();
+            if (rows.Count > 0)
             {
-                this._id = rdr.GetInt32(0);
-                this._CreationDate = rdr.GetDateTime(1);
-                this._CreatedBy = rdr.GetString(2);
-                this._PlannedStartDate = rdr.GetDateTime(3);
-                this._PlannedEndDate = rdr.GetDateTime(4);
-                this._DepartmentId = rdr.IsDBNull(5) ? -1 : rdr.GetInt32(5);
-                this._DepartmentName = rdr.IsDBNull(6)? "" : rdr.GetString(6);
-                this._DepartmentTimeZone = rdr.IsDBNull(7) ? "" : rdr.GetString(7);
-                this._Name = rdr.IsDBNull(8) ? "" : rdr.GetString(8);
-                this._Description = rdr.IsDBNull(9) ? "" : rdr.GetString(9);
-                this._ProcessId = rdr.IsDBNull(10) ? -1 : rdr.GetInt32(10);
-                this._ProcessRev = rdr.IsDBNull(11) ? -1 : rdr.GetInt32(11);
-                this._VariantId = rdr.IsDBNull(12) ? -1 : rdr.GetInt32(12);
-                this._ProcessName = rdr.IsDBNull(13) ? "" : rdr.GetString(13);
-                this._ProcessDescription = rdr.IsDBNull(14) ? "" : rdr.GetString(14);
-                this._VariantName = rdr.IsDBNull(15) ? "" : rdr.GetString(15);
-                this._Status = rdr.IsDBNull(16) ? '\0' : rdr.GetChar(16);
-                this._SerialNumber = rdr.IsDBNull(17) ? "" : rdr.GetString(17);
-                this._Quantity = rdr.GetDouble(18);
-                this._MeasurementUnitId = rdr.GetInt32(19);
-                this._MeasurementUnitType = rdr.GetString(20);
-                this._RealEndDate = rdr.IsDBNull(21) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(21);
-                this._RealWorkingTime_Hours = rdr.IsDBNull(22) ? 0 : rdr.GetDouble(22);
-                this._RealLeadTime_Hours = rdr.IsDBNull(23) ? 0 : rdr.GetDouble(23);
-                this._AllowCustomTasks = rdr.GetBoolean(24);
-                this._AllowExecuteFinishedTasks = rdr.GetBoolean(25);
+                var row = rows[0];
+                this._id = row.id;
+                this._CreationDate = row.creationdate;
+                this._CreatedBy = row.createdby;
+                this._PlannedStartDate = row.plannedstartdate;
+                this._PlannedEndDate = row.plannedenddate;
+                this._DepartmentId = row.departmentid.HasValue ? row.departmentid.Value : -1;
+                this._DepartmentName = row.nome != null ? row.nome : "";
+                this._DepartmentTimeZone = row.timezone != null ? row.timezone : "";
+                this._Name = row.fname != null ? row.fname : "";
+                this._Description = row.fdesc != null ? row.fdesc : "";
+                this._ProcessId = row.processid.HasValue ? row.processid.Value : -1;
+                this._ProcessRev = row.processrev.HasValue ? row.processrev.Value : -1;
+                this._VariantId = row.variantid.HasValue ? row.variantid.Value : -1;
+                this._ProcessName = row.vname != null ? row.vname : "";
+                this._ProcessDescription = row.vdesc != null ? row.vdesc : "";
+                this._VariantName = row.nomevariante != null ? row.nomevariante : "";
+                this._Status = row.status != null ? row.status[0] : '\0';
+                this._SerialNumber = row.serialnumber != null ? row.serialnumber : "";
+                this._Quantity = row.quantity;
+                this._MeasurementUnitId = row.measurementunit;
+                this._MeasurementUnitType = row.unittype;
+                this._RealEndDate = row.realenddate.HasValue ? row.realenddate.Value : new DateTime(1970, 1, 1);
+                this._RealWorkingTime_Hours = row.realworkingtime_hours.HasValue ? row.realworkingtime_hours.Value : 0;
+                this._RealLeadTime_Hours = row.realleadtime_hours.HasValue ? row.realleadtime_hours.Value : 0;
+                this._AllowCustomTasks = row.AllowCustomTasks;
+                this._AllowExecuteFinishedTasks = row.ExecuteFinishedTasks;
             }
-            rdr.Close();
             conn.Close();
            
         }
@@ -262,19 +249,16 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT freemeasurements_tasks.MeasurementId, freemeasurements_tasks.TaskId FROM freemeasurements_tasks "
+                string sql = "SELECT freemeasurements_tasks.MeasurementId, freemeasurements_tasks.TaskId FROM freemeasurements_tasks "
                     + " INNER JOIN freemeasurements ON (freemeasurements.id = freemeasurements_tasks.MeasurementId)"
                     + " WHERE freemeasurements_tasks.MeasurementId=@measurementid"
                     + " ORDER BY sequence";
-                cmd.Parameters.AddWithValue("@measurementid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<(int MeasurementId, int TaskId)>(sql, new { measurementid = this.id });
+                foreach (var r in rows)
                 {
-                    FreeMeasurement_Task curr = new FreeMeasurement_Task(this.Tenant, this.id, rdr.GetInt32(1));
+                    FreeMeasurement_Task curr = new FreeMeasurement_Task(this.Tenant, this.id, r.TaskId);
                     this.Tasks.Add(curr);
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -312,38 +296,16 @@ namespace KIS.App_Sources
 
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmdTasks = conn.CreateCommand();
-                    /*cmdTasks.CommandText = "SELECT MAX(TaskId) FROM freemeasurements_tasks WHERE measurementid=@measurementid";
-                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
-                    MySqlDataReader rdr = cmdTasks.ExecuteReader();
-                    int tID = 0;
-                    if(rdr.Read())
-                    {
-                        tID = rdr.GetInt32(0) + 1;
-                    }*/
+                    /*SELECT MAX(TaskId) FROM freemeasurements_tasks WHERE measurementid=@measurementid;*/
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmdTasks.Transaction = tr;
-                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                    string sql = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
                         + " description, sequence, workstationid, quantity_planned, status) "
                         + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
                         + " @description, @sequence, @workstationid, @quantity_planned, @status)";
 
-                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
-                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
-                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
-                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
-                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
-                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", npTask.ID);
-                    cmdTasks.Parameters.AddWithValue("@name", npTask.Name);
-                    cmdTasks.Parameters.AddWithValue("@description", npTask.Description);
-                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
-                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
-                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
-                    cmdTasks.Parameters.AddWithValue("@status", 'N');
-
                     try
                     {
-                        cmdTasks.ExecuteNonQuery();
+                        conn.Execute(sql, new { measurementid = this.id, taskid = tID, OrigTaskId = (int?)null, OrigTaskRev = (int?)null, VariantId = (int?)null, NoProductiveTaskId = npTask.ID, name = npTask.Name, description = npTask.Description, sequence = seq, workstationid = (int?)null, quantity_planned = this.Quantity, status = 'N'.ToString() }, tr);
                         tr.Commit();
                         ret = tID;
                     }
@@ -389,31 +351,15 @@ namespace KIS.App_Sources
 
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmdTasks = conn.CreateCommand();
-
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmdTasks.Transaction = tr;
-                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                    string sql = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
                         + " description, sequence, workstationid, quantity_planned, status) "
                         + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @NoProductiveTaskId, @name, "
                         + " @description, @sequence, @workstationid, @quantity_planned, @status)";
 
-                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
-                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
-                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
-                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
-                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
-                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", null);
-                    cmdTasks.Parameters.AddWithValue("@name", TaskName);
-                    cmdTasks.Parameters.AddWithValue("@description", "");
-                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
-                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
-                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
-                    cmdTasks.Parameters.AddWithValue("@status", 'N');
-
                     try
                     {
-                        cmdTasks.ExecuteNonQuery();
+                        conn.Execute(sql, new { measurementid = this.id, taskid = tID, OrigTaskId = (int?)null, OrigTaskRev = (int?)null, VariantId = (int?)null, NoProductiveTaskId = (int?)null, name = TaskName, description = "", sequence = seq, workstationid = (int?)null, quantity_planned = this.Quantity, status = 'N'.ToString() }, tr);
                         tr.Commit();
                         ret = tID;
                     }
@@ -460,11 +406,8 @@ namespace KIS.App_Sources
 
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmdTasks = conn.CreateCommand();
-
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmdTasks.Transaction = tr;
-                    cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
+                    string sql = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, NoProductiveTaskId, name, "
                         + " description, sequence, workstationid, quantity_planned, status, quantity_produced, task_startdatereal, task_enddatereal, "
                         + " realleadtime_hours, realworkingtime_hours, step, isAcyclic, Acyclic_CycleTime, Acyclic_QtyUsed, Acyclic_QtyForEachProduct, ValueOrWaste, Ergonomy"
                         + ") "
@@ -472,34 +415,9 @@ namespace KIS.App_Sources
                         + " @description, @sequence, @workstationid, @quantity_planned, @status, @quantityproduced, @task_startdatereal, @task_enddatereal, "
                         + " @realleadtime_hours, @realworkingtime_hours, @step, @isAcyclic, @Acyclic_CycleTime, @Acyclic_QtyUsed, @Acyclic_QtyForEachProduct, @ValueOrWaste, @Ergonomy)";
 
-                    cmdTasks.Parameters.AddWithValue("@measurementid", this.id);
-                    cmdTasks.Parameters.AddWithValue("@taskid", tID);
-                    cmdTasks.Parameters.AddWithValue("@OrigTaskId", null);
-                    cmdTasks.Parameters.AddWithValue("@OrigTaskRev", null);
-                    cmdTasks.Parameters.AddWithValue("@VariantId", null);
-                    cmdTasks.Parameters.AddWithValue("@NoProductiveTaskId", null);
-                    cmdTasks.Parameters.AddWithValue("@name", TaskName);
-                    cmdTasks.Parameters.AddWithValue("@description", "");
-                    cmdTasks.Parameters.AddWithValue("@sequence", seq);
-                    cmdTasks.Parameters.AddWithValue("@workstationid", null);
-                    cmdTasks.Parameters.AddWithValue("@quantity_planned", this.Quantity);
-                    cmdTasks.Parameters.AddWithValue("@status", 'F');
-                    cmdTasks.Parameters.AddWithValue("@quantityproduced", this.Quantity);
-                    cmdTasks.Parameters.AddWithValue("@task_startdatereal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmdTasks.Parameters.AddWithValue("@task_enddatereal", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmdTasks.Parameters.AddWithValue("@realleadtime_hours", 0);
-                    cmdTasks.Parameters.AddWithValue("@realworkingtime_hours", workingtime);
-                    cmdTasks.Parameters.AddWithValue("@step", step);
-                    cmdTasks.Parameters.AddWithValue("@isAcyclic", isAcyclic);
-                    cmdTasks.Parameters.AddWithValue("@Acyclic_CycleTime", Acyclic_CycleTime);
-                    cmdTasks.Parameters.AddWithValue("@Acyclic_QtyUsed", Acyclic_QtyUsed);
-                    cmdTasks.Parameters.AddWithValue("@Acyclic_QtyForEachProduct", Acyclic_QtyForEachProduct);
-                    cmdTasks.Parameters.AddWithValue("@ValueOrWaste", ValueOrWaste);
-                    cmdTasks.Parameters.AddWithValue("@Ergonomy", Ergonomy);
-
                     try
                     {
-                        cmdTasks.ExecuteNonQuery();
+                        conn.Execute(sql, new { measurementid = this.id, taskid = tID, OrigTaskId = (int?)null, OrigTaskRev = (int?)null, VariantId = (int?)null, NoProductiveTaskId = (int?)null, name = TaskName, description = "", sequence = seq, workstationid = (int?)null, quantity_planned = this.Quantity, status = 'F'.ToString(), quantityproduced = this.Quantity, task_startdatereal = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), task_enddatereal = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), realleadtime_hours = 0, realworkingtime_hours = workingtime, step = step, isAcyclic = isAcyclic, Acyclic_CycleTime = Acyclic_CycleTime, Acyclic_QtyUsed = Acyclic_QtyUsed, Acyclic_QtyForEachProduct = Acyclic_QtyForEachProduct, ValueOrWaste = ValueOrWaste.ToString(), Ergonomy = Ergonomy.ToString() }, tr);
                         tr.Commit();
                         ret = tID;
                     }
@@ -546,19 +464,13 @@ namespace KIS.App_Sources
 
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.CommandText = "UPDATE freemeasurements SET status='F', realenddate=@enddate, "
+                        string sql = "UPDATE freemeasurements SET status='F', realenddate=@enddate, "
                             + " realworkingtime_hours=@workingtime, realleadtime_hours=@leadtime "
                             + " WHERE id=@measurementid";
-                        cmd.Parameters.AddWithValue("@enddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                        cmd.Parameters.AddWithValue("@workingtime", workingtime);
-                        cmd.Parameters.AddWithValue("@leadtime", leadtime);
-                        cmd.Parameters.AddWithValue("@measurementid", this.id);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { enddate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), workingtime = workingtime, leadtime = leadtime, measurementid = this.id }, tr);
 
                         tr.Commit();
 
@@ -644,36 +556,31 @@ namespace KIS.App_Sources
                 Boolean checkstart = false;
                 Boolean checkend = false;
                 // Gets the first event
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurements_tasks_events.freemeasurementid, freemeasurements_tasks_events.taskid, inputpoint, eventtype, eventdate, notes FROM "
+                string sql = "SELECT id, freemeasurements_tasks_events.freemeasurementid, freemeasurements_tasks_events.taskid, inputpoint, eventtype, eventdate, notes FROM "
                     + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
                     + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
                     + " WHERE freemeasurementid=@measurementid AND eventtype='I' "
                     + " AND freemeasurements_tasks.NoProductiveTaskId=-1 "
                     + " ORDER BY eventdate";
-                cmd.Parameters.AddWithValue("@measurementid", this.id);
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                var rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { measurementid = this.id }).ToList();
+                if (rows.Count > 0)
                 {
-                    start = rdr.GetDateTime(5);
+                    start = rows[0].eventdate;
                     checkstart = true;
                 }
-                rdr.Close();
 
-                cmd.CommandText = "SELECT id, freemeasurements_tasks_events.freemeasurementid, freemeasurements_tasks_events.taskid, inputpoint, eventtype, eventdate, notes FROM "
+                sql = "SELECT id, freemeasurements_tasks_events.freemeasurementid, freemeasurements_tasks_events.taskid, inputpoint, eventtype, eventdate, notes FROM "
                     + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
                     + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
                     +" WHERE freemeasurementid=@measurementid AND (eventtype='F' OR eventtype='P') "
                     + " AND freemeasurements_tasks.NoProductiveTaskId=-1 "
                     + " ORDER BY eventdate DESC";
-                rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { measurementid = this.id }).ToList();
+                if (rows.Count > 0)
                 {
-                    end = rdr.GetDateTime(5);
+                    end = rows[0].eventdate;
                     checkend = true;
                 }
-                rdr.Close();
                 conn.Close();
 
                 if (checkstart && checkend && end >= start)
@@ -700,8 +607,7 @@ namespace KIS.App_Sources
                 conn.Open();
 
                 // Get all events of finished tasks there are not in the timespans table
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT freemeasurements_tasks_events.id, "
+                string sql = "SELECT freemeasurements_tasks_events.id, "
                                 + " freemeasurements_tasks_events.freemeasurementid, "
                                 + " freemeasurements_tasks_events.taskid, "
                                 + " freemeasurements_tasks_events.inputpoint, "
@@ -721,21 +627,19 @@ namespace KIS.App_Sources
                                 + " freemeasurements_tasks_events.taskid, "
                                 + " freemeasurements_tasks_events.inputpoint, "
                                 + " freemeasurements_tasks_events.eventdate";
-                cmd.Parameters.AddWithValue("@measurementid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { measurementid = this.id });
+                foreach (var r in rows)
                 {
                     FreeMeasurements_Tasks_Event currEv = new FreeMeasurements_Tasks_Event(this.Tenant);
-                    currEv.id = rdr.GetInt32(0);
-                    currEv.freemeasurementid = rdr.GetInt32(1);
-                    currEv.taskid = rdr.GetInt32(2);
-                    currEv.inputpoint = rdr.GetInt32(3);
-                    currEv.eventtype = rdr.GetChar(4);
-                    currEv.eventdate = rdr.GetDateTime(5);
-                    currEv.notes = rdr.GetString(6);
+                    currEv.id = r.id;
+                    currEv.freemeasurementid = r.freemeasurementid;
+                    currEv.taskid = r.taskid;
+                    currEv.inputpoint = r.inputpoint;
+                    currEv.eventtype = r.eventtype[0];
+                    currEv.eventdate = r.eventdate;
+                    currEv.notes = r.notes;
                     events.Add(currEv);
                 }
-                rdr.Close();
 
                 // Transform all events to timespans
                 for (int i = 0; i < events.Count; i += 2)
@@ -772,25 +676,13 @@ namespace KIS.App_Sources
                 foreach (var ts in timespans)
                 {
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmdTs = conn.CreateCommand();
-                    cmdTs.CommandText = "INSERT INTO freemeasurements_tasks_events_timespans (measurementid,taskid,inputpoint,starteventid,starteventtype,starteventdate,starteventnotes, "
+                    string sqlTs = "INSERT INTO freemeasurements_tasks_events_timespans (measurementid,taskid,inputpoint,starteventid,starteventtype,starteventdate,starteventnotes, "
                         + "endeventid, endeventtype, endeventdate, endeventnotes) "
                         + " VALUES (@measurementid, @taskid, @inputpoint, @starteventid, @starteventtype, @starteventdate, @starteventnotes, "
                         + " @endeventid, @endeventtype, @endeventdate, @endeventnotes)";
-                    cmdTs.Parameters.AddWithValue("@measurementid", ts.freemeasurementid);
-                    cmdTs.Parameters.AddWithValue("@taskid", ts.taskid);
-                    cmdTs.Parameters.AddWithValue("@inputpoint", ts.inputpoint);
-                    cmdTs.Parameters.AddWithValue("@starteventid", ts.starteventid);
-                    cmdTs.Parameters.AddWithValue("@starteventtype", ts.starteventtype);
-                    cmdTs.Parameters.AddWithValue("@starteventdate", ts.starteventdate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmdTs.Parameters.AddWithValue("@starteventnotes", ts.starteventnotes);
-                    cmdTs.Parameters.AddWithValue("@endeventid", ts.endeventid);
-                    cmdTs.Parameters.AddWithValue("@endeventtype", ts.endeventtype);
-                    cmdTs.Parameters.AddWithValue("@endeventdate", ts.endeventdate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmdTs.Parameters.AddWithValue("@endeventnotes", ts.endeventnotes);
                     try
                     {
-                        cmdTs.ExecuteNonQuery();
+                        conn.Execute(sqlTs, new { measurementid = ts.freemeasurementid, taskid = ts.taskid, inputpoint = ts.inputpoint, starteventid = ts.starteventid, starteventtype = ts.starteventtype.ToString(), starteventdate = ts.starteventdate.ToString("yyyy-MM-dd HH:mm:ss"), starteventnotes = ts.starteventnotes, endeventid = ts.endeventid, endeventtype = ts.endeventtype.ToString(), endeventdate = ts.endeventdate.ToString("yyyy-MM-dd HH:mm:ss"), endeventnotes = ts.endeventnotes }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -826,14 +718,11 @@ namespace KIS.App_Sources
             this.MeasurementsList = new List<FreeTimeMeasurement>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM freemeasurements ORDER BY plannedstartdate, plannedenddate";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<int>("SELECT id FROM freemeasurements ORDER BY plannedstartdate, plannedenddate");
+            foreach (var id in rows)
             {
-                this.MeasurementsList.Add(new FreeTimeMeasurement(this.Tenant, rdr.GetInt32(0)));
+                this.MeasurementsList.Add(new FreeTimeMeasurement(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -846,8 +735,6 @@ namespace KIS.App_Sources
             this.MeasurementsList = new List<FreeTimeMeasurement>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-
             String strWhere = "";
             if(Status != 'A')
             { 
@@ -860,19 +747,21 @@ namespace KIS.App_Sources
                     strWhere = " WHERE status = @status";
                 }
             }
-            cmd.CommandText = "SELECT id FROM freemeasurements  " + strWhere + " ORDER BY plannedstartdate, plannedenddate";
+            string sql = "SELECT id FROM freemeasurements  " + strWhere + " ORDER BY plannedstartdate, plannedenddate";
+            IEnumerable<int> rows;
             if (Status != 'A' && Status != 'O')
             {
-                cmd.Parameters.AddWithValue("@status", Status.ToString());
+                rows = conn.Query<int>(sql, new { status = Status.ToString() });
             }
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            else
             {
-                int measurementid = rdr.GetInt32(0);
+                rows = conn.Query<int>(sql);
+            }
+            foreach (var measurementid in rows)
+            {
                 FreeTimeMeasurement curr = new FreeTimeMeasurement(this.Tenant, measurementid);
                 this.MeasurementsList.Add(curr);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -896,42 +785,22 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO freemeasurements(createdby, plannedstartdate, plannedenddate, departmentid, name, description,"
+                    string sql = "INSERT INTO freemeasurements(createdby, plannedstartdate, plannedenddate, departmentid, name, description,"
                         + " processid, processrev, variantid, status, serialnumber, quantity, measurementunit, "
                         + " AllowCustomTasks, ExecuteFinishedTasks) "
                         + " VALUES(@createdby, @plannedstartdate, @plannedenddate, @departmentid, @name, @description,"
                         + " @processid, @processrev, @variantid, @status, @serialnumber, @quantity, @measurementunit, "
                         + " @AllowCustomTasks, @ExecuteFinishedTasks)";
 
-                    cmd.Parameters.AddWithValue("@createdby", createdby);
-                    cmd.Parameters.AddWithValue("@plannedstartdate", plannedstartdate);
-                    cmd.Parameters.AddWithValue("@plannedenddate", plannedenddate);
-                    cmd.Parameters.AddWithValue("@departmentid", DepartmentId);
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@description", description);
-                    cmd.Parameters.AddWithValue("@processid", processid);
-                    cmd.Parameters.AddWithValue("@processrev", processrev);
-                    cmd.Parameters.AddWithValue("@variantid", variantid);
-                    cmd.Parameters.AddWithValue("@status", 'N');
-                    cmd.Parameters.AddWithValue("@serialnumber", serialnumber);
-                    cmd.Parameters.AddWithValue("@quantity", quantity);
-                    cmd.Parameters.AddWithValue("@measurementunit", measurementUnitId);
-                    cmd.Parameters.AddWithValue("@AllowCustomTasks", AllowCustomTasks);
-                    cmd.Parameters.AddWithValue("@ExecuteFinishedTasks", AllowExecuteFinishedTasks);
-
                     try
                     {
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                        MySqlDataReader rdr = cmd.ExecuteReader();
-                        if (rdr.Read())
+                        conn.Execute(sql, new { createdby = createdby, plannedstartdate = plannedstartdate, plannedenddate = plannedenddate, departmentid = DepartmentId, name = name, description = description, processid = processid, processrev = processrev, variantid = variantid, status = 'N'.ToString(), serialnumber = serialnumber, quantity = quantity, measurementunit = measurementUnitId, AllowCustomTasks = AllowCustomTasks, ExecuteFinishedTasks = AllowExecuteFinishedTasks }, tr);
+                        int? lid = conn.QueryFirstOrDefault<int?>("SELECT LAST_INSERT_ID()", transaction: tr);
+                        if (lid.HasValue)
                         {
-                            ret = rdr.GetInt32(0);
+                            ret = lid.Value;
                         }
-                        rdr.Close();
 
                         // LoadSon
                         prc.loadFigli(vr);
@@ -944,31 +813,18 @@ namespace KIS.App_Sources
                             {
                                 wsId = tskvar.PostazioniDiLavoro[0].id;
                             }
-                            MySqlCommand cmdTasks = conn.CreateCommand();
-                            cmdTasks.Transaction = tr;
-                            cmdTasks.CommandText = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, name, "
+                            string sqlTasks = "INSERT INTO freemeasurements_tasks(MeasurementId, TaskId, OrigTaskId, OrigTaskRev, VariantId, name, "
                                 + " description, sequence, workstationid, quantity_planned, status) "
                                 + " VALUES (@measurementid, @taskid, @OrigTaskId, @OrigTaskRev, @VariantId, @name, "
                                 + " @description, @sequence, @workstationid, @quantity_planned, @status)";
-                            cmdTasks.Parameters.AddWithValue("@measurementid", ret);
-                            cmdTasks.Parameters.AddWithValue("@taskid", i);
-                            cmdTasks.Parameters.AddWithValue("@OrigTaskId", prc.subProcessi[i].processID);
-                            cmdTasks.Parameters.AddWithValue("@OrigTaskRev", prc.subProcessi[i].revisione);
-                            cmdTasks.Parameters.AddWithValue("@VariantId", vr.idVariante);
-                            cmdTasks.Parameters.AddWithValue("@name", prc.subProcessi[i].processName);
-                            cmdTasks.Parameters.AddWithValue("@description", prc.subProcessi[i].processDescription);
-                            cmdTasks.Parameters.AddWithValue("@sequence", (i + 1));
                             if (wsId != -1)
                             {
-                                cmdTasks.Parameters.AddWithValue("@workstationid", wsId);
+                                conn.Execute(sqlTasks, new { measurementid = ret, taskid = i, OrigTaskId = prc.subProcessi[i].processID, OrigTaskRev = prc.subProcessi[i].revisione, VariantId = vr.idVariante, name = prc.subProcessi[i].processName, description = prc.subProcessi[i].processDescription, sequence = (i + 1), workstationid = wsId, quantity_planned = quantity, status = 'N'.ToString() }, tr);
                             }
                             else
                             {
-                                cmdTasks.Parameters.AddWithValue("@workstationid", null);
+                                conn.Execute(sqlTasks, new { measurementid = ret, taskid = i, OrigTaskId = prc.subProcessi[i].processID, OrigTaskRev = prc.subProcessi[i].revisione, VariantId = vr.idVariante, name = prc.subProcessi[i].processName, description = prc.subProcessi[i].processDescription, sequence = (i + 1), workstationid = (int?)null, quantity_planned = quantity, status = 'N'.ToString() }, tr);
                             }
-                            cmdTasks.Parameters.AddWithValue("@quantity_planned", quantity);
-                            cmdTasks.Parameters.AddWithValue("@status", 'N');
-                            cmdTasks.ExecuteNonQuery();
                         }
                         tr.Commit();
                     }
@@ -1007,46 +863,22 @@ namespace KIS.App_Sources
             {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO freemeasurements(createdby, plannedstartdate, plannedenddate, departmentid, name, description,"
+                    string sql = "INSERT INTO freemeasurements(createdby, plannedstartdate, plannedenddate, departmentid, name, description,"
                         + " processid, processrev, variantid, status, serialnumber, quantity, measurementunit, "
                         + " AllowCustomTasks, ExecuteFinishedTasks, MeasurementType, realenddate, realleadtime_hours, realworkingtime_hours) "
                         + " VALUES(@createdby, @plannedstartdate, @plannedenddate, @departmentid, @name, @description,"
                         + " @processid, @processrev, @variantid, @status, @serialnumber, @quantity, @measurementunit, "
                         + " @AllowCustomTasks, @ExecuteFinishedTasks, @MeasurementType, @realenddate, @realleadtime, @realworkingtime)";
 
-                    cmd.Parameters.AddWithValue("@createdby", createdby);
-                    cmd.Parameters.AddWithValue("@plannedstartdate", plannedstartdate);
-                    cmd.Parameters.AddWithValue("@plannedenddate", plannedenddate);
-                    cmd.Parameters.AddWithValue("@departmentid", null);
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@description", description);
-                    cmd.Parameters.AddWithValue("@processid", null);
-                    cmd.Parameters.AddWithValue("@processrev", null);
-                    cmd.Parameters.AddWithValue("@variantid", null);
-                    cmd.Parameters.AddWithValue("@status", 'F');
-                    cmd.Parameters.AddWithValue("@serialnumber", serialnumber);
-                    cmd.Parameters.AddWithValue("@quantity", quantity);
-                    cmd.Parameters.AddWithValue("@measurementunit", measurementUnitId);
-                    cmd.Parameters.AddWithValue("@AllowCustomTasks", AllowCustomTasks);
-                    cmd.Parameters.AddWithValue("@ExecuteFinishedTasks", AllowExecuteFinishedTasks);
-                cmd.Parameters.AddWithValue("@MeasurementType", "B");
-                cmd.Parameters.AddWithValue("@realenddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@realleadtime", realleadtime);
-                cmd.Parameters.AddWithValue("@realworkingtime", realworkingtime);
-
                 try
                     {
-                        cmd.ExecuteNonQuery();
-                        cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                        MySqlDataReader rdr = cmd.ExecuteReader();
-                        if (rdr.Read())
+                        conn.Execute(sql, new { createdby = createdby, plannedstartdate = plannedstartdate, plannedenddate = plannedenddate, departmentid = (int?)null, name = name, description = description, processid = (int?)null, processrev = (int?)null, variantid = (int?)null, status = 'F'.ToString(), serialnumber = serialnumber, quantity = quantity, measurementunit = measurementUnitId, AllowCustomTasks = AllowCustomTasks, ExecuteFinishedTasks = AllowExecuteFinishedTasks, MeasurementType = "B", realenddate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), realleadtime = realleadtime, realworkingtime = realworkingtime }, tr);
+                        int? lid = conn.QueryFirstOrDefault<int?>("SELECT LAST_INSERT_ID()", transaction: tr);
+                        if (lid.HasValue)
                         {
-                            ret = rdr.GetInt32(0);
+                            ret = lid.Value;
                         }
-                        rdr.Close();
 
                         tr.Commit();
                     }
@@ -1069,8 +901,7 @@ namespace KIS.App_Sources
             List<FreeMeasurentsTasksJsonStruct> fmStruct = new List<FreeMeasurentsTasksJsonStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT "
+            string sql = "SELECT "
                 + " freemeasurements.id, "              // 0
                 + " freemeasurements.creationdate, "    // 1
                 + " freemeasurements.createdby, "
@@ -1115,46 +946,44 @@ namespace KIS.App_Sources
                 + " AND freemeasurements.status <> 'F' "
                 + " AND(ExecuteFinishedTasks = true OR(ExecuteFinishedTasks = false AND freemeasurements_tasks.status <> 'F')) "
                 + " ORDER BY freemeasurements.id, freemeasurements_tasks.sequence";
-            cmd.Parameters.AddWithValue("@departmentid", departmentId);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int MeasurementId, DateTime Creationdate, String CreatedBy, DateTime PlannedStartDate, DateTime PlannedEndDate, int DepartmentId, String MeasurementName, String MeasurementDescription, int ProcessId, int ProcessRev, int VariantId, String Status, String SerialNumber, double Quantity, int MeasurementUnitId, String MeasurementUnitType, int TaskId, int? OrigTaskId, int? OrigTaskRev, int? TaskVariantId, int? NoProductiveTaskId, String TaskName, String TaskDescription, int Sequence, int? WorkstationId, String WorkstationName, double TaskQuantity, String TaskStatus, String ProcessName, String VariantName, Boolean AllowCustomTasks, Boolean ExecuteFinishedTasks)>(sql, new { departmentid = departmentId });
+            foreach (var r in rows)
             {
                 FreeMeasurentsTasksJsonStruct curr = new FreeMeasurentsTasksJsonStruct();
-                curr.MeasurementId = rdr.GetInt32(0);
-                curr.Creationdate = rdr.GetDateTime(1);
-                curr.CreatedBy = rdr.GetString(2);
-                curr.PlannedStartDate = rdr.GetDateTime(3);
-                curr.PlannedEndDate = rdr.GetDateTime(4);
-                curr.DepartmentId = rdr.GetInt32(5);
-                curr.MeasurementName = rdr.GetString(6);
-                curr.MeasurementDescription = rdr.GetString(7);
-                curr.ProcessId = rdr.GetInt32(8);
-                curr.ProcessRev = rdr.GetInt32(9);
-                curr.VariantId = rdr.GetInt32(10);
-                curr.Status = rdr.GetChar(11);
-                curr.SerialNumber = rdr.GetString(12);
-                curr.Quantity = rdr.GetDouble(13);
-                curr.MeasurementUnitId = rdr.GetInt32(14);
-                curr.MeasurementUnitType = rdr.GetString(15);
-                curr.TaskId = rdr.GetInt32(16);
-                curr.OrigTaskId = rdr.IsDBNull(17) ? -1 : rdr.GetInt32(17);
-                curr.OrigTaskRev = rdr.IsDBNull(18) ? -1 : rdr.GetInt32(18);
-                curr.VariantId = rdr.IsDBNull(19) ? -1 : rdr.GetInt32(19);
-                curr.NoProductiveTaskId = rdr.IsDBNull(20) ? -1 : rdr.GetInt32(20);
-                curr.TaskName = rdr.GetString(21);
-                curr.TaskDescription = rdr.GetString(22);
-                curr.Sequence = rdr.GetInt32(23);
-                curr.WorkstationId = rdr.IsDBNull(24) ? -1 : rdr.GetInt32(24);
-                curr.WorkstationName = rdr.IsDBNull(25) ? "" : rdr.GetString(25);
-                curr.TaskQuantity = rdr.GetDouble(26);
-                curr.TaskStatus = rdr.GetChar(27);
-                curr.ProcessName = rdr.GetString(28);
-                curr.VariantName = rdr.GetString(29);
-                curr.AllowCustomTasks = rdr.GetBoolean(30);
-                curr.ExecuteFinishedTasks = rdr.GetBoolean(31);
+                curr.MeasurementId = r.MeasurementId;
+                curr.Creationdate = r.Creationdate;
+                curr.CreatedBy = r.CreatedBy;
+                curr.PlannedStartDate = r.PlannedStartDate;
+                curr.PlannedEndDate = r.PlannedEndDate;
+                curr.DepartmentId = r.DepartmentId;
+                curr.MeasurementName = r.MeasurementName;
+                curr.MeasurementDescription = r.MeasurementDescription;
+                curr.ProcessId = r.ProcessId;
+                curr.ProcessRev = r.ProcessRev;
+                curr.VariantId = r.VariantId;
+                curr.Status = r.Status[0];
+                curr.SerialNumber = r.SerialNumber;
+                curr.Quantity = r.Quantity;
+                curr.MeasurementUnitId = r.MeasurementUnitId;
+                curr.MeasurementUnitType = r.MeasurementUnitType;
+                curr.TaskId = r.TaskId;
+                curr.OrigTaskId = r.OrigTaskId.HasValue ? r.OrigTaskId.Value : -1;
+                curr.OrigTaskRev = r.OrigTaskRev.HasValue ? r.OrigTaskRev.Value : -1;
+                curr.VariantId = r.TaskVariantId.HasValue ? r.TaskVariantId.Value : -1;
+                curr.NoProductiveTaskId = r.NoProductiveTaskId.HasValue ? r.NoProductiveTaskId.Value : -1;
+                curr.TaskName = r.TaskName;
+                curr.TaskDescription = r.TaskDescription;
+                curr.Sequence = r.Sequence;
+                curr.WorkstationId = r.WorkstationId.HasValue ? r.WorkstationId.Value : -1;
+                curr.WorkstationName = r.WorkstationName != null ? r.WorkstationName : "";
+                curr.TaskQuantity = r.TaskQuantity;
+                curr.TaskStatus = r.TaskStatus[0];
+                curr.ProcessName = r.ProcessName;
+                curr.VariantName = r.VariantName;
+                curr.AllowCustomTasks = r.AllowCustomTasks;
+                curr.ExecuteFinishedTasks = r.ExecuteFinishedTasks;
                 fmStruct.Add(curr);
             }
-            rdr.Close();
             conn.Close();
 
             return fmStruct;
@@ -1167,8 +996,7 @@ namespace KIS.App_Sources
             { 
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT "
+                string sql = "SELECT "
                     + " freemeasurements.id, "
                     + " freemeasurements_tasks.taskid, "
                        + " freemeasurements_tasks.name AS TaskName, "
@@ -1199,25 +1027,21 @@ namespace KIS.App_Sources
                   + "  LEFT JOIN postazioni ON(freemeasurements_tasks.workstationid = postazioni.idpostazioni) "
                     + " WHERE eventtype = 'I'";
 
-                cmd.Parameters.AddWithValue("@inputpoint", ip.id);
-                cmd.Parameters.AddWithValue("@departmentid", dept.id);
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var rows = conn.Query<(int MeasurementId, int TaskId, String TaskName, String WorkstationName, double TaskQuantity, String MeasurementUnitType, String MeasurementName, int LastTaskEventId, int? NoProductiveTaskId)>(sql, new { inputpoint = ip.id, departmentid = dept.id });
+                foreach (var r in rows)
                 {
                     FreeMeasurentsTasksJsonStruct curr = new FreeMeasurentsTasksJsonStruct();
-                    curr.MeasurementId = rdr.GetInt32(0);
-                    curr.TaskId = rdr.GetInt32(1);
-                    curr.TaskName = rdr.GetString(2);
-                    curr.WorkstationName = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                    curr.TaskQuantity = rdr.GetDouble(4);
-                    curr.MeasurementUnitType = rdr.GetString(5);
-                    curr.MeasurementName = rdr.GetString(6);
-                    curr.LastTaskEventId = rdr.GetInt32(7);
-                    curr.NoProductiveTaskId = rdr.IsDBNull(8) ? -1 : rdr.GetInt32(8);
+                    curr.MeasurementId = r.MeasurementId;
+                    curr.TaskId = r.TaskId;
+                    curr.TaskName = r.TaskName;
+                    curr.WorkstationName = r.WorkstationName != null ? r.WorkstationName : "";
+                    curr.TaskQuantity = r.TaskQuantity;
+                    curr.MeasurementUnitType = r.MeasurementUnitType;
+                    curr.MeasurementName = r.MeasurementName;
+                    curr.LastTaskEventId = r.LastTaskEventId;
+                    curr.NoProductiveTaskId = r.NoProductiveTaskId.HasValue ? r.NoProductiveTaskId.Value : -1;
                     ret.Add(curr);
                 }
-                rdr.Close();
                 conn.Close();
             }
             return ret;
@@ -1237,8 +1061,7 @@ namespace KIS.App_Sources
             conn.Open();
 
             // Get all events of finished tasks there are not in the timespans table
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT freemeasurements_tasks_events.id, "
+            string sql = "SELECT freemeasurements_tasks_events.id, "
                             + " freemeasurements_tasks_events.freemeasurementid, "
                             + " freemeasurements_tasks_events.taskid, "
                             + " freemeasurements_tasks_events.inputpoint, "
@@ -1257,20 +1080,19 @@ namespace KIS.App_Sources
                             + " freemeasurements_tasks_events.inputpoint, "
                             + " freemeasurements_tasks_events.taskid, "
                             + " freemeasurements_tasks_events.eventdate";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+            var rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql);
+            foreach (var r in rows)
             {
                 FreeMeasurements_Tasks_Event currEv = new FreeMeasurements_Tasks_Event(this.Tenant);
-                currEv.id = rdr.GetInt32(0);
-                currEv.freemeasurementid = rdr.GetInt32(1);
-                currEv.taskid = rdr.GetInt32(2);
-                currEv.inputpoint = rdr.GetInt32(3);
-                currEv.eventtype = rdr.GetChar(4);
-                currEv.eventdate = rdr.GetDateTime(5);
-                currEv.notes = rdr.GetString(6);
+                currEv.id = r.id;
+                currEv.freemeasurementid = r.freemeasurementid;
+                currEv.taskid = r.taskid;
+                currEv.inputpoint = r.inputpoint;
+                currEv.eventtype = r.eventtype[0];
+                currEv.eventdate = r.eventdate;
+                currEv.notes = r.notes;
                 events.Add(currEv);
             }
-            rdr.Close();
 
             // Transform all events to timespans
             for(int i = 0; i < events.Count - 1; i+=2)
@@ -1307,25 +1129,13 @@ namespace KIS.App_Sources
             foreach(var ts in timespans)
             {
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmdTs = conn.CreateCommand();
-                cmdTs.CommandText = "INSERT INTO freemeasurements_tasks_events_timespans (measurementid,taskid,inputpoint,starteventid,starteventtype,starteventdate,starteventnotes, " 
+                string sqlTs = "INSERT INTO freemeasurements_tasks_events_timespans (measurementid,taskid,inputpoint,starteventid,starteventtype,starteventdate,starteventnotes, " 
                     + "endeventid, endeventtype, endeventdate, endeventnotes) "
                     + " VALUES (@measurementid, @taskid, @inputpoint, @starteventid, @starteventtype, @starteventdate, @starteventnotes, "
                     + " @endeventid, @endeventtype, @endeventdate, @endeventnotes)";
-                cmdTs.Parameters.AddWithValue("@measurementid", ts.freemeasurementid);
-                cmdTs.Parameters.AddWithValue("@taskid", ts.taskid);
-                cmdTs.Parameters.AddWithValue("@inputpoint", ts.inputpoint);
-                cmdTs.Parameters.AddWithValue("@starteventid", ts.starteventid);
-                cmdTs.Parameters.AddWithValue("@starteventtype", ts.starteventtype);
-                cmdTs.Parameters.AddWithValue("@starteventdate", ts.starteventdate.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmdTs.Parameters.AddWithValue("@starteventnotes", ts.starteventnotes);
-                cmdTs.Parameters.AddWithValue("@endeventid", ts.endeventid);
-                cmdTs.Parameters.AddWithValue("@endeventtype", ts.endeventtype);
-                cmdTs.Parameters.AddWithValue("@endeventdate", ts.endeventdate.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmdTs.Parameters.AddWithValue("@endeventnotes", ts.endeventnotes);
                 try
                 {
-                    cmdTs.ExecuteNonQuery();
+                    conn.Execute(sqlTs, new { measurementid = ts.freemeasurementid, taskid = ts.taskid, inputpoint = ts.inputpoint, starteventid = ts.starteventid, starteventtype = ts.starteventtype.ToString(), starteventdate = ts.starteventdate.ToString("yyyy-MM-dd HH:mm:ss"), starteventnotes = ts.starteventnotes, endeventid = ts.endeventid, endeventtype = ts.endeventtype.ToString(), endeventdate = ts.endeventdate.ToString("yyyy-MM-dd HH:mm:ss"), endeventnotes = ts.endeventnotes }, tr);
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -1346,16 +1156,13 @@ namespace KIS.App_Sources
             this.MeasurementsList = new List<FreeTimeMeasurement>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT freemeasurements.id FROM freemeasurements LEFT JOIN "
+            var rows = conn.Query<int>("SELECT freemeasurements.id FROM freemeasurements LEFT JOIN "
                 + " (SELECT DISTINCT(measurementid) FROM freemeasurements_tasks WHERE status <> 'F' AND noproductivetaskid IS NULL) AS openmeasurements "
-                + " ON(freemeasurements.id = openmeasurements.measurementid) WHERE status <> 'F' AND measurementid IS NULL";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+                + " ON(freemeasurements.id = openmeasurements.measurementid) WHERE status <> 'F' AND measurementid IS NULL");
+            foreach (var id in rows)
             {
-                this.MeasurementsList.Add(new FreeTimeMeasurement(this.Tenant, rdr.GetInt32(0)));
+                this.MeasurementsList.Add(new FreeTimeMeasurement(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1413,16 +1220,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET quantity_produced=@quantity_produced WHERE measurementid=@measurementid AND taskid=@taskid";
-                    cmd.Parameters.AddWithValue("@quantity_produced", value);
-                    cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                    cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                    string sql = "UPDATE freemeasurements_tasks SET quantity_produced=@quantity_produced WHERE measurementid=@measurementid AND taskid=@taskid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { quantity_produced = value, measurementid = this.MeasurementId, taskid = this.TaskId }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1450,16 +1252,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET status=@status WHERE measurementid=@measurementid AND taskid=@taskid";
-                    cmd.Parameters.AddWithValue("@status", value);
-                    cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                    cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                    string sql = "UPDATE freemeasurements_tasks SET status=@status WHERE measurementid=@measurementid AND taskid=@taskid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { status = value.ToString(), measurementid = this.MeasurementId, taskid = this.TaskId }, tr);
                         tr.Commit();
                         this._Status = value;
                     }
@@ -1482,16 +1279,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET task_startdatereal=@startdatereal WHERE measurementid=@measurementid AND taskid=@taskid";
-                    cmd.Parameters.AddWithValue("@startdatereal", value.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                    cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                    string sql = "UPDATE freemeasurements_tasks SET task_startdatereal=@startdatereal WHERE measurementid=@measurementid AND taskid=@taskid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { startdatereal = value.ToString("yyyy-MM-dd HH:mm:ss"), measurementid = this.MeasurementId, taskid = this.TaskId }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1515,16 +1307,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET task_enddatereal=@enddatereal WHERE measurementid=@measurementid AND taskid=@taskid";
-                    cmd.Parameters.AddWithValue("@enddatereal", value.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                    cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                    string sql = "UPDATE freemeasurements_tasks SET task_enddatereal=@enddatereal WHERE measurementid=@measurementid AND taskid=@taskid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { enddatereal = value.ToString("yyyy-MM-dd HH:mm:ss"), measurementid = this.MeasurementId, taskid = this.TaskId }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1545,16 +1332,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET RealLeadTime_Hours=@leadtime WHERE measurementid=@measurementid AND taskid=@taskid";
-                    cmd.Parameters.AddWithValue("@leadtime", value);
-                    cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                    cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                    string sql = "UPDATE freemeasurements_tasks SET RealLeadTime_Hours=@leadtime WHERE measurementid=@measurementid AND taskid=@taskid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { leadtime = value, measurementid = this.MeasurementId, taskid = this.TaskId }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1575,16 +1357,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE freemeasurements_tasks SET RealWorkingTime_Hours=@workingtime WHERE measurementid=@measurementid AND taskid=@taskid";
-                    cmd.Parameters.AddWithValue("@workingtime", value);
-                    cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                    cmd.Parameters.AddWithValue("@taskid", this.TaskId);
+                    string sql = "UPDATE freemeasurements_tasks SET RealWorkingTime_Hours=@workingtime WHERE measurementid=@measurementid AND taskid=@taskid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { workingtime = value, measurementid = this.MeasurementId, taskid = this.TaskId }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1653,8 +1430,7 @@ namespace KIS.App_Sources
             this._TaskId = -1;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT "
+            string sql = "SELECT "
                     + " freemeasurements_tasks.MeasurementId, " // 0
                     + " freemeasurements_tasks.TaskId, "        // 1
                     + " freemeasurements_tasks.OrigTaskId, "
@@ -1688,39 +1464,37 @@ namespace KIS.App_Sources
                     + " INNER JOIN freemeasurements ON (freemeasurements_tasks.MeasurementId = freemeasurements.id)"
                     + " WHERE freemeasurements_tasks.TaskId=@taskid AND freemeasurements_tasks.MeasurementId=@measurementid"
                     + " ORDER BY sequence";
-            cmd.Parameters.AddWithValue("@taskid", taskID);
-            cmd.Parameters.AddWithValue("@measurementid", measurementID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read())
+            var rows = conn.Query<(int MeasurementId, int TaskId, int? OrigTaskId, int? OrigTaskRev, int? VariantId, int? NoProductiveTaskId, String Name, String Description, int Sequence, int? WorkstationId, String WorkstationName, double PlannedQuantity, double? ProducedQuantity, String Status, DateTime? StartDateReal, DateTime? EndDateReal, double? RealLeadTime_Hours, double? RealWorkingTime_Hours, Boolean AllowCustomTasks, Boolean ExecuteFinishedTasks, int? DepartmentId, int? Step, Boolean? isAcyclic, double? Acyclic_CycleTime, double? Acyclic_QuantityUsed, double? Acyclic_QuantityForEachProduct, String ValueOrWaste, int? Ergonomy)>(sql, new { taskid = taskID, measurementid = measurementID }).ToList();
+            if (rows.Count > 0)
             {
-                this._MeasurementId = rdr.GetInt32(0);
-                this._TaskId = rdr.GetInt32(1);
-                this._OrigTaskId = rdr.IsDBNull(2) ? -1 : rdr.GetInt32(2);
-                this._OrigTaskRev = rdr.IsDBNull(3) ? -1 : rdr.GetInt32(3);
-                this._VariantId = rdr.IsDBNull(4) ? -1 : rdr.GetInt32(4);
-                this._NoProductiveTaskId = rdr.IsDBNull(5) ? -1 : rdr.GetInt32(5);
-                this._Name = rdr.GetString(6);
-                this._Description = rdr.GetString(7);
-                this._Sequence = rdr.GetInt32(8);
-                this._WorkstationId = rdr.IsDBNull(9) ? -1 : rdr.GetInt32(9);
-                this._WorkstationName = rdr.IsDBNull(10) ? "" : rdr.GetString(10);
-                this._PlannedQuantity = rdr.GetDouble(11);
-                this._ProducedQuantity = rdr.IsDBNull(12) ? 0 : rdr.GetDouble(12);
-                this._Status = rdr.GetChar(13);
-                this._StartDateReal = rdr.IsDBNull(14) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(14);
-                this._EndDateReal = rdr.IsDBNull(15) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(15);
-                this._RealLeadTime_Hours = rdr.IsDBNull(16) ? 0 : rdr.GetDouble(16);
-                this._RealWorkingTime_Hours = rdr.IsDBNull(17) ? 0 : rdr.GetDouble(17);
-                this._AllowCustomTasks = rdr.GetBoolean(18);
-                this._AllowExecuteFinishedTasks = rdr.GetBoolean(19);
-                this._DepartmentId = rdr.IsDBNull(20)?-1:rdr.GetInt32(20);
-                this._Step = rdr.IsDBNull(21) ? 60 : rdr.GetInt32(21);                this._isAcyclic = rdr.IsDBNull(22) ? false : rdr.GetBoolean(22);
-                this._Acyclic_CycleTime = rdr.IsDBNull(23) ? 0 : rdr.GetDouble(23);                this._Acyclic_QuantityUsed = rdr.IsDBNull(24) ? 0 : rdr.GetDouble(24);
-                this._Acyclic_QuantityForEachProduct = rdr.IsDBNull(25) ? 0 : rdr.GetDouble(25);
-                this._ValueOrWaste = rdr.IsDBNull(26) ? '\0' : rdr.GetChar(26);
-                this._Ergonomy = rdr.IsDBNull(27) ? -1 : rdr.GetInt32(27);
+                var row = rows[0];
+                this._MeasurementId = row.MeasurementId;
+                this._TaskId = row.TaskId;
+                this._OrigTaskId = row.OrigTaskId.HasValue ? row.OrigTaskId.Value : -1;
+                this._OrigTaskRev = row.OrigTaskRev.HasValue ? row.OrigTaskRev.Value : -1;
+                this._VariantId = row.VariantId.HasValue ? row.VariantId.Value : -1;
+                this._NoProductiveTaskId = row.NoProductiveTaskId.HasValue ? row.NoProductiveTaskId.Value : -1;
+                this._Name = row.Name;
+                this._Description = row.Description;
+                this._Sequence = row.Sequence;
+                this._WorkstationId = row.WorkstationId.HasValue ? row.WorkstationId.Value : -1;
+                this._WorkstationName = row.WorkstationName != null ? row.WorkstationName : "";
+                this._PlannedQuantity = row.PlannedQuantity;
+                this._ProducedQuantity = row.ProducedQuantity.HasValue ? row.ProducedQuantity.Value : 0;
+                this._Status = row.Status[0];
+                this._StartDateReal = row.StartDateReal.HasValue ? row.StartDateReal.Value : new DateTime(1970, 1, 1);
+                this._EndDateReal = row.EndDateReal.HasValue ? row.EndDateReal.Value : new DateTime(1970, 1, 1);
+                this._RealLeadTime_Hours = row.RealLeadTime_Hours.HasValue ? row.RealLeadTime_Hours.Value : 0;
+                this._RealWorkingTime_Hours = row.RealWorkingTime_Hours.HasValue ? row.RealWorkingTime_Hours.Value : 0;
+                this._AllowCustomTasks = row.AllowCustomTasks;
+                this._AllowExecuteFinishedTasks = row.ExecuteFinishedTasks;
+                this._DepartmentId = row.DepartmentId.HasValue ? row.DepartmentId.Value : -1;
+                this._Step = row.Step.HasValue ? row.Step.Value : 60;                this._isAcyclic = row.isAcyclic.HasValue ? row.isAcyclic.Value : false;
+                this._Acyclic_CycleTime = row.Acyclic_CycleTime.HasValue ? row.Acyclic_CycleTime.Value : 0;                this._Acyclic_QuantityUsed = row.Acyclic_QuantityUsed.HasValue ? row.Acyclic_QuantityUsed.Value : 0;
+                this._Acyclic_QuantityForEachProduct = row.Acyclic_QuantityForEachProduct.HasValue ? row.Acyclic_QuantityForEachProduct.Value : 0;
+                this._ValueOrWaste = row.ValueOrWaste != null ? row.ValueOrWaste[0] : '\0';
+                this._Ergonomy = row.Ergonomy.HasValue ? row.Ergonomy.Value : -1;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1788,9 +1562,7 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
                         if (PauseDefaultNoProductiveTask)
@@ -1800,29 +1572,15 @@ namespace KIS.App_Sources
                             {
                                 npStatus = 'F';
                             }
-                            MySqlCommand cmdDef = conn.CreateCommand();
-                            cmdDef.Transaction = tr;
-                            cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
+                            string sqlDef = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
                                 + " VALUES(@freemeasurementid, @taskid, @inputpoint, @eventtype, @eventdate, @notes) ";
-                            cmdDef.Parameters.AddWithValue("@freemeasurementid", npTaskMeasurentId);
-                            cmdDef.Parameters.AddWithValue("@taskid", npTask);
-                            cmdDef.Parameters.AddWithValue("@inputpoint", ip.id.ToString());
-                            cmdDef.Parameters.AddWithValue("@eventtype", npStatus);
-                            cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                            cmdDef.Parameters.AddWithValue("@notes", "");
-                            cmdDef.ExecuteNonQuery();
+                            conn.Execute(sqlDef, new { freemeasurementid = npTaskMeasurentId, taskid = npTask, inputpoint = ip.id.ToString(), eventtype = npStatus.ToString(), eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), notes = "" }, tr);
                         }
 
 
-                        cmd.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
+                        string sql = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
                                 + " VALUES(@freemeasurementid, @taskid, @inputpoint, @eventtype, @eventdate, @notes) ";
-                        cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                        cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-                        cmd.Parameters.AddWithValue("@inputpoint", ip.id.ToString());
-                        cmd.Parameters.AddWithValue("@eventtype", 'I');
-                        cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                        cmd.Parameters.AddWithValue("@notes", "");
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { freemeasurementid = this.MeasurementId, taskid = this.TaskId, inputpoint = ip.id.ToString(), eventtype = 'I'.ToString(), eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), notes = "" }, tr);
                         tr.Commit();
                         this.Status = 'I';
                         fmMeas.Status = 'I';
@@ -1927,21 +1685,13 @@ namespace KIS.App_Sources
                 DateTime eventtime = DateTime.UtcNow;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
+                string sql = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
                    + " VALUES(@freemeasurementid, @taskid, @user, @eventtype, @eventdate, @notes) ";
-                cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-                cmd.Parameters.AddWithValue("@user", ip.id.ToString());
-                cmd.Parameters.AddWithValue("@eventtype", eventtype);
-                cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@notes", "");
                 
                 try
                 { 
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { freemeasurementid = this.MeasurementId, taskid = this.TaskId, user = ip.id.ToString(), eventtype = eventtype.ToString(), eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), notes = "" }, tr);
                     tr.Commit();
                     ret = 1;
                 }
@@ -1975,9 +1725,7 @@ namespace KIS.App_Sources
                     var defTask = npts.TaskList.FirstOrDefault(x => x.IsDefault == true);
                     if(defTask!=null && defTask.ID != -1)
                     {
-                        MySqlCommand cmdDef = conn.CreateCommand();
                         MySqlTransaction tr2 = conn.BeginTransaction();
-                        cmdDef.Transaction = tr2;
 
                         // ADD NO PRODUCTIVE TASK IN TASK_LIST
                         int nptask = -1;
@@ -2002,18 +1750,12 @@ namespace KIS.App_Sources
                         { 
                             try
                             {
-                                cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
+                                string sqlEv = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
                                    + " VALUES(@freemeasurementid, @taskid, @inputpoint, @eventtype, @eventdate, @notes) ";
-                                cmdDef.Parameters.AddWithValue("@freemeasurementid", npmeasurement);
-                                cmdDef.Parameters.AddWithValue("@taskid", nptask);
-                                cmdDef.Parameters.AddWithValue("@inputpoint", ip.id.ToString());
-                                cmdDef.Parameters.AddWithValue("@eventtype", 'I');
-                                cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                                cmdDef.Parameters.AddWithValue("@notes", "");
-                                cmdDef.ExecuteNonQuery();
+                                conn.Execute(sqlEv, new { freemeasurementid = npmeasurement, taskid = nptask, inputpoint = ip.id.ToString(), eventtype = 'I'.ToString(), eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), notes = "" }, tr2);
 
-                                cmdDef.CommandText = "UPDATE freemeasurements_tasks SET status='I', task_startdatereal=@eventdate WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
-                                cmdDef.ExecuteNonQuery();
+                                string sqlUpd = "UPDATE freemeasurements_tasks SET status='I', task_startdatereal=@eventdate WHERE measurementid=@freemeasurementid AND TaskId=@taskid";
+                                conn.Execute(sqlUpd, new { eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), freemeasurementid = npmeasurement, taskid = nptask }, tr2);
 
                                 tr2.Commit();
                             }
@@ -2057,18 +1799,9 @@ namespace KIS.App_Sources
 
                     foreach(var usr in this.InputPoints)
                     {
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.Transaction = tr;
-                        cmd.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
+                        string sql = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
                            + " VALUES(@freemeasurementid, @taskid, @inputpoint, @eventtype, @eventdate, @notes) ";
-                        cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                        cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-                        cmd.Parameters.AddWithValue("@inputpoint", ip.id);
-                        cmd.Parameters.AddWithValue("@eventtype", 'F');
-                        cmd.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                        cmd.Parameters.AddWithValue("@notes", "Task finished by " + ip.id.ToString());
-
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { freemeasurementid = this.MeasurementId, taskid = this.TaskId, inputpoint = ip.id, eventtype = 'F'.ToString(), eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), notes = "Task finished by " + ip.id.ToString() }, tr);
                     }
                     tr.Commit();
 
@@ -2085,18 +1818,12 @@ namespace KIS.App_Sources
                 Double leadtime = this.calculateLeadTime();
                 Double workingtime = this.calculateWorkingTime();
                 // Calculates leadtime and workingtime and writes in the database
-                MySqlCommand cmd2 = conn.CreateCommand();
-                tr = conn.BeginTransaction();
-                cmd2.Transaction = tr;
-                cmd2.CommandText = "UPDATE freemeasurements_tasks SET realleadtime_hours=@leadtime, realworkingtime_hours=@workingtime WHERE "
+                string sql2 = "UPDATE freemeasurements_tasks SET realleadtime_hours=@leadtime, realworkingtime_hours=@workingtime WHERE "
                    + " MeasurementId=@measurementid AND taskid=@taskid";
-                cmd2.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                cmd2.Parameters.AddWithValue("@taskid", this.TaskId);
-                cmd2.Parameters.AddWithValue("@leadtime", leadtime);
-                cmd2.Parameters.AddWithValue("@workingtime", workingtime);
+                tr = conn.BeginTransaction();
                 try
                 { 
-                    cmd2.ExecuteNonQuery();
+                    conn.Execute(sql2, new { measurementid = this.MeasurementId, taskid = this.TaskId, leadtime = leadtime, workingtime = workingtime }, tr);
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -2138,22 +1865,14 @@ namespace KIS.App_Sources
                             ip.loadFreeMeasurementRunningTasks();
                             if (ip.FreeMeasurementTasks.Count == 0)
                             {
-                                MySqlCommand cmdDef = conn.CreateCommand();
                                 MySqlTransaction tr2 = conn.BeginTransaction();
-                                cmdDef.Transaction = tr2;
 
                                 try
                                 {
-                                    cmdDef.CommandText = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
+                                    string sqlDef = "INSERT INTO freemeasurements_tasks_events(freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes) "
                                        + " VALUES(@freemeasurementid, @taskid, @inputpoint, @eventtype, @eventdate, @notes) ";
-                                    cmdDef.Parameters.AddWithValue("@freemeasurementid", npmeasurement);
-                                    cmdDef.Parameters.AddWithValue("@taskid", nptask);
-                                    cmdDef.Parameters.AddWithValue("@inputpoint", ip.id.ToString());
-                                    cmdDef.Parameters.AddWithValue("@eventtype", 'I');
-                                    cmdDef.Parameters.AddWithValue("@eventdate", eventtime.ToString("yyyy-MM-dd HH:mm:ss"));
-                                    cmdDef.Parameters.AddWithValue("@notes", "");
+                                    conn.Execute(sqlDef, new { freemeasurementid = npmeasurement, taskid = nptask, inputpoint = ip.id.ToString(), eventtype = 'I'.ToString(), eventdate = eventtime.ToString("yyyy-MM-dd HH:mm:ss"), notes = "" }, tr2);
 
-                                    cmdDef.ExecuteNonQuery();
                                     tr2.Commit();
                                 }
                                 catch (Exception ex)
@@ -2191,8 +1910,7 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT  "
+                string sql = "SELECT  "
                     + " freemeasurements.id,  "
                 + " freemeasurements_tasks.taskid, "
                    + " freemeasurements_tasks.name AS TaskName, "
@@ -2220,14 +1938,11 @@ namespace KIS.App_Sources
                + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit)"
                + " LEFT JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid)"
                 + " WHERE eventtype = 'I'; ";
-                cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<(int id, int taskid, String TaskName, String WorkstationName, double QuantityPlanned, String MeasurementUnitType, int InputPoint)>(sql, new { measurementid = this.MeasurementId, taskid = this.TaskId });
+                foreach (var r in rows)
                 {
-                    this.InputPoints.Add(rdr.GetInt32(6));
+                    this.InputPoints.Add(r.InputPoint);
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2242,29 +1957,25 @@ namespace KIS.App_Sources
                 List<FreeMeasurements_Tasks_Event> eventsLst = new List<FreeMeasurements_Tasks_Event>();
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, inputpoint, eventtype, eventdate, notes FROM "
+                string sql = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, inputpoint, eventtype, eventdate, notes FROM "
                     + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
                     + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
                     + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid "
                    // + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY inputpoint, eventdate";
-                cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { measurementid = this.MeasurementId, taskid = this.TaskId });
+                foreach (var r in rows)
                 {
                     FreeMeasurements_Tasks_Event curr = new FreeMeasurements_Tasks_Event(this.Tenant);
-                    curr.id = rdr.GetInt32(0);
-                    curr.freemeasurementid = rdr.GetInt32(1);
-                    curr.taskid = rdr.GetInt32(2);
-                    curr.inputpoint = rdr.GetInt32(3);
-                    curr.eventtype = rdr.GetChar(4);
-                    curr.eventdate = rdr.GetDateTime(5);
-                    curr.notes = rdr.GetString(6);
+                    curr.id = r.id;
+                    curr.freemeasurementid = r.freemeasurementid;
+                    curr.taskid = r.taskid;
+                    curr.inputpoint = r.inputpoint;
+                    curr.eventtype = r.eventtype[0];
+                    curr.eventdate = r.eventdate;
+                    curr.notes = r.notes;
                     eventsLst.Add(curr);
                 }
-                rdr.Close();
                 conn.Close();
 
                 for (int i = 0; i < eventsLst.Count -1; i+=2)
@@ -2296,37 +2007,31 @@ namespace KIS.App_Sources
                 Boolean checkstart = false;
                 Boolean checkend = false;
                 // Gets the first event
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, inputpoint, eventtype, eventdate, notes FROM "
+                string sql = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, inputpoint, eventtype, eventdate, notes FROM "
                     + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
                     + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
                     + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid AND eventtype='I' "
                    // + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY eventdate";
-                cmd.Parameters.AddWithValue("@measurementid", this.MeasurementId);
-                cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read())
+                var rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { measurementid = this.MeasurementId, taskid = this.TaskId }).ToList();
+                if (rows.Count > 0)
                 {
-                    start = rdr.GetDateTime(5);
+                    start = rows[0].eventdate;
                     checkstart = true;
                 }
-                rdr.Close();
 
-                cmd.CommandText = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, inputpoint, eventtype, eventdate, notes FROM "
+                sql = "SELECT id, freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, inputpoint, eventtype, eventdate, notes FROM "
                     + " freemeasurements_tasks_events INNER JOIN freemeasurements_tasks ON "
                     + "(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) " 
                     + " WHERE freemeasurements_tasks.measurementid=@measurementid AND freemeasurements_tasks.taskid=@taskid AND (eventtype='F' OR eventtype='P') "
                     // + " AND freemeasurements_tasks.NoProductiveTaskId IS NULL "
                     + " ORDER BY eventdate DESC";
-                rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { measurementid = this.MeasurementId, taskid = this.TaskId }).ToList();
+                if (rows.Count > 0)
                 {
-                    end = rdr.GetDateTime(5);
+                    end = rows[0].eventdate;
                     checkend = true;
                 }
-                rdr.Close();
                 conn.Close();
 
                 if(checkstart && checkend && end >=start)
@@ -2344,25 +2049,21 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, inputpoint, eventtype, eventdate, notes FROM freemeasurements_tasks_events WHERE freemeasurementid=@freemeasurementid AND taskid=@taskid "
+                string sql = "SELECT id, inputpoint, eventtype, eventdate, notes FROM freemeasurements_tasks_events WHERE freemeasurementid=@freemeasurementid AND taskid=@taskid "
                     + " ORDER BY eventdate";
-                cmd.Parameters.AddWithValue("@freemeasurementid", this.MeasurementId);
-                cmd.Parameters.AddWithValue("@taskid", this.TaskId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var rows = conn.Query<(int id, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { freemeasurementid = this.MeasurementId, taskid = this.TaskId });
+                foreach (var r in rows)
                 {
                     FreeMeasurements_Tasks_Event fmev = new FreeMeasurements_Tasks_Event(this.Tenant);
                     fmev.freemeasurementid = this.MeasurementId;
                     fmev.taskid = this.TaskId;
-                    fmev.id = rdr.GetInt32(0);
-                    fmev.inputpoint = rdr.GetInt32(1);
-                    fmev.eventtype = rdr.GetChar(2);
-                    fmev.eventdate = rdr.GetDateTime(3);
-                    fmev.notes = rdr.GetString(4);
+                    fmev.id = r.id;
+                    fmev.inputpoint = r.inputpoint;
+                    fmev.eventtype = r.eventtype[0];
+                    fmev.eventdate = r.eventdate;
+                    fmev.notes = r.notes;
                     this.TaskEvents.Add(fmev);
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2400,21 +2101,19 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes FROM freemeasurements_tasks_events WHERE id=@evid";
-                cmd.Parameters.AddWithValue("@evid", eventid);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read())
+                string sql = "SELECT id, freemeasurementid, taskid, inputpoint, eventtype, eventdate, notes FROM freemeasurements_tasks_events WHERE id=@evid";
+                var rows = conn.Query<(int id, int freemeasurementid, int taskid, int inputpoint, String eventtype, DateTime eventdate, String notes)>(sql, new { evid = eventid }).ToList();
+                if (rows.Count > 0)
                 {
-                    this.id = rdr.GetInt32(0);
-                    this.freemeasurementid = rdr.GetInt32(1);
-                    this.taskid = rdr.GetInt32(2);
-                    this.inputpoint = rdr.GetInt32(3);
-                    this.eventtype = rdr.GetChar(4);
-                    this.eventdate = rdr.GetDateTime(5);
-                    this.notes = rdr.GetString(6);
+                    var row = rows[0];
+                    this.id = row.id;
+                    this.freemeasurementid = row.freemeasurementid;
+                    this.taskid = row.taskid;
+                    this.inputpoint = row.inputpoint;
+                    this.eventtype = row.eventtype[0];
+                    this.eventdate = row.eventdate;
+                    this.notes = row.notes;
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2429,15 +2128,11 @@ namespace KIS.App_Sources
             int ret = 0;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "UPDATE freemeasurements_tasks_events SET notes=@note WHERE id=@id";
-            cmd.Parameters.AddWithValue("@note", note);
-            cmd.Parameters.AddWithValue("@id", id);
+            string sql = "UPDATE freemeasurements_tasks_events SET notes=@note WHERE id=@id";
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { note = note, id = id }, tr);
                 tr.Commit();
                 this.notes = note;
                 ret = 1;

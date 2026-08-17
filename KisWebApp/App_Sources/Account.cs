@@ -5,6 +5,7 @@ using System.Web;
 using System.Net.Mail;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Dapper;
 using KIS.App_Code;
 
 namespace KIS.App_Sources
@@ -12,6 +13,26 @@ namespace KIS.App_Sources
     public class UserAccount
     {
         public String log;
+
+        private class UserAccountRow
+        {
+            public int id { get; set; }
+            public String userid { get; set; }
+            public String email { get; set; }
+            public String firstname { get; set; }
+            public String lastname { get; set; }
+            public String nickname { get; set; }
+            public String picture_url { get; set; }
+            public String locale { get; set; }
+            public DateTime updated_at { get; set; }
+            public String iss { get; set; }
+            public String nonce { get; set; }
+            public String access_token { get; set; }
+            public String refresh_token { get; set; }
+            public DateTime created_at { get; set; }
+            public DateTime lastlogin { get; set; }
+            public bool globaladmin { get; set; }
+        }
 
         protected String Tenant;
 
@@ -120,32 +141,28 @@ namespace KIS.App_Sources
             this._Workspaces = new List<Workspace>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
+            var row = conn.QueryFirstOrDefault<UserAccountRow>("SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
                 +" lastlogin, globaladmin "
-                + " FROM useraccounts WHERE userid=@userid";
-            cmd.Parameters.AddWithValue("@userid", id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read())
+                + " FROM useraccounts WHERE userid=@userid", new { userid = id });
+            if(row != null)
             {
-                this._id = rdr.GetInt32(0);
-                this._userId = rdr.GetString(1);
-                this._email = new MailAddress(rdr.GetString(2));
-                this._firstname = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
-                this._nickname = rdr.GetString(5);
-                this._pictureUrl = rdr.GetString(6);
-                this._locale = rdr.IsDBNull(7) ? "en" : rdr.GetString(7);
-                this._updatedAt = rdr.GetDateTime(8);
-                this._iss = rdr.GetString(9);
-                this._nonce = rdr.GetString(10);
-                this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
-                this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
-                this._created_at = rdr.GetDateTime(13);
-                this._LastLogin = rdr.GetDateTime(14);
-                this._GlobalAdmin = rdr.GetBoolean(15);
+                this._id = row.id;
+                this._userId = row.userid;
+                this._email = new MailAddress(row.email);
+                this._firstname = row.firstname ?? "";
+                this._lastname = row.lastname ?? "";
+                this._nickname = row.nickname;
+                this._pictureUrl = row.picture_url;
+                this._locale = row.locale ?? "en";
+                this._updatedAt = row.updated_at;
+                this._iss = row.iss;
+                this._nonce = row.nonce;
+                this._access_token = row.access_token ?? "";
+                this._refresh_token = row.refresh_token ?? "";
+                this._created_at = row.created_at;
+                this._LastLogin = row.lastlogin;
+                this._GlobalAdmin = row.globaladmin;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -160,32 +177,28 @@ namespace KIS.App_Sources
             this._Workspaces = new List<Workspace>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
+            var row = conn.QueryFirstOrDefault<UserAccountRow>("SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
                 + " lastlogin, globaladmin "
-                + " FROM useraccounts WHERE id=@userid";
-            cmd.Parameters.AddWithValue("@userid", id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read())
+                + " FROM useraccounts WHERE id=@userid", new { userid = id });
+            if (row != null)
             {
-                this._id = rdr.GetInt32(0);
-                this._userId = rdr.GetString(1);
-                this._email = new MailAddress(rdr.GetString(2));
-                this._firstname = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
-                this._nickname = rdr.GetString(5);
-                this._pictureUrl = rdr.GetString(6);
-                this._locale = rdr.IsDBNull(7) ? "en" : rdr.GetString(7);
-                this._updatedAt = rdr.GetDateTime(8);
-                this._iss = rdr.GetString(9);
-                this._nonce = rdr.GetString(10);
-                this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
-                this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
-                this._created_at = rdr.GetDateTime(13);
-                this._LastLogin = rdr.GetDateTime(14);
-                this._GlobalAdmin = rdr.GetBoolean(15);
+                this._id = row.id;
+                this._userId = row.userid;
+                this._email = new MailAddress(row.email);
+                this._firstname = row.firstname ?? "";
+                this._lastname = row.lastname ?? "";
+                this._nickname = row.nickname;
+                this._pictureUrl = row.picture_url;
+                this._locale = row.locale ?? "en";
+                this._updatedAt = row.updated_at;
+                this._iss = row.iss;
+                this._nonce = row.nonce;
+                this._access_token = row.access_token ?? "";
+                this._refresh_token = row.refresh_token ?? "";
+                this._created_at = row.created_at;
+                this._LastLogin = row.lastlogin;
+                this._GlobalAdmin = row.globaladmin;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -200,32 +213,28 @@ namespace KIS.App_Sources
             this._Workspaces = new List<Workspace>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
+            var row = conn.QueryFirstOrDefault<UserAccountRow>("SELECT id, userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, access_token, refresh_token, created_at, "
                 + " lastlogin, globaladmin "
-                + " FROM useraccounts WHERE email=@userid";
-            cmd.Parameters.AddWithValue("@userid", id.Address);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read())
+                + " FROM useraccounts WHERE email=@userid", new { userid = id.Address });
+            if (row != null)
             {
-                this._id = rdr.GetInt32(0);
-                this._userId = rdr.GetString(1);
-                this._email = new MailAddress(rdr.GetString(2));
-                this._firstname = rdr.IsDBNull(3) ? "" : rdr.GetString(3);
-                this._lastname = rdr.IsDBNull(4) ? "" : rdr.GetString(4);
-                this._nickname = rdr.GetString(5);
-                this._pictureUrl = rdr.GetString(6);
-                this._locale = rdr.IsDBNull(7) ? "en" : rdr.GetString(7);
-                this._updatedAt = rdr.GetDateTime(8);
-                this._iss = rdr.GetString(9);
-                this._nonce = rdr.GetString(10);
-                this._access_token = rdr.IsDBNull(11) ? "" : rdr.GetString(11);
-                this._refresh_token = rdr.IsDBNull(12) ? "" : rdr.GetString(12);
-                this._created_at = rdr.GetDateTime(13);
-                this._LastLogin = rdr.GetDateTime(14);
-                this._GlobalAdmin = rdr.GetBoolean(15);
+                this._id = row.id;
+                this._userId = row.userid;
+                this._email = new MailAddress(row.email);
+                this._firstname = row.firstname ?? "";
+                this._lastname = row.lastname ?? "";
+                this._nickname = row.nickname;
+                this._pictureUrl = row.picture_url;
+                this._locale = row.locale ?? "en";
+                this._updatedAt = row.updated_at;
+                this._iss = row.iss;
+                this._nonce = row.nonce;
+                this._access_token = row.access_token ?? "";
+                this._refresh_token = row.refresh_token ?? "";
+                this._created_at = row.created_at;
+                this._LastLogin = row.lastlogin;
+                this._GlobalAdmin = row.globaladmin;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -249,15 +258,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE useraccounts SET lastlogin=@lastlogin WHERE id=@userid";
-                    cmd.Parameters.AddWithValue("@lastlogin", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@userid", this.id);
+                    string sql = "UPDATE useraccounts SET lastlogin=@lastlogin WHERE id=@userid";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { lastlogin = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), userid = this.id }, tr);
                         tr.Commit();
                     }
                     catch(Exception ex)
@@ -276,17 +281,13 @@ namespace KIS.App_Sources
             { 
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
+                var ids = conn.Query<int>("SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
                     + " WHERE useraccountworkspaces.userid = @userId "
-                    + " ORDER BY name";
-                cmd.Parameters.AddWithValue("@userId", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                    + " ORDER BY name", new { userId = this.id });
+                foreach (var id in ids)
                 {
-                    this.workspaces.Add(new Workspace(rdr.GetInt32(0)));
+                    this.workspaces.Add(new Workspace(id));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -316,16 +317,10 @@ namespace KIS.App_Sources
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO workspaces(name, creator, enabled, enableddate) VALUES(@wsname, @wscreator, @enabled, @enableddate)";
-                    cmd.Parameters.AddWithValue("@wsname", name);
-                    cmd.Parameters.AddWithValue("@wscreator", this.userId);
-                    cmd.Parameters.AddWithValue("@enabled", true);
-                    cmd.Parameters.AddWithValue("@enableddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
+                    string sql1 = "INSERT INTO workspaces(name, creator, enabled, enableddate) VALUES(@wsname, @wscreator, @enabled, @enableddate)";
                     try
                     { 
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql1, new { wsname = name, wscreator = this.userId, enabled = true, enableddate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") }, tr);
                     }
                     catch(Exception ex)
                     {
@@ -334,31 +329,17 @@ namespace KIS.App_Sources
                         ret = -4;
                     }
 
-                    cmd.CommandText = "SELECT MAX(id) FROM workspaces WHERE creator=@userid2 ORDER BY creationdate DESC";
-                    cmd.Parameters.AddWithValue("@userid2", this.userId);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    int wsid = -1;
-                    if(rdr.Read() && !rdr.IsDBNull(0)) { wsid = rdr.GetInt32(0); }
-                    rdr.Close();
-                    if(wsid!=-1)
+                    int? wsid = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM workspaces WHERE creator=@userid2 ORDER BY creationdate DESC", new { userid2 = this.userId }, tr);
+                    if(wsid.HasValue)
                     {
-                        cmd.CommandText = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invitation_accepted, invitation_accepted_date, "
+                        String chksum = Dati.Utilities.getRandomString(16);
+                        string sql3 = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invitation_accepted, invitation_accepted_date, "
                             + " default_ws, invite_checksum) "
                             + " VALUES(@userid3, @workspaceid, @invite_sent, @invite_sent_at, @invitation_accepted, @invitation_accepted_at, @default, @invite_checksum)";
-                        String chksum = Dati.Utilities.getRandomString(16);
-                        cmd.Parameters.AddWithValue("@userid3", this.id);
-                        cmd.Parameters.AddWithValue("@workspaceid", wsid);
-                        cmd.Parameters.AddWithValue("@invite_sent", null);
-                        cmd.Parameters.AddWithValue("@invite_sent_at", null);
-                        cmd.Parameters.AddWithValue("@invitation_accepted", false);
-                        cmd.Parameters.AddWithValue("@invitation_accepted_at", null);
-                        cmd.Parameters.AddWithValue("@default", defaultWS);
-                        cmd.Parameters.AddWithValue("@invite_checksum", chksum);
-
                         try
                         {
-                            cmd.ExecuteNonQuery();
-                            ret = wsid;
+                            conn.Execute(sql3, new Dictionary<string, object> { { "userid3", this.id }, { "workspaceid", wsid.Value }, { "invite_sent", null }, { "invite_sent_at", null }, { "invitation_accepted", false }, { "invitation_accepted_at", null }, { "default", defaultWS }, { "invite_checksum", chksum } }, tr);
+                            ret = wsid.Value;
                             tr.Commit();
                         }
                         catch (Exception ex)
@@ -390,18 +371,13 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
+                int? wsid = conn.QueryFirstOrDefault<int?>("SELECT id FROM workspaces INNER JOIN useraccountworkspaces ON(useraccountworkspaces.workspaceid=workspaces.id) "
                     + " WHERE useraccountworkspaces.userid = @userId AND default_ws=@defaultws"
-                    + " ORDER BY name";
-                cmd.Parameters.AddWithValue("@userId", this.userId);
-                cmd.Parameters.AddWithValue("@defaultws", true);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                    + " ORDER BY name", new { userId = this.userId, defaultws = true });
+                if (wsid.HasValue)
                 {
-                    this._DefaultWorkspace = new Workspace(rdr.GetInt32(0));
+                    this._DefaultWorkspace = new Workspace(wsid.Value);
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -417,19 +393,14 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupID FROM useraccountsgroups INNER JOIN groupss ON (groupss.id = useraccountsgroups.groupid)  "
+                var ids = conn.Query<int>("SELECT groupID FROM useraccountsgroups INNER JOIN groupss ON (groupss.id = useraccountsgroups.groupid)  "
                     + " WHERE useraccountsgroups.userid=@user "
                     + " AND workspaceid=@wsid"
-                    + " ORDER BY groupss.name";
-                cmd.Parameters.AddWithValue("@user", this.id);
-                cmd.Parameters.AddWithValue("@wsid", workspaceid);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                    + " ORDER BY groupss.name", new { user = this.id, wsid = workspaceid });
+                foreach (var id in ids)
                 {
-                    this.groups.Add(new Group(rdr.GetInt32(0)));
+                    this.groups.Add(new Group(id));
                 }
-                rdr.Close();
                 conn.Close();
                 rt = true;
             }
@@ -447,16 +418,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupid FROM useraccountsgroups WHERE userid=@userid AND workspaceid=@workspaceid";
-                cmd.Parameters.AddWithValue("@userid", this.id);
-                cmd.Parameters.AddWithValue("@workspaceid", WorkspaceId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var ids = conn.Query<int>("SELECT groupid FROM useraccountsgroups WHERE userid=@userid AND workspaceid=@workspaceid", new { userid = this.id, workspaceid = WorkspaceId });
+                foreach (var id in ids)
                 {
-                    this._GroupPermissions.Add(new GroupPermissions(rdr.GetInt32(0)));
+                    this._GroupPermissions.Add(new GroupPermissions(id));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -474,16 +440,12 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM useraccountsgroups WHERE groupid=@group AND workspaceid=@ws AND userid=@usr";
-                cmd.Parameters.AddWithValue("@group", group);
-                cmd.Parameters.AddWithValue("@ws", workspace);
-                cmd.Parameters.AddWithValue("@usr", this.id);
+                string sql = "DELETE FROM useraccountsgroups WHERE groupid=@group AND workspaceid=@ws AND userid=@usr";
 
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { group = group, ws = workspace, usr = this.id });
                     tr.Commit();
                     ret = 1;
                 }
@@ -559,15 +521,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT email FROM useremail WHERE userID LIKE @userID ORDER BY note";
-                cmd.Parameters.AddWithValue("@userID", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var emails = conn.Query<string>("SELECT email FROM useremail WHERE userID LIKE @userID ORDER BY note", new { userID = this.id });
+                foreach (var email in emails)
                 {
-                    this.Email.Add(new UserEmail(this.userId, rdr.GetString(0)));
+                    this.Email.Add(new UserEmail(this.userId, email));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -589,17 +547,11 @@ namespace KIS.App_Sources
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
 
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO useremail(userid, email, forAlarm, note) VALUES("
+                string sql = "INSERT INTO useremail(userid, email, forAlarm, note) VALUES("
                     + "@userID, @email, @forAlarm, @note)";
-                cmd.Parameters.AddWithValue("@userID", this.id);
-                cmd.Parameters.AddWithValue("@email", mailAddr.Address);
-                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
-                cmd.Parameters.AddWithValue("@note", note);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { userID = this.id, email = mailAddr.Address, forAlarm = forAlarm, note = note }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -622,15 +574,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT phoneNumber FROM userphonenumbers WHERE userID LIKE @userID ORDER BY note";
-                cmd.Parameters.AddWithValue("@userID", this.userId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var phones = conn.Query<string>("SELECT phoneNumber FROM userphonenumbers WHERE userID LIKE @userID ORDER BY note", new { userID = this.userId });
+                foreach (var phone in phones)
                 {
-                    this.PhoneNumbers.Add(new UserPhoneNumber(this.userId, rdr.GetString(0)));
+                    this.PhoneNumbers.Add(new UserPhoneNumber(this.userId, phone));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -652,17 +600,11 @@ namespace KIS.App_Sources
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
 
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO userphoneNumbers(userid, phoneNumber, forAlarm, note) VALUES("
+                string sql = "INSERT INTO userphoneNumbers(userid, phoneNumber, forAlarm, note) VALUES("
                     + "@userid, @phoneNumber, @forAlarm, @note)";
-                cmd.Parameters.AddWithValue("@userid", this.userId);
-                cmd.Parameters.AddWithValue("@phoneNumber", phone);
-                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
-                cmd.Parameters.AddWithValue("@note", note);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { userid = this.userId, phoneNumber = phone, forAlarm = forAlarm, note = note }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -684,17 +626,13 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(workspace) FROM workspacesinvites WHERE mail LIKE @mail AND accepted IS false" 
-                    + " AND sent_date >= NOW() - INTERVAL 2 DAY ORDER BY sent_date DESC";
-                cmd.Parameters.AddWithValue("@mail", this.email.Address.ToString());
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var wsids = conn.Query<int>("SELECT DISTINCT(workspace) FROM workspacesinvites WHERE mail LIKE @mail AND accepted IS false" 
+                    + " AND sent_date >= NOW() - INTERVAL 2 DAY ORDER BY sent_date DESC", new { mail = this.email.Address.ToString() });
+                foreach (var wsid in wsids)
                 {
-                    WorkspaceInvite curr = new WorkspaceInvite(this.email, new Workspace(rdr.GetInt32(0)));
+                    WorkspaceInvite curr = new WorkspaceInvite(this.email, new Workspace(wsid));
                     this.WorkspaceInvites.Add(curr);
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -715,37 +653,23 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
 
                     try
                     {
-                        cmd.CommandText = "UPDATE workspacesinvites SET accepted=true, accepted_date=NOW() WHERE workspace=@wsid "
+                        string sql1 = "UPDATE workspacesinvites SET accepted=true, accepted_date=NOW() WHERE workspace=@wsid "
                             + " AND mail=@mail AND sent_date >= NOW() - INTERVAL 2 DAY";
-                        cmd.Parameters.AddWithValue("@wsid", ws.id.ToString());
-                        cmd.Parameters.AddWithValue("@mail", this.email.Address.ToString());
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql1, new { wsid = ws.id.ToString(), mail = this.email.Address.ToString() }, tr);
 
-                        cmd.CommandText = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invite_checksum, "
+                        string sql2 = "INSERT INTO useraccountworkspaces(userid, workspaceid, invite_sent, invite_sent_date, invite_checksum, "
                             + " invitation_accepted, invitation_accepted_date, default_ws, destinationUrl) "
                             + "VALUES(@userid, @workspaceid, @invite_sent, @invite_sent_date, @invite_checksum, "
                             + " @invitation_accepted, @invitation_accepted_date, @default_ws, @destinationUrl)";
-                        cmd.Parameters.AddWithValue("@userid", this.id.ToString());
-                        cmd.Parameters.AddWithValue("@workspaceid", ws.id.ToString());
-                        cmd.Parameters.AddWithValue("@invite_sent", true);
-                        cmd.Parameters.AddWithValue("@invite_sent_date", wsinv.SentDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                        cmd.Parameters.AddWithValue("@invite_checksum", wsinv.checksum);
-                        cmd.Parameters.AddWithValue("@invitation_accepted", true);
-                        cmd.Parameters.AddWithValue("@invitation_accepted_date", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                        cmd.Parameters.AddWithValue("@default_ws", false);
-                        cmd.Parameters.AddWithValue("@destinationUrl", "");
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql2, new { userid = this.id.ToString(), workspaceid = ws.id.ToString(), invite_sent = true, invite_sent_date = wsinv.SentDate.ToString("yyyy-MM-dd HH:mm:ss"), invite_checksum = wsinv.checksum, invitation_accepted = true, invitation_accepted_date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), default_ws = false, destinationUrl = "" }, tr);
 
-                        cmd.CommandText = "INSERT INTO useraccountsgroups(groupid, userid, workspaceid) "
+                        string sql3 = "INSERT INTO useraccountsgroups(groupid, userid, workspaceid) "
                             + "VALUES(@groupid, @userid, @workspaceid)";
-                        cmd.Parameters.AddWithValue("@groupid", 14);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql3, new { groupid = 14, userid = this.id.ToString(), workspaceid = ws.id.ToString() }, tr);
 
                         tr.Commit();
                     }
@@ -862,16 +786,12 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "INSERT INTO useraccountsgroups(groupid, workspaceid, userid) VALUES(@group, @ws, @usr)";
-                cmd.Parameters.AddWithValue("@group", group);
-                cmd.Parameters.AddWithValue("@ws", workspace);
-                cmd.Parameters.AddWithValue("@usr", this.id);
+                string sql = "INSERT INTO useraccountsgroups(groupid, workspaceid, userid) VALUES(@group, @ws, @usr)";
 
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { group = group, ws = workspace, usr = this.id });
                     tr.Commit();
                     ret = 1;
                 }
@@ -906,14 +826,11 @@ namespace KIS.App_Sources
             this.list = new List<UserAccount>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userid FROM useraccounts ORDER BY email";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+            var userids = conn.Query<string>("SELECT userid FROM useraccounts ORDER BY email");
+            foreach (var userid in userids)
             {
-                this.list.Add(new UserAccount(rdr.GetString(0)));
+                this.list.Add(new UserAccount(userid));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -936,28 +853,12 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "INSERT INTO useraccounts(userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, id_token, access_token, refresh_token, created_at) "
+                string sql = "INSERT INTO useraccounts(userid, email, firstname, lastname, nickname, picture_url, locale, updated_at, iss, nonce, id_token, access_token, refresh_token, created_at) "
                     + "VALUES(@userid, @email, @firstname, @lastname, @nickname, @picture_url, @locale, @update_at, @iss, @nonce, @id_token, @access_token, @refresh_token, @created_at)";
-                cmd.Parameters.AddWithValue("@userid", userid);
-                cmd.Parameters.AddWithValue("@email", email.Address);
-                cmd.Parameters.AddWithValue("@firstname", firstname);
-                cmd.Parameters.AddWithValue("@lastname", lastname);
-                cmd.Parameters.AddWithValue("@nickname", nickname);
-                cmd.Parameters.AddWithValue("@picture_url", picture_url);
-                cmd.Parameters.AddWithValue("@locale", locale);
-                cmd.Parameters.AddWithValue("@update_at", update_at.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@iss", iss);
-                cmd.Parameters.AddWithValue("@nonce", nonce);
-                cmd.Parameters.AddWithValue("@id_token", id_token);
-                cmd.Parameters.AddWithValue("@access_token", access_token);
-                cmd.Parameters.AddWithValue("@refresh_token", refresh_token);
-                cmd.Parameters.AddWithValue("@created_at", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { userid = userid, email = email.Address, firstname = firstname, lastname = lastname, nickname = nickname, picture_url = picture_url, locale = locale, update_at = update_at.ToString("yyyy-MM-dd HH:mm:ss"), iss = iss, nonce = nonce, id_token = id_token, access_token = access_token, refresh_token = refresh_token, created_at = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") }, tr);
                     ret = 1;
                     tr.Commit();
                 }
@@ -980,6 +881,16 @@ namespace KIS.App_Sources
     public class Workspace
     {
         public String log;
+
+        private class WorkspaceRow
+        {
+            public int id { get; set; }
+            public String name { get; set; }
+            public DateTime creationdate { get; set; }
+            public String creator { get; set; }
+            public bool enabled { get; set; }
+            public DateTime enableddate { get; set; }
+        }
 
         private int _id;
         public int id
@@ -1014,20 +925,16 @@ namespace KIS.App_Sources
             this._UserAccounts = new List<UserAccount>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, name, creationdate, creator, enabled, enableddate FROM workspaces WHERE id=@id";
-            cmd.Parameters.AddWithValue("@id", wsid);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read())
+            var row = conn.QueryFirstOrDefault<WorkspaceRow>("SELECT id, name, creationdate, creator, enabled, enableddate FROM workspaces WHERE id=@id", new { id = wsid });
+            if (row != null)
             {
-                this._id = rdr.GetInt32(0);
-                this._Name = rdr.GetString(1);
-                this._creationDate = rdr.GetDateTime(2);
-                this._Creator = rdr.GetString(3);
-                this._enabled = rdr.GetBoolean(4);
-                this._enabledDate = rdr.GetDateTime(5);
+                this._id = row.id;
+                this._Name = row.name;
+                this._creationDate = row.creationdate;
+                this._Creator = row.creator;
+                this._enabled = row.enabled;
+                this._enabledDate = row.enableddate;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1038,20 +945,16 @@ namespace KIS.App_Sources
             this._UserAccounts = new List<UserAccount>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, name, creationdate, creator, enabled, enableddate FROM workspaces WHERE name=@name";
-            cmd.Parameters.AddWithValue("@name", wsid);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read())
+            var row = conn.QueryFirstOrDefault<WorkspaceRow>("SELECT id, name, creationdate, creator, enabled, enableddate FROM workspaces WHERE name=@name", new { name = wsid });
+            if (row != null)
             {
-                this._id = rdr.GetInt32(0);
-                this._Name = rdr.GetString(1);
-                this._creationDate = rdr.GetDateTime(2);
-                this._Creator = rdr.GetString(3);
-                this._enabled = rdr.GetBoolean(4);
-                this._enabledDate = rdr.GetDateTime(5);
+                this._id = row.id;
+                this._Name = row.name;
+                this._creationDate = row.creationdate;
+                this._Creator = row.creator;
+                this._enabled = row.enabled;
+                this._enabledDate = row.enableddate;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1062,18 +965,14 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT useraccounts.id FROM useraccountworkspaces "
+                var ids = conn.Query<int>("SELECT useraccounts.id FROM useraccountworkspaces "
                     + " INNER JOIN useraccounts ON(useraccountworkspaces.userid= useraccounts.id) "
                     + " WHERE workspaceid = @workspaceid "
-                    + " ORDER BY useraccounts.userid";
-                cmd.Parameters.AddWithValue("@workspaceid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                    + " ORDER BY useraccounts.userid", new { workspaceid = this.id });
+                foreach (var id in ids)
                 {
-                    this._UserAccounts.Add(new UserAccount(rdr.GetInt32(0)));
+                    this._UserAccounts.Add(new UserAccount(id));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -1110,17 +1009,11 @@ namespace KIS.App_Sources
                     String checksum = Dati.Utilities.getRandomString(16);
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO workspacesinvites(mail, workspace, invited_by, checksum) VALUES(@mail, @workspace, @invited_by, @checksum)";
-                    cmd.Parameters.AddWithValue("@mail", email.Address);
-                    cmd.Parameters.AddWithValue("@workspace", this.id.ToString());
-                    cmd.Parameters.AddWithValue("@invited_by", host.id);
-                    cmd.Parameters.AddWithValue("@checksum", checksum);
+                    string sql = "INSERT INTO workspacesinvites(mail, workspace, invited_by, checksum) VALUES(@mail, @workspace, @invited_by, @checksum)";
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { mail = email.Address, workspace = this.id.ToString(), invited_by = host.id, checksum = checksum }, tr);
                         ret = 1;
                         tr.Commit();
                     }
@@ -1182,15 +1075,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT mail FROM workspacesinvites WHERE workspace=@wsid";
-                cmd.Parameters.AddWithValue("@wsid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var mails = conn.Query<string>("SELECT mail FROM workspacesinvites WHERE workspace=@wsid", new { wsid = this.id });
+                foreach (var mail in mails)
                 {
-                    this.Invites.Add(new WorkspaceInvite(new MailAddress(rdr.GetString(0)), this));
+                    this.Invites.Add(new WorkspaceInvite(new MailAddress(mail), this));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -1206,14 +1095,11 @@ namespace KIS.App_Sources
             this.workspaces = new List<Workspace>();
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM workspaces ORDER BY name";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var ids = conn.Query<int>("SELECT id FROM workspaces ORDER BY name");
+            foreach (var id in ids)
             {
-                this.workspaces.Add(new Workspace(rdr.GetInt32(0)));
+                this.workspaces.Add(new Workspace(id));
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -1221,6 +1107,21 @@ namespace KIS.App_Sources
     public class Group
     {
         public String log;
+
+        private class GroupRow
+        {
+            public int id { get; set; }
+            public String nomeGruppo { get; set; }
+            public String descrizione { get; set; }
+        }
+
+        private class GroupNameRow
+        {
+            public int id { get; set; }
+            public String name { get; set; }
+            public String description { get; set; }
+        }
+
         private int _ID;
         public int ID
         {
@@ -1239,13 +1140,9 @@ namespace KIS.App_Sources
                     conn.Open();
                     MySqlTransaction trn = conn.BeginTransaction();
 
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@GroupName", value);
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.Transaction = trn;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { GroupName = value, ID = this.ID }, trn);
                         trn.Commit();
                         this._Nome = value;
                     }
@@ -1271,13 +1168,9 @@ namespace KIS.App_Sources
                     conn.Open();
                     MySqlTransaction trn = conn.BeginTransaction();
 
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@desc", value);
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.Transaction = trn;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { desc = value, ID = this.ID }, trn);
                         trn.Commit();
                         this._Descrizione = value;
                     }
@@ -1302,16 +1195,13 @@ namespace KIS.App_Sources
             String strSQL = "SELECT * FROM groupss WHERE id = @ID";
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@ID", groupID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            rdr.Read();
+            var row = conn.QueryFirstOrDefault<GroupRow>(strSQL, new { ID = groupID });
             this._Permessi = new GroupPermissions(groupID);
-            if (rdr.HasRows)
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._Nome = rdr.GetString(1);
-                this._Descrizione = rdr.GetString(2);
+                this._ID = row.id;
+                this._Nome = row.nomeGruppo;
+                this._Descrizione = row.descrizione;
             }
             else
             {
@@ -1319,7 +1209,6 @@ namespace KIS.App_Sources
                 this._Nome = "";
                 this._Descrizione = "";
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1327,15 +1216,12 @@ namespace KIS.App_Sources
         {
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, name, description FROM groupss WHERE name=@GroupName";
-            cmd.Parameters.AddWithValue("@GroupName", GroupName);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<GroupNameRow>("SELECT id, name, description FROM groupss WHERE name=@GroupName", new { GroupName = GroupName });
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._Nome = rdr.GetString(1);
-                this._Descrizione = rdr.GetString(2);
+                this._ID = row.id;
+                this._Nome = row.name;
+                this._Descrizione = row.description;
             }
             else
             {
@@ -1343,7 +1229,6 @@ namespace KIS.App_Sources
                 this._Nome = "";
                 this._Descrizione = "";
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1355,17 +1240,13 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlTransaction trn = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = trn;
-
 
                 try
                 {
-                    cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM groupss WHERE id = @ID";
-                    cmd.ExecuteNonQuery();
+                    string sql1 = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
+                    conn.Execute(sql1, new { ID = this.ID }, trn);
+                    string sql2 = "DELETE FROM groupss WHERE id = @ID";
+                    conn.Execute(sql2, new { ID = this.ID }, trn);
                     trn.Commit();
                     rt = true;
                 }
@@ -1393,16 +1274,12 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT menuitemid FROM menugroups WHERE groupid=@ID "
-                    + " ORDER BY sequence";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var ids = conn.Query<int>("SELECT menuitemid FROM menugroups WHERE groupid=@ID "
+                    + " ORDER BY sequence", new { ID = this.ID });
+                foreach (var id in ids)
                 {
-                    this._VociDiMenu.Add(new VoceMenu(rdr.GetInt32(0)));
+                    this._VociDiMenu.Add(new VoceMenu(id));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -1414,18 +1291,13 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 this.loadMenu();
                 int maxOrd = this.VociDiMenu.Count + 1;
-                cmd.CommandText = "INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(@ID, @vmid, @maxOrd)";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                cmd.Parameters.AddWithValue("@vmid", vm.ID);
-                cmd.Parameters.AddWithValue("@maxOrd", maxOrd);
+                string sql = "INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(@ID, @vmid, @maxOrd)";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { ID = this.ID, vmid = vm.ID, maxOrd = maxOrd }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -1446,15 +1318,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM menugruppi WHERE gruppo = @ID AND idVoce = @vmid";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                cmd.Parameters.AddWithValue("@vmid", vm.ID);
+                string sql = "DELETE FROM menugruppi WHERE gruppo = @ID AND idVoce = @vmid";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { ID = this.ID, vmid = vm.ID }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -1506,25 +1374,16 @@ namespace KIS.App_Sources
                         else
                         {
                             MySqlTransaction tr = conn.BeginTransaction();
-                            MySqlCommand cmd = conn.CreateCommand();
-                            cmd.Transaction = tr;
                             try
                             {
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento1"
+                                string sql1 = "UPDATE menugruppi SET ordinamento = @ordinamento1"
                                     + " WHERE gruppo = @ID"
                                     + " AND idVoce = @idVoce1";
-                                cmd.Parameters.AddWithValue("@ordinamento1", (indVM - 1));
-                                cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce1", this.VociDiMenu[indVM].ID);
-
-                                cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento2"
+                                conn.Execute(sql1, new { ordinamento1 = (indVM - 1), ID = this.ID, idVoce1 = this.VociDiMenu[indVM].ID }, tr);
+                                string sql2 = "UPDATE menugruppi SET ordinamento = @ordinamento2"
                                     + " WHERE gruppo = @ID "
                                     + " AND idVoce = @idVoce2";
-                                cmd.Parameters.AddWithValue("@ordinamento2", indVM);
-                                cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce2", this.VociDiMenu[indVM - 1].ID);
-                                cmd.ExecuteNonQuery();
+                                conn.Execute(sql2, new { ordinamento2 = indVM, ID = this.ID, idVoce2 = this.VociDiMenu[indVM - 1].ID }, tr);
                                 tr.Commit();
                                 ret = true;
                             }
@@ -1546,24 +1405,16 @@ namespace KIS.App_Sources
                         else
                         {
                             MySqlTransaction tr = conn.BeginTransaction();
-                            MySqlCommand cmd = conn.CreateCommand();
-                            cmd.Transaction = tr;
                             try
                             {
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento1"
+                                string sql1 = "UPDATE menugruppi SET ordinamento = @ordinamento1"
                                     + " WHERE gruppo = @ID"
                                     + " AND idVoce = @idVoce1";
-                                cmd.Parameters.AddWithValue("@ordinamento1", (indVM + 1));
-                                cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce1", this.VociDiMenu[indVM].ID);
-                                cmd.ExecuteNonQuery();
-                                cmd.CommandText = "UPDATE menugruppi SET ordinamento = @ordinamento2"
+                                conn.Execute(sql1, new { ordinamento1 = (indVM + 1), ID = this.ID, idVoce1 = this.VociDiMenu[indVM].ID }, tr);
+                                string sql2 = "UPDATE menugruppi SET ordinamento = @ordinamento2"
                                     + " WHERE gruppo = @ID"
                                     + " AND idVoce = @idVoce2";
-                                cmd.Parameters.AddWithValue("@ordinamento2", indVM);
-                                cmd.Parameters.AddWithValue("@ID", this.ID);
-                                cmd.Parameters.AddWithValue("@idVoce2", this.VociDiMenu[indVM + 1].ID);
-                                cmd.ExecuteNonQuery();
+                                conn.Execute(sql2, new { ordinamento2 = indVM, ID = this.ID, idVoce2 = this.VociDiMenu[indVM + 1].ID }, tr);
                                 tr.Commit();
                                 ret = true;
                             }
@@ -1601,16 +1452,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT userid FROM useraccountsgroups WHERE groupID = @ID AND workspaceid=@workspaceid";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var userids = conn.Query<string>("SELECT userid FROM useraccountsgroups WHERE groupID = @ID AND workspaceid=@workspaceid", new { ID = this.ID, workspaceid = workspaceid });
+                foreach (var userid in userids)
                 {
-                    this._Utenti.Add(rdr.GetString(0));
+                    this._Utenti.Add(userid);
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -1647,16 +1493,12 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Ritardo' "
-                        + "AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var ids = conn.Query<int>("SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Ritardo' "
+                        + "AND idGruppo = @ID", new { ID = this.ID });
+                    foreach (var id in ids)
                     {
-                        // ret.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                        // ret.Add(new Reparto(this.Tenant, id));
                     }
-                    rdr.Close();
                     conn.Close();
                 }
                 return ret;
@@ -1670,14 +1512,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<(int commessaid, int commessaanno)>("SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
+                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID", new { ID = this.ID });
+                    foreach (var r in rows)
                     {
-                        Commessa cm = new Commessa(tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Commessa cm = new Commessa(tenant, r.commessaid, r.commessaanno);
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -1695,14 +1534,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<(int articoloid, int articoloanno)>("SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
+                        + "TipoEvento LIKE 'Ritardo' AND idGruppo = @ID", new { ID = this.ID });
+                    foreach (var r in rows)
                     {
-                        Articolo cm = new Articolo(tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Articolo cm = new Articolo(tenant, r.articoloid, r.articoloanno);
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -1720,16 +1556,12 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Warning' "
-                        + "AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var ids = conn.Query<int>("SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Warning' "
+                        + "AND idGruppo = @ID", new { ID = this.ID });
+                    foreach (var id in ids)
                     {
-                        ret.Add(new Reparto(tenant, rdr.GetInt32(0)));
+                        ret.Add(new Reparto(tenant, id));
                     }
-                    rdr.Close();
                     conn.Close();
                 }
                 return ret;
@@ -1742,14 +1574,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
-                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<(int commessaid, int commessaanno)>("SELECT commessaid, commessaanno FROM eventocommessagruppi WHERE "
+                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID", new { ID = this.ID });
+                    foreach (var r in rows)
                     {
-                        Commessa cm = new Commessa(tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Commessa cm = new Commessa(tenant, r.commessaid, r.commessaanno);
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -1767,14 +1596,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
-                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<(int articoloid, int articoloanno)>("SELECT articoloid, articoloanno FROM eventoarticologruppi WHERE "
+                        + "TipoEvento LIKE 'Warning' AND idGruppo = @ID", new { ID = this.ID });
+                    foreach (var r in rows)
                     {
-                        Articolo cm = new Articolo(tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Articolo cm = new Articolo(tenant, r.articoloid, r.articoloanno);
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -1796,18 +1622,13 @@ namespace KIS.App_Sources
             { 
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "INSERT INTO useraccountsgroups(groupid, userid, workspaceid) VALUES(@groupid, @userid, @workspaceid)";
-                cmd.Parameters.AddWithValue("@groupid", this.ID);
-                cmd.Parameters.AddWithValue("@userid", usr.id);
-                cmd.Parameters.AddWithValue("@workspaceid", ws.id);
+                string sql = "INSERT INTO useraccountsgroups(groupid, userid, workspaceid) VALUES(@groupid, @userid, @workspaceid)";
 
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
 
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { groupid = this.ID, userid = usr.id, workspaceid = ws.id }, tr);
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -1832,15 +1653,12 @@ namespace KIS.App_Sources
         {
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM groupss ORDER BY name";
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var ids = conn.Query<int>("SELECT id FROM groupss ORDER BY name");
             Elenco = new List<Group>();
-            while (rdr.Read())
+            foreach (var id in ids)
             {
-                Elenco.Add(new Group(rdr.GetInt32(0)));
+                Elenco.Add(new Group(id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1849,29 +1667,22 @@ namespace KIS.App_Sources
             bool rt = false;
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM groupss";
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            int? max = conn.ExecuteScalar<int?>("SELECT MAX(id) FROM groupss");
             int maxID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            if (max.HasValue)
             {
-                maxID = rdr.GetInt32(0) + 1;
+                maxID = max.Value + 1;
             }
             else
             {
                 maxID = 0;
             }
-            rdr.Close();
 
             MySqlTransaction trn = conn.BeginTransaction();
-            cmd.Transaction = trn;
-            cmd.CommandText = "INSERT INTO groupss(id, nomeGruppo, descrizione) VALUES(@ID, @NAME, @DESC)";
-            cmd.Parameters.AddWithValue("@ID", maxID);
-            cmd.Parameters.AddWithValue("@NAME", nomeG);
-            cmd.Parameters.AddWithValue("@DESC", descG);
+            string sql = "INSERT INTO groupss(id, nomeGruppo, descrizione) VALUES(@ID, @NAME, @DESC)";
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { ID = maxID, NAME = nomeG, DESC = descG }, trn);
                 trn.Commit();
                 rt = true;
             }
@@ -1889,6 +1700,13 @@ namespace KIS.App_Sources
     public class GroupPermission
     {
         public String log;
+
+        private class GroupPermissionRow
+        {
+            public bool? r { get; set; }
+            public bool? w { get; set; }
+            public bool? x { get; set; }
+        }
 
         private int _GroupID;
         public int GroupID
@@ -1930,17 +1748,13 @@ namespace KIS.App_Sources
 
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
 
                     // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
                     bool recExists;
 
-                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" +
-                        " AND idpermesso = @IDPermesso";
-                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    int? check = conn.QueryFirstOrDefault<int?>("SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" +
+                        " AND idpermesso = @IDPermesso", new { IDGroup = this.GroupID, IDPermesso = this.IdPermesso });
+                    if (check.HasValue)
                     {
                         recExists = true;
                     }
@@ -1948,27 +1762,25 @@ namespace KIS.App_Sources
                     {
                         recExists = false;
                     }
-                    rdr.Close();
 
                     log = "OK " + recExists.ToString();
 
+                    string sql;
                     if (recExists)
                     {
-                        cmd.CommandText = "UPDATE gruppipermessi SET r = @r WHERE idGroup = @IDGroup"
+                        sql = "UPDATE gruppipermessi SET r = @r WHERE idGroup = @IDGroup"
                             + " AND idpermesso = @IDPermesso";
 
                     }
                     else
                     {
-                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, @r, false, false)";
+                        sql = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, @r, false, false)";
                     }
-                    cmd.Parameters.AddWithValue("@r", value);
 
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { IDGroup = this.GroupID, IDPermesso = this.IdPermesso, r = value }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1990,17 +1802,13 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
 
                     // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
                     bool recExists;
 
-                    cmd.CommandText = "SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" +
-                        " AND idpermesso = @IDPermesso";
-                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    int? check = conn.QueryFirstOrDefault<int?>("SELECT * FROM gruppipermessi WHERE idGroup = @IDGroup" +
+                        " AND idpermesso = @IDPermesso", new { IDGroup = this.GroupID, IDPermesso = this.IdPermesso });
+                    if (check.HasValue)
                     {
                         recExists = true;
                     }
@@ -2008,29 +1816,21 @@ namespace KIS.App_Sources
                     {
                         recExists = false;
                     }
-                    rdr.Close();
 
+                    string sql;
                     if (recExists)
                     {
-                        cmd.CommandText = "UPDATE gruppipermessi SET w = @w WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
-                        cmd.Parameters.AddWithValue("@w", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        sql = "UPDATE gruppipermessi SET w = @w WHERE idGroup = @IDGroup AND idpermesso = @IDPermesso";
                     }
                     else
                     {
-                        cmd.CommandText = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, @w, false)";
-                        cmd.Parameters.AddWithValue("@w", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
-
+                        sql = "INSERT INTO gruppipermessi(idgroup, idpermesso, r, w, x) VALUES(@IDGroup, @IDPermesso, false, @w, false)";
                     }
 
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { IDGroup = this.GroupID, IDPermesso = this.IdPermesso, w = value }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -2053,15 +1853,11 @@ namespace KIS.App_Sources
                 {
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     // Controllo se esiste già il record. Se esiste lo aggiorno, altrimenti lo creo.
                     bool recExists;
 
-                    cmd.CommandText = "SELECT * FROM groupspermissions WHERE groupid = @IDGroup AND permissionid = @IDPermesso";
-                    cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                    cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    int? check = conn.QueryFirstOrDefault<int?>("SELECT * FROM groupspermissions WHERE groupid = @IDGroup AND permissionid = @IDPermesso", new { IDGroup = this.GroupID, IDPermesso = this.IdPermesso });
+                    if (check.HasValue)
                     {
                         recExists = true;
                     }
@@ -2069,27 +1865,20 @@ namespace KIS.App_Sources
                     {
                         recExists = false;
                     }
-                    rdr.Close();
 
+                    string sql;
                     if (recExists)
                     {
-                        cmd.CommandText = "UPDATE groupspermissions SET x = @x WHERE groupid = @IDGroup AND permissionid = @IDPermesso";
-                        cmd.Parameters.AddWithValue("@x", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        sql = "UPDATE groupspermissions SET x = @x WHERE groupid = @IDGroup AND permissionid = @IDPermesso";
                     }
                     else
                     {
-                        cmd.CommandText = "INSERT INTO groupspermissions(groupid, permissionid, r, w, x) VALUES(@IDGroup, @IDPermesso, false, false, @x)";
-                        cmd.Parameters.AddWithValue("@x", value);
-                        cmd.Parameters.AddWithValue("@IDGroup", this.GroupID);
-                        cmd.Parameters.AddWithValue("@IDPermesso", this.IdPermesso);
+                        sql = "INSERT INTO groupspermissions(groupid, permissionid, r, w, x) VALUES(@IDGroup, @IDPermesso, false, false, @x)";
                     }
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { IDGroup = this.GroupID, IDPermesso = this.IdPermesso, x = value }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -2109,15 +1898,11 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id FROM groupss WHERE id = @ID";
-                cmd.Parameters.AddWithValue("@ID", grp);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                int? gid = conn.QueryFirstOrDefault<int?>("SELECT id FROM groupss WHERE id = @ID", new { ID = grp });
+                if (gid.HasValue)
                 {
                     check = true;
                 }
-                rdr.Close();
                 conn.Close();
             }
 
@@ -2130,16 +1915,12 @@ namespace KIS.App_Sources
                 this._IdPermesso = Permes.ID;
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT r, w, x FROM groupspermissions WHERE groupid=@GroupID AND permissionid=@PermesID";
-                cmd.Parameters.AddWithValue("@GroupID", grp);
-                cmd.Parameters.AddWithValue("@PermesID", Permes.ID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                var row = conn.QueryFirstOrDefault<GroupPermissionRow>("SELECT r, w, x FROM groupspermissions WHERE groupid=@GroupID AND permissionid=@PermesID", new { GroupID = grp, PermesID = Permes.ID });
+                if (row != null)
                 {
-                    this._R = rdr.IsDBNull(0) ? false : rdr.GetBoolean(0);
-                    this._W = rdr.IsDBNull(1) ? false : rdr.GetBoolean(1);
-                    this._X = rdr.IsDBNull(2) ? false : rdr.GetBoolean(2);
+                    this._R = row.r.HasValue ? row.r.Value : false;
+                    this._W = row.w.HasValue ? row.w.Value : false;
+                    this._X = row.x.HasValue ? row.x.Value : false;
                 }
                 else
                 {
@@ -2148,7 +1929,6 @@ namespace KIS.App_Sources
                     this._X = false;
 
                 }
-                rdr.Close();
                 conn.Close();
             }
             else
@@ -2179,11 +1959,8 @@ namespace KIS.App_Sources
             bool check = false;
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM groupss WHERE id = @GroupID";
-            cmd.Parameters.AddWithValue("@GroupID", grp);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            int? gid = conn.QueryFirstOrDefault<int?>("SELECT ID FROM groupss WHERE id = @GroupID", new { GroupID = grp });
+            if (gid.HasValue)
             {
                 check = true;
             }
@@ -2191,7 +1968,6 @@ namespace KIS.App_Sources
             {
                 check = false;
             }
-            rdr.Close();
             conn.Close();
 
             if (check == true)
@@ -2217,6 +1993,14 @@ namespace KIS.App_Sources
     {
         public String log;
 
+        private class UserEmailRow
+        {
+            public String userID { get; set; }
+            public String email { get; set; }
+            public bool forAlarm { get; set; }
+            public String Note { get; set; }
+        }
+
         private String _UserID;
         public String UserID
         {
@@ -2241,15 +2025,10 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE useremail SET forAlarm=@forAlarm WHERE userID LIKE @userID AND email LIKE @email";
-                cmd.Parameters.AddWithValue("@forAlarm", value);
-                cmd.Parameters.AddWithValue("@userID", this.UserID);
-                cmd.Parameters.AddWithValue("@email", this.Email);
+                string sql = "UPDATE useremail SET forAlarm=@forAlarm WHERE userID LIKE @userID AND email LIKE @email";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { forAlarm = value, userID = this.UserID, email = this.Email }, tr);
                     tr.Commit();
                 }
                 catch
@@ -2272,16 +2051,11 @@ namespace KIS.App_Sources
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE useremail SET note = @note WHERE userID LIKE @userID"
+                    string sql = "UPDATE useremail SET note = @note WHERE userID LIKE @userID"
                         + " AND email LIKE @email";
-                    cmd.Parameters.AddWithValue("@note", value);
-                    cmd.Parameters.AddWithValue("@userID", this.UserID);
-                    cmd.Parameters.AddWithValue("@email", this.Email);
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { note = value, userID = this.UserID, email = this.Email }, tr);
                         tr.Commit();
                     }
                     catch
@@ -2298,17 +2072,13 @@ namespace KIS.App_Sources
         {
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID, email, forAlarm, Note FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
-            cmd.Parameters.AddWithValue("@usr", usr);
-            cmd.Parameters.AddWithValue("@email", email);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<UserEmailRow>("SELECT userID, email, forAlarm, Note FROM useremail WHERE userID LIKE @usr AND email LIKE @email", new { usr = usr, email = email });
+            if (row != null)
             {
-                this._UserID = rdr.GetString(0);
-                this._Email = rdr.GetString(1);
-                this._ForAlarm = rdr.GetBoolean(2);
-                this._Note = rdr.GetString(3);
+                this._UserID = row.userID;
+                this._Email = row.email;
+                this._ForAlarm = row.forAlarm;
+                this._Note = row.Note;
             }
             else
             {
@@ -2317,7 +2087,6 @@ namespace KIS.App_Sources
                 this._ForAlarm = false;
                 this._Note = "";
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -2329,14 +2098,10 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
-                cmd.Parameters.AddWithValue("@usr", this.UserID);
-                cmd.Parameters.AddWithValue("@email", this.Email);
+                string sql = "DELETE FROM useremail WHERE userID LIKE @usr AND email LIKE @email";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { usr = this.UserID, email = this.Email }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -2355,6 +2120,14 @@ namespace KIS.App_Sources
     public class UserPhoneNumber
     {
         public String log;
+
+        private class UserPhoneNumberRow
+        {
+            public String userID { get; set; }
+            public String PhoneNumber { get; set; }
+            public bool forAlarm { get; set; }
+            public String Note { get; set; }
+        }
 
         private String _UserID;
         public String UserID
@@ -2380,16 +2153,11 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE userphonenumbers SET forAlarm=@forAlarm WHERE userID LIKE @usr"
+                string sql = "UPDATE userphonenumbers SET forAlarm=@forAlarm WHERE userID LIKE @usr"
                     + " AND phoneNumber LIKE @phone";
-                cmd.Parameters.AddWithValue("@forAlarm", value);
-                cmd.Parameters.AddWithValue("@usr", this.UserID);
-                cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { forAlarm = value, usr = this.UserID, phone = this.PhoneNumber }, tr);
                     tr.Commit();
                 }
                 catch
@@ -2412,15 +2180,10 @@ namespace KIS.App_Sources
                     MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE userphonenumbers SET note=@note WHERE userID LIKE @usr AND phoneNumber LIKE @phone";
-                    cmd.Parameters.AddWithValue("@note", value);
-                    cmd.Parameters.AddWithValue("@usr", this.UserID);
-                    cmd.Parameters.AddWithValue("@phone", this.PhoneNumber);
+                    string sql = "UPDATE userphonenumbers SET note=@note WHERE userID LIKE @usr AND phoneNumber LIKE @phone";
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { note = value, usr = this.UserID, phone = this.PhoneNumber }, tr);
                         tr.Commit();
                     }
                     catch
@@ -2437,18 +2200,14 @@ namespace KIS.App_Sources
         {
             MySqlConnection conn = (new Dati.Dati()).VCMainConn();
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT userID, PhoneNumber, forAlarm, Note FROM userphonenumbers WHERE userID LIKE @usr "
-                + " AND PhoneNumber LIKE @phone";
-            cmd.Parameters.AddWithValue("@usr", usr);
-            cmd.Parameters.AddWithValue("@phone", phone);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<UserPhoneNumberRow>("SELECT userID, PhoneNumber, forAlarm, Note FROM userphonenumbers WHERE userID LIKE @usr "
+                + " AND PhoneNumber LIKE @phone", new { usr = usr, phone = phone });
+            if (row != null)
             {
-                this._UserID = rdr.GetString(0);
-                this._PhoneNumber = rdr.GetString(1);
-                this._ForAlarm = rdr.GetBoolean(2);
-                this._Note = rdr.GetString(3);
+                this._UserID = row.userID;
+                this._PhoneNumber = row.PhoneNumber;
+                this._ForAlarm = row.forAlarm;
+                this._Note = row.Note;
             }
             else
             {
@@ -2457,7 +2216,6 @@ namespace KIS.App_Sources
                 this._ForAlarm = false;
                 this._Note = "";
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -2469,14 +2227,10 @@ namespace KIS.App_Sources
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM userphonenumbers WHERE userID LIKE @userID AND phonenumber LIKE @phonenumber";
-                cmd.Parameters.AddWithValue("@userID", this.UserID);
-                cmd.Parameters.AddWithValue("@phonenumber", this.PhoneNumber);
+                string sql = "DELETE FROM userphonenumbers WHERE userID LIKE @userID AND phonenumber LIKE @phonenumber";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { userID = this.UserID, phonenumber = this.PhoneNumber }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -2539,19 +2293,15 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT userid, workspaceid FROM useraccountworkspaces "
+                var rows = conn.Query<(int userid, int workspaceid)>("SELECT userid, workspaceid FROM useraccountworkspaces "
                     + " INNER JOIN useraccounts ON(useraccountworkspaces.userid = useraccounts.id) "
                     + " INNER JOIN workspaces ON(useraccountworkspaces.workspaceid = workspaces.id)"
                     + " WHERE "
                     + " useraccounts.id = @userid "
-                    + " AND workspaces.id = @wsid";
-                cmd.Parameters.AddWithValue("@userid", usr.id);
-                cmd.Parameters.AddWithValue("@wsid", ws.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
+                    + " AND workspaces.id = @wsid", new { userid = usr.id, wsid = ws.id });
 
                 Boolean alreadyPresent = false;
-                while(rdr.Read())
+                foreach (var r in rows)
                 {
                     alreadyPresent = true;
                 }
@@ -2564,7 +2314,6 @@ namespace KIS.App_Sources
                 {
                     // addd the user and send the invite
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2572,6 +2321,14 @@ namespace KIS.App_Sources
 
     public class WorkspaceInvite
     {
+        private class WorkspaceInviteRow
+        {
+            public int invited_by { get; set; }
+            public DateTime sent_date { get; set; }
+            public bool accepted { get; set; }
+            public DateTime? accepted_date { get; set; }
+        }
+
         private int _WorkspaceId;
         public int WorkspaceId
         {
@@ -2628,22 +2385,17 @@ namespace KIS.App_Sources
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT invited_by, sent_date, accepted, accepted_date FROM workspacesinvites WHERE mail LIKE @mail AND workspace=@wsid ORDER BY sent_date DESC";
-                cmd.Parameters.AddWithValue("@mail", mail.Address);
-                cmd.Parameters.AddWithValue("@wsid", ws.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read())
+                var row = conn.QueryFirstOrDefault<WorkspaceInviteRow>("SELECT invited_by, sent_date, accepted, accepted_date FROM workspacesinvites WHERE mail LIKE @mail AND workspace=@wsid ORDER BY sent_date DESC", new { mail = mail.Address, wsid = ws.id });
+                if(row != null)
                 {
                     this._WorkspaceId = ws.id;
                     this._Email = mail.Address;
-                    this._InvitedBy = rdr.GetInt32(0);
-                    this._SentDate = rdr.GetDateTime(1);
-                    this._Accepted = rdr.GetBoolean(2);
-                    this._AcceptedDate = rdr.IsDBNull(3) ? new DateTime(1970,1,1) : rdr.GetDateTime(3);
+                    this._InvitedBy = row.invited_by;
+                    this._SentDate = row.sent_date;
+                    this._Accepted = row.accepted;
+                    this._AcceptedDate = row.accepted_date.HasValue ? row.accepted_date.Value : new DateTime(1970,1,1);
                     this._WorkspaceName = ws.Name;
                 }
-                rdr.Close();
                 conn.Close();
             }
         }

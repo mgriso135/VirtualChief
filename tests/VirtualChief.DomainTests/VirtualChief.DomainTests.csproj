@@ -56,6 +56,8 @@
     <Compile Include="..\..\KisWebApp\App_Sources\AppConfig.cs" Link="App_Sources\AppConfig.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\WebEnv.cs" Link="App_Sources\WebEnv.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\quality.cs" Link="App_Sources\quality.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\parts.cs" Link="App_Sources\parts.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\Analysis.cs" Link="App_Sources\Analysis.cs" />
   </ItemGroup>
 
 </Project>

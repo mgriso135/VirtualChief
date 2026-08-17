@@ -6,6 +6,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using MySql.Data.MySqlClient;
 using System.Net.Http;
 using KIS.App_Sources;
@@ -44,14 +45,10 @@ namespace KIS.App_Code
                     extID = value.Substring(0, 250);
                 }
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE commesse SET ExternalID = @extID WHERE idcommesse=@id AND anno=@anno";
-                cmd.Parameters.AddWithValue("@extID", extID);
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
+                string sql = "UPDATE commesse SET ExternalID = @extID WHERE idcommesse=@id AND anno=@anno";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { extID = extID, id = this.ID, anno = this.Year }, tr);
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -115,14 +112,10 @@ namespace KIS.App_Code
                     notes = value.Substring(0, 250);
                 }
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE commesse SET note = @note WHERE idcommesse=@id AND anno=@anno";
-                cmd.Parameters.AddWithValue("@note", notes);
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
+                string sql = "UPDATE commesse SET note = @note WHERE idcommesse=@id AND anno=@anno";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { note = notes, id = this.ID, anno = this.Year }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -212,17 +205,13 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE commesse set Confirmed = @confirmed"
+                    string sql = "UPDATE commesse set Confirmed = @confirmed"
                             + " WHERE idcommesse = @id"
                             + " AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@confirmed", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { confirmed = value, id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                         this._Confirmed = value;
                     }
@@ -251,17 +240,13 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE commesse set ConfirmedDate = @confirmedDate"
+                    string sql = "UPDATE commesse set ConfirmedDate = @confirmedDate"
                             + " WHERE idcommesse = @id"
                             + " AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@confirmedDate", value.ToString("yyyy/MM/dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { confirmedDate = value.ToString("yyyy/MM/dd HH:mm:ss"), id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                         this._ConfirmationDate = value;
                     }
@@ -289,15 +274,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE commesse set ConfirmedBy = @user WHERE idcommesse = @salesorderid AND anno = @year";
-                    cmd.Parameters.AddWithValue("@user", value.id);
-                    cmd.Parameters.AddWithValue("@year", this.Year.ToString());
-                    cmd.Parameters.AddWithValue("@salesorderid", this.ID.ToString());
+                    string sql = "UPDATE commesse set ConfirmedBy = @user WHERE idcommesse = @salesorderid AND anno = @year";
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { user = value.id, year = this.Year.ToString(), salesorderid = this.ID.ToString() }, tr);
                         tr.Commit();
                         this._ConfirmedBy = value;
                     }
@@ -323,38 +304,32 @@ namespace KIS.App_Code
             this._Articoli = new List<Articolo>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT cliente, dataInserimento, note, confirmed, confirmedBy, confirmedDate, ExternalID"
+            string sql = "SELECT cliente, dataInserimento, note, confirmed, confirmedBy, confirmedDate, ExternalID"
                 + " FROM commesse"
                 + " WHERE idcommesse = @id AND "
                 + " anno = @anno ORDER BY anno DESC";
-            cmd.Parameters.AddWithValue("@id", idCommessa);
-            cmd.Parameters.AddWithValue("@anno", AnnoComm);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var rows = conn.Query<(string cliente, DateTime dataInserimento, string note, bool confirmed, string confirmedBy, DateTime? confirmedDate, string externalID)>(sql, new { id = idCommessa, anno = AnnoComm }).ToList();
+            if (rows.Count > 0 && rows[0].cliente != null)
             {
                 this._ID = idCommessa;
-                this._Cliente = rdr.GetString(0);
-                this._DataInserimento = DateTime.SpecifyKind(rdr.GetDateTime(1), DateTimeKind.Utc);
-                if(!rdr.IsDBNull(2))
+                this._Cliente = rows[0].cliente;
+                this._DataInserimento = DateTime.SpecifyKind(rows[0].dataInserimento, DateTimeKind.Utc);
+                if (rows[0].note != null)
                 { 
-                this._Note = rdr.GetString(2);
+                this._Note = rows[0].note;
                 }
-                if (!rdr.IsDBNull(3))
+                this._Confirmed = rows[0].confirmed;
+                if (rows[0].confirmedBy != null)
                 {
-                    this._Confirmed = rdr.GetBoolean(3);
+                    this._ConfirmedBy = new UserAccount(rows[0].confirmedBy);
                 }
-                if (!rdr.IsDBNull(4))
+                if (rows[0].confirmedDate != null)
                 {
-                    this._ConfirmedBy = new UserAccount(rdr.GetString(4));
+                    this._ConfirmationDate = rows[0].confirmedDate.Value;
                 }
-                if (!rdr.IsDBNull(5))
+                if (rows[0].externalID != null)
                 {
-                    this._ConfirmationDate = rdr.GetDateTime(5);
-                }
-                if (!rdr.IsDBNull(6))
-                {
-                    this._ExternalID = rdr.GetString(6);
+                    this._ExternalID = rows[0].externalID;
                 }
             }
             else
@@ -368,7 +343,6 @@ namespace KIS.App_Code
                 this._ExternalID = "";
             }
 
-            rdr.Close();
             conn.Close();
         }
 
@@ -378,18 +352,14 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, anno FROM productionplan WHERE commessa = @id AND annoCommessa = @anno"
+                string sql = "SELECT id, anno FROM productionplan WHERE commessa = @id AND annoCommessa = @anno"
                     + " ORDER BY status, dataConsegnaPrevista";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                MySqlDataReader rdr = cmd.ExecuteReader();
+                var rows = conn.Query<(int, int)>(sql, new { id = this.ID, anno = this.Year });
                 this._Articoli = new List<Articolo>();
-                while (rdr.Read())
+                foreach (var r in rows)
                 {
-                    this._Articoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._Articoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -400,21 +370,16 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, anno FROM productionplan WHERE commessa = @id"
+                string sql = "SELECT id, anno FROM productionplan WHERE commessa = @id"
                     + " AND annoCommessa = @anno"
                     + " AND reparto = @reparto"
                     + " ORDER BY status, dataConsegnaPrevista";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                cmd.Parameters.AddWithValue("@reparto", rp.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
+                var rows = conn.Query<(int, int)>(sql, new { id = this.ID, anno = this.Year, reparto = rp.id });
                 this._Articoli = new List<Articolo>();
-                while (rdr.Read())
+                foreach (var r in rows)
                 {
-                    this._Articoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._Articoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -425,23 +390,18 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = @anno";
-            cmd.Parameters.AddWithValue("@anno", DateTime.UtcNow.Year);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            int? maxID = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM productionPlan WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
             int artID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            if (maxID.HasValue)
             {
-                artID = rdr.GetInt32(0)+1;
+                artID = maxID.Value + 1;
             }
             else
             {
                 artID = 0;
             }
             FusoOrario fuso = new FusoOrario(this.Tenant);
-            rdr.Close();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
+            string sql = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
                 + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta, MeasurementUnit) VALUES(@artID, @anno"
                 + ", @processo, @revisione, @variante"
                 + ", null, 'N', null, null, @id, "
@@ -452,18 +412,9 @@ namespace KIS.App_Code
                 + "@qty, "
                 + "@mu"
                 + ")";
-            cmd.Parameters.AddWithValue("@artID", artID);
-            cmd.Parameters.AddWithValue("@processo", prc.process.processID);
-            cmd.Parameters.AddWithValue("@revisione", prc.process.revisione);
-            cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
-            cmd.Parameters.AddWithValue("@id", this.ID);
-            cmd.Parameters.AddWithValue("@annoCommessa", this.Year);
-            cmd.Parameters.AddWithValue("@consegna", TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"));
-            cmd.Parameters.AddWithValue("@qty", qty);
-            cmd.Parameters.AddWithValue("@mu", prc.MeasurementUnitID);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { artID = artID, anno = DateTime.UtcNow.Year, processo = prc.process.processID, revisione = prc.process.revisione, variante = prc.variant.idVariante, id = this.ID, annoCommessa = this.Year, consegna = TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"), qty = qty, mu = prc.MeasurementUnitID }, tr);
                 tr.Commit();
                 rt = true;
             }
@@ -486,23 +437,18 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = @anno";
-            cmd.Parameters.AddWithValue("@anno", DateTime.UtcNow.Year);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            int? maxID = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM productionPlan WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
             int artID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            if (maxID.HasValue)
             {
-                artID = rdr.GetInt32(0) + 1;
+                artID = maxID.Value + 1;
             }
             else
             {
                 artID = 0;
             }
-            rdr.Close();
-            cmd.Transaction = tr;
             FusoOrario fuso = new FusoOrario(this.Tenant);
-            cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
+            string sql = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
                 + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta, MeasurementUnit) VALUES(@artID, @anno"
                 + ", @processo, @revisione, @variante"
                 + ", null, 'N', null, null, @id, "
@@ -513,18 +459,9 @@ namespace KIS.App_Code
                 + "@qty, "
                 + "@mu"
                 + ")";
-            cmd.Parameters.AddWithValue("@artID", artID);
-            cmd.Parameters.AddWithValue("@processo", prc.process.processID);
-            cmd.Parameters.AddWithValue("@revisione", prc.process.revisione);
-            cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
-            cmd.Parameters.AddWithValue("@id", this.ID);
-            cmd.Parameters.AddWithValue("@annoCommessa", this.Year);
-            cmd.Parameters.AddWithValue("@consegna", TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"));
-            cmd.Parameters.AddWithValue("@qty", qty);
-            cmd.Parameters.AddWithValue("@mu", prc.MeasurementUnitID);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { artID = artID, anno = DateTime.UtcNow.Year, processo = prc.process.processID, revisione = prc.process.revisione, variante = prc.variant.idVariante, id = this.ID, annoCommessa = this.Year, consegna = TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"), qty = qty, mu = prc.MeasurementUnitID }, tr);
                 tr.Commit();
                 rt[0] = artID;
                 rt[1] = DateTime.UtcNow.Year;
@@ -549,23 +486,18 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(id) FROM productionPlan WHERE anno = @anno";
-            cmd.Parameters.AddWithValue("@anno", DateTime.UtcNow.Year);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            int? maxID = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM productionPlan WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
             int artID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            if (maxID.HasValue)
             {
-                artID = rdr.GetInt32(0) + 1;
+                artID = maxID.Value + 1;
             }
             else
             {
                 artID = 0;
             }
-            rdr.Close();
-            cmd.Transaction = tr;
             FusoOrario fuso = new FusoOrario(this.Tenant);
-            cmd.CommandText = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
+            string sql = "INSERT INTO productionplan(id, anno, processo, revisione, variante, matricola, status, reparto, startTime, "
                 + "commessa, annoCommessa, dataConsegnaPrevista, planner, quantita, quantitaProdotta, kanbanCard, measurementunit) VALUES(" 
                 + "@artID, " 
                 + "@anno"
@@ -579,19 +511,9 @@ namespace KIS.App_Code
                 + "@kanbanCard, "
                 + "@mu"
                 + ")";
-            cmd.Parameters.AddWithValue("@artID", artID);
-            cmd.Parameters.AddWithValue("@processo", prc.process.processID);
-            cmd.Parameters.AddWithValue("@revisione", prc.process.revisione);
-            cmd.Parameters.AddWithValue("@variante", prc.variant.idVariante);
-            cmd.Parameters.AddWithValue("@id", this.ID);
-            cmd.Parameters.AddWithValue("@annoCommessa", this.Year);
-            cmd.Parameters.AddWithValue("@consegna", TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"));
-            cmd.Parameters.AddWithValue("@qty", qty);
-            cmd.Parameters.AddWithValue("@kanbanCard", kanbanCard);
-            cmd.Parameters.AddWithValue("@mu", prc.MeasurementUnitID);
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { artID = artID, anno = DateTime.UtcNow.Year, processo = prc.process.processID, revisione = prc.process.revisione, variante = prc.variant.idVariante, id = this.ID, annoCommessa = this.Year, consegna = TimeZoneInfo.ConvertTimeToUtc(consPrev, fuso.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"), qty = qty, kanbanCard = kanbanCard, mu = prc.MeasurementUnitID }, tr);
                 tr.Commit();
                 rt[0] = artID;
                 rt[1] = DateTime.UtcNow.Year;
@@ -621,15 +543,11 @@ namespace KIS.App_Code
                         MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                         conn.Open();
                         MySqlTransaction tr = conn.BeginTransaction();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.Transaction = tr;
                         try
                         {
-                            cmd.CommandText = "DELETE FROM commesse WHERE idcommesse = @id"
+                            string sql = "DELETE FROM commesse WHERE idcommesse = @id"
                                 + " AND anno = @anno";
-                            cmd.Parameters.AddWithValue("@id", this.ID);
-                            cmd.Parameters.AddWithValue("@anno", this.Year);
-                            cmd.ExecuteNonQuery();
+                            conn.Execute(sql, new { id = this.ID, anno = this.Year }, tr);
                             tr.Commit();
                             rt = true;
                         }
@@ -689,14 +607,12 @@ namespace KIS.App_Code
             this._Commesse = new List<Commessa>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idcommesse, anno FROM commesse ORDER BY dataInserimento DESC";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            string sql = "SELECT idcommesse, anno FROM commesse ORDER BY dataInserimento DESC";
+            var rows = conn.Query<(int, int)>(sql);
+            foreach (var r in rows)
             {
-                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -709,22 +625,18 @@ namespace KIS.App_Code
             int rt = -1;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
             // Ricerco l'id corretto
-            cmd.CommandText = "SELECT MAX(idcommesse) FROM commesse WHERE anno = @anno";
-            cmd.Parameters.AddWithValue("@anno", DateTime.UtcNow.Year);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            int? maxCommIDq = conn.QueryFirstOrDefault<int?>("SELECT MAX(idcommesse) FROM commesse WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
             int maxCommID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            if (maxCommIDq.HasValue)
             {
-                maxCommID = rdr.GetInt32(0) + 1;
+                maxCommID = maxCommIDq.Value + 1;
             }
             if (externalID.Length >= 255)
             {
                 externalID = externalID.Substring(0, 250);
             }
-                rdr.Close();
-            cmd.CommandText = "INSERT INTO commesse(idcommesse, anno, cliente, dataInserimento, note, "
+            string sql = "INSERT INTO commesse(idcommesse, anno, cliente, dataInserimento, note, "
                 + "confirmed, confirmedBy, confirmedDate, ExternalID"
                 + ") VALUES(@maxID"
                 + ", @anno, @cliente, @dataIns, @note, "
@@ -733,16 +645,10 @@ namespace KIS.App_Code
                 + "null,"
                 + "@externalID"
                 + ")";
-            cmd.Parameters.AddWithValue("@maxID", maxCommID);
-            cmd.Parameters.AddWithValue("@cliente", Cliente);
-            cmd.Parameters.AddWithValue("@dataIns", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
-            cmd.Parameters.AddWithValue("@note", notes);
-            cmd.Parameters.AddWithValue("@externalID", externalID);
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { maxID = maxCommID, anno = DateTime.UtcNow.Year, cliente = Cliente, dataIns = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), note = notes, externalID = externalID }, tr);
                 tr.Commit();
                 rt = maxCommID;
             }
@@ -761,15 +667,12 @@ namespace KIS.App_Code
             this._Commesse = new List<Commessa>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idcommesse, anno FROM commesse WHERE cliente =@cliente ORDER BY dataInserimento DESC";
-            cmd.Parameters.AddWithValue("@cliente", customer.CodiceCliente);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            string sql = "SELECT idcommesse, anno FROM commesse WHERE cliente =@cliente ORDER BY dataInserimento DESC";
+            var rows = conn.Query<(int, int)>(sql, new { cliente = customer.CodiceCliente });
+            foreach (var r in rows)
             {
-                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
 
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
@@ -789,23 +692,18 @@ namespace KIS.App_Code
             this._Commesse = new List<Commessa>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT commesse.idcommesse, commesse.anno FROM commesse "
+            string sql = "SELECT commesse.idcommesse, commesse.anno FROM commesse "
                 + " INNER JOIN tasksproduzione ON (commesse.idcommesse = tasksproduzione.idcommessa AND commesse.anno = tasksproduzione.annocommessa) "
                 + " WHERE commesse.cliente = @cliente"
                 +" AND tasksproduzione.lateFinish >= @inizio"
                 + " AND earlyStart <= @fine "
                 + " GROUP BY commesse.idcommesse, commesse.anno"
                 + " ORDER BY commesse.anno, commesse.idcommesse";
-            cmd.Parameters.AddWithValue("@cliente", customer.CodiceCliente);
-            cmd.Parameters.AddWithValue("@inizio", inizio.ToString("dd/MM/yyyy HH:mm:ss"));
-            cmd.Parameters.AddWithValue("@fine", fine.ToString("dd/MM/yyyy HH:mm:ss"));
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int, int)>(sql, new { cliente = customer.CodiceCliente, inizio = inizio.ToString("dd/MM/yyyy HH:mm:ss"), fine = fine.ToString("dd/MM/yyyy HH:mm:ss") });
+            foreach (var r in rows)
             {
-                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
 
             this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
@@ -845,19 +743,17 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idcommesse, commesse.anno FROM commesse LEFT JOIN productionplan "
+            string sql = "SELECT idcommesse, commesse.anno FROM commesse LEFT JOIN productionplan "
                 + " ON (commesse.idcommesse = productionplan.commessa AND commesse.anno = productionplan.annoCommessa) "
                 + " WHERE productionplan.status <> 'F' OR productionplan.status IS NULL "
                 + " GROUP BY idcommesse, commesse.anno "
                 + " ORDER BY commesse.anno, commesse.idcommesse";
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var rows = conn.Query<(int, int)>(sql);
             this._Commesse = new List<Commessa>();
-            while (rdr.Read())
+            foreach (var r in rows)
             {
-                this._Commesse.Add(new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._Commesse.Add(new Commessa(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -866,28 +762,19 @@ namespace KIS.App_Code
             int rt = -1;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
             // Ricerco l'id corretto
-            cmd.CommandText = "SELECT MAX(idcommesse) FROM commesse WHERE anno = @anno";
-            cmd.Parameters.AddWithValue("@anno", DateTime.UtcNow.Year);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            int? maxCommIDq = conn.QueryFirstOrDefault<int?>("SELECT MAX(idcommesse) FROM commesse WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
             int maxCommID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            if (maxCommIDq.HasValue)
             {
-                maxCommID = rdr.GetInt32(0) + 1;
+                maxCommID = maxCommIDq.Value + 1;
             }
-            rdr.Close();
-            cmd.CommandText = "INSERT INTO commesse(idcommesse, anno, cliente, dataInserimento, note) VALUES(@maxID"
+            string sql = "INSERT INTO commesse(idcommesse, anno, cliente, dataInserimento, note) VALUES(@maxID"
                 + ", @anno, @cliente, @dataIns, @note)";
-            cmd.Parameters.AddWithValue("@maxID", maxCommID);
-            cmd.Parameters.AddWithValue("@cliente", Cliente);
-            cmd.Parameters.AddWithValue("@dataIns", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
-            cmd.Parameters.AddWithValue("@note", notes);
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { maxID = maxCommID, anno = DateTime.UtcNow.Year, cliente = Cliente, dataIns = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), note = notes }, tr);
                 tr.Commit();
                 rt = maxCommID;
             }
@@ -955,22 +842,21 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
+                    string sql;
+                    object prm;
                     if (value == -1)
                     {
-                        cmd.CommandText = "UPDATE productionplan SET reparto = null WHERE id = @id AND anno = @anno";
+                        sql = "UPDATE productionplan SET reparto = null WHERE id = @id AND anno = @anno";
+                        prm = new { id = this.ID, anno = this.Year };
                     }
                     else
                     {
-                        cmd.CommandText = "UPDATE productionplan SET reparto = @reparto WHERE id = @id AND anno = @anno";
-                        cmd.Parameters.AddWithValue("@reparto", value);
+                        sql = "UPDATE productionplan SET reparto = @reparto WHERE id = @id AND anno = @anno";
+                        prm = new { reparto = value, id = this.ID, anno = this.Year };
                     }
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, prm, tr);
                         tr.Commit();
                         this._Reparto = value;
                     }
@@ -1034,15 +920,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
+                    string sql = "UPDATE productionPlan SET matricola=@matricola WHERE ID = @id";
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.CommandText = "UPDATE productionPlan SET matricola=@matricola WHERE ID = @id";
-                    cmd.Parameters.AddWithValue("@matricola", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { matricola = value, id = this.ID }, tr);
                         tr.Commit();
                     }
                     catch(Exception ex)
@@ -1077,17 +959,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET dataconsegnaprevista = @consegna"
+                    string sql = "UPDATE productionplan SET dataconsegnaprevista = @consegna"
                         + " WHERE id = @id AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@consegna", TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
                     try
                     {
                         this._DataPrevistaConsegna = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { consegna = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss"), id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1141,18 +1018,13 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET dataPrevistaFineProduzione = @fineProd"
+                    string sql = "UPDATE productionplan SET dataPrevistaFineProduzione = @fineProd"
                         + " WHERE id = @id AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@fineProd", fineProd.ToString("yyyy/MM/dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
-                    log = cmd.CommandText;
+                    log = sql;
                     try
                     {
                         this._DataPrevistaFineProduzione = fineProd;
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { fineProd = fineProd.ToString("yyyy/MM/dd HH:mm:ss"), id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1177,19 +1049,15 @@ namespace KIS.App_Code
                 DateTime rt = new DateTime(1970, 1, 1);
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT MAX(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM tasksproduzione "
+                string sql = "SELECT MAX(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM tasksproduzione "
                     + " INNER JOIN productionplan ON (idArticolo=id AND annoarticolo=productionplan.anno) "
                     + " WHERE productionplan.id = @id"
                     + " AND productionplan.anno = @anno";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                DateTime? maxFine = conn.QueryFirstOrDefault<DateTime?>(sql, new { id = this.ID, anno = this.Year });
+                if (maxFine.HasValue)
                 {
-                    rt = rdr.GetDateTime(0);
+                    rt = maxFine.Value;
                 }
-                rdr.Close();
                 conn.Close();
                 if(this.reparto==null || this.reparto.id==-1)
                 {
@@ -1302,18 +1170,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET planner = @planner"
+                    string sql = "UPDATE productionplan SET planner = @planner"
                         + " WHERE id = @id"
                         + " AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@planner", value.id.ToString());
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
-
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { planner = value.id.ToString(), id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                     }
                     catch(Exception ex)
@@ -1340,18 +1202,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET quantita = @quantita"
+                    string sql = "UPDATE productionplan SET quantita = @quantita"
                         + " WHERE id = @id"
                         + " AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@quantita", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
-
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { quantita = value, id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1378,18 +1234,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET quantitaProdotta = @quantitaProdotta"
+                    string sql = "UPDATE productionplan SET quantitaProdotta = @quantitaProdotta"
                         + " WHERE id = @id"
                         + " AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@quantitaProdotta", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
-
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { quantitaProdotta = value, id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                     }
                     catch (Exception ex)
@@ -1423,17 +1273,12 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE productionplan SET kanbancard = @kanbanCard WHERE id = @id"
+                    string sql = "UPDATE productionplan SET kanbancard = @kanbanCard WHERE id = @id"
                         + " AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@kanbanCard", value);
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
+                    MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { kanbanCard = value, id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                         this._KanbanCardID = value;
                     }
@@ -1531,111 +1376,109 @@ namespace KIS.App_Code
             this._EndProductionDateReal = new DateTime(1970, 1, 1);
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
+            string sql = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
             + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
             + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
             + " commesse.ExternalID, endproductiondatereal, WorkingTimePlanned "
             + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) WHERE id = @id"
             + " AND productionplan.anno = @anno"
             + " ORDER BY productionplan.anno DESC";
-            cmd.Parameters.AddWithValue("@id", idArticolo);
-            cmd.Parameters.AddWithValue("@anno", AnnoArticolo);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var rows = conn.Query<(int processo, int revisione, int variante, string matricola, string status, int? reparto, TimeSpan? startTime, int commessa, int annoCommessa, DateTime dataConsegnaPrevista, string cliente, DateTime? dataPrevistaFineProduzione, string planner, int quantita, int? quantitaProdotta, string kanbanCard, TimeSpan? leadtime, TimeSpan? workingtime, TimeSpan? delay, int measurementunit, string externalID, DateTime? endproductiondatereal, TimeSpan? workingTimePlanned)>(sql, new { id = idArticolo, anno = AnnoArticolo }).ToList();
+            if (rows.Count > 0)
             {
+                var r = rows[0];
                 this._ID = idArticolo;
-                this._Proc = new ProcessoVariante(this.Tenant, new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)), new variante(this.Tenant, rdr.GetInt32(2)));
+                this._Proc = new ProcessoVariante(this.Tenant, new processo(this.Tenant, r.processo, r.revisione), new variante(this.Tenant, r.variante));
                 this._Proc.loadReparto();
                 this._Proc.process.loadFigli(this._Proc.variant);
                 this._ProductExternalID = this._Proc.ExternalID;
-                if (!rdr.IsDBNull(3))
+                if (r.matricola != null)
                 {
-                    this._Matricola = rdr.GetString(3);
+                    this._Matricola = r.matricola;
                 }
-                this._Status = rdr.GetChar(4);
-                if (!rdr.IsDBNull(5))
+                this._Status = r.status[0];
+                if (r.reparto.HasValue)
                 {
-                    this._Reparto = rdr.GetInt32(5);
+                    this._Reparto = r.reparto.Value;
                 }
                 else
                 {
                     this._Reparto = -1;
                 }
-                this._Commessa = rdr.GetInt32(7);
-                this._AnnoCommessa = rdr.GetInt32(8);
-                this._DataPrevistaConsegna = rdr.GetDateTime(9);
+                this._Commessa = r.commessa;
+                this._AnnoCommessa = r.annoCommessa;
+                this._DataPrevistaConsegna = r.dataConsegnaPrevista;
                 this._Year = AnnoArticolo;
-                this._Cliente = rdr.GetString(10);
-                if (!rdr.IsDBNull(11))
+                this._Cliente = r.cliente;
+                if (r.dataPrevistaFineProduzione.HasValue)
                 {
-                    this._DataPrevistaFineProduzione = rdr.GetDateTime(11);
+                    this._DataPrevistaFineProduzione = r.dataPrevistaFineProduzione.Value;
                 }
                 else
                 {
                     Reparto rp = new Reparto(this.Tenant, this.Reparto);
                     this._DataPrevistaFineProduzione = TimeZoneInfo.ConvertTimeToUtc(new DateTime(1970, 1, 1), rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(12))
+                if (r.planner != null)
                 {
-                    this._Planner = new UserAccount(rdr.GetString(12));
+                    this._Planner = new UserAccount(r.planner);
                 }
                 else
                 {
                     this._Planner = null;
                 }
-                this._Quantita = rdr.GetInt32(13);
-                if (!rdr.IsDBNull(14))
+                this._Quantita = r.quantita;
+                if (r.quantitaProdotta.HasValue)
                 {
-                    this._QuantitaProdotta = rdr.GetInt32(14);
+                    this._QuantitaProdotta = r.quantitaProdotta.Value;
                 }
                 else
                 {
                     this._QuantitaProdotta = 0; 
                 }
-                if (!rdr.IsDBNull(15))
+                if (r.kanbanCard != null)
                 {
-                    this._KanbanCardID = rdr.GetString(15);
+                    this._KanbanCardID = r.kanbanCard;
                 }
                 else
                 {
                     this._KanbanCardID = "";
                 }
-                if(!rdr.IsDBNull(16))
+                if (r.leadtime.HasValue)
                 {
-                    this._LeadTime = rdr.GetTimeSpan(16);
+                    this._LeadTime = r.leadtime.Value;
                 }
                 else
                 {
                     this._LeadTime = new TimeSpan(0, 0, 0);
                 }
-                if (!rdr.IsDBNull(17))
+                if (r.workingtime.HasValue)
                 {
-                    this._WorkingTime = rdr.GetTimeSpan(17);
+                    this._WorkingTime = r.workingtime.Value;
                 }
                 else
                 {
                     this._WorkingTime = new TimeSpan(0, 0, 0);
                 }
-                if (!rdr.IsDBNull(18))
+                if (r.delay.HasValue)
                 {
-                    this._Delay = rdr.GetTimeSpan(18);
+                    this._Delay = r.delay.Value;
                 }
                 else
                 {
                     this._Delay = new TimeSpan(0, 0, 0);
                 }
 
-                this._MeasurementUnitID = rdr.GetInt32(19);
-                this._CommessaExternalID = rdr.GetString(20);
+                this._MeasurementUnitID = r.measurementunit;
+                this._CommessaExternalID = r.externalID;
                 this._EndProductionDateReal = new DateTime(1970, 1, 1);
-                if(!rdr.IsDBNull(21))
+                if (r.endproductiondatereal.HasValue)
                 {
-                    this._EndProductionDateReal=rdr.GetDateTime(21);
+                    this._EndProductionDateReal = r.endproductiondatereal.Value;
                 }
-                if(!rdr.IsDBNull(22))
+                if (r.workingTimePlanned.HasValue)
                 {
-                    this._WorkingTimePlanned = rdr.GetTimeSpan(22);
+                    this._WorkingTimePlanned = r.workingTimePlanned.Value;
                 }
                 else
                 {
@@ -1662,7 +1505,6 @@ namespace KIS.App_Code
                 this._CommessaExternalID = "";
                 this._EndProductionDateReal = new DateTime(1970, 1, 1);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1676,70 +1518,68 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
+                string sql = "SELECT processo, revisione, variante, matricola, status, reparto, startTime, commessa, annoCommessa, "
                 + " dataConsegnaPrevista, commesse.cliente, dataPrevistaFineProduzione, planner, productionplan.quantita, "
                 + "productionplan.quantitaProdotta, productionplan.kanbanCard, productionplan.id, productionplan.anno, productionplan.leadtime, productionplan.workingtime, productionplan.delay, productionplan.measurementunit, "
                 + "commesse.ExternalID, productionplan.WorkingTimePlanned "
                 + " FROM productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idCommesse AND commesse.anno = productionplan.annoCommessa) "
                 + " WHERE productionplan.kanbanCard LIKE @kanbanCard AND "
                 + " productionplan.kanbanCard IS NOT NULL";
-                cmd.Parameters.AddWithValue("@kanbanCard", card.ekanban_string.ToString());
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                var rows = conn.Query<(int processo, int revisione, int variante, string matricola, string status, int? reparto, TimeSpan? startTime, int commessa, int annoCommessa, DateTime dataConsegnaPrevista, string cliente, DateTime? dataPrevistaFineProduzione, string planner, int quantita, int? quantitaProdotta, string kanbanCard, int id, int anno, TimeSpan? leadtime, TimeSpan? workingtime, TimeSpan? delay, int? measurementunit, string externalID, TimeSpan? workingTimePlanned)>(sql, new { kanbanCard = card.ekanban_string.ToString() }).ToList();
+                if (rows.Count > 0)
                 {
-                    this._ID = rdr.GetInt32(16);
-                    this._Year = rdr.GetInt32(17);
-                    this._Proc = new ProcessoVariante(this.Tenant, new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)), new variante(this.Tenant, rdr.GetInt32(2)));
+                    var r = rows[0];
+                    this._ID = r.id;
+                    this._Year = r.anno;
+                    this._Proc = new ProcessoVariante(this.Tenant, new processo(this.Tenant, r.processo, r.revisione), new variante(this.Tenant, r.variante));
                     this._Proc.loadReparto();
                     this._Proc.process.loadFigli(this._Proc.variant);
-                    if (!rdr.IsDBNull(3))
+                    if (r.matricola != null)
                     {
-                        this._Matricola = rdr.GetString(3);
+                        this._Matricola = r.matricola;
                     }
-                    this._Status = rdr.GetChar(4);
-                    if (!rdr.IsDBNull(5))
+                    this._Status = r.status[0];
+                    if (r.reparto.HasValue)
                     {
-                        this._Reparto = rdr.GetInt32(5);
+                        this._Reparto = r.reparto.Value;
                     }
                     else
                     {
                         this._Reparto = -1;
                     }
-                    this._Commessa = rdr.GetInt32(7);
-                    this._AnnoCommessa = rdr.GetInt32(8);
-                    this._DataPrevistaConsegna = rdr.GetDateTime(9);
+                    this._Commessa = r.commessa;
+                    this._AnnoCommessa = r.annoCommessa;
+                    this._DataPrevistaConsegna = r.dataConsegnaPrevista;
 
-                    this._Cliente = rdr.GetString(10);
-                    if (!rdr.IsDBNull(11))
+                    this._Cliente = r.cliente;
+                    if (r.dataPrevistaFineProduzione.HasValue)
                     {
-                        this._DataPrevistaFineProduzione = rdr.GetDateTime(11);
+                        this._DataPrevistaFineProduzione = r.dataPrevistaFineProduzione.Value;
                     }
                     else
                     {
                         this._DataPrevistaFineProduzione = new DateTime(1970, 1, 1);
                     }
-                    if (!rdr.IsDBNull(12))
+                    if (r.planner != null)
                     {
-                        this._Planner = new UserAccount(rdr.GetString(12));
+                        this._Planner = new UserAccount(r.planner);
                     }
                     else
                     {
                         this._Planner = null;
                     }
-                    this._Quantita = rdr.GetInt32(13);
-                    if (!rdr.IsDBNull(14))
+                    this._Quantita = r.quantita;
+                    if (r.quantitaProdotta.HasValue)
                     {
-                        this._QuantitaProdotta = rdr.GetInt32(14);
+                        this._QuantitaProdotta = r.quantitaProdotta.Value;
                     }
                     else
                     {
                         this._QuantitaProdotta = 0;
                     }
-                    if (!rdr.IsDBNull(15))
+                    if (r.kanbanCard != null)
                     {
-                        this._KanbanCardID = rdr.GetString(15);
+                        this._KanbanCardID = r.kanbanCard;
                     }
                     else
                     {
@@ -1747,40 +1587,40 @@ namespace KIS.App_Code
                     }
                     this._TempoDiLavoroTotale = new TimeSpan(0, 0, 0);
 
-                    if (!rdr.IsDBNull(18))
+                    if (r.leadtime.HasValue)
                     {
-                        this._LeadTime = rdr.GetTimeSpan(18);
+                        this._LeadTime = r.leadtime.Value;
                     }
                     else
                     {
                         this._LeadTime = new TimeSpan(0, 0, 0);
                     }
-                    if (!rdr.IsDBNull(19))
+                    if (r.workingtime.HasValue)
                     {
-                        this._WorkingTime = rdr.GetTimeSpan(19);
+                        this._WorkingTime = r.workingtime.Value;
                     }
                     else
                     {
                         this._WorkingTime = new TimeSpan(0, 0, 0);
                     }
-                    if (!rdr.IsDBNull(20))
+                    if (r.delay.HasValue)
                     {
-                        this._Delay = rdr.GetTimeSpan(20);
+                        this._Delay = r.delay.Value;
                     }
                     else
                     {
                         this._Delay = new TimeSpan(0, 0, 0);
                     }
-                    if (!rdr.IsDBNull(21))
+                    if (r.measurementunit.HasValue)
                     {
-                        this._WorkingTimePlanned = rdr.GetTimeSpan(21);
+                        this._WorkingTimePlanned = (TimeSpan)(object)r.measurementunit.Value;
                     }
                     else
                     {
                         this._WorkingTimePlanned = new TimeSpan(0, 0, 0);
                     }
-                    this._MeasurementUnitID = rdr.GetInt32(21);
-                    this._CommessaExternalID = rdr.GetString(22);
+                    this._MeasurementUnitID = r.measurementunit.Value;
+                    this._CommessaExternalID = r.externalID;
                 }
                 else
                 {
@@ -1802,7 +1642,6 @@ namespace KIS.App_Code
                     this._MeasurementUnitID = -1;
                     this._CommessaExternalID = "";
                 }
-                rdr.Close();
                 conn.Close();
             }
             else
@@ -1830,12 +1669,8 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "DELETE FROM productionPlan WHERE ID = @id AND anno = @anno";
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@anno", this.Year);
+                    string sql = "DELETE FROM productionPlan WHERE ID = @id AND anno = @anno";
                     try
                     {
                         this.loadTaskParameters();
@@ -1849,7 +1684,7 @@ namespace KIS.App_Code
                         {
                             this.Parameters[i].Delete();
                         }
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { id = this.ID, anno = this.Year }, tr);
                         tr.Commit();
                         rt = true;
                     }
@@ -1883,17 +1718,13 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE idArticolo = @id" +
+                string sql = "SELECT taskID FROM tasksproduzione WHERE idArticolo = @id" +
                     " AND annoArticolo = @anno ORDER BY lateStart, earlyStart";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<int>(sql, new { id = this.ID, anno = this.Year });
+                foreach (var t in rows)
                 {
-                    this._Tasks.Add(new TaskProduzione(this.Tenant, rdr.GetInt32(0)));
+                    this._Tasks.Add(new TaskProduzione(this.Tenant, t));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -1993,14 +1824,8 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.Parameters.AddWithValue("@taskID", 0);
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                
-              try
+                try
                 {
                     this.loadTasksProduzione();
 
@@ -2017,32 +1842,24 @@ namespace KIS.App_Code
 
                     for (int i = 0; i < this.Tasks.Count; i++)
                     {
-                        cmd.Parameters["@taskID"].Value = this.Tasks[i].TaskProduzioneID;
-                        cmd.CommandText = "DELETE FROM taskreschedulelog WHERE task = @taskID";
-                        cmd.ExecuteNonQuery();
+                        conn.Execute("DELETE FROM taskreschedulelog WHERE task = @taskID", new { taskID = this.Tasks[i].TaskProduzioneID }, tr);
                     }
 
                     for (int i = 0; i < this.Tasks.Count; i++)
                     {
-                        cmd.Parameters["@taskID"].Value = this.Tasks[i].TaskProduzioneID;
-                        cmd.CommandText = "DELETE FROM prectasksproduzione WHERE prec = @taskID"
-                            + " OR succ = @taskID";
-                        cmd.ExecuteNonQuery();
+                        conn.Execute("DELETE FROM prectasksproduzione WHERE prec = @taskID"
+                            + " OR succ = @taskID", new { taskID = this.Tasks[i].TaskProduzioneID }, tr);
 
-                        cmd.CommandText = "DELETE FROM registroeventiproduzione WHERE taskID = @taskID";
-                        cmd.ExecuteNonQuery();
+                        conn.Execute("DELETE FROM registroeventiproduzione WHERE taskID = @taskID", new { taskID = this.Tasks[i].TaskProduzioneID }, tr);
                     }
 
                     for (int i = 0; i < this.Tasks.Count; i++)
                     {
-                        cmd.Parameters["@taskID"].Value = this.Tasks[i].TaskProduzioneID;
-                        cmd.CommandText = "DELETE FROM tasksproduzione WHERE taskID = @taskID";
-                        cmd.ExecuteNonQuery();
+                        conn.Execute("DELETE FROM tasksproduzione WHERE taskID = @taskID", new { taskID = this.Tasks[i].TaskProduzioneID }, tr);
                     }
 
-                    cmd.CommandText = "UPDATE productionplan SET status = 'N' WHERE id = @id"
-                        + " AND anno = @anno";
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("UPDATE productionplan SET status = 'N' WHERE id = @id"
+                        + " AND anno = @anno", new { id = this.ID, anno = this.Year }, tr);
 
                     tr.Commit();
                     ret = true;
@@ -2488,30 +2305,21 @@ namespace KIS.App_Code
                 // tutti i tasks --> P
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.Parameters.AddWithValue("@taskID", 0);
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
                 try
                 {
                     this.loadTasksProduzione();
                     for (int i = 0; i < this.Tasks.Count; i++)
                     {
-                        cmd.Parameters["@taskID"].Value = this.Tasks[i].TaskProduzioneID;
-                        cmd.CommandText = "UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
+                        conn.Execute("UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
                         + "task = @taskID"
-                        + " AND evento = 'F'";
-                        cmd.ExecuteNonQuery();
+                        + " AND evento = 'F'", new { taskID = this.Tasks[i].TaskProduzioneID }, tr);
                     }
-                    cmd.CommandText = "UPDATE tasksproduzione SET status='P' WHERE idArticolo = @id"
+                    conn.Execute("UPDATE tasksproduzione SET status='P' WHERE idArticolo = @id"
                         + " AND annoArticolo = @anno"
-                        + " AND status = 'F'";
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "UPDATE productionplan SET status='I' WHERE id = @id"
-                        + " AND anno = @anno";
-                    cmd.ExecuteNonQuery();
+                        + " AND status = 'F'", new { id = this.ID, anno = this.Year }, tr);
+                    conn.Execute("UPDATE productionplan SET status='I' WHERE id = @id"
+                        + " AND anno = @anno", new { id = this.ID, anno = this.Year }, tr);
                     tr.Commit();
                     res = true;
                 }
@@ -2533,9 +2341,7 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-
-                cmd.CommandText = "INSERT INTO productparameters(ProductID, ProductYear, paramID, "
+                string sql = "INSERT INTO productparameters(ProductID, ProductYear, paramID, "
                     + " paramName, paramDescription, isFixed, sequence) VALUES("
                     + "@id, "
                     + "@anno, "
@@ -2545,23 +2351,16 @@ namespace KIS.App_Code
                     + "@isFixed, "
                     + "@sequence"
                     + ")";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                cmd.Parameters.AddWithValue("@paramID", ParamID);
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@desc", description);
-                cmd.Parameters.AddWithValue("@isFixed", isFixed);
-                cmd.Parameters.AddWithValue("@sequence", sequence);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { id = this.ID, anno = this.Year, paramID = ParamID, name = name, desc = description, isFixed = isFixed, sequence = sequence }, tr);
                     tr.Commit();
                     ret = true;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     ret = false;
                     tr.Rollback();
                 }
@@ -2577,21 +2376,17 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ProductID, ProductYear, paramID, paramCategory "
+                string sql = "SELECT ProductID, ProductYear, paramID, paramCategory "
                     + " FROM productparameters WHERE ProductID = @id"
                     + " AND ProductYear = @anno"
                     + " ORDER BY sequence";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@anno", this.Year);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                var rows = conn.Query<(int, int, int, int)>(sql, new { id = this.ID, anno = this.Year });
+                foreach (var r in rows)
                 {
-                    this.Parameters.Add(new ProductParameter(rdr.GetInt32(0), rdr.GetInt32(1),
-                        new ProductParametersCategory(this.Tenant, rdr.GetInt32(3)),
-                        rdr.GetInt32(2)));
+                    this.Parameters.Add(new ProductParameter(r.Item1, r.Item2,
+                        new ProductParametersCategory(this.Tenant, r.Item4),
+                        r.Item3));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2708,14 +2503,12 @@ namespace KIS.App_Code
             this._ArticoliAperti = new List<Articolo>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status <> 'F' ORDER BY dataConsegnaPrevista";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            string sql = "SELECT id, anno FROM productionplan WHERE status <> 'F' ORDER BY dataConsegnaPrevista";
+            var rows = conn.Query<(int, int)>(sql);
+            foreach (var r in rows)
             {
-                this._ArticoliAperti.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ArticoliAperti.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -2724,15 +2517,12 @@ namespace KIS.App_Code
             this._ArticoliAperti = new List<Articolo>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status <> 'F' AND reparto = @reparto ORDER BY dataConsegnaPrevista";
-            cmd.Parameters.AddWithValue("@reparto", idReparto);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            string sql = "SELECT id, anno FROM productionplan WHERE status <> 'F' AND reparto = @reparto ORDER BY dataConsegnaPrevista";
+            var rows = conn.Query<(int, int)>(sql, new { reparto = idReparto });
+            foreach (var r in rows)
             {
-                this._ArticoliAperti.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ArticoliAperti.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -2767,15 +2557,13 @@ namespace KIS.App_Code
             this.ProductList = new List<FlatProduct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan ORDER BY anno DESC, id DESC";
+            string sql = "SELECT id, anno FROM productionplan ORDER BY anno DESC, id DESC";
             
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int, int)>(sql);
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -2784,9 +2572,8 @@ namespace KIS.App_Code
             this.ProductList = new List<FlatProduct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
             //                cmd.CommandText = "SELECT id, anno FROM productionplan ORDER BY anno DESC, id DESC";
-            cmd.CommandText = "SELECT productionplan.id, productionplan.anno, processo.name, varianti.nomevariante,"
+            string sql = "SELECT productionplan.id, productionplan.anno, processo.name, varianti.nomevariante,"
                                             + " productionplan.matricola, productionplan.quantita, commesse.cliente, "
                                             + " anagraficaclienti.ragsociale, processo.processID, processo.revisione, varianti.idVariante, "
                                             + " productionplan.status "
@@ -2798,29 +2585,28 @@ namespace KIS.App_Code
                                             + " ON(productionplan.commessa = commesse.idcommesse AND productionplan.annocommessa = commesse.anno)"
                                             + " INNER JOIN anagraficaclienti ON(commesse.cliente = anagraficaclienti.codice)"
                                             + " ORDER BY productionplan.anno DESC, productionplan.id DESC";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int, int, string, string, string, int, string, string, int, int, int, string)>(sql);
+            foreach (var r in rows)
             {
                 FlatProduct curr = new FlatProduct();
-                curr.ProductID = rdr.GetInt32(0);
-                curr.ProductYear = rdr.GetInt32(1);
-                curr.processName = rdr.GetString(2);
-                curr.varianteName = rdr.GetString(3);
-                if (!rdr.IsDBNull(4))
+                curr.ProductID = r.Item1;
+                curr.ProductYear = r.Item2;
+                curr.processName = r.Item3;
+                curr.varianteName = r.Item4;
+                if (r.Item5 != null)
                 {
-                    curr.SerialNumber = rdr.GetString(4);
+                    curr.SerialNumber = r.Item5;
                 }
-                curr.Quantity = rdr.GetInt32(5);
-                curr.CustomerID = rdr.GetString(6);
-                curr.CustomerName = rdr.GetString(7);
-                curr.processID = rdr.GetInt32(8);
-                curr.revID = rdr.GetInt32(9);
-                curr.varID = rdr.GetInt32(10);
-                curr.Status = rdr.GetChar(11);
+                curr.Quantity = r.Item6;
+                curr.CustomerID = r.Item7;
+                curr.CustomerName = r.Item8;
+                curr.processID = r.Item9;
+                curr.revID = r.Item10;
+                curr.varID = r.Item11;
+                curr.Status = r.Item12[0];
 
                 this.ProductList.Add(curr);
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -2836,25 +2622,24 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, anno FROM productionplan WHERE "
+                string sql = "SELECT id, anno FROM productionplan WHERE "
                     + " processo = @processo"
                     + " AND revisione = @revisione"
                     + " AND variante = @variante";
-                cmd.Parameters.AddWithValue("@processo", prcVar.process.processID);
-                cmd.Parameters.AddWithValue("@revisione", prcVar.process.revisione);
-                cmd.Parameters.AddWithValue("@variante", prcVar.variant.idVariante);
+                var prm = new Dapper.DynamicParameters();
+                prm.Add("@processo", prcVar.process.processID);
+                prm.Add("@revisione", prcVar.process.revisione);
+                prm.Add("@variante", prcVar.variant.idVariante);
                 if (closed == true)
                 {
-                    cmd.CommandText += " AND status = 'F'";
+                    sql += " AND status = 'F'";
                 }
-                cmd.CommandText += " ORDER BY dataConsegnaPrevista";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                sql += " ORDER BY dataConsegnaPrevista";
+                var rows = conn.Query<(int, int)>(sql, prm);
+                foreach (var r in rows)
                 {
-                    this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2871,32 +2656,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, anno FROM productionplan WHERE "
+                string sql = "SELECT id, anno FROM productionplan WHERE "
                     + " processo = @processo"
                     + " AND revisione = @revisione"
                     + " AND variante = @variante"
                     + " AND status = @stato";
-                cmd.Parameters.AddWithValue("@processo", prcVar.process.processID);
-                cmd.Parameters.AddWithValue("@revisione", prcVar.process.revisione);
-                cmd.Parameters.AddWithValue("@variante", prcVar.variant.idVariante);
-                cmd.Parameters.AddWithValue("@stato", stato.ToString());
+                var prm = new Dapper.DynamicParameters();
+                prm.Add("@processo", prcVar.process.processID);
+                prm.Add("@revisione", prcVar.process.revisione);
+                prm.Add("@variante", prcVar.variant.idVariante);
+                prm.Add("@stato", stato.ToString());
                 if (start != null && end != null && start < end)
                 {
-                    cmd.CommandText += " AND productionplan.dataPrevistaFineProduzione >= @start "
+                    sql += " AND productionplan.dataPrevistaFineProduzione >= @start "
                         + " AND productionplan.dataPrevistaFineProduzione <= @end";
-                    cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
-                    cmd.Parameters.AddWithValue("@end", end.ToString("yyyy/MM/dd"));
+                    prm.Add("@start", start.ToString("yyyy/MM/dd"));
+                    prm.Add("@end", end.ToString("yyyy/MM/dd"));
                 }    
 
-                cmd.CommandText+= " ORDER BY dataConsegnaPrevista";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                sql += " ORDER BY dataConsegnaPrevista";
+                var rows = conn.Query<(int, int)>(sql, prm);
+                foreach (var r in rows)
                 {
-                    this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
                 }
 
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -2921,32 +2705,31 @@ namespace KIS.App_Code
             this._ListArticoli = new List<Articolo>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM "
+            string sql = "SELECT productionplan.id, productionplan.anno FROM "
                 + " productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa = commesse.anno) "
                 + " WHERE ";
             String condCustomer="";
+            var prm = new Dapper.DynamicParameters();
             if (customer != null && customer.CodiceCliente.Length > 0)
             {
                 condCustomer = " commesse.cliente = @cliente";
-                cmd.Parameters.AddWithValue("@cliente", customer.CodiceCliente);
+                prm.Add("@cliente", customer.CodiceCliente);
             }
             
             if (condCustomer.Length > 0)
             {
-                cmd.CommandText += condCustomer;
+                sql += condCustomer;
             }
             
-            cmd.CommandText += " ORDER BY productionplan.anno DESC, productionplan.id DESC";
+            sql += " ORDER BY productionplan.anno DESC, productionplan.id DESC";
 
-            log = cmd.CommandText;
+            log = sql;
 
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int, int)>(sql, prm);
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -2957,67 +2740,66 @@ namespace KIS.App_Code
             this._ListArticoli = new List<Articolo>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT productionplan.id, productionplan.anno FROM "
+            string sql = "SELECT productionplan.id, productionplan.anno FROM "
                 + " productionplan INNER JOIN commesse ON (productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa = commesse.anno) "
                 + " WHERE productionplan.status = 'F' AND ";
             String condOrigProc = "", condCustomer = "", condTime = "";
+            var prm = new Dapper.DynamicParameters();
             if (origProc != null && origProc.process != null && origProc.variant != null && origProc.process.processID != -1 && origProc.variant.idVariante != -1)
             {
                 condOrigProc = " productionplan.processo = @processo"
                     + " AND productionplan.revisione = @revisione"
                     + " AND productionplan.variante = @variante";
-                cmd.Parameters.AddWithValue("@processo", origProc.process.processID);
-                cmd.Parameters.AddWithValue("@revisione", origProc.process.revisione);
-                cmd.Parameters.AddWithValue("@variante", origProc.variant.idVariante);
+                prm.Add("@processo", origProc.process.processID);
+                prm.Add("@revisione", origProc.process.revisione);
+                prm.Add("@variante", origProc.variant.idVariante);
             }
 
             if (customer!=null && customer.CodiceCliente.Length > 0)
             {
                 condCustomer = " commesse.cliente = @cliente";
-                cmd.Parameters.AddWithValue("@cliente", customer.CodiceCliente);
+                prm.Add("@cliente", customer.CodiceCliente);
             }
 
             if (start != null && end != null && start < end)
             {
                 condTime = " productionplan.dataPrevistaFineProduzione >= @start "
                     + " AND productionplan.dataPrevistaFineProduzione <= @end";
-                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
-                cmd.Parameters.AddWithValue("@end", end.ToString("yyyy/MM/dd"));
+                prm.Add("@start", start.ToString("yyyy/MM/dd"));
+                prm.Add("@end", end.ToString("yyyy/MM/dd"));
             }
 
             if (condOrigProc.Length > 0)
             {
-                cmd.CommandText += condOrigProc;
+                sql += condOrigProc;
             }
 
             if (condCustomer.Length > 0)
             {
                 if (condOrigProc.Length > 0)
                 {
-                    cmd.CommandText += " AND ";
+                    sql += " AND ";
                 }
-                cmd.CommandText += condCustomer;
+                sql += condCustomer;
             }
             if (condTime.Length > 0)
             {
                 if (condCustomer.Length > 0 || condOrigProc.Length > 0)
                 {
-                    cmd.CommandText += " AND ";
+                    sql += " AND ";
                 }
-                cmd.CommandText += condTime;
+                sql += condTime;
             }
 
-            cmd.CommandText += " ORDER BY dataPrevistaFineProduzione";
+            sql += " ORDER BY dataPrevistaFineProduzione";
 
-            log = cmd.CommandText;
+            log = sql;
 
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int, int)>(sql, prm);
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -3027,16 +2809,13 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = @stato ORDER BY DataPrevistaFineProduzione";
-            cmd.Parameters.AddWithValue("@stato", stato.ToString());
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            string sql = "SELECT id, anno FROM productionplan WHERE status = @stato ORDER BY DataPrevistaFineProduzione";
+            var rows = conn.Query<(int, int)>(sql, new { stato = stato.ToString() });
             this._ListArticoli = new List<Articolo>();
-            while (rdr.Read())
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -3046,17 +2825,13 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = @stato AND reparto = @reparto ORDER BY DataPrevistaFineProduzione";
-            cmd.Parameters.AddWithValue("@stato", stato.ToString());
-            cmd.Parameters.AddWithValue("@reparto", rep.id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            string sql = "SELECT id, anno FROM productionplan WHERE status = @stato AND reparto = @reparto ORDER BY DataPrevistaFineProduzione";
+            var rows = conn.Query<(int, int)>(sql, new { stato = stato.ToString(), reparto = rep.id });
             this._ListArticoli = new List<Articolo>();
-            while (rdr.Read())
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -3066,24 +2841,19 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT max(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM "
+            string sql = "SELECT max(lateFinish) as dataFineProd, idArticolo, annoArticolo FROM "
             + " tasksproduzione INNER JOIN productionplan ON (idArticolo = productionplan.id AND annoarticolo = productionplan.anno) "
             + " WHERE productionplan.status = @stato"
             + " AND lateFinish >= @start"
             + " AND lateFinish <= @finish"
             + " GROUP BY idArticolo, annoArticolo"
             + " ORDER BY datafineprod DESC";
-            cmd.Parameters.AddWithValue("@stato", stato.ToString());
-            cmd.Parameters.AddWithValue("@start", start.ToString("yyyy-MM-dd"));
-            cmd.Parameters.AddWithValue("@finish", finish.ToString("yyyy-MM-dd"));
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var rows = conn.Query<(DateTime, int, int)>(sql, new { stato = stato.ToString(), start = start.ToString("yyyy-MM-dd"), finish = finish.ToString("yyyy-MM-dd") });
             this._ListArticoli = new List<Articolo>();
-            while (rdr.Read())
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(1), rdr.GetInt32(2)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item2, r.Item3));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -3093,22 +2863,18 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "Select productionplan.id, productionplan.anno from productionplan "
+            string sql = "Select productionplan.id, productionplan.anno from productionplan "
                 + "inner join commesse on "
                 + "(productionplan.commessa = commesse.idcommesse AND productionplan.annoCommessa = commesse.anno)"
                 + " WHERE commesse.dataInserimento >= @start"
                 +" AND commesse.dataInserimento <= @finish"
                 + " ORDER BY commesse.dataInserimento";
-            cmd.Parameters.AddWithValue("@start", start.ToString("yyyy-MM-dd"));
-            cmd.Parameters.AddWithValue("@finish", finish.ToString("yyyy-MM-dd"));
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var rows = conn.Query<(int, int)>(sql, new { start = start.ToString("yyyy-MM-dd"), finish = finish.ToString("yyyy-MM-dd") });
             this._ListArticoli = new List<Articolo>();
-            while (rdr.Read())
+            foreach (var r in rows)
             {
-                this._ListArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                this._ListArticoli.Add(new Articolo(this.Tenant, r.Item1, r.Item2));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -3184,8 +2950,7 @@ namespace KIS.App_Code
             this.ProductList = new List<FlatProduct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT productionplan.id, productionplan.anno, processo.name, varianti.nomevariante,"
+            string sql = "SELECT productionplan.id, productionplan.anno, processo.name, varianti.nomevariante,"
                                 + "productionplan.matricola, productionplan.quantita, commesse.cliente, "
                                 + "anagraficaclienti.ragsociale"
                                 + " FROM productionplan INNER JOIN variantiprocessi "
@@ -3196,22 +2961,21 @@ namespace KIS.App_Code
                                 + "ON(productionplan.commessa = commesse.idcommesse AND productionplan.annocommessa = commesse.anno)"
                                 + "INNER JOIN anagraficaclienti ON(commesse.cliente = anagraficaclienti.codice)"
                                 + "ORDER BY productionplan.anno, productionplan.id";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<(int, int, string, string, string, int, string, string)>(sql);
+            foreach (var r in rows)
             {
                 FlatProduct curr = new FlatProduct();
-                curr.ProductID = rdr.GetInt32(0);
-                curr.ProductYear = rdr.GetInt32(1);
-                curr.processName = rdr.GetString(2);
-                curr.varianteName = rdr.GetString(3);
-                curr.SerialNumber = rdr.GetString(4);
-                curr.Quantity = rdr.GetInt32(5);
-                curr.CustomerID = rdr.GetString(6);
-                curr.CustomerName = rdr.GetString(7);
+                curr.ProductID = r.Item1;
+                curr.ProductYear = r.Item2;
+                curr.processName = r.Item3;
+                curr.varianteName = r.Item4;
+                curr.SerialNumber = r.Item5;
+                curr.Quantity = r.Item6;
+                curr.CustomerID = r.Item7;
+                curr.CustomerName = r.Item8;
 
                 this.ProductList.Add(curr);
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -3253,19 +3017,14 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE productparameters SET paramCategory = @category WHERE "
+                    string sql = "UPDATE productparameters SET paramCategory = @category WHERE "
                         + " paramID = @paramID"
                         + " AND productID = @productID"
                         + " AND productYear = @productYear";
-                    cmd.Parameters.AddWithValue("@category", value.ID);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@productID", this.ProductID);
-                    cmd.Parameters.AddWithValue("@productYear", this.ProductYear);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { category = value.ID, paramID = this.ParameterID, productID = this.ProductID, productYear = this.ProductYear }, tr);
                         tr.Commit();
                         this._ParameterCategory = value;
                     }
@@ -3297,19 +3056,14 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE productparameters SET paramName = @name WHERE "
+                    string sql = "UPDATE productparameters SET paramName = @name WHERE "
                         + " paramID = @paramID"
                         + " AND productID = @productID"
                         + " AND productYear = @productYear";
-                    cmd.Parameters.AddWithValue("@name", value);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@productID", this.ProductID);
-                    cmd.Parameters.AddWithValue("@productYear", this.ProductYear);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { name = value, paramID = this.ParameterID, productID = this.ProductID, productYear = this.ProductYear }, tr);
                         tr.Commit();
                         this._Name = value;
                     }
@@ -3332,19 +3086,14 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET paramDescription = @desc WHERE "
+                    string sql = "UPDATE modelparameters SET paramDescription = @desc WHERE "
                         + " paramID = @paramID"
                         + " AND ProductID = @productID"
                         + " AND ProductYear = @productYear";
-                    cmd.Parameters.AddWithValue("@desc", value);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@productID", this.ProductID);
-                    cmd.Parameters.AddWithValue("@productYear", this.ProductYear);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { desc = value, paramID = this.ParameterID, productID = this.ProductID, productYear = this.ProductYear }, tr);
                         tr.Commit();
                         this._Description = value;
                     }
@@ -3367,19 +3116,14 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET isFixed = @isFixed WHERE "
+                    string sql = "UPDATE modelparameters SET isFixed = @isFixed WHERE "
                         + " paramID = @paramID"
                         + " AND ProductID = @productID"
                         + " AND ProductYear = @productYear";
-                    cmd.Parameters.AddWithValue("@isFixed", value);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@productID", this.ProductID);
-                    cmd.Parameters.AddWithValue("@productYear", this.ProductYear);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { isFixed = value, paramID = this.ParameterID, productID = this.ProductID, productYear = this.ProductYear }, tr);
                         tr.Commit();
                         this._isFixed = value;
                     }
@@ -3402,19 +3146,14 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelparameters SET isRequired = @isRequired WHERE "
+                    string sql = "UPDATE modelparameters SET isRequired = @isRequired WHERE "
                         + " paramID = @paramID"
                         + " AND ProductID = @productID"
                         + " AND ProductYear = @productYear";
-                    cmd.Parameters.AddWithValue("@isRequired", value);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@productID", this.ProductID);
-                    cmd.Parameters.AddWithValue("@productYear", this.ProductYear);
                     MySqlTransaction tr = conn.BeginTransaction();
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { isRequired = value, paramID = this.ParameterID, productID = this.ProductID, productYear = this.ProductYear }, tr);
                         tr.Commit();
                         this._isRequired = value;
                     }
@@ -3443,42 +3182,37 @@ namespace KIS.App_Code
             this._ProductYear = -1;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT productID, productYear, paramID, paramCategory, paramName, "
+            string sql = "SELECT productID, productYear, paramID, paramCategory, paramName, "
                 + " paramDescription, isFixed, sequence FROM productparameters WHERE "
                 + " productID = @productID"
                 + " AND productYear = @productYear"
                 + " AND paramID = @paramID"
                 + " AND paramCategory = @category";
-            cmd.Parameters.AddWithValue("@productID", productID);
-            cmd.Parameters.AddWithValue("@productYear", productYear);
-            cmd.Parameters.AddWithValue("@paramID", parameterID);
-            cmd.Parameters.AddWithValue("@category", category.ID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(3))
+            var rows = conn.Query<(int, int, int, int, string, string, bool?, int?)>(sql, new { productID = productID, productYear = productYear, paramID = parameterID, category = category.ID }).ToList();
+            if (rows.Count > 0)
             {
-                this._ProductID = rdr.GetInt32(0);
-                this._ProductYear = rdr.GetInt32(1);
-                this._ParameterID = rdr.GetInt32(2);
-                this.ParameterCategory = new ProductParametersCategory(this.Tenant, rdr.GetInt32(3));
-                if (!rdr.IsDBNull(4))
+                var r = rows[0];
+                this._ProductID = r.Item1;
+                this._ProductYear = r.Item2;
+                this._ParameterID = r.Item3;
+                this.ParameterCategory = new ProductParametersCategory(this.Tenant, r.Item4);
+                if (r.Item5 != null)
                 {
-                    this._Name = rdr.GetString(4);
+                    this._Name = r.Item5;
                 }
-                if (!rdr.IsDBNull(5))
+                if (r.Item6 != null)
                 {
-                    this._Description = rdr.GetString(5);
+                    this._Description = r.Item6;
                 }
-                if (!rdr.IsDBNull(6))
+                if (r.Item7.HasValue)
                 {
-                    this._isFixed = rdr.GetBoolean(6);
+                    this._isFixed = r.Item7.Value;
                 }
-                if (!rdr.IsDBNull(7))
+                if (r.Item8.HasValue)
                 {
-                    this._Sequence = rdr.GetInt32(7);
+                    this._Sequence = r.Item8.Value;
                 }
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -3489,18 +3223,13 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM productparameters WHERE productID = @productID"
+                string sql = "DELETE FROM productparameters WHERE productID = @productID"
                     + " AND productYear = @productYear"
                     + " AND paramID = @paramID";
-                cmd.Parameters.AddWithValue("@productID", this.ProductID);
-                cmd.Parameters.AddWithValue("@productYear", this.ProductYear);
-                cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { productID = this.ProductID, productYear = this.ProductYear, paramID = this.ParameterID }, tr);
                     tr.Commit();
                     ret = true;
                 }

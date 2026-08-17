@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web.Services;
 using MySql.Data.MySqlClient;
+using Dapper;
 using System.Net.Mail;
 using KIS.App_Code;
 namespace KIS.Eventi
@@ -28,14 +29,11 @@ namespace KIS.Eventi
             MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
             conn.Open();
             List<TaskProduzione> tskList = new List<TaskProduzione>();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM registroeventiproduzione WHERE TipoEvento LIKE 'Warning' AND segnalato = false";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var taskIDs = conn.Query<int>("SELECT taskID FROM registroeventiproduzione WHERE TipoEvento LIKE 'Warning' AND segnalato = false");
+            foreach (var taskID in taskIDs)
             {
-                tskList.Add(new TaskProduzione(tenant, rdr.GetInt32(0)));
+                tskList.Add(new TaskProduzione(tenant, taskID));
             }
-            rdr.Close();
             for (int i = 0; i < tskList.Count; i++)
             {
                 // Ricerco tutti gli indirizzi cui inviare la mail
@@ -132,10 +130,10 @@ namespace KIS.Eventi
                     smtpcli.Send(mMessage);
                 }
                 // Metto lo warning come già segnalato
-                cmd.CommandText = "UPDATE registroeventiproduzione SET segnalato = true WHERE TipoEvento LIKE 'Warning' AND taskID = " + tskList[i].TaskProduzioneID;
+                string sql = "UPDATE registroeventiproduzione SET segnalato = true WHERE TipoEvento LIKE 'Warning' AND taskID = " + tskList[i].TaskProduzioneID;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql);
                     rt = true;
                 }
                 catch

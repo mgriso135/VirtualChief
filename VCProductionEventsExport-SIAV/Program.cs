@@ -8,6 +8,7 @@ using System.Configuration;
 using Newtonsoft.Json;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Dapper;
 using System.IO;
 
 namespace VCProductionEventsExport_SIAV
@@ -594,13 +595,11 @@ namespace VCProductionEventsExport_SIAV
             DateTime exporttimestamp = DateTime.UtcNow;
             foreach(var m in lstEvents)
             {
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
 
-                    cmd.CommandText = "INSERT INTO " + dbtable 
+                    string sql = "INSERT INTO " + dbtable 
                         + "(exportdate, CustomerName, CustomerID, CustomerVATNumber, CustomerCodiceFiscale, CustomerAddress, CustomerCity, TaskEventID, "
                         + "CustomerProvince, CustomerZipCode, CustomerCountry, CustomerPhoneNumber, CustomerEMail, CustomerKanbanManaged, "
                         + " SalesOrderID, SalesOrderYear, SalesOrderCustomer, SalesOrderDate, SalesOrderNotes, ProductionOrderID, ProductionOrderYear, "
@@ -636,114 +635,115 @@ namespace VCProductionEventsExport_SIAV
                          + "@TaskEventNotes"
                          + ")";
 
-                    cmd.Parameters.AddWithValue("@exportdate", exporttimestamp.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@CustomerName", m.CustomerName);
-                    cmd.Parameters.AddWithValue("@CustomerID", m.CustomerID);
-                    cmd.Parameters.AddWithValue("@CustomerVATNumber", m.CustomerVATNumber);
-                    cmd.Parameters.AddWithValue("@CustomerCodiceFiscale", m.CustomerCodiceFiscale);
-                    cmd.Parameters.AddWithValue("@CustomerAddress", m.CustomerAddress);
-                    cmd.Parameters.AddWithValue("@CustomerCity", m.CustomerCity);
-                    cmd.Parameters.AddWithValue("@TaskEventID", m.TaskEventID);
-                    cmd.Parameters.AddWithValue("@CustomerProvince", m.CustomerProvince);
-                    cmd.Parameters.AddWithValue("@CustomerZipCode", m.CustomerZipCode);
-                    cmd.Parameters.AddWithValue("@CustomerCountry", m.CustomerCountry);
-                    cmd.Parameters.AddWithValue("@CustomerPhoneNumber", m.CustomerPhoneNumber);
-                    cmd.Parameters.AddWithValue("@CustomerEMail", m.CustomerEMail);
-                    cmd.Parameters.AddWithValue("@CustomerKanbanManaged", m.CustomerKanbanManaged);
-                    cmd.Parameters.AddWithValue("@SalesOrderID", m.SalesOrderID);
-                    cmd.Parameters.AddWithValue("@SalesOrderYear", m.SalesOrderYear);
-                    cmd.Parameters.AddWithValue("@SalesOrderCustomer", m.SalesOrderCustomer);
-                    cmd.Parameters.AddWithValue("@SalesOrderDate", m.SalesOrderDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@SalesOrderNotes", m.SalesOrderNotes);
-                    cmd.Parameters.AddWithValue("@ProductionOrderID", m.ProductionOrderID);
-                    cmd.Parameters.AddWithValue("@ProductionOrderYear", m.ProductionOrderYear);
-                    cmd.Parameters.AddWithValue("@ProductionOrderProductTypeID", m.ProductionOrderProductTypeID);
-                    cmd.Parameters.AddWithValue("@ProductionOrderProductTypeReview", m.ProductionOrderProductTypeReview);
-                    cmd.Parameters.AddWithValue("@ProductionOrderProductID", m.ProductionOrderProductID);
-                    cmd.Parameters.AddWithValue("@ProductionOrderSerialNumber", m.ProductionOrderSerialNumber);
-                    cmd.Parameters.AddWithValue("@ProductionOrderStatus", m.ProductionOrderStatus);
-                    cmd.Parameters.AddWithValue("@ProductionOrderDepartmentID", m.ProductionOrderDepartmentID);
-                    cmd.Parameters.AddWithValue("@ProductionOrderStartTime", m.ProductionOrderStartTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@ProductionOrderDeliveryDate", m.ProductionOrderDeliveryDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@ProductionOrderEndProductionDate", m.ProductionOrderEndProductionDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@ProductionOrderPlanner", m.ProductionOrderPlanner);
-                    cmd.Parameters.AddWithValue("@ProductionOrderQuantityOrdered", m.ProductionOrderQuantityOrdered);
-                    cmd.Parameters.AddWithValue("@ProductionOrderQuantityProduced", m.ProductionOrderQuantityProduced);
-                    cmd.Parameters.AddWithValue("@ProductionOrderKanbanCardID", m.ProductionOrderKanbanCardID);
-                    cmd.Parameters.AddWithValue("@ProductTypeID", m.ProductTypeID);
-                    cmd.Parameters.AddWithValue("@ProductTypeReview", m.ProductTypeReview);
-                    cmd.Parameters.AddWithValue("@ProductTypeReviewDate", m.ProductTypeReviewDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@ProductTypeName", m.ProductTypeName);
-                    cmd.Parameters.AddWithValue("@ProductTypeDescription", m.ProductTypeDescription);
-                    cmd.Parameters.AddWithValue("@ProductTypeEnabled", m.ProductTypeEnabled);
-                    cmd.Parameters.AddWithValue("@ProductID", m.ProductID);
-                    cmd.Parameters.AddWithValue("@ProductName", m.ProductName);
-                    cmd.Parameters.AddWithValue("@ProductDescription", m.ProductDescription);
-                    cmd.Parameters.AddWithValue("@DepartmentID", m.DepartmentID);
-                    cmd.Parameters.AddWithValue("@DepartmentName", m.DepartmentName);
-                    cmd.Parameters.AddWithValue("@DepartmentDescription", m.DepartmentDescription);
-                    cmd.Parameters.AddWithValue("@DepartmentTaktTime", m.DepartmentTaktTime);
-                    cmd.Parameters.AddWithValue("@DepartmentTimeZone", m.DepartmentTimeZone);
-                    cmd.Parameters.AddWithValue("@RealWorkingTime", Math.Truncate(m.RealWorkingTime.TotalHours).ToString()
+                    conn.Execute(sql, new {
+                        exportdate = exporttimestamp.ToString("yyyy-MM-dd HH:mm:ss"),
+                        CustomerName = m.CustomerName,
+                        CustomerID = m.CustomerID,
+                        CustomerVATNumber = m.CustomerVATNumber,
+                        CustomerCodiceFiscale = m.CustomerCodiceFiscale,
+                        CustomerAddress = m.CustomerAddress,
+                        CustomerCity = m.CustomerCity,
+                        TaskEventID = m.TaskEventID,
+                        CustomerProvince = m.CustomerProvince,
+                        CustomerZipCode = m.CustomerZipCode,
+                        CustomerCountry = m.CustomerCountry,
+                        CustomerPhoneNumber = m.CustomerPhoneNumber,
+                        CustomerEMail = m.CustomerEMail,
+                        CustomerKanbanManaged = m.CustomerKanbanManaged,
+                    SalesOrderID = m.SalesOrderID,
+                        SalesOrderYear = m.SalesOrderYear,
+                        SalesOrderCustomer = m.SalesOrderCustomer,
+                        SalesOrderDate = m.SalesOrderDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                        SalesOrderNotes = m.SalesOrderNotes,
+                        ProductionOrderID = m.ProductionOrderID,
+                        ProductionOrderYear = m.ProductionOrderYear,
+                        ProductionOrderProductTypeID = m.ProductionOrderProductTypeID,
+                        ProductionOrderProductTypeReview = m.ProductionOrderProductTypeReview,
+                        ProductionOrderProductID = m.ProductionOrderProductID,
+                        ProductionOrderSerialNumber = m.ProductionOrderSerialNumber,
+                        ProductionOrderStatus = m.ProductionOrderStatus,
+                        ProductionOrderDepartmentID = m.ProductionOrderDepartmentID,
+                        ProductionOrderStartTime = m.ProductionOrderStartTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                        ProductionOrderDeliveryDate = m.ProductionOrderDeliveryDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                        ProductionOrderEndProductionDate = m.ProductionOrderEndProductionDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                        ProductionOrderPlanner = m.ProductionOrderPlanner,
+                        ProductionOrderQuantityOrdered = m.ProductionOrderQuantityOrdered,
+                        ProductionOrderQuantityProduced = m.ProductionOrderQuantityProduced,
+                        ProductionOrderKanbanCardID = m.ProductionOrderKanbanCardID,
+                        ProductTypeID = m.ProductTypeID,
+                        ProductTypeReview = m.ProductTypeReview,
+                        ProductTypeReviewDate = m.ProductTypeReviewDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                        ProductTypeName = m.ProductTypeName,
+                        ProductTypeDescription = m.ProductTypeDescription,
+                        ProductTypeEnabled = m.ProductTypeEnabled,
+                        ProductID = m.ProductID,
+                        ProductName = m.ProductName,
+                        ProductDescription = m.ProductDescription,
+                        DepartmentID = m.DepartmentID,
+                        DepartmentName = m.DepartmentName,
+                        DepartmentDescription = m.DepartmentDescription,
+                        DepartmentTaktTime = m.DepartmentTaktTime,
+                        DepartmentTimeZone = m.DepartmentTimeZone,
+                        RealWorkingTime = Math.Truncate(m.RealWorkingTime.TotalHours).ToString()
                         + ":" + m.RealWorkingTime.Minutes.ToString()
-                        + ":" + m.RealWorkingTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@RealDelay", Math.Truncate(m.RealDelay.TotalHours).ToString()
+                        + ":" + m.RealWorkingTime.Seconds.ToString(),
+                        RealDelay = Math.Truncate(m.RealDelay.TotalHours).ToString()
                         + ":" + m.RealDelay.Minutes.ToString()
-                        + ":" + m.RealDelay.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@RealLeadTime", Math.Truncate(m.RealLeadTime.TotalHours).ToString()
+                        + ":" + m.RealDelay.Seconds.ToString(),
+                        RealLeadTime = Math.Truncate(m.RealLeadTime.TotalHours).ToString()
                         + ":" + m.RealLeadTime.Minutes.ToString()
-                        + ":" + m.RealLeadTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@ProductionOrderEndProductionDateReal", m.ProductionOrderEndProductionDateReal.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@ProductionOrderEndProductionDateRealWeek", 0);
-                    cmd.Parameters.AddWithValue("@TaskID", m.TaskID);
-                    cmd.Parameters.AddWithValue("@TaskName", m.TaskName);
-                    cmd.Parameters.AddWithValue("@TaskDescription", m.TaskDescription);
-                    cmd.Parameters.AddWithValue("@TaskEarlyStart", m.TaskEarlyStart.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@TaskLateStart", m.TaskLateStart.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@TaskEarlyFinish", m.TaskEarlyFinish.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@TaskLateFinish", m.TaskLateFinish.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@TaskStatus", m.TaskStatus);
-                    cmd.Parameters.AddWithValue("@TaskNumOperators", m.TaskNumOperators);
-                    cmd.Parameters.AddWithValue("@TaskQuantityOrdered", m.TaskQuantityOrdered);
-                    cmd.Parameters.AddWithValue("@TaskQuantityProduced", m.TaskQuantityProduced);
-                    cmd.Parameters.AddWithValue("@TaskPlannedSetupTime", Math.Truncate(m.TaskPlannedSetupTime.TotalHours).ToString()
+                        + ":" + m.RealLeadTime.Seconds.ToString(),
+                        ProductionOrderEndProductionDateReal = m.ProductionOrderEndProductionDateReal.ToString("yyyy-MM-dd HH:mm:ss"),
+                        ProductionOrderEndProductionDateRealWeek = 0,
+                        TaskID = m.TaskID,
+                        TaskName = m.TaskName,
+                        TaskDescription = m.TaskDescription,
+                        TaskEarlyStart = m.TaskEarlyStart.ToString("yyyy-MM-dd HH:mm:ss"),
+                        TaskLateStart = m.TaskLateStart.ToString("yyyy-MM-dd HH:mm:ss"),
+                        TaskEarlyFinish = m.TaskEarlyFinish.ToString("yyyy-MM-dd HH:mm:ss"),
+                        TaskLateFinish = m.TaskLateFinish.ToString("yyyy-MM-dd HH:mm:ss"),
+                        TaskStatus = m.TaskStatus,
+                        TaskNumOperators = m.TaskNumOperators,
+                        TaskQuantityOrdered = m.TaskQuantityOrdered,
+                        TaskQuantityProduced = m.TaskQuantityProduced,
+                        TaskPlannedSetupTime = Math.Truncate(m.TaskPlannedSetupTime.TotalHours).ToString()
                         + ":" + m.TaskPlannedSetupTime.Minutes.ToString()
-                        + ":" + m.TaskPlannedSetupTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@TaskPlannedCycleTime", Math.Truncate(m.TaskPlannedCycleTime.TotalHours).ToString()
+                        + ":" + m.TaskPlannedSetupTime.Seconds.ToString(),
+                        TaskPlannedCycleTime = Math.Truncate(m.TaskPlannedCycleTime.TotalHours).ToString()
                         + ":" + m.TaskPlannedCycleTime.Minutes.ToString()
-                        + ":" + m.TaskPlannedCycleTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@TaskPlannedUnloadTime", Math.Truncate(m.TaskPlannedUnloadTime.TotalHours).ToString()
+                        + ":" + m.TaskPlannedCycleTime.Seconds.ToString(),
+                        TaskPlannedUnloadTime = Math.Truncate(m.TaskPlannedUnloadTime.TotalHours).ToString()
                         + ":" + m.TaskPlannedUnloadTime.Minutes.ToString()
-                        + ":" + m.TaskPlannedUnloadTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@WorkstationID", m.WorkstationID);
-                    cmd.Parameters.AddWithValue("@WorkstationName", m.WorkstationName);
-                    cmd.Parameters.AddWithValue("@WorkstationDescription", m.WorkstationDescription);
-                    cmd.Parameters.AddWithValue("@TaskRealEndDate", m.TaskRealEndDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@TaskRealEndDateWeek", m.TaskRealEndDateWeek);
-                    cmd.Parameters.AddWithValue("@TaskRealLeadTime", Math.Truncate(m.TaskRealLeadTime.TotalHours).ToString()
+                        + ":" + m.TaskPlannedUnloadTime.Seconds.ToString(),
+                        WorkstationID = m.WorkstationID,
+                        WorkstationName = m.WorkstationName,
+                        WorkstationDescription = m.WorkstationDescription,
+                        TaskRealEndDate = m.TaskRealEndDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                        TaskRealEndDateWeek = m.TaskRealEndDateWeek,
+                        TaskRealLeadTime = Math.Truncate(m.TaskRealLeadTime.TotalHours).ToString()
                         + ":" + m.TaskRealLeadTime.Minutes.ToString()
-                        + ":" + m.TaskRealLeadTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@TaskRealWorkingTime", Math.Truncate(m.TaskRealWorkingTime.TotalHours).ToString()
+                        + ":" + m.TaskRealLeadTime.Seconds.ToString(),
+                        TaskRealWorkingTime = Math.Truncate(m.TaskRealWorkingTime.TotalHours).ToString()
                         + ":" + m.TaskRealWorkingTime.Minutes.ToString()
-                        + ":" + m.TaskRealWorkingTime.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@TaskRealDelay", Math.Truncate(m.TaskRealDelay.TotalHours).ToString()
+                        + ":" + m.TaskRealWorkingTime.Seconds.ToString(),
+                        TaskRealDelay = Math.Truncate(m.TaskRealDelay.TotalHours).ToString()
                         + ":" + m.TaskRealDelay.Minutes.ToString()
-                        + ":" + m.TaskRealDelay.Seconds.ToString());
-                    cmd.Parameters.AddWithValue("@TaskOriginalID", m.TaskOriginalID);
-                    cmd.Parameters.AddWithValue("@TaskOriginalRev", m.TaskOriginalRev);
-                    cmd.Parameters.AddWithValue("@TaskOriginalVar", m.TaskOriginalVar);
-                    cmd.Parameters.AddWithValue("@TaskPlannedWorkingTime", Math.Truncate(m.TaskPlannedWorkingTime.TotalHours).ToString() 
+                        + ":" + m.TaskRealDelay.Seconds.ToString(),
+                        TaskOriginalID = m.TaskOriginalID,
+                        TaskOriginalRev = m.TaskOriginalRev,
+                        TaskOriginalVar = m.TaskOriginalVar,
+                        TaskPlannedWorkingTime = Math.Truncate(m.TaskPlannedWorkingTime.TotalHours).ToString() 
                         + ":"+m.TaskPlannedWorkingTime.Minutes.ToString()
-                        +":" + m.TaskPlannedWorkingTime.Seconds.ToString());
-                    
-                    cmd.Parameters.AddWithValue("@TaskEventUser", m.TaskEventUser);
-                    cmd.Parameters.AddWithValue("@TaskEventTime", m.TaskEventTime.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@TaskEventType", m.TaskEventType);
-                    cmd.Parameters.AddWithValue("@TaskEventNotes", m.TaskEventNotes);
+                        +":" + m.TaskPlannedWorkingTime.Seconds.ToString(),
+                        
+                        TaskEventUser = m.TaskEventUser,
+                        TaskEventTime = m.TaskEventTime.ToString("yyyy-MM-dd HH:mm:ss"),
+                        TaskEventType = m.TaskEventType,
+                        TaskEventNotes = m.TaskEventNotes
+                    }, tr);
 
-                    Console.WriteLine("cmdtext: " + cmd.CommandText);
+                    Console.WriteLine("cmdtext: " + sql);
 
-                    cmd.ExecuteNonQuery();
                     tr.Commit();
                 }
                 catch(Exception ex)

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using Dapper;
 using System.Net.Http;
 using System.Net.Mail;
 using KIS.App_Sources;
@@ -45,13 +46,10 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupid FROM groupspermissions WHERE permissionid = @p0";
-                cmd.Parameters.AddWithValue("@p0", prm.ID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<int>("SELECT groupid FROM groupspermissions WHERE permissionid = @p0", new { p0 = prm.ID });
+                foreach (var id in rows)
                 {
-                    Group grp = new Group(rdr.GetInt32(0));
+                    Group grp = new Group(id);
                     if (grp.ID != -1)
                     {
                         Workspace ws = new Workspace(this.Tenant);
@@ -62,7 +60,6 @@ namespace KIS.App_Code
                         }
                     }
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -104,21 +101,18 @@ namespace KIS.App_Code
             this.Reparti = new List<Reparto>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM configurazione WHERE "
+            var rows = conn.Query<int>("SELECT ID FROM configurazione WHERE "
                 + " Sezione LIKE 'Reparto'"
                 + " AND parametro LIKE 'KanbanManaged'"
-                + " AND valore = 1";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+                + " AND valore = 1");
+            foreach (var id in rows)
             {
-                Reparto rp = new Reparto(this.Tenant, rdr.GetInt32(0));
+                Reparto rp = new Reparto(this.Tenant, id);
                 if (rp!=null && rp.id != -1)
                 {
                     this.Reparti.Add(rp);
                 }
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -127,14 +121,11 @@ namespace KIS.App_Code
             this.Clienti = new List<Cliente>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE kanbanManaged = true";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<String>("SELECT codice FROM anagraficaclienti WHERE kanbanManaged = true");
+            foreach (var codice in rows)
             {
-                this.Clienti.Add(new Cliente(this.Tenant, rdr.GetString(0)));
+                this.Clienti.Add(new Cliente(this.Tenant, codice));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -730,18 +721,8 @@ namespace KIS.App_Code
             this._ElencoReparti = new List<Reparto>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM configurazione WHERE Sezione LIKE 'Reparto' AND paramentro LIKE 'KanbanManaged' "
-                + " AND valore = 1";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (!rdr.Read())
-            {
-                if (!rdr.IsDBNull(0))
-                {
-                    this._ElencoReparti.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
-                }
-            }
-            rdr.Close();
+            conn.Query<int>("SELECT ID FROM configurazione WHERE Sezione LIKE 'Reparto' AND paramentro LIKE 'KanbanManaged' "
+                + " AND valore = 1");
             conn.Close();
         }
     }
@@ -766,17 +747,14 @@ namespace KIS.App_Code
             this._ElencoClienti = new List<Cliente>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT codice FROM anagraficaclienti WHERE kanbanManaged = true ORDER BY ragsociale";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<String>("SELECT codice FROM anagraficaclienti WHERE kanbanManaged = true ORDER BY ragsociale");
+            foreach (var codice in rows)
             {
-                if (!rdr.IsDBNull(0))
+                if (codice != null)
                 {
-                    this._ElencoClienti.Add(new Cliente(this.Tenant, rdr.GetString(0)));
+                    this._ElencoClienti.Add(new Cliente(this.Tenant, codice));
                 }
             }
-            rdr.Close();
             conn.Close();
         }
     }

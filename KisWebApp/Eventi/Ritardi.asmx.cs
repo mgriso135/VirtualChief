@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Services;
 using MySql.Data.MySqlClient;
+using Dapper;
 using System.Net.Mail;
 using KIS.App_Code;
 namespace KIS.Eventi
@@ -33,14 +34,13 @@ namespace KIS.Eventi
             List<String[]> ritardi = new List<string[]>();
             MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
             FusoOrario fuso = new FusoOrario(tenant);
-            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status <> 'F'  AND earlystart <= '"+TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") + "'" + " ORDER BY lateStart";
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            string sql = "SELECT taskID FROM tasksproduzione WHERE status <> 'F'  AND earlystart <= '"+TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss") + "'" + " ORDER BY lateStart";
+            var taskIDs = conn.Query<int>(sql);
             List<int> tskRitardo = new List<int>();
-            while (rdr.Read())
+            foreach (var taskID in taskIDs)
             {
-                TaskProduzione tsk = new TaskProduzione(tenant, rdr.GetInt32(0));
+                TaskProduzione tsk = new TaskProduzione(tenant, taskID);
 
                 // Check if delay is already in registroeventiproduzione table
                 if(!tsk.DelayDetected)
@@ -62,15 +62,14 @@ namespace KIS.Eventi
                     }
                 }
             }
-            rdr.Close();
 
             for (int i = 0; i < tskRitardo.Count; i++)
             {
-                cmd.CommandText = "INSERT INTO registroeventiproduzione(TipoEvento, taskID, segnalato) VALUES('Ritardo', "
+                sql = "INSERT INTO registroeventiproduzione(TipoEvento, taskID, segnalato) VALUES('Ritardo', "
                     + tskRitardo[i].ToString() + ", false)";
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql);
                 }
                 catch
                 {
@@ -88,15 +87,12 @@ namespace KIS.Eventi
             MySqlConnection conn = (new Dati.Dati()).mycon(tenant);
             conn.Open();
             List<TaskProduzione> tskList = new List<TaskProduzione>();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' AND segnalato = false";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var taskIDs = conn.Query<int>("SELECT taskID FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' AND segnalato = false");
+            foreach (var taskID in taskIDs)
             {
-                //retu += "DB: " + rdr.GetInt32(0).ToString() + "<br />";
-                tskList.Add(new TaskProduzione(tenant, rdr.GetInt32(0)));
+                //retu += "DB: " + taskID.ToString() + "<br />";
+                tskList.Add(new TaskProduzione(tenant, taskID));
             }
-            rdr.Close();
             for (int i = 0; i < tskList.Count; i++)
             {
                 TimeSpan ritardo = tskList[i].ritardo;
@@ -226,10 +222,10 @@ namespace KIS.Eventi
                     && ritardo >= cm.EventoRitardo.RitardoMinimoDaSegnalare && ritardo >= art.EventoRitardo.RitardoMinimoDaSegnalare)
                 {*/
                     // Metto il ritardo come già segnalato
-                    cmd.CommandText = "UPDATE registroeventiproduzione SET segnalato = true WHERE TipoEvento LIKE 'Ritardo' AND taskID = " + tskList[i].TaskProduzioneID;
+                    string sql = "UPDATE registroeventiproduzione SET segnalato = true WHERE TipoEvento LIKE 'Ritardo' AND taskID = " + tskList[i].TaskProduzioneID;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql);
                         rt = true;
                     }
                     catch

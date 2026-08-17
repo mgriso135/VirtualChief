@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Dapper;
 
 namespace KIS.App_Sources
 {
@@ -21,6 +22,63 @@ namespace KIS.App_Sources
 
         public List<ProductionHistoryStruct> HistoricData;
 
+        private class ProductionHistoryRow
+        {
+            public String CustomerID { get; set; }
+            public String CustomerName { get; set; }
+            public String CustomerVATNumber { get; set; }
+            public String CustomerCodiceFiscale { get; set; }
+            public String CustomerAddress { get; set; }
+            public String CustomerCity { get; set; }
+            public String CustomerProvince { get; set; }
+            public String CustomerZipCode { get; set; }
+            public String CustomerCountry { get; set; }
+            public String CustomerPhoneNumber { get; set; }
+            public String CustomerEMail { get; set; }
+            public Boolean? CustomerKanbanManaged { get; set; }
+            public int? SalesOrderID { get; set; }
+            public int? SalesOrderYear { get; set; }
+            public String SalesOrderCustomer { get; set; }
+            public DateTime? SalesOrderDate { get; set; }
+            public String SalesOrderNotes { get; set; }
+            public int? ProductionOrderID { get; set; }
+            public int? ProductionOrderYear { get; set; }
+            public int? ProductionOrderProductTypeID { get; set; }
+            public int? ProductionOrderProductTypeReview { get; set; }
+            public int? ProductionOrderProductID { get; set; }
+            public String ProductionOrderSerialNumber { get; set; }
+            public String ProductionOrderStatus { get; set; }
+            public int? ProductionOrderDepartmentID { get; set; }
+            public DateTime? ProductionOrderStartTime { get; set; }
+            public DateTime? ProductionOrderDeliveryDate { get; set; }
+            public DateTime? ProductionOrderEndProductionDate { get; set; }
+            public String ProductionOrderPlanner { get; set; }
+            public int? ProductionOrderQuantityOrdered { get; set; }
+            public int? ProductionOrderQuantityProduced { get; set; }
+            public String ProductionOrderKanbanCardID { get; set; }
+            public int? ProductTypeID { get; set; }
+            public int? ProductTypeReview { get; set; }
+            public DateTime? ProductTypeReviewDate { get; set; }
+            public String ProductTypeName { get; set; }
+            public String ProductTypeDescription { get; set; }
+            public Boolean? ProductTypeEnabled { get; set; }
+            public int? ProductID { get; set; }
+            public String ProductName { get; set; }
+            public String ProductDescription { get; set; }
+            public int DepartmentID { get; set; }
+            public String DepartmentName { get; set; }
+            public String DepartmentDescription { get; set; }
+            public Double? DepartmentTaktTime { get; set; }
+            public String DepartmentTimeZone { get; set; }
+            public TimeSpan? RealLeadTime { get; set; }
+            public TimeSpan? RealWorkingTime { get; set; }
+            public TimeSpan? RealDelay { get; set; }
+            public DateTime? RealEndProductionDate { get; set; }
+            public String SalesOrderExternalID { get; set; }
+            public String ProductExternalID { get; set; }
+            public String MeasurementUnit { get; set; }
+        }
+
         public ProductionHistory(String Tenant)
         {
             this.Tenant = Tenant;
@@ -31,8 +89,7 @@ namespace KIS.App_Sources
             this.HistoricData = new List<ProductionHistoryStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
+            string sql = "SELECT anagraficaclienti.codice AS CustomerID, "
                 + " anagraficaclienti.ragsociale AS CustomerName,"
                 + " anagraficaclienti.partitaiva AS CustomerVATNumber,"
                 + " anagraficaclienti.codfiscale AS CustomerCodiceFiscale,"
@@ -94,223 +151,219 @@ namespace KIS.App_Sources
 +  " INNER JOIN measurementunits ON(variantiprocessi.measurementUnit = measurementunits.id)"
  + " WHERE productionplan.status = 'F'"
  + " order by productionplan.anno DESC, productionplan.id DESC";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<ProductionHistoryRow>(sql);
+            foreach (var row in rows)
             {
                 ProductionHistoryStruct curr = new ProductionHistoryStruct();
-                curr.DepartmentID = rdr.GetInt32(41);
+                curr.DepartmentID = row.DepartmentID;
                 KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
-                if (!rdr.IsDBNull(0))
+                if (row.CustomerID != null)
                 {
-                    curr.CustomerID = rdr.GetString(0);
+                    curr.CustomerID = row.CustomerID;
                 }
-                if (!rdr.IsDBNull(1))
+                if (row.CustomerName != null)
                 {
-                    curr.CustomerName = rdr.GetString(1);
+                    curr.CustomerName = row.CustomerName;
                 }
-                if (!rdr.IsDBNull(2))
+                if (row.CustomerVATNumber != null)
                 {
-                    curr.CustomerVATNumber = rdr.GetString(2);
+                    curr.CustomerVATNumber = row.CustomerVATNumber;
                 }
-                if (!rdr.IsDBNull(3))
+                if (row.CustomerCodiceFiscale != null)
                 {
-                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                    curr.CustomerCodiceFiscale = row.CustomerCodiceFiscale;
                 }
-                if (!rdr.IsDBNull(4))
+                if (row.CustomerAddress != null)
                 {
-                    curr.CustomerAddress = rdr.GetString(4);
+                    curr.CustomerAddress = row.CustomerAddress;
                 }
-                if (!rdr.IsDBNull(5))
+                if (row.CustomerCity != null)
                 {
-                    curr.CustomerCity = rdr.GetString(5);
+                    curr.CustomerCity = row.CustomerCity;
                 }
-                if (!rdr.IsDBNull(6))
+                if (row.CustomerProvince != null)
                 {
-                    curr.CustomerProvince = rdr.GetString(6);
+                    curr.CustomerProvince = row.CustomerProvince;
                 }
-                if (!rdr.IsDBNull(7))
+                if (row.CustomerZipCode != null)
                 {
-                    curr.CustomerZipCode = rdr.GetString(7);
+                    curr.CustomerZipCode = row.CustomerZipCode;
                 }
-                if (!rdr.IsDBNull(8))
+                if (row.CustomerCountry != null)
                 {
-                    curr.CustomerCountry = rdr.GetString(8);
+                    curr.CustomerCountry = row.CustomerCountry;
                 }
-                if (!rdr.IsDBNull(9))
+                if (row.CustomerPhoneNumber != null)
                 {
-                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                    curr.CustomerPhoneNumber = row.CustomerPhoneNumber;
                 }
-                if (!rdr.IsDBNull(10))
+                if (row.CustomerEMail != null)
                 {
-                    curr.CustomerEMail = rdr.GetString(10);
+                    curr.CustomerEMail = row.CustomerEMail;
                 }
-                if (!rdr.IsDBNull(11))
+                if (row.CustomerKanbanManaged.HasValue)
                 {
-                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                    curr.CustomerKanbanManaged = row.CustomerKanbanManaged.Value;
                 }
-                if (!rdr.IsDBNull(12))
+                if (row.SalesOrderID.HasValue)
                 {
-                    curr.SalesOrderID = rdr.GetInt32(12);
+                    curr.SalesOrderID = row.SalesOrderID.Value;
                 }
-                if (!rdr.IsDBNull(13))
+                if (row.SalesOrderYear.HasValue)
                 {
-                    curr.SalesOrderYear = rdr.GetInt32(13);
+                    curr.SalesOrderYear = row.SalesOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(14))
+                if (row.SalesOrderCustomer != null)
                 {
-                    curr.SalesOrderCustomer = rdr.GetString(14);
+                    curr.SalesOrderCustomer = row.SalesOrderCustomer;
                 }
-                if (!rdr.IsDBNull(15))
+                if (row.SalesOrderDate.HasValue)
                 {
-                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(row.SalesOrderDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(16))
+                if (row.SalesOrderNotes != null)
                 {
-                    curr.SalesOrderNotes = rdr.GetString(16);
+                    curr.SalesOrderNotes = row.SalesOrderNotes;
                 }
-                if (!rdr.IsDBNull(17))
+                if (row.ProductionOrderID.HasValue)
                 {
-                    curr.ProductionOrderID = rdr.GetInt32(17);
+                    curr.ProductionOrderID = row.ProductionOrderID.Value;
                 }
-                if (!rdr.IsDBNull(18))
+                if (row.ProductionOrderYear.HasValue)
                 {
-                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                    curr.ProductionOrderYear = row.ProductionOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(19))
+                if (row.ProductionOrderProductTypeID.HasValue)
                 {
-                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                    curr.ProductionOrderProductTypeID = row.ProductionOrderProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(20))
+                if (row.ProductionOrderProductTypeReview.HasValue)
                 {
-                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                    curr.ProductionOrderProductTypeReview = row.ProductionOrderProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(21))
+                if (row.ProductionOrderProductID.HasValue)
                 {
-                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                    curr.ProductionOrderProductID = row.ProductionOrderProductID.Value;
                 }
-                if (!rdr.IsDBNull(22))
+                if (row.ProductionOrderSerialNumber != null)
                 {
-                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                    curr.ProductionOrderSerialNumber = row.ProductionOrderSerialNumber;
                 }
-                if (!rdr.IsDBNull(23))
+                if (row.ProductionOrderStatus != null)
                 {
-                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                    curr.ProductionOrderStatus = row.ProductionOrderStatus[0];
                 }
-                if (!rdr.IsDBNull(24))
+                if (row.ProductionOrderDepartmentID.HasValue)
                 {
-                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                    curr.ProductionOrderDepartmentID = row.ProductionOrderDepartmentID.Value;
                 }
-                if (!rdr.IsDBNull(25))
+                if (row.ProductionOrderStartTime.HasValue)
                 {
-                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderStartTime.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(26))
+                if (row.ProductionOrderDeliveryDate.HasValue)
                 {
-                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderDeliveryDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(27))
+                if (row.ProductionOrderEndProductionDate.HasValue)
                 {
-                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderEndProductionDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(28))
+                if (row.ProductionOrderPlanner != null)
                 {
-                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                    curr.ProductionOrderPlanner = row.ProductionOrderPlanner;
                 }
-                if (!rdr.IsDBNull(29))
+                if (row.ProductionOrderQuantityOrdered.HasValue)
                 {
-                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                    curr.ProductionOrderQuantityOrdered = row.ProductionOrderQuantityOrdered.Value;
                 }
-                if (!rdr.IsDBNull(30))
+                if (row.ProductionOrderQuantityProduced.HasValue)
                 {
-                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                    curr.ProductionOrderQuantityProduced = row.ProductionOrderQuantityProduced.Value;
                 }
-                if (!rdr.IsDBNull(31))
+                if (row.ProductionOrderKanbanCardID != null)
                 {
-                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                    curr.ProductionOrderKanbanCardID = row.ProductionOrderKanbanCardID;
                 }
-                if (!rdr.IsDBNull(32))
+                if (row.ProductTypeID.HasValue)
                 {
-                    curr.ProductTypeID = rdr.GetInt32(32);
+                    curr.ProductTypeID = row.ProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(33))
+                if (row.ProductTypeReview.HasValue)
                 {
-                    curr.ProductTypeReview = rdr.GetInt32(33);
+                    curr.ProductTypeReview = row.ProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(34))
+                if (row.ProductTypeReviewDate.HasValue)
                 {
-                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductTypeReviewDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(35))
+                if (row.ProductTypeName != null)
                 {
-                    curr.ProductTypeName = rdr.GetString(35);
+                    curr.ProductTypeName = row.ProductTypeName;
                 }
-                if (!rdr.IsDBNull(36))
+                if (row.ProductTypeDescription != null)
                 {
-                    curr.ProductTypeDescription = rdr.GetString(36);
+                    curr.ProductTypeDescription = row.ProductTypeDescription;
                 }
-                if (!rdr.IsDBNull(37))
+                if (row.ProductTypeEnabled.HasValue)
                 {
-                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                    curr.ProductTypeEnabled = row.ProductTypeEnabled.Value;
                 }
-                if (!rdr.IsDBNull(38))
+                if (row.ProductID.HasValue)
                 {
-                    curr.ProductID = rdr.GetInt32(38);
+                    curr.ProductID = row.ProductID.Value;
                 }
-                if (!rdr.IsDBNull(39))
+                if (row.ProductName != null)
                 {
-                    curr.ProductName = rdr.GetString(39);
+                    curr.ProductName = row.ProductName;
                 }
-                if (!rdr.IsDBNull(40))
+                if (row.ProductDescription != null)
                 {
-                    curr.ProductDescription = rdr.GetString(40);
+                    curr.ProductDescription = row.ProductDescription;
                 }
-                if (!rdr.IsDBNull(41))
+                if (row.DepartmentName != null)
                 {
-                    curr.DepartmentID = rdr.GetInt32(41);
+                    curr.DepartmentName = row.DepartmentName;
                 }
-                if (!rdr.IsDBNull(42))
+                if (row.DepartmentDescription != null)
                 {
-                    curr.DepartmentName = rdr.GetString(42);
+                    curr.DepartmentDescription = row.DepartmentDescription;
                 }
-                if (!rdr.IsDBNull(43))
+                if (row.DepartmentTaktTime.HasValue)
                 {
-                    curr.DepartmentDescription = rdr.GetString(43);
+                    curr.DepartmentTaktTime = row.DepartmentTaktTime.Value;
                 }
-                if (!rdr.IsDBNull(44))
+                if (row.DepartmentTimeZone != null)
                 {
-                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                    curr.DepartmentTimeZone = row.DepartmentTimeZone;
                 }
-                if (!rdr.IsDBNull(45))
+                if (row.RealLeadTime.HasValue)
                 {
-                    curr.DepartmentTimeZone = rdr.GetString(45);
+                    curr.RealLeadTime = row.RealLeadTime.Value;
                 }
-                if (!rdr.IsDBNull(46))
+                if (row.RealWorkingTime.HasValue)
                 {
-                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                    curr.RealWorkingTime = row.RealWorkingTime.Value;
                 }
-                if (!rdr.IsDBNull(47))
+                if (row.RealDelay.HasValue)
                 {
-                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                    curr.RealDelay = row.RealDelay.Value;
                 }
-                if (!rdr.IsDBNull(48))
+                if (row.RealEndProductionDate.HasValue)
                 {
-                    curr.RealDelay = rdr.GetTimeSpan(48);
+                    curr.ProductionOrderEndProductionDateReal = row.RealEndProductionDate.Value;
                 }
-                if (!rdr.IsDBNull(49))
+                if (row.SalesOrderExternalID != null)
                 {
-                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
+                    curr.SalesOrderExternalID = row.SalesOrderExternalID;
                 }
-                if (!rdr.IsDBNull(50))
+                if(row.ProductExternalID != null)
                 {
-                    curr.SalesOrderExternalID = rdr.GetString(50);
+                    curr.ProductExternalID = row.ProductExternalID;
                 }
-                if(!rdr.IsDBNull(51))
+                if (row.MeasurementUnit != null)
                 {
-                    curr.ProductExternalID = rdr.GetString(51);
-                }
-                if (!rdr.IsDBNull(52))
-                {
-                    curr.MeasurementUnit = rdr.GetString(52);
+                    curr.MeasurementUnit = row.MeasurementUnit;
                 }
                 this.HistoricData.Add(curr);
             }
@@ -339,13 +392,68 @@ namespace KIS.App_Sources
             }
         }
 
+        private class ProductionAnalysisRow
+        {
+            public String CustomerID { get; set; }
+            public String CustomerName { get; set; }
+            public String CustomerVATNumber { get; set; }
+            public String CustomerCodiceFiscale { get; set; }
+            public String CustomerAddress { get; set; }
+            public String CustomerCity { get; set; }
+            public String CustomerProvince { get; set; }
+            public String CustomerZipCode { get; set; }
+            public String CustomerCountry { get; set; }
+            public String CustomerPhoneNumber { get; set; }
+            public String CustomerEMail { get; set; }
+            public Boolean? CustomerKanbanManaged { get; set; }
+            public int? SalesOrderID { get; set; }
+            public int? SalesOrderYear { get; set; }
+            public String SalesOrderCustomer { get; set; }
+            public DateTime? SalesOrderDate { get; set; }
+            public String SalesOrderNotes { get; set; }
+            public int? ProductionOrderID { get; set; }
+            public int? ProductionOrderYear { get; set; }
+            public int? ProductionOrderProductTypeID { get; set; }
+            public int? ProductionOrderProductTypeReview { get; set; }
+            public int? ProductionOrderProductID { get; set; }
+            public String ProductionOrderSerialNumber { get; set; }
+            public String ProductionOrderStatus { get; set; }
+            public int? ProductionOrderDepartmentID { get; set; }
+            public DateTime? ProductionOrderStartTime { get; set; }
+            public DateTime? ProductionOrderDeliveryDate { get; set; }
+            public DateTime? ProductionOrderEndProductionDate { get; set; }
+            public String ProductionOrderPlanner { get; set; }
+            public int? ProductionOrderQuantityOrdered { get; set; }
+            public int? ProductionOrderQuantityProduced { get; set; }
+            public String ProductionOrderKanbanCardID { get; set; }
+            public int? ProductTypeID { get; set; }
+            public int? ProductTypeReview { get; set; }
+            public DateTime? ProductTypeReviewDate { get; set; }
+            public String ProductTypeName { get; set; }
+            public String ProductTypeDescription { get; set; }
+            public Boolean? ProductTypeEnabled { get; set; }
+            public int? ProductID { get; set; }
+            public String ProductName { get; set; }
+            public String ProductDescription { get; set; }
+            public int DepartmentID { get; set; }
+            public String DepartmentName { get; set; }
+            public String DepartmentDescription { get; set; }
+            public Double? DepartmentTaktTime { get; set; }
+            public String DepartmentTimeZone { get; set; }
+            public TimeSpan? RealLeadTime { get; set; }
+            public TimeSpan? RealWorkingTime { get; set; }
+            public TimeSpan? RealDelay { get; set; }
+            public DateTime? RealEndProductionDate { get; set; }
+            public String SalesOrderExternalID { get; set; }
+            public TimeSpan? PlannedWorkingTime { get; set; }
+        }
+
         public void loadProductionAnalysis()
         {
             this.AnalysisData = new List<ProductionAnalysisStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
+            string sql = "SELECT anagraficaclienti.codice AS CustomerID, "
                 + " anagraficaclienti.ragsociale AS CustomerName,"
                 + " anagraficaclienti.partitaiva AS CustomerVATNumber,"
                 + " anagraficaclienti.codfiscale AS CustomerCodiceFiscale,"
@@ -404,220 +512,216 @@ namespace KIS.App_Sources
  + " INNER JOIN processo ON (processo.ProcessID = productionplan.processo AND processo.revisione = productionplan.revisione)"
  + " WHERE productionplan.status = 'F'"
  + " order by productionplan.anno DESC, productionplan.id DESC";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<ProductionAnalysisRow>(sql);
+            foreach (var row in rows)
             {
                 ProductionAnalysisStruct curr = new ProductionAnalysisStruct();
-                curr.DepartmentID = rdr.GetInt32(41);
+                curr.DepartmentID = row.DepartmentID;
                 KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
-                if (!rdr.IsDBNull(0))
+                if (row.CustomerID != null)
                 {
-                    curr.CustomerID = rdr.GetString(0);
+                    curr.CustomerID = row.CustomerID;
                 }
-                if (!rdr.IsDBNull(1))
+                if (row.CustomerName != null)
                 {
-                    curr.CustomerName = rdr.GetString(1);
+                    curr.CustomerName = row.CustomerName;
                 }
-                if (!rdr.IsDBNull(2))
+                if (row.CustomerVATNumber != null)
                 {
-                    curr.CustomerVATNumber = rdr.GetString(2);
+                    curr.CustomerVATNumber = row.CustomerVATNumber;
                 }
-                if (!rdr.IsDBNull(3))
+                if (row.CustomerCodiceFiscale != null)
                 {
-                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                    curr.CustomerCodiceFiscale = row.CustomerCodiceFiscale;
                 }
-                if (!rdr.IsDBNull(4))
+                if (row.CustomerAddress != null)
                 {
-                    curr.CustomerAddress = rdr.GetString(4);
+                    curr.CustomerAddress = row.CustomerAddress;
                 }
-                if (!rdr.IsDBNull(5))
+                if (row.CustomerCity != null)
                 {
-                    curr.CustomerCity = rdr.GetString(5);
+                    curr.CustomerCity = row.CustomerCity;
                 }
-                if (!rdr.IsDBNull(6))
+                if (row.CustomerProvince != null)
                 {
-                    curr.CustomerProvince = rdr.GetString(6);
+                    curr.CustomerProvince = row.CustomerProvince;
                 }
-                if (!rdr.IsDBNull(7))
+                if (row.CustomerZipCode != null)
                 {
-                    curr.CustomerZipCode = rdr.GetString(7);
+                    curr.CustomerZipCode = row.CustomerZipCode;
                 }
-                if (!rdr.IsDBNull(8))
+                if (row.CustomerCountry != null)
                 {
-                    curr.CustomerCountry = rdr.GetString(8);
+                    curr.CustomerCountry = row.CustomerCountry;
                 }
-                if (!rdr.IsDBNull(9))
+                if (row.CustomerPhoneNumber != null)
                 {
-                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                    curr.CustomerPhoneNumber = row.CustomerPhoneNumber;
                 }
-                if (!rdr.IsDBNull(10))
+                if (row.CustomerEMail != null)
                 {
-                    curr.CustomerEMail = rdr.GetString(10);
+                    curr.CustomerEMail = row.CustomerEMail;
                 }
-                if (!rdr.IsDBNull(11))
+                if (row.CustomerKanbanManaged.HasValue)
                 {
-                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                    curr.CustomerKanbanManaged = row.CustomerKanbanManaged.Value;
                 }
-                if (!rdr.IsDBNull(12))
+                if (row.SalesOrderID.HasValue)
                 {
-                    curr.SalesOrderID = rdr.GetInt32(12);
+                    curr.SalesOrderID = row.SalesOrderID.Value;
                 }
-                if (!rdr.IsDBNull(13))
+                if (row.SalesOrderYear.HasValue)
                 {
-                    curr.SalesOrderYear = rdr.GetInt32(13);
+                    curr.SalesOrderYear = row.SalesOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(14))
+                if (row.SalesOrderCustomer != null)
                 {
-                    curr.SalesOrderCustomer = rdr.GetString(14);
+                    curr.SalesOrderCustomer = row.SalesOrderCustomer;
                 }
-                if (!rdr.IsDBNull(15))
+                if (row.SalesOrderDate.HasValue)
                 {
-                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(row.SalesOrderDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(16))
+                if (row.SalesOrderNotes != null)
                 {
-                    curr.SalesOrderNotes = rdr.GetString(16);
+                    curr.SalesOrderNotes = row.SalesOrderNotes;
                 }
-                if (!rdr.IsDBNull(17))
+                if (row.ProductionOrderID.HasValue)
                 {
-                    curr.ProductionOrderID = rdr.GetInt32(17);
+                    curr.ProductionOrderID = row.ProductionOrderID.Value;
                 }
-                if (!rdr.IsDBNull(18))
+                if (row.ProductionOrderYear.HasValue)
                 {
-                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                    curr.ProductionOrderYear = row.ProductionOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(19))
+                if (row.ProductionOrderProductTypeID.HasValue)
                 {
-                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                    curr.ProductionOrderProductTypeID = row.ProductionOrderProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(20))
+                if (row.ProductionOrderProductTypeReview.HasValue)
                 {
-                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                    curr.ProductionOrderProductTypeReview = row.ProductionOrderProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(21))
+                if (row.ProductionOrderProductID.HasValue)
                 {
-                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                    curr.ProductionOrderProductID = row.ProductionOrderProductID.Value;
                 }
-                if (!rdr.IsDBNull(22))
+                if (row.ProductionOrderSerialNumber != null)
                 {
-                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                    curr.ProductionOrderSerialNumber = row.ProductionOrderSerialNumber;
                 }
-                if (!rdr.IsDBNull(23))
+                if (row.ProductionOrderStatus != null)
                 {
-                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                    curr.ProductionOrderStatus = row.ProductionOrderStatus[0];
                 }
-                if (!rdr.IsDBNull(24))
+                if (row.ProductionOrderDepartmentID.HasValue)
                 {
-                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                    curr.ProductionOrderDepartmentID = row.ProductionOrderDepartmentID.Value;
                 }
-                if (!rdr.IsDBNull(25))
+                if (row.ProductionOrderStartTime.HasValue)
                 {
-                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderStartTime.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(26))
+                if (row.ProductionOrderDeliveryDate.HasValue)
                 {
-                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderDeliveryDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(27))
+                if (row.ProductionOrderEndProductionDate.HasValue)
                 {
-                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderEndProductionDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(28))
+                if (row.ProductionOrderPlanner != null)
                 {
-                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                    curr.ProductionOrderPlanner = row.ProductionOrderPlanner;
                 }
-                if (!rdr.IsDBNull(29))
+                if (row.ProductionOrderQuantityOrdered.HasValue)
                 {
-                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                    curr.ProductionOrderQuantityOrdered = row.ProductionOrderQuantityOrdered.Value;
                 }
-                if (!rdr.IsDBNull(30))
+                if (row.ProductionOrderQuantityProduced.HasValue)
                 {
-                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                    curr.ProductionOrderQuantityProduced = row.ProductionOrderQuantityProduced.Value;
                 }
-                if (!rdr.IsDBNull(31))
+                if (row.ProductionOrderKanbanCardID != null)
                 {
-                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                    curr.ProductionOrderKanbanCardID = row.ProductionOrderKanbanCardID;
                 }
-                if (!rdr.IsDBNull(32))
+                if (row.ProductTypeID.HasValue)
                 {
-                    curr.ProductTypeID = rdr.GetInt32(32);
+                    curr.ProductTypeID = row.ProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(33))
+                if (row.ProductTypeReview.HasValue)
                 {
-                    curr.ProductTypeReview = rdr.GetInt32(33);
+                    curr.ProductTypeReview = row.ProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(34))
+                if (row.ProductTypeReviewDate.HasValue)
                 {
-                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductTypeReviewDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(35))
+                if (row.ProductTypeName != null)
                 {
-                    curr.ProductTypeName = rdr.GetString(35);
+                    curr.ProductTypeName = row.ProductTypeName;
                 }
-                if (!rdr.IsDBNull(36))
+                if (row.ProductTypeDescription != null)
                 {
-                    curr.ProductTypeDescription = rdr.GetString(36);
+                    curr.ProductTypeDescription = row.ProductTypeDescription;
                 }
-                if (!rdr.IsDBNull(37))
+                if (row.ProductTypeEnabled.HasValue)
                 {
-                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                    curr.ProductTypeEnabled = row.ProductTypeEnabled.Value;
                 }
-                if (!rdr.IsDBNull(38))
+                if (row.ProductID.HasValue)
                 {
-                    curr.ProductID = rdr.GetInt32(38);
+                    curr.ProductID = row.ProductID.Value;
                 }
-                if (!rdr.IsDBNull(39))
+                if (row.ProductName != null)
                 {
-                    curr.ProductName = rdr.GetString(39);
+                    curr.ProductName = row.ProductName;
                 }
-                if (!rdr.IsDBNull(40))
+                if (row.ProductDescription != null)
                 {
-                    curr.ProductDescription = rdr.GetString(40);
+                    curr.ProductDescription = row.ProductDescription;
                 }
-                if (!rdr.IsDBNull(41))
+                if (row.DepartmentName != null)
                 {
-                    curr.DepartmentID = rdr.GetInt32(41);
+                    curr.DepartmentName = row.DepartmentName;
                 }
-                if (!rdr.IsDBNull(42))
+                if (row.DepartmentDescription != null)
                 {
-                    curr.DepartmentName = rdr.GetString(42);
+                    curr.DepartmentDescription = row.DepartmentDescription;
                 }
-                if (!rdr.IsDBNull(43))
+                if (row.DepartmentTaktTime.HasValue)
                 {
-                    curr.DepartmentDescription = rdr.GetString(43);
+                    curr.DepartmentTaktTime = row.DepartmentTaktTime.Value;
                 }
-                if (!rdr.IsDBNull(44))
+                if (row.DepartmentTimeZone != null)
                 {
-                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                    curr.DepartmentTimeZone = row.DepartmentTimeZone;
                 }
-                if (!rdr.IsDBNull(45))
+                if (row.RealLeadTime.HasValue)
                 {
-                    curr.DepartmentTimeZone = rdr.GetString(45);
+                    curr.RealLeadTime = row.RealLeadTime.Value;
                 }
-                if (!rdr.IsDBNull(46))
+                if (row.RealWorkingTime.HasValue)
                 {
-                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                    curr.RealWorkingTime = row.RealWorkingTime.Value;
                 }
-                if (!rdr.IsDBNull(47))
+                if (row.RealDelay.HasValue)
                 {
-                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                    curr.RealDelay = row.RealDelay.Value;
                 }
-                if (!rdr.IsDBNull(48))
+                if (row.RealEndProductionDate.HasValue)
                 {
-                    curr.RealDelay = rdr.GetTimeSpan(48);
+                    curr.ProductionOrderEndProductionDateReal = row.RealEndProductionDate.Value;
+                    curr.ProductionOrderEndProductionDateRealWeek = GetWeekOfTheYear(row.RealEndProductionDate.Value);
                 }
-                if (!rdr.IsDBNull(49))
+                if (row.SalesOrderExternalID != null)
                 {
-                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
-                    curr.ProductionOrderEndProductionDateRealWeek = GetWeekOfTheYear(rdr.GetDateTime(49));
+                    curr.SalesOrderExternalID = row.SalesOrderExternalID;
                 }
-                if (!rdr.IsDBNull(50))
+                if(row.PlannedWorkingTime.HasValue)
                 {
-                    curr.SalesOrderExternalID = rdr.GetString(50);
-                }
-                if(!rdr.IsDBNull(51))
-                {
-                    curr.PlannedWorkingTime = rdr.GetTimeSpan(51);
+                    curr.PlannedWorkingTime = row.PlannedWorkingTime.Value;
                 }
 
                 if(curr.ProductionOrderStatus == 'F' && curr.RealWorkingTime.TotalHours > 0.75)
@@ -804,13 +908,91 @@ namespace KIS.App_Sources
 
         public List<TaskProductionHistoryStruct> TaskHistoricData;
 
+        private class TaskProductionHistoryRow
+        {
+            public String CustomerID { get; set; }
+            public String CustomerName { get; set; }
+            public String CustomerVATNumber { get; set; }
+            public String CustomerCodiceFiscale { get; set; }
+            public String CustomerAddress { get; set; }
+            public String CustomerCity { get; set; }
+            public String CustomerProvince { get; set; }
+            public String CustomerZipCode { get; set; }
+            public String CustomerCountry { get; set; }
+            public String CustomerPhoneNumber { get; set; }
+            public String CustomerEMail { get; set; }
+            public Boolean? CustomerKanbanManaged { get; set; }
+            public int? SalesOrderID { get; set; }
+            public int? SalesOrderYear { get; set; }
+            public String SalesOrderCustomer { get; set; }
+            public DateTime? SalesOrderDate { get; set; }
+            public String SalesOrderNotes { get; set; }
+            public int? ProductionOrderID { get; set; }
+            public int? ProductionOrderYear { get; set; }
+            public int? ProductionOrderProductTypeID { get; set; }
+            public int? ProductionOrderProductTypeReview { get; set; }
+            public int? ProductionOrderProductID { get; set; }
+            public String ProductionOrderSerialNumber { get; set; }
+            public String ProductionOrderStatus { get; set; }
+            public int? ProductionOrderDepartmentID { get; set; }
+            public DateTime? ProductionOrderStartTime { get; set; }
+            public DateTime? ProductionOrderDeliveryDate { get; set; }
+            public DateTime? ProductionOrderEndProductionDate { get; set; }
+            public String ProductionOrderPlanner { get; set; }
+            public int? ProductionOrderQuantityOrdered { get; set; }
+            public int? ProductionOrderQuantityProduced { get; set; }
+            public String ProductionOrderKanbanCardID { get; set; }
+            public int? ProductTypeID { get; set; }
+            public int? ProductTypeReview { get; set; }
+            public DateTime? ProductTypeReviewDate { get; set; }
+            public String ProductTypeName { get; set; }
+            public String ProductTypeDescription { get; set; }
+            public Boolean? ProductTypeEnabled { get; set; }
+            public int? ProductID { get; set; }
+            public String ProductName { get; set; }
+            public String ProductDescription { get; set; }
+            public int DepartmentID { get; set; }
+            public String DepartmentName { get; set; }
+            public String DepartmentDescription { get; set; }
+            public Double? DepartmentTaktTime { get; set; }
+            public String DepartmentTimeZone { get; set; }
+            public TimeSpan? ProductRealLeadTime { get; set; }
+            public TimeSpan? ProductRealWorkingTime { get; set; }
+            public TimeSpan? ProductRealDelay { get; set; }
+            public DateTime? ProductRealEndProductionDate { get; set; }
+            public int? TaskID { get; set; }
+            public String TaskName { get; set; }
+            public String TaskDescription { get; set; }
+            public DateTime? TaskEarlyStart { get; set; }
+            public DateTime? TaskLateStart { get; set; }
+            public DateTime? TaskEarlyFinish { get; set; }
+            public DateTime? TaskLateFinish { get; set; }
+            public String TaskStatus { get; set; }
+            public int? TaskNumOperators { get; set; }
+            public Double? TaskQuantityOrdered { get; set; }
+            public Double? TaskQuantityProduced { get; set; }
+            public TimeSpan? TaskSetupTimePlanned { get; set; }
+            public TimeSpan? TaskCycleTimePlanned { get; set; }
+            public TimeSpan? TaskUnloadTimePlanned { get; set; }
+            public int? WorkstationID { get; set; }
+            public String WorkstationName { get; set; }
+            public String WorkstationDescription { get; set; }
+            public DateTime? TaskEndDateReal { get; set; }
+            public TimeSpan? TaskLeadTime { get; set; }
+            public TimeSpan? TaskWorkingTime { get; set; }
+            public TimeSpan? TaskDelay { get; set; }
+            public int? TaskOriginalTaskID { get; set; }
+            public int? TaskOriginalTaskRev { get; set; }
+            public int? TaskOriginalTaskVar { get; set; }
+            public TimeSpan? TaskPlannedWorkingTime { get; set; }
+        }
+
         public void loadTaskProductionHistory()
         {
             this.TaskHistoricData = new List<TaskProductionHistoryStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
+            string sql = "SELECT anagraficaclienti.codice AS CustomerID, "
 + "anagraficaclienti.ragsociale AS CustomerName,"
 + "anagraficaclienti.partitaiva AS CustomerVATNumber,"
 + "anagraficaclienti.codfiscale AS CustomerCodiceFiscale, "
@@ -898,237 +1080,233 @@ namespace KIS.App_Sources
  + " WHERE tasksproduzione.status = 'F' order by productionplan.anno, productionplan.id, tasksproduzione.taskid;";
 
 
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while(rdr.Read())
+            var rows = conn.Query<TaskProductionHistoryRow>(sql);
+            foreach (var row in rows)
             {
                 TaskProductionHistoryStruct curr = new TaskProductionHistoryStruct();
-                curr.DepartmentID = rdr.GetInt32(41);
+                curr.DepartmentID = row.DepartmentID;
                 KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
-                if (!rdr.IsDBNull(0))
+                if (row.CustomerID != null)
                 {
-                    curr.CustomerID = rdr.GetString(0);
+                    curr.CustomerID = row.CustomerID;
                 }
-                if (!rdr.IsDBNull(1))
+                if (row.CustomerName != null)
                 {
-                    curr.CustomerName = rdr.GetString(1);
+                    curr.CustomerName = row.CustomerName;
                 }
-                if (!rdr.IsDBNull(2))
+                if (row.CustomerVATNumber != null)
                 {
-                    curr.CustomerVATNumber = rdr.GetString(2);
+                    curr.CustomerVATNumber = row.CustomerVATNumber;
                 }
-                if (!rdr.IsDBNull(3))
+                if (row.CustomerCodiceFiscale != null)
                 {
-                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                    curr.CustomerCodiceFiscale = row.CustomerCodiceFiscale;
                 }
-                if (!rdr.IsDBNull(4))
+                if (row.CustomerAddress != null)
                 {
-                    curr.CustomerAddress = rdr.GetString(4);
+                    curr.CustomerAddress = row.CustomerAddress;
                 }
-                if (!rdr.IsDBNull(5))
+                if (row.CustomerCity != null)
                 {
-                    curr.CustomerCity = rdr.GetString(5);
+                    curr.CustomerCity = row.CustomerCity;
                 }
-                if (!rdr.IsDBNull(6))
+                if (row.CustomerProvince != null)
                 {
-                    curr.CustomerProvince = rdr.GetString(6);
+                    curr.CustomerProvince = row.CustomerProvince;
                 }
-                if (!rdr.IsDBNull(7))
+                if (row.CustomerZipCode != null)
                 {
-                    curr.CustomerZipCode = rdr.GetString(7);
+                    curr.CustomerZipCode = row.CustomerZipCode;
                 }
-                if (!rdr.IsDBNull(8))
+                if (row.CustomerCountry != null)
                 {
-                    curr.CustomerCountry = rdr.GetString(8);
+                    curr.CustomerCountry = row.CustomerCountry;
                 }
-                if (!rdr.IsDBNull(9))
+                if (row.CustomerPhoneNumber != null)
                 {
-                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                    curr.CustomerPhoneNumber = row.CustomerPhoneNumber;
                 }
-                if (!rdr.IsDBNull(10))
+                if (row.CustomerEMail != null)
                 {
-                    curr.CustomerEMail = rdr.GetString(10);
+                    curr.CustomerEMail = row.CustomerEMail;
                 }
-                if (!rdr.IsDBNull(11))
+                if (row.CustomerKanbanManaged.HasValue)
                 {
-                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                    curr.CustomerKanbanManaged = row.CustomerKanbanManaged.Value;
                 }
-                if (!rdr.IsDBNull(12))
+                if (row.SalesOrderID.HasValue)
                 {
-                    curr.SalesOrderID = rdr.GetInt32(12);
+                    curr.SalesOrderID = row.SalesOrderID.Value;
                 }
-                if (!rdr.IsDBNull(13))
+                if (row.SalesOrderYear.HasValue)
                 {
-                    curr.SalesOrderYear = rdr.GetInt32(13);
+                    curr.SalesOrderYear = row.SalesOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(14))
+                if (row.SalesOrderCustomer != null)
                 {
-                    curr.SalesOrderCustomer = rdr.GetString(14);
+                    curr.SalesOrderCustomer = row.SalesOrderCustomer;
                 }
-                if (!rdr.IsDBNull(15))
+                if (row.SalesOrderDate.HasValue)
                 {
-                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(row.SalesOrderDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(16))
+                if (row.SalesOrderNotes != null)
                 {
-                    curr.SalesOrderNotes = rdr.GetString(16);
+                    curr.SalesOrderNotes = row.SalesOrderNotes;
                 }
-                if (!rdr.IsDBNull(17))
+                if (row.ProductionOrderID.HasValue)
                 {
-                    curr.ProductionOrderID = rdr.GetInt32(17);
+                    curr.ProductionOrderID = row.ProductionOrderID.Value;
                 }
-                if (!rdr.IsDBNull(18))
+                if (row.ProductionOrderYear.HasValue)
                 {
-                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                    curr.ProductionOrderYear = row.ProductionOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(19))
+                if (row.ProductionOrderProductTypeID.HasValue)
                 {
-                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                    curr.ProductionOrderProductTypeID = row.ProductionOrderProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(20))
+                if (row.ProductionOrderProductTypeReview.HasValue)
                 {
-                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                    curr.ProductionOrderProductTypeReview = row.ProductionOrderProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(21))
+                if (row.ProductionOrderProductID.HasValue)
                 {
-                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                    curr.ProductionOrderProductID = row.ProductionOrderProductID.Value;
                 }
-                if (!rdr.IsDBNull(22))
+                if (row.ProductionOrderSerialNumber != null)
                 {
-                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                    curr.ProductionOrderSerialNumber = row.ProductionOrderSerialNumber;
                 }
-                if (!rdr.IsDBNull(23))
+                if (row.ProductionOrderStatus != null)
                 {
-                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                    curr.ProductionOrderStatus = row.ProductionOrderStatus[0];
                 }
-                if (!rdr.IsDBNull(24))
+                if (row.ProductionOrderDepartmentID.HasValue)
                 {
-                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                    curr.ProductionOrderDepartmentID = row.ProductionOrderDepartmentID.Value;
                 }
-                if (!rdr.IsDBNull(25))
+                if (row.ProductionOrderStartTime.HasValue)
                 {
-                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderStartTime.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(26))
+                if (row.ProductionOrderDeliveryDate.HasValue)
                 {
-                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderDeliveryDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(27))
+                if (row.ProductionOrderEndProductionDate.HasValue)
                 {
-                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderEndProductionDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(28))
+                if (row.ProductionOrderPlanner != null)
                 {
-                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                    curr.ProductionOrderPlanner = row.ProductionOrderPlanner;
                 }
-                if (!rdr.IsDBNull(29))
+                if (row.ProductionOrderQuantityOrdered.HasValue)
                 {
-                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                    curr.ProductionOrderQuantityOrdered = row.ProductionOrderQuantityOrdered.Value;
                 }
-                if (!rdr.IsDBNull(30))
+                if (row.ProductionOrderQuantityProduced.HasValue)
                 {
-                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                    curr.ProductionOrderQuantityProduced = row.ProductionOrderQuantityProduced.Value;
                 }
-                if (!rdr.IsDBNull(31))
+                if (row.ProductionOrderKanbanCardID != null)
                 {
-                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                    curr.ProductionOrderKanbanCardID = row.ProductionOrderKanbanCardID;
                 }
-                if (!rdr.IsDBNull(32))
+                if (row.ProductTypeID.HasValue)
                 {
-                    curr.ProductTypeID = rdr.GetInt32(32);
+                    curr.ProductTypeID = row.ProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(33))
+                if (row.ProductTypeReview.HasValue)
                 {
-                    curr.ProductTypeReview = rdr.GetInt32(33);
+                    curr.ProductTypeReview = row.ProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(34))
+                if (row.ProductTypeReviewDate.HasValue)
                 {
-                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductTypeReviewDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(35))
+                if (row.ProductTypeName != null)
                 {
-                    curr.ProductTypeName = rdr.GetString(35);
+                    curr.ProductTypeName = row.ProductTypeName;
                 }
-                if (!rdr.IsDBNull(36))
+                if (row.ProductTypeDescription != null)
                 {
-                    curr.ProductTypeDescription = rdr.GetString(36);
+                    curr.ProductTypeDescription = row.ProductTypeDescription;
                 }
-                if (!rdr.IsDBNull(37))
+                if (row.ProductTypeEnabled.HasValue)
                 {
-                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                    curr.ProductTypeEnabled = row.ProductTypeEnabled.Value;
                 }
-                if (!rdr.IsDBNull(38))
+                if (row.ProductID.HasValue)
                 {
-                    curr.ProductID = rdr.GetInt32(38);
+                    curr.ProductID = row.ProductID.Value;
                 }
-                if (!rdr.IsDBNull(39))
+                if (row.ProductName != null)
                 {
-                    curr.ProductName = rdr.GetString(39);
+                    curr.ProductName = row.ProductName;
                 }
-                if (!rdr.IsDBNull(40))
+                if (row.ProductDescription != null)
                 {
-                    curr.ProductDescription = rdr.GetString(40);
+                    curr.ProductDescription = row.ProductDescription;
                 }
-                if (!rdr.IsDBNull(41))
+                if (row.DepartmentName != null)
                 {
-                    curr.DepartmentID = rdr.GetInt32(41);
+                    curr.DepartmentName = row.DepartmentName;
                 }
-                if (!rdr.IsDBNull(42))
+                if (row.DepartmentDescription != null)
                 {
-                    curr.DepartmentName = rdr.GetString(42);
+                    curr.DepartmentDescription = row.DepartmentDescription;
                 }
-                if (!rdr.IsDBNull(43))
+                if (row.DepartmentTaktTime.HasValue)
                 {
-                    curr.DepartmentDescription = rdr.GetString(43);
+                    curr.DepartmentTaktTime = row.DepartmentTaktTime.Value;
                 }
-                if (!rdr.IsDBNull(44))
+                if (row.DepartmentTimeZone != null)
                 {
-                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                    curr.DepartmentTimeZone = row.DepartmentTimeZone;
                 }
-                if (!rdr.IsDBNull(45))
+                if (row.ProductRealLeadTime.HasValue)
                 {
-                    curr.DepartmentTimeZone = rdr.GetString(45);
+                    curr.RealLeadTime = row.ProductRealLeadTime.Value;
                 }
-                if (!rdr.IsDBNull(46))
+                if (row.ProductRealWorkingTime.HasValue)
                 {
-                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                    curr.RealWorkingTime = row.ProductRealWorkingTime.Value;
                 }
-                if (!rdr.IsDBNull(47))
+                if (row.ProductRealDelay.HasValue)
                 {
-                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                    curr.RealDelay = row.ProductRealDelay.Value;
                 }
-                if (!rdr.IsDBNull(48))
+                if (row.ProductRealEndProductionDate.HasValue)
                 {
-                    curr.RealDelay = rdr.GetTimeSpan(48);
+                    curr.ProductionOrderEndProductionDateReal = row.ProductRealEndProductionDate.Value;
                 }
-                if (!rdr.IsDBNull(49))
-                {
-                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
-                }
-                if(!rdr.IsDBNull(50)) { curr.TaskID = rdr.GetInt32(50); }
-                if (!rdr.IsDBNull(51)) { curr.TaskName = rdr.GetString(51); }
-                if (!rdr.IsDBNull(52)) { curr.TaskDescription = rdr.GetString(52); }
-                if (!rdr.IsDBNull(53)) { curr.TaskEarlyStart = rdr.GetDateTime(53); }
-                if (!rdr.IsDBNull(54)) { curr.TaskLateStart = rdr.GetDateTime(54); }
-                if (!rdr.IsDBNull(55)) { curr.TaskEarlyFinish = rdr.GetDateTime(55); }
-                if (!rdr.IsDBNull(56)) { curr.TaskLateFinish = rdr.GetDateTime(56); curr.TaskLateFinishWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskLateFinish); }
-                if (!rdr.IsDBNull(57)) { curr.TaskStatus = rdr.GetChar(57); }
-                if (!rdr.IsDBNull(58)) { curr.TaskNumOperators = rdr.GetInt32(58); }
-                if (!rdr.IsDBNull(59)) { curr.TaskQuantityOrdered = rdr.GetDouble(59); }
-                if (!rdr.IsDBNull(60)) { curr.TaskQuantityProduced = rdr.GetDouble(60); }
-                if (!rdr.IsDBNull(61)) { curr.TaskPlannedSetupTime = rdr.GetTimeSpan(61); }
-                if (!rdr.IsDBNull(62)) { curr.TaskPlannedCycleTime = rdr.GetTimeSpan(62); }
-                if (!rdr.IsDBNull(63)) { curr.TaskPlannedUnloadTime = rdr.GetTimeSpan(63); }
-                if (!rdr.IsDBNull(64)) { curr.WorkstationID = rdr.GetInt32(64); }
-                if (!rdr.IsDBNull(65)) { curr.WorkstationName = rdr.GetString(65); }
-                if (!rdr.IsDBNull(66)) { curr.WorkstationDescription = rdr.GetString(66); }
-                if (!rdr.IsDBNull(67)) { curr.TaskRealEndDate = rdr.GetDateTime(67); curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
-                if (!rdr.IsDBNull(68)) { curr.TaskRealLeadTime = rdr.GetTimeSpan(68); }
-                if (!rdr.IsDBNull(69)) { curr.TaskRealWorkingTime = rdr.GetTimeSpan(69); }
-                if (!rdr.IsDBNull(70)) { curr.TaskRealDelay = rdr.GetTimeSpan(70); }
-                if (!rdr.IsDBNull(71)) { curr.TaskOriginalID = rdr.GetInt32(71); }
-                if (!rdr.IsDBNull(72)) { curr.TaskOriginalRev = rdr.GetInt32(72); }
-                if (!rdr.IsDBNull(73)) { curr.TaskOriginalVar = rdr.GetInt32(73); }
-                if (!rdr.IsDBNull(74)) { curr.TaskPlannedWorkingTime = rdr.GetTimeSpan(74); }
+                if(row.TaskID.HasValue) { curr.TaskID = row.TaskID.Value; }
+                if (row.TaskName != null) { curr.TaskName = row.TaskName; }
+                if (row.TaskDescription != null) { curr.TaskDescription = row.TaskDescription; }
+                if (row.TaskEarlyStart.HasValue) { curr.TaskEarlyStart = row.TaskEarlyStart.Value; }
+                if (row.TaskLateStart.HasValue) { curr.TaskLateStart = row.TaskLateStart.Value; }
+                if (row.TaskEarlyFinish.HasValue) { curr.TaskEarlyFinish = row.TaskEarlyFinish.Value; }
+                if (row.TaskLateFinish.HasValue) { curr.TaskLateFinish = row.TaskLateFinish.Value; curr.TaskLateFinishWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskLateFinish); }
+                if (row.TaskStatus != null) { curr.TaskStatus = row.TaskStatus[0]; }
+                if (row.TaskNumOperators.HasValue) { curr.TaskNumOperators = row.TaskNumOperators.Value; }
+                if (row.TaskQuantityOrdered.HasValue) { curr.TaskQuantityOrdered = row.TaskQuantityOrdered.Value; }
+                if (row.TaskQuantityProduced.HasValue) { curr.TaskQuantityProduced = row.TaskQuantityProduced.Value; }
+                if (row.TaskSetupTimePlanned.HasValue) { curr.TaskPlannedSetupTime = row.TaskSetupTimePlanned.Value; }
+                if (row.TaskCycleTimePlanned.HasValue) { curr.TaskPlannedCycleTime = row.TaskCycleTimePlanned.Value; }
+                if (row.TaskUnloadTimePlanned.HasValue) { curr.TaskPlannedUnloadTime = row.TaskUnloadTimePlanned.Value; }
+                if (row.WorkstationID.HasValue) { curr.WorkstationID = row.WorkstationID.Value; }
+                if (row.WorkstationName != null) { curr.WorkstationName = row.WorkstationName; }
+                if (row.WorkstationDescription != null) { curr.WorkstationDescription = row.WorkstationDescription; }
+                if (row.TaskEndDateReal.HasValue) { curr.TaskRealEndDate = row.TaskEndDateReal.Value; curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
+                if (row.TaskLeadTime.HasValue) { curr.TaskRealLeadTime = row.TaskLeadTime.Value; }
+                if (row.TaskWorkingTime.HasValue) { curr.TaskRealWorkingTime = row.TaskWorkingTime.Value; }
+                if (row.TaskDelay.HasValue) { curr.TaskRealDelay = row.TaskDelay.Value; }
+                if (row.TaskOriginalTaskID.HasValue) { curr.TaskOriginalID = row.TaskOriginalTaskID.Value; }
+                if (row.TaskOriginalTaskRev.HasValue) { curr.TaskOriginalRev = row.TaskOriginalTaskRev.Value; }
+                if (row.TaskOriginalTaskVar.HasValue) { curr.TaskOriginalVar = row.TaskOriginalTaskVar.Value; }
+                if (row.TaskPlannedWorkingTime.HasValue) { curr.TaskPlannedWorkingTime = row.TaskPlannedWorkingTime.Value; }
 
                 this.TaskHistoricData.Add(curr);
             }
@@ -1140,8 +1318,7 @@ namespace KIS.App_Sources
             this.TaskHistoricData = new List<TaskProductionHistoryStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT anagraficaclienti.codice AS CustomerID, "
+            string sql = "SELECT anagraficaclienti.codice AS CustomerID, "
                 + "anagraficaclienti.ragsociale AS CustomerName,"
                 + "anagraficaclienti.partitaiva AS CustomerVATNumber,"
                 + "anagraficaclienti.codfiscale AS CustomerCodiceFiscale, "
@@ -1229,237 +1406,233 @@ namespace KIS.App_Sources
                  + " WHERE tasksproduzione.status <> 'F' order by productionplan.anno, productionplan.id, tasksproduzione.taskid;";
 
 
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query<TaskProductionHistoryRow>(sql);
+            foreach (var row in rows)
             {
                 TaskProductionHistoryStruct curr = new TaskProductionHistoryStruct();
-                curr.DepartmentID = rdr.GetInt32(41);
+                curr.DepartmentID = row.DepartmentID;
                 KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
-                if (!rdr.IsDBNull(0))
+                if (row.CustomerID != null)
                 {
-                    curr.CustomerID = rdr.GetString(0);
+                    curr.CustomerID = row.CustomerID;
                 }
-                if (!rdr.IsDBNull(1))
+                if (row.CustomerName != null)
                 {
-                    curr.CustomerName = rdr.GetString(1);
+                    curr.CustomerName = row.CustomerName;
                 }
-                if (!rdr.IsDBNull(2))
+                if (row.CustomerVATNumber != null)
                 {
-                    curr.CustomerVATNumber = rdr.GetString(2);
+                    curr.CustomerVATNumber = row.CustomerVATNumber;
                 }
-                if (!rdr.IsDBNull(3))
+                if (row.CustomerCodiceFiscale != null)
                 {
-                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                    curr.CustomerCodiceFiscale = row.CustomerCodiceFiscale;
                 }
-                if (!rdr.IsDBNull(4))
+                if (row.CustomerAddress != null)
                 {
-                    curr.CustomerAddress = rdr.GetString(4);
+                    curr.CustomerAddress = row.CustomerAddress;
                 }
-                if (!rdr.IsDBNull(5))
+                if (row.CustomerCity != null)
                 {
-                    curr.CustomerCity = rdr.GetString(5);
+                    curr.CustomerCity = row.CustomerCity;
                 }
-                if (!rdr.IsDBNull(6))
+                if (row.CustomerProvince != null)
                 {
-                    curr.CustomerProvince = rdr.GetString(6);
+                    curr.CustomerProvince = row.CustomerProvince;
                 }
-                if (!rdr.IsDBNull(7))
+                if (row.CustomerZipCode != null)
                 {
-                    curr.CustomerZipCode = rdr.GetString(7);
+                    curr.CustomerZipCode = row.CustomerZipCode;
                 }
-                if (!rdr.IsDBNull(8))
+                if (row.CustomerCountry != null)
                 {
-                    curr.CustomerCountry = rdr.GetString(8);
+                    curr.CustomerCountry = row.CustomerCountry;
                 }
-                if (!rdr.IsDBNull(9))
+                if (row.CustomerPhoneNumber != null)
                 {
-                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                    curr.CustomerPhoneNumber = row.CustomerPhoneNumber;
                 }
-                if (!rdr.IsDBNull(10))
+                if (row.CustomerEMail != null)
                 {
-                    curr.CustomerEMail = rdr.GetString(10);
+                    curr.CustomerEMail = row.CustomerEMail;
                 }
-                if (!rdr.IsDBNull(11))
+                if (row.CustomerKanbanManaged.HasValue)
                 {
-                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                    curr.CustomerKanbanManaged = row.CustomerKanbanManaged.Value;
                 }
-                if (!rdr.IsDBNull(12))
+                if (row.SalesOrderID.HasValue)
                 {
-                    curr.SalesOrderID = rdr.GetInt32(12);
+                    curr.SalesOrderID = row.SalesOrderID.Value;
                 }
-                if (!rdr.IsDBNull(13))
+                if (row.SalesOrderYear.HasValue)
                 {
-                    curr.SalesOrderYear = rdr.GetInt32(13);
+                    curr.SalesOrderYear = row.SalesOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(14))
+                if (row.SalesOrderCustomer != null)
                 {
-                    curr.SalesOrderCustomer = rdr.GetString(14);
+                    curr.SalesOrderCustomer = row.SalesOrderCustomer;
                 }
-                if (!rdr.IsDBNull(15))
+                if (row.SalesOrderDate.HasValue)
                 {
-                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(row.SalesOrderDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(16))
+                if (row.SalesOrderNotes != null)
                 {
-                    curr.SalesOrderNotes = rdr.GetString(16);
+                    curr.SalesOrderNotes = row.SalesOrderNotes;
                 }
-                if (!rdr.IsDBNull(17))
+                if (row.ProductionOrderID.HasValue)
                 {
-                    curr.ProductionOrderID = rdr.GetInt32(17);
+                    curr.ProductionOrderID = row.ProductionOrderID.Value;
                 }
-                if (!rdr.IsDBNull(18))
+                if (row.ProductionOrderYear.HasValue)
                 {
-                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                    curr.ProductionOrderYear = row.ProductionOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(19))
+                if (row.ProductionOrderProductTypeID.HasValue)
                 {
-                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                    curr.ProductionOrderProductTypeID = row.ProductionOrderProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(20))
+                if (row.ProductionOrderProductTypeReview.HasValue)
                 {
-                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                    curr.ProductionOrderProductTypeReview = row.ProductionOrderProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(21))
+                if (row.ProductionOrderProductID.HasValue)
                 {
-                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                    curr.ProductionOrderProductID = row.ProductionOrderProductID.Value;
                 }
-                if (!rdr.IsDBNull(22))
+                if (row.ProductionOrderSerialNumber != null)
                 {
-                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                    curr.ProductionOrderSerialNumber = row.ProductionOrderSerialNumber;
                 }
-                if (!rdr.IsDBNull(23))
+                if (row.ProductionOrderStatus != null)
                 {
-                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                    curr.ProductionOrderStatus = row.ProductionOrderStatus[0];
                 }
-                if (!rdr.IsDBNull(24))
+                if (row.ProductionOrderDepartmentID.HasValue)
                 {
-                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                    curr.ProductionOrderDepartmentID = row.ProductionOrderDepartmentID.Value;
                 }
-                if (!rdr.IsDBNull(25))
+                if (row.ProductionOrderStartTime.HasValue)
                 {
-                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderStartTime.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(26))
+                if (row.ProductionOrderDeliveryDate.HasValue)
                 {
-                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderDeliveryDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(27))
+                if (row.ProductionOrderEndProductionDate.HasValue)
                 {
-                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderEndProductionDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(28))
+                if (row.ProductionOrderPlanner != null)
                 {
-                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                    curr.ProductionOrderPlanner = row.ProductionOrderPlanner;
                 }
-                if (!rdr.IsDBNull(29))
+                if (row.ProductionOrderQuantityOrdered.HasValue)
                 {
-                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                    curr.ProductionOrderQuantityOrdered = row.ProductionOrderQuantityOrdered.Value;
                 }
-                if (!rdr.IsDBNull(30))
+                if (row.ProductionOrderQuantityProduced.HasValue)
                 {
-                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                    curr.ProductionOrderQuantityProduced = row.ProductionOrderQuantityProduced.Value;
                 }
-                if (!rdr.IsDBNull(31))
+                if (row.ProductionOrderKanbanCardID != null)
                 {
-                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                    curr.ProductionOrderKanbanCardID = row.ProductionOrderKanbanCardID;
                 }
-                if (!rdr.IsDBNull(32))
+                if (row.ProductTypeID.HasValue)
                 {
-                    curr.ProductTypeID = rdr.GetInt32(32);
+                    curr.ProductTypeID = row.ProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(33))
+                if (row.ProductTypeReview.HasValue)
                 {
-                    curr.ProductTypeReview = rdr.GetInt32(33);
+                    curr.ProductTypeReview = row.ProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(34))
+                if (row.ProductTypeReviewDate.HasValue)
                 {
-                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductTypeReviewDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(35))
+                if (row.ProductTypeName != null)
                 {
-                    curr.ProductTypeName = rdr.GetString(35);
+                    curr.ProductTypeName = row.ProductTypeName;
                 }
-                if (!rdr.IsDBNull(36))
+                if (row.ProductTypeDescription != null)
                 {
-                    curr.ProductTypeDescription = rdr.GetString(36);
+                    curr.ProductTypeDescription = row.ProductTypeDescription;
                 }
-                if (!rdr.IsDBNull(37))
+                if (row.ProductTypeEnabled.HasValue)
                 {
-                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                    curr.ProductTypeEnabled = row.ProductTypeEnabled.Value;
                 }
-                if (!rdr.IsDBNull(38))
+                if (row.ProductID.HasValue)
                 {
-                    curr.ProductID = rdr.GetInt32(38);
+                    curr.ProductID = row.ProductID.Value;
                 }
-                if (!rdr.IsDBNull(39))
+                if (row.ProductName != null)
                 {
-                    curr.ProductName = rdr.GetString(39);
+                    curr.ProductName = row.ProductName;
                 }
-                if (!rdr.IsDBNull(40))
+                if (row.ProductDescription != null)
                 {
-                    curr.ProductDescription = rdr.GetString(40);
+                    curr.ProductDescription = row.ProductDescription;
                 }
-                if (!rdr.IsDBNull(41))
+                if (row.DepartmentName != null)
                 {
-                    curr.DepartmentID = rdr.GetInt32(41);
+                    curr.DepartmentName = row.DepartmentName;
                 }
-                if (!rdr.IsDBNull(42))
+                if (row.DepartmentDescription != null)
                 {
-                    curr.DepartmentName = rdr.GetString(42);
+                    curr.DepartmentDescription = row.DepartmentDescription;
                 }
-                if (!rdr.IsDBNull(43))
+                if (row.DepartmentTaktTime.HasValue)
                 {
-                    curr.DepartmentDescription = rdr.GetString(43);
+                    curr.DepartmentTaktTime = row.DepartmentTaktTime.Value;
                 }
-                if (!rdr.IsDBNull(44))
+                if (row.DepartmentTimeZone != null)
                 {
-                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                    curr.DepartmentTimeZone = row.DepartmentTimeZone;
                 }
-                if (!rdr.IsDBNull(45))
+                if (row.ProductRealLeadTime.HasValue)
                 {
-                    curr.DepartmentTimeZone = rdr.GetString(45);
+                    curr.RealLeadTime = row.ProductRealLeadTime.Value;
                 }
-                if (!rdr.IsDBNull(46))
+                if (row.ProductRealWorkingTime.HasValue)
                 {
-                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                    curr.RealWorkingTime = row.ProductRealWorkingTime.Value;
                 }
-                if (!rdr.IsDBNull(47))
+                if (row.ProductRealDelay.HasValue)
                 {
-                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                    curr.RealDelay = row.ProductRealDelay.Value;
                 }
-                if (!rdr.IsDBNull(48))
+                if (row.ProductRealEndProductionDate.HasValue)
                 {
-                    curr.RealDelay = rdr.GetTimeSpan(48);
+                    curr.ProductionOrderEndProductionDateReal = row.ProductRealEndProductionDate.Value;
                 }
-                if (!rdr.IsDBNull(49))
-                {
-                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
-                }
-                if (!rdr.IsDBNull(50)) { curr.TaskID = rdr.GetInt32(50); }
-                if (!rdr.IsDBNull(51)) { curr.TaskName = rdr.GetString(51); }
-                if (!rdr.IsDBNull(52)) { curr.TaskDescription = rdr.GetString(52); }
-                if (!rdr.IsDBNull(53)) { curr.TaskEarlyStart = rdr.GetDateTime(53); }
-                if (!rdr.IsDBNull(54)) { curr.TaskLateStart = rdr.GetDateTime(54); }
-                if (!rdr.IsDBNull(55)) { curr.TaskEarlyFinish = rdr.GetDateTime(55); }
-                if (!rdr.IsDBNull(56)) { curr.TaskLateFinish = rdr.GetDateTime(56); curr.TaskLateFinishWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskLateFinish); }
-                if (!rdr.IsDBNull(57)) { curr.TaskStatus = rdr.GetChar(57); }
-                if (!rdr.IsDBNull(58)) { curr.TaskNumOperators = rdr.GetInt32(58); }
-                if (!rdr.IsDBNull(59)) { curr.TaskQuantityOrdered = rdr.GetDouble(59); }
-                if (!rdr.IsDBNull(60)) { curr.TaskQuantityProduced = rdr.GetDouble(60); }
-                if (!rdr.IsDBNull(61)) { curr.TaskPlannedSetupTime = rdr.GetTimeSpan(61); }
-                if (!rdr.IsDBNull(62)) { curr.TaskPlannedCycleTime = rdr.GetTimeSpan(62); }
-                if (!rdr.IsDBNull(63)) { curr.TaskPlannedUnloadTime = rdr.GetTimeSpan(63); }
-                if (!rdr.IsDBNull(64)) { curr.WorkstationID = rdr.GetInt32(64); }
-                if (!rdr.IsDBNull(65)) { curr.WorkstationName = rdr.GetString(65); }
-                if (!rdr.IsDBNull(66)) { curr.WorkstationDescription = rdr.GetString(66); }
-                if (!rdr.IsDBNull(67)) { curr.TaskRealEndDate = rdr.GetDateTime(67); curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
-                if (!rdr.IsDBNull(68)) { curr.TaskRealLeadTime = rdr.GetTimeSpan(68); }
-                if (!rdr.IsDBNull(69)) { curr.TaskRealWorkingTime = rdr.GetTimeSpan(69); }
-                if (!rdr.IsDBNull(70)) { curr.TaskRealDelay = rdr.GetTimeSpan(70); }
-                if (!rdr.IsDBNull(71)) { curr.TaskOriginalID = rdr.GetInt32(71); }
-                if (!rdr.IsDBNull(72)) { curr.TaskOriginalRev = rdr.GetInt32(72); }
-                if (!rdr.IsDBNull(73)) { curr.TaskOriginalVar = rdr.GetInt32(73); }
-                if (!rdr.IsDBNull(74)) { curr.TaskPlannedWorkingTime = rdr.GetTimeSpan(74); }
+                if(row.TaskID.HasValue) { curr.TaskID = row.TaskID.Value; }
+                if (row.TaskName != null) { curr.TaskName = row.TaskName; }
+                if (row.TaskDescription != null) { curr.TaskDescription = row.TaskDescription; }
+                if (row.TaskEarlyStart.HasValue) { curr.TaskEarlyStart = row.TaskEarlyStart.Value; }
+                if (row.TaskLateStart.HasValue) { curr.TaskLateStart = row.TaskLateStart.Value; }
+                if (row.TaskEarlyFinish.HasValue) { curr.TaskEarlyFinish = row.TaskEarlyFinish.Value; }
+                if (row.TaskLateFinish.HasValue) { curr.TaskLateFinish = row.TaskLateFinish.Value; curr.TaskLateFinishWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskLateFinish); }
+                if (row.TaskStatus != null) { curr.TaskStatus = row.TaskStatus[0]; }
+                if (row.TaskNumOperators.HasValue) { curr.TaskNumOperators = row.TaskNumOperators.Value; }
+                if (row.TaskQuantityOrdered.HasValue) { curr.TaskQuantityOrdered = row.TaskQuantityOrdered.Value; }
+                if (row.TaskQuantityProduced.HasValue) { curr.TaskQuantityProduced = row.TaskQuantityProduced.Value; }
+                if (row.TaskSetupTimePlanned.HasValue) { curr.TaskPlannedSetupTime = row.TaskSetupTimePlanned.Value; }
+                if (row.TaskCycleTimePlanned.HasValue) { curr.TaskPlannedCycleTime = row.TaskCycleTimePlanned.Value; }
+                if (row.TaskUnloadTimePlanned.HasValue) { curr.TaskPlannedUnloadTime = row.TaskUnloadTimePlanned.Value; }
+                if (row.WorkstationID.HasValue) { curr.WorkstationID = row.WorkstationID.Value; }
+                if (row.WorkstationName != null) { curr.WorkstationName = row.WorkstationName; }
+                if (row.WorkstationDescription != null) { curr.WorkstationDescription = row.WorkstationDescription; }
+                if (row.TaskEndDateReal.HasValue) { curr.TaskRealEndDate = row.TaskEndDateReal.Value; curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
+                if (row.TaskLeadTime.HasValue) { curr.TaskRealLeadTime = row.TaskLeadTime.Value; }
+                if (row.TaskWorkingTime.HasValue) { curr.TaskRealWorkingTime = row.TaskWorkingTime.Value; }
+                if (row.TaskDelay.HasValue) { curr.TaskRealDelay = row.TaskDelay.Value; }
+                if (row.TaskOriginalTaskID.HasValue) { curr.TaskOriginalID = row.TaskOriginalTaskID.Value; }
+                if (row.TaskOriginalTaskRev.HasValue) { curr.TaskOriginalRev = row.TaskOriginalTaskRev.Value; }
+                if (row.TaskOriginalTaskVar.HasValue) { curr.TaskOriginalVar = row.TaskOriginalTaskVar.Value; }
+                if (row.TaskPlannedWorkingTime.HasValue) { curr.TaskPlannedWorkingTime = row.TaskPlannedWorkingTime.Value; }
 
                 this.TaskHistoricData.Add(curr);
             }
@@ -1685,6 +1858,89 @@ namespace KIS.App_Sources
 
         public List<TaskEventStruct> TaskEventsData;
 
+        private class TaskEventRow
+        {
+            public String CustomerID { get; set; }
+            public String CustomerName { get; set; }
+            public String CustomerVATNumber { get; set; }
+            public String CustomerCodiceFiscale { get; set; }
+            public String CustomerAddress { get; set; }
+            public String CustomerCity { get; set; }
+            public String CustomerProvince { get; set; }
+            public String CustomerZipCode { get; set; }
+            public String CustomerCountry { get; set; }
+            public String CustomerPhoneNumber { get; set; }
+            public String CustomerEMail { get; set; }
+            public Boolean? CustomerKanbanManaged { get; set; }
+            public int? SalesOrderID { get; set; }
+            public int? SalesOrderYear { get; set; }
+            public String SalesOrderCustomer { get; set; }
+            public DateTime? SalesOrderDate { get; set; }
+            public String SalesOrderNotes { get; set; }
+            public int? ProductionOrderID { get; set; }
+            public int? ProductionOrderYear { get; set; }
+            public int? ProductionOrderProductTypeID { get; set; }
+            public int? ProductionOrderProductTypeReview { get; set; }
+            public int? ProductionOrderProductID { get; set; }
+            public String ProductionOrderSerialNumber { get; set; }
+            public String ProductionOrderStatus { get; set; }
+            public int? ProductionOrderDepartmentID { get; set; }
+            public DateTime? ProductionOrderStartTime { get; set; }
+            public DateTime? ProductionOrderDeliveryDate { get; set; }
+            public DateTime? ProductionOrderEndProductionDate { get; set; }
+            public String ProductionOrderPlanner { get; set; }
+            public int? ProductionOrderQuantityOrdered { get; set; }
+            public int? ProductionOrderQuantityProduced { get; set; }
+            public String ProductionOrderKanbanCardID { get; set; }
+            public int? ProductTypeID { get; set; }
+            public int? ProductTypeReview { get; set; }
+            public DateTime? ProductTypeReviewDate { get; set; }
+            public String ProductTypeName { get; set; }
+            public String ProductTypeDescription { get; set; }
+            public Boolean? ProductTypeEnabled { get; set; }
+            public int? ProductID { get; set; }
+            public String ProductName { get; set; }
+            public String ProductDescription { get; set; }
+            public int DepartmentID { get; set; }
+            public String DepartmentName { get; set; }
+            public String DepartmentDescription { get; set; }
+            public Double? DepartmentTaktTime { get; set; }
+            public String DepartmentTimeZone { get; set; }
+            public TimeSpan? ProductRealLeadTime { get; set; }
+            public TimeSpan? ProductRealWorkingTime { get; set; }
+            public TimeSpan? ProductRealDelay { get; set; }
+            public DateTime? ProductRealEndProductionDate { get; set; }
+            public int? TaskID { get; set; }
+            public String TaskName { get; set; }
+            public String TaskDescription { get; set; }
+            public DateTime? TaskEarlyStart { get; set; }
+            public DateTime? TaskLateStart { get; set; }
+            public DateTime? TaskEarlyFinish { get; set; }
+            public DateTime? TaskLateFinish { get; set; }
+            public String TaskStatus { get; set; }
+            public int? TaskNumOperators { get; set; }
+            public Double? TaskQuantityOrdered { get; set; }
+            public Double? TaskQuantityProduced { get; set; }
+            public TimeSpan? TaskSetupTimePlanned { get; set; }
+            public TimeSpan? TaskCycleTimePlanned { get; set; }
+            public TimeSpan? TaskUnloadTimePlanned { get; set; }
+            public int? WorkstationID { get; set; }
+            public String WorkstationName { get; set; }
+            public String WorkstationDescription { get; set; }
+            public DateTime? TaskEndDateReal { get; set; }
+            public TimeSpan? TaskLeadTime { get; set; }
+            public TimeSpan? TaskWorkingTime { get; set; }
+            public TimeSpan? TaskDelay { get; set; }
+            public int? TaskOriginalTaskID { get; set; }
+            public int? TaskOriginalTaskRev { get; set; }
+            public int? TaskOriginalTaskVar { get; set; }
+            public TimeSpan? TaskPlannedWorkingTime { get; set; }
+            public int? id { get; set; }
+            public DateTime? data { get; set; }
+            public String evento { get; set; }
+            public String user { get; set; }
+        }
+
         public TaskEvents(String Tenant)
         {
             this.Tenant = Tenant;
@@ -1696,8 +1952,7 @@ namespace KIS.App_Sources
             this.TaskEventsData = new List<TaskEventStruct>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT "
+            string sql = "SELECT "
                + " anagraficaclienti.codice AS CustomerID, " // 0
 + "anagraficaclienti.ragsociale AS CustomerName,"
 + "anagraficaclienti.partitaiva AS CustomerVATNumber," // 2
@@ -1796,242 +2051,239 @@ namespace KIS.App_Sources
                 + " AND productionplan.EndProductionDateReal <= '" + end.ToString("yyyy-MM-dd HH:mm:ss") + "'"
                 + " ORDER  BY productionplan.anno, productionplan.id asc, tasksproduzione.taskid, registroeventitaskproduzione.USER, registroeventitaskproduzione.data asc";
 
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+
+            var rows = conn.Query<TaskEventRow>(sql);
+            foreach (var row in rows)
             {
                 TaskEventStruct curr = new TaskEventStruct();
 
-                curr.DepartmentID = rdr.GetInt32(41);
+                curr.DepartmentID = row.DepartmentID;
                 KIS.App_Code.Reparto rp = new App_Code.Reparto(this.Tenant, curr.DepartmentID);
-                if (!rdr.IsDBNull(0))
+                if (row.CustomerID != null)
                 {
-                    curr.CustomerID = rdr.GetString(0);
+                    curr.CustomerID = row.CustomerID;
                 }
-                if (!rdr.IsDBNull(1))
+                if (row.CustomerName != null)
                 {
-                    curr.CustomerName = rdr.GetString(1);
+                    curr.CustomerName = row.CustomerName;
                 }
-                if (!rdr.IsDBNull(2))
+                if (row.CustomerVATNumber != null)
                 {
-                    curr.CustomerVATNumber = rdr.GetString(2);
+                    curr.CustomerVATNumber = row.CustomerVATNumber;
                 }
-                if (!rdr.IsDBNull(3))
+                if (row.CustomerCodiceFiscale != null)
                 {
-                    curr.CustomerCodiceFiscale = rdr.GetString(3);
+                    curr.CustomerCodiceFiscale = row.CustomerCodiceFiscale;
                 }
-                if (!rdr.IsDBNull(4))
+                if (row.CustomerAddress != null)
                 {
-                    curr.CustomerAddress = rdr.GetString(4);
+                    curr.CustomerAddress = row.CustomerAddress;
                 }
-                if (!rdr.IsDBNull(5))
+                if (row.CustomerCity != null)
                 {
-                    curr.CustomerCity = rdr.GetString(5);
+                    curr.CustomerCity = row.CustomerCity;
                 }
-                if (!rdr.IsDBNull(6))
+                if (row.CustomerProvince != null)
                 {
-                    curr.CustomerProvince = rdr.GetString(6);
+                    curr.CustomerProvince = row.CustomerProvince;
                 }
-                if (!rdr.IsDBNull(7))
+                if (row.CustomerZipCode != null)
                 {
-                    curr.CustomerZipCode = rdr.GetString(7);
+                    curr.CustomerZipCode = row.CustomerZipCode;
                 }
-                if (!rdr.IsDBNull(8))
+                if (row.CustomerCountry != null)
                 {
-                    curr.CustomerCountry = rdr.GetString(8);
+                    curr.CustomerCountry = row.CustomerCountry;
                 }
-                if (!rdr.IsDBNull(9))
+                if (row.CustomerPhoneNumber != null)
                 {
-                    curr.CustomerPhoneNumber = rdr.GetString(9);
+                    curr.CustomerPhoneNumber = row.CustomerPhoneNumber;
                 }
-                if (!rdr.IsDBNull(10))
+                if (row.CustomerEMail != null)
                 {
-                    curr.CustomerEMail = rdr.GetString(10);
+                    curr.CustomerEMail = row.CustomerEMail;
                 }
-                if (!rdr.IsDBNull(11))
+                if (row.CustomerKanbanManaged.HasValue)
                 {
-                    curr.CustomerKanbanManaged = rdr.GetBoolean(11);
+                    curr.CustomerKanbanManaged = row.CustomerKanbanManaged.Value;
                 }
-                if (!rdr.IsDBNull(12))
+                if (row.SalesOrderID.HasValue)
                 {
-                    curr.SalesOrderID = rdr.GetInt32(12);
+                    curr.SalesOrderID = row.SalesOrderID.Value;
                 }
-                if (!rdr.IsDBNull(13))
+                if (row.SalesOrderYear.HasValue)
                 {
-                    curr.SalesOrderYear = rdr.GetInt32(13);
+                    curr.SalesOrderYear = row.SalesOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(14))
+                if (row.SalesOrderCustomer != null)
                 {
-                    curr.SalesOrderCustomer = rdr.GetString(14);
+                    curr.SalesOrderCustomer = row.SalesOrderCustomer;
                 }
-                if (!rdr.IsDBNull(15))
+                if (row.SalesOrderDate.HasValue)
                 {
-                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(15), rp.tzFusoOrario);
+                    curr.SalesOrderDate = TimeZoneInfo.ConvertTimeFromUtc(row.SalesOrderDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(16))
+                if (row.SalesOrderNotes != null)
                 {
-                    curr.SalesOrderNotes = rdr.GetString(16);
+                    curr.SalesOrderNotes = row.SalesOrderNotes;
                 }
-                if (!rdr.IsDBNull(17))
+                if (row.ProductionOrderID.HasValue)
                 {
-                    curr.ProductionOrderID = rdr.GetInt32(17);
+                    curr.ProductionOrderID = row.ProductionOrderID.Value;
                 }
-                if (!rdr.IsDBNull(18))
+                if (row.ProductionOrderYear.HasValue)
                 {
-                    curr.ProductionOrderYear = rdr.GetInt32(18);
+                    curr.ProductionOrderYear = row.ProductionOrderYear.Value;
                 }
-                if (!rdr.IsDBNull(19))
+                if (row.ProductionOrderProductTypeID.HasValue)
                 {
-                    curr.ProductionOrderProductTypeID = rdr.GetInt32(19);
+                    curr.ProductionOrderProductTypeID = row.ProductionOrderProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(20))
+                if (row.ProductionOrderProductTypeReview.HasValue)
                 {
-                    curr.ProductionOrderProductTypeReview = rdr.GetInt32(20);
+                    curr.ProductionOrderProductTypeReview = row.ProductionOrderProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(21))
+                if (row.ProductionOrderProductID.HasValue)
                 {
-                    curr.ProductionOrderProductID = rdr.GetInt32(21);
+                    curr.ProductionOrderProductID = row.ProductionOrderProductID.Value;
                 }
-                if (!rdr.IsDBNull(22))
+                if (row.ProductionOrderSerialNumber != null)
                 {
-                    curr.ProductionOrderSerialNumber = rdr.GetString(22);
+                    curr.ProductionOrderSerialNumber = row.ProductionOrderSerialNumber;
                 }
-                if (!rdr.IsDBNull(23))
+                if (row.ProductionOrderStatus != null)
                 {
-                    curr.ProductionOrderStatus = rdr.GetChar(23);
+                    curr.ProductionOrderStatus = row.ProductionOrderStatus[0];
                 }
-                if (!rdr.IsDBNull(24))
+                if (row.ProductionOrderDepartmentID.HasValue)
                 {
-                    curr.ProductionOrderDepartmentID = rdr.GetInt32(24);
+                    curr.ProductionOrderDepartmentID = row.ProductionOrderDepartmentID.Value;
                 }
-                if (!rdr.IsDBNull(25))
+                if (row.ProductionOrderStartTime.HasValue)
                 {
-                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(25), rp.tzFusoOrario);
+                    curr.ProductionOrderStartTime = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderStartTime.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(26))
+                if (row.ProductionOrderDeliveryDate.HasValue)
                 {
-                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(26), rp.tzFusoOrario);
+                    curr.ProductionOrderDeliveryDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderDeliveryDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(27))
+                if (row.ProductionOrderEndProductionDate.HasValue)
                 {
-                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(27), rp.tzFusoOrario);
+                    curr.ProductionOrderEndProductionDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductionOrderEndProductionDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(28))
+                if (row.ProductionOrderPlanner != null)
                 {
-                    curr.ProductionOrderPlanner = rdr.GetString(28);
+                    curr.ProductionOrderPlanner = row.ProductionOrderPlanner;
                 }
-                if (!rdr.IsDBNull(29))
+                if (row.ProductionOrderQuantityOrdered.HasValue)
                 {
-                    curr.ProductionOrderQuantityOrdered = rdr.GetInt32(29);
+                    curr.ProductionOrderQuantityOrdered = row.ProductionOrderQuantityOrdered.Value;
                 }
-                if (!rdr.IsDBNull(30))
+                if (row.ProductionOrderQuantityProduced.HasValue)
                 {
-                    curr.ProductionOrderQuantityProduced = rdr.GetInt32(30);
+                    curr.ProductionOrderQuantityProduced = row.ProductionOrderQuantityProduced.Value;
                 }
-                if (!rdr.IsDBNull(31))
+                if (row.ProductionOrderKanbanCardID != null)
                 {
-                    curr.ProductionOrderKanbanCardID = rdr.GetString(31);
+                    curr.ProductionOrderKanbanCardID = row.ProductionOrderKanbanCardID;
                 }
-                if (!rdr.IsDBNull(32))
+                if (row.ProductTypeID.HasValue)
                 {
-                    curr.ProductTypeID = rdr.GetInt32(32);
+                    curr.ProductTypeID = row.ProductTypeID.Value;
                 }
-                if (!rdr.IsDBNull(33))
+                if (row.ProductTypeReview.HasValue)
                 {
-                    curr.ProductTypeReview = rdr.GetInt32(33);
+                    curr.ProductTypeReview = row.ProductTypeReview.Value;
                 }
-                if (!rdr.IsDBNull(34))
+                if (row.ProductTypeReviewDate.HasValue)
                 {
-                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(rdr.GetDateTime(34), rp.tzFusoOrario);
+                    curr.ProductTypeReviewDate = TimeZoneInfo.ConvertTimeFromUtc(row.ProductTypeReviewDate.Value, rp.tzFusoOrario);
                 }
-                if (!rdr.IsDBNull(35))
+                if (row.ProductTypeName != null)
                 {
-                    curr.ProductTypeName = rdr.GetString(35);
+                    curr.ProductTypeName = row.ProductTypeName;
                 }
-                if (!rdr.IsDBNull(36))
+                if (row.ProductTypeDescription != null)
                 {
-                    curr.ProductTypeDescription = rdr.GetString(36);
+                    curr.ProductTypeDescription = row.ProductTypeDescription;
                 }
-                if (!rdr.IsDBNull(37))
+                if (row.ProductTypeEnabled.HasValue)
                 {
-                    curr.ProductTypeEnabled = rdr.GetBoolean(37);
+                    curr.ProductTypeEnabled = row.ProductTypeEnabled.Value;
                 }
-                if (!rdr.IsDBNull(38))
+                if (row.ProductID.HasValue)
                 {
-                    curr.ProductID = rdr.GetInt32(38);
+                    curr.ProductID = row.ProductID.Value;
                 }
-                if (!rdr.IsDBNull(39))
+                if (row.ProductName != null)
                 {
-                    curr.ProductName = rdr.GetString(39);
+                    curr.ProductName = row.ProductName;
                 }
-                if (!rdr.IsDBNull(40))
+                if (row.ProductDescription != null)
                 {
-                    curr.ProductDescription = rdr.GetString(40);
+                    curr.ProductDescription = row.ProductDescription;
                 }
-                if (!rdr.IsDBNull(41))
+                if (row.DepartmentName != null)
                 {
-                    curr.DepartmentID = rdr.GetInt32(41);
+                    curr.DepartmentName = row.DepartmentName;
                 }
-                if (!rdr.IsDBNull(42))
+                if (row.DepartmentDescription != null)
                 {
-                    curr.DepartmentName = rdr.GetString(42);
+                    curr.DepartmentDescription = row.DepartmentDescription;
                 }
-                if (!rdr.IsDBNull(43))
+                if (row.DepartmentTaktTime.HasValue)
                 {
-                    curr.DepartmentDescription = rdr.GetString(43);
+                    curr.DepartmentTaktTime = row.DepartmentTaktTime.Value;
                 }
-                if (!rdr.IsDBNull(44))
+                if (row.DepartmentTimeZone != null)
                 {
-                    curr.DepartmentTaktTime = rdr.GetDouble(44);
+                    curr.DepartmentTimeZone = row.DepartmentTimeZone;
                 }
-                if (!rdr.IsDBNull(45))
+                if (row.ProductRealLeadTime.HasValue)
                 {
-                    curr.DepartmentTimeZone = rdr.GetString(45);
+                    curr.RealLeadTime = row.ProductRealLeadTime.Value;
                 }
-                if (!rdr.IsDBNull(46))
+                if (row.ProductRealWorkingTime.HasValue)
                 {
-                    curr.RealLeadTime = rdr.GetTimeSpan(46);
+                    curr.RealWorkingTime = row.ProductRealWorkingTime.Value;
                 }
-                if (!rdr.IsDBNull(47))
+                if (row.ProductRealDelay.HasValue)
                 {
-                    curr.RealWorkingTime = rdr.GetTimeSpan(47);
+                    curr.RealDelay = row.ProductRealDelay.Value;
                 }
-                if (!rdr.IsDBNull(48))
+                if (row.ProductRealEndProductionDate.HasValue)
                 {
-                    curr.RealDelay = rdr.GetTimeSpan(48);
+                    curr.ProductionOrderEndProductionDateReal = row.ProductRealEndProductionDate.Value;
                 }
-                if (!rdr.IsDBNull(49))
-                {
-                    curr.ProductionOrderEndProductionDateReal = rdr.GetDateTime(49);
-                }
-                if (!rdr.IsDBNull(50)) { curr.TaskID = rdr.GetInt32(50); }
-                if (!rdr.IsDBNull(51)) { curr.TaskName = rdr.GetString(51); }
-                if (!rdr.IsDBNull(52)) { curr.TaskDescription = rdr.GetString(52); }
-                if (!rdr.IsDBNull(53)) { curr.TaskEarlyStart = rdr.GetDateTime(53); }
-                if (!rdr.IsDBNull(54)) { curr.TaskLateStart = rdr.GetDateTime(54); }
-                if (!rdr.IsDBNull(55)) { curr.TaskEarlyFinish = rdr.GetDateTime(55); }
-                if (!rdr.IsDBNull(56)) { curr.TaskLateFinish = rdr.GetDateTime(56); }
-                if (!rdr.IsDBNull(57)) { curr.TaskStatus = rdr.GetChar(57); }
-                if (!rdr.IsDBNull(58)) { curr.TaskNumOperators = rdr.GetInt32(58); }
-                if (!rdr.IsDBNull(59)) { curr.TaskQuantityOrdered = rdr.GetDouble(59); }
-                if (!rdr.IsDBNull(60)) { curr.TaskQuantityProduced = rdr.GetDouble(60); }
-                if (!rdr.IsDBNull(61)) { curr.TaskPlannedSetupTime = rdr.GetTimeSpan(61); }
-                if (!rdr.IsDBNull(62)) { curr.TaskPlannedCycleTime = rdr.GetTimeSpan(62); }
-                if (!rdr.IsDBNull(63)) { curr.TaskPlannedUnloadTime = rdr.GetTimeSpan(63); }
-                if (!rdr.IsDBNull(64)) { curr.WorkstationID = rdr.GetInt32(64); }
-                if (!rdr.IsDBNull(65)) { curr.WorkstationName = rdr.GetString(65); }
-                if (!rdr.IsDBNull(66)) { curr.WorkstationDescription = rdr.GetString(66); }
-                if (!rdr.IsDBNull(67)) { curr.TaskRealEndDate = rdr.GetDateTime(67); curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
-                if (!rdr.IsDBNull(68)) { curr.TaskRealLeadTime = rdr.GetTimeSpan(68); }
-                if (!rdr.IsDBNull(69)) { curr.TaskRealWorkingTime = rdr.GetTimeSpan(69); }
-                if (!rdr.IsDBNull(70)) { curr.TaskRealDelay = rdr.GetTimeSpan(70); }
-                if (!rdr.IsDBNull(71)) { curr.TaskOriginalID = rdr.GetInt32(71); }
-                if (!rdr.IsDBNull(72)) { curr.TaskOriginalRev = rdr.GetInt32(72); }
-                if (!rdr.IsDBNull(73)) { curr.TaskOriginalVar = rdr.GetInt32(73); }
-                if (!rdr.IsDBNull(74)) { curr.TaskPlannedWorkingTime = rdr.GetTimeSpan(74); }
-                if (!rdr.IsDBNull(75)) { curr.TaskEventID = rdr.GetInt32(75); }
-                if(!rdr.IsDBNull(76)) { curr.TaskEventTime = rdr.GetDateTime(76); }
-                if (!rdr.IsDBNull(77)) { curr.TaskEventType = rdr.GetChar(77); }
-                if (!rdr.IsDBNull(78)) { curr.TaskEventUser = rdr.GetString(78); }
+                if (row.TaskID.HasValue) { curr.TaskID = row.TaskID.Value; }
+                if (row.TaskName != null) { curr.TaskName = row.TaskName; }
+                if (row.TaskDescription != null) { curr.TaskDescription = row.TaskDescription; }
+                if (row.TaskEarlyStart.HasValue) { curr.TaskEarlyStart = row.TaskEarlyStart.Value; }
+                if (row.TaskLateStart.HasValue) { curr.TaskLateStart = row.TaskLateStart.Value; }
+                if (row.TaskEarlyFinish.HasValue) { curr.TaskEarlyFinish = row.TaskEarlyFinish.Value; }
+                if (row.TaskLateFinish.HasValue) { curr.TaskLateFinish = row.TaskLateFinish.Value; }
+                if (row.TaskStatus != null) { curr.TaskStatus = row.TaskStatus[0]; }
+                if (row.TaskNumOperators.HasValue) { curr.TaskNumOperators = row.TaskNumOperators.Value; }
+                if (row.TaskQuantityOrdered.HasValue) { curr.TaskQuantityOrdered = row.TaskQuantityOrdered.Value; }
+                if (row.TaskQuantityProduced.HasValue) { curr.TaskQuantityProduced = row.TaskQuantityProduced.Value; }
+                if (row.TaskSetupTimePlanned.HasValue) { curr.TaskPlannedSetupTime = row.TaskSetupTimePlanned.Value; }
+                if (row.TaskCycleTimePlanned.HasValue) { curr.TaskPlannedCycleTime = row.TaskCycleTimePlanned.Value; }
+                if (row.TaskUnloadTimePlanned.HasValue) { curr.TaskPlannedUnloadTime = row.TaskUnloadTimePlanned.Value; }
+                if (row.WorkstationID.HasValue) { curr.WorkstationID = row.WorkstationID.Value; }
+                if (row.WorkstationName != null) { curr.WorkstationName = row.WorkstationName; }
+                if (row.WorkstationDescription != null) { curr.WorkstationDescription = row.WorkstationDescription; }
+                if (row.TaskEndDateReal.HasValue) { curr.TaskRealEndDate = row.TaskEndDateReal.Value; curr.TaskRealEndDateWeek = Dati.Utilities.GetWeekOfTheYear(curr.TaskRealEndDate); }
+                if (row.TaskLeadTime.HasValue) { curr.TaskRealLeadTime = row.TaskLeadTime.Value; }
+                if (row.TaskWorkingTime.HasValue) { curr.TaskRealWorkingTime = row.TaskWorkingTime.Value; }
+                if (row.TaskDelay.HasValue) { curr.TaskRealDelay = row.TaskDelay.Value; }
+                if (row.TaskOriginalTaskID.HasValue) { curr.TaskOriginalID = row.TaskOriginalTaskID.Value; }
+                if (row.TaskOriginalTaskRev.HasValue) { curr.TaskOriginalRev = row.TaskOriginalTaskRev.Value; }
+                if (row.TaskOriginalTaskVar.HasValue) { curr.TaskOriginalVar = row.TaskOriginalTaskVar.Value; }
+                if (row.TaskPlannedWorkingTime.HasValue) { curr.TaskPlannedWorkingTime = row.TaskPlannedWorkingTime.Value; }
+                if (row.id.HasValue) { curr.TaskEventID = row.id.Value; }
+                if(row.data.HasValue) { curr.TaskEventTime = row.data.Value; }
+                if (row.evento != null) { curr.TaskEventType = row.evento[0]; }
+                if (row.user != null) { curr.TaskEventUser = row.user; }
 
                 this.TaskEventsData.Add(curr);
             }
@@ -2040,95 +2292,79 @@ namespace KIS.App_Sources
             conn.Close();
         }
 
+        private class ExportTimeSpanRow
+        {
+            public String user { get; set; }
+            public DateTime data { get; set; }
+            public String evento { get; set; }
+            public int id { get; set; }
+            public int task { get; set; }
+        }
+
         public void ExportTimeSpans(Boolean AllEvents)
         {
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            /*int maxstartev = 0;
-            cmd.CommandText = "SELECT MAX(starteventid) FROM taskstimespans";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read() && !rdr.IsDBNull(0))
-            {
-                maxstartev = rdr.GetInt32(0);
-            }
-            rdr.Close();*/
             int timespanid = 0;
-            cmd.CommandText = "SELECT MAX(id) FROM taskstimespans";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            int? maxid = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM taskstimespans");
+            if (maxid.HasValue)
             {
-                timespanid = rdr.GetInt32(0)+1;
+                timespanid = maxid.Value + 1;
             }
-            rdr.Close();
-            cmd.CommandText = "SELECT user, data, evento, id, task FROM registroeventitaskproduzione";
-            if(!AllEvents)
+            string sql = "SELECT user, data, evento, id, task FROM registroeventitaskproduzione";
+            object parms = null;
+            if (!AllEvents)
             {
-                cmd.CommandText += " WHERE data > @data";
-                cmd.Parameters.AddWithValue("@data", DateTime.UtcNow.AddMonths(-6).ToString("yyyy-MM-dd"));
+                sql += " WHERE data > @data";
+                parms = new { data = DateTime.UtcNow.AddMonths(-6).ToString("yyyy-MM-dd") };
             }
-            cmd.CommandText += " ORDER BY task, user, data";
-            rdr = cmd.ExecuteReader();
-
-            while (rdr.Read())
+            sql += " ORDER BY task, user, data";
+            var rows = conn.Query<ExportTimeSpanRow>(sql, parms).ToList();
+            int i = 0;
+            while (i < rows.Count)
             {
-                log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                DateTime inizio = rdr.GetDateTime(1);
-                String usrI = rdr.GetString(0);
-                Char EventoI = rdr.GetChar(2);
-                int IDEventoI = rdr.GetInt32(3);
-                int taskIdI = rdr.GetInt32(4);
+                ExportTimeSpanRow r = rows[i];
+                log += "1-Evento: " + r.evento[0] + " " + r.data + "<br />";
+                DateTime inizio = r.data;
+                String usrI = r.user;
+                Char EventoI = r.evento[0];
+                int IDEventoI = r.id;
+                int taskIdI = r.task;
                 if (EventoI == 'I')
                 {
-                    if (rdr.Read())
+                    if (i + 1 < rows.Count)
                     {
-                        log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                        String usrF = rdr.GetString(0);
-                        Char EventoF = rdr.GetChar(2);
-                        DateTime fine = rdr.GetDateTime(1);
-                        int IDEventoF = rdr.GetInt32(3);
-                        int taskIdF = rdr.GetInt32(4);
+                        ExportTimeSpanRow rF = rows[i + 1];
+                        log += "2-Evento: " + rF.evento[0] + " " + rF.data + "<br />";
+                        String usrF = rF.user;
+                        Char EventoF = rF.evento[0];
+                        DateTime fine = rF.data;
+                        int IDEventoF = rF.id;
+                        int taskIdF = rF.task;
                         if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF && taskIdI == taskIdF)
                         {
                             // Checks if start and end events are already in the table
                             int tsid = -1;
                             MySqlConnection conn2 = (new Dati.Dati()).mycon(this.Tenant);
                             conn2.Open();
-                            MySqlCommand cmd2 = conn2.CreateCommand();
-                            cmd2.CommandText = "SELECT id FROM taskstimespans WHERE starteventid=@evi OR starteventid=@evf OR endeventid=@evi OR endeventid=@evf";
-                            cmd2.Parameters.AddWithValue("@evi", IDEventoI);
-                            cmd2.Parameters.AddWithValue("@evf", IDEventoF);
-                            MySqlDataReader rdr2 = cmd2.ExecuteReader();
-                            if (rdr2.Read() && !rdr.IsDBNull(0))
+                            int? evId = conn2.QueryFirstOrDefault<int?>("SELECT id FROM taskstimespans WHERE starteventid=@evi OR starteventid=@evf OR endeventid=@evi OR endeventid=@evf", new { evi = IDEventoI, evf = IDEventoF });
+                            if (evId.HasValue && usrF != null)
                             {
-                                tsid = rdr2.GetInt32(0);
+                                tsid = evId.Value;
                             }
-                            rdr2.Close();
 
 
                             // If events were not already exported, write them in the taskstimespans table
                             if (tsid == -1)
                             {
-                                MySqlCommand cmd3 = conn2.CreateCommand();
-                                cmd3.CommandText = "INSERT INTO taskstimespans(id, userid, taskid, starteventid, starteventdate, starteventtype," +
-                                    "endeventid, endeventdate, endeventtype, duration_sec)" +
-                                    " VALUES(@timespanid, @user, @task, @eviID, @eviDate, @eviType, @evfID, @evfDate, @evfType, @duration)";
-                                cmd3.Parameters.AddWithValue("@timespanid", timespanid);
-                                cmd3.Parameters.AddWithValue("@user", usrF);
-                                cmd3.Parameters.AddWithValue("@task", taskIdF);
-                                cmd3.Parameters.AddWithValue("@eviID", IDEventoI);
-                                cmd3.Parameters.AddWithValue("@eviDate", inizio.ToString("yyyy-MM-dd HH:mm:ss"));
-                                cmd3.Parameters.AddWithValue("@eviType", EventoI);
-                                cmd3.Parameters.AddWithValue("@evfID", IDEventoF);
-                                cmd3.Parameters.AddWithValue("@evfDate", fine.ToString("yyyy-MM-dd HH:mm:ss"));
-                                cmd3.Parameters.AddWithValue("@evfType", EventoF);
                                 TimeSpan duration = fine - inizio;
-                                cmd3.Parameters.AddWithValue("@duration", Math.Floor(duration.TotalSeconds));
                                 MySqlTransaction tr = conn2.BeginTransaction();
-                                cmd3.Transaction = tr;
                                 try
                                 {
-                                    cmd3.ExecuteNonQuery();
+                                    conn2.Execute("INSERT INTO taskstimespans(id, userid, taskid, starteventid, starteventdate, starteventtype," +
+                                        "endeventid, endeventdate, endeventtype, duration_sec)" +
+                                        " VALUES(@timespanid, @user, @task, @eviID, @eviDate, @eviType, @evfID, @evfDate, @evfType, @duration)",
+                                        new { timespanid, user = usrF, task = taskIdF, eviID = IDEventoI, eviDate = inizio.ToString("yyyy-MM-dd HH:mm:ss"), eviType = EventoI, evfID = IDEventoF, evfDate = fine.ToString("yyyy-MM-dd HH:mm:ss"), evfType = EventoF, duration = Math.Floor(duration.TotalSeconds) }, tr);
                                     tr.Commit();
                                     timespanid++;
                                 }
@@ -2141,11 +2377,11 @@ namespace KIS.App_Sources
                             conn2.Close();
 
                         }
+                        i++;
                     }
                 }
-
+                i++;
             }
-            rdr.Close();
             conn.Close();
         }
     }
