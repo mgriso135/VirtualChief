@@ -35,6 +35,7 @@ fi
 if ! mysqladmin --socket="$SOCK" -u root ping >/dev/null 2>&1; then
   setsid /usr/sbin/mariadbd --datadir="$DATA" --socket="$SOCK" --port="$PORT" \
     --bind-address=127.0.0.1 --pid-file="$BASE/run/mysqld.pid" --user="$(id -un)" \
+    --lower-case-table-names=1 \
     --log-error="$BASE/log/err.log" >"$BASE/log/stdout.log" 2>&1 </dev/null &
   for _ in $(seq 1 30); do
     mysqladmin --socket="$SOCK" -u root ping >/dev/null 2>&1 && break

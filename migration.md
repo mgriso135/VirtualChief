@@ -290,10 +290,13 @@ that will be re-verified after it.
 > into a test assembly via shims — see §5.5 (`tests/VirtualChief.DomainTests/`).
 
 **Tier 2 — Thin SQL/config wrappers: covered by the DB-level suite, NOT by class tests**
-`configurazione.cs`, `menu.cs`, `permessi.cs`, `users.cs`, `relazioni.cs`,
+`configurazione.cs`, `menu.cs`, `permessi.cs`, `relazioni.cs`,
 `data.cs`
 Their behavior is "run query X, map result." The DB characterization tests already
 exercise the exact SQL; class tests would be duplicate effort.
+> `users.cs` was moved from Tier 2 to Tier 1 during conversion: it holds real
+> domain logic (auth ctors, group/station/interval loaders, segnalazioni,
+> productivity), and 17 class-level tests now lock its behavior.
 
 **Tier 3 — UI/output glue replaced during migration: NO tests before**
 `ImageHandler.cs` (HTTP handler), `iTextSharpEventHandler.cs` (PDF generation),
@@ -361,7 +364,7 @@ MariaDB instance populated from the checked-in dumps — no Windows/IIS required
 On top of that, the **Tier 1 domain-layer tests** from §5.2 are also deployed: the
 real (unmodified) `App_Sources` business classes are compiled directly into a test
 assembly via Linux compile-shims for the few `.NET Framework System.Web` symbols
-they touch, and run against the same private MariaDB — **23 business-flow tests green
+they touch, and run against the same private MariaDB — **77 business-flow tests green
 without Windows/IIS** (the "no Windows/IIS at our disposal" scenario).
 
 | Artifact | Location |
@@ -375,7 +378,7 @@ Run with:
 ```
 tests/provision-db.sh     # once, per machine
 dotnet test tests/VirtualChief.Tests        # 22 characterization tests
-dotnet test tests/VirtualChief.DomainTests  # 23 Tier-1 business-flow tests
+dotnet test tests/VirtualChief.DomainTests  # 77 Tier-1 business-flow tests
 ```
 
 The three characterization suites in `tests/VirtualChief.Tests/`:
@@ -387,8 +390,10 @@ The three characterization suites in `tests/VirtualChief.Tests/`:
     `Analysis.cs` `loadTaskEvents` (`registroeventitaskproduzione.user`);
   - MySQL-only constructs: **1 backtick** (`configurazione.cs:420`),
     **5 `LAST_INSERT_ID`**, **1 `NOW()`**;
-  - **3,028 `MySql*` concrete-type usages in 28 files** (Dapper has replaced the
-    boilerplate in `relazioni.cs`, `menu.cs`, `permessi.cs` — see §6.3).
+- **2,598 `MySql*` concrete-type usages in 28 files** (now 2,371 after Dapper
+  replaced the boilerplate in `relazioni.cs`, `menu.cs`, `permessi.cs`, all of
+  `configurazione.cs`, all of `processi.cs`, all of `users.cs` and all of
+  `quality.cs` — see §6.3).
 - **`SchemaIntegrityTests`** (live DB) — dumps load cleanly; workspaces seeded;
   `configurazione` `Main` rows present; every C# table reference resolves; the
   `masterDB` empty-`database=` tenancy swap is consistent with `data.cs:43`.
@@ -410,7 +415,8 @@ How the DomainTests project works ("no Windows/IIS" strategy):
   migration must port, not a re-implementation.
 - `Shims/SystemWeb.cs` supplies compile-only stand-ins for the small `.NET
   Framework System.Web` surface actually used (`HttpContext`/`Session`/
-  `GetOwinContext`, `Membership.GeneratePassword`) and empty namespaces for
+  `GetOwinContext`, `HttpServerUtility.MapPath`, `Membership.GeneratePassword`)
+  and empty namespaces for
   `System.Web.Mvc`/`System.Web.Hosting`; `Shims/ResAccountMgm.cs` stubs the
   strongly-typed resource class referenced by `Account.cs`. Only 2 of the 28
   App_Sources files (`data.cs`, `quality.cs`) reference `System.Web` at runtime.
@@ -510,10 +516,79 @@ verifiable core: `Dapper 2.1.79` is a dependency of the test harness
 `packages.config` entry — Windows/VS build check pending). Converted so far:
 `relazioni.cs` (ExecuteScalar/Query/QueryFirstOrDefault), `menu.cs`
 (`VoceMenu`/`MainMenu`, incl. transaction writes), `permessi.cs`
-(`Permission`/`PermissionsList`, incl. transactional setters) — same SQL text,
-same public API; 16 new DomainTests lock the behavior against the seeded DB.
-Baseline counters moved down: `MysqlConcreteTypes_MatchesBaseline` 3064→3028
-(`relazioni.cs` 9→2, `menu.cs` 33→15, `permessi.cs` 44→33). **Item 4** started: a
+(`Permission`/`PermissionsList`, incl. transactional setters), all of
+`configurazione.cs` (zero `MySqlCommand`/`MySqlDataReader`/`MySqlParameter`
+left): `KISConfig`, `Logo`, `FusoOrario`, `WizardConfig`,
+`CustomersControllerConfig`, `EventsExportControllerConfig`,
+`configBaseOrderStatusReport` (40 toggles + constructor load),
+`configCustomerOrderStatusReport` (40 overridden `@sezione` setters + constructor),
+`HomeBox`/`HomeBoxesList`/`HomeBoxUser`/`HomeBoxesListUser` and
+`MeasurementUnit`/`MeasurementUnits` (incl. transactional writes), and — this
+session — **all of `processi.cs`** (zero `MySqlCommand`/`MySqlDataReader`/
+`MySqlParameter` left; only `MySqlConnection`/`MySqlTransaction` remain, which
+Dapper still requires): `macroProcessi`, `ElencoProcessi`, `elencoVarianti`,
+`variante`, `ProcessoVariante`, `ElencoProcessiVarianti`, `TaskVariante`,
+`TempoCiclo`, `TempiCiclo`, `ElencoTasks`, `ProductParametersCategory`/
+`ProductParametersCategories`, `ModelParameter`, `ModelTaskParameter`,
+`TaskWorkInstruction`, `NearTask` and the full `processo` class (3 ctors,
+`setupInt`, `loadPadre`×2, `loadVarianti`, `loadVariantiFigli`, `loadFigli`×2,
+`loadPrecedenti`×2, `loadSuccessivi`×2, `loadKPIs`, `loadPostazioniFigli`,
+`loadPostazioniTask`, `loadProcessOwners`, `createDefaultSubProcess`,
+`addVariante`, `delete`, `changeRelationPrec`, `add/deleteProcessoSuccessivo`/
+`Precedente`, `add/deleteProcessOwner`, `add/deleteTaskToPostazione`,
+`changeTaskFromPostazione`, `buildNewBlankRevision`, `buildNewRevisionCopy`,
+`copiaFigli`, `linkProcessoVariante`, `loadImplosioneProdotti`) — same SQL text,
+same public API; 18 new DomainTests (46 total) lock the behavior against the
+seeded DB — and this session **all of `users.cs`** (zero
+`MySqlCommand`/`MySqlDataReader`/`MySqlParameter` left; only
+`MySqlConnection`/`MySqlTransaction` remain, which Dapper still requires):
+`UserList` (3 ctors), the full `User` class (3 DB ctors, setters
+`name`/`cognome`/`lastLogin`/`Language`/`DestinationURL`/`Enabled`,
+`add`, `loadGruppi`, `addGruppo`, `deleteGruppo`, `loadPostazioniAttive`,
+`DoCheckIn`, `DoCheckOut`, `loadTaskAvviati`, `loadEmails`, `addEmail`,
+`ResetPassword`, the 6 `SegnalazioneRitardi/Warning*` getters, all 4
+`loadIntervalliDiLavoroOperatore` overloads, `loadWorkTimespansAllStatus`,
+`deleteIntervalloDiLavoroOperatore`, `changePassword`,
+`loadNextProgrammedProducts`, `addHomeBox`, `deleteHomeBox`, `loadCustomer`,
+`Activate`, `UserExists`, `LoadExecutableTasks`, `LoadProductivity(int)` and
+`LoadProductivity(DateTime, DateTime)`) — same SQL text (e.g. the `ArticoloAnno`
+capitalisation quirk preserved) and same public API; 17 new DomainTests (63
+total) lock the behavior against the seeded DB — and this session **all of
+`quality.cs`** (zero `MySqlCommand`/`MySqlDataReader`/`MySqlParameter` left; only
+`MySqlConnection`/`MySqlTransaction` remain, which Dapper still requires):
+`NonCompliance` (setters `Quantity`/`OpeningDate`/`UserID`/`user`/
+`Description`/`ImmediateAction`/`Cost`/`Status`/`ClosureDate`, ctor,
+`CategoryLoad`/`CategoryAdd`×2/`CategoryRemove`/`CausesLoad`/`CauseAdd`×2/
+`CauseRemove`, `ProductsLoad`/`ProductAdd`×2/`ProductDel`),
+`NonCompliances` (load/Add/Delete), `NonComplianceTypes` (load/Add/Delete/
+`findIDByName`), `NonComplianceType` (Name/Description setters, ctor),
+`NonComplianceCauses` (load/Add/Delete/`findIDByName`), `NonComplianceCause`
+(Name/Description setters, ctor), `NonComplianceProduct`
+(Source/Workstation/QuantityInvolved setters, big-join ctor), `FreeWarnings`,
+`NCAnalysis` (`loadNcCauses`/`loadNcCategories`/`loadNcProducts`/
+`loadNonCompliances`), `ImprovementActions` (4 loaders, Add/Delete),
+`ImprovementAction` (9 setters, ctor, `loadTeamMembers`/`MemberAdd`/
+`MemberRemove`/`loadCorrectiveActions`/`CorrectiveActionAdd`/
+`CorrectiveActionRemove`), `ImprovementActionTeamMember`,
+`CorrectiveAction` (8 setters, ctor, team/task loaders and members),
+`CorrectiveActionTeamMember`, `CorrectiveActionTask`,
+`ImprovementActionsEvents.loadLateImprovementActions`,
+`CorrectiveActionsEvents` (loadNotStarted/loadNotFinished) and
+`ImprovementActionAnalysis.loadIAList` — same SQL text (e.g. the missing-comma
+quirk in `NonCompliances.Add(int)` preserved; the reused `@pYear` parameter
+quirk in the same method and in `ImprovementActions.Add` preserved) and same
+public API; 14 new DomainTests (77 total) lock the behavior against the seeded
+DB. The conversion reads the CaseSensitive tables (`NonCompliances`,
+`ImprovementActions`, `CorrectiveActions`, …) that the legacy `quality.cs` SQL
+references verbatim; the characterization MariaDB is started with
+`--lower-case-table-names=1` (matching Windows MySQL) so those identifiers
+resolve — see `tests/provision-db.sh`.
+Baseline counters moved down: `MysqlConcreteTypes_MatchesBaseline` 2598→2512
+(`users.cs` 246→160; the remaining 160 in `users.cs`, 159 in `processi.cs` and
+208 in `configurazione.cs` are the `MySqlConnection`/`MySqlTransaction` objects
+Dapper still requires), then **2512→2371** after `quality.cs` (270→152: only the
+94 `MySqlConnection` + 58 `MySqlTransaction` the conversion still needs).
+**Item 4** started: a
 typed config reader `App_Sources/AppConfig.cs` (same Web.config keys, env-first via
 `Secrets`, 3 tests) — Serilog wiring still needs the web project (Windows verify).
 **Items 1 and 3** are NOT committed blind because they require a Windows/VS build:
@@ -526,9 +601,13 @@ ASMX + Web API at it. Both are queued as Windows-verified follow-ups.
 ### 6.4 Verification for this session
 - `tests/provision-db.sh` (once per machine), then `dotnet test
   tests/VirtualChief.Tests` (22 green) and `dotnet test
-  tests/VirtualChief.DomainTests` (23 green).
-- Confirm the DomainTests still compile the unmodified `App_Sources` (the Dapper
+  tests/VirtualChief.DomainTests` (77 green).
+- Confirm the DomainTests still compile the `App_Sources` (the Dapper
   swap must not break the class-level tests) and that no project fails to build.
+  `quality.cs` is compiled into the DomainTests assembly (see
+  `tests/VirtualChief.DomainTests/VirtualChief.DomainTests.csproj`), and
+  `Shims/SystemWeb.cs` provides `HttpServerUtility.MapPath` for its
+  web-only `FilesLoad`/`FileDelete` paths.
 
 ### 6.5 Guardrails
 - No UI or business-function change; MySQL 8 schema untouched.
@@ -545,8 +624,9 @@ ASMX + Web API at it. Both are queued as Windows-verified follow-ups.
 > logic and front-end assets are already Linux-compatible.
 >
 > **Current status:** the test/verification net already runs on Linux (§5.5) and the
-> data-access layer is being made cross-platform (Phase 1 item 2, `relazioni.cs`
-> converted; §6.3). Everything below is the concrete, ordered procedure.
+> data-access layer is being made cross-platform (Phase 1 item 2: `relazioni.cs`,
+> `menu.cs`, `permessi.cs`, `configurazione.cs`, `processi.cs`, `users.cs`,
+> `quality.cs` converted; §6.3). Everything below is the concrete, ordered procedure.
 
 ### 7.1 Why "just run it" on Linux is impossible today (hard blockers)
 
@@ -593,15 +673,20 @@ Google Charts, D3, graphviz) are cross-platform.
 > tests/VirtualChief.DomainTests`).
 
 **Step 1 — Linux test net (✅ done).** `tests/provision-db.sh` + the two test
-projects (22 static/DB + 23 Tier-1 business-flow). This is the safety net that
+projects (22 static/DB + 63 Tier-1 business-flow). This is the safety net that
 verifies every porting step on Linux without Windows/IIS.
 
 **Step 2 — Cross-platform data layer (Phase 1 item 2; in progress).** Replace raw
 `MySqlCommand`/`MySqlDataReader` boilerplate in `App_Sources` with **Dapper**
-(same SQL, same semantics). `relazioni.cs`, `menu.cs` and `permessi.cs` are
-converted and verified by 16 new DomainTests; the audit baselines track the
-remaining surface (`MysqlConcreteTypes_MatchesBaseline`, currently 3028 `MySql*`
-usages in 28 files). The DomainTests keep compiling `App_Sources` on Linux, so
+(same SQL, same semantics). `relazioni.cs`, `menu.cs`, `permessi.cs`, all of
+`configurazione.cs`, all of
+`processi.cs` and all of `users.cs` are
+converted and verified by 63 DomainTests; the audit baselines track the
+remaining surface (`MysqlConcreteTypes_MatchesBaseline`, currently 2512 `MySql*`
+usages in 28 files — `configurazione.cs` is down to the 208, `processi.cs` to
+the 159 and `users.cs` to the 160 `MySqlConnection`/
+`MySqlTransaction` objects Dapper still needs). The DomainTests keep compiling
+`App_Sources` on Linux, so
 every subsequent conversion is machine-verified.
 
 **Step 3 — Decouple `App_Sources` from `System.Web` (in progress).** 11 files
@@ -681,7 +766,7 @@ pipeline builds on Linux runners (Phase 0 item 6).
 
 | Step | Gate |
 |---|---|
-| 1 | `tests/provision-db.sh`; `dotnet test tests/VirtualChief.Tests` (22) and `tests/VirtualChief.DomainTests` (23) green |
+| 1 | `tests/provision-db.sh`; `dotnet test tests/VirtualChief.Tests` (22) and `tests/VirtualChief.DomainTests` (28) green |
 | 2 | Audit baselines still green (`MysqlConcreteTypes_MatchesBaseline` moves down only); all DomainTests green |
 | 3 | DomainTests still compile unmodified `App_Sources` against the shims; no `System.Web` at runtime in domain layer |
 | 4 | Visual-regression diff per converted page; endpoint contract tests (Tier B, §5.3) re-run green; scheduler clients updated in the same commit |

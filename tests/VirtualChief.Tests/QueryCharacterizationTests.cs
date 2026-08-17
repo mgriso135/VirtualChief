@@ -173,17 +173,18 @@ ORDER  BY productionplan.anno, productionplan.id asc, tasksproduzione.taskid, re
     {
         // App_Sources/Analysis.cs:1790 uses "taskvariant" (lowercase alias) while the alias
         // is declared "TaskVariant". MySQL 8 (the app's real DB) resolves aliases
-        // case-insensitively, so this works there. MariaDB 11.8 and PostgreSQL resolve
-        // aliases case-sensitively, so the ORIGINAL text fails — a real dialect difference
-        // to fix during the migration. This test documents both behaviours.
+        // case-insensitively, so this works there. The test MariaDB is provisioned with
+        // lower_case_table_names=1 to mirror MySQL 8's behaviour, so the ORIGINAL text now
+        // also succeeds here. (PostgreSQL resolves aliases case-sensitively — still a real
+        // difference to fix during the migration.)
         const string originalLower = "SELECT tasksproduzione.taskid FROM varianti AS TaskVariant JOIN tasksproduzione ON(taskvariant.idvariante = tasksproduzione.variante) LIMIT 1";
         const string corrected = "SELECT tasksproduzione.taskid FROM varianti AS TaskVariant JOIN tasksproduzione ON(TaskVariant.idvariante = tasksproduzione.variante) LIMIT 1";
 
-        await Assert.ThrowsAsync<MySqlConnector.MySqlException>(() =>
-            Db.ScalarAsync(Kaizenkey, originalLower));
-
-        var ok = await Db.ScalarAsync(Kaizenkey, corrected);
+        var ok = await Db.ScalarAsync(Kaizenkey, originalLower);
         Assert.NotNull(ok);
+
+        var ok2 = await Db.ScalarAsync(Kaizenkey, corrected);
+        Assert.NotNull(ok2);
     }
 
     [Fact]

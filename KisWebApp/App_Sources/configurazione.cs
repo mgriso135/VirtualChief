@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using Dapper;
 using MySql.Data.MySqlClient;
 using System.Configuration;
 
@@ -32,18 +33,8 @@ namespace KIS.App_Code
                 Boolean ret = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    ret = true;
-                }
-                else
-                {
-                    ret = false;
-                }
-                rdr.Close();
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'");
+                ret = valore != null;
                 conn.Close();
                 return ret;
             }
@@ -115,18 +106,8 @@ namespace KIS.App_Code
                 Boolean ret = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT * FROM configurazione WHERE parametro LIKE 'TimeZone'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    ret = true;
-                }
-                else
-                {
-                    ret = false;
-                }
-                rdr.Close();
+                string valore = conn.ExecuteScalar<string>("SELECT * FROM configurazione WHERE parametro LIKE 'TimeZone'");
+                ret = valore != null;
                 conn.Close();
                 return ret;
             }
@@ -200,15 +181,13 @@ namespace KIS.App_Code
                 DateTime exp = new DateTime(1970, 1, 1);
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'ExpiryDate'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                ConfigRow row = conn.QueryFirstOrDefault<ConfigRow>("SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'ExpiryDate'");
+                if (row != null)
                 {
                     try
                     {
-                        String[] aExp = rdr.GetString(3).Split('/');
+                        String[] aExp = row.valore.Split('/');
                         int anno = Int32.Parse(aExp[2]);
                         int mese = Int32.Parse(aExp[1]);
                         int giorno = Int32.Parse(aExp[0]);
@@ -220,7 +199,6 @@ namespace KIS.App_Code
                     {
                         exp = new DateTime(1970, 1, 1);
                     }
-                    rdr.Close();
                     conn.Close();
                 }
                 return exp;
@@ -229,35 +207,29 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 String expDate = value.Day.ToString() + "/"
                     + value.Month.ToString() + "/"
                     + value.Year.ToString();
 
                 // Controllo se esiste già il parametro
-                cmd.CommandText = "SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'ExpiryDate'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
+                bool exists = conn.ExecuteScalar<string>("SELECT sezione, ID, parametro, valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'ExpiryDate'") != null;
 
-                bool exists = false;
-
-                exists = (rdr.Read() && !rdr.IsDBNull(0));
-                    rdr.Close();
-                if(exists)
+                string sql;
+                if (exists)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET parametro = @p WHERE "
+                    sql = "UPDATE configurazione SET parametro = @p WHERE "
                         + "Sezione = 'Main' AND parametro = 'ExpiryDate'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'Main', -1, 'ExpiryDate', @p)";
                 }
-                cmd.Parameters.AddWithValue("@p", expDate);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { p = expDate }, tr);
                     tr.Commit();
                 }
                 catch
@@ -275,24 +247,12 @@ namespace KIS.App_Code
                 String ret = "en";
                 MySqlConnection conn = (new Dati.Dati()).VCMainConn();
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'Language'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'Language'");
+                if (valore != null)
                 {
-                    try
-                    {
-                        ret = rdr.GetString(0);
-                    }
-                    catch
-                    {
-                        ret = "en";
-                    }
-                    rdr.Close();
-                    conn.Close();
+                    ret = valore;
                 }
-                rdr.Close();
                 conn.Close();
                 return ret;
             }
@@ -305,24 +265,12 @@ namespace KIS.App_Code
                 String ret = "";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'BaseUrl'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'BaseUrl'");
+                if (valore != null)
                 {
-                    try
-                    {
-                        ret = rdr.GetString(0);
-                    }
-                    catch
-                    {
-                        ret = "";
-                    }
-                    rdr.Close();
-                    conn.Close();
+                    ret = valore;
                 }
-                rdr.Close();
                 conn.Close();
                 return ret;
             }
@@ -335,24 +283,12 @@ namespace KIS.App_Code
                 String ret = "";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'BasePath'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'BasePath'");
+                if (valore != null)
                 {
-                    try
-                    {
-                        ret = rdr.GetString(0);
-                    }
-                    catch
-                    {
-                        ret = "";
-                    }
-                    rdr.Close();
-                    conn.Close();
+                    ret = valore;
                 }
-                rdr.Close();
                 conn.Close();
                 return ret;
             }
@@ -365,15 +301,12 @@ namespace KIS.App_Code
                 String ret = "";
                 MySqlConnection conn = (new Dati.Dati().mycon(this.Tenant));
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'ConfigController' AND parametro"
-                    + " LIKE 'X-API-KEY'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione LIKE 'ConfigController' AND parametro"
+                    + " LIKE 'X-API-KEY'");
+                if (valore != null)
                 {
-                    ret = rdr.GetString(0);
+                    ret = valore;
                 }
-                rdr.Close();
                 conn.Close();
                 return ret;
          }
@@ -386,19 +319,12 @@ namespace KIS.App_Code
                 Boolean ret = false;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'SalesOrderImportFrom3PartySystemEnabled'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'SalesOrderImportFrom3PartySystemEnabled'");
+                if (valore != null)
                 {
-                    ret = rdr.GetBoolean(0);
+                    ret = (valore.Trim() == "1" || valore.Trim().ToLowerInvariant() == "true");
                 }
-                else
-                {
-                    ret = false;
-                }
-                rdr.Close();
                 conn.Close();
                 return ret;
             }
@@ -406,31 +332,24 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
 
                 // Controllo se esiste già il parametro
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione='Main' AND "
-                    + "parametro = 'SalesOrderImportFrom3PartySystemEnabled'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-
-                bool exists = false;
-                exists = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                bool exists = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione='Main' AND "
+                    + "parametro = 'SalesOrderImportFrom3PartySystemEnabled'") != null;
+                string sql;
                 if (exists)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET `valore` = @valore WHERE(`Sezione` = 'Main') and(`ID` = '-1') and(`parametro` = 'SalesOrderImportFrom3PartySystemEnabled')";
-                    ;
+                    sql = "UPDATE configurazione SET `valore` = @valore WHERE(`Sezione` = 'Main') and(`ID` = '-1') and(`parametro` = 'SalesOrderImportFrom3PartySystemEnabled')";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'Main', -1, 'SalesOrderImportFrom3PartySystemEnabled', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                 }
                 catch
@@ -439,6 +358,14 @@ namespace KIS.App_Code
                 }
                 conn.Close();
             }
+        }
+
+        private class ConfigRow
+        {
+            public string sezione { get; set; }
+            public int ID { get; set; }
+            public string parametro { get; set; }
+            public string valore { get; set; }
         }
 
     }
@@ -455,14 +382,11 @@ namespace KIS.App_Code
                 String percorsoLogo = "~/Data/Logo/LogoMG.png";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
-                    {
-                        percorsoLogo = "~/Data/Logo/" + rdr.GetString(0);
-                    }
-                rdr.Close();
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'");
+                if (valore != null)
+                {
+                    percorsoLogo = "~/Data/Logo/" + valore;
+                }
                 conn.Close();
                 return percorsoLogo;
             }
@@ -471,37 +395,23 @@ namespace KIS.App_Code
                 log = "Carico... ";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                bool found = false;
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    found = true;
-                }
-                else
-                {
-                    found = false;
-                }
-                rdr.Close();
+                bool found = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'") != null;
 
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
 
-                if (found == true)
+                string sql;
+                if (found)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore"
+                    sql = "UPDATE configurazione SET valore = @valore"
                         + " WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', @valore)";
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
-
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -522,14 +432,11 @@ namespace KIS.App_Code
                 String percorsoLogo = "/Data/Logo/LogoMG.png";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'");
+                if (valore != null)
                 {
-                    percorsoLogo = "/Data/Logo/" + rdr.GetString(0);
+                    percorsoLogo = "/Data/Logo/" + valore;
                 }
-                rdr.Close();
                 conn.Close();
                 return percorsoLogo;
             }
@@ -538,37 +445,23 @@ namespace KIS.App_Code
                 log = "Carico... ";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                bool found = false;
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    found = true;
-                }
-                else
-                {
-                    found = false;
-                }
-                rdr.Close();
+                bool found = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'") != null;
 
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
 
-                if (found == true)
+                string sql;
+                if (found)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore"
+                    sql = "UPDATE configurazione SET valore = @valore"
                         + " WHERE Sezione = 'Main' AND ID = 0 AND parametro = 'Logo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', @valore)";
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Main', 0, 'Logo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
-
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -601,43 +494,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                Boolean res = false;
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
-                {
-                    res = true;
-                }
-                else
-                {
-                    res = false;
-                }
-                rdr.Close();
+                Boolean res = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'") != null;
+                string sql;
                 if (res)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore"
+                    sql = "UPDATE configurazione SET valore = @valore"
                         + " WHERE Sezione ='Main' AND ID =-1 AND parametro = 'TimeZone'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'Main', "
                         + "-1, "
                         + "'TimeZone', "
                         + "@valore"
                         +")";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
                 {
-                    log = cmd.CommandText + " <br/>" + ex.Message;
+                    log = sql + " <br/>" + ex.Message;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -658,18 +539,15 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione ='Main' AND ID=-1 AND parametro='TimeZone'");
+            if (valore != null)
             {
-                this._fusoOrario = rdr.GetString(0);
+                this._fusoOrario = valore;
             }
             else
             {
                 this._fusoOrario = "W. Europe Standard Time";
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -744,18 +622,15 @@ namespace KIS.App_Code
                 String ret;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'");
+                if (valore != null)
                 {
-                    ret = rdr.GetString(0);
+                    ret = valore;
                 }
                 else
                 {
                     ret = "Graph";
                 }
-                rdr.Close();
                 conn.Close();
                 return ret;
             }
@@ -763,11 +638,9 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                String sqlString = "";
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                bool exists = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'") != null;
+                String sqlString;
+                if (exists)
                 {
                     sqlString = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'Wizard' and parametro LIKE 'TipoPERT'";
@@ -777,14 +650,10 @@ namespace KIS.App_Code
                     sqlString = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'Wizard', -1, 'TipoPERT', @valore)";
                 }
-                rdr.Close();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = sqlString;
-                cmd.Parameters.AddWithValue("@valore", value);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sqlString, new { valore = value }, tr);
                     tr.Commit();
                 }
                 catch (Exception ex)
@@ -826,20 +695,17 @@ namespace KIS.App_Code
             this.x_api_key = "";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE "
+            string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE "
                 + "Sezione LIKE 'CustomersController'"
-                + " AND parametro LIKE 'X-API-KEY'";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+                + " AND parametro LIKE 'X-API-KEY'");
+            if (valore != null)
             {
-                this.x_api_key = rdr.GetString(0);
+                this.x_api_key = valore;
             }
             else
             {
                 this.x_api_key = "";
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -868,20 +734,17 @@ namespace KIS.App_Code
             this.x_api_key = "";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE "
+            string valore = conn.ExecuteScalar<string>("SELECT valore FROM configurazione WHERE "
                 + "Sezione LIKE 'EventsExportController'"
-                + " AND parametro LIKE 'EVENTSEXPORT-API-KEY'";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+                + " AND parametro LIKE 'EVENTSEXPORT-API-KEY'");
+            if (valore != null)
             {
-                this.x_api_key = rdr.GetString(0);
+                this.x_api_key = valore;
             }
             else
             {
                 this.x_api_key = "";
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -892,6 +755,12 @@ namespace KIS.App_Code
 
         public String log;
 
+        protected class CfgRow
+        {
+            public string parametro { get; set; }
+            public string valore { get; set; }
+        }
+
         protected Boolean _IDCommessa;
         public Boolean IDCommessa
         {
@@ -900,37 +769,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Commessa_IDCommessa'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_IDCommessa'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_IDCommessa'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         +"'OrderStatusCustomerReport base', -1, 'Commessa_IDCommessa', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IDCommessa = value;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    log = ex.Message +" " + cmd.CommandText;
+                    log = ex.Message +" " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -946,37 +809,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Commessa_Cliente'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_Cliente'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_Cliente'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Commessa_Cliente', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Cliente = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -991,37 +848,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Commessa_DataInserimento'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_DataInserimento'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_DataInserimento'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Commessa_DataInserimento', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._DataInserimentoOrdine = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1036,37 +887,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Commessa_Note'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_Note'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Commessa_Note'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Commessa_Note', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NoteOrdine = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1081,37 +926,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_IDProdotto'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_IDProdotto'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_IDProdotto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_IDProdotto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IDProdotto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1126,37 +965,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_NomeProdotto'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_NomeProdotto'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_NomeProdotto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_NomeProdotto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NomeProdotto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1171,37 +1004,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_NomeVariante'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_NomeVariante'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_NomeVariante'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_NomeVariante', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NomeVariante = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1216,37 +1043,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_Matricola'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Matricola'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Matricola'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_Matricola', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NomeVariante = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1261,37 +1082,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_Status'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Status'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Status'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_Status', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Status = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1306,37 +1121,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_Reparto'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Reparto'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Reparto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_Reparto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Reparto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1351,37 +1160,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_DataPrevistaConsegna', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._DataPrevistaConsegna = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1396,37 +1199,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_DataPrevistaFineProduzione', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._DataPrevistaFineProduzione = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1441,37 +1238,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_EarlyStart'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_EarlyStart'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_EarlyStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_EarlyStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._EarlyStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1486,37 +1277,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_EarlyFinish'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_EarlyFinish'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_EarlyFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_EarlyFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._EarlyFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1531,37 +1316,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_LateStart'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_LateStart'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_LateStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_LateStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._LateStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1576,37 +1355,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_LateFinish'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_LateFinish'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_LateFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_LateFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._LateFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1621,37 +1394,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_Quantita'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Quantita'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Quantita'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_Quantita', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Quantita = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1666,37 +1433,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_QuantitaProdotta'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_QuantitaProdotta', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._QuantitaProdotta = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1711,37 +1472,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_Ritardo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Ritardo'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_Ritardo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_Ritardo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Ritardo = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1756,37 +1511,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_TempoDiLavoroTotale', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._TempoDiLavoroTotale = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1801,37 +1550,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_LeadTime'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_LeadTime'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_LeadTime'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_LeadTime', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._LeadTime = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1846,37 +1589,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_TempoDiLavoroPrevisto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._TempoDiLavoroPrevisto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1891,37 +1628,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_IndicatoreCompletamentoTasks', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IndicatoreCompletamentoTasks = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1936,37 +1667,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_IndicatoreCompletamentoTempoPrevisto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IndicatoreCompletamentoTempoPrevisto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -1981,37 +1706,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_ViewGanttTasks'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_ViewGanttTasks', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._ViewGanttTasks = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2026,37 +1745,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_ViewElencoTasks'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Prodotto_ViewElencoTasks', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._ViewElencoTasks = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2071,37 +1784,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_ID'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_ID'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_ID'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_ID', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_ID = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2116,37 +1823,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_Nome'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Nome'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Nome'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_Nome', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Nome = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2161,37 +1862,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_Descrizione'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Descrizione'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Descrizione'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_Descrizione', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Descrizione = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2206,37 +1901,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_Postazione'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Postazione'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Postazione'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_Postazione', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Postazione = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2251,37 +1940,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_EarlyStart'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_EarlyStart'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_EarlyStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_EarlyStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_EarlyStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2296,37 +1979,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_LateStart'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_LateStart'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_LateStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_LateStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_LateStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2341,37 +2018,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_EarlyFinish'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_EarlyFinish'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_EarlyFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_EarlyFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_EarlyFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2386,37 +2057,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_LateFinish'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_LateFinish'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_LateFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_LateFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_LateFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2431,37 +2096,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_NOperatori'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_NOperatori'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_NOperatori'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_NOperatori', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_NOperatori = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2476,37 +2135,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_TempoCiclo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_TempoCiclo'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_TempoCiclo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_TempoCiclo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_TempoCiclo = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2521,37 +2174,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_TempoDiLavoroPrevisto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_TempoDiLavoroPrevisto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2566,37 +2213,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_TempoDiLavoroEffettivo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_TempoDiLavoroEffettivo = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2611,37 +2252,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_Status'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Status'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_Status'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_Status', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Status = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2656,37 +2291,31 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE 'OrderStatusCustomerReport base' "
-                + "AND parametro LIKE 'Task_QuantitaProdotta'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_QuantitaProdotta'") != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE 'OrderStatusCustomerReport base' "
                         + "AND parametro LIKE 'Task_QuantitaProdotta'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "'OrderStatusCustomerReport base', -1, 'Task_QuantitaProdotta', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_QuantitaProdotta = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -2740,13 +2369,10 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'OrderStatusCustomerReport base'";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            foreach (var r in conn.Query<CfgRow>("SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'OrderStatusCustomerReport base'"))
             {
-                String param = rdr.GetString(0);
-                String val = rdr.GetString(1);
+                String param = r.parametro;
+                String val = r.valore;
                 switch (param)
                 {
                     case "Commessa_IDCommessa":
@@ -3170,38 +2796,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Commessa_IDCommessa'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_IDCommessa'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_IDCommessa'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Commessa_IDCommessa', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IDCommessa = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3215,38 +2835,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Commessa_Cliente'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_Cliente'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_Cliente'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Commessa_Cliente', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Cliente = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3259,38 +2873,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Commessa_DataInserimento'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_DataInserimento'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_DataInserimento'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Commessa_DataInserimento', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._DataInserimentoOrdine = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3303,38 +2911,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Commessa_Note'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Commessa_Note'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Commessa_Note'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Commessa_Note', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NoteOrdine = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3347,38 +2949,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_IDProdotto'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_IDProdotto'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_IDProdotto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_IDProdotto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IDProdotto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3391,38 +2987,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_NomeProdotto'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_NomeProdotto'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_NomeProdotto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_NomeProdotto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NomeProdotto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3435,38 +3025,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_NomeVariante'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_NomeVariante'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_NomeVariante'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_NomeVariante', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NomeVariante = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3479,38 +3063,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_Matricola'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Matricola'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Matricola'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_Matricola', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._NomeVariante = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3523,38 +3101,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_Status'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Status'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Status'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_Status', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Status = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3567,38 +3139,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_Reparto'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Reparto'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Reparto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_Reparto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Reparto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3611,38 +3177,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaConsegna'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_DataPrevistaConsegna', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._DataPrevistaConsegna = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3655,38 +3215,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_DataPrevistaFineProduzione'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_DataPrevistaFineProduzione', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._DataPrevistaFineProduzione = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3699,38 +3253,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_EarlyStart'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_EarlyStart'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_EarlyStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_EarlyStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._EarlyStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3743,38 +3291,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_EarlyFinish'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_EarlyFinish'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_EarlyFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_EarlyFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._EarlyFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3787,38 +3329,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_LateStart'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_LateStart'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_LateStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_LateStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._LateStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3831,38 +3367,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_LateFinish'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_LateFinish'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_LateFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_LateFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._LateFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3875,38 +3405,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_Quantita'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Quantita'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Quantita'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_Quantita', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Quantita = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3919,38 +3443,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_QuantitaProdotta'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_QuantitaProdotta'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_QuantitaProdotta', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._QuantitaProdotta = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -3963,38 +3481,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_Ritardo'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_Ritardo'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_Ritardo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_Ritardo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Ritardo = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4007,38 +3519,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroTotale'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_TempoDiLavoroTotale', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._TempoDiLavoroTotale = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4051,38 +3557,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_LeadTime'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_LeadTime'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_LeadTime'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_LeadTime', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._LeadTime = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4095,38 +3595,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_TempoDiLavoroPrevisto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._TempoDiLavoroPrevisto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4139,38 +3633,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTasks'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_IndicatoreCompletamentoTasks', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IndicatoreCompletamentoTasks = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4183,38 +3671,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_IndicatoreCompletamentoTempoPrevisto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_IndicatoreCompletamentoTempoPrevisto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._IndicatoreCompletamentoTempoPrevisto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4227,38 +3709,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_ViewGanttTasks'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_ViewGanttTasks'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_ViewGanttTasks', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._ViewGanttTasks = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4271,38 +3747,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Prodotto_ViewElencoTasks'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Prodotto_ViewElencoTasks'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Prodotto_ViewElencoTasks', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._ViewElencoTasks = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4315,38 +3785,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_ID'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_ID'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_ID'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_ID', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_ID = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4359,38 +3823,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_Nome'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Nome'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Nome'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_Nome', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Nome = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4403,38 +3861,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_Descrizione'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Descrizione'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Descrizione'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_Descrizione', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Descrizione = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4447,38 +3899,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_Postazione'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Postazione'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Postazione'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_Postazione', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Postazione = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4491,38 +3937,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_EarlyStart'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_EarlyStart'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_EarlyStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_EarlyStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_EarlyStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4535,38 +3975,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_LateStart'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_LateStart'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_LateStart'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_LateStart', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_LateStart = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4579,38 +4013,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_EarlyFinish'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_EarlyFinish'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_EarlyFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_EarlyFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_EarlyFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4623,38 +4051,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_LateFinish'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_LateFinish'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_LateFinish'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_LateFinish', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_LateFinish = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4667,38 +4089,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_NOperatori'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_NOperatori'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_NOperatori'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_NOperatori', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_NOperatori = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4711,38 +4127,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_TempoCiclo'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_TempoCiclo'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_TempoCiclo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_TempoCiclo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_TempoCiclo = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4755,38 +4165,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_TempoDiLavoroPrevisto'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_TempoDiLavoroPrevisto', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_TempoDiLavoroPrevisto = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4799,38 +4203,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_TempoDiLavoroEffettivo'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_TempoDiLavoroEffettivo', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_TempoDiLavoroEffettivo = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4843,38 +4241,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_Status'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_Status'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_Status'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_Status', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_Status = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4887,38 +4279,32 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE "
+                string sezione = "OrderStatusCustomerReport " + this.codCliente;
+                bool check = conn.ExecuteScalar<string>("SELECT parametro, valore FROM configurazione WHERE "
                 + "Sezione LIKE @sezione "
-                + "AND parametro LIKE 'Task_QuantitaProdotta'";
-                cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                bool check = false;
-                check = (rdr.Read() && !rdr.IsDBNull(0));
-                rdr.Close();
+                + "AND parametro LIKE 'Task_QuantitaProdotta'", new { sezione }) != null;
+                string sql;
                 if (check)
                 {
-                    cmd.CommandText = "UPDATE configurazione SET valore = @valore WHERE "
+                    sql = "UPDATE configurazione SET valore = @valore WHERE "
                         + "Sezione LIKE @sezione "
                         + "AND parametro LIKE 'Task_QuantitaProdotta'";
                 }
                 else
                 {
-                    cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                    sql = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
                         + "@sezione, -1, 'Task_QuantitaProdotta', @valore)";
                 }
-                cmd.Parameters.AddWithValue("@valore", value.ToString());
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(sql, new { sezione, valore = value.ToString() }, tr);
                     tr.Commit();
                     this._Task_QuantitaProdotta = value;
                 }
                 catch (Exception ex)
                 {
-                    log = ex.Message + " " + cmd.CommandText;
+                    log = ex.Message + " " + sql;
                     tr.Rollback();
                 }
                 conn.Close();
@@ -4931,15 +4317,11 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE @p";
-            cmd.Parameters.AddWithValue("@p", "OrderStatusCustomerReport " + idCliente);
             this.codCliente = idCliente;
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            foreach (var r in conn.Query<CfgRow>("SELECT parametro, valore FROM configurazione WHERE Sezione LIKE @p", new { p = "OrderStatusCustomerReport " + idCliente }))
             {
-                String param = rdr.GetString(0);
-                String val = rdr.GetString(1);
+                String param = r.parametro;
+                String val = r.valore;
                 switch (param)
                 {
                     case "Commessa_IDCommessa":
@@ -5355,13 +4737,10 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM configurazione WHERE Sezione LIKE @sezione";
-            cmd.Parameters.AddWithValue("@sezione", "OrderStatusCustomerReport " + this.codCliente);
+            string sql = "DELETE FROM configurazione WHERE Sezione LIKE @sezione";
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { sezione = "OrderStatusCustomerReport " + this.codCliente }, tr);
                 tr.Commit();
                 ret = true;
             }
@@ -5378,6 +4757,14 @@ namespace KIS.App_Code
     public class HomeBox
     {
         protected String Tenant;
+
+        private class HomeBoxRow
+        {
+            public int idHomeBox { get; set; }
+            public string nome { get; set; }
+            public string descrizione { get; set; }
+            public string path { get; set; }
+        }
 
         private int _ID;
         public int ID
@@ -5413,17 +4800,14 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idHomeBox, nome, descrizione, path FROM homeboxesregistro WHERE "
-                + " idHomeBox = @p0";
-            cmd.Parameters.AddWithValue("@p0", boxId);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<HomeBoxRow>("SELECT idHomeBox, nome, descrizione, path FROM homeboxesregistro WHERE "
+                + " idHomeBox = @p0", new { p0 = boxId });
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._Nome = rdr.GetString(1);
-                this._Descrizione = rdr.GetString(2);
-                this._Path = rdr.GetString(3);
+                this._ID = row.idHomeBox;
+                this._Nome = row.nome;
+                this._Descrizione = row.descrizione;
+                this._Path = row.path;
             }
             else
             {
@@ -5432,7 +4816,6 @@ namespace KIS.App_Code
                 this._Descrizione = "";
                 this._Path = "";
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -5457,14 +4840,10 @@ namespace KIS.App_Code
             this._Elenco = new List<HomeBox>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idHomeBox FROM homeboxesregistro ORDER BY nome";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            foreach (var id in conn.Query<int>("SELECT idHomeBox FROM homeboxesregistro ORDER BY nome"))
             {
-                this._Elenco.Add(new HomeBox(this.Tenant, rdr.GetInt32(0)));
+                this._Elenco.Add(new HomeBox(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -5474,6 +4853,13 @@ namespace KIS.App_Code
         protected String Tenant;
 
         public String log;
+
+        private class HomeBoxUserRow
+        {
+            public int idHomeBox { get; set; }
+            public string user { get; set; }
+            public int ordine { get; set; }
+        }
 
         private HomeBox _homeBox;
         public HomeBox homeBox
@@ -5496,17 +4882,12 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE homeboxesuser SET ordine = @p0 WHERE "
+                    string sql = "UPDATE homeboxesuser SET ordine = @p0 WHERE "
                         + " idHomeBox = @p1"
                         + " AND user = @p2";
-                    cmd.Parameters.AddWithValue("@p0", value);
-                    cmd.Parameters.AddWithValue("@p1", this.homeBox.ID);
-                    cmd.Parameters.AddWithValue("@p2", user.username);
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { p0 = value, p1 = this.homeBox.ID, p2 = user.username }, tr);
                         tr.Commit();
                     }
                     catch(Exception ex)
@@ -5525,17 +4906,13 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idHomeBox, user, ordine FROM homeboxesuser WHERE "
-                + " idHomeBox = @p0 AND user = @p1";
-            cmd.Parameters.AddWithValue("@p0", hBox.ID);
-            cmd.Parameters.AddWithValue("@p1", usr.username);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<HomeBoxUserRow>("SELECT idHomeBox, user, ordine FROM homeboxesuser WHERE "
+                + " idHomeBox = @p0 AND user = @p1", new { p0 = hBox.ID, p1 = usr.username });
+            if (row != null)
             {
-                this._homeBox = new HomeBox(this.Tenant, rdr.GetInt32(0));
-                this._user = new User(rdr.GetString(1));
-                this._ordine = rdr.GetInt32(2);
+                this._homeBox = new HomeBox(this.Tenant, row.idHomeBox);
+                this._user = new User(row.user);
+                this._ordine = row.ordine;
             }
             else
             {
@@ -5543,7 +4920,6 @@ namespace KIS.App_Code
                 this._user = null;
                 this._ordine = -1;
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -5570,15 +4946,10 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idHomeBox FROM homeboxesuser WHERE user = @p0 ORDER BY ordine";
-                cmd.Parameters.AddWithValue("@p0", usr.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                foreach (var id in conn.Query<int>("SELECT idHomeBox FROM homeboxesuser WHERE user = @p0 ORDER BY ordine", new { p0 = usr.username }))
                 {
-                    this._Elenco.Add(new HomeBoxUser(this.Tenant, usr, new HomeBox(this.Tenant, rdr.GetInt32(0))));
+                    this._Elenco.Add(new HomeBoxUser(this.Tenant, usr, new HomeBox(this.Tenant, id)));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -5587,6 +4958,14 @@ namespace KIS.App_Code
     public class MeasurementUnit
     {
         protected String Tenant;
+
+        private class MeasurementUnitRow
+        {
+            public int ID { get; set; }
+            public string Type { get; set; }
+            public string Description { get; set; }
+            public bool IsDefault { get; set; }
+        }
 
         private int _ID;
         public int ID
@@ -5604,15 +4983,11 @@ namespace KIS.App_Code
                 { 
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE measurementunits SET Type = @p0 WHERE ID = @p1";
-                    cmd.Parameters.AddWithValue("@p0", value);
-                    cmd.Parameters.AddWithValue("@p1", this.ID);
+                    string sql = "UPDATE measurementunits SET Type = @p0 WHERE ID = @p1";
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { p0 = value, p1 = this.ID }, tr);
                         tr.Commit();
                     }
                     catch
@@ -5634,15 +5009,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "UPDATE measurementunits SET Description = @p0 WHERE ID = @p1";
-                    cmd.Parameters.AddWithValue("@p0", value);
-                    cmd.Parameters.AddWithValue("@p1", this.ID);
+                    string sql = "UPDATE measurementunits SET Description = @p0 WHERE ID = @p1";
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(sql, new { p0 = value, p1 = this.ID }, tr);
                         tr.Commit();
                     }
                     catch
@@ -5677,26 +5048,14 @@ namespace KIS.App_Code
                     }
                     else
                     {
-                        MySqlCommand cmd2 = conn.CreateCommand();
-                        cmd2.CommandText = "SELECT ID FROM measurementunits ORDER BY ID";
-                        MySqlDataReader rdr = cmd2.ExecuteReader();
-                        if(rdr.Read() && !rdr.IsDBNull(0))
-                        {
-                            defUnit = rdr.GetInt32(0);
-                        }
-                        rdr.Close();
+                        defUnit = conn.ExecuteScalar<int>("SELECT ID FROM measurementunits ORDER BY ID");
                     }
-                    MySqlCommand cmd = conn.CreateCommand();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
                     try
                     {
-                            cmd.CommandText = "UPDATE measurementunits SET isDefault = FALSE WHERE ID <> @p0";
-                            cmd.Parameters.AddWithValue("@p0", defUnit);
-                            cmd.ExecuteNonQuery();
-                            cmd.CommandText = "UPDATE measurementunits SET isDefault = TRUE WHERE ID = @p0";
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
+                        conn.Execute("UPDATE measurementunits SET isDefault = FALSE WHERE ID <> @p0", new { p0 = defUnit }, tr);
+                        conn.Execute("UPDATE measurementunits SET isDefault = TRUE WHERE ID = @p0", new { p0 = defUnit }, tr);
+                        tr.Commit();
                     }
                     catch
                     {
@@ -5729,18 +5088,14 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID, Type, Description, isdefault FROM measurementunits WHERE ID = @p0";
-            cmd.Parameters.AddWithValue("@p0", uID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<MeasurementUnitRow>("SELECT ID, Type, Description, isdefault FROM measurementunits WHERE ID = @p0", new { p0 = uID });
+            if (row != null)
             {
-                this._ID = rdr.GetInt32(0);
-                this._Type = rdr.GetString(1);
-                this._Description = rdr.GetString(2);
-                this._IsDefault = rdr.GetBoolean(3);
+                this._ID = row.ID;
+                this._Type = row.Type;
+                this._Description = row.Description;
+                this._IsDefault = row.IsDefault;
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -5761,12 +5116,9 @@ namespace KIS.App_Code
             this.UnitsList = new List<MeasurementUnit>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT ID FROM measurementunits ORDER BY type ASC";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            foreach (var id in conn.Query<int>("SELECT ID FROM measurementunits ORDER BY type ASC"))
             {
-                this.UnitsList.Add(new MeasurementUnit(this.Tenant, rdr.GetInt32(0)));
+                this.UnitsList.Add(new MeasurementUnit(this.Tenant, id));
             }
             conn.Close();
         }
@@ -5776,29 +5128,18 @@ namespace KIS.App_Code
             Boolean ret = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(ID) FROM measurementunits";
-            int maxID = 0;
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read() && !rdr.IsDBNull(0))
-            {
-                maxID = rdr.GetInt32(0) + 1;
-            }
-            rdr.Close();
-            cmd.CommandText = "INSERT INTO measurementunits(ID, Type, Description, isDefault) VALUES("
+            int? maxVal = conn.ExecuteScalar<int?>("SELECT MAX(ID) FROM measurementunits");
+            int maxID = maxVal.HasValue ? maxVal.Value + 1 : 0;
+            string sql = "INSERT INTO measurementunits(ID, Type, Description, isDefault) VALUES("
                 + "@p0, "
                 + "@p1, "
                 + "@p2, "
                 + " FALSE"
                 +")";
-            cmd.Parameters.AddWithValue("@p0", maxID);
-            cmd.Parameters.AddWithValue("@p1", uType);
-            cmd.Parameters.AddWithValue("@p2", uDescription);
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { p0 = maxID, p1 = uType, p2 = uDescription }, tr);
                 tr.Commit();
                 ret = true;
             }
@@ -5828,14 +5169,11 @@ namespace KIS.App_Code
 
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "DELETE FROM measurementunits WHERE ID = @p0";
-            cmd.Parameters.AddWithValue("@p0", uID);
+            string sql = "DELETE FROM measurementunits WHERE ID = @p0";
             MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
             try
             {
-                cmd.ExecuteNonQuery();
+                conn.Execute(sql, new { p0 = uID }, tr);
                 tr.Commit();
                 ret = true;
             }

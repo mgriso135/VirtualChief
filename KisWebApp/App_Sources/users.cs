@@ -21,6 +21,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using MySql.Data.MySqlClient;
 using KIS.App_Sources;
 
@@ -1011,17 +1012,15 @@ namespace KIS.App_Code
             listUsers = new List<User>();
 
             String strSQL = "SELECT * FROM useraccounts INNER JOIN useraccountworkspaces ON (useraccounts.id=useraccountworkspaces.userid) WHERE workspaceid=@workspaceid";
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@workspaceid", workspace);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var rows = conn.Query(strSQL, new { workspaceid = workspace }).ToList();
             int i = 0;
-            while (i < this.numUsers && rdr.Read())
+            foreach (var row in rows)
             {
-                elencoUtenti[i] = new User(rdr.GetString(0));
-                listUsers.Add(new User(rdr.GetString(0)));
+                if (i >= this.numUsers) break;
+                elencoUtenti[i] = new User(Convert.ToString(row.id));
+                listUsers.Add(new User(Convert.ToString(row.id)));
                 i++;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1031,17 +1030,15 @@ namespace KIS.App_Code
             conn.Open();
             listUsers = new List<User>();
             String strSQL = "SELECT * FROM useraccounts INNER JOIN useraccountworkspaces ON (useraccounts.id=useraccountworkspaces.userid) WHERE workspaceid=@workspaceid";
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var rows = conn.Query(strSQL, new { workspaceid = workspaceid }).ToList();
             int i = 0;
-            while (i < this.numUsers && rdr.Read())
+            foreach (var row in rows)
             {
-                elencoUtenti[i] = new User(rdr.GetString(0));
-                listUsers.Add(new User(rdr.GetString(0)));
+                if (i >= this.numUsers) break;
+                elencoUtenti[i] = new User(Convert.ToString(row.id));
+                listUsers.Add(new User(Convert.ToString(row.id)));
                 i++;
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1050,8 +1047,7 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             this.listUsers = new List<User>();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT DISTINCT(useraccounts.id) FROM useraccounts "
+            String strSQL = "SELECT DISTINCT(useraccounts.id) FROM useraccounts "
                        + " INNER JOIN useraccountsgroups ON(useraccounts.id = useraccountsgroups.userid) "
                        + "  INNER JOIN useraccountworkspaces ON(useraccounts.id= useraccountworkspaces.userid) "
                        + "   INNER JOIN groupspermissions ON(useraccountsgroups.groupid = groupspermissions.groupid) "
@@ -1060,14 +1056,11 @@ namespace KIS.App_Code
                        + "   WHERE 1 = 1  "
                        + "   AND permissions.id=@idpermesso "
                        + "   AND useraccountworkspaces.workspaceid = @workspaceid";
-            cmd.Parameters.AddWithValue("@idpermesso", prm.ID);
-            cmd.Parameters.AddWithValue("@workspaceid", workspaceid);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            var rows = conn.Query(strSQL, new { idpermesso = prm.ID, workspaceid = workspaceid }).ToList();
+            foreach (var row in rows)
             {
-                this.listUsers.Add(new User(rdr.GetString(0)));
+                this.listUsers.Add(new User(Convert.ToString(row.id)));
             }
-            rdr.Close();
             conn.Close();
         }
     }
@@ -1076,6 +1069,20 @@ namespace KIS.App_Code
     {
         protected String Tenant;
         public String log;
+
+        private class UserRow
+        {
+            public String userID { get; set; }
+            public String nome { get; set; }
+            public String cognome { get; set; }
+            public String tipoUtente { get; set; }
+            public DateTime? lastLogin { get; set; }
+            public int ID { get; set; }
+            public String language { get; set; }
+            public DateTime? creationdate { get; set; }
+            public String destinationURL { get; set; }
+            public bool enabled { get; set; }
+        }
 
         private bool _authenticated;
         public bool authenticated
@@ -1104,13 +1111,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@name", value);
-                    cmd.Parameters.AddWithValue("@username", this.username);
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { name = value, username = this.username }, tr);
                         tr.Commit();
                         this._name = value;
                     }
@@ -1136,13 +1139,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@lastname", value);
-                    cmd.Parameters.AddWithValue("@username", this.username);
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { lastname = value, username = this.username }, tr);
                         tr.Commit();
                         this._cognome = value;
                     }
@@ -1183,10 +1182,7 @@ namespace KIS.App_Code
                     string strSQL = "UPDATE users SET lastLogin = @lastlogin WHERE userID LIKE @username";
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@lastlogin", TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@username", this.username);
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(strSQL, new { lastlogin = TimeZoneInfo.ConvertTimeToUtc(value, fuso.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), username = this.username });
                     conn.Close();
                 }
             }
@@ -1209,13 +1205,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@language", value);
-                    cmd.Parameters.AddWithValue("@userid", this.username);
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { language = value, userid = this.username }, tr);
                         tr.Commit();
                     }
                     catch(Exception ex)
@@ -1245,13 +1237,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@destinationURL", value);
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { destinationURL = value, userID = this.username }, tr);
                         tr.Commit();
                         this._DestinationURL = value;
                     }
@@ -1295,13 +1283,9 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@enabled", value);
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    cmd.Transaction = tr;
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute(strSQL, new { enabled = value, userID = this.username }, tr);
                         tr.Commit();
                         this._Enabled = value;
                     }
@@ -1358,49 +1342,45 @@ namespace KIS.App_Code
                 +" FROM users WHERE enabled=true AND verified = true AND userID LIKE @user AND password = MD5(@pwd)";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@user", usr);
-            cmd.Parameters.AddWithValue("@pwd", pwd);
-            MySqlDataReader rdr1 = cmd.ExecuteReader();
-            if (rdr1.Read() && !rdr1.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<UserRow>(strSQL, new { user = usr, pwd = pwd });
+            if (row != null && row.userID != null)
             {
-                this._username = rdr1.GetString(0);
-                this._name = rdr1.GetString(1);
-                this._cognome = rdr1.GetString(2);
-                this._typeOfUser = rdr1.GetString(3);
-                if (!rdr1.IsDBNull(4))
+                this._username = row.userID;
+                this._name = row.nome;
+                this._cognome = row.cognome;
+                this._typeOfUser = row.tipoUtente;
+                if (row.lastLogin.HasValue)
                 {
-                    this._lastLogin = rdr1.GetDateTime(4);
+                    this._lastLogin = row.lastLogin.Value;
                 }
                 this._authenticated = true;
                 FusoOrario fuso = new FusoOrario(this.Tenant);
                 this.lastLogin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario);
-                this._ID = rdr1.GetInt32(5);
-                if(!rdr1.IsDBNull(6))
+                this._ID = row.ID;
+                if (row.language != null)
                 {
-                    this._Language = rdr1.GetString(6);
+                    this._Language = row.language;
                 }
                 else
                 {
                     KISConfig kisCfg = new KISConfig(this.Tenant);
                     this._Language = kisCfg.Language;
                 }
-                if(!rdr1.IsDBNull(7))
+                if (row.creationdate.HasValue)
                 {
-                    this._CreationDate = rdr1.GetDateTime(7);
+                    this._CreationDate = row.creationdate.Value;
                 }
-                if (!rdr1.IsDBNull(8))
+                if (row.destinationURL != null)
                 {
-                    this._DestinationURL = rdr1.GetString(8);
+                    this._DestinationURL = row.destinationURL;
                 }
-                this._Enabled = rdr1.GetBoolean(9);
+                this._Enabled = row.enabled;
             }
             else
             {
                 this._username = "";
                 this._Enabled = false;
             }
-            rdr1.Close();
             conn.Close();
         }
 
@@ -1415,43 +1395,40 @@ namespace KIS.App_Code
                 + " FROM users WHERE enabled=true AND userID LIKE @userID";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@userID", usr);
-            MySqlDataReader rdr1 = cmd.ExecuteReader();
-            if (rdr1.Read() && !rdr1.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<UserRow>(strSQL, new { userID = usr });
+            if (row != null && row.userID != null)
             {
-                this._username = rdr1.GetString(0);
-                this._name = rdr1.GetString(1);
-                this._cognome = rdr1.GetString(2);
-                this._typeOfUser = rdr1.GetString(3);
-                this._lastLogin = rdr1.GetDateTime(4);
+                this._username = row.userID;
+                this._name = row.nome;
+                this._cognome = row.cognome;
+                this._typeOfUser = row.tipoUtente;
+                this._lastLogin = row.lastLogin.Value;
                 this._authenticated = false;
-                this._ID = rdr1.GetInt32(5);
-                if (!rdr1.IsDBNull(6))
+                this._ID = row.ID;
+                if (row.language != null)
                 {
-                    this._Language = rdr1.GetString(6);
+                    this._Language = row.language;
                 }
                 else
                 {
                     KISConfig kisCfg = new KISConfig(this.Tenant);
                     this._Language = kisCfg.Language;
                 }
-                if (!rdr1.IsDBNull(7))
+                if (row.creationdate.HasValue)
                 {
-                    this._CreationDate = rdr1.GetDateTime(7);
+                    this._CreationDate = row.creationdate.Value;
                 }
-                if (!rdr1.IsDBNull(8))
+                if (row.destinationURL != null)
                 {
-                    this._DestinationURL = rdr1.GetString(8);
+                    this._DestinationURL = row.destinationURL;
                 }
-                this._Enabled = rdr1.GetBoolean(9);
+                this._Enabled = row.enabled;
             }
             else
             {
                 this._username = "";
                 this._Enabled = false;
             }
-            rdr1.Close();
             conn.Close();
         }
 
@@ -1466,43 +1443,40 @@ namespace KIS.App_Code
                 + " FROM users WHERE enabled=true AND ID = @ID";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@ID", IDn);
-            MySqlDataReader rdr1 = cmd.ExecuteReader();
-            if (rdr1.Read() && !rdr1.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<UserRow>(strSQL, new { ID = IDn });
+            if (row != null && row.userID != null)
             {
-                this._username = rdr1.GetString(0);
-                this._name = rdr1.GetString(1);
-                this._cognome = rdr1.GetString(2);
-                this._typeOfUser = rdr1.GetString(3);
-                this._lastLogin = rdr1.GetDateTime(4);
+                this._username = row.userID;
+                this._name = row.nome;
+                this._cognome = row.cognome;
+                this._typeOfUser = row.tipoUtente;
+                this._lastLogin = row.lastLogin.Value;
                 this._authenticated = false;
-                this._ID = rdr1.GetInt32(5);
-                if (!rdr1.IsDBNull(6))
+                this._ID = row.ID;
+                if (row.language != null)
                 {
-                    this._Language = rdr1.GetString(6);
+                    this._Language = row.language;
                 }
                 else
                 {
                     KISConfig kisCfg = new KISConfig(this.Tenant);
                     this._Language = kisCfg.Language;
                 }
-                if (!rdr1.IsDBNull(7))
+                if (row.creationdate.HasValue)
                 {
-                    this._CreationDate = rdr1.GetDateTime(7);
+                    this._CreationDate = row.creationdate.Value;
                 }
-                if (!rdr1.IsDBNull(8))
+                if (row.destinationURL != null)
                 {
-                    this._DestinationURL = rdr1.GetString(8);
+                    this._DestinationURL = row.destinationURL;
                 }
-                this._Enabled = rdr1.GetBoolean(9);
+                this._Enabled = row.enabled;
             }
             else
             {
                 this._username = "";
                 this._Enabled = false;
             }
-            rdr1.Close();
             conn.Close();
         }
 
@@ -1535,28 +1509,24 @@ namespace KIS.App_Code
             String strSQL = "SELECT * FROM users WHERE userID LIKE @usr";
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@usr", usr);
-            MySqlDataReader rdr1 = cmd.ExecuteReader();
-            rdr1.Read();
-            if (rdr1.HasRows)
+            bool existing = conn.Query(strSQL, new { usr = usr }).Any();
+            if (existing)
             {
                 rt = "2";
-                rdr1.Close();
             }
             else
             {
-                rdr1.Close();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 int maxID = 0;
-                cmd.CommandText = "SELECT MAX(ID) FROM users";
-                rdr1 = cmd.ExecuteReader();
-                if (rdr1.Read() && !rdr1.IsDBNull(0))
+                int? mx = conn.ExecuteScalar<int?>("SELECT MAX(ID) FROM users", transaction: tr);
+                if (mx.HasValue)
                 {
-                    maxID = rdr1.GetInt32(0) + 1;
+                    maxID = mx.Value + 1;
                 }
-                rdr1.Close();
+                else
+                {
+                    maxID = 0;
+                }
 
                 try
                 {
@@ -1565,20 +1535,7 @@ namespace KIS.App_Code
                         + "@ID, @language, @verified, @checksum, "
                         + "@creationdate, @enabled"
                         + ")";
-                    cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@userID", usr);
-                    cmd.Parameters.AddWithValue("@password", pwd);
-                    cmd.Parameters.AddWithValue("@nome", nome);
-                    cmd.Parameters.AddWithValue("@cognome", cognome);
-                    cmd.Parameters.AddWithValue("@tipoUtente", typeOf);
-                    cmd.Parameters.AddWithValue("@lastLogin", DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
-                    cmd.Parameters.AddWithValue("@ID", maxID);
-                    cmd.Parameters.AddWithValue("@language", idioma);
-                    cmd.Parameters.AddWithValue("@verified", skipVerify);
-                    cmd.Parameters.AddWithValue("@checksum", checksum);
-                    cmd.Parameters.AddWithValue("@creationdate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@enabled", true);
-                    cmd.ExecuteNonQuery();
+                    conn.Execute(strSQL, new { userID = usr, password = pwd, nome = nome, cognome = cognome, tipoUtente = typeOf, lastLogin = DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"), ID = maxID, language = idioma, verified = skipVerify, checksum = checksum, creationdate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), enabled = true }, tr);
 
                     tr.Commit();
 
@@ -1597,7 +1554,6 @@ namespace KIS.App_Code
                     tr.Rollback();
                 }
             }
-            rdr1.Close();
             conn.Close();
             return rt;
         }
@@ -1610,16 +1566,12 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT groupID FROM groupusers INNER JOIN groupss ON (groupusers.groupID = groupss.ID) WHERE groupusers.user = @user " +
-                    " ORDER BY groupss.nomeGruppo";
-                cmd.Parameters.AddWithValue("@user", this.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<int>("SELECT groupID FROM groupusers INNER JOIN groupss ON (groupusers.groupID = groupss.ID) WHERE groupusers.user = @user " +
+                    " ORDER BY groupss.nomeGruppo", new { user = this.username });
+                foreach (var id in rows)
                 {
-                    this.Gruppi.Add(new Group(rdr.GetInt32(0)));
+                    this.Gruppi.Add(new Group(id));
                 }
-                rdr.Close();
                 conn.Close();
                 rt = true;
             }
@@ -1650,17 +1602,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "INSERT INTO groupusers(groupID, user) VALUES(@GroupID, @userID)";
-                    cmd.Parameters.AddWithValue("@GroupID", grp.ID);
-                    cmd.Parameters.AddWithValue("@userID", this.username);
                     MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
 
                     try
                     {
-                        
-                        cmd.ExecuteNonQuery();
+                        conn.Execute("INSERT INTO groupusers(groupID, user) VALUES(@GroupID, @userID)", new { GroupID = grp.ID, userID = this.username }, tr);
                         tr.Commit();
                         ret = true;
                     }
@@ -1669,7 +1615,7 @@ namespace KIS.App_Code
                         log = ex.Message;
                         ret = false;
                         tr.Rollback();
-                        
+
                     }
                     conn.Close();
                 }
@@ -1684,14 +1630,10 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM groupusers WHERE groupID = @GroupID AND user = @userID";
-                cmd.Parameters.AddWithValue("@GroupID", grp.ID);
-                cmd.Parameters.AddWithValue("@userID", this.username);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("DELETE FROM groupusers WHERE groupID = @GroupID AND user = @userID", new { GroupID = grp.ID, userID = this.username }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -1716,16 +1658,12 @@ namespace KIS.App_Code
         {
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT postazione FROM registrooperatoripostazioni WHERE logout IS null AND username = @username";
-            cmd.Parameters.AddWithValue("@username", this.username);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var rows = conn.Query<int>("SELECT postazione FROM registrooperatoripostazioni WHERE logout IS null AND username = @username", new { username = this.username });
             this._PostazioniAttive = new List<Postazione>();
-            while (rdr.Read())
+            foreach (var id in rows)
             {
-                this._PostazioniAttive.Add(new Postazione(this.Tenant, rdr.GetInt32(0)));
+                this._PostazioniAttive.Add(new Postazione(this.Tenant, id));
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1750,17 +1688,10 @@ namespace KIS.App_Code
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
                     MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO registrooperatoripostazioni(username, postazione, login, logout) VALUES("
-                        + "@username, @postazione, @login, @logout)";
-                    cmd.Parameters.AddWithValue("@username", this.username);
-                    cmd.Parameters.AddWithValue("@postazione", p.id);
-                    cmd.Parameters.AddWithValue("@login", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@logout", null);
                     try
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Execute("INSERT INTO registrooperatoripostazioni(username, postazione, login, logout) VALUES("
+                            + "@username, @postazione, @login, @logout)", new { username = this.username, postazione = p.id, login = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), logout = (string)null }, tr);
                         tr.Commit();
                         rt = true;
                     }
@@ -1795,16 +1726,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE registrooperatoripostazioni SET logout=@logout"
-                    + " WHERE logout IS null AND username = @username AND postazione = @postazione";
-                cmd.Parameters.AddWithValue("@logout", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@username", this.username);
-                cmd.Parameters.AddWithValue("@postazione", p.id);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("UPDATE registrooperatoripostazioni SET logout=@logout"
+                        + " WHERE logout IS null AND username = @username AND postazione = @postazione", new { logout = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), username = this.username, postazione = p.id }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -1837,22 +1762,21 @@ namespace KIS.App_Code
             this._TaskAvviati = new List<int>();
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
+            var rows = conn.Query<dynamic>("SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
                 + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' "
-                + " AND registroeventitaskproduzione.user = @user ORDER BY registroeventitaskproduzione.data DESC";
-            cmd.Parameters.AddWithValue("@user", this.username);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+                + " AND registroeventitaskproduzione.user = @user ORDER BY registroeventitaskproduzione.data DESC", new { user = this.username }).ToList();
             List<int> DaNonInserire = new List<int>();
-            while (rdr.Read())
+            foreach (var r in rows)
             {
-                log += "Task: " + rdr.GetInt32(0).ToString() + " " + rdr.GetChar(1);
-                if (rdr.GetChar(1) == 'P' || rdr.GetChar(1) == 'F')
+                int taskID = Convert.ToInt32(r.taskID);
+                Char evento = Convert.ToChar(r.evento);
+                log += "Task: " + taskID.ToString() + " " + evento;
+                if (evento == 'P' || evento == 'F')
                 {
                     log += " da non inserire<br/>";
-                    DaNonInserire.Add(rdr.GetInt32(0));
+                    DaNonInserire.Add(taskID);
                 }
-                else if (rdr.GetChar(1) == 'I')
+                else if (evento == 'I')
                 {
                     log += " da verificare --> ";
                     // Verifico che non sia nella lista di quelli da non inserire, e nemmeno in quella dei già inseriti!
@@ -1860,7 +1784,7 @@ namespace KIS.App_Code
                     bool checkI = false;
                     for (int q = 0; q < DaNonInserire.Count; q++)
                     {
-                        if (DaNonInserire[q] == rdr.GetInt32(0))
+                        if (DaNonInserire[q] == taskID)
                         {
                             log += " da non inserire";
                             checkN = true;
@@ -1868,7 +1792,7 @@ namespace KIS.App_Code
                     }
                     for (int q = 0; q < this._TaskAvviati.Count; q++)
                     {
-                        if (this._TaskAvviati[q] == rdr.GetInt32(0))
+                        if (this._TaskAvviati[q] == taskID)
                         {
                             log += " già inserito";
                             checkI = true;
@@ -1877,7 +1801,7 @@ namespace KIS.App_Code
                     if (checkN == false && checkI == false)
                     {
                         log += "aggiunto.<br/>";
-                        this._TaskAvviati.Add(rdr.GetInt32(0));
+                        this._TaskAvviati.Add(taskID);
                     }
                     else
                     {
@@ -1885,7 +1809,6 @@ namespace KIS.App_Code
                     }
                 }
             }
-            rdr.Close();
             conn.Close();
         }
 
@@ -1945,15 +1868,11 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT email FROM useremail WHERE userID LIKE @userID ORDER BY note";
-                cmd.Parameters.AddWithValue("@userID", this.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var rows = conn.Query<string>("SELECT email FROM useremail WHERE userID LIKE @userID ORDER BY note", new { userID = this.username });
+                foreach (var em in rows)
                 {
-                    this.Email.Add(new UserEmail(this.username, rdr.GetString(0)));
+                    this.Email.Add(new UserEmail(this.username, em));
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -1975,17 +1894,10 @@ namespace KIS.App_Code
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
 
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO useremail(userid, email, forAlarm, note) VALUES("
-                    + "@userID, @email, @forAlarm, @note)";
-                cmd.Parameters.AddWithValue("@userID", this.username);
-                cmd.Parameters.AddWithValue("@email", mailAddr.Address);
-                cmd.Parameters.AddWithValue("@forAlarm", forAlarm);
-                cmd.Parameters.AddWithValue("@note", note);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("INSERT INTO useremail(userid, email, forAlarm, note) VALUES("
+                        + "@userID, @email, @forAlarm, @note)", new { userID = this.username, email = mailAddr.Address, forAlarm = forAlarm, note = note }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -2011,14 +1923,9 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE users SET password = MD5(@newPass) WHERE userID = @userID";
-                cmd.Parameters.AddWithValue("@newPass", newPass);
-                cmd.Parameters.AddWithValue("@userID", this.username);
-                cmd.Transaction = tr;
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("UPDATE users SET password = MD5(@newPass) WHERE userID = @userID", new { newPass = newPass, userID = this.username }, tr);
                     tr.Commit();
                 }
                 catch(Exception ex)
@@ -2040,16 +1947,12 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT repartoID FROM eventorepartoutenti WHERE TipoEvento LIKE 'Ritardo' "
-                        + "AND userID = @userID";
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<int>("SELECT repartoID FROM eventorepartoutenti WHERE TipoEvento LIKE 'Ritardo' "
+                        + "AND userID = @userID", new { userID = this.username });
+                    foreach (var id in rows)
                     {
-                        ret.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                        ret.Add(new Reparto(this.Tenant, id));
                     }
-                    rdr.Close();
                     conn.Close();
                 }
                 return ret;
@@ -2088,14 +1991,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessautenti WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND userID = @userID";
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<dynamic>("SELECT commessaid, commessaanno FROM eventocommessautenti WHERE "
+                        + "TipoEvento LIKE 'Ritardo' AND userID = @userID", new { userID = this.username });
+                    foreach (var r in rows)
                     {
-                        Commessa cm = new Commessa(this.Tenant , rdr.GetInt32(0), rdr.GetInt32(1));
+                        Commessa cm = new Commessa(this.Tenant, Convert.ToInt32(r.commessaid), Convert.ToInt32(r.commessaanno));
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -2129,7 +2029,7 @@ namespace KIS.App_Code
             }
         }
 
-        public List<Articolo> SegnalazioneRitardiArticolo
+public List<Articolo> SegnalazioneRitardiArticolo
         {
             get
             {
@@ -2138,14 +2038,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT articoloID, ArticoloAnno FROM eventoarticoloutenti WHERE "
-                        + "TipoEvento LIKE 'Ritardo' AND userID = @userID";
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<dynamic>("SELECT articoloid, articoloanno FROM eventoarticoloutenti WHERE "
+                        + "TipoEvento LIKE 'Ritardo' AND userID = @userID", new { userID = this.username });
+                    foreach (var r in rows)
                     {
-                        Articolo cm = new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Articolo cm = new Articolo(this.Tenant, Convert.ToInt32(r.articoloid), Convert.ToInt32(r.articoloanno));
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -2189,16 +2086,12 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT repartoID FROM eventorepartoutenti WHERE TipoEvento LIKE 'Warning' "
-                        + "AND userID = @userID";
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<int>("SELECT repartoID FROM eventorepartoutenti WHERE TipoEvento LIKE 'Warning' "
+                        + "AND userID = @userID", new { userID = this.username });
+                    foreach (var id in rows)
                     {
-                        ret.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                        ret.Add(new Reparto(this.Tenant, id));
                     }
-                    rdr.Close();
                     conn.Close();
                 }
                 return ret;
@@ -2237,14 +2130,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT commessaid, commessaanno FROM eventocommessautenti WHERE "
-                        + "TipoEvento LIKE 'Warning' AND userID = @userID";
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<dynamic>("SELECT commessaid, commessaanno FROM eventocommessautenti WHERE "
+                        + "TipoEvento LIKE 'Warning' AND userID = @userID", new { userID = this.username });
+                    foreach (var r in rows)
                     {
-                        Commessa cm = new Commessa(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Commessa cm = new Commessa(this.Tenant, Convert.ToInt32(r.commessaid), Convert.ToInt32(r.commessaanno));
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -2278,7 +2168,7 @@ namespace KIS.App_Code
             }
         }
 
-        public List<Articolo> SegnalazioneWarningArticolo
+public List<Articolo> SegnalazioneWarningArticolo
         {
             get
             {
@@ -2287,14 +2177,11 @@ namespace KIS.App_Code
                 {
                     MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                     conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT articoloID, ArticoloAnno FROM eventoarticoloutenti WHERE "
-                        + "TipoEvento LIKE 'Warning' AND userID = @userID";
-                    cmd.Parameters.AddWithValue("@userID", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    var rows = conn.Query<dynamic>("SELECT articoloid, ArticoloAnno FROM eventoarticoloutenti WHERE "
+                        + "TipoEvento LIKE 'Warning' AND userID = @userID", new { userID = this.username });
+                    foreach (var r in rows)
                     {
-                        Articolo cm = new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
+                        Articolo cm = new Articolo(this.Tenant, Convert.ToInt32(r.articoloid), Convert.ToInt32(r.articoloanno));
                         if (cm.Status != 'F')
                         {
                             ret.Add(cm);
@@ -2359,16 +2246,12 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@userID"
-                    + " ORDER BY data";
-                cmd.Parameters.AddWithValue("@userID", this.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                var tasks = conn.Query<int>("SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@userID"
+                    + " ORDER BY data", new { userID = this.username });
+                foreach (var t in tasks)
                 {
-                    ElencoTasksOperatore.Add(new TaskProduzione(this.Tenant, rdr.GetInt32(0)));
+                    ElencoTasksOperatore.Add(new TaskProduzione(this.Tenant, t));
                 }
-                rdr.Close();
 
                 // -- FUNZIONE INTERVALLI
 
@@ -2376,24 +2259,21 @@ namespace KIS.App_Code
                 {
                     if (ElencoTasksOperatore[i].Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                        var rows = conn.Query<dynamic>("SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                             + " AND user LIKE @userID"
-                             + " ORDER BY data";
-                        cmd.Parameters.AddWithValue("@task", ElencoTasksOperatore[i].TaskProduzioneID);
-                        cmd.Parameters.AddWithValue("@userID", this.username);
-                        rdr = cmd.ExecuteReader();
-                        while (rdr.Read())
+                             + " ORDER BY data", new { task = ElencoTasksOperatore[i].TaskProduzioneID, userID = this.username }).ToList();
+                        for (int r = 0; r < rows.Count; r++)
                         {
-                            log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                            DateTime inizio = rdr.GetDateTime(1);
-                            int usrI = rdr.GetInt32(0);
-                            Char EventoI = rdr.GetChar(2);
-                            if (rdr.Read())
+                            log += "1-Evento: " + Convert.ToChar(rows[r].evento) + " " + Convert.ToDateTime(rows[r].data) + "<br />";
+                            DateTime inizio = Convert.ToDateTime(rows[r].data);
+                            int usrI = Convert.ToInt32(rows[r].user);
+                            Char EventoI = Convert.ToChar(rows[r].evento);
+                            if (r + 1 < rows.Count)
                             {
-                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                int usrF = rdr.GetInt32(0);
-                                Char EventoF = rdr.GetChar(2);
-                                DateTime fine = rdr.GetDateTime(1);
+                                log += "2-Evento: " + Convert.ToChar(rows[r + 1].evento) + " " + Convert.ToDateTime(rows[r + 1].data) + "<br />";
+                                int usrF = Convert.ToInt32(rows[r + 1].user);
+                                Char EventoF = Convert.ToChar(rows[r + 1].evento);
+                                DateTime fine = Convert.ToDateTime(rows[r + 1].data);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
                                 {
                                     IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
@@ -2415,7 +2295,6 @@ namespace KIS.App_Code
                                 }
                             }
                         }
-                        rdr.Close();
                     }
                 }
 
@@ -2437,20 +2316,13 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@userID "
+                var tasks = conn.Query<int>("SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@userID "
                     + " AND data >= @start AND data <= @end"
-                    + " ORDER BY data";
-                cmd.Parameters.AddWithValue("@userID", this.username);
-                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
-                cmd.Parameters.AddWithValue("@end", end.AddDays(1).ToString("yyyy/MM/dd"));
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                    + " ORDER BY data", new { userID = this.username, start = start.ToString("yyyy/MM/dd"), end = end.AddDays(1).ToString("yyyy/MM/dd") });
+                foreach (var t in tasks)
                 {
-                    ElencoTasksOperatore.Add(new TaskProduzione(this.Tenant, rdr.GetInt32(0)));
+                    ElencoTasksOperatore.Add(new TaskProduzione(this.Tenant, t));
                 }
-                rdr.Close();
 
                 // -- FUNZIONE INTERVALLI
 
@@ -2458,25 +2330,22 @@ namespace KIS.App_Code
                 {
                     if (ElencoTasksOperatore[i].Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
-                            + " AND user LIKE @user ORDER BY data";
-                        cmd.Parameters.AddWithValue("@task", ElencoTasksOperatore[i].TaskProduzioneID);
-                        cmd.Parameters.AddWithValue("@user", this.username);
-                        rdr = cmd.ExecuteReader();
-                        while (rdr.Read())
+                        var rows = conn.Query<dynamic>("SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND user LIKE @user ORDER BY data", new { task = ElencoTasksOperatore[i].TaskProduzioneID, user = this.username }).ToList();
+                        for (int r = 0; r < rows.Count; r++)
                         {
-                            log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                            DateTime inizio = rdr.GetDateTime(1);
-                            int usrI = rdr.GetInt32(0);
-                            Char EventoI = rdr.GetChar(2);
-                            int IDEventoI = rdr.GetInt32(3);
-                            if (rdr.Read())
+                            log += "1-Evento: " + Convert.ToChar(rows[r].evento) + " " + Convert.ToDateTime(rows[r].data) + "<br />";
+                            DateTime inizio = Convert.ToDateTime(rows[r].data);
+                            int usrI = Convert.ToInt32(rows[r].user);
+                            Char EventoI = Convert.ToChar(rows[r].evento);
+                            int IDEventoI = Convert.ToInt32(rows[r].id);
+                            if (r + 1 < rows.Count)
                             {
-                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                int usrF = rdr.GetInt32(0);
-                                Char EventoF = rdr.GetChar(2);
-                                DateTime fine = rdr.GetDateTime(1);
-                                int IDEventoF = rdr.GetInt32(3);
+                                log += "2-Evento: " + Convert.ToChar(rows[r + 1].evento) + " " + Convert.ToDateTime(rows[r + 1].data) + "<br />";
+                                int usrF = Convert.ToInt32(rows[r + 1].user);
+                                Char EventoF = Convert.ToChar(rows[r + 1].evento);
+                                DateTime fine = Convert.ToDateTime(rows[r + 1].data);
+                                int IDEventoF = Convert.ToInt32(rows[r + 1].id);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
                                 {
                                     IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
@@ -2507,7 +2376,6 @@ namespace KIS.App_Code
                             }
 
                         }
-                        rdr.Close();
                     }
                 }
 
@@ -2528,31 +2396,27 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
 
                 TaskProduzione currTask = new TaskProduzione(this.Tenant, TaskID);
                     if (currTask!=null && currTask.Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
+                        var rows = conn.Query<dynamic>("SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
                             + " AND user LIKE @user"
-                             + " ORDER BY data";
-                    cmd.Parameters.AddWithValue("@task", currTask.TaskProduzioneID);
-                    cmd.Parameters.AddWithValue("@user", this.username);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                        while (rdr.Read())
+                             + " ORDER BY data", new { task = currTask.TaskProduzioneID, user = this.username }).ToList();
+                        for (int r = 0; r < rows.Count; r++)
                         {
-                            log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                            DateTime inizio = rdr.GetDateTime(1);
-                            int usrI = rdr.GetInt32(0);
-                            Char EventoI = rdr.GetChar(2);
-                            int IDEventoI = rdr.GetInt32(3);
-                            if (rdr.Read())
+                            log += "1-Evento: " + Convert.ToChar(rows[r].evento) + " " + Convert.ToDateTime(rows[r].data) + "<br />";
+                            DateTime inizio = Convert.ToDateTime(rows[r].data);
+                            int usrI = Convert.ToInt32(rows[r].user);
+                            Char EventoI = Convert.ToChar(rows[r].evento);
+                            int IDEventoI = Convert.ToInt32(rows[r].id);
+                            if (r + 1 < rows.Count)
                             {
-                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                int usrF = rdr.GetInt32(0);
-                                Char EventoF = rdr.GetChar(2);
-                                DateTime fine = rdr.GetDateTime(1);
-                                int IDEventoF = rdr.GetInt32(3);
+                                log += "2-Evento: " + Convert.ToChar(rows[r + 1].evento) + " " + Convert.ToDateTime(rows[r + 1].data) + "<br />";
+                                int usrF = Convert.ToInt32(rows[r + 1].user);
+                                Char EventoF = Convert.ToChar(rows[r + 1].evento);
+                                DateTime fine = Convert.ToDateTime(rows[r + 1].data);
+                                int IDEventoF = Convert.ToInt32(rows[r + 1].id);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
                                 {
                                     IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
@@ -2582,7 +2446,6 @@ namespace KIS.App_Code
                             }
 
                         }
-                        rdr.Close();
                     }
                 //}
 
@@ -2604,7 +2467,6 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 /*cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user='" + this.username
                     + "' ORDER BY data";
                 MySqlDataReader rdr = cmd.ExecuteReader();
@@ -2621,24 +2483,21 @@ namespace KIS.App_Code
                     TaskProduzione currTask = new TaskProduzione(this.Tenant, TasksID[i]);
                     if (currTask.Status == 'F')
                     {
-                        cmd.CommandText = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                        var rows = conn.Query<dynamic>("SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                             + " AND user LIKE @user"
-                             + " ORDER BY data";
-                        cmd.Parameters.AddWithValue("@task", TasksID[i]);
-                        cmd.Parameters.AddWithValue("@user", this.username);
-                        MySqlDataReader rdr = cmd.ExecuteReader();
-                        while (rdr.Read())
+                             + " ORDER BY data", new { task = TasksID[i], user = this.username }).ToList();
+                        for (int r = 0; r < rows.Count; r++)
                         {
-                            log += "1-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                            DateTime inizio = rdr.GetDateTime(1);
-                            int usrI = rdr.GetInt32(0);
-                            Char EventoI = rdr.GetChar(2);
-                            if (rdr.Read())
+                            log += "1-Evento: " + Convert.ToChar(rows[r].evento) + " " + Convert.ToDateTime(rows[r].data) + "<br />";
+                            DateTime inizio = Convert.ToDateTime(rows[r].data);
+                            int usrI = Convert.ToInt32(rows[r].user);
+                            Char EventoI = Convert.ToChar(rows[r].evento);
+                            if (r + 1 < rows.Count)
                             {
-                                log += "2-Evento: " + rdr.GetChar(2) + " " + rdr.GetDateTime(1) + "<br />";
-                                int usrF = rdr.GetInt32(0);
-                                Char EventoF = rdr.GetChar(2);
-                                DateTime fine = rdr.GetDateTime(1);
+                                log += "2-Evento: " + Convert.ToChar(rows[r + 1].evento) + " " + Convert.ToDateTime(rows[r + 1].data) + "<br />";
+                                int usrF = Convert.ToInt32(rows[r + 1].user);
+                                Char EventoF = Convert.ToChar(rows[r + 1].evento);
+                                DateTime fine = Convert.ToDateTime(rows[r + 1].data);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
                                 {
                                     IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
@@ -2659,7 +2518,6 @@ namespace KIS.App_Code
                                 }
                             }
                         }
-                        rdr.Close();
                     }
                 }
 
@@ -2681,20 +2539,14 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@user "
+                var tasks = conn.Query<int>("SELECT DISTINCT(task) FROM registroeventitaskproduzione WHERE user=@user "
                     + " AND data >= @start"
                     + " AND data <= @end"
-                    + " ORDER BY data";
-                cmd.Parameters.AddWithValue("@user", this.username);
-                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy/MM/dd"));
-                cmd.Parameters.AddWithValue("@end", end.ToString("yyyy/MM/dd"));
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                    + " ORDER BY data", new { user = this.username, start = start.ToString("yyyy/MM/dd"), end = end.ToString("yyyy/MM/dd") });
+                foreach (var t in tasks)
                 {
-                    ElencoTasksOperatore.Add(new TaskProduzione(this.Tenant, rdr.GetInt32(0)));
+                    ElencoTasksOperatore.Add(new TaskProduzione(this.Tenant, t));
                 }
-                rdr.Close();
 
                 // -- FUNZIONE INTERVALLI
 
@@ -2702,24 +2554,21 @@ namespace KIS.App_Code
                 {
                     //if (ElencoTasksOperatore[i].Status == 'F')
                     //{
-                        cmd.CommandText = "SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
+                        var rows = conn.Query<dynamic>("SELECT user, data, evento, id FROM registroeventitaskproduzione WHERE task = @task"
                             + " AND user LIKE @user"
-                             + " ORDER BY data";
-                    cmd.Parameters.AddWithValue("@task", ElencoTasksOperatore[i].TaskProduzioneID);
-                    cmd.Parameters.AddWithValue("@user", this.username);
-                    rdr = cmd.ExecuteReader();
-                        while (rdr.Read())
+                             + " ORDER BY data", new { task = ElencoTasksOperatore[i].TaskProduzioneID, user = this.username }).ToList();
+                        for (int r = 0; r < rows.Count; r++)
                         {
-                            DateTime inizio = rdr.GetDateTime(1);
-                            int usrI = rdr.GetInt32(0);
-                            Char EventoI = rdr.GetChar(2);
-                            int IDEventoI = rdr.GetInt32(3);
-                            if (rdr.Read())
+                            DateTime inizio = Convert.ToDateTime(rows[r].data);
+                            int usrI = Convert.ToInt32(rows[r].user);
+                            Char EventoI = Convert.ToChar(rows[r].evento);
+                            int IDEventoI = Convert.ToInt32(rows[r].id);
+                            if (r + 1 < rows.Count)
                             {
-                                int usrF = rdr.GetInt32(0);
-                                Char EventoF = rdr.GetChar(2);
-                                DateTime fine = rdr.GetDateTime(1);
-                                int IDEventoF = rdr.GetInt32(3);
+                                int usrF = Convert.ToInt32(rows[r + 1].user);
+                                Char EventoF = Convert.ToChar(rows[r + 1].evento);
+                                DateTime fine = Convert.ToDateTime(rows[r + 1].data);
+                                int IDEventoF = Convert.ToInt32(rows[r + 1].id);
                                 if (fine >= inizio && EventoI == 'I' && (EventoF == 'P' || EventoF == 'F') && usrI == usrF)
                                 {
                                     IntervalliDiLavoroEffettivi curr = new IntervalliDiLavoroEffettivi();
@@ -2749,7 +2598,6 @@ namespace KIS.App_Code
                             }
 
                         }
-                        rdr.Close();
                     //}
                 }
 
@@ -2779,27 +2627,20 @@ namespace KIS.App_Code
             // Check integrity before deleting
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
             DateTime startD = new DateTime(2999, 1, 1);
             DateTime endD = new DateTime(1970, 1, 1);
-            cmd.CommandText = "SELECT data, task FROM registroeventitaskproduzione WHERE id = @id";
-            cmd.Parameters.AddWithValue("@id", StartEventID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            var startRow = conn.QueryFirstOrDefault<dynamic>("SELECT data, task FROM registroeventitaskproduzione WHERE id = @id", new { id = StartEventID });
             int taskID = -1;
-            if(rdr.Read() && !rdr.IsDBNull(0))
+            if (startRow != null && startRow.data != null)
             {
-                startD = rdr.GetDateTime(0);
-                taskID = rdr.GetInt32(1);
+                startD = Convert.ToDateTime(startRow.data);
+                taskID = Convert.ToInt32(startRow.task);
             }
-            rdr.Close();
-            cmd.CommandText = "SELECT data FROM registroeventitaskproduzione WHERE id = @id";
-            cmd.Parameters.AddWithValue("@id", EndEventID);
-            rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var endRow = conn.QueryFirstOrDefault<dynamic>("SELECT data FROM registroeventitaskproduzione WHERE id = @id", new { id = EndEventID });
+            if (endRow != null && endRow.data != null)
             {
-                endD = rdr.GetDateTime(0);
+                endD = Convert.ToDateTime(endRow.data);
             }
-            rdr.Close();
 
             this.log = taskID + " " + startD.ToString("dd/MM/yyyy") + " " + endD.ToString("dd/MM/yyyy");
 
@@ -2850,14 +2691,10 @@ namespace KIS.App_Code
             if(ret == 1)
             {
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
                 try
                 { 
-                    cmd.CommandText = "DELETE FROM registroeventitaskproduzione WHERE id = @startEVid OR id = @endEVid";
-                    cmd.Parameters.AddWithValue("@startEVid", StartEventID);
-                    cmd.Parameters.AddWithValue("@endEVid", EndEventID);
-                    this.log += cmd.CommandText + " ";
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("DELETE FROM registroeventitaskproduzione WHERE id = @startEVid OR id = @endEVid", new { startEVid = StartEventID, endEVid = EndEventID }, tr);
+                    this.log += "DELETE FROM registroeventitaskproduzione WHERE id = @startEVid OR id = @endEVid ";
                     tr.Commit();
                     ret = 1;
                 }
@@ -3041,15 +2878,10 @@ namespace KIS.App_Code
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE users SET password = MD5(@newPass) WHERE userID LIKE @userID";
-                cmd.Parameters.AddWithValue("@newPass", newPass);
-                cmd.Parameters.AddWithValue("@userID", this.username);
                 try
                 {
-                    log = cmd.CommandText;
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("UPDATE users SET password = MD5(@newPass) WHERE userID LIKE @userID", new { newPass = newPass, userID = this.username }, tr);
+                    log = "UPDATE users SET password = MD5(@newPass) WHERE userID LIKE @userID";
                     ret = 1;
                     tr.Commit();
                 }
@@ -3080,17 +2912,12 @@ namespace KIS.App_Code
                 List<Articolo> artList = new List<Articolo>();
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, anno FROM productionplan where status <> 'I' AND status <> 'F' "
-                    + " AND planner LIKE @planner ORDER BY dataPrevistaFineProduzione";
-                cmd.Parameters.AddWithValue("@planner", this.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-
-                while (rdr.Read())
+                var rows = conn.Query<dynamic>("SELECT id, anno FROM productionplan where status <> 'I' AND status <> 'F' "
+                    + " AND planner LIKE @planner ORDER BY dataPrevistaFineProduzione", new { planner = this.username });
+                foreach (var r in rows)
                 {
-                    artList.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    artList.Add(new Articolo(this.Tenant, Convert.ToInt32(r.id), Convert.ToInt32(r.anno)));
                 }
-                rdr.Close();
                 conn.Close();
 
                 this._NextProgrammedProducts = artList.OrderBy(x => x.EarlyStart).ToList();
@@ -3131,16 +2958,10 @@ namespace KIS.App_Code
                 int ordine = this.homeBoxes.Elenco.Count;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO homeboxesuser(idHomeBox, user, ordine) VALUES(@idHomeBox, @user, @ordine)";
-                cmd.Parameters.AddWithValue("@idHomeBox", box.ID);
-                cmd.Parameters.AddWithValue("@user", this.username);
-                cmd.Parameters.AddWithValue("@ordine", ordine);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("INSERT INTO homeboxesuser(idHomeBox, user, ordine) VALUES(@idHomeBox, @user, @ordine)", new { idHomeBox = box.ID, user = this.username, ordine = ordine }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -3162,15 +2983,10 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
                 MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM homeboxesuser WHERE idHomeBox = @idHomeBox AND user = @user";
-                cmd.Parameters.AddWithValue("@idHomeBox", box.ID);
-                cmd.Parameters.AddWithValue("@user", this.username);
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("DELETE FROM homeboxesuser WHERE idHomeBox = @idHomeBox AND user = @user", new { idHomeBox = box.ID, user = this.username }, tr);
                     tr.Commit();
                     rt = true;
                 }
@@ -3192,16 +3008,15 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT cliente FROM contatticlienti INNER JOIN users ON"
-                    +"(contatticlienti.user = users.userID) WHERE userID=@user";
-                cmd.Parameters.AddWithValue("@user", this.username);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read() && !rdr.IsDBNull(0))
+                var rows = conn.Query<string>("SELECT cliente FROM contatticlienti INNER JOIN users ON"
+                    +"(contatticlienti.user = users.userID) WHERE userID=@user", new { user = this.username });
+                foreach (var c in rows)
                 {
-                    this.Customers.Add(rdr.GetString(0));
+                    if (c != null)
+                    {
+                        this.Customers.Add(c);
+                    }
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -3211,24 +3026,14 @@ namespace KIS.App_Code
             Boolean ret = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT checksum FROM users WHERE userID = @user";
-            cmd.Parameters.AddWithValue("@user", this.username);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            String chk = "";
-            if(rdr.Read() && !rdr.IsDBNull(0))
-            {
-                chk = rdr.GetString(0);
-            }
-            rdr.Close();
+            String chk = conn.QueryFirstOrDefault<string>("SELECT checksum FROM users WHERE userID = @user", new { user = this.username });
+            chk = chk == null ? "" : chk;
             if(chk.Length > 0 && chk == checksum)
             {
-                cmd.CommandText = "UPDATE users SET verified = true WHERE userID = @user";
-                cmd.Parameters.AddWithValue("@user", username);
                 MySqlTransaction tr = conn.BeginTransaction();
                 try
                 {
-                    cmd.ExecuteNonQuery();
+                    conn.Execute("UPDATE users SET verified = true WHERE userID = @user", new { user = username }, tr);
                     tr.Commit();
                     ret = true;
                 }
@@ -3248,15 +3053,11 @@ namespace KIS.App_Code
             Boolean ret = false;
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT * FROM users WHERE userID = @user";
-            cmd.Parameters.AddWithValue("@user", username);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            var row = conn.QueryFirstOrDefault<dynamic>("SELECT * FROM users WHERE userID = @user", new { user = username });
+            if (row != null)
             {
                 ret = true;
             }
-            rdr.Close();
             conn.Close();
             return ret;
         }
@@ -3268,22 +3069,16 @@ namespace KIS.App_Code
             {
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT taskuser.taskID FROM tasksproduzione INNER JOIN taskuser ON (tasksproduzione.taskid=taskuser.taskid) "
+                var rows = conn.Query<int>("SELECT taskuser.taskID FROM tasksproduzione INNER JOIN taskuser ON (tasksproduzione.taskid=taskuser.taskid) "
                     +" WHERE (status = 'N' OR status = 'I' OR status = 'P') "
-                 + "AND taskuser.user = @User ORDER BY lateStart, earlyStart, idArticolo";
-                cmd.Parameters.AddWithValue("@User", this.username);
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                 + "AND taskuser.user = @User ORDER BY lateStart, earlyStart, idArticolo", new { User = this.username });
+                foreach (var taskID in rows)
                 {
-
                     // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
-                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, taskID);
 
                     if (tsk.TaskProduzioneID != -1)
                     {
-
                         tsk.loadPrecedenti();
                         bool controllo = true;
                         for (int i = 0; i < tsk.PreviousTasks.Count; i++)
@@ -3306,11 +3101,10 @@ namespace KIS.App_Code
                         }
                         if (controllo == true)
                         {
-                            this._ExecutableTasks.Add(rdr.GetInt32(0));
+                            this._ExecutableTasks.Add(taskID);
                         }
                     }
                 }
-                rdr.Close();
                 conn.Close();
             }
         }
@@ -3356,23 +3150,17 @@ namespace KIS.App_Code
                 Double PlannedWorkingTime = 0.0;
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(taskID), tempociclo, nOperatori FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON(tasksproduzione.taskID = registroeventitaskproduzione.task) "
-                    +" WHERE user LIKE @user AND endDateReal >= @start AND endDateReal <= @end";
-
-                cmd.Parameters.AddWithValue("@user", this.username);
-                cmd.Parameters.AddWithValue("@start", start.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@end", end.ToString("yyyy-MM-dd HH:mm:ss"));
+                var rows = conn.Query<dynamic>("SELECT DISTINCT(taskID), tempociclo, nOperatori FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON(tasksproduzione.taskID = registroeventitaskproduzione.task) "
+                    +" WHERE user LIKE @user AND endDateReal >= @start AND endDateReal <= @end", new { user = this.username, start = start.ToString("yyyy-MM-dd HH:mm:ss"), end = end.ToString("yyyy-MM-dd HH:mm:ss") });
 
                 List<int> taskIDs = new List<int>();
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                foreach (var r in rows)
                 {
-                    taskIDs.Add(rdr.GetInt32(0));
-                    if(!rdr.IsDBNull(1) && !rdr.IsDBNull(2))
+                    taskIDs.Add(Convert.ToInt32(r.taskID));
+                    if (r.tempociclo != null && r.nOperatori != null)
                     {
-                        TimeSpan tc = rdr.GetTimeSpan(1);
-                        int nop = rdr.GetInt32(2);
+                        TimeSpan tc = (TimeSpan)r.tempociclo;
+                        int nop = Convert.ToInt32(r.nOperatori);
                         if(nop>0)
                         { 
                             PlannedWorkingTime += tc.TotalSeconds / nop;
@@ -3380,7 +3168,6 @@ namespace KIS.App_Code
                     }
                     
                 }
-                rdr.Close();
                 conn.Close();
 
                 if(taskIDs.Count > 0)

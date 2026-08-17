@@ -9,8 +9,13 @@ namespace System.Web
     {
         public static HttpContext? Current { get; set; }
         public HttpSessionState? Session { get; set; }
-        public object? Server { get; set; }
+        public HttpServerUtility? Server { get; set; }
         public OwinContext GetOwinContext() => new();
+    }
+
+    public class HttpServerUtility
+    {
+        public string MapPath(string path) => System.IO.Path.Combine(System.IO.Directory.GetCurrentDirectory(), "Data", "Quality");
     }
 
     public class HttpSessionState
