@@ -1,0 +1,21 @@
+@inherits KIS.Analysis.DetailAnalysisOperatore
+@{
+    // placeholder – markup reproduced from DetailAnalysisOperatore.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="analysis.cshtml"><label id="lblNavAnalisi" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="ListAnalysisOperatori.cshtml"><label id="lblNavSelezionaOp" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a id="lnkNavCurr" href="#"><label id="lblNavDetailAttivita" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+
+<label id="lbl1" /><br />
+@Html.Partial("~/Analysis/OperatoreTempoTasks.cshtml")

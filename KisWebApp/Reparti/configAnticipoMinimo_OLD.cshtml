@@ -1,0 +1,27 @@
+@inherits KIS.Reparti.configAnticipoMinimo
+@{
+    // placeholder – markup reproduced from configAnticipoMinimo_OLD.ascx
+}
+<h3>Anticipo minimo per i task non appartenenti al critical path</h3>
+<label id="lbl1" />
+<input type="text" id="ore" style="width:40px;" />H:
+<select id="minuti"></select>m:
+<select id="secondi"></select>s
+<button type="button" id="btnEdit" class="btn-link" onclick="toggleEdit()"><img src="/img/edit.png" height="30" /></button>
+<br />
+
+<span style="color:red;">Il campo ore accetta solo valori numerici</span><br />
+<span style="color:red;">Errore: il numero di ore deve essere maggiore o uguale a 0</span><br />
+<button type="button" id="save" class="btn btn-success" onclick="doSave()">Salva</button>
+<button type="button" id="undo" class="btn">Annulla</button>
+
+<script type="text/javascript">
+    function toggleEdit() {
+        $("#ore").prop("disabled", false);
+        $("#minuti").prop("disabled", false);
+        $("#secondi").prop("disabled", false);
+    }
+    function doSave() {
+        alert("Configurazione salvata");
+    }
+</script>

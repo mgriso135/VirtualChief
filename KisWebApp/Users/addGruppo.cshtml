@@ -1,0 +1,39 @@
+@inherits KIS.Users.addGruppo
+@{
+    // placeholder – markup reproduced from addGruppo.ascx
+}
+<label id="lbl1" />
+<button type="button" id="btnShowAddGruppo" class="btn-link" onclick="toggleForm()"><img src="~/img/iconAdd2.png" height="50" /></button>
+
+<table id="frmAddGruppo" style="display:none;">
+    <tr>
+        <td><label id="lblNome" />:</td>
+        <td><input type="text" id="nomeG" required />
+            <span style="color:red;"><label id="lblReqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescrizione" />:</td>
+        <td>
+            <textarea id="descG" rows="4" required></textarea>
+            <span style="color:red;"><label id="lblReqField2" /></span>
+        </td>
+    </tr>
+    <tr><td colspan="2">
+        <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+        <button type="button" id="btnUndo" class="btn">Annulla</button>
+    </td></tr>
+</table>
+
+<script type="text/javascript">
+    function toggleForm() {
+        $("#frmAddGruppo").toggle();
+    }
+    function doSave() {
+        if (!$("#nomeG").val() || !$("#descG").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Gruppo aggiunto");
+    }
+</script>

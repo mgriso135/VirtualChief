@@ -1,0 +1,31 @@
+@inherits KIS.Produzione.frmSolveProblem
+@{
+    // placeholder – markup reproduced from frmSolveProblem.ascx
+}
+<h1><label id="lblSolveWarning" /></h1>
+<table id="tblResolution">
+    <tr><td><label id="lblCausa" /></td><td><textarea id="txtCausa" rows="4" required></textarea>
+        <span style="color:red;"><label id="lblReqField" /></span>
+    </td></tr>
+    <tr><td><label id="lblRisoluzione" /></td><td><textarea id="txtRisoluzione" rows="4" required></textarea>
+        <span style="color:red;"><label id="lblReqField2" /></span>
+    </td></tr>
+    <tr><td colspan="2">
+        <button type="button" id="imgSave" class="btn btn-success">Salva</button>
+        <button type="button" id="imgUndo" class="btn">Annulla</button>
+    </td></tr>
+</table>
+<label id="lbl1" />
+
+<script type="text/javascript">
+    $(function () {
+        $("#imgSave").click(function () {
+            if (!$("#txtCausa").val() || !$("#txtRisoluzione").val()) {
+                alert("Compilare tutti i campi obbligatori");
+                return;
+            }
+            alert("Problema risolto");
+        });
+        $("#imgUndo").click(function () { $("#txtCausa").val(""); $("#txtRisoluzione").val(""); });
+    });
+</script>

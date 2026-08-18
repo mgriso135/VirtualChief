@@ -1,0 +1,194 @@
+@inherits KIS.Admin.configOrderStatusCustomer1
+@{
+    // placeholder – markup reproduced from configOrderStatusCustomer.ascx
+}
+<h3>CONFIGURAZIONE CLIENTE</h3>
+
+<script>
+    $(document).ready(function () {
+    });
+</script>
+<div class="row-fluid">
+    <div class="span4">
+        <button type="button" id="btnResetIDCommessa" class="btn-link" onclick="doReset()"><img src="~/img/iconUndo.png" height="40" /></button>Resetta la configurazione</div>
+    <div class="span8">
+        <label id="lbl1" />
+    </div>
+</div>
+<div class="row-fluid" id="frmConfigReport">
+    <div class="span12">
+        <table class="table table-bordered table-condensed table-striped">
+            <thead>
+                <tr><th><label id="lblParametro" /></th>
+                    <th><label id="lblOpzioni" /></th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><label id="lblCommessa_IDCommessa" /></td>
+                    <td><select id="ddlIDCommessa"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblCommessa_Cliente" /></td>
+                    <td><select id="ddlCliente"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblCommessa_DataInserimento" /></td>
+                    <td><select id="ddlDataInserimentoOrdine"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblCommessa_Note" /></td>
+                    <td><select id="ddlNoteOrdine"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_IDProdotto" /></td>
+                    <td><select id="ddlIDProdotto"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_LineaProdotto" /></td>
+                    <td><select id="ddlNomeProdotto"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_NomeProdotto" /></td>
+                    <td><select id="ddlNomeVariante"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_Matricola" /></td>
+                    <td><select id="ddlMatricola"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_Status" /></td>
+                    <td><select id="ddlStatus"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_Reparto" /></td>
+                    <td><select id="ddlReparto"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_DataPrevConsegna" /></td>
+                    <td><select id="ddlDataPrevistaConsegna"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_DataPrevFineProd" /></td>
+                    <td><select id="ddlDataPrevistaFineProduzione"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_EarlyStart" /></td>
+                    <td><select id="ddlEarlyStart"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_EarlyFinish" /></td>
+                    <td><select id="ddlEarlyFinish"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_LateStart" /></td>
+                    <td><select id="ddlLateStart"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_LateFinish" /></td>
+                    <td><select id="ddlLateFinish"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_QtaPrevista" /></td>
+                    <td><select id="ddlQuantita"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_QtaProdotta" /></td>
+                    <td><select id="ddlQuantitaProdotta"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_Ritardo" /></td>
+                    <td><select id="ddlRitardo"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_TempoLavTotale" /></td>
+                    <td><select id="ddlTempoDiLavoroTotale"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_LeadTime" /></td>
+                    <td><select id="ddlLeadTime"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_TempoLavPrevisto" /></td>
+                    <td><select id="ddlTempoDiLavoroPrevisto"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_IndComplTasks" /></td>
+                    <td><select id="ddlIndicatoreCompletamentoTasks"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_IndComplTasksTempo" /></td>
+                    <td><select id="ddlIndicatoreCompletamentoTempoPrevisto"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_GANTT" /></td>
+                    <td><select id="ddlViewGanttTasks"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblProdotto_ElencoTasks" /></td>
+                    <td><select id="ddlViewElencoTasks"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr><td colspan="2"><label id="lblTaskInfo" /></td></tr>
+                <tr>
+                    <td><label id="lblTask_ID" /></td>
+                    <td><select id="ddlTask_ID"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_Nome" /></td>
+                    <td><select id="ddlTask_Nome"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_Descrizione" /></td>
+                    <td><select id="ddlTask_Descrizione"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_Postazione" /></td>
+                    <td><select id="ddlTask_Postazione"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_EarlyStart" /></td>
+                    <td><select id="ddlTask_EarlyStart"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_LateStart" /></td>
+                    <td><select id="ddlTask_LateStart"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_EarlyFinish" /></td>
+                    <td><select id="ddlTask_EarlyFinish"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_LateFinish" /></td>
+                    <td><select id="ddlTask_LateFinish"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_NOps" /></td>
+                    <td><select id="ddlTask_NOperatori"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_TempoCiclo" /></td>
+                    <td><select id="ddlTask_TempoCiclo"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_TempoLavPrevisto" /></td>
+                    <td><select id="ddlTask_TempoDiLavoroPrevisto"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_TempoLavEffettivo" /></td>
+                    <td><select id="ddlTask_TempoDiLavoroEffettivo"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_Status" /></td>
+                    <td><select id="ddlTask_Status"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+                <tr>
+                    <td><label id="lblTask_QtaProdotta" /></td>
+                    <td><select id="ddlTask_QuantitaProdotta"><option value="true"></option><option value="false"></option></select></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function doReset() { alert("Configurazione resettata"); }
+</script>

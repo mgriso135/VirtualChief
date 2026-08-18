@@ -1,0 +1,89 @@
+@inherits KIS.Analysis.DetailTaskProduct1
+@{
+    // placeholder – markup reproduced from DetailTaskProduct.ascx (control wins over .aspx page)
+}
+<script type="text/javascript">
+    $(function () {
+        $("#txtProductDateStart").datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+    $(function () {
+        $("#txtProductDateEnd").datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+</script>
+<label id="lbl1" />
+
+<h3 id="lblProdotto"></h3>
+<label id="lblProdDataInizio1" />&nbsp;
+<input type="text" id="txtProductDateStart" style="width:100px;" />
+&nbsp;<label id="lblProdDataFine1" />&nbsp;
+<input type="text" id="txtProductDateEnd" style="width:100px;" />
+<button type="button" id="btnAnalizza" class="btn-link" onclick="doAnalyze()"><img src="~/img/iconView.png" height="20" /></button>
+<div class="accordion-group" id="accordion1">
+    <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+            <label id="lblAccTempiLavGlobali" />
+        </a>
+    </div>
+    <div id="collapseOne" class="accordion-body collapse">
+        <div class="accordion-inner">
+            <label id="lblTempoLavMedio" />:&nbsp;
+            <label id="lblMediaTempoDiLavoro" /><br />
+            <div id="chartTempiLavoro" style="width:600px;">
+                <!-- Grafico tempi di lavoro -->
+            </div>
+            <br />
+            <div id="rptTempiLavoro">
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th><label id="lblTHIDProd" /></th>
+                            <th><label id="lblTHDataRealizzazione" /></th>
+                            <th><label id="lblTHTempoLav" /></th>
+                            <th><label id="lblTHQuantita" /></th>
+                            <th><label id="lblTHTempoLavUnitario" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tempi di lavoro -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-heading">
+        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+            <label id="lblAccTempiCicloGlobali" />
+        </a>
+    </div>
+    <div id="collapseTwo" class="accordion-body collapse">
+        <div class="accordion-inner">
+            <label id="lblMedia" />:&nbsp;
+            <label id="lblMediaTempiCiclo" /><br />
+            <div id="chartTempiCiclo" style="width:600px;">
+                <!-- Grafico tempi di ciclo -->
+            </div>
+            <br />
+            <div id="rptTempiCiclo">
+                <table class="table table-condensed table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th><label id="lblTHIDProd2" /></th>
+                            <th><label id="lblTHDataRealizzazione2" /></th>
+                            <th><label id="lblTHTempoCiclo" /></th>
+                            <th><label id="lblTHQuantita2" /></th>
+                            <th><label id="lblTHTempoCicloUnitario" /></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Tempi di ciclo -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function doAnalyze() { alert("Analisi avviata"); }
+</script>

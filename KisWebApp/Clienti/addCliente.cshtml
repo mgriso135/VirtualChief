@@ -1,0 +1,80 @@
+@inherits KIS.Clienti.addCliente
+@{
+    // placeholder – markup reproduced from addCliente.ascx
+}
+<label id="lbl1" />
+<table id="frmAddcliente" class="table table-hover table-striped">
+    <tr>
+        <td><label id="lblCodiceCliente" /></td>
+        <td><input type="text" id="txtCodiceCliente" required />
+            <span style="color:red;"><label id="reqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblRagioneSocialeCliente" /></td>
+        <td><input type="text" id="txtRagSoc" required />
+            <span style="color:red;"><label id="reqField2" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblPartitaIVA" /></td>
+        <td><input type="text" id="txtPartitaIVA" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblCodiceFiscale" /></td>
+        <td><input type="text" id="txtCodFiscale" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblIndirizzo" /></td>
+        <td><input type="text" id="txtIndirizzo" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblCitta" /></td>
+        <td><input type="text" id="txtCitta" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblProvincia" /></td>
+        <td><input type="text" id="txtProvincia" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblCAP" /></td>
+        <td><input type="text" id="txtCAP" maxlength="10" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblStato" /></td>
+        <td><input type="text" id="txtStato" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblTelefono" /></td>
+        <td><input type="text" id="txtTelefono" maxlength="45" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblEmail" /></td>
+        <td><input type="email" id="txtEmail" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblKanban" /></td>
+        <td>
+            <select id="ddlKanban">
+                <option value="0">Disabled</option>
+                <option value="1">Enabled</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+            <button type="button" id="btnUndo" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function doSave() {
+        if (!$("#txtCodiceCliente").val() || !$("#txtRagSoc").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Cliente aggiunto");
+    }
+</script>

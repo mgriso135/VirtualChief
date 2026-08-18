@@ -1,0 +1,52 @@
+@inherits KIS.Produzione.configCadenza
+@{
+    // placeholder – markup reproduced from configCadenza.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <label id="lbl1" /><br />
+        <h3>Cadenza</h3>
+    </div>
+</div>
+
+<br />
+
+<div class="row-fluid">
+    <div class="span12">
+        <table class="table table-condensed">
+            <tr>
+                <td><label id="lblTaktTime" /></td>
+                <td><label id="lblOre" />: <input type="text" id="ore" class="tiny" /> <label id="lblMM" />: <input type="text" id="minuti" class="tiny" /> <label id="lblSS" />: <input type="text" id="secondi" class="tiny" /></td>
+            </tr>
+            <tr id="valButtons">
+                <td colspan="2" style="text-align:center;">
+                    <button type="button" id="save" class="btn">Salva</button>
+                    <button type="button" id="reset" class="btn">Annulla</button>
+                    <br />
+                    <!-- Validators simplified to HTML5 or removed -->
+                    <span id="valOre" style="color:red;"></span>
+                    <span id="valMinuti" style="color:red;"></span>
+                    <span id="valSecondi" style="color:red;"></span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Original had RequiredFieldValidator/RangeValidator; here we just do basic client‑side checks.
+        $("#save").click(function () {
+            var ore = $("#ore").val();
+            var minuti = $("#minuti").val();
+            var secondi = $("#secondi").val();
+            if (!ore || isNaN(ore)) { $("#valOre").text("Inserire ore"); return; }
+            if (!minuti || isNaN(minuti)) { $("#valMinuti").text("Inserire minuti"); return; }
+            if (!secondi || isNaN(secondi)) { $("#valSecondi").text("Inserire secondi"); return; }
+            alert("Cadenza salvata: " + ore + ":" + minuti + ":" + secondi);
+        });
+        $("#reset").click(function () {
+            $("#ore").val(""); $("#minuti").val(""); $("#secondi").val("");
+        });
+    });
+</script>

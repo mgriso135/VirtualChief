@@ -1,0 +1,29 @@
+@inherits KIS.Users.editUser
+@{
+    // placeholder – markup reproduced from editUser.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="../Admin/admin.cshtml"><label id="lblNavAdmin" /></a>
+        <span class="divider">/</span>
+        <a href="manageUsers.cshtml"><label id="lblNavGestUsuarios" /></a>
+        <span class="divider">/</span>
+        <a href='@Request.RawUrl'><label id="lblNavModUsuario" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<label id="lbl1" />
+@Html.Partial("~/Users/editUserInfo.cshtml")
+<table class="table table-bordered table-condensed table-hover">
+    <tr>
+        <td>
+            @Html.Partial("~/Users/addUserEmail.cshtml")
+            @Html.Partial("~/Users/listUserEmails.cshtml")
+        </td>
+        <td>
+            @Html.Partial("~/Users/addUserPhoneNumber.cshtml")
+            @Html.Partial("~/Users/listUserPhoneNumber.cshtml")
+        </td>
+    </tr>
+</table>
+@Html.Partial("~/Users/listUserGruppi.cshtml")

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using MySql.Data;
 using MySql.Data.MySqlClient;
+using Dapper;
 using KIS.App_Code;
 
 namespace KIS.App_Sources
@@ -114,22 +115,13 @@ namespace KIS.App_Sources
                 if(this.id>-1 && this.Tenant.Length > 0)
                 {
                     String name = value.Length >= 255 ? value.Substring(0, 255) : value;
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE inputpoints SET name=@name WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@name", name);
-                    cmd.Parameters.AddWithValue("@id", this.id);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Open();
+                        conn.Execute("UPDATE inputpoints SET name=@name WHERE id=@id",
+                            new { @name = name, @id = this.id });
                         this._name = name;
                     }
-                    catch(Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -142,22 +134,13 @@ namespace KIS.App_Sources
                 if (this.id > -1 && this.Tenant.Length > 0)
                 {
                     String description = value.Length >= 255 ? value.Substring(0, 255) : value;
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE inputpoints SET description=@description WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@description", description);
-                    cmd.Parameters.AddWithValue("@id", this.id);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
+                        conn.Open();
+                        conn.Execute("UPDATE inputpoints SET description=@description WHERE id=@id",
+                            new { @description = description, @id = this.id });
                         this._description = description;
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -186,24 +169,33 @@ namespace KIS.App_Sources
             this._id = -1;
             if (this._Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id, name, description, creationdate, creator, notes FROM inputpoints WHERE id=@id";
-                cmd.Parameters.AddWithValue("@id", id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._id = rdr.GetInt32(0);
-                    this._name = rdr.IsDBNull(1) ? "" : rdr.GetString(1);
-                    this._description = rdr.IsDBNull(2) ? "" : rdr.GetString(2);
-                    this._CreationDate = rdr.IsDBNull(3) ? new DateTime(1970,1,1) : rdr.GetDateTime(3);
-                    this._CreatorId = rdr.IsDBNull(4) ? -1 : rdr.GetInt32(4);
-                    this._notes = rdr.IsDBNull(5) ? "" : rdr.GetString(5);
+                    conn.Open();
+                    InputPointRow row = conn.QueryFirstOrDefault<InputPointRow>(
+                        "SELECT id, name, description, creationdate, creator, notes FROM inputpoints WHERE id=@id",
+                        new { @id = id });
+                    if (row != null)
+                    {
+                        this._id = row.id;
+                        this._name = row.name ?? "";
+                        this._description = row.description ?? "";
+                        this._CreationDate = row.creationdate ?? new DateTime(1970, 1, 1);
+                        this._CreatorId = row.creator ?? -1;
+                        this._notes = row.notes ?? "";
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
+        }
+
+        private class InputPointRow
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string description { get; set; }
+            public DateTime? creationdate { get; set; }
+            public int? creator { get; set; }
+            public string notes { get; set; }
         }
 
         /* Returns:
@@ -220,24 +212,16 @@ namespace KIS.App_Sources
                 this.loadWorkstations();
                 if(this.departments.Count == 0 && this.workstations.Count == 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "DELETE FROm inputpoints WHERE id=@id";
-                    cmd.Parameters.AddWithValue("@id", this.id);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
+                        conn.Open();
+                        using (var trn = conn.BeginTransaction())
+                        {
+                            conn.Execute("DELETE FROm inputpoints WHERE id=@id",
+                                new { @id = this.id }, trn);
+                            trn.Commit();
+                        }
                     }
-                    catch(Exception ex)
-                    {
-                        this.log = ex.Message;
-                        tr.Rollback();
-                    }
-                    conn.Close();
                 }
                 else
                 {
@@ -256,22 +240,15 @@ namespace KIS.App_Sources
             this.departments = new List<InputPointDepartment>();
             if(this.id >= 0 && this.Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT departmentid, creationdate FROM inputpoints_departments WHERE enabled IS true AND inputpointId=@inputpointid";
-                cmd.Parameters.AddWithValue("@inputpointid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    InputPointDepartment ipdept = new InputPointDepartment(this.Tenant, this.id, rdr.GetInt32(0));
-                    if(ipdept.departmentId>= 0 && ipdept.inputpointId >= 0)
-                    { 
-                        this.departments.Add(ipdept);
+                    var ids = conn.Query<int>("SELECT departmentid FROM inputpoints_departments WHERE enabled IS true AND inputpointId=@inputpointid",
+                        new { @inputpointid = this.id }).ToArray();
+                    foreach (int deptId in ids)
+                    {
+                        this.departments.Add(new InputPointDepartment(this.Tenant, this.id, deptId));
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -284,29 +261,22 @@ namespace KIS.App_Sources
             this.departments = new List<InputPointDepartment>();
             if (this.id >= 0 && this.Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT departmentid, creationdate FROM inputpoints_departments WHERE inputpointId=@inputpointid";
-                switch (cEnabled)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    case '0': cmd.CommandText += " AND enabled is FALSE"; break;
-                    case '1': cmd.CommandText += " AND enabled is TRUE"; break;
-                    case 'A': break;
-                    default: break;
-                }
-                cmd.Parameters.AddWithValue("@inputpointid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
-                {
-                    InputPointDepartment ipdept = new InputPointDepartment(this.Tenant, this.id, rdr.GetInt32(0));
-                    if (ipdept.departmentId >= 0 && ipdept.inputpointId >= 0)
+                    string cmdText = "SELECT departmentid FROM inputpoints_departments WHERE inputpointId=@inputpointid";
+                    switch (cEnabled)
                     {
-                        this.departments.Add(ipdept);
+                        case '0': cmdText += " AND enabled is FALSE"; break;
+                        case '1': cmdText += " AND enabled is TRUE"; break;
+                        case 'A': break;
+                        default: break;
+                    }
+                    var ids = conn.Query<int>(cmdText, new { @inputpointid = this.id }).ToArray();
+                    foreach (int deptId in ids)
+                    {
+                        this.departments.Add(new InputPointDepartment(this.Tenant, this.id, deptId));
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -315,22 +285,15 @@ namespace KIS.App_Sources
             this.workstations = new List<InputPointWorkstation>();
             if (this.id >= 0 && this.Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT workstationid, creationdate FROM inputpoints_workstations WHERE enabled IS true AND inputpointId=@inputpointid";
-                cmd.Parameters.AddWithValue("@inputpointid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    InputPointWorkstation ipwst = new InputPointWorkstation(this.Tenant, this.id, rdr.GetInt32(0));
-                    if (ipwst.workstationId >= 0 && ipwst.inputpointId >= 0)
+                    var ids = conn.Query<int>("SELECT workstationid FROM inputpoints_workstations WHERE enabled IS true AND inputpointId=@inputpointid",
+                        new { @inputpointid = this.id }).ToArray();
+                    foreach (int wstId in ids)
                     {
-                        this.workstations.Add(ipwst);
+                        this.workstations.Add(new InputPointWorkstation(this.Tenant, this.id, wstId));
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -343,29 +306,22 @@ namespace KIS.App_Sources
             this.workstations = new List<InputPointWorkstation>();
             if (this.id >= 0 && this.Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT workstationid, creationdate FROM inputpoints_workstations WHERE inputpointId=@inputpointid";
-                switch(cEnabled)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    case '0': cmd.CommandText += " AND enabled is FALSE"; break;
-                    case '1': cmd.CommandText += " AND enabled is TRUE"; break;
-                    case 'A': break;
-                    default: break;
-                }
-                cmd.Parameters.AddWithValue("@inputpointid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
-                {
-                    InputPointWorkstation ipwst = new InputPointWorkstation(this.Tenant, this.id, rdr.GetInt32(0));
-                    if (ipwst.workstationId >= 0 && ipwst.inputpointId >= 0)
+                    string cmdText = "SELECT workstationid FROM inputpoints_workstations WHERE inputpointId=@inputpointid";
+                    switch(cEnabled)
                     {
-                        this.workstations.Add(ipwst);
+                        case '0': cmdText += " AND enabled is FALSE"; break;
+                        case '1': cmdText += " AND enabled is TRUE"; break;
+                        case 'A': break;
+                        default: break;
+                    }
+                    var ids = conn.Query<int>(cmdText, new { @inputpointid = this.id }).ToArray();
+                    foreach (int wstId in ids)
+                    {
+                        this.workstations.Add(new InputPointWorkstation(this.Tenant, this.id, wstId));
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -395,27 +351,17 @@ namespace KIS.App_Sources
 
                 if(!found)
                 { 
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO inputpoints_departments(inputpointid, departmentid) VALUES(@ipid, @deptid)";
-                    cmd.Parameters.AddWithValue("@ipid", this.id);
-                    cmd.Parameters.AddWithValue("@deptid", dept.id);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        ret = 1;
+                        conn.Open();
+                        using (var trn = conn.BeginTransaction())
+                        {
+                            conn.Execute("INSERT INTO inputpoints_departments(inputpointid, departmentid) VALUES(@ipid, @deptid)",
+                                new { @ipid = this.id, @deptid = dept.id }, trn);
+                            trn.Commit();
+                            ret = 1;
+                        }
                     }
-                    catch(Exception ex)
-                    {
-                        this.log = ex.Message;
-                        tr.Rollback();
-                        ret = 3;
-                    }
-                    conn.Close();
                 }
                 else
                 {

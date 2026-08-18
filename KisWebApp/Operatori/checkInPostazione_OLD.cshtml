@@ -1,0 +1,32 @@
+@inherits KIS.Operatori.checkInPostazione
+@{
+    // placeholder – markup reproduced from checkInPostazione_OLD.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="#"><label id="lblNavWorkPlace" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="checkInPostazione.cshtml"><label id="lblNavWebGemba" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<label id="lbl1" />
+@Html.Partial("~/Produzione/listTaskAvviatiUtente.cshtml")
+<div class="row-fluid">
+    <span class="span6">
+        @Html.Partial("~/Operatori/operatorePostazioniAttive_OLD.cshtml")
+    </span>
+    <span class="span6">
+        @Html.Partial("~/Operatori/userLoginPostazione_OLD.cshtml")
+    </span>
+</div>
+<table>
+    <tr style="vertical-align:top">
+        <td>
+
+        </td><td>
+
+        </td></tr>
+</table>

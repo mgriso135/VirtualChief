@@ -1,0 +1,26 @@
+@inherits KIS.Commesse.wzAddCommessa1
+@{
+    // placeholder – markup reproduced from wzAddCommessa.ascx
+}
+<label id="lbl1" />
+<table id="frmAddCommessa" class="table table-bordered table-hover">
+    <tr><td>Cliente</td><td>
+        <select id="ddlCliente"></select><br />
+        <a href="../Commesse/wzAddCliente.cshtml">
+            <label id="lblAggiungiCliente" />
+        </a>
+    </td></tr>
+    <tr><td><label id="lblExternalID" /></td><td><input type="text" id="txtExternalID" />
+    </td></tr>
+    <tr><td><label id="lblNote" /></td><td><textarea id="txtNote" rows="4"></textarea></td></tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="imgBtnSave" class="btn btn-primary" onclick="doSave()"><img src="~/img/iconArrowRight.png" height="40" /></button>
+        </td></tr>
+</table>
+
+<script type="text/javascript">
+    function doSave() {
+        alert("Salvataggio wizard");
+    }
+</script>

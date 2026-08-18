@@ -1,0 +1,258 @@
+@inherits KIS.configReparto.configReparto
+@{
+    // placeholder – markup reproduced from configReparto.aspx
+}
+<script>
+    $(document).ready(function () {
+        function loadScrollTypeView() {
+            var deptID = parseInt($("#DepartmentID").val());
+            if (deptID != -1) {
+                $("#imgLoadScrollView").fadeIn();
+                $.ajax({
+                    url: "../Config/AndonConfig/DepartmentScrollTypeView",
+                    type: 'GET',
+                    data: { DepartmentID: deptID },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#imgLoadScrollView").fadeOut();
+                        $('#frmScrollView').html(result);
+                    },
+                    error: function (result) { $("#imgLoadScrollView").fadeOut(); alert("Error loadScrollTypeView" + result); }
+                });
+            }
+        }
+
+        function loadDepartmentAndonConfig() {
+            var deptID = parseInt($("#DepartmentID").val());
+            if (deptID != -1) {
+                $("#imgLoadAndonConfig").fadeIn();
+                $.ajax({
+                    url: "../Andon/DepartmentAndonConfig/GetDepartmentAndonConfig",
+                    type: 'GET',
+                    data: { DepartmentID: deptID },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#imgLoadAndonConfig").fadeOut();
+                        $('#frmAndonConfig').html(result);
+                    },
+                    error: function (result) { $("#imgLoadAndonConfig").fadeOut(); alert("Error loadDepartmentAndonConfig" + result); }
+                });
+            }
+        }
+
+        function loadAutoPauseTasksConfig() {
+            var deptID = parseInt($("#DepartmentID").val());
+            if (deptID != -1) {
+                $("#imgAutoPauseTasks").fadeIn();
+                $.ajax({
+                    url: "../Departments/DepartmentsConfig/GetAutoPauseTaskConfig",
+                    type: 'GET',
+                    data: { DepartmentID: deptID },
+                    dataType: 'html',
+                    success: function (result) {
+                        $("#imgAutoPauseTasks").fadeOut();
+                        $('#frmAutoPauseTasks').html(result);
+                    },
+                    error: function (result) { $("#imgAutoPauseTasks").fadeOut(); alert("Error loadAutoPauseTasksConfig " + result); }
+                });
+            }
+        }
+
+        loadScrollTypeView();
+        loadDepartmentAndonConfig();
+        loadAutoPauseTasksConfig();
+    });
+</script>
+
+<input type="hidden" id="DepartmentID" />
+
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="configReparto.cshtml"><label id="lblNavManageReparti" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<label id="lbl1" />
+
+<h3><label id="lblTitle" /></h3>
+<label id="lblDesc" />
+
+<h3 id="titleConfig"><label id="lblCfgReparto" /></h3>
+<div class="accordion" id="accordion1">
+    <div class="accordion-group" style="display:none;">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                <label id="lblAccTaktTime" />
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configCadenza.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                <label id="lblPlanTasks" />
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configSplitTasksTurni.cshtml")<br />
+                <img src="../img/iconLoading.gif" id="imgLoadDeliveryDateFormat" style="min-width:20px; max-width:20px;" />
+                <div id="frmDeliveryDateFormat"></div>
+                <img src="../img/iconLoading.gif" id="imgLoadEndProductionDateFormat" style="min-width:20px; max-width:20px;" />
+                <div id="frmEndProductionDateFormat"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group" style="display:none;">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+                <label id="lblAccOpReparto" />
+            </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/listRepartoUtenti.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
+                <label id="lblAccTurniLavoro" />
+            </a>
+        </div>
+        <div id="collapseFive" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configTurni.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSix">
+                <label id="lblAccAlarmaDemora" />
+            </a>
+        </div>
+        <div id="collapseSix" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Eventi/RepartoRitardo.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSeven">
+                <label id="lblAccAlarmaProblema" />
+            </a>
+        </div>
+        <div id="collapseSeven" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Eventi/RepartoWarning.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEight">
+                <label id="lblAccCalcoloTC" />
+            </a>
+        </div>
+        <div id="collapseEight" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configModoCalcoloTC.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseNine">
+                <label id="lblAccAndonRep" />
+            </a>
+        </div>
+        <div id="collapseNine" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <img src="../img/iconLoading.gif" id="imgLoadAndonConfig" style="min-width:20px; max-width:20px;" />
+                <div id="frmAndonConfig"></div><br />
+                @Html.Partial("~/Andon/configMaxViewDaysAndonReparto_OLD.cshtml")
+                @Html.Partial("~/Andon/AndonRepartoViewFields.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTen">
+                <label id="lblAccAvvioTasks" />
+            </a>
+        </div>
+        <div id="collapseTen" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configAvvioTasks.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <!-- Auto Pause Tasks -->
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseAutoPauseTasks">
+                <label id="lblAutoPauseTasks" />
+            </a>
+        </div>
+        <div id="collapseAutoPauseTasks" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <img src="../img/iconLoading.gif" id="imgAutoPauseTasks" style="min-width:20px; max-width:20px;" />
+                <div id="frmAutoPauseTasks"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEleven">
+                <label id="lblAccKBBox" />
+            </a>
+        </div>
+        <div id="collapseEleven" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configKanban.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwelve">
+                <label id="lblAccFusoOrario" />
+            </a>
+        </div>
+        <div id="collapseTwelve" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configRepartoTimezone.cshtml")
+            </div>
+        </div>
+    </div>
+    <!-- Scrolling -->
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThirteen">
+                <label id="lblAccScrolling" />
+            </a>
+        </div>
+        <div id="collapseThirteen" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <img src="../img/iconLoading.gif" id="imgLoadScrollView" style="min-width:20px; max-width:20px;" />
+                <div id="frmScrollView"></div>
+            </div>
+        </div>
+    </div>
+</div>

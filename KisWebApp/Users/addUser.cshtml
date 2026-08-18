@@ -1,0 +1,90 @@
+@inherits KIS.Admin.addUser
+@{
+    // placeholder – markup reproduced from addUser.ascx
+}
+<label id="lbl1" />
+<button type="button" id="btnUserAdd" class="btn btn-link" onclick="toggleForm()"><img src="~/img/iconUserAdd.jpg" height="100" class="img-rounded" /></button>
+<br />
+<table class="table table-condensed table-hover" id="tblInputNewUser" style="display:none;">
+    <thead>
+        <tr><th><label id="lblTHNewUser" /></th></tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><label id="lblName" />:</td>
+            <td><input type="text" id="inputNome" required />
+                <span style="color:red;"><label id="lblReqField" /></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="lblCognome" />:</td>
+            <td><input type="text" id="inputCognome" required />
+                <span style="color:red;"><label id="lblReqField2" /></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="lblUsername" />:</td>
+            <td><input type="text" id="inputUsername" required />
+                <span style="color:red;"><label id="lblReqField3" /></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="lblIdioma" />:</td>
+            <td><select id="ddlLanguages">
+                <option value=""></option>
+                <option value="en-US">English (United States)</option>
+                <option value="es-AR">Español (Argentina)</option>
+                <option value="it">Italiano (Italia)</option>
+            </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="lblPassword" />:</td>
+            <td><input type="password" id="inputPassword" required />
+                <span style="color:red;"><label id="lblReqField4" /></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="lblRptPassword" />:</td>
+            <td><input type="password" id="inputPassword2" required />
+                <span style="color:red;"><label id="lblReqField5" /></span><br />
+                <span style="color:red;"><label id="lblCampiCoincidenti" /></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label id="lblTipoUtente" />:</td>
+            <td>
+                <select id="tipoUtente">
+                    <option value="User">User</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2">
+                <button type="button" id="btnSaveUser" class="btn btn-success" onclick="doSave()">Salva</button>&nbsp;
+                <button type="button" id="btnUndo" class="btn">Annulla</button>
+            </td>
+        </tr>
+        <tr><td colspan="2"><label id="lblEsito" /></td></tr>
+    </tfoot>
+</table>
+
+<script type="text/javascript">
+    function toggleForm() {
+        $("#tblInputNewUser").toggle();
+    }
+    function doSave() {
+        if (!$("#inputNome").val() || !$("#inputCognome").val() || !$("#inputUsername").val() || !$("#inputPassword").val() || !$("#inputPassword2").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        if ($("#inputPassword").val() !== $("#inputPassword2").val()) {
+            alert("Le password non coincidono");
+            return;
+        }
+        alert("Utente aggiunto");
+    }
+</script>

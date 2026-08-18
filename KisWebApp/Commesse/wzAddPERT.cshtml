@@ -1,0 +1,152 @@
+@inherits KIS.Commesse.wzAddPERT1
+@{
+    // placeholder – markup reproduced from wzAddPERT.ascx
+}
+<div class="span12">
+    <label id="lbl1" />
+    <h3><label id="lblTitle" /></h3>
+    <div class="accordion" id="accordion1">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                    <label id="lblAccProdStandard" />
+                </a>
+            </div>
+            <div id="collapseOne" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <table class="table table-striped table-hover" id="tblAddPERT">
+                        <tr>
+                            <td style="vertical-align: middle;">
+                                <h4><label id="lblAccProdStandard1" /></h4>
+                                <label id="lblSelezionaProdotto" />:&nbsp;<select id="ddlAddProdStandard">
+                                    <option value=""></option>
+                                </select>
+                                <br />
+                                <label id="lblQuantita" />:&nbsp;<input type="text" id="txtStdQty" required />
+                                <span style="color:red;"><label id="lblReqField" /></span>
+                                <br />
+                                <label id="lblMatricola" />:&nbsp;<input type="text" id="txtStdMatricola" />
+                                <br />
+                                <label id="lblFiltraCliente" />:&nbsp;<select id="ddlStdFiltroCliente">
+                                    <option value=""></option>
+                                </select>
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <button type="button" id="addProdStd" class="btn-link" onclick="addExistingProduct()"><img src="~/img/iconArrowRight.png" height="40" /></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                    <label id="lblAccAggiungiProdotto" />
+                </a>
+            </div>
+            <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <table>
+                        <tr>
+                            <td style="vertical-align: middle;">
+                                <h4><label id="lblAccAggiungiProdotto1" /></h4>
+                                <label id="lblNomeNuovoProd" />:&nbsp;<input type="text" id="txtNomeBlankProd" required />
+                                <span style="color:red;"><label id="lblReqField2" /></span>
+                                <br />
+                                <label id="lblDescNuovoProd" />:&nbsp;<textarea id="txtDescBlankProd" rows="4" required></textarea>
+                                <span style="color:red;"><label id="lblReqField3" /></span>
+                                <br />
+                                <label id="lblQuantita2" />:&nbsp;<input type="text" id="txtQtyBlank" required />
+                                <span style="color:red;"><label id="lblReqField4" /></span>
+                                <br />
+                                <label id="lblMatricola2" />:&nbsp;<input type="text" id="txtMatricolaBlank" />
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <button type="button" id="addVariante" class="btn-link" onclick="addBlankProduct()"><img src="~/img/iconArrowRight.png" height="40" /></button>
+                            </td>
+                        </tr>
+                        <tr id="trBlankConfirm" style="display:none;">
+                            <td colspan="2"><div class="text-warning">
+                                <label id="lblErrorDuplicate" />
+                                <br /></div>
+                                <button type="button" id="imgBlankConfirmOK" class="btn-link" onclick="confirmDuplicate(true)"><img src="~/img/iconComplete.png" width="30" /></button>
+                                <button type="button" id="imgBlankConfirmKO" class="btn-link" onclick="confirmDuplicate(false)"><img src="~/img/iconKO.jpg" width="30" /></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+                    <label id="lblAccAggiungiProdCopia" />
+                </a>
+            </div>
+            <div id="collapseThree" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <table>
+                        <tr id="trCopiaPERT">
+                            <td>
+                                <div id="lblCopiaPERT">
+                                    <h4><label id="lblAccAggiungiProdCopia1" /></h4>
+                                    <label id="lblNomeNuovoProd2" />:&nbsp;<input type="text" id="txtNomeCopiaProd" required />
+                                    <span style="color:red;"><label id="lblReqField5" /></span>
+                                    <br />
+                                    <label id="lblDescNuovoProd2" />:&nbsp;<textarea id="txtDescCopiaProd" rows="4" required></textarea>
+                                    <span style="color:red;"><label id="lblReqField6" /></span>
+                                    <br />
+                                    <label id="lblQuantita3" />:&nbsp;<input type="text" id="txtQtyCopiaProd" required />
+                                    <span style="color:red;"><label id="lblReqField7" /></span>
+                                    <br />
+                                    <label id="lblMatricola3" />:&nbsp;<input type="text" id="txtMatricolaCopiaProd" />
+                                    <br />
+                                    <label id="lblSelBaseProd" />:&nbsp;<select id="ddlCopiaPERT"></select><br />
+                                    <label id="lblFiltraCliente3" />:&nbsp;<select id="ddlCopiaPERTClienti">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                                <br /><input type="checkbox" id="chkCopia" checked="checked" disabled="disabled" /><label id="lblRiutilizzaTasks" /><br />
+                                <input type="checkbox" id="chkCopiaTC" checked="checked" /><label id="lblCopiaTempiCiclo" /><br />
+                                <input type="checkbox" id="chkCopiaReparti" checked="checked" /><label id="lblCopiaReparti" /><br />
+                                <input type="checkbox" id="chkCopiaPostazioni" checked="checked" /><label id="lblCopiaPostazioni" /><br />
+                                <input type="checkbox" id="chkCopyParameters" checked="checked" /><label id="lblCopyParameters" /><br />
+                                <input type="checkbox" id="chkCopyWorkInstructions" checked="checked" /><label id="lblCopyWorkInstructions" />
+                            </td>
+                            <td style="vertical-align: middle;">
+                                <button type="button" id="btnCopiaPERT" class="btn-link" onclick="copyProduct()"><img src="~/img/iconArrowRight.png" height="40" /></button>
+                                <label id="lblCopiaPERTLog" />
+                            </td>
+                        </tr>
+                        <tr id="trCopyConfirm" style="display:none;">
+                            <td colspan="2"><div class="text-warning">
+                                <label id="lblErrorDuplicate2" /><br /></div>
+                                <button type="button" id="imgCopyConfirmOK" class="btn-link" onclick="confirmCopy(true)"><img src="~/img/iconComplete.png" width="30" /></button>
+                                <button type="button" id="imgCopyConfirmKO" class="btn-link" onclick="confirmCopy(false)"><img src="~/img/iconKO.jpg" width="30" /></button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function addExistingProduct() {
+        if (!$("#ddlAddProdStandard").val() || !$("#txtStdQty").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Prodotto esistente aggiunto");
+    }
+    function addBlankProduct() {
+        alert("Nuovo prodotto aggiunto");
+    }
+    function confirmDuplicate(ok) {
+        $("#trBlankConfirm").hide();
+    }
+    function copyProduct() {
+        alert("Copia prodotto effettuata");
+    }
+    function confirmCopy(ok) {
+        $("#trCopyConfirm").hide();
+    }
+</script>

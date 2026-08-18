@@ -1,0 +1,48 @@
+@inherits KIS.Users.addUserEmail
+@{
+    // placeholder – markup reproduced from addUserEmail.ascx
+}
+<button type="button" id="imgShowForm" class="btn-link" onclick="toggleForm()"><img src="~/img/iconAdd.jpg" height="40" /></button>
+<label id="lblTitleAddEmail" />
+
+<table id="tblAddEmail" class="table table-bordered" style="display:none;">
+    <tbody>
+        <tr>
+            <td><label id="lblEmail" />
+                <br /><input type="email" id="txtEmail" required />
+                <span style="color:red;"><label id="lblReqField" /></span>
+            </td>
+            <td><label id="lblAmbito" /><br /><input type="text" id="txtNote" required />
+                <span style="color:red;"><label id="lblReqField2" /></span>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="checkbox" id="chkAlarm" />
+                <label id="lblSendAlarm" />
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2">
+                <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+                <button type="button" id="btnUndo" class="btn">Annulla</button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
+<label id="lbl1" />
+
+<script type="text/javascript">
+    function toggleForm() {
+        $("#tblAddEmail").toggle();
+    }
+    function doSave() {
+        if (!$("#txtEmail").val() || !$("#txtNote").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Email aggiunta");
+    }
+</script>

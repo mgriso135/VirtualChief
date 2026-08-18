@@ -1,0 +1,36 @@
+@inherits KIS.Processi.lnkProcessoVarianteReparto
+@{
+    // placeholder – markup reproduced from lnkProcessoVarianteReparto.aspx
+}
+<ul class="breadcrumb hidden-phone" id="tblPertNavBar" style="display:none;">
+    <li>
+        <a id="lnkManageProcesso" href="showProcesso.cshtml"><label id="lblNavCreaProcesso" /></a>
+        <span class="divider">/</span>
+        <a href="@Request.RawUrl" class="lead">
+            <strong><label id="lblNavAssociaReparto" /></strong>
+        </a>
+        <span class="divider">/</span>
+        <a id="LinkButton1" href="#" title="Attrezzi"><label id="lblNavAssociaPostazioni" /></a><span class="divider">/</span>
+        <div class="ui-widget" id="dvInfo" style="display:none;">
+            <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                    <label id="lblTooltip" /></p>
+            </div>
+        </div>
+    </li>
+</ul>
+<h3><label id="lblTitleAddProcesso" /></h3>
+
+<table class="table table-hover table-condensed">
+    <tr>
+        <td><label id="lblNomeProc" /> rev. <label id="lblRevProc" />
+        </td></tr>
+    <tr><td><label id="lblDescProc" /></td></tr>
+    <tr><td><label id="lblNomeVar" /></td></tr>
+</table>
+
+<a id="lnkGestisciReparti" href="~/Reparti/configReparto.cshtml" target="_blank">
+    <img class="btn btn-primary" id="imgReparti" title="Gestione reparti" src="~/img/iconFactory.png" height="80" />
+</a>
+
+@Html.Partial("~/Processi/lnkProcRepartoLista.cshtml")

@@ -1,0 +1,59 @@
+@inherits KIS.kpi.admin
+@{
+    // placeholder – markup reproduced from admin.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="#">Admin</a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+
+<div class="page-header">
+    <label id="lblPageHeader" />
+</div>
+<p class="lead">
+    <label id="lbl1" />
+    <a href="~/Login/login.cshtml" id="lnkLogin"><label id="lblNeedToLogin" /></a>
+</p>
+
+<div class="row-fluid" id="tblOptions">
+    <ul class="thumbnails unstyled">
+        <li class="span2">
+            <a href="~/Admin/kisAdmin.cshtml" id="lnkConfigPrincipale">
+                <img src="~/img/iconConfiguration.png" id="Image2" title="Configurazione Logo e editor processi" height="100" class="btn btn-primary" /></a>
+            <p><label id="lblMainConfig" /></p>
+        </li>
+        <li class="span2">
+            <a href="../Users/manageUsers.cshtml" id="A1">
+                <img src="~/img/iconUser.png" id="Image1" title="Gestione utenti" height="100" class="btn btn-primary" /></a>
+            <p><label id="lblGestioneUtenti" /></p>
+        </li>
+        <li class="span2">
+            <a id="lnkGruppi" href="~/Users/manageGruppi.cshtml">
+                <img class="btn btn-primary" id="imgAdminGroups" title="Gestione gruppi" height="100" src="~/img/iconGroup.png" />
+            </a>
+            <p><label id="lblGestioneGruppi" /></p>
+        </li>
+        <li class="span2">
+            <a id="lnkManagePermessi" href="~/Users/managePermessi.cshtml">
+                <img class="btn btn-primary" id="imgAdminPermessi" title="Gestione permessi" height="100" src="~/img/iconPermissions.png" /></a>
+            <p><label id="lblGestionePermessi" /></p>
+        </li>
+        <li class="span2">
+            <a id="lnkMenu" href="~/Admin/manageMenu.cshtml">
+                <img class="btn btn-primary" id="imgMenu" title="Gestione menu principale" height="100" src="~/img/iconMenuItem.jpg" /></a>
+            <p><label id="lblGestioneMenu" /></p>
+        </li>
+        <li class="span2">
+            <a id="lnkReports" href="~/Admin/manageReports.cshtml">
+                <img class="btn btn-primary" id="Image3" title="Configurazione dei reports" height="100" src="~/img/iconReport.png" /></a>
+            <p><label id="lblCfgReports" /></p>
+        </li>
+        <li class="span2">
+            <a id="lnkMeasurementUnits" href="~/Config/MeasurementUnits/Index">
+                <img class="btn btn-primary" id="Image4" title="Measurement units management" height="100" src="~/img/iconMeasurementUnits.png" /></a>
+            <p><label id="lblMeasurementUnits" /></p>
+        </li>
+    </ul>
+</div>

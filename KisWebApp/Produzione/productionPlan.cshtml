@@ -1,0 +1,19 @@
+@inherits KIS.Produzione.productionPlan
+@{
+    // placeholder – markup reproduced from productionPlan.aspx
+    // note: addNewItemToProductionPlan.ascx source file is not present; partial left as placeholder
+}
+<label id="lbl" />
+<h1><label id="lblTitle" /></h1>
+<button type="button" id="showAddItemForm" class="btn-link" onclick="toggleAddForm()"><img src="/img/iconAdd.jpg" height="40" /></button><br />
+<div id="addNewItemForm">
+    <!-- addNewItemToProductionPlan partial not yet converted (source missing) -->
+</div>
+<button type="button" id="hideAddItemForm" class="btn-link" onclick="toggleAddForm()"><img src="/img/iconCancel.jpg" height="40" /></button>
+@Html.Partial("~/Produzione/showProductionPlan.cshtml")
+
+<script type="text/javascript">
+    function toggleAddForm() {
+        $("#addNewItemForm").toggle();
+    }
+</script>

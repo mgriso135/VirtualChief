@@ -1,0 +1,40 @@
+@inherits KIS.Commesse.wzCheckDeliveryDate1
+@{
+    // placeholder – markup reproduced from wzCheckDeliveryDate.ascx
+}
+<script type="text/javascript">
+    function FireConfirm() {
+        return confirm('Confermare il lancio?');
+    }
+</script>
+
+<label id="lbl1" />
+<table id="tblDeliveryDate" class="table table-condensed">
+    <tr>
+        <td>
+            <a id="lnkGoBack" href="#">
+                <img id="imgGoBack" src="~/img/iconArrowLeft.png" height="40" />
+            </a>
+        </td>
+        <td style="vertical-align: top; text-align:center;">
+            <label id="lblDataFineProd" />:&nbsp;<input type="date" id="calFineProd" style="width:100px;" />
+            <br />
+            <label id="lblOre" />:<select id="calOre" class="dropdown" style="width:70px;"></select>
+            &nbsp;<label id="lblMinuti" />:<select id="calMinuti" class="dropdown" style="width:70px;"></select>
+            &nbsp;<label id="lblSecondi" />:<select id="calSecondi" class="dropdown" style="width:70px;"></select>
+            <br />
+            <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+        </td>
+        <td>
+            <button type="button" id="imgGoFwd" class="btn-link" onclick="if (FireConfirm()) doGoFwd();"><img src="~/img/iconArrowRight.png" height="40" /></button>
+        </td>
+    </tr></table>
+
+<script type="text/javascript">
+    function doSave() {
+        alert("Data consegna salvata");
+    }
+    function doGoFwd() {
+        alert("Avanti");
+    }
+</script>

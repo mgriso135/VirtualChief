@@ -1,0 +1,72 @@
+@inherits KIS.Clienti.EditCliente1
+@{
+    // placeholder – markup reproduced from EditCliente.ascx
+}
+<label id="lbl1" />
+<table id="tblData" class="table table-striped table-hover">
+    <tr>
+        <td><label id="lblCodCliente" /></td>
+        <td><input type="text" id="txtCodCli" disabled /></td>
+    </tr>
+    <tr>
+        <td><label id="lblRagSocCliente" /></td>
+        <td><input type="text" id="txtRagSoc" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblPartitaIVA" /></td>
+        <td><input type="text" id="txtPIva" maxlength="11" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblCodFiscale" /></td>
+        <td><input type="text" id="txtCodFiscale" maxlength="16" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblIndirizzo" /></td>
+        <td><input type="text" id="txtIndirizzo" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblCitta" /></td>
+        <td><input type="text" id="txtCitta" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblProvincia" /></td>
+        <td><input type="text" id="txtProvincia" style="width:20px;" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblCAP" /></td>
+        <td><input type="text" id="txtCAP" maxlength="10" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblStato" /></td>
+        <td><input type="text" id="txtStato" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblTelefono" /></td>
+        <td><input type="text" id="txtTelefono" maxlength="45" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblEMail" /></td>
+        <td><input type="email" id="txtEmail" maxlength="255" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblKBBox" /></td>
+        <td>
+            <select id="ddlKanban">
+                <option value="0">Disabled</option>
+                <option value="1">Enabled</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+            <button type="button" id="btnUndo" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function doSave() {
+        alert("Cliente modificato");
+    }
+</script>

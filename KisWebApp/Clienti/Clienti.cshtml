@@ -1,0 +1,13 @@
+@inherits KIS.Clienti.Clienti
+@{
+    // placeholder – markup reproduced from Clienti.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="Clienti.aspx"><label id="lblNavAnagClienti" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<a href="AddCliente.aspx"><label id="lblTitleAddCustomer" /></a>
+<br />
+@Html.Partial("~/Clienti/listClienti.cshtml")

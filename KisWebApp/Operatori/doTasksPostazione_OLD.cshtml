@@ -1,0 +1,23 @@
+@inherits KIS.Operatori.doTasksPostazione
+@{
+    // placeholder – markup reproduced from doTasksPostazione_OLD.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="#"><label id="lblWorkplace" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="checkInPostazione.cshtml"><label id="lblNavWebGemba" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl"><label id="lblNavPostazione" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<h3><label id="lblPostazione" /></h3>
+<label id="lbl1" />
+
+@Html.Partial("~/Produzione/listTaskAvviatiPostazioneUtente.cshtml")
+@Html.Partial("~/Produzione/listTaskAvviabili.cshtml")

@@ -1,0 +1,32 @@
+@inherits KIS.Processi.editVariante
+@{
+    // placeholder – markup reproduced from editVariante.ascx
+}
+<label id="lblErr" />
+<table style="border:1px dashed green;">
+    <tr>
+        <td><label id="lblExternalID" />:</td>
+        <td><input type="text" id="txtExternalID" /></td>
+        <td rowspan="3">
+            <button type="button" id="save" class="btn btn-success">Salva</button>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblNomeVar" />:</td>
+        <td><input type="text" id="nomeVar" /><input type="hidden" id="lblVarID" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblDescVariante" />:</td>
+        <td><textarea id="descVar" rows="4"></textarea></td>
+    </tr>
+    <tr>
+        <td><label id="lblMeasurementUnit" />:</td>
+        <td><select id="ddlMeasurementUnits"><option>kg</option><option>pz</option></select></td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $("#save").click(function () { alert("Variante salvata"); });
+    });
+</script>

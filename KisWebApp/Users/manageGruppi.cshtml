@@ -1,0 +1,14 @@
+@inherits KIS.Users.manageGruppi
+@{
+    // placeholder – markup reproduced from manageGruppi.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="../Admin/admin.cshtml"><label id="lblNavAdmin" /></a>
+        <span class="divider">/</span>
+        <a href="manageGruppi.cshtml"><label id="lblNavGestGruppi" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+@Html.Partial("~/Users/addGruppo.cshtml")
+@Html.Partial("~/Users/listGruppi.cshtml")

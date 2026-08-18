@@ -1,0 +1,36 @@
+@inherits KIS.Produzione.linkArticoliToCommessa
+@{
+    // placeholder – markup reproduced from linkArticoliToCommessa.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="commesse.cshtml"><label id="lblNavCommesse" /></a>
+        <span class="divider">/</span>
+        <a href="@Request.RawUrl"><label id="lblNavDettaglioCommesse" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<h3><label id="lblTitleAddProdotto" /></h3>
+
+<label id="lblCommessa" />: <label id="lblIDCommessa" /><br />
+<label id="lblExternalID" />: <label id="lblExternalIDCommessa" />
+<br />
+<label id="lblDataInserimento" />:&nbsp;<label id="lblDataCommessa" />
+<br />
+<label id="lblLNote" />: <label id="lblNote" />
+<br /><br />
+<label id="lbl1" />
+@Html.Partial("~/Commesse/linkArticoli.cshtml")
+<br />
+@Html.Partial("~/Commesse/listArticoliCommessa.cshtml")
+<br />
+<table>
+    <tr>
+        <td style="vertical-align:top;">
+            @Html.Partial("~/Eventi/CommessaRitardo.cshtml")
+        </td>
+        <td style="vertical-align:top;">
+            @Html.Partial("~/Eventi/CommessaWarning.cshtml")
+        </td>
+    </tr>
+</table>

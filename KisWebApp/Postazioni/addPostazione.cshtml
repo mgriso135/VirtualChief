@@ -1,0 +1,46 @@
+@inherits KIS.Produzione.addPostazione
+@{
+    // placeholder – markup reproduced from addPostazione.ascx
+}
+<label id="lblErr" />
+<h2><label id="lblAddPostazione" /></h2>
+<table class="table table-condensed">
+    <tr>
+        <td><label id="lblNome" /></td>
+        <td><input type="text" id="nomePost" required />
+            <span style="color:red;"><label id="lblValReqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescrizione" /></td>
+        <td><textarea id="descPost" rows="4" required></textarea>
+            <span style="color:red;"><label id="lblValReqField2" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblAutoCheckIn" /></td>
+        <td>
+            <select id="ddlAutoCheckIn">
+                <option value="0">Disabled</option>
+                <option value="1">Enabled</option>
+            </select>
+        </td>
+    </tr>
+    <tr><td colspan="2" style="text-align:center;">
+        <button type="button" id="save" class="btn btn-success">Salva</button>
+        <button type="button" id="undo" class="btn">Annulla</button>
+    </td></tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $("#save").click(function () {
+            if (!$("#nomePost").val() || !$("#descPost").val()) {
+                alert("Compilare tutti i campi obbligatori");
+                return;
+            }
+            alert("Postazione aggiunta");
+        });
+        $("#undo").click(function () { $("#nomePost").val(""); $("#descPost").val(""); });
+    });
+</script>

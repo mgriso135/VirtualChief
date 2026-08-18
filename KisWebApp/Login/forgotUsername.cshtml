@@ -1,0 +1,19 @@
+@inherits KIS.Login.forgotUsername
+@{
+    // placeholder – markup reproduced from forgotUsername.ascx
+}
+<label id="lblEmailAddr" />:&nbsp;<input type="email" id="txtEmail" required />
+<button type="button" id="btnUsername" class="btn" onclick="doSend()">Invia username</button>
+<span style="color:red;"><label id="lblValReqField" /></span>
+<br />
+<label id="lbl1" class="text-info" />
+
+<script type="text/javascript">
+    function doSend() {
+        if (!$("#txtEmail").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Username inviato");
+    }
+</script>

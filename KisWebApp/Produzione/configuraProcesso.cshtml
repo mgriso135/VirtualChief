@@ -1,0 +1,16 @@
+@inherits KIS.Produzione.configuraProcesso
+@{
+    // placeholder – markup reproduced from configuraProcesso.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="produzione.cshtml"><label id="lblNavProduzione" /></a>
+        <span class="divider">/</span>
+        <a href="commesseDaProdurre.cshtml"><label id="lblNavNuoveCommesse" /></a>
+        <span class="divider">/</span>
+        <a href="@Request.RawUrl"><label id="lblNavInserimentoProd" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<label id="lbl1" />
+@Html.Partial("~/Produzione/configProcessoPerProduzione.cshtml")

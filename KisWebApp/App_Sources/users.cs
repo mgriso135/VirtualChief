@@ -44,27 +44,12 @@ namespace KIS.App_Code
             {
                 if (this._ID != -1 && value.Length > 0)
                 {
-                    String strSQL = "UPDATE groupss SET nomeGruppo = @GroupName WHERE id = @ID";
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction trn = conn.BeginTransaction();
-
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@GroupName", value);
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.Transaction = trn;
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        trn.Commit();
+                        conn.Execute("UPDATE groupss SET nomeGruppo = @pName WHERE id = @pID",
+                            new { @pName = value, @pID = this._ID });
                         this._Nome = value;
                     }
-                    catch (Exception ex)
-                    {
-                        log = ex.Message;
-                        trn.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -76,27 +61,12 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1 && value.Length > 0)
                 {
-                    String strSQL = "UPDATE groupss SET descrizione = @desc WHERE id = @ID";
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction trn = conn.BeginTransaction();
-
-                    MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-                    cmd.Parameters.AddWithValue("@desc", value);
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.Transaction = trn;
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        trn.Commit();
+                        conn.Execute("UPDATE groupss SET descrizione = @pDesc WHERE id = @pID",
+                            new { @pDesc = value, @pID = this.ID });
                         this._Descrizione = value;
                     }
-                    catch (Exception ex)
-                    {
-                        log = ex.Message;
-                        trn.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -110,28 +80,32 @@ namespace KIS.App_Code
         public Group(String tenant, int groupID)
         {
             this.Tenant = tenant;
-            String strSQL = "SELECT * FROM groupss WHERE id = @ID";
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = new MySqlCommand(strSQL, conn);
-            cmd.Parameters.AddWithValue("@ID", groupID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            rdr.Read();
-            this._Permessi = new GruppoPermessi(this.Tenant, groupID);
-            if(rdr.HasRows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._ID = rdr.GetInt32(0);
-                this._Nome = rdr.GetString(1);
-                this._Descrizione = rdr.GetString(2);
+                var row = conn.QueryFirstOrDefault<GroupRow>(
+                    "SELECT id, nomegruppo, descrizione FROM groupss WHERE id = @ID",
+                    new { @ID = groupID });
+                if (row != null)
+                {
+                    this._ID = row.id;
+                    this._Nome = row.nomegruppo ?? "";
+                    this._Descrizione = row.descrizione ?? "";
+                }
+                else
+                {
+                    this._ID = -1;
+                    this._Nome = "";
+                    this._Descrizione = "";
+                }
+                this._Permessi = new GruppoPermessi(this.Tenant, groupID);
             }
-            else
-            {
-                this._ID = -1;
-                this._Nome = "";
-                this._Descrizione = "";
-            }
-            rdr.Close();
-            conn.Close();
+        }
+
+        private class GroupRow
+        {
+            public int id { get; set; }
+            public string nomegruppo { get; set; }
+            public string descrizione { get; set; }
         }
 
         public Group(String tenant, String GroupName) : base()
@@ -164,30 +138,17 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction trn = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = trn;
-                
-
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.CommandText = "DELETE FROM gruppipermessi WHERE idgroup = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.ExecuteNonQuery();
-                    cmd.CommandText = "DELETE FROM groupss WHERE id = @ID";
-                    cmd.ExecuteNonQuery();
-                    trn.Commit();
-                    rt = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        conn.Execute("DELETE FROM gruppipermessi WHERE idgroup = @pID", new { @pID = this.ID }, tr);
+                        conn.Execute("DELETE FROM groupss WHERE id = @pID", new { @pID = this.ID }, tr);
+                        tr.Commit();
+                        rt = true;
+                    }
                 }
-                catch(Exception ex)
-                {
-                    log = ex.Message;
-                    rt = false;
-                    trn.Rollback();
-                }
-                conn.Close();
             }
             return rt;
         }
@@ -203,19 +164,15 @@ namespace KIS.App_Code
             this._VociDiMenu = new List<VoceMenu>();
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idVoce FROM menugruppi WHERE gruppo = @ID"
-                    + " ORDER BY ordinamento";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._VociDiMenu.Add(new VoceMenu(this.Tenant, rdr.GetInt32(0)));
+                    var ids = conn.Query<int>("SELECT idVoce FROM menugruppi WHERE gruppo = @ID ORDER BY ordinamento",
+                        new { @ID = this.ID }).ToArray();
+                    foreach (int idVoce in ids)
+                    {
+                        this._VociDiMenu.Add(new VoceMenu(this.Tenant, idVoce));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -224,28 +181,18 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                this.loadMenu();
-                int maxOrd = this.VociDiMenu.Count+1;
-                cmd.CommandText = "INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(@ID, @vmid, @maxOrd)";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                cmd.Parameters.AddWithValue("@vmid", vm.ID);
-                cmd.Parameters.AddWithValue("@maxOrd", maxOrd);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    rt = true;
-                }
-                catch(Exception ex)
-                {
-                    log = ex.Message;
-                    rt = false;
-                    tr.Rollback();
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        this.loadMenu();
+                        int maxOrd = this.VociDiMenu.Count + 1;
+                        conn.Execute("INSERT INTO menugruppi(gruppo, idVoce, ordinamento) VALUES(@ID, @vmid, @maxOrd)",
+                            new { @ID = this.ID, @vmid = vm.ID, @maxOrd = maxOrd }, tr);
+                        tr.Commit();
+                        rt = true;
+                    }
                 }
             }
             return rt;
@@ -411,18 +358,12 @@ namespace KIS.App_Code
             this._Utenti = new List<string>();
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT user FROM groupusers WHERE groupID = @ID";
-                cmd.Parameters.AddWithValue("@ID", this.ID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._Utenti.Add(rdr.GetString(0));
+                    var users = conn.Query<string>("SELECT user FROM groupusers WHERE groupID = @ID",
+                        new { @ID = this.ID }).ToArray();
+                    this._Utenti = users.ToList();
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -433,19 +374,15 @@ namespace KIS.App_Code
                 List<Reparto> ret = new List<Reparto>();
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Ritardo' "
-                        + "AND idGruppo = @ID";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        ret.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                        var ids = conn.Query<int>("SELECT idReparto FROM eventorepartogruppi WHERE TipoEvento LIKE 'Ritardo' AND idGruppo = @ID",
+                            new { @ID = this.ID }).ToArray();
+                        foreach (int idReparto in ids)
+                        {
+                            ret.Add(new Reparto(this.Tenant, idReparto));
+                        }
                     }
-                    rdr.Close();
-                    conn.Close();
                 }
                 return ret;
             }

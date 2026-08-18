@@ -1,0 +1,41 @@
+@inherits KIS.Users.addPermesso
+@{
+    // placeholder – markup reproduced from addPermesso.ascx
+}
+<label id="lbl1" />
+<button type="button" id="showAddPermesso" class="btn-link" onclick="toggleForm()"><img src="~/img/iconAdd2.png" height="50" /></button>
+
+<table id="tblFormAddPermesso" style="display:none;">
+    <tr>
+        <td><label id="lblNome" />:</td>
+        <td><input type="text" id="nomeP" required />
+            <span style="color:red;"><label id="lblReqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescrizione" />:</td>
+        <td><textarea id="descP" rows="4" required></textarea>
+            <span style="color:red;"><label id="lblReqField2" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="imgAddPermesso" class="btn btn-success" onclick="doSave()">Salva</button>
+            <button type="button" id="imgReset" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+<label id="err" />
+
+<script type="text/javascript">
+    function toggleForm() {
+        $("#tblFormAddPermesso").toggle();
+    }
+    function doSave() {
+        if (!$("#nomeP").val() || !$("#descP").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Permesso aggiunto");
+    }
+</script>

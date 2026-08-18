@@ -1,0 +1,25 @@
+@inherits KIS.kpi.addKPIForm
+@{
+    // placeholder – markup reproduced from addKPIForm.ascx
+}
+<label id="lblKPI" />
+<label id="kpi_title" style="font-size:20px">Key Performance Indicators</label><br />
+<button type="button" id="imgAddKPI" class="btn-link" onclick="toggleKPIForm()"><img src="/img/iconAdd.jpg" height="40" title="Aggiungi un nuovo KPI" /></button><br />
+<label id="lblInputNameKPI">Name:&nbsp;</label>
+<input type="text" id="nomeKPI" style="font-size:12px; font-family: calibri;" />
+<span style="color:red;">CAMPO OBBLIGATORIO</span>
+<br />
+<label id="lblInputDescrKPI">Description:&nbsp;</label>
+<textarea id="descrKPI" style="font-size:12px; font-family: calibri;" rows="2" cols="30"></textarea>
+<span style="color:red;">CAMPO OBBLIGATORIO</span>
+<br />
+<button type="button" id="btnADDKPI" class="btn-link" onclick="doAddKPI()"><img src="/img/iconSave.jpg" height="40" /></button>
+<button type="button" id="imgCancel" class="btn-link" onclick="toggleKPIForm()"><img src="/img/iconCancel.jpg" height="40" /></button>
+
+<script type="text/javascript">
+    function toggleKPIForm() {
+        var f = $('#kpi_title').parent();
+        $('input[name=nomeKPI], #descrKPI').closest('input, textarea').toggle();
+    }
+    function doAddKPI() { alert("KPI aggiunto"); }
+</script>

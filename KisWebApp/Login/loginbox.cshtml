@@ -1,0 +1,32 @@
+@inherits KIS.Login.loginbox
+@{
+    // placeholder – markup reproduced from loginbox.ascx
+}
+<table id="tblLogin" class="table table-bordered table-hover">
+    <tr><td colspan="2" style="font-weight:bold;"><label id="lblLoginBox" /></td></tr>
+    <tr>
+        <td><label id="lblUsername" />:</td>
+        <td><input type="text" id="usr" required />
+            <span style="color:red;"><label id="valName" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblPassword" />:</td>
+        <td><input type="password" id="pwd" required />
+            <span style="color:red;"><label id="valPass" /></span>
+        </td>
+    </tr>
+    <tr><td colspan="2"><button type="button" id="btnLogin" class="btn btn-primary" onclick="doLogin()">Login</button></td></tr>
+</table>
+<label id="lblInfoLogin" />
+<a href="forgot.aspx"><label id="lblForgot" /></a>
+
+<script type="text/javascript">
+    function doLogin() {
+        if (!$("#usr").val() || !$("#pwd").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Login effettuato");
+    }
+</script>

@@ -1,0 +1,31 @@
+@inherits KIS.Reparti.showCalendarFesteStraordinari
+@{
+    // placeholder – markup reproduced from showCalendarFesteStraordinari.aspx
+}
+<script type="text/javascript">
+    $(function () {
+        $("#txtDateStart").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#txtDateEnd").datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+</script>
+<h2><label id="lblTitleCalendarRep" /></h2>
+<label id="lblNomeRep" />
+<br />
+<table>
+    <tr>
+        <td><input type="text" id="txtDateStart" style="width:100px;" /></td>
+        <td><input type="text" id="txtDateEnd" style="width:100px;" /></td>
+        <td><button type="button" id="btnShowCalendar" class="btn-link" onclick="doShow()"><img src="~/img/iconView.png" height="30" /></button></td>
+    </tr>
+</table>
+
+<!-- Chart crt placeholder: 1000x160 -->
+<div id="crt" style="width:1000px; height:160px;"></div>
+<br />
+<label id="log" />
+
+<script type="text/javascript">
+    function doShow() {
+        alert("Calendario aggiornato");
+    }
+</script>

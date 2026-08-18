@@ -1,0 +1,35 @@
+@inherits KIS.Personal.baseInfo
+@{
+    // placeholder – markup reproduced from baseInfo.ascx
+}
+<table class="table table-striped table-hover table-condensed">
+    <tr>
+        <td><label id="lblDescNome" /></td>
+        <td><b><label id="lblNome" />
+            <input type="text" id="txtNome" /></b>
+        </td>
+        <td>
+            <button type="button" id="imgEditNome" class="btn-link">Edit</button>
+            <button type="button" id="imgSaveNome" class="btn btn-success">Salva</button>
+            <button type="button" id="imgUndoNome" class="btn">Annulla</button>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescCognome" /></td>
+        <td><b><label id="lblCognome" />
+            <input type="text" id="txtCognome" /></b>
+        </td>
+        <td>
+            <button type="button" id="imgEditCognome" class="btn-link">Edit</button>
+            <button type="button" id="imgSaveCognome" class="btn btn-success">Salva</button>
+            <button type="button" id="imgUndoCognome" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $("#imgSaveNome").click(function () { alert("Nome salvato"); });
+        $("#imgSaveCognome").click(function () { alert("Cognome salvato"); });
+    });
+</script>

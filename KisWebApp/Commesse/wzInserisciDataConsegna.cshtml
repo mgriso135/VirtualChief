@@ -1,0 +1,34 @@
+@inherits KIS.Commesse.wzInserisciDataConsegna1
+@{
+    // placeholder – markup reproduced from wzInserisciDataConsegna.ascx
+}
+<label id="lbl1" />
+<div class="row-fluid">
+    <div class="span1">
+        <a id="lnkGoBack" href="#">
+            <img id="imgGoBack" src="~/img/iconArrowLeft.png" height="40" />
+        </a>
+    </div>
+    <div class="span6">
+        <table id="tbl">
+            <tr>
+                <td style="vertical-align:top;">
+                    <label id="lblDataConsegna" />
+                </td>
+                <td>
+                    <label id="lblCalendar" />
+                    <input type="date" id="calDate" />
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="span1">
+        <button type="button" id="btnGoFwd" class="btn-link" onclick="doGoFwd()"><img src="~/img/iconArrowRight.png" height="40" /></button>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function doGoFwd() {
+        alert("Avanti");
+    }
+</script>

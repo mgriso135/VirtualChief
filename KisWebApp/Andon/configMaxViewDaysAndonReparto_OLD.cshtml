@@ -1,0 +1,25 @@
+@inherits KIS.Andon.configMaxViewDaysAndonReparto
+@{
+    // placeholder – markup reproduced from configMaxViewDaysAndonReparto_OLD.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <h3><label id="lblTitleCfgGiorni" /></h3>
+        <label id="lbl1" />
+        <br />
+        <select id="ddlNumDays" onchange="ddlNumDays_SelectedIndexChanged();">
+            <option>7</option>
+            <option>14</option>
+            <option>30</option>
+        </select>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Original used AutoPostBack; here we just log change.
+        $("#ddlNumDays").change(function () {
+            alert("Numero giorni cambiato a: " + $(this).val());
+        });
+    });
+</script>

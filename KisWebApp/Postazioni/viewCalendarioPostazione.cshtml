@@ -1,0 +1,69 @@
+@inherits KIS.Postazioni.viewCalendarioPostazione
+@{
+    // placeholder – markup reproduced from viewCalendarioPost.aspx
+}
+<div class="row-fluid">
+    <div class="accordion" id="accordion1">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                    <span><%$Resources:lblDataInizio %></span>
+                </a>
+            </div>
+            <div id="collapseOne" class="accordion-body collapse in">
+                <div class="accordion-inner">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td><label id="lblDataInizio" /></td>
+                            <td><input type="text" id="txtCalInizio" class="datepicker" style="width:80px;" /></td>
+                        </tr>
+                        <tr>
+                            <td><label id="lblDataFine" /></td>
+                            <td><input type="text" id="txtCalFine" style="width:80px;" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button type="button" id="btnUpdateCalendar" class="btn">Salva</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                    <span><%$Resources:lblDataFine %></span>
+                </a>
+            </div>
+            <div id="collapseTwo" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <table class="table table-condensed">
+                        <tr>
+                            <td><label id="dataI" /></td>
+                            <td><label id="dataF" /></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="row-fluid">
+    <div class="span12">
+        <div id="wlPostazionePlaceholder" style="width:1000px;"></div>
+        <label id="lbl1" />
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // datepicker init – the original uses PageRequestManager; here we directly bind
+        $("[id*=txtCalInizio]").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("[id*=txtCalFine]").datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+    // TODO: replace wlPostazionePlaceholder with Google Chart / D3
+</script>

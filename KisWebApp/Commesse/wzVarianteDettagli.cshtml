@@ -1,0 +1,67 @@
+@inherits KIS.Commesse.wzVarianteDettagli
+@{
+    // placeholder – markup reproduced from wzVarianteDettagli.ascx
+}
+<label id="lbl1" />
+<table id="tblDatiProdotto" class="table table-hover table-condensed table-bordered" width="100%">
+    <tr>
+        <td style="vertical-align:middle;" rowspan="4">
+            <button type="button" id="imgEditNomeVariante" class="btn-link" onclick="editMode()"><img src="~/img/edit.png" height="40" /></button>
+            <button type="button" id="imgSaveNomeVariante" class="btn-link" onclick="saveMode()" style="display:none;"><img src="~/img/iconSave.jpg" height="40" /></button>
+            <button type="button" id="imgUndoNomeVariante" class="btn-link" onclick="undoMode()" style="display:none;"><img src="~/img/iconUndo.png" height="40" /></button>
+        </td>
+        <td><label id="lblName" /></td>
+        <td>
+            <label id="lblNomeVariante" />
+            <input type="text" id="txtNomeVariante" style="display:none;" required />
+            <span style="color:red;"><label id="lblValReqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescription" /></td>
+        <td>
+            <label id="lblDescVariante" />
+            <textarea id="txtDescVariante" rows="4" style="display:none;" required></textarea>
+            <span style="color:red;"><label id="lblValReqField2" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblExternalID" /></td>
+        <td>
+            <label id="lblExternalID2" />
+            <input type="text" id="txtExternalID" style="display:none;" />
+        </td></tr>
+    <tr>
+        <td><label id="lblMeasurementUnit" />:</td>
+        <td><select id="ddlMeasurementUnits" disabled="disabled"></select></td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function editMode() {
+        $("#lblNomeVariante").hide();
+        $("#lblDescVariante").hide();
+        $("#lblExternalID2").hide();
+        $("#txtNomeVariante").show();
+        $("#txtDescVariante").show();
+        $("#txtExternalID").show();
+        $("#imgSaveNomeVariante").show();
+        $("#imgUndoNomeVariante").show();
+        $("#imgEditNomeVariante").hide();
+    }
+    function saveMode() {
+        alert("Modifiche salvate");
+        undoMode();
+    }
+    function undoMode() {
+        $("#txtNomeVariante").hide();
+        $("#txtDescVariante").hide();
+        $("#txtExternalID").hide();
+        $("#imgSaveNomeVariante").hide();
+        $("#imgUndoNomeVariante").hide();
+        $("#imgEditNomeVariante").show();
+        $("#lblNomeVariante").show();
+        $("#lblDescVariante").show();
+        $("#lblExternalID2").show();
+    }
+</script>

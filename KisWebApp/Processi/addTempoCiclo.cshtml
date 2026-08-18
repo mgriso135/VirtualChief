@@ -1,0 +1,47 @@
+@inherits KIS.Processi.addTempoCiclo
+@{
+    // placeholder – markup reproduced from addTempoCiclo.ascx
+}
+<label id="lblAddTC" />
+<button type="button" id="imgShowFrmAddTempo" class="btn">Add</button>
+<input type="hidden" id="taskID" />
+<input type="hidden" id="varID" />
+<table id="frmAddTempo" style="border:1px dotted green;">
+    <tr>
+        <td><label id="lblNumOp" /></td>
+        <td><select id="ddlNumOp" style="width:80px;"><option>1</option><option>2</option></select></td>
+    </tr>
+    <tr>
+        <td><label id="lblSetup" /></td>
+        <td>
+            <label id="lblOre" />:<select id="oreSetup" style="width:80px;"><option>00</option></select>
+            <label id="lblMinuti" />:<select id="minSetup" style="width:60px;"><option>00</option></select>
+            <label id="lblSecondi" />:<select id="secSetup" style="width:60px;"><option>00</option></select>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblTempoCiclo" /></td>
+        <td>
+            <label id="Literal1" />:<select id="ore" style="width:80px;"><option>00</option></select>
+            <label id="Literal2" />:<select id="minuti" style="width:60px;"><option>00</option></select>
+            <label id="Literal3" />:<select id="secondi" style="width:60px;"><option>00</option></select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="checkbox" id="chkDefault" checked /><label id="lblDefault" /></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="btnSave" class="btn btn-success">Salva</button>
+            <button type="button" id="btnUndo" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+<label id="lbl1" />
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnSave").click(function () { alert("Tempo ciclo salvato"); });
+        $("#btnUndo").click(function () { $("#ore").val("00"); $("#minuti").val("00"); $("#secondi").val("00"); });
+    });
+</script>

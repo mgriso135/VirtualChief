@@ -1,0 +1,37 @@
+@inherits KIS.Commesse.linkArticoli
+@{
+    // placeholder – markup reproduced from linkArticoli.ascx
+}
+<table id="frmLinkArticolo" class="table table-condensed">
+    <tr>
+        <td><label id="lblProdotto" />:</td>
+        <td><select id="ddlArticoli">
+            <option value="-1"></option>
+        </select></td>
+    </tr>
+    <tr>
+        <td><label id="lblQuantita" /></td>
+        <td><input type="text" id="txtQuantita" required />
+            <span style="color:red;"><label id="lblReqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDataConsegnaPrevista" />:</td>
+        <td><input type="date" id="consegnaprevista" /></td>
+    </tr>
+    <tr><td colspan="2" style="text-align:center;">
+        <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+        <button type="button" id="btnUndo" class="btn">Annulla</button>
+    </td></tr>
+</table>
+<label id="lbl1" />
+
+<script type="text/javascript">
+    function doSave() {
+        if (!$("#ddlArticoli").val() || !$("#txtQuantita").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Articolo collegato");
+    }
+</script>

@@ -1,0 +1,43 @@
+@inherits KIS.Reparti.addStraordinario
+@{
+    // placeholder – markup reproduced from addStraordinario.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <label id="lbl1" /><br />
+        <table class="table table-condensed">
+            <thead>
+                <tr style="text-align:center;">
+                    <th><label id="lblTHStart" /></th>
+                    <th><label id="lblTHEnd" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="text-align:center;">
+                    <td>
+                        <input type="text" id="inizioStraord" class="datepicker" /> <br />
+                        <select id="OraI" class="dropdown" style="width:60px;"><option>00</option></select>
+                        <select id="MinutoI" class="dropdown" style="width:60px;"><option>00</option></select>
+                    </td>
+                    <td>
+                        <input type="text" id="fineStraord" class="datepicker" /> <br />
+                        <select id="OraF" class="dropdown" style="width:60px;"><option>00</option></select>
+                        <select id="MinutoF" class="dropdown" style="width:60px;"><option>00</option></select>
+                    </td>
+                </tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <button type="button" id="saveStraord" class="btn">Salva</button>
+                </td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $(".datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#saveStraord").click(function () {
+            alert("Straordinario salvato");
+        });
+    });
+</script>

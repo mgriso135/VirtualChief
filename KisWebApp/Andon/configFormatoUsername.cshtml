@@ -1,0 +1,33 @@
+@inherits KIS.Andon.configFormatoUsername
+@{
+    // placeholder – markup reproduced from configFormatoUsername.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <h3><label id="lblTitleVisUtenti" /></h3>
+        <label id="lbl1" />
+        <div class="radio">
+            <label>
+                <input type="radio" id="rbList_0" name="rbList" /> <%= Resources.liVisUsername %>
+            </label>
+            <label>
+                <input type="radio" id="rbList_1" name="rbList" /> <%= Resources.liVisNome %>
+            </label>
+            <label>
+                <input type="radio" id="rbList_2" name="rbList" /> <%= Resources.liVisNomeInizialeC %>
+            </label>
+            <label>
+                <input type="radio" id="rbList_3" name="rbList" /> <%= Resources.liVisNomeCognome %>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Original used AutoPostBack + SelectedIndexChanged; here we just log.
+        $("input[name='rbList']").change(function () {
+            alert("Formato username cambiato a: " + $(this).val());
+        });
+    });
+</script>

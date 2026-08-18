@@ -1,0 +1,37 @@
+@inherits KIS.Login.forgot
+@{
+    // placeholder – markup reproduced from Login/forgot.aspx
+}
+<h3><label id="lblTitleRipristinoDati" /></h3>
+<label id="lbl1" />
+<div class="row-fluid">
+    <span class="span12">
+        <label class="radio">
+            <input type="radio" name="rbMain" id="rbMain_username" value="username" onchange="doScelta()" />
+            <label id="lblForgotUsername" />
+        </label>
+        <label class="radio">
+            <input type="radio" name="rbMain" id="rbMain_password" value="password" onchange="doScelta()" />
+            <label id="lblForgotPassword" />
+        </label>
+    </span>
+</div>
+
+<div class="row-fluid">
+    <span class="span12">
+        @Html.Partial("~/Login/forgotUsername.cshtml")
+    </span>
+</div>
+<div class="row-fluid">
+    <span class="span12">
+        @Html.Partial("~/Login/forgotPassword.cshtml")
+    </span>
+</div>
+
+<script type="text/javascript">
+    function doScelta() {
+        var v = $('input[name=rbMain]:checked').val();
+        if (v == "username") { $('#frmUsername').show(); $('#frmPassword').hide(); }
+        else { $('#frmUsername').hide(); $('#frmPassword').show(); }
+    }
+</script>

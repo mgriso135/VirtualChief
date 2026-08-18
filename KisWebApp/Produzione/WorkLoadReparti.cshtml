@@ -1,0 +1,19 @@
+@inherits KIS.Produzione.WorkLoadReparti
+@{
+    // placeholder – markup reproduced from WorkLoadReparti.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="produzione.cshtml"><label id="lblNavProduzione" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="workLoadListReparti.cshtml"><label id="lblNavCapProd" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl"><label id="lblNavCapRichiesta" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+@Html.Partial("~/Produzione/wlReparto.cshtml")

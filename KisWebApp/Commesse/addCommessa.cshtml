@@ -1,0 +1,36 @@
+@inherits KIS.Commesse.addCommessa
+@{
+    // placeholder – markup reproduced from addCommessa.ascx
+}
+<a href="~/SalesOrders/SalesOrder/AddSalesOrder?OrderID=-1&OrderYear=-1">
+    <img class="img-rounded" id="btnShowFrmAddCommessa" height="40" src="~/img/iconAdd.jpg" title="Aggiungi una nuova commessa" />
+</a>
+<label id="lblTxtAddCommessa" /><br />
+
+<table id="frmAddCommessa" class="table table-bordered table-hover">
+    <tr><td><label id="lblCliente" /></td><td>
+        <select id="ddlCliente"></select>
+        <a href="../Clienti/AddCliente.cshtml"><label id="lblAddCliente" /></a>
+    </td></tr>
+    <tr><td><label id="lblExternalID" /></td><td><input type="text" id="txtExternalID" />
+    </td></tr>
+    <tr><td><label id="lblNote" /></td><td><textarea id="txtNote" rows="4"></textarea>
+    </td></tr>
+
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+            <button type="button" id="btnUndo" class="btn">Annulla</button>
+        </td></tr>
+</table>
+<label id="lbl1" />
+
+<script type="text/javascript">
+    function doSave() {
+        if (!$("#ddlCliente").val()) {
+            alert("Selezionare un cliente");
+            return;
+        }
+        alert("Commessa aggiunta");
+    }
+</script>

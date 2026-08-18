@@ -1,0 +1,19 @@
+@inherits KIS.Configuration.WizConfigTimezone1
+@{
+    // placeholder – markup reproduced from WizConfigTimezone.ascx
+}
+<h3><label id="lblSelTimezone" /></h3>
+<select id="ddlTimezones">
+    <option value="">--</option>
+    <option value="Europe/Rome">Europe/Rome</option>
+    <option value="UTC">UTC</option>
+</select>
+<button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+<br />
+<label id="lbl1" class="text-info" />
+
+<script type="text/javascript">
+    function doSave() {
+        alert("Timezone salvato");
+    }
+</script>

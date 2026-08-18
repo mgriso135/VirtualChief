@@ -1,0 +1,39 @@
+@inherits KIS.Admin.menuAddVoceFiglia
+@{
+    // placeholder – markup reproduced from menuAddVoceFiglia.ascx
+}
+<button type="button" id="imgShowFormAddMainMenu" class="btn-link" onclick="toggleMenuForm()"><img src="~/img/iconAdd2.png" height="50" title="Aggiungi una voce di menu figlia" /></button>
+<table id="tblFormAdd" style="display:none;">
+    <tr>
+        <td><label id="lblTitolo" /></td>
+        <td><input type="text" id="txtTitolo" />
+            <span style="color:red;"><label id="lblValValoreRichiesto" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescrizione" /></td>
+        <td><input type="text" id="txtDesc" />
+            <span style="color:red;"><label id="lblValValoreRichiesto2" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblURL" /></td>
+        <td>
+            <input type="text" id="txtURL" />
+            <span style="color:red;"><label id="lblValValoreRichiesto3" /></span>
+        </td>
+    </tr>
+    <tr><td colspan="2">
+        <button type="button" id="save" class="btn-link" onclick="doSave()"><img src="~/img/iconSave.jpg" height="40" /></button>
+        <button type="button" id="undo" class="btn-link" onclick="toggleMenuForm()"><img src="~/img/iconUndo.png" height="40" /></button>
+    </td></tr>
+</table>
+<label id="lbl1" />
+
+<script type="text/javascript">
+    function toggleMenuForm() {
+        var f = $('#tblFormAdd');
+        f.is(':visible') ? f.hide() : f.show();
+    }
+    function doSave() { alert("Voce di menu figlia aggiunta"); }
+</script>

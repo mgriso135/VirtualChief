@@ -1,0 +1,57 @@
+@inherits KIS.Reparti.addFestivita
+@{
+    // placeholder – markup reproduced from addFestivita.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <label id="lbl1" />
+        <br />
+        <table class="table table-condensed">
+            <thead>
+                <tr style="text-align:center;">
+                    <th><label id="lblInizioFest" /></th>
+                    <th><label id="lblFineFest" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="text" id="inizioFest" class="datepicker" /> <br />
+                        <select id="OraI" class="dropdown" style="width:60px;"><option>00</option></select>
+                        <select id="MinutoI" class="dropdown" style="width:60px;"><option>00</option></select>
+                    </td>
+                    <td>
+                        <input type="text" id="fineFest" class="datepicker" /> <br />
+                        <select id="OraF" class="dropdown" style="width:60px;"><option>00</option></select>
+                        <select id="MinutoF" class="dropdown" style="width:60px;"><option>00</option></select>
+                    </td>
+                </tr>
+                <tr><td colspan="2" style="text-align:center;">
+                    <button type="button" id="saveFest" class="btn">Salva</button>
+                </td></tr>
+                <tr><td colspan="2" runat="server" id="colSave" style="display:none;">
+                    <label id="lblListProd" />
+                    <button type="button" id="imgSave" class="btn">Complete</button>
+                    <button type="button" id="imgUndo" class="btn">Annulla</button>
+                </td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Datepicker init – original used Calendar WebControl.
+        $(".datepicker").datepicker({ dateFormat: 'dd/mm/yy' });
+        // Original postbacks replaced with simple click handlers.
+        $("#saveFest").click(function () {
+            alert("Festività salvata");
+        });
+        $("#imgSave").click(function () {
+            alert("Lista prodotti completata");
+        });
+        $("#imgUndo").click(function () {
+            alert("Annullato");
+        });
+    });
+</script>

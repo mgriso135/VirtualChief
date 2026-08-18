@@ -1,0 +1,23 @@
+@inherits KIS.Analysis.ReportCustomerProdProgress_chooseCustomer1
+@{
+    // placeholder – markup reproduced from ReportCustomerProdProgress_chooseCustomer.ascx (control wins over .aspx page)
+}
+<h3><label id="lblTitleScegliCliente" /></h3>
+<script>
+    $(document).ready(function () {
+        $("#lbl1").delay(3000).fadeOut("slow");
+    });
+</script>
+<div class="row-fluid">
+    <div class="span10">
+        <label id="lbl1" class="text-info" />
+        <label class="radio">
+            <!-- Clienti -->
+        </label>
+    </div>
+    <div class="span2">
+        <a id="lnkGoFwd" href="ReportCustomerProdProgress_chooseINPProducts.cshtml">
+            <img id="imgGoFwd" src="~/img/iconArrowRight.png" height="40" style="display:none;" />
+        </a>
+    </div>
+</div>

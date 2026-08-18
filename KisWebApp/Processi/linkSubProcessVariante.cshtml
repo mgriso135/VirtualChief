@@ -1,0 +1,17 @@
+@inherits KIS.Processi.linkSubProcessVariante
+@{
+    // placeholder – markup reproduced from linkSubProcessVariante.ascx
+}
+<b><label id="lblLinkTask" />:&nbsp;</b>
+<select id="ddlTasks">
+    <option>Task 1</option>
+    <option>Task 2</option>
+</select>
+<button type="button" id="btnLnkTask" class="btn btn-success">Salva</button>
+<br /><label id="lbl1" />
+
+<script type="text/javascript">
+    $(function () {
+        $("#btnLnkTask").click(function () { alert("Task collegato"); });
+    });
+</script>

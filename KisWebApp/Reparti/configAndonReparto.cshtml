@@ -1,0 +1,33 @@
+@inherits KIS.Reparti.configAndonReparto
+@{
+    // placeholder – markup reproduced from configAndonReparto.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <label id="lbl1" /><br />
+        <b><label id="lblTitleAndonRep" /></b>
+        <div class="radio">
+            <label>
+                <input type="radio" id="rbList_0" name="rbList" /> <%= Resources.lblVisUsername %>
+            </label>
+            <label>
+                <input type="radio" id="rbList_1" name="rbList" /> <%= Resources.lblVisNombre %>
+            </label>
+            <label>
+                <input type="radio" id="rbList_2" name="rbList" /> <%= Resources.lblVisNombreYA %>
+            </label>
+            <label>
+                <input type="radio" id="rbList_3" name="rbList" /> <%= Resources.lblVisNombreYAppellido %>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Original used AutoPostBack + SelectedIndexChanged; here we just log.
+        $("input[name='rbList']").change(function () {
+            alert("Visualizzazione Andon cambiata a: " + $(this).val());
+        });
+    });
+</script>

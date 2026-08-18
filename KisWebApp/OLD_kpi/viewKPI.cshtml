@@ -1,0 +1,50 @@
+@inherits KIS.kpi.viewKPI
+@{
+    // placeholder – markup reproduced from viewKPI.aspx
+}
+<label id="lbl1" />
+<a id="lblBack">Torna al processo</a>
+<br />
+<br />
+
+<h1>Key Performance Indicator</h1>
+
+<table border="0">
+    <tr>
+        <td style="vertical-align:top">
+            <button type="button" id="imgRecordValue" class="btn-link" onclick="toggleRecordForm()"><img src="/img/iconRecord.png" height="100" /></button><br />
+            @Html.Partial("~/OLD_kpi/recordValueNow.cshtml")
+        </td>
+
+        <td style="vertical-align:top">
+            <label id="nomePROC" style="font-size: 18px; font-weight: bold;" />
+            <label id="nomeKPI" style="font-size: 18px; font-weight: bold;" />
+            <input type="text" id="inputNomeKpi" />
+            <br />
+            <label id="descrKPI" style="font-size: 14px; font-style:italic;" />
+            <textarea id="inputDescrKPI"></textarea>
+            <br />
+            Default value:&nbsp;<label id="baseVal" style="font-size: 14px; font-style:italic;" />
+            <input type="text" id="inputBaseVal" />&nbsp;secondi
+            <br />
+            <button type="button" id="imgSaveKPI" class="btn-link" onclick="doSave()"><img src="/img/iconSave.jpg" height="40" /></button>
+            <button type="button" id="imgIconCancel" class="btn-link" onclick="toggleEdit()"><img src="/img/iconCancel.jpg" height="40" /></button>
+            <button type="button" id="imgEditKPI" class="btn-link" onclick="toggleEdit()"><img src="/img/edit.png" height="40" /></button>
+            <button type="button" id="imgTrashKPI" class="btn-link" onclick="doTrash()"><img src="/img/iconDelete.png" height="40" title="Move KPI to trash. It will be possible to resume it in the future without losing saved data." /></button>
+            <button type="button" id="imgDeleteKPI" class="btn-link" onclick="doDelete()"><img src="/img/iconMinus.png" height="40" title="Definitely deletes KPI and related recorded values." /></button>
+        </td>
+    </tr>
+</table>
+
+<br />
+<br />
+<hr />
+@Html.Partial("~/OLD_kpi/showKPIRecords.cshtml")
+
+<script type="text/javascript">
+    function toggleRecordForm() { alert("Registra valore"); }
+    function toggleEdit() { alert("Modifica KPI"); }
+    function doSave() { alert("KPI salvato"); }
+    function doTrash() { if (confirm("Spostare il KPI nel cestino?")) alert("KPI spostato nel cestino"); }
+    function doDelete() { if (confirm("Eliminare definitivamente il KPI?")) alert("KPI eliminato"); }
+</script>

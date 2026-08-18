@@ -1,0 +1,91 @@
+@inherits KIS.Configuration.wizConfigReparti_Detail
+@{
+    // placeholder – markup reproduced from wizConfigReparti_Detail.aspx
+}
+<label id="lbl1" />
+<br />
+<h1><label id="lblTitle" /></h1>
+<label id="lblDesc" />
+<br />
+<br />
+
+<h2 id="titleConfig"><label id="lblTitleDeptCfg" /></h2>
+
+<div class="accordion" id="accordion1">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                <label id="lblNavTaskLaunch" />
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configSplitTasksTurni.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
+                <label id="lblNavWorkShift" />
+            </a>
+        </div>
+        <div id="collapseFive" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configTurni.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSix">
+                <label id="lblDelayWarn" />
+            </a>
+        </div>
+        <div id="collapseSix" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Eventi/RepartoRitardo.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSeven">
+                <label id="lblProblemWarn" />
+            </a>
+        </div>
+        <div id="collapseSeven" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Eventi/RepartoWarning.cshtml")
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEight">
+                <label id="lblCalcoloTC" />
+            </a>
+        </div>
+        <div id="collapseEight" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configModoCalcoloTC.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTen">
+                <label id="lblTaskExecution" />
+            </a>
+        </div>
+        <div id="collapseTen" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Reparti/configAvvioTasks.cshtml")
+            </div>
+        </div>
+    </div>
+</div>

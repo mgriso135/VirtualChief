@@ -1,0 +1,33 @@
+@inherits KIS.Commesse.wzEditPauseTasks1
+@{
+    // placeholder – markup reproduced from wzEditPauseTasks.ascx
+}
+<h3><label id="lblTitlePause" /></h3>
+<label id="lbl1" />
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th><label id="lblTHTaskPrec" /></th>
+            <th><label id="lblTHPausa" />&nbsp;<img src="~/img/iconWait.png" width="40" /></th>
+            <th><label id="lblTHTaskSucc" /></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align:center;"><label id="lblNomePrec" /></td>
+            <td style="text-align:center;">
+                <select id="ddlHour" class="dropdown" style="width:70px;"><option>00</option></select>:
+                <select id="ddlMinutes" class="dropdown" style="width:60px;"><option>00</option></select>:
+                <select id="ddlSeconds" class="dropdown" style="width:60px;"><option>00</option></select>
+            </td>
+            <td style="text-align:center;"><label id="lblNomeSucc" /></td>
+        </tr>
+        <tr>
+            <td colspan="3" style="text-align:center;">
+                <button type="button" id="btnSave" class="btn">Salva</button>
+                <button type="button" id="btnUndo" class="btn">Annulla</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<label id="lblInfo" class="text-info" />

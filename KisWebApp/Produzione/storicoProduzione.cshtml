@@ -1,0 +1,15 @@
+@inherits KIS.Produzione.storicoProduzione
+@{
+    // placeholder – markup reproduced from storicoProduzione.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="produzione.cshtml"><label id="lblNavProd" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="@Request.RawUrl"><label id="lblNavStoricoProd" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+@Html.Partial("~/Produzione/listArticoliTerminati.cshtml")

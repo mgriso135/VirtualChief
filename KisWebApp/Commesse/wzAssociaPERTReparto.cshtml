@@ -1,0 +1,32 @@
+@inherits KIS.Commesse.wzAssociaPERTReparto
+@{
+    // placeholder – markup reproduced from wzAssociaPERTReparto.aspx
+}
+<h1><label id="lblWizNuovoOrd" /></h1>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="wzAddCommessa.cshtml"><label id="lblNavNewOrdine" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a id="lnkAddPert" href="#"><label id="lblNavDescrProd" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a id="lnkEditPert" href="#"><label id="lblNavDescrProcesso" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a id="lnkAssociaReparto" href="#"><b style="font-size: 14px;"><label id="lblNavSelReparto" /></b></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+
+<div class="row-fluid">
+    <div class="span9">
+        @Html.Partial("~/Commesse/wzAssociaProdottoReparto.cshtml")
+    </div>
+    <div class="span3">
+        @Html.Partial("~/Commesse/wzInfoPanel.cshtml")
+    </div>
+</div>

@@ -1,0 +1,18 @@
+@inherits KIS.Admin.configTimezone
+@{
+    // placeholder – markup reproduced from configTimezone.ascx
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#lbl1").delay(3000).fadeOut("slow", function () {
+            $(this).text('');
+        });
+    });
+</script>
+<select id="ddlTimezones" onchange="doTimezoneChanged()"></select>
+<br />
+<label id="lbl1" class="text-info" />
+
+<script type="text/javascript">
+    function doTimezoneChanged() { alert("Fuso orario aggiornato"); }
+</script>

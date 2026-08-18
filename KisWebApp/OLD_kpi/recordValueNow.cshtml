@@ -1,0 +1,18 @@
+@inherits KIS.kpi.recordValueNow
+@{
+    // placeholder – markup reproduced from recordValueNow.ascx
+}
+<input type="text" id="valore" />
+<br />
+<span style="color:red;">Errore: richiesto valore numerico!</span>
+<br />
+<span style="color:red;">Errore: campo richiesto</span>
+<br />
+<button type="button" id="btnSaveRecord" class="btn-link" onclick="doSaveRecord()"><img src="/img/iconSave.jpg" height="40" /></button>
+<button type="button" id="btnCancelSaveRecord" class="btn-link" onclick="doCancelSave()"><img src="/img/iconCancel.jpg" height="40" /></button>
+<label id="lblErr" />
+
+<script type="text/javascript">
+    function doSaveRecord() { alert("Valore registrato"); }
+    function doCancelSave() { alert("Operazione annullata"); }
+</script>

@@ -1,0 +1,75 @@
+@inherits KIS.Users.editUserInfo
+@{
+    // placeholder – markup reproduced from editUserInfo.ascx
+}
+<script>
+    $(document).ready(function () {
+        $("#btnDisableUser").click(function () {
+            var username = $("#hdUsername").val();
+            $("#btnDisableUser").fadeOut();
+            $.ajax({
+                url: "../Users/Users/DisableUser",
+                type: 'POST',
+                data: { user: username },
+                success: function (data) {
+                    if (data == "1") {
+                        window.location.href = "../Users/manageUsers.cshtml";
+                    }
+                    else if (data == "0") {
+                        alert("Error");
+                    }
+                    else if (data == "2") {
+                        alert("User not allowed");
+                    }
+                    $("#btnDisableUser").fadeIn();
+                },
+                statusCode: {
+                    404: function () { alert('cannot find resource'); $("#btnDisableUser").fadeIn(); },
+                    500: function () { alert('internal server error'); $("#btnDisableUser").fadeIn(); }
+                },
+                error: function () {
+                    $("#btnDisableUser").fadeIn();
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+<label id="lbl1" />
+<h1><label id="lblUsername" /></h1>
+<div class="row-fluid">
+    <div class="span9">
+        <table id="tbEdit" class="table table-hover">
+            <tbody>
+                <tr>
+                    <td><label id="lblNome" />:</td>
+                    <td><input type="text" id="tbNome" /></td>
+                </tr>
+                <tr>
+                    <td><label id="lblCognome" />:</td>
+                    <td><input type="text" id="tbCognome" /></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
+                        <button type="button" id="btnUndo" class="btn">Annulla</button>
+                        <label id="lblRes" style="color:red;" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="span3">
+        <button type="button" id="btnDisableUser" style="min-width:30px; max-width:60px; border:none; background:transparent;"><img src="~/img/iconDelete.png" /></button>
+        <input type="hidden" id="hdUsername" />
+    </div>
+</div>
+
+<script type="text/javascript">
+    function doSave() {
+        alert("Dati utente salvati");
+    }
+</script>

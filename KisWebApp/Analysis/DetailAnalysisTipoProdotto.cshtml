@@ -1,0 +1,150 @@
+@inherits KIS.Analysis.DetailAnalysisTipoProdotto1
+@{
+    // placeholder – markup reproduced from DetailAnalysisTipoProdotto.ascx (control wins over .aspx page)
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        function init() {
+            $("#txtStart").datepicker({ dateFormat: 'dd/mm/yy' });
+            $("#txtEnd").datepicker({ dateFormat: 'dd/mm/yy' });
+        }
+        init();
+    });
+
+    function FireSearch() {
+        $("#lbl1").fadeIn("fast", function () { $(this).text('Loading data...'); });
+        return true;
+    }
+</script>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h3><label id="lblNomeTipoProdotto" /></h3>
+        <label id="lblDescTipoProdotto" /><br />
+    </div>
+</div>
+
+<div class="row-fluid"><div class="span12"><label id="lbl1" class="text-info" /></div></div>
+
+<div class="row-fluid" id="container">
+    <div class="span12">
+        <table>
+            <tr><td><label id="lblDataInizio" /></td>
+                <td><input type="text" id="txtStart" /></td>
+            </tr>
+            <tr><td><label id="lblDataFine" /></td>
+                <td><input type="text" id="txtEnd" /></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button type="button" id="btnSearch" class="btn-link" onclick="FireSearch()"><img src="~/img/iconView.png" width="40" /></button>
+                </td>
+            </tr>
+        </table>
+
+        <div class="accordion" id="accordion1">
+            <div id="rptProdotti">
+                <div class="accordion-group">
+                    <div class="accordion-heading">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <label id="lblProducts" />
+                        </a>
+                    </div>
+                    <div id="collapseOne" class="accordion-body collapse">
+                        <div class="accordion-inner">
+                            <!-- Prodotti -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        <label id="lblTempiDiLavoro" />
+                    </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <label id="lblMedia" /><label id="lblMediaTempoDiLavoro" />
+                        <br />
+                        <div id="chartTempi" style="width:600px;">
+                            <!-- Grafico tempi di lavoro -->
+                        </div>
+                        <br />
+                        <div id="rptTempiDiLavoro">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tr>
+                                    <th><label id="lblTHID" /></th>
+                                    <th><label id="lblTHCliente" /></th>
+                                    <th><label id="lblTHQuantita" /></th>
+                                    <th><label id="lblTempoLavTotale" /></th>
+                                    <th><label id="lblTempoLavUnitario" /></th>
+                                </tr>
+                                <!-- Tempi di lavoro -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        <label id="lblLeadTimes" />
+                    </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <label id="lblMedia1" /><label id="lblMediaLeadTimes" /><br />
+                        <div id="chartLeadTimes" style="width:600px;">
+                            <!-- Grafico lead times -->
+                        </div>
+                        <br />
+                        <div id="rptLeadTimes">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tr>
+                                    <th><label id="lblTHID2" /></th>
+                                    <th><label id="lblTHCliente2" /></th>
+                                    <th><label id="lblTHQuantita2" /></th>
+                                    <th><label id="lblTHLeadTime" /></th>
+                                </tr>
+                                <!-- Lead times -->
+                                <tr>
+                                    <td colspan="3">
+                                        <b><label id="lblMedia2" /></b>
+                                    </td>
+                                    <td>
+                                        <b><label id="lblLTMedio" /></b>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+                        <label id="lblTempoLavTask" />
+                    </a>
+                </div>
+                <div id="collapseFour" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <div id="rptTempiLavoroTasks">
+                            <table class="table table-striped table-hover table-condensed">
+                                <tr>
+                                    <th></th>
+                                    <th><label id="lblTHTask" /></th>
+                                    <th><label id="lblTHQtaProd" /></th>
+                                    <th><label id="lblTHTaskTempoMedioUnitario" /></th>
+                                </tr>
+                                <!-- Tempi di lavoro tasks -->
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+@inherits KIS.Admin.manageMenu
+@{
+    // placeholder – markup reproduced from manageMenu.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="../Admin/admin.cshtml"><label id="lblNavAdmin" /></a>
+        <span class="divider">/</span>
+        <a href="manageMenu.cshtml"><label id="lblNavManageMenu" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+@Html.Partial("~/Admin/menuAddMainVoce.cshtml")
+@Html.Partial("~/Admin/menuMainVociList.cshtml")

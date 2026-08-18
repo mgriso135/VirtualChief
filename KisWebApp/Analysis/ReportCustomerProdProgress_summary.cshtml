@@ -1,0 +1,42 @@
+@inherits KIS.Analysis.ReportCustomerProdProgress_summary1
+@{
+    // placeholder – markup reproduced from ReportCustomerProdProgress_summary.ascx (control wins over .aspx page)
+}
+<div class="row-fluid">
+    <div class="span12"><h3>
+        <label id="lblSelProdF" />
+    </h3>
+    </div>
+</div>
+<label id="lbl1" />
+<div class="row-fluid" id="frmReport">
+    <div class="span2">
+        <a id="lnkGoBack" href="ReportCustomerProdProgress_chooseFProducts.cshtml">
+            <img id="imgGoBack" src="~/img/iconArrowLeft.png" height="40" />
+        </a>
+    </div>
+    <div class="span8">
+        <label id="lblFormato" />:&nbsp;<select id="ddlFormato">
+            <option value="pdf">PDF</option>
+            <option value="xml" disabled="disabled">XML</option>
+        </select>
+        <div id="rpt1">
+            <table class="table table-striped table-condensed table-hover">
+                <thead>
+                    <th><label id="lblTHIDProd" /></th>
+                    <th><label id="lblTHNome" /></th>
+                    <th><label id="lblTHMatricola" /></th>
+                    <th><label id="lblTHQuantita" /></th>
+                    <th><label id="lblTHStatus" /></th>
+                </thead>
+                <!-- Riepilogo prodotti -->
+            </table>
+        </div>
+    </div>
+    <div class="span2">
+        <button type="button" id="imgGoFwd" class="btn-link" onclick="doGenerate()"><img src="~/img/iconArrowRight.png" height="40" /></button></div>
+</div>
+
+<script type="text/javascript">
+    function doGenerate() { alert("Report generato"); }
+</script>

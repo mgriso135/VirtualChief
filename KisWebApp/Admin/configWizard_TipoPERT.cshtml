@@ -1,0 +1,17 @@
+@inherits KIS.Admin.configWizard_TipoPERT
+@{
+    // placeholder – markup reproduced from configWizard_TipoPERT.ascx
+}
+<label id="lbl1" />
+<label class="radio">
+    <input type="radio" name="rb1" id="rb1_Graph" value="Graph" onchange="doRadioChanged()" />
+    <label id="ddlPertGraph" />
+</label>
+<label class="radio">
+    <input type="radio" name="rb1" id="rb1_Table" value="Table" onchange="doRadioChanged()" />
+    <label id="ddlTableGraph" />
+</label>
+
+<script type="text/javascript">
+    function doRadioChanged() { alert("Tipo diagramma aggiornato"); }
+</script>

@@ -1,0 +1,23 @@
+@inherits KIS.Postazioni.managePostazioni
+@{
+    // placeholder – markup reproduced from managePostazioniLavoro.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="managePostazioniLavoro.cshtml">
+            <label id="lblNavManagePostazioni" />
+        </a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<button type="button" id="imgShowAddPostazioni" class="btn-link" onclick="toggleAddForm()"><img src="~/img/iconAdd2.png" height="60" title="Aggiungi postazione" /></button>
+<br />
+@Html.Partial("~/Postazioni/addPostazione.cshtml")
+
+@Html.Partial("~/Postazioni/viewElencoPostazioni.cshtml")
+
+<script type="text/javascript">
+    function toggleAddForm() {
+        $("#frmAddPostazione").toggle();
+    }
+</script>

@@ -1,0 +1,32 @@
+@inherits KIS.Commesse.wzPrintBarcordes
+@{
+    // placeholder – markup reproduced from wzPrintBarcordes.ascx
+}
+<label id="lbl1" />
+<div class="accordion" id="frmPrintBarcodes">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                <label id="lblStampaBarcodes" />
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <button type="button" id="imgPrintOrdini" class="btn"><i class="icon-barcode"></i> <label id="lblStampaFogliMultipliA4" /></button>
+                <br />
+                <button type="button" id="imgPrintOrdiniSingolo" class="btn"><i class="icon-barcode"></i> <label id="lblStampaFogliSingoliA4" /></button>
+                <br />
+                <button type="button" id="imgPrintOrdiniSingoloA3" class="btn"><i class="icon-file"></i> <label id="Label1" /></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Print buttons – original used OnClick handlers; simplified stubs.
+        $("#imgPrintOrdini").click(function () { alert("Stampa fogli multipli A4"); });
+        $("#imgPrintOrdiniSingolo").click(function () { alert("Stampa fogli singoli A4"); });
+        $("#imgPrintOrdiniSingoloA3").click(function () { alert("Stampa fogli singoli A3"); });
+    });
+</script>

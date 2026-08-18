@@ -1,0 +1,30 @@
+@inherits KIS.Processi.editTask1
+@{
+    // placeholder – markup reproduced from editTask.ascx
+}
+<table style="background-color:white; border:1px dashed black;">
+    <tr>
+        <td><label id="lblNome" />:</td>
+        <td><input type="text" id="editTaskNome" /></td>
+    </tr>
+    <tr>
+        <td><label id="lblDescrizione" />:</td>
+        <td><textarea id="editTaskDesc" rows="4"></textarea></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button type="button" id="editTaskSave" class="btn btn-success">Salva</button>
+            <button type="button" id="editTaskUndo" class="btn">Annulla</button>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2"><label id="lbl1" /></td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $("#editTaskSave").click(function () { alert("Task salvato"); });
+        $("#editTaskUndo").click(function () { $("#editTaskNome").val(""); $("#editTaskDesc").val(""); });
+    });
+</script>

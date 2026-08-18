@@ -1,0 +1,45 @@
+@inherits KIS.Processi.addMacroProcesso
+@{
+    // placeholder – markup reproduced from addMacroProcesso.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="MacroProcessi.cshtml"><label id="lblNavProcessMan" /></a>
+        <span class="divider">/</span>
+        <a href="AddMacroProcesso.cshtml"><label id="lblNavAddProc" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<label id="lbl1" />
+<h3><label id="lblTitleAddProc" /></h3>
+<table id="frmAddProc" class="table table-bordered">
+    <tr><td><label id="lblNomeProc" />
+    </td><td><input type="text" id="ProcName" required /></td>
+        <td><span style="color:red;"><label id="lblValReqField" /></span></td>
+    </tr>
+    <tr><td><label id="lblDescProc" /></td><td><textarea id="ProcDesc" style="height:50px; width:250px;" required></textarea></td>
+        <td><span style="color:red;"><label id="lblValReqField2" /></span></td>
+    </tr>
+
+    <tr style="display:none;">
+        <td><label id="lblTipoGrafico" /></td>
+        <td>
+            <select id="vsm">
+                <option value="True">Value-Stream Map</option>
+                <option value="False" selected="selected">PERT</option>
+            </select>
+        </td>
+    </tr>
+    <tr><td colspan="2">
+        <button type="button" id="btnAddMacroProc" class="btn btn-primary" onclick="doAdd()">Aggiungi linea di produzione</button></td></tr>
+</table>
+
+<script type="text/javascript">
+    function doAdd() {
+        if (!$("#ProcName").val() || !$("#ProcDesc").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Processo aggiunto");
+    }
+</script>

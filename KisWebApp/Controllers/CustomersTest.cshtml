@@ -1,0 +1,87 @@
+@inherits KIS.Controllers.CustomersTest
+@{
+    Layout = null;
+    // placeholder – markup reproduced from Controllers/CustomersTest.aspx
+}
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+</head>
+<body>
+    <div>
+        <!-- Get customer list -->
+        Get customer list<br />
+        <button type="button" id="btnCustomerList" onclick="doCustomerList()">Get customer list</button>
+        <br />
+        <div id="rptCustomerList">
+            <table>
+                <thead>
+                    <th>codice</th>
+                    <th>ragsociale</th>
+                    <th>partitaiva</th>
+                    <th>codfiscale</th>
+                    <th>indirizzo</th>
+                    <th>citta</th>
+                    <th>provincia</th>
+                    <th>CAP</th>
+                    <th>stato</th>
+                    <th>telefono</th>
+                    <th>email</th>
+                </thead>
+                <!-- Customer list rows -->
+            </table>
+        </div>
+        <hr />
+        <!-- Get single customer data -->
+        Get single customer data<br />
+        <input type="text" id="txtCustomerID" /><button type="button" id="btnGetCustomer" onclick="doGetCustomer()">Get Customer</button>
+        <table id="tblCustomerData">
+            <tr><td><label id="lblcodiceCliente" /></td></tr>
+            <tr><td><label id="lblragioneSociale" /></td></tr>
+            <tr><td><label id="lblpartitaiva" /></td></tr>
+            <tr><td><label id="lblcodiceFiscale" /></td></tr>
+            <tr><td><label id="lblindirizzo" /></td></tr>
+            <tr><td><label id="lblcitta" /></td></tr>
+            <tr><td><label id="lblprovincia" /></td></tr>
+            <tr><td><label id="lblCAP" /></td></tr>
+            <tr><td><label id="lblstato" /></td></tr>
+            <tr><td><label id="lbltelefono" /></td></tr>
+            <tr><td><label id="lblemail" /></td></tr>
+        </table>
+        <hr />
+        <!-- Add new customer or modify existing customer -->
+        Add new customer or modify existing customer<br />
+        <table id="tblAddCustomer">
+            <tr><td>codiceCliente</td><td><input type="text" id="txtcodiceCliente" /></td></tr>
+            <tr><td>ragioneSociale</td><td><input type="text" id="txtragioneSociale" /></td></tr>
+            <tr><td>partitaiva</td><td><input type="text" id="txtpartitaiva" /></td></tr>
+            <tr><td>codicefiscale</td><td><input type="text" id="txtcodicefiscale" /></td></tr>
+            <tr><td>indirizzo</td><td><input type="text" id="txtindirizzo" /></td></tr>
+            <tr><td>citta</td><td><input type="text" id="txtcitta" /></td></tr>
+            <tr><td>provincia</td><td><input type="text" id="txtprovincia" /></td></tr>
+            <tr><td>CAP</td><td><input type="text" id="txtcap" /></td></tr>
+            <tr><td>stato</td><td><input type="text" id="txtstato" /></td></tr>
+            <tr><td>telefono</td><td><input type="text" id="txttelefono" /></td></tr>
+            <tr><td>email</td><td><input type="text" id="txtemail" /></td></tr>
+        </table>
+        <button type="button" id="btnAddCustomer" onclick="doAddCustomer()">Add customer</button>
+        <button type="button" id="btnModifyCustomer" onclick="doModifyCustomer()">Modify existing customer</button>
+        <hr />
+        <input type="text" id="txtCodClienteDelete" /><button type="button" id="btnDeleteCliente" onclick="doDeleteCliente()">Delete existing customer</button>
+        <hr />
+
+        <label id="lbl1" />
+    </div>
+
+    <script type="text/javascript">
+        function doCustomerList() { alert("Get customer list"); }
+        function doGetCustomer() { alert("Get customer"); }
+        function doAddCustomer() { alert("Add customer"); }
+        function doModifyCustomer() { alert("Modify customer"); }
+        function doDeleteCliente() { alert("Delete customer"); }
+    </script>
+</body>
+</html>

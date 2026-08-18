@@ -1,0 +1,27 @@
+@inherits KIS.Reparti.configRepartoTimezone
+@{
+    // placeholder – markup reproduced from configRepartoTimezone.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <label id="lbl1" />
+        <br />
+        <select id="ddlTimezones" onchange="ddlTimezones_SelectedIndexChanged();">
+            <option>Timezone 1</option>
+            <option>Timezone 2</option>
+        </select>
+        <br />
+        <span id="lblInfo" class="text-info" /></span>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Original used Sys.WebForms.PageRequestManager.endRequest; here we just bind change.
+        $("#ddlTimezones").change(function () {
+            $("#lblInfo").delay(3000).fadeOut("slow", function () {
+                $(this).text('');
+            });
+        });
+    });
+</script>

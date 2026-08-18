@@ -1,0 +1,26 @@
+@inherits KIS.Reparti.manageCalendarFesteStraordinari
+@{
+    // placeholder – markup reproduced from manageCalendarFesteStraordinari.aspx
+}
+<h2><label id="lblCalendarioRep" /></h2>
+<label id="lblNomeRep" />
+<br />
+<a id="lnkFestivita" href="manageFestivita.cshtml?id=" target="_blank">
+    <img id="imgShowAddFest" src="~/img/iconHoliday.png" height="60" title="Festività" />
+</a>
+<a id="lnkStraordinario" href="manageStraordinario.cshtml?id=" target="_blank">
+    <img id="imgShowAddStraordinario" src="~/img/iconOvertime.jpg" height="60" title="Straordinari" />
+</a>
+<br />
+
+<table>
+    <tr>
+        <td><input type="date" id="dtStartCal" /></td>
+        <td><input type="date" id="dtEndCal" /></td>
+    </tr>
+</table>
+
+<!-- Chart crt placeholder: 1000x160 -->
+<div id="crt" style="width:1000px; height:160px;"></div>
+<br />
+<label id="log" />

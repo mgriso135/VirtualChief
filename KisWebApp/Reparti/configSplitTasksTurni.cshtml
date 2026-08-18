@@ -1,0 +1,27 @@
+@inherits KIS.Reparti.configSplitTasksTurni
+@{
+    // placeholder – markup reproduced from configSplitTasksTurni.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <label id="lbl1" /><br />
+        <h3><label id="lblOpzioniInserimento" /></h3>
+        <div class="radio">
+            <label>
+                <input type="radio" id="splitTasks_0" name="splitTasks" /> <%= Resources.lblStessoTurno %>
+            </label>
+            <label>
+                <input type="radio" id="splitTasks_1" name="splitTasks" /> <%= Resources.lblSuddividi %>
+            </label>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // Original used AutoPostBack + SelectedIndexChanged; here we just log.
+        $("input[name='splitTasks']").change(function () {
+            alert("Opzione selezionata: " + $(this).val());
+        });
+    });
+</script>

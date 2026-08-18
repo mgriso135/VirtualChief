@@ -1,0 +1,47 @@
+@inherits KIS.kpi.showKPIRecords
+@{
+    // placeholder – markup reproduced from showKPIRecords.ascx
+}
+<label id="lblKpiID" />
+
+<label id="lblMsg" />
+<table>
+    <tr>
+        <td>
+            <label id="dataIniziale" />
+            <br />
+            <button type="button" id="lblStartDate" class="btn-link" onclick="toggleCalendar('startDate')">Start date</button>
+            <div id="startDate" style="display:none;">
+                <!-- Calendario data inizio -->
+            </div>
+        </td>
+        <td>
+            <label id="dataFinale" />
+            <br />
+            <button type="button" id="lblEndDate" class="btn-link" onclick="toggleCalendar('endDate')">End date</button>
+            <div id="endDate" style="display:none;">
+                <!-- Calendario data fine -->
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="Chart1" style="width:1000px;">
+    <!-- Grafico KPI -->
+</div>
+
+<div id="rptKPIRecs" style="display:none;">
+    <table style="border: 1px dashed green">
+        <tr>
+            <td style="text-align:center; font-size: 14px; font-weight:bold;">Date</td>
+            <td style="text-align:center; font-size: 14px; font-weight:bold;">Recorded Value</td>
+        </tr>
+        <!-- Record KPI -->
+    </table>
+</div>
+
+<script type="text/javascript">
+    function toggleCalendar(id) {
+        $('#' + id).toggle();
+    }
+</script>

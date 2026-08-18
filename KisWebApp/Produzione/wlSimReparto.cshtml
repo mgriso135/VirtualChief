@@ -1,0 +1,162 @@
+@inherits KIS.Produzione.wlSimReparto
+@{
+    // placeholder – markup reproduced from wlSimReparto.ascx
+}
+<div class="row-fluid">
+    <table class="table table-condensed">
+        <tr>
+            <td style="vertical-align: top;">
+                <div class="accordion" id="accordion1">
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                                <span><%$Resources:lblAccCalendario %></span>
+                            </a>
+                        </div>
+                        <div id="collapseOne" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <asp:UpdatePanel runat="server" ID="upd1">
+                                    <ContentTemplate>
+                                        <asp:Literal runat="server" ID="lblDataIniziale" Text="<%$Resources:lblDataIniziale %>" />:&nbsp;
+                                        <input type="text" id="txtProductDateStart" class="datepicker" style="width:80px;" />
+                                        <br />
+                                        <asp:Literal runat="server" ID="lblDataFinale" Text="<%$Resources:lblDataFinale %>" />:&nbsp;
+                                        <input type="text" id="txtProductDateEnd" class="datepicker" style="width:80px;" />
+                                        <br />
+                                        <asp:ImageButton runat="server" ID="btnUpdateDate" OnClick="btnUpdateDate_Click" ImageUrl="~/img/iconSave.jpg" Width="30" />
+                                    </ContentTemplate>
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="rbPostazioni" EventName="SelectedIndexChanged" />
+                                        <asp:AsyncPostBackTrigger ControlID="chkLstPostazioni" EventName="SelectedIndexChanged" />
+                                    </Triggers>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                                <span><%$Resources:lblAccPostazione %></span>
+                            </a>
+                        </div>
+                        <div id="collapseTwo" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <asp:UpdatePanel runat="server">
+                                    <ContentTemplate>
+                                        <asp:RadioButtonList CssClass="radio" runat="server" id="rbPostizioni" AutoPostBack="true" OnSelectedIndexChanged="rbPostazioni_SelectedIndexChanged">
+                                            <asp:ListItem Selected="True" Value="0" Text="<%$Resources:lblVisTempiTotali %>" />
+                                            <asp:ListItem Value="1" Text="<%$Resources:lblVisTempiPostazione %>" />
+                                        </asp:RadioButtonList>
+                                        <asp:CheckBoxList CssClass="checkbox" runat="server" AutoPostBack="true" ID="chkLstPostizioni" OnSelectedIndexChanged="chkLstPostazioni_SelectedIndexChanged">
+                                        </asp:CheckBoxList>
+                                    </ContentTemplate>
+                                    <Triggers>
+                                        <asp:AsyncPostBackTrigger ControlID="rbPostizioni" EventName="SelectedIndexChanged" />
+                                        <asp:AsyncPostBackTrigger ControlID="chkLstPostizioni" EventName="SelectedIndexChanged" />
+                                    </Triggers>
+                                </asp:UpdatePanel>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-group">
+                        <div class="accordion-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+                                <span><%$Resources:lblAccProdottiNew %></span>
+                            </a>
+                        </div>
+                        <div id="collapseThree" class="accordion-body collapse">
+                            <div class="accordion-inner">
+                                <asp:Repeater runat="server" ID="rptProdotti" OnItemCommand="rptProdotti_ItemCommand" OnItemDataBound="rptProdotti_ItemDataBound">
+                                    <HeaderTemplate>
+                                        <table class="table table-condensed table-striped">
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" id="itmID" value='<%# DataBinder.Eval(Container.DataItem, "ID") %>' />
+                                                <input type="hidden" id="itmYear" value='<%# DataBinder.Eval(Container.DataItem, "Year") %>' />
+                                                <input type="checkbox" id="chk" OnCheckedChanged="chk_CheckedChanged" AutoPostBack="true" />
+                                            </td>
+                                            <td><%# DataBinder.Eval(Container.DataItem, "Cliente") %></td>
+                                            <td><%# DataBinder.Eval(Container.DataItem, "ID") %>/<%# DataBinder.Eval(Container.DataItem, "Year") %></td>
+                                            <td><%# DataBinder.Eval(Container.DataItem, "Matricola") %></td>
+                                            <td><%# DataBinder.Eval(Container.DataItem, "Proc.process.processName") %> - <%# DataBinder.Eval(Container.DataItem, "Proc.variant.nomeVariante") %></td>
+                                            <td>
+                                                <input type="text" id="txtProductDate" class="datepicker" style="width:100px;" />
+                                                <br />
+                                                Ore: <select id="calOre" class="dropdown" style="width:70px;">
+                                                    <option>00</option>
+                                                    <!-- options populated by code‑behind -->
+                                                </select>
+                                                Minuti: <select id="calMinuti" class="dropdown" style="width:70px;">
+                                                    <option>00</option>
+                                                </select>
+                                                Secondi: <select id="calSecondi" class="dropdown" style="width:70px;">
+                                                    <option>00</option>
+                                                </select>
+                                                <br />
+                                                <button type="button" id="btnSaveData" class="btn">Salva</button>
+                                            </td>
+                                        </tr>
+                                    </ItemTemplate>
+                                    <FooterTemplate>
+                                        </table>
+                                    </FooterTemplate>
+                                </asp:Repeater>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td style="vertical-align: top;">
+                <asp:UpdatePanel runat="server"><ContentTemplate>
+                    <asp:chart ID="Chart1" runat="server" Width="1000" Height="400">
+                        <Series>
+                            <asp:Series ChartArea="ChartArea1" ChartType="StackedColumn" Name="Series1">
+                                <EmptyPointStyle BorderDashStyle="Dot" IsVisibleInLegend="False" />
+                            </asp:Series>
+                        </Series>
+                        <ChartAreas>
+                            <asp:ChartArea Name="ChartArea1">
+                                <AxisY Minimum="0" />
+                            </asp:ChartArea>
+                        </ChartAreas>
+                    </asp:chart>
+
+                    <br />
+
+                    <div class="ui-widget" id="dvErr">
+                        <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+                            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+                                <strong><span id="lblAttenzione" /></strong>&nbsp;<span id="lblErr" /></p>
+                        </div>
+                    </div>
+
+                    <div class="ui-widget" id="dvInfo">
+                        <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+                            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+                                <span id="lbl1" />&nbsp;
+                                <span id="lblTurni" /></p>
+                        </div>
+                    </div>
+                </ContentTemplate>
+                    <Triggers>
+                        <asp:AsyncPostBackTrigger ControlID="rbPostizioni" EventName="SelectedIndexChanged" />
+                        <asp:AsyncPostBackTrigger ControlID="chkLstPostizioni" EventName="SelectedIndexChanged" />
+                    </Triggers>
+                </asp:UpdatePanel>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        // datepicker initialization – the original uses Sys.WebForms.PageRequestManager for async scenarios;
+        // here we simply bind to the inputs.
+        $("[id*=txtProductDateStart]").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("[id*=txtProductDateEnd]").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("[id*=txtProductDate]").datepicker({ dateFormat: 'dd/mm/yy' });
+    });
+    // TODO: replace Chart1 placeholder with Google Chart / D3 implementation
+</script>

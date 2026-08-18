@@ -1,0 +1,77 @@
+@inherits KIS.Analysis.ReportCustomerProdProgress_chooseINPProducts1
+@{
+    // placeholder – markup reproduced from ReportCustomerProdProgress_chooseINPProducts.ascx (control wins over .aspx page)
+}
+<label id="lbl1" />
+<div class="row-fluid">
+    <div class="span12"><h3>
+        <label id="lblTitleSelProducts" />
+    </h3>
+    </div>
+</div>
+
+<div class="row-fluid" id="frmReport">
+    <div class="span2">
+        <a id="lnkGoBack" href="ReportCustomerProdProgress_chooseCustomer.cshtml">
+            <img id="imgGoBack" src="~/img/iconArrowLeft.png" height="40" />
+        </a>
+    </div>
+    <div class="span8">
+        <div class="accordion" id="accordion1">
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                        <label id="lblAccProdI" />
+                    </a>
+                </div>
+                <div id="collapseOne" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <div id="rptProdottiI">
+                            <table class="table table-condensed table-striped">
+                                <!-- Prodotti in corso -->
+                            </table>
+                        </div>
+                        <label id="lblI" class="text-info" />
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                        <label id="lblAccProdP" />
+                    </a>
+                </div>
+                <div id="collapseTwo" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <div id="rptProdottiP">
+                            <table class="table table-condensed table-striped">
+                                <!-- Prodotti da iniziare -->
+                            </table>
+                        </div>
+                        <label id="lblP" class="text-info" />
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+                        <label id="lblAccProdN" />
+                    </a>
+                </div>
+                <div id="collapseThree" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <div id="rptProdottiN">
+                            <table class="table table-condensed table-striped">
+                                <!-- Prodotti da pianificare -->
+                            </table>
+                        </div>
+                        <label id="lblN" class="text-info" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="span2"><a id="lnkGoFwd" href="ReportCustomerProdProgress_chooseFProducts.cshtml">
+        <img id="imgGoFwd" src="~/img/iconArrowRight.png" height="40" />
+    </a></div>
+</div>

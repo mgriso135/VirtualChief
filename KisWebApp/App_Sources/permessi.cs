@@ -28,26 +28,17 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE permessi SET nome = @nome WHERE idpermesso = @idPermesso";
-                    cmd.Parameters.AddWithValue("@nome", value);
-                    cmd.Parameters.AddWithValue("@idPermesso", this.ID);
-                    MySqlTransaction trn = conn.BeginTransaction();
-                    cmd.Transaction = trn;
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        trn.Commit();
-                        this._Nome = value;
+                        conn.Open();
+                        using (var trn = conn.BeginTransaction())
+                        {
+                            conn.Execute("UPDATE permessi SET nome = @pNome WHERE idpermesso = @pID",
+                                new { @pNome = value, @pID = this.ID }, trn);
+                            trn.Commit();
+                            this._Nome = value;
+                        }
                     }
-                    catch(Exception ex)
-                    {
-                        log = ex.Message;
-                        trn.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -59,26 +50,17 @@ namespace KIS.App_Code
             {
                 if (this.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE permessi SET descrizione = @descrizione WHERE idpermesso = @idPermesso";
-                    cmd.Parameters.AddWithValue("@descrizione", value);
-                    cmd.Parameters.AddWithValue("@idPermesso", this.ID);
-                    MySqlTransaction trn = conn.BeginTransaction();
-                    cmd.Transaction = trn;
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        trn.Commit();
-                        this._Descrizione = value;
+                        conn.Open();
+                        using (var trn = conn.BeginTransaction())
+                        {
+                            conn.Execute("UPDATE permessi SET descrizione = @pDescrizione WHERE idpermesso = @pID",
+                                new { @pDescrizione = value, @pID = this.ID }, trn);
+                            trn.Commit();
+                            this._Descrizione = value;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        log = ex.Message;
-                        trn.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -87,52 +69,50 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idpermesso, nome, descrizione FROM permessi WHERE idpermesso = @idPermesso";
-            cmd.Parameters.AddWithValue("@idPermesso", idPerm);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._ID = rdr.GetInt32(0);
-                this._Nome = rdr.GetString(1);
-                this._Descrizione = rdr.GetString(2);
+                conn.Open();
+                PermissionRow row = conn.QueryFirstOrDefault<PermissionRow>(
+                    "SELECT idpermesso, nome, descrizione FROM permessi WHERE idpermesso = @idPermesso",
+                    new { @idPermesso = idPerm });
+                if (row != null)
+                {
+                    this._ID = row.idpermesso;
+                    this._Nome = row.nome;
+                    this._Descrizione = row.descrizione;
+                }
+                else
+                {
+                    this._ID = -1;
+                    this._Nome = "";
+                    this._Descrizione = "";
+                }
             }
-            else
-            {
-                this._ID = -1;
-                this._Nome = "";
-                this._Descrizione = "";
-            }
-            rdr.Close();
-            conn.Close();
         }
 
         public Permesso(String Tenant, String nomePerm)
         {
             this.Tenant = Tenant;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idpermesso, nome, descrizione FROM permessi WHERE nome = @nome";
-            cmd.Parameters.AddWithValue("@nome", nomePerm);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._ID = rdr.GetInt32(0);
-                this._Nome = rdr.GetString(1);
-                this._Descrizione = rdr.GetString(2);
+                conn.Open();
+                PermissionRow row = conn.QueryFirstOrDefault<PermissionRow>(
+                    "SELECT idpermesso, nome, descrizione FROM permessi WHERE nome = @nome",
+                    new { @nome = nomePerm });
+                if (row != null)
+                {
+                    this._ID = row.idpermesso;
+                    this._Nome = row.nome;
+                    this._Descrizione = row.descrizione;
+                }
+                else
+                {
+                    this._ID = -1;
+                    this._Nome = "";
+                    this._Descrizione = "";
+                }
             }
-            else
-            {
-                this._ID = -1;
-                this._Nome = "";
-                this._Descrizione = "";
-            }
-            rdr.Close();
-            conn.Close();
         }
 
         public bool Delete()
@@ -140,26 +120,17 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.ID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction trn = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = trn;
-                cmd.CommandText = "DELETE FROM permessi WHERE idpermesso = @idPermesso";
-                cmd.Parameters.AddWithValue("@idPermesso", this.ID);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    trn.Commit();
-                    rt = true;
+                    conn.Open();
+                    using (var trn = conn.BeginTransaction())
+                    {
+                        conn.Execute("DELETE FROM permessi WHERE idpermesso = @pID",
+                            new { @pID = this.ID }, trn);
+                        trn.Commit();
+                        rt = true;
+                    }
                 }
-                catch(Exception ex)
-                {
-                    log=ex.Message;
-                    rt = false;
-                    trn.Rollback();
-                }
-                conn.Close();
             }
             return rt;
         }
@@ -177,53 +148,32 @@ namespace KIS.App_Code
             this.Tenant = Tenant;
 
             Elenco = new List<Permesso>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idpermesso FROM permessi ORDER BY nome";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                Elenco.Add(new Permesso(this.Tenant, rdr.GetInt32(0)));
+                var ids = conn.Query<int>("SELECT idpermesso FROM permessi ORDER BY nome").ToArray();
+                foreach (int id in ids)
+                {
+                    Elenco.Add(new Permesso(this.Tenant, id));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         public bool Add(String nomeP, String descP)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(idpermesso) FROM permessi";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            int maxID = 0;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                maxID = rdr.GetInt32(0) + 1;
+                conn.Open();
+                using (var trn = conn.BeginTransaction())
+                {
+                    int? max = conn.ExecuteScalar<int?>("SELECT MAX(idpermesso) FROM permessi");
+                    int maxID = max.HasValue ? max.Value + 1 : 0;
+                    conn.Execute("INSERT INTO permessi(idpermesso, nome, descrizione) VALUES (@pID, @pNome, @pDescrizione)",
+                        new { @pID = maxID, @pNome = nomeP, @pDescrizione = descP }, trn);
+                    trn.Commit();
+                    rt = true;
+                }
             }
-            else
-            {
-                maxID = 0;
-            }
-            rdr.Close();
-            cmd.CommandText = "INSERT INTO permessi(idpermesso, nome, descrizione) VALUES (" + maxID.ToString() + ", '"+nomeP+"', '"+descP+"')";
-            MySqlTransaction trn = conn.BeginTransaction();
-            cmd.Transaction = trn;
-            try
-            {
-                cmd.ExecuteNonQuery();
-                rt = true;
-                trn.Commit();
-            }
-            catch(Exception ex)
-            {
-                log = ex.Message;
-                rt = false;
-                trn.Rollback();
-            }
-            conn.Close();
             return rt;
         }
     }

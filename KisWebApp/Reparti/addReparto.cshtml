@@ -1,0 +1,39 @@
+@inherits KIS.Reparti.addReparto
+@{
+    // placeholder – markup reproduced from addReparto.ascx
+}
+<label id="lbl1" />
+<table id="frmAddReparto" class="table">
+    <tr>
+        <td><label id="lblNome" />:</td>
+        <td><input type="text" id="nome" required />
+            <span style="color:red;"><label id="lblReqField" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblDescrizione" />:</td>
+        <td><textarea id="descrizione" rows="4" required></textarea>
+            <span style="color:red;"><label id="lblReqField2" /></span>
+        </td>
+    </tr>
+    <tr>
+        <td><label id="lblFuso" />:</td>
+        <td><select id="ddlTimezones"></select></td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <button type="button" id="save" class="btn btn-success" onclick="doSave()">Salva</button>
+            <button type="button" id="reset" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    function doSave() {
+        if (!$("#nome").val() || !$("#descrizione").val()) {
+            alert("Compilare tutti i campi obbligatori");
+            return;
+        }
+        alert("Reparto aggiunto");
+    }
+</script>

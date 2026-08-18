@@ -1,0 +1,101 @@
+@inherits KIS.Admin.kisAdmin
+@{
+    // placeholder – markup reproduced from kisAdmin.aspx
+}
+<script>
+    $(document).ready(function () {
+        function loadRemoteSalesOrders() {
+            $.ajax({
+                url: "../Config/Config/SalesOrderImport3PartySystemActive",
+                type: 'POST',
+                dataType: "html",
+                data: {},
+                success: function (result) {
+                    $("#frmRemoteSalesOrders").html(result);
+                    $("#imgLoadRemoteSalesOrders").fadeOut();
+                },
+                error: function (result) {
+                    $("#imgLoadRemoteSalesOrders").fadeOut();
+                }
+            });
+        }
+        $("#imgLoadRemoteSalesOrders").fadeIn();
+        loadRemoteSalesOrders();
+    });
+</script>
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="../Admin/admin.cshtml"><label id="lblNavAdmin" /></a>
+        <span class="divider">/</span>
+    </li>
+    <li>
+        <a href="kisAdmin.cshtml"><label id="lblNavSysCfg" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<h1><label id="lblTitleSysCfg" /></h1>
+<label id="lbl1" />
+
+<div class="accordion" id="accordion1">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseExpiry">
+                <label id="lblBilling" />
+            </a>
+        </div>
+        <div id="collapseExpiry" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Admin/kisBilling.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                <label id="lblLogo" />
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Admin/configLogo.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                <label id="lblPERT" />
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Admin/configWizard_TipoPERT.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+                <label id="lblFusoOrario" />
+            </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+            <div class="accordion-inner">
+                @Html.Partial("~/Admin/configTimezone.cshtml")
+            </div>
+        </div>
+    </div>
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFour">
+                <label id="lblSalesOrder3rdParty" />
+            </a>
+        </div>
+        <div id="collapseFour" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <img src="../img/iconLoading.gif" style="min-width:15px; max-width:20px;" id="imgLoadRemoteSalesOrders" />
+                <div id="frmRemoteSalesOrders" />
+            </div>
+        </div>
+    </div>
+</div>

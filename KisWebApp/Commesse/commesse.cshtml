@@ -1,0 +1,16 @@
+@inherits KIS.Commesse.commesse
+@{
+    // placeholder – markup reproduced from commesse.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="commesse.cshtml">
+            <label id="lblNavCommesse" />
+        </a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<h1><label id="lblTitleCommesse" /></h1>
+@Html.Partial("~/Commesse/addCommessa.cshtml")
+<br />
+@Html.Partial("~/Commesse/listCommesse.cshtml")

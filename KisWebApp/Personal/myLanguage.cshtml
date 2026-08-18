@@ -1,0 +1,24 @@
+@inherits KIS.Personal.myLanguage
+@{
+    // placeholder – markup reproduced from myLanguage.ascx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <select id="ddlLanguages">
+            <option value=""></option>
+            <option value="en-US">English (United States)</option>
+            <option value="es-AR">Español (Argentina)</option>
+            <option value="it">Italiano (Italia)</option>
+        </select>
+        <button type="button" id="imgSave" class="btn btn-success" onclick="doSaveLang()">Salva</button>
+        <button type="button" id="imgUndo" class="btn">Annulla</button>
+        <br />
+        <label id="lbl1" class="text-info" />
+    </div>
+</div>
+
+<script type="text/javascript">
+    function doSaveLang() {
+        alert("Lingua salvata");
+    }
+</script>

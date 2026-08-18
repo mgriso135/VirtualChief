@@ -1,0 +1,160 @@
+@inherits KIS.Personal.my
+@{
+    // Razor page replacing Personal/my.aspx
+}
+<div class="row-fluid">
+    <div class="span12">
+        <ul class="breadcrumb hidden-phone">
+            <li><a href="my.aspx"><label id="lblNavYourAccount" /></a><span class="divider">/</span></li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        function loadDestinationURL() {
+            $('#imgLoadDestinationURL').show();
+            $.ajax({
+                url: "../Personal/PersonalArea/EditDestinationURL",
+                type: 'GET',
+                dataType: 'html',
+                success: function (result) {
+                    $('#frmDestinationURL').html(result);
+                    $('#imgLoadDestinationURL').hide();
+                }
+            });
+        }
+        loadDestinationURL();
+    });
+</script>
+
+<div class="accordion" id="accordion1">
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseOne">
+                <label id="lblInfoBase" />
+            </a>
+        </div>
+        <div id="collapseOne" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <div id="frmBaseInfo" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTwo">
+                <label id="lblEMail" />
+            </a>
+        </div>
+        <div id="collapseTwo" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmMail" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseThree">
+                <label id="lblTelefono" />
+            </a>
+        </div>
+        <div id="collapseThree" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmPhone" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFour">
+                <label id="lblGruppi" />
+            </a>
+        </div>
+        <div id="collapseFour" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="lstGruppi" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseFive">
+                <label id="lblSegnalazioneRitardi" />
+            </a>
+        </div>
+        <div id="collapseFive" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmEventoRitardo" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSix">
+                <label id="lblSegnalazioneWarning" />
+            </a>
+        </div>
+        <div id="collapseSix" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmEventoWarning" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseSeven">
+                <label id="lblCambiaPassword" />
+            </a>
+        </div>
+        <div id="collapseSeven" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmChangePassword" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseEight">
+                <label id="lblInfoBox" />
+            </a>
+        </div>
+        <div id="collapseEight" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmHomeBoxes" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseNine">
+                <label id="lblLanguage" />
+            </a>
+        </div>
+        <div id="collapseNine" class="accordion-body collapse">
+            <div class="accordion-inner">
+                <label id="frmLanguage" />
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-group">
+        <div class="accordion-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#collapseTen">
+                <label id="lblDestinationURL" />
+            </a>
+        </div>
+        <div id="collapseTen" class="accordion-body collapse">
+            <img src="../img/iconLoading.gif" style="min-width:20px; max-width:30px;" id="imgLoadDestinationURL" />
+            <div id="frmDestinationURL" />
+        </div>
+    </div>
+</div>

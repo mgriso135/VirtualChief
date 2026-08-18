@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 //using WebApplication1;
 using MySql.Data.MySqlClient;
+using Dapper;
 
 namespace KIS.App_Code
 {
@@ -28,15 +29,12 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE postazioni SET name=@p0 WHERE idpostazioni = @p1";
-                    cmd.Parameters.AddWithValue("@p0", value);
-                    cmd.Parameters.AddWithValue("@p1", this.id);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    this._name = value;
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Execute("UPDATE postazioni SET name=@p0 WHERE idpostazioni = @p1",
+                            new { @p0 = value, @p1 = this.id });
+                        this._name = value;
+                    }
                 }
             }
         }
@@ -49,15 +47,12 @@ namespace KIS.App_Code
             {
                 if (value.Length > 0 && this.id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE postazioni SET description=@p0 WHERE idpostazioni = @p1";
-                    cmd.Parameters.AddWithValue("@p0", value);
-                    cmd.Parameters.AddWithValue("@p1", this.id);
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                    this._desc = value;
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Execute("UPDATE postazioni SET description=@p0 WHERE idpostazioni = @p1",
+                            new { @p0 = value, @p1 = this.id });
+                        this._desc = value;
+                    }
                 }
             }
         }
@@ -91,26 +86,17 @@ namespace KIS.App_Code
             {
                 if(this.id!=-1)
                 { 
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.CommandText = "UPDATE postazioni SET barcodeAutoCheckIn = @p0"
-                        + " WHERE idpostazioni = @p1";
-                    cmd.Parameters.AddWithValue("@p0", value);
-                    cmd.Parameters.AddWithValue("@p1", this.id);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        this._barcodeAutoCheckIn = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            conn.Execute("UPDATE postazioni SET barcodeAutoCheckIn = @p0 WHERE idpostazioni = @p1",
+                                new { @p0 = value, @p1 = this.id }, tr);
+                            tr.Commit();
+                            this._barcodeAutoCheckIn = value;
+                        }
                     }
-                    catch(Exception ex)
-                    {
-                        tr.Rollback();
-                        log = ex.Message;
-                    }
-                    conn.Close();
                 }
             }
 

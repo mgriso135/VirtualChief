@@ -1,0 +1,32 @@
+@inherits KIS.Postazioni.editPostazione_ascx
+@{
+    // placeholder – markup reproduced from editPostazione.ascx
+}
+<h3><label id="lblTitleModPostazione" /></h3>
+<label id="err" />
+<table class="table">
+    <tr><td><label id="lblNome" /></td><td><input type="text" id="postName" /></td></tr>
+    <tr><td><label id="lblDescrizione" /></td><td><textarea id="postDesc" rows="4"></textarea></td></tr>
+    <tr>
+        <td><label id="lblAutoCheckIn" /></td>
+        <td>
+            <select id="ddlAutoCheckIn">
+                <option value="0">Disabled</option>
+                <option value="1">Enabled</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;">
+            <button type="button" id="save" class="btn btn-success">Salva</button>
+            <button type="button" id="reset" class="btn">Annulla</button>
+        </td>
+    </tr>
+</table>
+
+<script type="text/javascript">
+    $(function () {
+        $("#save").click(function () { alert("Postazione salvata"); });
+        $("#reset").click(function () { $("#postName").val(""); $("#postDesc").val(""); });
+    });
+</script>

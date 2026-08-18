@@ -1,0 +1,23 @@
+@inherits KIS.Users.manageUsers
+@{
+    // placeholder – markup reproduced from manageUsers.aspx
+}
+<ul class="breadcrumb hidden-phone">
+    <li>
+        <a href="../Admin/admin.cshtml"><label id="lblNavAdmin" /></a>
+        <span class="divider">/</span>
+        <a href="manageUsers.cshtml"><label id="lblGestUsers" /></a>
+        <span class="divider">/</span>
+    </li>
+</ul>
+<div class="row-fluid">
+    <div class="span8">
+        @Html.Partial("~/Users/addUser.cshtml")
+    </div>
+    <div class="span4">
+        <a href="../Users/Users/DisabledUsers" title="Archived users">
+            <img src="../img/iconArchive.png" class="img-rounded" style="min-height: 20px; max-height:100px;" />
+        </a>
+    </div>
+</div>
+@Html.Partial("~/Users/listUsers.cshtml")
