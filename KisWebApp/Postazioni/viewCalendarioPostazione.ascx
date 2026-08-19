@@ -37,9 +37,9 @@
 
 <br />
 
-<asp:Chart runat="server" ID="wlPostazione" Width="1000px" Height="100px">
+
     
-</asp:Chart>
+
 <asp:Label runat="server" ID="lbl1" />
         </ContentTemplate>
     </asp:UpdatePanel>

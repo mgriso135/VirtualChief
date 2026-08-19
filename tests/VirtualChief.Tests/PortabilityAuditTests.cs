@@ -73,33 +73,29 @@ public class PortabilityAuditTests
     {
         var mt = SqlAudit.MysqlTypeUsagePerFile();
 
-        Assert.Equal(28, mt.Count);
-        Assert.Equal(1712, mt.Values.Sum());
+        Assert.Equal(24, mt.Count);
+        Assert.Equal(1184, mt.Values.Sum());
 
-        Assert.Equal(96, mt["KisWebApp/App_Sources/Account.cs"]);
+        Assert.Equal(94, mt["KisWebApp/App_Sources/Account.cs"]);
         Assert.Equal(8, mt["KisWebApp/App_Sources/Analysis.cs"]);
-        Assert.Equal(103, mt["KisWebApp/App_Sources/andon.cs"]);
         Assert.Equal(68, mt["KisWebApp/App_Sources/clienti.cs"]);
         Assert.Equal(7, mt["KisWebApp/App_Sources/data.cs"]);
         Assert.Equal(72, mt["KisWebApp/App_Sources/eventi.cs"]);
         Assert.Equal(84, mt["KisWebApp/App_Sources/commesse.cs"]);
         Assert.Equal(208, mt["KisWebApp/App_Sources/configurazione.cs"]);
-        Assert.Equal(63, mt["KisWebApp/App_Sources/inputpoints.cs"]);
         Assert.Equal(58, mt["KisWebApp/App_Sources/FreeTimeMeasurement.cs"]);
         Assert.Equal(5, mt["KisWebApp/App_Sources/KanbanBox.cs"]);
         Assert.Equal(12, mt["KisWebApp/App_Sources/kpi.cs"]);
         Assert.Equal(15, mt["KisWebApp/App_Sources/menu.cs"]);
         Assert.Equal(14, mt["KisWebApp/App_Sources/NoProductiveTasks.cs"]);
         Assert.Equal(14, mt["KisWebApp/App_Sources/parts.cs"]);
-        Assert.Equal(33, mt["KisWebApp/App_Sources/permessi.cs"]);
-        Assert.Equal(71, mt["KisWebApp/App_Sources/postazioni.cs"]);
+        Assert.Equal(11, mt["KisWebApp/App_Sources/permessi.cs"]);
         Assert.Equal(159, mt["KisWebApp/App_Sources/processi.cs"]);
-        Assert.Equal(132, mt["KisWebApp/App_Sources/produzione.cs"]);
+        Assert.Equal(1, mt["KisWebApp/App_Sources/produzione.cs"]);
         Assert.Equal(152, mt["KisWebApp/App_Sources/quality.cs"]);
         Assert.Equal(2, mt["KisWebApp/App_Sources/relazioni.cs"]);
         Assert.Equal(86, mt["KisWebApp/App_Sources/reparti.cs"]);
-        Assert.Equal(160, mt["KisWebApp/App_Sources/users.cs"]);
-        Assert.Equal(82, mt["KisWebApp/App_Sources/WorkInstructions.cs"]);
+        Assert.Equal(106, mt["KisWebApp/App_Sources/users.cs"]);
         Assert.Equal(2, mt["KisWebApp/Controllers/DelaysAlarmController.cs"]);
         Assert.Equal(2, mt["KisWebApp/Eventi/Ritardi.asmx.cs"]);
         Assert.Equal(1, mt["KisWebApp/Eventi/Warning.asmx.cs"]);

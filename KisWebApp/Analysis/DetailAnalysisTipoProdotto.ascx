@@ -100,20 +100,20 @@
       <div class="accordion-inner">
           <asp:Label runat="server" ID="lblMedia" meta:resourcekey="lblMedia" /><asp:Label runat="server" ID="lblMediaTempoDiLavoro" />
         <br />
-            <asp:Chart runat="server" ID="chartTempi" Width="600">
+            
                 <Titles>
                     <asp:Title Name="titoloChartTempi" Text="<%$resources:lblChartTempoLavUnitario %>" Font="Calibri, 20pt, style=Bold" />
                 </Titles>
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
+                
+                    
+                    
                 </ChartAreas>
                 <Series>
                     <asp:Series Name="tempi" ChartType="Line">
 
                     </asp:Series>
                 </Series>
-            </asp:Chart>
+            
           <br />
           <!--Dettaglio tempi di lavoro-->
           <asp:Repeater runat="server" ID="rptTempiDiLavoro">
@@ -152,20 +152,20 @@
       <div class="accordion-inner">
           
            <asp:Label runat="server" ID="lblMedia1" meta:resourcekey="lblMedia" /><asp:Label runat="server" ID="lblMediaLeadTimes" /><br />
-            <asp:Chart runat="server" ID="chartLeadTimes" Width="600">
+            
                 <Titles>
                     <asp:Title Name="titoloChartTempi" Text="<%$resources:lblLeadTimes %>" Font="Calibri, 20pt, style=Bold" />
                 </Titles>
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
+                
+                    
+                    
                 </ChartAreas>
                 <Series>
                     <asp:Series Name="leadTimes" ChartType="Line">
 
                     </asp:Series>
                 </Series>
-            </asp:Chart>
+            
           <br />
           <asp:Repeater runat="server" ID="rptLeadTimes" OnItemDataBound="rptLeadTimes_ItemDataBound">
               <HeaderTemplate>

@@ -1,13 +1,10 @@
-@inherits KIS.Analysis.analysis
 @{
-    // Razor page that replaces Analysis/analysis.aspx
+    ViewBag.Title = "Analisi";
+    Layout = "~/Site.cshtml";
 }
-<div class="row-fluid">
-    <div class="span12">
-        <ul class="breadcrumb hidden-phone">
-            <li><a href="analysis.aspx"><label id="lblNavAnalisi" /></a><span class="divider">/</span></li>
-        </ul>
-    </div>
-</div>
 
-<analysis:home runat="server" ID="frmAnalysis" />
+<div class="container">
+    <h1>Analisi</h1>
+    <p>Pagina analisi in conversione Razor.</p>
+    <p>Sono disponibili analisi globali, prodotto, operatore e storico produzione.</p>
+</div>

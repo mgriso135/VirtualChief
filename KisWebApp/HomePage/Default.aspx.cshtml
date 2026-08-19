@@ -1,0 +1,28 @@
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Site.cshtml";
+}
+
+<div class="jumbotron">
+    <h1>Benvenuto in VirtualChief</h1>
+    <p>Sistema di monitoraggio produzione MES / Andon / Kaizen per manifattura.</p>
+</div>
+<br />
+<p>Seleziona una delle aree sottostanti per iniziare.</p>
+<div class="row">
+    <div class="col-md-4">
+        <h3>Produzione</h1>
+        <p>Monitoraggio produzione e avanzamento.</p>
+        <p><a class="btn btn-primary" href="/Produzione/produzione.aspx"> Vai alla produzione </a></p>
+    </div>
+    <div class="col-md-4">
+        <h3>Clienti</h1>
+        <p>Gestione clienti e portfolio.</p>
+        <p><a class="btn btn-primary" href="/Clienti/Clienti.aspx"> Vai ai clienti </a></p>
+    </div>
+    <div class="col-md-4">
+        <h3>Amministrazione</h1>
+        <p>Configurazione e gestione sistema.</p>
+        <p><a class="btn btn-primary" href="/Admin/kisAdmin.aspx"> Vai all'amministrazione </a></p>
+    </div>
+</div>

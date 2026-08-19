@@ -1,54 +1,13 @@
-@inherits KIS.ProduzioneUI.produzioneUI
 @{
-    // placeholder – markup reproduced from produzione.aspx
+    ViewBag.Title = "Produzione";
+    Layout = "~/Site.cshtml";
 }
-<ul class="breadcrumb hidden-phone">
-    <li>
-        <a href="produzione.cshtml"><label id="lblNavProduzione" /></a>
-        <span class="divider">/</span>
-    </li>
-</ul>
 
-<ul class="thumbnails unstyled">
-    <li class="span2">
-        <a id="lnkNuoveCommesse" href="commesseDaProdurre.cshtml">
-            <img class="btn btn-primary" id="imgNuoveCommesse" src="~/img/iconCart1.jpg" height="100" width="100" title="Ordini non inseriti" />
-            <p><label id="lblNuoviOrdini" /></p>
-        </a>
-    </li>
+@section HeadContent {
+}
 
-    <li class="span2">
-        <a id="lnkCapacitaProd" href="workLoadListReparti.cshtml">
-            <img class="btn btn-primary" id="imgCapacitaProd" src="~/img/iconLabor.png" height="100" width="100" title="Capacita produttiva" />
-            <p><label id="lblCapacitaProd" /></p>
-        </a>
-    </li>
-
-    <li class="span2">
-        <a id="lnkPianoProd" href="PianoProduzioneCompleto.cshtml">
-            <img class="btn btn-primary" id="imgPianoProd" src="~/img/iconProductionPlan.png" height="100" width="100" title="Piano di produzione" />
-            <p><label id="lblPianoProd" /></p>
-        </a>
-    </li>
-
-    <li class="span2">
-        <a id="lnkProdottiLanciati" href="avanzamentoProduzione.cshtml">
-            <img class="btn btn-primary" id="imgProdottiLanciati" src="~/img/iconManufacturing2.png" height="100" title="Andon generale" />
-            <p><label id="lblAndonGenerale" /></p>
-        </a>
-    </li>
-
-    <li class="span2">
-        <a id="lnkAndonReparto" href="~/Produzione/AndonListReparti.cshtml">
-            <img class="btn btn-primary" id="imgAndonReparto" src="~/img/iconOrder2.png" height="100" title="Andon reparto" />
-            <p><label id="lblAndonReparto" /></p>
-        </a>
-    </li>
-
-    <li class="span2">
-        <a id="lnkStoricoProduzione" href="storicoProduzione.cshtml">
-            <img class="btn btn-primary" style="border:1px dashed green;" id="imgStoricoProduzione" src="~/img/iconHistory.png" height="100" title="Storico produzione" />
-            <p><label id="lblStoricoProd" /></p>
-        </a>
-    </li>
-</ul>
+@section MainContent {
+    <h1>Produzione</h1>
+    <p>Pagina di produzione in conversione Razor.</p>
+    <p>Contenuto della produzione in fase di migrazione.</p>
+}

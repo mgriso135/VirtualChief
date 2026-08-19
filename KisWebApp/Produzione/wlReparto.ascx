@@ -37,21 +37,36 @@
     </td>
     <td>
         
-        <asp:chart ID="Chart1" runat="server" Width="800">
-<ChartAreas>
-    <asp:ChartArea Name="ChartArea1">
-        <AxisY Minimum="0">
-            
-        </AxisY>
-    </asp:ChartArea>
-  </ChartAreas>
-</asp:chart>
-        <br />
-        <div class="ui-widget">
-	<div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
-		<p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
-		<asp:Label runat="server" ID="lbl1" /></p>
-	</div>
+        <!-- Google Charts Column Chart: Workload per postazione -->
+<div id="workloadChart" style="width: 800px; height: 400px;"></div>
+<script type="text/javascript">
+    // Google Charts: Workload per postazione
+    google.charts.load('current', {'packages':['corechart']});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Postazione');
+        data.addColumn('number', 'Carico orario');
+        // Data will be populated from server-side code via JSON
+        // Example: data.addRow(['Postazione 1', 8.5]);
+        
+        var options = {
+            title: 'Carico di lavoro per postazione',
+            hAxis: {title: 'Postazione', minValue: 0},
+            vAxis: {title: 'Ore'},
+            seriesType: 'columns',
+            series: {0: {type: 'column'}}
+        };
+        
+        var chart = new google.visualization.ColumnChart(document.getElementById('workloadChart'));
+        chart.draw(data, options);
+    }
+</script>
+<div class="ui-widget">
+    <div class="ui-state-highlight ui-corner-all" style="margin-top: 20px; padding: 0 .7em;">
+        <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+        <span id="chartPlaceholder">Carico postazioni</span></p>
+    </div>
 </div>
         
 

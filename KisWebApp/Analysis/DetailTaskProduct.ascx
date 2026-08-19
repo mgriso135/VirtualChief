@@ -26,18 +26,18 @@
       <div class="accordion-inner">
           <asp:Label runat="server" ID="lblTempoLavMedio" meta:resourcekey="lblTempoLavMedio" />:&nbsp;
           <asp:Label runat="server" ID="lblMediaTempoDiLavoro" /><br />
-<asp:Chart runat="server" ID="chartTempiLavoro" Width="600">
+
     <Titles><asp:Title Name="titoloChartTempi" Text="<%$resources:lblChartTempoLavUnitario %>" Font="Calibri, 20pt, style=Bold" /></Titles>
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
+                
+                    
+                    
                 </ChartAreas>
                 <Series>
                     <asp:Series Name="tempi" ChartType="Line">
 
                     </asp:Series>
                 </Series>
-            </asp:Chart>
+            
           <br />
           <asp:Repeater runat="server" ID="rptTempiLavoro">
               <HeaderTemplate><table class="table table-condensed table-striped table-hover">
@@ -76,20 +76,20 @@
       <div class="accordion-inner">          
           <asp:Label runat="server" ID="lblMedia" meta:resourcekey="lblMedia" />:&nbsp;
           <asp:Label runat="server" ID="lblMediaTempiCiclo" /><br />
-            <asp:Chart runat="server" ID="chartTempiCiclo" Width="600">
+            
                 <Titles>
                     <asp:Title Name="titoloChartTempiCiclo" Text="<%$resources:lblChartTempoCicloUnitario %>" Font="Calibri, 20pt, style=Bold" />
                 </Titles>
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
+                
+                    
+                    
                 </ChartAreas>
                 <Series>
                     <asp:Series Name="TempiCiclo" ChartType="Line">
 
                     </asp:Series>
                 </Series>
-            </asp:Chart>
+            
           <br />
           <asp:Repeater runat="server" ID="rptTempiCiclo">
               <HeaderTemplate><table class="table table-condensed table-striped table-hover">

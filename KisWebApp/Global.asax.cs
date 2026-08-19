@@ -10,6 +10,8 @@ using System.Web.Mvc;
 using KIS.App_Code;
 using KIS.App_Start;
 using KIS.App_Sources;
+using Serilog;
+
 
 namespace KIS
 {
@@ -21,6 +23,13 @@ namespace KIS
             // Codice eseguito all'avvio dell'applicazione
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register); // NEW way
+            
+            // Serilog configuration
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .Write.Console()
+                .CreateLogger();
+            
             // Default stuff
             RouteConfig.RegisterRoutes(RouteTable.Routes);
 

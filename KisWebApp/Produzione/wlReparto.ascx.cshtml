@@ -1,0 +1,34 @@
+@using KIS.Produzione
+@model dynamic
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Workload Reparto</h3>
+    </div>
+    <div class="panel-body">
+        <p>Grafico workload in fase di conversione da asp:Chart a Google Charts.</p>
+        <div id="workloadChart" style="width: 800px; height: 400px;"></div>
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
+            function drawChart() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Postazione');
+                data.addColumn('number', 'Carico orario');
+                // Dati caricati dinamicamente
+                // data.addRow(['Postazione 1', 8.5]);
+                
+                var options = {
+                    title: 'Carico di lavoro per postazione',
+                    hAxis: {title: 'Postazione', minValue: 0},
+                    vAxis: {title: 'Ore'},
+                    seriesType: 'columns',
+                    series: {0: {type: 'column'}}
+                };
+                
+                var chart = new google.visualization.ColumnChart(document.getElementById('workloadChart'));
+                chart.draw(data, options);
+            }
+        </script>
+    </div>
+</div>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient;
+using Dapper;
 using System.Web.Mvc;
 using System.IO;
 using System.Web.Hosting;
@@ -42,26 +43,24 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET Name=@name WHERE ID = @id AND Version = @version";
-                        cmd.Parameters.AddWithValue("@name", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.Parameters.AddWithValue("@version", this.Version);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._Name = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE manuals SET Name=@name WHERE ID = @id AND Version = @version",
+                                        new { @name = value, @id = this.ID, @version = this.Version }, tr);
+                                    tr.Commit();
+                                    this._Name = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -74,26 +73,24 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET Description=@description WHERE ID = @id AND Version = @version";
-                        cmd.Parameters.AddWithValue("@description", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.Parameters.AddWithValue("@version", this.Version);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._Description = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE manuals SET Description=@description WHERE ID = @id AND Version = @version",
+                                        new { @description = value, @id = this.ID, @version = this.Version }, tr);
+                                    tr.Commit();
+                                    this._Description = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -103,26 +100,24 @@ namespace KIS.App_Sources
                 {
                     if(this.ID!=-1 && this.Version!=-1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET path=@path WHERE ID = @id AND Version = @version";
-                        cmd.Parameters.AddWithValue("@path", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.Parameters.AddWithValue("@version", this.Version);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._Path = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE manuals SET path=@path WHERE ID = @id AND Version = @version",
+                                        new { @path = value, @id = this.ID, @version = this.Version }, tr);
+                                    tr.Commit();
+                                    this._Path = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -144,26 +139,24 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET expirydate=@expirydate WHERE ID = @id AND Version = @version";
-                        cmd.Parameters.AddWithValue("@expirydate", value.ToString("yyyy-MM-dd"));
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.Parameters.AddWithValue("@version", this.Version);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._ExpiryDate = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE manuals SET expirydate=@expirydate WHERE ID = @id AND Version = @version",
+                                        new { @expirydate = value.ToString("yyyy-MM-dd"), @id = this.ID, @version = this.Version }, tr);
+                                    tr.Commit();
+                                    this._ExpiryDate = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -179,26 +172,24 @@ namespace KIS.App_Sources
                 {
                     if (this.ID != -1 && this.Version != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE manuals SET isActive=@isActive WHERE ID = @id AND Version = @version";
-                        cmd.Parameters.AddWithValue("@isActive", value);
-                        cmd.Parameters.AddWithValue("@id", this.ID);
-                        cmd.Parameters.AddWithValue("@version", this.Version);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._IsActive = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE manuals SET isActive=@isActive WHERE ID = @id AND Version = @version",
+                                        new { @isActive = value, @id = this.ID, @version = this.Version }, tr);
+                                    tr.Commit();
+                                    this._IsActive = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -236,30 +227,26 @@ namespace KIS.App_Sources
                 this.listTasksProducts = new List<WITaskProduct>();
                 this.OlderVersions = new List<WIOlderVersion>();
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
-                    + "ID = @id"
-                    + " AND Version = @version";
-                cmd.Parameters.AddWithValue("@id", id);
-                cmd.Parameters.AddWithValue("@version", version);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._ID = rdr.GetInt32(0);
-                    this._Version = rdr.GetInt32(1);
-                    this._Name = rdr.GetString(2);
-                    this._Description = rdr.GetString(3);
-                    this._Path = rdr.GetString(4);
-                    this._UploadDate = rdr.GetDateTime(5);
-                    this._ExpiryDate = rdr.GetDateTime(6);
-                    this._IsActive = rdr.GetBoolean(7);
-                    this._Author = rdr.GetString(8);
+                    conn.Open();
+                    string sql = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
+                        + "ID = @id"
+                        + " AND Version = @version";
+                    ManualRow row = conn.QueryFirstOrDefault<ManualRow>(sql, new { @id = id, @version = version });
+                    if (row != null)
+                    {
+                        this._ID = row.ID;
+                        this._Version = row.Version;
+                        this._Name = row.Name;
+                        this._Description = row.Description;
+                        this._Path = row.Path;
+                        this._UploadDate = row.UploadDate;
+                        this._ExpiryDate = row.ExpiryDate;
+                        this._IsActive = row.IsActive;
+                        this._Author = row.User;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
-
             }
 
             public WorkInstruction(String tenant, int id)
@@ -278,47 +265,54 @@ namespace KIS.App_Sources
                 this.listTasksProducts = new List<WITaskProduct>();
                 this.OlderVersions = new List<WIOlderVersion>();
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
-                    + "ID = @id"
-                    + " ORDER BY version DESC";
-                cmd.Parameters.AddWithValue("@id", id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._ID = rdr.GetInt32(0);
-                    this._Version = rdr.GetInt32(1);
-                    this._Name = rdr.GetString(2);
-                    this._Description = rdr.GetString(3);
-                    this._Path = rdr.GetString(4);
-                    this._UploadDate = rdr.GetDateTime(5);
-                    this._ExpiryDate = rdr.GetDateTime(6);
-                    this._IsActive = rdr.GetBoolean(7);
-                    this._Author = rdr.GetString(8);
+                    conn.Open();
+                    string sql = "SELECT ID, version, Name, Description, path, uploaddate, expiryDate, isActive, user FROM manuals WHERE "
+                        + "ID = @id"
+                        + " ORDER BY version DESC";
+                    ManualRow row = conn.QueryFirstOrDefault<ManualRow>(sql, new { @id = id });
+                    if (row != null)
+                    {
+                        this._ID = row.ID;
+                        this._Version = row.Version;
+                        this._Name = row.Name;
+                        this._Description = row.Description;
+                        this._Path = row.Path;
+                        this._UploadDate = row.UploadDate;
+                        this._ExpiryDate = row.ExpiryDate;
+                        this._IsActive = row.IsActive;
+                        this._Author = row.User;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
+            }
 
+            private class ManualRow
+            {
+                public int ID { get; set; }
+                public int Version { get; set; }
+                public String Name { get; set; }
+                public String Description { get; set; }
+                public String Path { get; set; }
+                public DateTime UploadDate { get; set; }
+                public DateTime ExpiryDate { get; set; }
+                public Boolean IsActive { get; set; }
+                public String User { get; set; }
             }
 
             public void loadLabels()
             {
                 this.Labels = new List<WILabel>();
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT LabelID FROM manualswilabels WHERE ManualID = @id AND ManualVersion = @version";
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                cmd.Parameters.AddWithValue("@version", this.Version);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.Labels.Add(new WILabel(this.Tenant, rdr.GetInt32(0)));
+                    conn.Open();
+                    var ids = conn.Query<int>("SELECT LabelID FROM manualswilabels WHERE ManualID = @id AND ManualVersion = @version",
+                        new { @id = this.ID, @version = this.Version });
+                    foreach (int lblID in ids)
+                    {
+                        this.Labels.Add(new WILabel(this.Tenant, lblID));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
 
             public Boolean addLabel(int labelID)
@@ -338,28 +332,25 @@ namespace KIS.App_Sources
 
                 if(!bfound)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO manualswilabels(ManualID, ManualVersion, LabelID) VALUES(@ManualID, @ManualVersion, @LabelID)";
-                cmd.Parameters.AddWithValue("@ManualID", this.ID.ToString());
-                cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
-                cmd.Parameters.AddWithValue("@LabelID", labelID);
-
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("INSERT INTO manualswilabels(ManualID, ManualVersion, LabelID) VALUES(@ManualID, @ManualVersion, @LabelID)",
+                                new { @ManualID = this.ID.ToString(), @ManualVersion = this.Version, @LabelID = labelID }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch(Exception ex)
+                        {
+                            tr.Rollback();
+                            ret = false;
+                        }
+                    }
                 }
-                catch(Exception ex)
-                {
-                    tr.Rollback();
-                    ret = false;
-                }
-                conn.Close();
                 }
                 return ret;
             }
@@ -379,33 +370,28 @@ namespace KIS.App_Sources
             public Boolean deleteLabel(int labelID)
             {
                 Boolean ret = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM manualswilabels WHERE ManualID=@ManualID AND ManualVersion=@ManualVersion AND LabelID=@LabelID";
-                cmd.Parameters.AddWithValue("@ManualID", this.ID.ToString());
-                cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
-                cmd.Parameters.AddWithValue("@LabelID", labelID);
-
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("DELETE FROM manualswilabels WHERE ManualID=@ManualID AND ManualVersion=@ManualVersion AND LabelID=@LabelID",
+                                new { @ManualID = this.ID.ToString(), @ManualVersion = this.Version, @LabelID = labelID }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            ret = false;
+                        }
+                    }
+
+                    WILabel lblCurr = new WILabel(this.Tenant, labelID);
+                    lblCurr.Delete();
                 }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    ret = false;
-                }
-
-                WILabel lblCurr = new WILabel(this.Tenant, labelID);
-                lblCurr.Delete();
-
-
-                conn.Close();
                 return ret;
             }
 
@@ -414,43 +400,49 @@ namespace KIS.App_Sources
                 this.listTasksProducts = new List<WITaskProduct>();
                 if (this.ID!=-1 && this.Version!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti, tasksmanuals.validityInitialDate, tasksmanuals.expiryDate FROM "
-                        + " tasksmanuals INNER JOIN processo ON (tasksmanuals.taskid=processo.processid AND tasksmanuals.taskrev=processo.revisione) "
-                        + "INNER JOIN varianti ON (tasksmanuals.taskVarianti = varianti.idvariante)"
-                        + " WHERE tasksmanuals.manualID = @ManualID"
-                        + " AND tasksmanuals.manualVersion=@ManualVersion AND tasksmanuals.isactive=true";
-                        //+ " AND tasksmanuals.validityInitialDate <= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")
-                        //+"' AND expiryDate >= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")+"'";
-                    cmd.Parameters.AddWithValue("@ManualID", this.ID);
-                    cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
-
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while(rdr.Read())
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        processo proc = new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1));
-                        variante var = new variante(this.Tenant, rdr.GetInt32(2));
-                        if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
+                        conn.Open();
+                        string sql = "SELECT tasksmanuals.taskid, tasksmanuals.taskrev, tasksmanuals.taskvarianti, tasksmanuals.validityInitialDate, tasksmanuals.expiryDate FROM "
+                            + " tasksmanuals INNER JOIN processo ON (tasksmanuals.taskid=processo.processid AND tasksmanuals.taskrev=processo.revisione) "
+                            + "INNER JOIN varianti ON (tasksmanuals.taskVarianti = varianti.idvariante)"
+                            + " WHERE tasksmanuals.manualID = @ManualID"
+                            + " AND tasksmanuals.manualVersion=@ManualVersion AND tasksmanuals.isactive=true";
+                            //+ " AND tasksmanuals.validityInitialDate <= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")
+                            //+"' AND expiryDate >= '"+DateTime.UtcNow.ToString("yyyy-MM-dd")+"'";
+                        var rows = conn.Query<TaskManualRow>(sql, new { @ManualID = this.ID, @ManualVersion = this.Version });
+                        foreach (var r in rows)
                         {
-                            int[] padre = proc.getPadre(var);
-                            ProcessoVariante prodotti = new ProcessoVariante(this.Tenant, new processo(this.Tenant, padre[0], padre[1]), var);
-                            WITaskProduct curr = new WITaskProduct(this.Tenant, this.ID, this.Version, rdr.GetInt32(0), rdr.GetInt32(1), rdr.GetInt32(2));
-                                curr.ProductID = prodotti.process.processID;
-                                curr.ProductVersion = prodotti.process.revisione;
-                                curr.VariantID = prodotti.variant.idVariante;
-                                curr.ProductName = prodotti.variant.nomeVariante;
-                                curr.ProductType = prodotti.process.processName;
-                                curr.TaskID = rdr.GetInt32(0);
-                                curr.TaskVersion = rdr.GetInt32(1);
-                                curr.TaskName = proc.processName;
+                            processo proc = new processo(this.Tenant, r.TaskId, r.TaskRev);
+                            variante var = new variante(this.Tenant, r.TaskVarianti);
+                            if (proc.processID != -1 && proc.revisione != -1 && proc.processoPadre != -1 && proc.revPadre != -1)
+                            {
+                                int[] padre = proc.getPadre(var);
+                                ProcessoVariante prodotti = new ProcessoVariante(this.Tenant, new processo(this.Tenant, padre[0], padre[1]), var);
+                                WITaskProduct curr = new WITaskProduct(this.Tenant, this.ID, this.Version, r.TaskId, r.TaskRev, r.TaskVarianti);
+                                    curr.ProductID = prodotti.process.processID;
+                                    curr.ProductVersion = prodotti.process.revisione;
+                                    curr.VariantID = prodotti.variant.idVariante;
+                                    curr.ProductName = prodotti.variant.nomeVariante;
+                                    curr.ProductType = prodotti.process.processName;
+                                    curr.TaskID = r.TaskId;
+                                    curr.TaskVersion = r.TaskRev;
+                                    curr.TaskName = proc.processName;
 
-                                this.listTasksProducts.Add(curr);
+                                    this.listTasksProducts.Add(curr);
+                            }
                         }
                     }
-                    conn.Close();
                 }
+            }
+
+            private class TaskManualRow
+            {
+                public int TaskId { get; set; }
+                public int TaskRev { get; set; }
+                public int TaskVarianti { get; set; }
+                public DateTime ValidityInitialDate { get; set; }
+                public DateTime ExpiryDate { get; set; }
             }
 
             public void loadOlderVersions()
@@ -458,35 +450,30 @@ namespace KIS.App_Sources
                 this.OlderVersions = new List<WIOlderVersion>();
                 if(this.ID!=-1 && this.Version!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT ID, Version, Name, Description, path, uploaddate, expirydate, isActive, user FROM manuals WHERE "
-                        + "ID = @ID "
-                        + " AND Version < @Version "
-                        + " AND IsActive = false";
-                    cmd.Parameters.AddWithValue("@ID", this.ID);
-                    cmd.Parameters.AddWithValue("@Version", this.Version);
-
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while(rdr.Read())
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        WIOlderVersion curr = new WIOlderVersion();
-                        curr.ID = rdr.GetInt32(0);
-                        curr.Version = rdr.GetInt32(1);
-                        curr.Name = rdr.GetString(2);
-                        curr.Description = rdr.GetString(3);
-                        curr.Path = rdr.GetString(4);
-                        curr.UploadDate = rdr.GetDateTime(5);
-                        curr.ExpiryDate = rdr.GetDateTime(6);
-                        curr.IsActive = rdr.GetBoolean(7);
-                        curr.Author = rdr.GetString(8);
+                        conn.Open();
+                        string sql = "SELECT ID, Version, Name, Description, path, uploaddate, expirydate, isActive, user FROM manuals WHERE "
+                            + "ID = @ID "
+                            + " AND Version < @Version "
+                            + " AND IsActive = false";
+                        var rows = conn.Query<ManualRow>(sql, new { @ID = this.ID, @Version = this.Version });
+                        foreach (var r in rows)
+                        {
+                            WIOlderVersion curr = new WIOlderVersion();
+                            curr.ID = r.ID;
+                            curr.Version = r.Version;
+                            curr.Name = r.Name;
+                            curr.Description = r.Description;
+                            curr.Path = r.Path;
+                            curr.UploadDate = r.UploadDate;
+                            curr.ExpiryDate = r.ExpiryDate;
+                            curr.IsActive = r.IsActive;
+                            curr.Author = r.User;
 
-                        this.OlderVersions.Add(curr);
+                            this.OlderVersions.Add(curr);
+                        }
                     }
-                    rdr.Close();
-
-                    conn.Clone();
                 }
             }
             
@@ -530,47 +517,34 @@ namespace KIS.App_Sources
 
                     if (!checkOverlaps)
                     { 
-
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Open();
                         int maxSequence = 0;
-                        cmd.CommandText = "SELECT MAX(sequence) FROM tasksmanuals WHERE TaskId=@TaskId AND TaskRev=@TaskRev AND taskVarianti=@TaskVariante";
-                        cmd.Parameters.AddWithValue("@TaskId", TaskID);
-                        cmd.Parameters.AddWithValue("@TaskRev", TaskVersion);
-                        cmd.Parameters.AddWithValue("@TaskVariante", VariantID);
-                        
-                        MySqlDataReader rdr = cmd.ExecuteReader();
-                        if(rdr.Read() && !rdr.IsDBNull(0))
+                        int? maxSeqRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(sequence) FROM tasksmanuals WHERE TaskId=@TaskId AND TaskRev=@TaskRev AND taskVarianti=@TaskVariante",
+                            new { @TaskId = TaskID, @TaskRev = TaskVersion, @TaskVariante = VariantID });
+                        if (maxSeqRow.HasValue)
                         {
-                            maxSequence = rdr.GetInt32(0) + 1;
+                            maxSequence = maxSeqRow.Value + 1;
                         }
-                        rdr.Close();
 
-                        cmd.CommandText = "INSERT INTO tasksmanuals(taskID, taskRev, taskVarianti, manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive) "
-                        + "VALUES(@TaskId, @TaskRev, @TaskVariante, @ManualID, @ManualVersion, @ValidityInitialDate, @ExpiryDate, @Sequence, @IsActive)";
-                        cmd.Parameters.AddWithValue("@ManualID", this.ID);
-                        cmd.Parameters.AddWithValue("@ManualVersion", this.Version);
-                        cmd.Parameters.AddWithValue("@ValidityInitialDate", ValidityInitialDate);
-                    cmd.Parameters.AddWithValue("@ExpiryDate", ValidityExpiryDate);
-                    cmd.Parameters.AddWithValue("@Sequence", maxSequence);
-                    cmd.Parameters.AddWithValue("@IsActive", isActive);
-
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        ret = 1;
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("INSERT INTO tasksmanuals(taskID, taskRev, taskVarianti, manualID, manualVersion, validityInitialDate, expiryDate, sequence, isActive) "
+                                + "VALUES(@TaskId, @TaskRev, @TaskVariante, @ManualID, @ManualVersion, @ValidityInitialDate, @ExpiryDate, @Sequence, @IsActive)",
+                                    new { @TaskId = TaskID, @TaskRev = TaskVersion, @TaskVariante = VariantID, @ManualID = this.ID, @ManualVersion = this.Version, @ValidityInitialDate = ValidityInitialDate, @ExpiryDate = ValidityExpiryDate, @Sequence = maxSequence, @IsActive = isActive }, tr);
+                                tr.Commit();
+                                ret = 1;
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                                ret = 3;
+                            }
+                        }
                     }
-                    catch
-                    {
-                        tr.Rollback();
-                        ret = 3;
-                    }
-
-                    conn.Close();
                     }
                 }
                 return ret;
@@ -586,93 +560,82 @@ namespace KIS.App_Sources
                 ret[0] = 0; ret[1] = 0;
                 if(this.ID!=-1 && this.Version >=0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-
-                    cmd.CommandText = "INSERT INTO manuals(ID, Version, Name, Description, path, uploaddate, expirydate, isactive, user) VALUES("
-                        + "@id, @version, @name, @description, @path, @uploaddate, @expirydate, @isactive, @user)";
-                    cmd.Parameters.AddWithValue("@id", this.ID);
-                    cmd.Parameters.AddWithValue("@version", (this.Version + 1));
-                    cmd.Parameters.AddWithValue("@name", this.Name);
-                    cmd.Parameters.AddWithValue("@description", this.Description);
-                    cmd.Parameters.AddWithValue("@path", FileName);
-                    cmd.Parameters.AddWithValue("@uploaddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@expirydate", ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                    cmd.Parameters.AddWithValue("@isactive", true);
-                    cmd.Parameters.AddWithValue("@user", user);
-
-                    Boolean checkNewVer = false;
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        checkNewVer = true;
-                        ret[0] = this.ID;
-                        ret[1] = this.Version + 1;
-                    }
-                    catch
-                    {
-                        checkNewVer = false;
-                        tr.Rollback();
-                    }
-
-                    if(checkNewVer)
-                    {
-                        // Disable manual
-                        if (this.ExpiryDate <= DateTime.UtcNow)
+                        conn.Open();
+                        Boolean checkNewVer = false;
+                        using (var tr = conn.BeginTransaction())
                         {
+                            string sql = "INSERT INTO manuals(ID, Version, Name, Description, path, uploaddate, expirydate, isactive, user) VALUES("
+                                + "@id, @version, @name, @description, @path, @uploaddate, @expirydate, @isactive, @user)";
+                            try
+                            {
+                                conn.Execute(sql, new { @id = this.ID, @version = (this.Version + 1), @name = this.Name, @description = this.Description, @path = FileName, @uploaddate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), @expirydate = ExpiryDate.ToString("yyyy-MM-dd HH:mm:ss"), @isactive = true, @user = user }, tr);
+                                tr.Commit();
+                                checkNewVer = true;
+                                ret[0] = this.ID;
+                                ret[1] = this.Version + 1;
+                            }
+                            catch
+                            {
+                                checkNewVer = false;
+                                tr.Rollback();
+                            }
+                        }
+
+                        if(checkNewVer)
+                        {
+                            // Disable manual
+                            if (this.ExpiryDate <= DateTime.UtcNow)
+                            {
+                                this.IsActive = false;
+                            }
+                            if (this.ExpiryDate >= ExpiryDate)
+                            {
+                                this.ExpiryDate = ExpiryDate.AddDays(-1);
+                            }
                             this.IsActive = false;
-                        }
-                        if (this.ExpiryDate >= ExpiryDate)
-                        {
-                            this.ExpiryDate = ExpiryDate.AddDays(-1);
-                        }
-                        this.IsActive = false;
 
-                        WorkInstruction newWI = new WorkInstruction(this.Tenant, this.ID, (this.Version) + 1);
-                        // Copy tasks and set end date as ExpiryDate-1Day for tasks in current manual
-                        this.loadTaskProducts();
-                        for(int i = 0; i < this.listTasksProducts.Count; i++)
-                        {
-                            if (this.listTasksProducts[i].InitialDate >= InitialDate)
+                            WorkInstruction newWI = new WorkInstruction(this.Tenant, this.ID, (this.Version) + 1);
+                            // Copy tasks and set end date as ExpiryDate-1Day for tasks in current manual
+                            this.loadTaskProducts();
+                            for(int i = 0; i < this.listTasksProducts.Count; i++)
                             {
-                                this.listTasksProducts[i].InitialDate = ExpiryDate.AddDays(-2);
+                                if (this.listTasksProducts[i].InitialDate >= InitialDate)
+                                {
+                                    this.listTasksProducts[i].InitialDate = ExpiryDate.AddDays(-2);
+                                }
+                                if (this.listTasksProducts[i].ExpiryDate >= InitialDate)
+                                {
+                                    this.listTasksProducts[i].ExpiryDate = ExpiryDate.AddDays(-1);
+                                }
+                                int lnkRet = newWI.linkManualToTask(this.listTasksProducts[i].TaskID,
+                                    this.listTasksProducts[i].TaskVersion,
+                                    this.listTasksProducts[i].VariantID,
+                                    InitialDate,
+                                    ExpiryDate,
+                                    this.listTasksProducts[i].Sequence,
+                                    true);
+                                if(lnkRet ==1)
+                                { 
+                                this.listTasksProducts[i].IsActive = false;
+                                }
+                                else
+                                {
+                                    ret[0] = -lnkRet;
+                                }
                             }
-                            if (this.listTasksProducts[i].ExpiryDate >= InitialDate)
+
+                            // Copy labels
+                            this.loadLabels();
+                            for(int i = 0; i < this.Labels.Count; i++)
                             {
-                                this.listTasksProducts[i].ExpiryDate = ExpiryDate.AddDays(-1);
+                                newWI.addLabel(this.Labels[i].WILabelID);
                             }
-                            int lnkRet = newWI.linkManualToTask(this.listTasksProducts[i].TaskID,
-                                this.listTasksProducts[i].TaskVersion,
-                                this.listTasksProducts[i].VariantID,
-                                InitialDate,
-                                ExpiryDate,
-                                this.listTasksProducts[i].Sequence,
-                                true);
-                            if(lnkRet ==1)
-                            { 
-                            this.listTasksProducts[i].IsActive = false;
-                            }
-                            else
-                            {
-                                ret[0] = -lnkRet;
-                            }
+
+
                         }
-
-                        // Copy labels
-                        this.loadLabels();
-                        for(int i = 0; i < this.Labels.Count; i++)
-                        {
-                            newWI.addLabel(this.Labels[i].WILabelID);
-                        }
-
-
                     }
-
-                    conn.Close();
                 }
                 return ret;
             }
@@ -702,77 +665,71 @@ namespace KIS.App_Sources
                 this._List = new List<WorkInstruction>();
                 if (idLabels.Count > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-
-                    String strFilter = "";
-                    for(int i =0; i < idLabels.Count; i++)
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        if(idLabels[i]==-1)
+                        conn.Open();
+                        DynamicParameters par = new DynamicParameters();
+
+                        String strFilter = "";
+                        for(int i =0; i < idLabels.Count; i++)
                         {
-                            strFilter += "manualswilabels.LabelID IS NULL";
+                            if(idLabels[i]==-1)
+                            {
+                                strFilter += "manualswilabels.LabelID IS NULL";
+                            }
+                            else
+                            { 
+                                strFilter += "manualswilabels.LabelID = @labelId" + i;
+                                par.Add("@labelId" + i, idLabels[i]);
+                            }
+                            if (i < idLabels.Count-1)
+                            {
+                                strFilter += " OR ";
+                            }
                         }
-                        else
-                        { 
-                            strFilter += "manualswilabels.LabelID = @labelId" + i;
-                            cmd.Parameters.AddWithValue("@labelId" + i, idLabels[i]);
-                        }
-                        if (i < idLabels.Count-1)
+
+
+                        String strOnlyActives = "";
+                        if (onlyActives)
                         {
-                            strFilter += " OR ";
+                            strOnlyActives = " AND (isActive = true AND expiryDate >= @today)";
+                        }
+
+                        string sql = "SELECT DISTINCT(ID), Version, Name, Description, path, uploaddate, expirydate, isActive, user from manuals "
+                            + " LEFT JOIN manualswilabels ON(manuals.ID = manualswilabels.ManualID AND manuals.Version = manualswilabels.manualVersion) "
+                            + " WHERE ("+strFilter+")";
+                        if (onlyActives)
+                        {
+                            sql += strOnlyActives;
+                            par.Add("@today", DateTime.UtcNow.ToString("yyyy-MM-dd"));
+                        }
+                        var rows = conn.Query<(int ID, int Version)>(sql, par);
+                        foreach (var r in rows)
+                        {
+                            this._List.Add(new WorkInstruction(this.Tenant, r.ID, r.Version));
                         }
                     }
-
-
-                    String strOnlyActives = "";
-                    if (onlyActives)
-                    {
-                        strOnlyActives = " AND (isActive = true AND expiryDate >= @today)";
-                    }
-
-                    
-                    cmd.CommandText = "SELECT DISTINCT(ID), Version, Name, Description, path, uploaddate, expirydate, isActive, user from manuals "
-                        + " LEFT JOIN manualswilabels ON(manuals.ID = manualswilabels.ManualID AND manuals.Version = manualswilabels.manualVersion) "
-                        + " WHERE ("+strFilter+")";
-                    if (onlyActives)
-                    {
-                        cmd.CommandText += strOnlyActives;
-                        cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy-MM-dd"));
-                    }
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while (rdr.Read())
-                    {
-                        this._List.Add(new WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
-                    }
-                    rdr.Close();
-                    conn.Close();
                 }
             }
 
             public void loadWorkInstructionList(Boolean onlyActives =true)
             {
                 this._List = new List<WorkInstruction>();
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                String strOnlyActives = "";
-                if(onlyActives)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    strOnlyActives = "WHERE isActive = true AND expiryDate >= @today";
+                    conn.Open();
+                    String strOnlyActives = "";
+                    if(onlyActives)
+                    {
+                        strOnlyActives = "WHERE isActive = true AND expiryDate >= @today";
+                    }
+                    string sql = "SELECT ID, Version FROM Manuals "+strOnlyActives+" ORDER BY Name";
+                    var rows = conn.Query<(int ID, int Version)>(sql, onlyActives ? new { @today = DateTime.UtcNow.ToString("yyyy-MM-dd") } : null);
+                    foreach (var r in rows)
+                    {
+                        this._List.Add(new WorkInstruction(this.Tenant, r.ID, r.Version));
+                    }
                 }
-                cmd.CommandText = "SELECT ID, Version FROM Manuals "+strOnlyActives+" ORDER BY Name";
-                if (onlyActives)
-                {
-                    cmd.Parameters.AddWithValue("@today", DateTime.UtcNow.ToString("yyyy-MM-dd"));
-                }
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
-                {
-                    this._List.Add(new WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
-                }
-                rdr.Close();
-                conn.Close();
             }
 
             /* Returns:
@@ -784,49 +741,35 @@ namespace KIS.App_Sources
                 int[] ret = new int[2];
                 ret[0] = -1; ret[1] = -1;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT MAX(ID) FROM manuals";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                int maxID = 0;
-                if(rdr.Read()&&!rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    maxID = rdr.GetInt32(0) + 1;
+                    conn.Open();
+                    int maxID = 0;
+                    int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(ID) FROM manuals");
+                    if (maxRow.HasValue)
+                    {
+                        maxID = maxRow.Value + 1;
+                    }
+
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("INSERT INTO manuals(ID, Version, Name, Description, path, uploaddate, expirydate, isactive, user) VALUES("
+                                + "@id, @version, @name, @description, @path, @uploaddate, @expirydate, @isactive, @user)",
+                                new { @id = maxID, @version = 0, @name = name, @description = description, @path = FileName, @uploaddate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), @expirydate = (new DateTime(2199, 1, 1).ToString("yyyy-MM-dd HH:mm:ss")), @isactive = true, @user = user }, tr);
+                            tr.Commit();
+                            ret[0] = maxID;
+                            ret[1] = 0;
+                        }
+                        catch(Exception ex)
+                        {
+                            ret[0] = -1;
+                            ret[1] = -1;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                rdr.Close();
-
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-
-                cmd.CommandText = "INSERT INTO manuals(ID, Version, Name, Description, path, uploaddate, expirydate, isactive, user) VALUES("
-                    + "@id, @version, @name, @description, @path, @uploaddate, @expirydate, @isactive, @user)";
-                cmd.Parameters.AddWithValue("@id", maxID);
-                cmd.Parameters.AddWithValue("@version", 0);
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@description", description);
-                cmd.Parameters.AddWithValue("@path", FileName);
-                cmd.Parameters.AddWithValue("@uploaddate", DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@expirydate", (new DateTime(2199, 1, 1).ToString("yyyy-MM-dd HH:mm:ss")));
-                cmd.Parameters.AddWithValue("@isactive", true);
-                cmd.Parameters.AddWithValue("@user", user);
-
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret[0] = maxID;
-                    ret[1] = 0;
-                }
-                catch(Exception ex)
-                {
-                    ret[0] = -1;
-                    ret[1] = -1;
-                    tr.Rollback();
-                }
-                
-
-                conn.Close();
 
                 return ret;
             }
@@ -858,19 +801,17 @@ namespace KIS.App_Sources
                 this._WILabelID = -1;
                 this._WILabelName = "";
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT wiLabelName FROM workinstructionslabel WHERE wiLabelID = @labelID";
-                cmd.Parameters.AddWithValue("@labelID", LabelID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._WILabelID = LabelID;
-                    this._WILabelName = rdr.GetString(0);
+                    conn.Open();
+                    String lblName = conn.QueryFirstOrDefault<String>("SELECT wiLabelName FROM workinstructionslabel WHERE wiLabelID = @labelID",
+                        new { @labelID = LabelID });
+                    if (lblName != null)
+                    {
+                        this._WILabelID = LabelID;
+                        this._WILabelName = lblName;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
 
             public void loadWorkInstructions()
@@ -878,21 +819,18 @@ namespace KIS.App_Sources
                 this.workInstructions = new List<WorkInstruction>();
                 if(this.WILabelID!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
-                        + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
-                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=@labelID";
-                    cmd.Parameters.AddWithValue("@labelID", this.WILabelID);
-
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    while(rdr.Read())
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        this.workInstructions.Add(new WorkInstruction(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                        conn.Open();
+                        string sql = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
+                            + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
+                            + " WHERE manuals.isActive = true AND manualswilabels.LabelID=@labelID";
+                        var rows = conn.Query<(int ID, int Version)>(sql, new { @labelID = this.WILabelID });
+                        foreach (var r in rows)
+                        {
+                            this.workInstructions.Add(new WorkInstruction(this.Tenant, r.ID, r.Version));
+                        }
                     }
-                    rdr.Close();
-                    conn.Close();
                 }
             }
 
@@ -907,48 +845,45 @@ namespace KIS.App_Sources
                 int ret = 0;
                 if(this.WILabelID!=-1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
-                        + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
-                        + " WHERE manuals.isActive = true AND manualswilabels.LabelID=@labelID";
-                    cmd.Parameters.AddWithValue("@labelID", this.WILabelID);
-
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    Boolean delete = false;
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        delete = false;
-                    }
-                    else
-                    {
-                        delete = true;
-                    }
-                    rdr.Close();
-
-                    if (delete)
-                    {
-                        cmd.CommandText = "DELETE FROM workinstructionslabel WHERE wilabelID = @labelID";
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        conn.Open();
+                        string sql = "select manuals.id, manuals.version from manuals INNER JOIN manualswilabels "
+                            + " ON(manuals.id = manualswilabels.manualID and manuals.Version = manualswilabels.manualversion) "
+                            + " WHERE manuals.isActive = true AND manualswilabels.LabelID=@labelID";
+                        var row = conn.QueryFirstOrDefault<(int ID, int Version)?>(sql, new { @labelID = this.WILabelID });
+                        Boolean delete = false;
+                        if (row.HasValue)
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            ret = 1;
+                            delete = false;
                         }
-                        catch
+                        else
                         {
-                            ret = 3;
+                            delete = true;
+                        }
+
+                        if (delete)
+                        {
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("DELETE FROM workinstructionslabel WHERE wilabelID = @labelID",
+                                        new { @labelID = this.WILabelID }, tr);
+                                    tr.Commit();
+                                    ret = 1;
+                                }
+                                catch
+                                {
+                                    ret = 3;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ret = 2;
                         }
                     }
-                    else
-                    {
-                        ret = 2;
-                    }
-
-                    conn.Close();
                 }
                 return ret;
             }
@@ -971,17 +906,15 @@ namespace KIS.App_Sources
             {
                 this.List = new List<WILabel>();
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT wiLabelID FROM workinstructionslabel ORDER BY wilabelname";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.List.Add(new WILabel(this.Tenant, rdr.GetInt32(0)));
+                    conn.Open();
+                    var ids = conn.Query<int>("SELECT wiLabelID FROM workinstructionslabel ORDER BY wilabelname");
+                    foreach (int lblID in ids)
+                    {
+                        this.List.Add(new WILabel(this.Tenant, lblID));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
 
             /* Returns:
@@ -992,51 +925,43 @@ namespace KIS.App_Sources
             {
                 int ret = -1;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT wiLabelID FROM workinstructionslabel WHERE wiLabelName = @labelName";
-                cmd.Parameters.AddWithValue("@labelName", lblName);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    ret = rdr.GetInt32(0);
+                    conn.Open();
+
+                    int? lblID = conn.QueryFirstOrDefault<int?>("SELECT wiLabelID FROM workinstructionslabel WHERE wiLabelName = @labelName",
+                        new { @labelName = lblName });
+                    if (lblID.HasValue)
+                    {
+                        ret = lblID.Value;
+                    }
+
+                    if(ret == -1)
+                    {
+                        int maxID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(wiLabelID) FROM workinstructionslabel");
+                        if (maxRow.HasValue)
+                        {
+                            maxID = maxRow.Value + 1;
+                        }
+
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("INSERT INTO workinstructionslabel(wiLabelID, wiLabelName) VALUES(@labelId, @labelName)",
+                                    new { @labelId = maxID, @labelName = lblName }, tr);
+                                tr.Commit();
+                                ret = maxID;
+                                loadLabelsList();
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
+                    }
                 }
-                rdr.Close();
-
-                if(ret == -1)
-                {
-                    int maxID = 0;
-                    cmd.CommandText = "SELECT MAX(wiLabelID) FROM workinstructionslabel";
-                    rdr = cmd.ExecuteReader();
-                    if(rdr.Read() && !rdr.IsDBNull(0))
-                    {
-                        maxID = rdr.GetInt32(0) + 1;
-                    }
-                    rdr.Close();
-
-                    cmd = conn.CreateCommand();
-                    cmd.CommandText = "INSERT INTO workinstructionslabel(wiLabelID, wiLabelName) VALUES(@labelId, @labelName)";
-                    cmd.Parameters.AddWithValue("@labelId", maxID);
-                    cmd.Parameters.AddWithValue("@labelName", lblName);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        ret = maxID;
-                        loadLabelsList();
-                    }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-
-                }
-
-                conn.Close();
                 return ret;
             }
         }
@@ -1065,33 +990,28 @@ namespace KIS.App_Sources
                 set {
                     if (this.TaskID != -1 && this.TaskVersion != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE tasksmanuals SET validityInitialDate=@initialDate"
-                            + " WHERE taskid = @taskid AND TaskRev = @taskRev"
-                            +" AND taskVarianti = @taskVarianti"
-                            + " AND manualID = @manualID"
-                            + " AND manualVersion = @manualVersion";
-                        cmd.Parameters.AddWithValue("@initialDate", value.ToString("yyyy-MM-dd"));
-                        cmd.Parameters.AddWithValue("@taskid", this.TaskID);
-                        cmd.Parameters.AddWithValue("@taskRev", this.TaskVersion);
-                        cmd.Parameters.AddWithValue("@taskVarianti", this.VariantID);
-                        cmd.Parameters.AddWithValue("@manualID", this.ManualID);
-                        cmd.Parameters.AddWithValue("@manualVersion", this.ManualVersion);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._InitialDate = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE tasksmanuals SET validityInitialDate=@initialDate"
+                                        + " WHERE taskid = @taskid AND TaskRev = @taskRev"
+                                        +" AND taskVarianti = @taskVarianti"
+                                        + " AND manualID = @manualID"
+                                        + " AND manualVersion = @manualVersion",
+                                        new { @initialDate = value.ToString("yyyy-MM-dd"), @taskid = this.TaskID, @taskRev = this.TaskVersion, @taskVarianti = this.VariantID, @manualID = this.ManualID, @manualVersion = this.ManualVersion }, tr);
+                                    tr.Commit();
+                                    this._InitialDate = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -1104,33 +1024,28 @@ namespace KIS.App_Sources
                 {
                     if (this.TaskID != -1 && this.TaskVersion != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE tasksmanuals SET expiryDate=@expiryDate"
-                            + " WHERE taskid = @taskid AND TaskRev = @taskRev"
-                            + " AND taskVarianti = @taskVarianti"
-                            + " AND manualID = @manualID"
-                            + " AND manualVersion = @manualVersion";
-                        cmd.Parameters.AddWithValue("@expiryDate", value.ToString("yyyy-MM-dd"));
-                        cmd.Parameters.AddWithValue("@taskid", this.TaskID);
-                        cmd.Parameters.AddWithValue("@taskRev", this.TaskVersion);
-                        cmd.Parameters.AddWithValue("@taskVarianti", this.VariantID);
-                        cmd.Parameters.AddWithValue("@manualID", this.ManualID);
-                        cmd.Parameters.AddWithValue("@manualVersion", this.ManualVersion);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._ExpiryDate = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE tasksmanuals SET expiryDate=@expiryDate"
+                                        + " WHERE taskid = @taskid AND TaskRev = @taskRev"
+                                        + " AND taskVarianti = @taskVarianti"
+                                        + " AND manualID = @manualID"
+                                        + " AND manualVersion = @manualVersion",
+                                        new { @expiryDate = value.ToString("yyyy-MM-dd"), @taskid = this.TaskID, @taskRev = this.TaskVersion, @taskVarianti = this.VariantID, @manualID = this.ManualID, @manualVersion = this.ManualVersion }, tr);
+                                    tr.Commit();
+                                    this._ExpiryDate = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -1144,33 +1059,28 @@ namespace KIS.App_Sources
                 {
                     if (this.TaskID != -1 && this.TaskVersion != -1)
                     {
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        MySqlCommand cmd = conn.CreateCommand();
-                        cmd.CommandText = "UPDATE tasksmanuals SET IsActive=@isActive"
-                            + " WHERE taskid = @taskid AND TaskRev = @taskRev"
-                            + " AND taskVarianti = @taskVarianti"
-                            + " AND manualID = @manualID"
-                            + " AND manualVersion = @manualVersion";
-                        cmd.Parameters.AddWithValue("@isActive", value);
-                        cmd.Parameters.AddWithValue("@taskid", this.TaskID);
-                        cmd.Parameters.AddWithValue("@taskRev", this.TaskVersion);
-                        cmd.Parameters.AddWithValue("@taskVarianti", this.VariantID);
-                        cmd.Parameters.AddWithValue("@manualID", this.ManualID);
-                        cmd.Parameters.AddWithValue("@manualVersion", this.ManualVersion);
-                        MySqlTransaction tr = conn.BeginTransaction();
-                        cmd.Transaction = tr;
-                        try
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                         {
-                            cmd.ExecuteNonQuery();
-                            tr.Commit();
-                            this._IsActive = value;
+                            conn.Open();
+                            using (var tr = conn.BeginTransaction())
+                            {
+                                try
+                                {
+                                    conn.Execute("UPDATE tasksmanuals SET IsActive=@isActive"
+                                        + " WHERE taskid = @taskid AND TaskRev = @taskRev"
+                                        + " AND taskVarianti = @taskVarianti"
+                                        + " AND manualID = @manualID"
+                                        + " AND manualVersion = @manualVersion",
+                                        new { @isActive = value, @taskid = this.TaskID, @taskRev = this.TaskVersion, @taskVarianti = this.VariantID, @manualID = this.ManualID, @manualVersion = this.ManualVersion }, tr);
+                                    tr.Commit();
+                                    this._IsActive = value;
+                                }
+                                catch
+                                {
+                                    tr.Rollback();
+                                }
+                            }
                         }
-                        catch
-                        {
-                            tr.Rollback();
-                        }
-                        conn.Close();
                     }
                 }
             }
@@ -1186,30 +1096,31 @@ namespace KIS.App_Sources
                 this.TaskVersion = -1;
                 this._InitialDate = new DateTime(1970, 1, 1);
                 this._ExpiryDate = new DateTime(1970, 1, 1);
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE TaskID=@TaskId AND taskRev=@TaskVersion AND "
-                    + " taskVarianti=@VariantID AND manualID=@ManualID AND manualVersion=@ManualVersion";
-                cmd.Parameters.AddWithValue("@TaskId", TaskID); 
-                cmd.Parameters.AddWithValue("@TaskVersion", TaskVersion);
-                cmd.Parameters.AddWithValue("@VariantID", VariantID);
-                cmd.Parameters.AddWithValue("@ManualID", ManualID);
-                cmd.Parameters.AddWithValue("@ManualVersion", ManualVersion);
-
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.ManualID = ManualID;
-                    this.ManualVersion = ManualVersion;
-                    this.TaskID = TaskID;
-                    this.TaskVersion = TaskVersion;
-                    this.VariantID = VariantID;
-                    this._InitialDate = rdr.GetDateTime(0);
-                    this._ExpiryDate = rdr.GetDateTime(1);
+                    conn.Open();
+                    string sql = "SELECT validityInitialDate, expiryDate, sequence, isActive FROM tasksmanuals WHERE TaskID=@TaskId AND taskRev=@TaskVersion AND "
+                        + " taskVarianti=@VariantID AND manualID=@ManualID AND manualVersion=@ManualVersion";
+                    WITaskProductRow row = conn.QueryFirstOrDefault<WITaskProductRow>(sql, new { @TaskId = TaskID, @TaskVersion = TaskVersion, @VariantID = VariantID, @ManualID = ManualID, @ManualVersion = ManualVersion });
+                    if (row != null)
+                    {
+                        this.ManualID = ManualID;
+                        this.ManualVersion = ManualVersion;
+                        this.TaskID = TaskID;
+                        this.TaskVersion = TaskVersion;
+                        this.VariantID = VariantID;
+                        this._InitialDate = row.ValidityInitialDate;
+                        this._ExpiryDate = row.ExpiryDate;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
+            }
+
+            private class WITaskProductRow
+            {
+                public DateTime ValidityInitialDate { get; set; }
+                public DateTime ExpiryDate { get; set; }
+                public int Sequence { get; set; }
+                public Boolean IsActive { get; set; }
             }
         }
 

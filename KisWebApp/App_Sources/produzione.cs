@@ -44,11 +44,12 @@ namespace KIS.App_Code
                 if (this.matricola.Length > 0)
                 {
                     string strSQL = "UPDATE productionPlan SET status = @status WHERE matricola = @matricola";
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    conn.Execute(strSQL, new { status = value.ToString(), matricola = this.matricola });
-                    conn.Close();
-                    this._status = value;
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Open();
+                        conn.Execute(strSQL, new { status = value.ToString(), matricola = this.matricola });
+                        this._status = value;
+                    }
                 }
             }
         }
@@ -64,9 +65,10 @@ namespace KIS.App_Code
         public prodotto(String Tenant, String prodID, ProcessoVariante mdl)
         {
             this.Tenant = Tenant;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT matricola, processo, revisione, variante, status, reparto, startTime FROM productionPlan "
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+            {
+                conn.Open();
+                string sql = "SELECT matricola, processo, revisione, variante, status, reparto, startTime FROM productionPlan "
                 + "WHERE matricola LIKE @matricola AND processo = @processo"
                 + " AND revisione = @revisione"
                 + " AND variante = @variante";
@@ -110,7 +112,7 @@ namespace KIS.App_Code
                 this._matricola = "";
                 this._RepartoID = -1;
             }
-            conn.Close();
+            }
         }
 
         private class ProdottoRow
@@ -188,23 +190,26 @@ namespace KIS.App_Code
                 {
                     this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                string sql = "UPDATE tasksproduzione SET earlyStart = @earlyStart"
-                    + " WHERE taskid = @taskid";
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute(sql, new { earlyStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
-                    tr.Commit();
-                    this._EarlyStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        string sql = "UPDATE tasksproduzione SET earlyStart = @earlyStart"
+                            + " WHERE taskid = @taskid";
+                        try
+                        {
+                            conn.Execute(sql, new { earlyStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
+                            tr.Commit();
+                            this._EarlyStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
+                        }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            log = ex.Message;
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    log = ex.Message;
-                }
-                conn.Close();
             }
         }
 
@@ -222,23 +227,26 @@ namespace KIS.App_Code
             set
             {
                 Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                string sql = "UPDATE tasksproduzione SET lateStart = @lateStart"
-                    + " WHERE taskid = @taskid";
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute(sql, new { lateStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
-                    tr.Commit();
-                    this._LateStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        string sql = "UPDATE tasksproduzione SET lateStart = @lateStart"
+                            + " WHERE taskid = @taskid";
+                        try
+                        {
+                            conn.Execute(sql, new { lateStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
+                            tr.Commit();
+                            this._LateStart = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario);
+                        }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            log = ex.Message;
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    log = ex.Message;
-                }
-                conn.Close();
             }
         }
         private DateTime _EarlyFinish;
@@ -258,22 +266,25 @@ namespace KIS.App_Code
                 {
                     this.rp = new Reparto(this.Tenant, this.RepartoID);
                 }
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                string sql = "UPDATE tasksproduzione SET earlyFinish = @earlyFinish"
-                    + " WHERE taskid = @taskid";
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute(sql, new { earlyFinish = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
-                    tr.Commit();
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        string sql = "UPDATE tasksproduzione SET earlyFinish = @earlyFinish"
+                            + " WHERE taskid = @taskid";
+                        try
+                        {
+                            conn.Execute(sql, new { earlyFinish = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
+                            tr.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            log = ex.Message;
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    log = ex.Message;
-                }
-                conn.Close();
             }
         }
         private DateTime _LateFinish;
@@ -290,22 +301,25 @@ namespace KIS.App_Code
             set
             {
                 Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                string sql = "UPDATE tasksproduzione SET lateFinish = @lateFinish"
-                    + " WHERE taskid = @taskid";
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute(sql, new { lateFinish = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
-                    tr.Commit();
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        string sql = "UPDATE tasksproduzione SET lateFinish = @lateFinish"
+                            + " WHERE taskid = @taskid";
+                        try
+                        {
+                            conn.Execute(sql, new { lateFinish = TimeZoneInfo.ConvertTimeToUtc(value, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), taskid = this.TaskProduzioneID }, tr);
+                            tr.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            tr.Rollback();
+                            log = ex.Message;
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    tr.Rollback();
-                    log = ex.Message;
-                }
-                conn.Close();
             }
         }
         private DateTime _StartEffettivo;
@@ -436,23 +450,26 @@ namespace KIS.App_Code
             {
                 if (this.TaskProduzioneID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    string sql = "UPDATE tasksproduzione SET qtaProdotta = @qtaProdotta"
-                        + " WHERE taskID = @taskid";
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        conn.Execute(sql, new { qtaProdotta = value, taskid = this.TaskProduzioneID }, tr);
-                        tr.Commit();
-                        this._QuantitaProdotta = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            string sql = "UPDATE tasksproduzione SET qtaProdotta = @qtaProdotta"
+                                + " WHERE taskID = @taskid";
+                            try
+                            {
+                                conn.Execute(sql, new { qtaProdotta = value, taskid = this.TaskProduzioneID }, tr);
+                                tr.Commit();
+                                this._QuantitaProdotta = value;
                     }
                     catch (Exception ex)
                     {
                         log = ex.Message;
                         tr.Rollback();
                     }
-                    conn.Close();
+                        }
+                    }
                 }
             }
         }
@@ -486,12 +503,13 @@ namespace KIS.App_Code
             this.Tenant = tenant;
             this.WorkInstructionActive = null;
             this.TaskOperatorNotes = null;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT taskID, name, description, earlyStart, lateStart, earlyFinish, lateFinish, "
-                + " origTask, revOrigTask, variante, reparto, postazione, status, idArticolo, annoArticolo, "
-                + " nOperatori, tempoCiclo, qtaPrevista, qtaProdotta, endDateReal, LeadTime, WorkingTime, Delay FROM tasksproduzione WHERE taskID = @taskid";
-            TaskProduzioneRow row = conn.QueryFirstOrDefault<TaskProduzioneRow>(sql, new { taskid = tskProdID });
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+            {
+                conn.Open();
+                string sql = "SELECT taskID, name, description, earlyStart, lateStart, earlyFinish, lateFinish, "
+                    + " origTask, revOrigTask, variante, reparto, postazione, status, idArticolo, annoArticolo, "
+                    + " nOperatori, tempoCiclo, qtaPrevista, qtaProdotta, endDateReal, LeadTime, WorkingTime, Delay FROM tasksproduzione WHERE taskID = @taskid";
+                TaskProduzioneRow row = conn.QueryFirstOrDefault<TaskProduzioneRow>(sql, new { taskid = tskProdID });
             if (row != null)
             {
                 this._TaskProduzioneID = row.TaskID;
@@ -562,7 +580,7 @@ namespace KIS.App_Code
                 this._RealEndDate = new DateTime(1970, 1, 1);
                 this._Delay = new TimeSpan(0, 0, 0);
             }
-            conn.Close();
+            }
         }
 
         private class TaskProduzioneRow
@@ -606,19 +624,20 @@ namespace KIS.App_Code
         {
             this._IdPrecedenti = new List<int>();
             this.PreviousTasks = new List<NearTask>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT prec, ConstraintType FROM prectasksproduzione WHERE succ = @succ";
-            var rows = conn.Query<(int Prec, int ConstraintType)>(sql, new { succ = this.TaskProduzioneID });
-            foreach (var row in rows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._IdPrecedenti.Add(row.Prec);
-                NearTask curr = new NearTask(this.Tenant);
-                curr.NearTaskID = row.Prec;
-                curr.ConstraintType = row.ConstraintType;
-                this.PreviousTasks.Add(curr);
+                conn.Open();
+                string sql = "SELECT prec, ConstraintType FROM prectasksproduzione WHERE succ = @succ";
+                var rows = conn.Query<(int Prec, int ConstraintType)>(sql, new { succ = this.TaskProduzioneID });
+                foreach (var row in rows)
+                {
+                    this._IdPrecedenti.Add(row.Prec);
+                    NearTask curr = new NearTask(this.Tenant);
+                    curr.NearTaskID = row.Prec;
+                    curr.ConstraintType = row.ConstraintType;
+                    this.PreviousTasks.Add(curr);
+                }
             }
-            conn.Close();
         }
 
         // Eventi del task
@@ -631,16 +650,17 @@ namespace KIS.App_Code
         public void loadEventi()
         {
             this._Eventi = new List<EventoTaskProduzione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT id FROM registroeventitaskproduzione WHERE task = @task"
-                + " ORDER BY data";
-            var rows = conn.Query<int>(sql, new { task = this.TaskProduzioneID });
-            foreach (var id in rows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._Eventi.Add(new EventoTaskProduzione(this.Tenant, id));
+                conn.Open();
+                string sql = "SELECT id FROM registroeventitaskproduzione WHERE task = @task"
+                    + " ORDER BY data";
+                var rows = conn.Query<int>(sql, new { task = this.TaskProduzioneID });
+                foreach (var id in rows)
+                {
+                    this._Eventi.Add(new EventoTaskProduzione(this.Tenant, id));
+                }
             }
-            conn.Close();
         }
 
         // Utenti attivi
@@ -695,25 +715,26 @@ namespace KIS.App_Code
                 String ret = "";
                 if (this.TaskProduzioneID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT anagraficaclienti.ragsociale FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
-                        + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
-                        + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
-                        + " WHERE taskID = @taskID";
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        String r = conn.QueryFirstOrDefault<String>(sql, new { taskID = this.TaskProduzioneID });
-                        if (r != null)
+                        conn.Open();
+                        string sql = "SELECT anagraficaclienti.ragsociale FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
+                            + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
+                            + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
+                            + " WHERE taskID = @taskID";
+                        try
                         {
-                            ret = r;
+                            String r = conn.QueryFirstOrDefault<String>(sql, new { taskID = this.TaskProduzioneID });
+                            if (r != null)
+                            {
+                                ret = r;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
                 return ret;
             }
@@ -726,25 +747,26 @@ namespace KIS.App_Code
                 String ret = "";
                 if (this.TaskProduzioneID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT anagraficaclienti.codice FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
-                        + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
-                        + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
-                        + " WHERE taskID = @taskID";
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        String r = conn.QueryFirstOrDefault<String>(sql, new { taskID = this.TaskProduzioneID });
-                        if (r != null)
+                        conn.Open();
+                        string sql = "SELECT anagraficaclienti.codice FROM anagraficaclienti INNER JOIN commesse ON (anagraficaclienti.codice = commesse.cliente) "
+                            + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
+                            + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
+                            + " WHERE taskID = @taskID";
+                        try
                         {
-                            ret = r;
+                            String r = conn.QueryFirstOrDefault<String>(sql, new { taskID = this.TaskProduzioneID });
+                            if (r != null)
+                            {
+                                ret = r;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
                 return ret;
             }
@@ -757,25 +779,26 @@ namespace KIS.App_Code
                 String ret = "";
                 if (this.TaskProduzioneID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT commesse.ExternalID FROM commesse "
-                        + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
-                        + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno) "
-                        + " WHERE taskID = @taskID";
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        String r = conn.QueryFirstOrDefault<String>(sql, new { taskID = this.TaskProduzioneID });
-                        if (r != null)
+                        conn.Open();
+                        string sql = "SELECT commesse.ExternalID FROM commesse "
+                            + " INNER JOIN productionplan ON (productionplan.commessa = commesse.idcommesse AND productionplan.anno = commesse.anno) INNER JOIN "
+                            + " tasksproduzione ON (tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno) "
+                            + " WHERE taskID = @taskID";
+                        try
                         {
-                            ret = r;
+                            String r = conn.QueryFirstOrDefault<String>(sql, new { taskID = this.TaskProduzioneID });
+                            if (r != null)
+                            {
+                                ret = r;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
                 return ret;
             }
@@ -817,10 +840,11 @@ namespace KIS.App_Code
             if (this.TaskProduzioneID != -1 && this.Status != 'F' && inputpoint!=null && inputpoint.id>=0)
             {
                 bool controlloUltimaAzione = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task=@taskid "
-                + " AND inputpoint=@ipid ORDER BY data desc";
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task=@taskid "
+                    + " AND inputpoint=@ipid ORDER BY data desc";
                 String evento = conn.QueryFirstOrDefault<String>(sql, new { taskid = this.TaskProduzioneID.ToString(), ipid = inputpoint.id });
                 if (evento != null)
                 {
@@ -884,37 +908,39 @@ namespace KIS.App_Code
 
                 if (controlloUltimaAzione == true && checkPrecedenti == true && controlloTasksAvviatiUtente == true)
                 {
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    int maxID = 0;
-                    int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
-                    if (maxRow.HasValue)
+                    using (var tr = conn.BeginTransaction())
                     {
-                        maxID = maxRow.Value + 1;
-                    }
-                    try
-                    {
-                        conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@id, @ipid, @taskid, @date, @statusI, @note)",
-                            new { id = maxID.ToString(), ipid = inputpoint.id, taskid = this.TaskProduzioneID.ToString(), date = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), statusI = 'I', note = "" }, tr);
-                        conn.Execute("UPDATE tasksproduzione SET status =@statusI WHERE taskID = @taskid",
-                            new { statusI = 'I', taskid = this.TaskProduzioneID.ToString() }, tr);
-                        Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                        if (art.Status == 'P')
+                        int maxID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
+                        if (maxRow.HasValue)
                         {
-                            conn.Execute("UPDATE productionplan SET status=@statusI WHERE id=@prodid AND anno=@prodYear",
-                                new { statusI = 'I', prodid = art.ID, prodYear = art.Year }, tr);
+                            maxID = maxRow.Value + 1;
                         }
+                        try
+                        {
+                            conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@id, @ipid, @taskid, @date, @statusI, @note)",
+                                new { id = maxID.ToString(), ipid = inputpoint.id, taskid = this.TaskProduzioneID.ToString(), date = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), statusI = 'I', note = "" }, tr);
+                            conn.Execute("UPDATE tasksproduzione SET status =@statusI WHERE taskID = @taskid",
+                                new { statusI = 'I', taskid = this.TaskProduzioneID.ToString() }, tr);
+                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                            if (art.Status == 'P')
+                            {
+                                conn.Execute("UPDATE productionplan SET status=@statusI WHERE id=@prodid AND anno=@prodYear",
+                                    new { statusI = 'I', prodid = art.ID, prodYear = art.Year }, tr);
+                            }
 
-                        tr.Commit();
-                        rt = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        rt = false;
-                        log += ex.Message;
-                        tr.Rollback();
+                            tr.Commit();
+                            rt = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            rt = false;
+                            log += ex.Message;
+                            tr.Rollback();
+                        }
                     }
                 }
-                conn.Close();
+                }
             }
             return rt;
         }
@@ -953,9 +979,10 @@ namespace KIS.App_Code
                 }
 
                 bool controlloUltimaAzione = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
                 + " AND user = @user ORDER BY data desc";
                 String evento = conn.QueryFirstOrDefault<String>(sql, new { task = this.TaskProduzioneID, user = usr.username });
                 if (evento != null)
@@ -1035,38 +1062,40 @@ namespace KIS.App_Code
 
                 if (controlloUtente == true && controlloUltimaAzione == true && checkPrecedenti == true && controlloTasksAvviatiUtente == true)
                 {
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    int maxID = 0;
-                    int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
-                    if (maxRow.HasValue)
+                    using (var tr = conn.BeginTransaction())
                     {
-                        maxID = maxRow.Value + 1;
-                    }
-                    try
-                    {
-                        conn.Execute("INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES(@id, @user, @task, @date, 'I', '')",
-                            new { id = maxID, user = usr.username, task = this.TaskProduzioneID, date = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") }, tr);
-                        conn.Execute("UPDATE tasksproduzione SET status = 'I' WHERE taskID = @task",
-                            new { task = this.TaskProduzioneID }, tr);
-                        Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                        if (art.Status == 'P')
+                        int maxID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
+                        if (maxRow.HasValue)
                         {
-                            conn.Execute("UPDATE productionplan SET status='I' WHERE id = @artID" +
-                                " AND anno = @artYear",
-                                new { artID = art.ID, artYear = art.Year }, tr);
+                            maxID = maxRow.Value + 1;
                         }
+                        try
+                        {
+                            conn.Execute("INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES(@id, @user, @task, @date, 'I', '')",
+                                new { id = maxID, user = usr.username, task = this.TaskProduzioneID, date = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy/MM/dd HH:mm:ss") }, tr);
+                            conn.Execute("UPDATE tasksproduzione SET status = 'I' WHERE taskID = @task",
+                                new { task = this.TaskProduzioneID }, tr);
+                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                            if (art.Status == 'P')
+                            {
+                                conn.Execute("UPDATE productionplan SET status='I' WHERE id = @artID" +
+                                    " AND anno = @artYear",
+                                    new { artID = art.ID, artYear = art.Year }, tr);
+                            }
 
-                        tr.Commit();
-                        rt = 1;
-                    }
-                    catch (Exception ex)
-                    {
-                        rt = 3;
-                        this.log += ex.Message;
-                        tr.Rollback();
+                            tr.Commit();
+                            rt = 1;
+                        }
+                        catch (Exception ex)
+                        {
+                            rt = 3;
+                            this.log += ex.Message;
+                            tr.Rollback();
+                        }
                     }
                 }
-                conn.Close();
+                }
             }
             else
             {
@@ -1078,47 +1107,51 @@ namespace KIS.App_Code
         public bool Pause(InputPoint usr)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            // Verifico che l'ultima azione per questo utente sia di Inizio del task
-            bool check = false;
-            String evento = conn.QueryFirstOrDefault<String>("SELECT evento FROM registroeventitaskproduzione WHERE task=@taskid"
-                + " AND inputpoint=@ipid ORDER BY data desc", new { taskid = this.TaskProduzioneID, ipid = usr.id }, tr);
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+            {
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    // Verifico che l'ultima azione per questo utente sia di Inizio del task
+                    bool check = false;
+                    String evento = conn.QueryFirstOrDefault<String>("SELECT evento FROM registroeventitaskproduzione WHERE task=@taskid"
+                        + " AND inputpoint=@ipid ORDER BY data desc", new { taskid = this.TaskProduzioneID, ipid = usr.id }, tr);
 
-            if (evento != null)
-            {
-                if (evento[0] == 'I')
-                {
-                    check = true;
-                }
-            }
-            if (check == true)
-            {
-                int maxID = 0;
-                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
-                if (maxRow.HasValue)
-                {
-                    maxID = maxRow.Value + 1;
-                }
-                try
-                {
-                    conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@maxid, @ipid, @taskid, @date, @event, @notes)",
-                        new { maxid = maxID, ipid = usr.id, taskid = this.TaskProduzioneID, date = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), @event = 'P', notes = "" }, tr);
-                    this.loadUtentiAttivi();
-                    if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
+                    if (evento != null)
                     {
-                        conn.Execute("UPDATE tasksproduzione SET status = 'P' WHERE taskID = @taskid",
-                            new { taskid = this.TaskProduzioneID }, tr);
+                        if (evento[0] == 'I')
+                        {
+                            check = true;
+                        }
                     }
-                    tr.Commit();
-                    rt = true;
-                }
-                catch (Exception ex)
-                {
-                    rt = false;
-                    log += ex.Message;
-                    tr.Rollback();
+                    if (check == true)
+                    {
+                        int maxID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
+                        if (maxRow.HasValue)
+                        {
+                            maxID = maxRow.Value + 1;
+                        }
+                        try
+                        {
+                            conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@maxid, @ipid, @taskid, @date, @event, @notes)",
+                                new { maxid = maxID, ipid = usr.id, taskid = this.TaskProduzioneID, date = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), @event = 'P', notes = "" }, tr);
+                            this.loadUtentiAttivi();
+                            if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
+                            {
+                                conn.Execute("UPDATE tasksproduzione SET status = 'P' WHERE taskID = @taskid",
+                                    new { taskid = this.TaskProduzioneID }, tr);
+                            }
+                            tr.Commit();
+                            rt = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            rt = false;
+                            log += ex.Message;
+                            tr.Rollback();
+                        }
+                    }
                 }
             }
             return rt;
@@ -1134,55 +1167,59 @@ namespace KIS.App_Code
         public int Pause(InputPoint usr, DateTime regDate)
         {
             int rt = 0;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            // Verifico che l'ultima azione per questo utente sia di Inizio del task
-            bool check = true;
-            /*cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
-                + " AND user = '" + usr.username + "' ORDER BY data desc";
-            MySqlDataReader rdr = cmd.ExecuteReader();
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+            {
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    // Verifico che l'ultima azione per questo utente sia di Inizio del task
+                    bool check = true;
+                    /*cmd.CommandText = "SELECT evento FROM registroeventitaskproduzione WHERE task = " + this.TaskProduzioneID.ToString()
+                        + " AND user = '" + usr.username + "' ORDER BY data desc";
+                    MySqlDataReader rdr = cmd.ExecuteReader();
 
-            if (rdr.Read() && !rdr.IsDBNull(0))
-            {
-                if (rdr.GetChar(0) == 'I')
-                {
-                    check = true;
-                }
-            }
-            rdr.Close();*/
-            if (check == true)
-            {
-                int maxID = 0;
-                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
-                if (maxRow.HasValue)
-                {
-                    maxID = maxRow.Value + 1;
-                }
-                try
-                {
-                    Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                    conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@maxid, @ipid, @taskid, @date, @event, @notes)",
-                        new { maxid = maxID, ipid = usr.id, taskid = this.TaskProduzioneID, date = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), @event = 'P', notes = "" }, tr);
-                    this.loadUtentiAttivi();
-                    if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
+                    if (rdr.Read() && !rdr.IsDBNull(0))
                     {
-                        conn.Execute("UPDATE tasksproduzione SET status='P' WHERE taskID = @taskid",
-                            new { taskid = this.TaskProduzioneID }, tr);
+                        if (rdr.GetChar(0) == 'I')
+                        {
+                            check = true;
+                        }
                     }
-                    tr.Commit();
-                    rt = 1;
+                    rdr.Close();*/
+                    if (check == true)
+                    {
+                        int maxID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
+                        if (maxRow.HasValue)
+                        {
+                            maxID = maxRow.Value + 1;
+                        }
+                        try
+                        {
+                            Reparto rp = new Reparto(this.Tenant, this.RepartoID);
+                            conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@maxid, @ipid, @taskid, @date, @event, @notes)",
+                                new { maxid = maxID, ipid = usr.id, taskid = this.TaskProduzioneID, date = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario).ToString("yyyy-MM-dd HH:mm:ss"), @event = 'P', notes = "" }, tr);
+                            this.loadUtentiAttivi();
+                            if (this.UtentiAttivi.Count == 0 || (this.UtentiAttivi.Count == 1 && this.UtentiAttivi[0] == usr.id))
+                            {
+                                conn.Execute("UPDATE tasksproduzione SET status='P' WHERE taskID = @taskid",
+                                    new { taskid = this.TaskProduzioneID }, tr);
+                            }
+                            tr.Commit();
+                            rt = 1;
+                        }
+                        catch (Exception ex)
+                        {
+                            rt = 4;
+                            log += ex.Message;
+                            tr.Rollback();
+                        }
+                    }
+                    else
+                    {
+                        rt = 2;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    rt = 4;
-                    log += ex.Message;
-                    tr.Rollback();
-                }
-            }
-            else
-            {
-                rt = 2;
             }
             return rt;
         }
@@ -1204,11 +1241,12 @@ namespace KIS.App_Code
                     }
                 }
                 bool controlloUltimaAzione = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
-                + " AND inputpoint = @inputpoint ORDER BY data desc";
-                String evento = conn.QueryFirstOrDefault<String>(sql, new { task = this.TaskProduzioneID, inputpoint = usr.id });
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
+                    + " AND inputpoint = @inputpoint ORDER BY data desc";
+                    String evento = conn.QueryFirstOrDefault<String>(sql, new { task = this.TaskProduzioneID, inputpoint = usr.id });
                 if (evento != null)
                 {
                     if (evento[0] == 'I')
@@ -1246,75 +1284,76 @@ namespace KIS.App_Code
                     + "<br/>";
                 if (checkUtenteAttivo == true && controlloUltimaAzione == true && checkParameters && checkIfPreviousCompleted)
                 {
-                    MySqlTransaction tr = conn.BeginTransaction();
-
-                    try
+                    using (var tr = conn.BeginTransaction())
                     {
-                        // Termino tutti gli utenti attivi
-
-                        DateTime endDate = DateTime.UtcNow;
-                        this.loadUtentiAttivi();
-                        for (int i = 0; i < this.UtentiAttivi.Count; i++)
+                        try
                         {
-                            int idEv = 0;
-                            int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
-                            if (maxRow.HasValue)
-                            {
-                                idEv = maxRow.Value + 1;
-                            }
-                            conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@id, @inputpoint, @task, @date, 'F', '')",
-                                new { id = idEv, inputpoint = this.ActiveInputPoints[i], task = this.TaskProduzioneID, date = endDate.ToString("yyyy/MM/dd HH:mm:ss") }, tr);
-                        }
-                        // Imposto lo stato del task a terminato
-                        conn.Execute("UPDATE tasksproduzione SET status = 'F', endDateReal=@endDateReal WHERE taskID = @task",
-                            new { endDateReal = endDate.ToString("yyyy-MM-dd HH:mm:ss"), task = this.TaskProduzioneID }, tr);
-                        this._Status = 'F';
-                        this._RealEndDate = endDate;
+                            // Termino tutti gli utenti attivi
 
-                        // Se tutti i task sono conclusi, allora imposto l'articolo come terminato!
-                        bool controlloFineTasks = true;
-                        Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                        art.loadTasksProduzione();
-                        for (int j = 0; j < art.Tasks.Count; j++)
-                        {
-                            if (art.Tasks[j].TaskProduzioneID != this.TaskProduzioneID && art.Tasks[j].Status != 'F')
+                            DateTime endDate = DateTime.UtcNow;
+                            this.loadUtentiAttivi();
+                            for (int i = 0; i < this.UtentiAttivi.Count; i++)
                             {
-                                controlloFineTasks = false;
-                            }
-                        }
-                        if (controlloFineTasks == true)
-                        {
-
-                            conn.Execute("UPDATE productionplan SET status = 'F', quantitaProdotta=@quantitaProdotta"
-                                + ", EndProductionDateReal=@endProductionDateReal"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { quantitaProdotta = this.QuantitaProdotta, endProductionDateReal = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            this._Status = 'F';
-
-                            // Segnalo a kanbanbox che ho finito il mio mestiere!
-                            KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
-                            Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                            Cliente cust = new Cliente(this.Tenant, art.Cliente);
-                            if (rp.id != -1 && cust.CodiceCliente.Length > 0)
-                            {
-                                if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
+                                int idEv = 0;
+                                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
+                                if (maxRow.HasValue)
                                 {
-                                    art.changeKanbanBoxCardStatus("full");
-                                    //log +=  "<br />" + art.log;
+                                    idEv = maxRow.Value + 1;
+                                }
+                                conn.Execute("INSERT INTO registroeventitaskproduzione(id, inputpoint, task, data, evento, note) VALUES(@id, @inputpoint, @task, @date, 'F', '')",
+                                    new { id = idEv, inputpoint = this.ActiveInputPoints[i], task = this.TaskProduzioneID, date = endDate.ToString("yyyy/MM/dd HH:mm:ss") }, tr);
+                            }
+                            // Imposto lo stato del task a terminato
+                            conn.Execute("UPDATE tasksproduzione SET status = 'F', endDateReal=@endDateReal WHERE taskID = @task",
+                                new { endDateReal = endDate.ToString("yyyy-MM-dd HH:mm:ss"), task = this.TaskProduzioneID }, tr);
+                            this._Status = 'F';
+                            this._RealEndDate = endDate;
+
+                            // Se tutti i task sono conclusi, allora imposto l'articolo come terminato!
+                            bool controlloFineTasks = true;
+                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                            art.loadTasksProduzione();
+                            for (int j = 0; j < art.Tasks.Count; j++)
+                            {
+                                if (art.Tasks[j].TaskProduzioneID != this.TaskProduzioneID && art.Tasks[j].Status != 'F')
+                                {
+                                    controlloFineTasks = false;
                                 }
                             }
+                            if (controlloFineTasks == true)
+                            {
+
+                                conn.Execute("UPDATE productionplan SET status = 'F', quantitaProdotta=@quantitaProdotta"
+                                    + ", EndProductionDateReal=@endProductionDateReal"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { quantitaProdotta = this.QuantitaProdotta, endProductionDateReal = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"), articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                this._Status = 'F';
+
+                                // Segnalo a kanbanbox che ho finito il mio mestiere!
+                                KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
+                                Reparto rp = new Reparto(this.Tenant, this.RepartoID);
+                                Cliente cust = new Cliente(this.Tenant, art.Cliente);
+                                if (rp.id != -1 && cust.CodiceCliente.Length > 0)
+                                {
+                                    if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
+                                    {
+                                        art.changeKanbanBoxCardStatus("full");
+                                        //log +=  "<br />" + art.log;
+                                    }
+                                }
+                            }
+
+
+                            tr.Commit();
+                            rt = true;
                         }
-
-
-                        tr.Commit();
-                        rt = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        log += ex.Message;
-                        rt = false;
-                        tr.Rollback();
+                        catch (Exception ex)
+                        {
+                            log += ex.Message;
+                            rt = false;
+                            tr.Rollback();
+                        }
                     }
 
                     // Sets the working time, delay and leadtime
@@ -1338,69 +1377,75 @@ namespace KIS.App_Code
                     if (this.Status == 'F')
                     {
                         // Aggiorno il leadtime
-                        tr = conn.BeginTransaction();
-                        try
+                        using (var tr = conn.BeginTransaction())
                         {
-                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                            art.loadLeadTimes();
-                            TimeSpan finalLt = art.CalculateLeadTime();
-                            String leadtime = Math.Floor(finalLt.TotalHours).ToString()
-                                + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
-                            conn.Execute("UPDATE productionplan SET leadtime=@leadtimeProd"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { leadtimeProd = leadtime, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            tr.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            //this.log = "Lead time fail: " + ex.Message;
-                            tr.Rollback();
+                            try
+                            {
+                                Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                                art.loadLeadTimes();
+                                TimeSpan finalLt = art.CalculateLeadTime();
+                                String leadtime = Math.Floor(finalLt.TotalHours).ToString()
+                                    + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
+                                conn.Execute("UPDATE productionplan SET leadtime=@leadtimeProd"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { leadtimeProd = leadtime, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                //this.log = "Lead time fail: " + ex.Message;
+                                tr.Rollback();
+                            }
                         }
 
                         // Aggiorno il WorkingTime
-                        tr = conn.BeginTransaction();
-                        try
+                        using (var tr = conn.BeginTransaction())
                         {
-                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                            art.loadTempoDiLavoroTotale();
-                            TimeSpan tLavTot = art.TempoDiLavoroTotale;
-                            String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
-                                + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
-                            conn.Execute("UPDATE productionplan SET WorkingTime=@workingTimeProd"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { workingTimeProd = tLavTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            tr.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            //this.log = "Working time fail: " + ex.Message;
-                            tr.Rollback();
+                            try
+                            {
+                                Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                                art.loadTempoDiLavoroTotale();
+                                TimeSpan tLavTot = art.TempoDiLavoroTotale;
+                                String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
+                                    + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
+                                conn.Execute("UPDATE productionplan SET WorkingTime=@workingTimeProd"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { workingTimeProd = tLavTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                //this.log = "Working time fail: " + ex.Message;
+                                tr.Rollback();
+                            }
                         }
                         // Updates delay
-                        tr = conn.BeginTransaction();
-                        try
+                        using (var tr = conn.BeginTransaction())
                         {
-                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                            TimeSpan tRitTot = art.Ritardo;
-                            String tRitTotStr = Math.Floor(tRitTot.TotalHours).ToString()
-                                + ":" + tRitTot.Minutes.ToString() + ":" + tRitTot.Seconds.ToString();
-                            conn.Execute("UPDATE productionplan SET Delay=@delayProd"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { delayProd = tRitTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            tr.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            //   this.log = "Delay fail: " + ex.Message;
-                            tr.Rollback();
+                            try
+                            {
+                                Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                                TimeSpan tRitTot = art.Ritardo;
+                                String tRitTotStr = Math.Floor(tRitTot.TotalHours).ToString()
+                                    + ":" + tRitTot.Minutes.ToString() + ":" + tRitTot.Seconds.ToString();
+                                conn.Execute("UPDATE productionplan SET Delay=@delayProd"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { delayProd = tRitTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                //   this.log = "Delay fail: " + ex.Message;
+                                tr.Rollback();
+                            }
                         }
 
                     }
                 }
-                conn.Close();
+                }
             }
             else
             {
@@ -1436,11 +1481,12 @@ namespace KIS.App_Code
                     }
                 }
                 bool controlloUltimaAzione = false;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
-                + " AND inputpoint = @inputpoint ORDER BY data desc";
-                String evento = conn.QueryFirstOrDefault<String>(sql, new { task = this.TaskProduzioneID, inputpoint = usr.id });
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT evento FROM registroeventitaskproduzione WHERE task = @task"
+                    + " AND inputpoint = @inputpoint ORDER BY data desc";
+                    String evento = conn.QueryFirstOrDefault<String>(sql, new { task = this.TaskProduzioneID, inputpoint = usr.id });
                 if (evento != null)
                 {
                     if (evento[0] == 'I')
@@ -1494,74 +1540,75 @@ namespace KIS.App_Code
                 if (checkUtenteAttivo == true && controlloUltimaAzione == true && checkParameters && checkIfPreviousCompleted)
                 {
 
-                    MySqlTransaction tr = conn.BeginTransaction();
-
-                    try
+                    using (var tr = conn.BeginTransaction())
                     {
-                        // Termino tutti gli utenti attivi
-                        Reparto rp = new Reparto(this.Tenant, this.RepartoID);
-                        DateTime endDate = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario);
-                        this.loadUtentiAttivi();
-                        for (int i = 0; i < this.UtentiAttivi.Count; i++)
+                        try
                         {
-                            int idEv = 0;
-                            int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
-                            if (maxRow.HasValue)
+                            // Termino tutti gli utenti attivi
+                            Reparto rp = new Reparto(this.Tenant, this.RepartoID);
+                            DateTime endDate = TimeZoneInfo.ConvertTimeToUtc(regDate, rp.tzFusoOrario);
+                            this.loadUtentiAttivi();
+                            for (int i = 0; i < this.UtentiAttivi.Count; i++)
                             {
-                                idEv = maxRow.Value + 1;
-                            }
-                            conn.Execute("INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES(@id, @user, @task, @date, 'F', '')",
-                                new { id = idEv, user = this.UtentiAttivi[i].ToString(), task = this.TaskProduzioneID, date = endDate.ToString("yyyy-MM-dd HH:mm:ss") }, tr);
-                        }
-                        // Imposto lo stato del task a terminato
-                        conn.Execute("UPDATE tasksproduzione SET status = 'F', endDateReal=@endDateReal WHERE taskID = @task",
-                            new { endDateReal = endDate.ToString("yyyy-MM-dd HH:mm:ss"), task = this.TaskProduzioneID }, tr);
-                        this._Status = 'F';
-                        this._RealEndDate = endDate;
-
-                        // Se tutti i task sono conclusi, allora imposto l'articolo come terminato!
-                        bool controlloFineTasks = true;
-                        Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                        art.loadTasksProduzione();
-                        for (int j = 0; j < art.Tasks.Count; j++)
-                        {
-                            if (art.Tasks[j].TaskProduzioneID != this.TaskProduzioneID && art.Tasks[j].Status != 'F')
-                            {
-                                controlloFineTasks = false;
-                            }
-                        }
-                        if (controlloFineTasks == true)
-                        {
-
-                            conn.Execute("UPDATE productionplan SET status = 'F', quantitaProdotta=@quantitaProdotta"
-                                + ", EndProductionDateReal=@endProductionDateReal"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { quantitaProdotta = this.QuantitaProdotta, endProductionDateReal = endDate.ToString("yyyy-MM-dd HH:mm:ss"), articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            this._Status = 'F';
-
-                            // Segnalo a kanbanbox che ho finito il mio mestiere!
-                            KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
-                            //Reparto rp = new Reparto(this.RepartoID);
-                            Cliente cust = new Cliente(this.Tenant, art.Cliente);
-                            if (rp.id != -1 && cust.CodiceCliente.Length > 0)
-                            {
-                                if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
+                                int idEv = 0;
+                                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM registroeventitaskproduzione", null, tr);
+                                if (maxRow.HasValue)
                                 {
-                                    art.changeKanbanBoxCardStatus("full");
+                                    idEv = maxRow.Value + 1;
+                                }
+                                conn.Execute("INSERT INTO registroeventitaskproduzione(id, user, task, data, evento, note) VALUES(@id, @user, @task, @date, 'F', '')",
+                                    new { id = idEv, user = this.UtentiAttivi[i].ToString(), task = this.TaskProduzioneID, date = endDate.ToString("yyyy-MM-dd HH:mm:ss") }, tr);
+                            }
+                            // Imposto lo stato del task a terminato
+                            conn.Execute("UPDATE tasksproduzione SET status = 'F', endDateReal=@endDateReal WHERE taskID = @task",
+                                new { endDateReal = endDate.ToString("yyyy-MM-dd HH:mm:ss"), task = this.TaskProduzioneID }, tr);
+                            this._Status = 'F';
+                            this._RealEndDate = endDate;
+
+                            // Se tutti i task sono conclusi, allora imposto l'articolo come terminato!
+                            bool controlloFineTasks = true;
+                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                            art.loadTasksProduzione();
+                            for (int j = 0; j < art.Tasks.Count; j++)
+                            {
+                                if (art.Tasks[j].TaskProduzioneID != this.TaskProduzioneID && art.Tasks[j].Status != 'F')
+                                {
+                                    controlloFineTasks = false;
                                 }
                             }
+                            if (controlloFineTasks == true)
+                            {
+
+                                conn.Execute("UPDATE productionplan SET status = 'F', quantitaProdotta=@quantitaProdotta"
+                                    + ", EndProductionDateReal=@endProductionDateReal"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { quantitaProdotta = this.QuantitaProdotta, endProductionDateReal = endDate.ToString("yyyy-MM-dd HH:mm:ss"), articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                this._Status = 'F';
+
+                                // Segnalo a kanbanbox che ho finito il mio mestiere!
+                                KanbanBoxConfig kboxCfg = (KanbanBoxConfig)System.Configuration.ConfigurationManager.GetSection("kanbanBox");
+                                //Reparto rp = new Reparto(this.RepartoID);
+                                Cliente cust = new Cliente(this.Tenant, art.Cliente);
+                                if (rp.id != -1 && cust.CodiceCliente.Length > 0)
+                                {
+                                    if (kboxCfg != null && art != null && kboxCfg.KanbanBoxEnabled && art.KanbanCardID.Length > 0 && (rp.KanbanManaged || cust.KanbanManaged))
+                                    {
+                                        art.changeKanbanBoxCardStatus("full");
+                                    }
+                                }
+                            }
+
+
+                            tr.Commit();
+                            rt = 1;
                         }
-
-
-                        tr.Commit();
-                        rt = 1;
-                    }
-                    catch (Exception ex)
-                    {
-                        log += ex.Message;
-                        rt = 6;
-                        tr.Rollback();
+                        catch (Exception ex)
+                        {
+                            log += ex.Message;
+                            rt = 6;
+                            tr.Rollback();
+                        }
                     }
 
                     // Sets the working time, delay and leadtime
@@ -1582,66 +1629,72 @@ namespace KIS.App_Code
                     if (this.Status == 'F')
                     {
                         // Aggiorno il leadtime
-                        tr = conn.BeginTransaction();
-                        try
+                        using (var tr = conn.BeginTransaction())
                         {
-                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                            art.loadLeadTimes();
-                            TimeSpan finalLt = art.CalculateLeadTime();
-                            String leadtime = Math.Floor(finalLt.TotalHours).ToString()
-                                + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
-                            conn.Execute("UPDATE productionplan SET leadtime=@leadtimeProd"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { leadtimeProd = leadtime, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            tr.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            tr.Rollback();
+                            try
+                            {
+                                Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                                art.loadLeadTimes();
+                                TimeSpan finalLt = art.CalculateLeadTime();
+                                String leadtime = Math.Floor(finalLt.TotalHours).ToString()
+                                    + ":" + finalLt.Minutes.ToString() + ":" + finalLt.Seconds.ToString();
+                                conn.Execute("UPDATE productionplan SET leadtime=@leadtimeProd"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { leadtimeProd = leadtime, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                tr.Rollback();
+                            }
                         }
 
                         // Aggiorno il WorkingTime
-                        tr = conn.BeginTransaction();
-                        try
+                        using (var tr = conn.BeginTransaction())
                         {
-                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                            art.loadTempoDiLavoroTotale();
-                            TimeSpan tLavTot = art.TempoDiLavoroTotale;
-                            String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
-                                + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
-                            conn.Execute("UPDATE productionplan SET WorkingTime=@workingTimeProd"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { workingTimeProd = tLavTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            tr.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            tr.Rollback();
+                            try
+                            {
+                                Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                                art.loadTempoDiLavoroTotale();
+                                TimeSpan tLavTot = art.TempoDiLavoroTotale;
+                                String tLavTotStr = Math.Floor(tLavTot.TotalHours).ToString()
+                                    + ":" + tLavTot.Minutes.ToString() + ":" + tLavTot.Seconds.ToString();
+                                conn.Execute("UPDATE productionplan SET WorkingTime=@workingTimeProd"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { workingTimeProd = tLavTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                tr.Rollback();
+                            }
                         }
                         // Updates delay
-                        tr = conn.BeginTransaction();
-                        try
+                        using (var tr = conn.BeginTransaction())
                         {
-                            Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                            TimeSpan tRitTot = art.Ritardo;
-                            String tRitTotStr = Math.Floor(tRitTot.TotalHours).ToString()
-                                + ":" + tRitTot.Minutes.ToString() + ":" + tRitTot.Seconds.ToString();
-                            conn.Execute("UPDATE productionplan SET Delay=@delayProd"
-                                + " WHERE id = @articoloID"
-                                + " AND anno = @articoloAnno",
-                                new { delayProd = tRitTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                            tr.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            tr.Rollback();
+                            try
+                            {
+                                Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                                TimeSpan tRitTot = art.Ritardo;
+                                String tRitTotStr = Math.Floor(tRitTot.TotalHours).ToString()
+                                    + ":" + tRitTot.Minutes.ToString() + ":" + tRitTot.Seconds.ToString();
+                                conn.Execute("UPDATE productionplan SET Delay=@delayProd"
+                                    + " WHERE id = @articoloID"
+                                    + " AND anno = @articoloAnno",
+                                    new { delayProd = tRitTotStr, articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                tr.Rollback();
+                            }
                         }
 
                     }
                 }
-                conn.Close();
+                }
             }
             return rt;
         }
@@ -1661,9 +1714,10 @@ namespace KIS.App_Code
                     if (rp.ModoCalcoloTC == false)
                     {
                         // Calcolo il tempo di lavoro NON tenendo conto degli intervalli produttivi
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
-                        string sql = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                        {
+                            conn.Open();
+                            string sql = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                             + " ORDER BY inputpoint, data";
                         var rows = conn.Query<(String User, DateTime Data, String Evento)>(sql, new { task = this.TaskProduzioneID }).ToList();
                         int idx = 0;
@@ -1697,13 +1751,14 @@ namespace KIS.App_Code
                                 }
                             }
                         }
-                        conn.Close();
+                        }
                     }
                     else
                     {
                         // Tengo conto degli intervalli produttivi
-                        MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                        conn.Open();
+                        using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                        {
+                            conn.Open();
                         List<DateTime[]> elenco = new List<DateTime[]>();
                         string sql = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                             + " ORDER BY user, data";
@@ -1779,7 +1834,7 @@ namespace KIS.App_Code
                                 }
                             }
                         }
-                        conn.Close();
+                        }
                     }
                 }
                 return tc;
@@ -1823,12 +1878,13 @@ namespace KIS.App_Code
                 if (rp.ModoCalcoloTC == false)
                 {
                     // Calcolo il tempo di lavoro NON tenendo conto degli intervalli produttivi
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
-                        + " AND data >= @startDate "
-                        + "AND data <= @endDate"
-                        + " ORDER BY user, data";
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Open();
+                        string sql = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                            + " AND data >= @startDate "
+                            + "AND data <= @endDate"
+                            + " ORDER BY user, data";
                     var rows = conn.Query<(String User, DateTime Data, String Evento)>(sql, new { task = this.TaskProduzioneID, startDate = startDate.ToString("yyyy/MM/dd HH:mm:ss"), endDate = endDate.ToString("yyyy/MM/dd HH:mm:ss") }).ToList();
                     int idx = 0;
                     while (idx < rows.Count)
@@ -1854,14 +1910,15 @@ namespace KIS.App_Code
                             }
                         }
                     }
-                    conn.Close();
+                    }
                 }
                 else
                 {
                     // Tengo conto degli intervalli produttivi
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    List<DateTime[]> elenco = new List<DateTime[]>();
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Open();
+                        List<DateTime[]> elenco = new List<DateTime[]>();
                     string sql = "SELECT user, data, evento FROM registroeventitaskproduzione WHERE task = @task"
                         + " ORDER BY user, data";
                     var rows = conn.Query<(String User, DateTime Data, String Evento)>(sql, new { task = this.TaskProduzioneID }).ToList();
@@ -1931,8 +1988,8 @@ namespace KIS.App_Code
                                 log += "if6 " + tc.TotalHours.ToString() + "<br />";
                             }
                         }
-                    }
-                    conn.Close();
+                }
+                }
                 }
             }
             return tc;
@@ -2033,53 +2090,57 @@ namespace KIS.App_Code
         public void loadWarnings()
         {
             this._Warnings = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT id FROM warningproduzione WHERE task = @task" +
-                " ORDER BY dataChiamata";
-            var rows = conn.Query<int>(sql, new { task = this.TaskProduzioneID });
-            foreach (var id in rows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._Warnings.Add(new Warning(this.Tenant, id));
+                conn.Open();
+                string sql = "SELECT id FROM warningproduzione WHERE task = @task" +
+                    " ORDER BY dataChiamata";
+                var rows = conn.Query<int>(sql, new { task = this.TaskProduzioneID });
+                foreach (var id in rows)
+                {
+                    this._Warnings.Add(new Warning(this.Tenant, id));
+                }
             }
-            conn.Close();
         }
 
         public bool generateWarning(InputPoint usr)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                int maxID = 0;
-                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT max(id) FROM warningproduzione", null, tr);
-                if (maxRow.HasValue)
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
                 {
-                    maxID = maxRow.Value + 1;
+                    try
+                    {
+                        int maxID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT max(id) FROM warningproduzione", null, tr);
+                        if (maxRow.HasValue)
+                        {
+                            maxID = maxRow.Value + 1;
+                        }
+                        conn.Execute("INSERT INTO warningproduzione(id, dataChiamata, task, inputpoint) VALUES("
+                            + "@maxID, @dataChiamata, @task, @inputpoint)",
+                            new { maxID = maxID, dataChiamata = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), task = this.TaskProduzioneID, inputpoint = usr.id }, tr);
+
+                        conn.Execute("DELETE FROM registroeventiproduzione WHERE TipoEvento='Warning' AND taskID = @taskID",
+                            new { taskID = this.TaskProduzioneID }, tr);
+
+                        conn.Execute("INSERT INTO registroeventiproduzione(TipoEvento, taskID, segnalato) VALUES('Warning', "
+                            + "@taskID, false)",
+                            new { taskID = this.TaskProduzioneID }, tr);
+
+                        rt = true;
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        rt = false;
+                        tr.Rollback();
+                    }
                 }
-                conn.Execute("INSERT INTO warningproduzione(id, dataChiamata, task, inputpoint) VALUES("
-                    + "@maxID, @dataChiamata, @task, @inputpoint)",
-                    new { maxID = maxID, dataChiamata = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), task = this.TaskProduzioneID, inputpoint = usr.id }, tr);
-
-                conn.Execute("DELETE FROM registroeventiproduzione WHERE TipoEvento='Warning' AND taskID = @taskID",
-                    new { taskID = this.TaskProduzioneID }, tr);
-
-                conn.Execute("INSERT INTO registroeventiproduzione(TipoEvento, taskID, segnalato) VALUES('Warning', "
-                    + "@taskID, false)",
-                    new { taskID = this.TaskProduzioneID }, tr);
-
-                rt = true;
-                tr.Commit();
             }
-            catch (Exception ex)
-            {
-                log = ex.Message;
-                rt = false;
-                tr.Rollback();
-            }
-            conn.Close();
             return rt;
         }
 
@@ -2091,16 +2152,17 @@ namespace KIS.App_Code
         public void loadWarningAperti()
         {
             this._WarningAperti = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT warningproduzione.id FROM warningproduzione WHERE warningproduzione.dataRisoluzione IS NULL "
-                + " AND task = @task ORDER BY warningproduzione.dataChiamata";
-            var rows = conn.Query<int>(sql, new { task = this.TaskProduzioneID });
-            foreach (var id in rows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._WarningAperti.Add(new Warning(this.Tenant, id));
+                conn.Open();
+                string sql = "SELECT warningproduzione.id FROM warningproduzione WHERE warningproduzione.dataRisoluzione IS NULL "
+                + " AND task = @task ORDER BY warningproduzione.dataChiamata";
+                var rows = conn.Query<int>(sql, new { task = this.TaskProduzioneID });
+                foreach (var id in rows)
+                {
+                    this._WarningAperti.Add(new Warning(this.Tenant, id));
+                }
             }
-            conn.Close();
         }
 
         /* 
@@ -2551,10 +2613,11 @@ namespace KIS.App_Code
                 if (rp.ModoCalcoloTC == false)
                 {
                     log = "ENTRO IN LOADINTERVALLI<br />";
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
-                         + " ORDER BY inputpoint, data";
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Open();
+                        string sql = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                             + " ORDER BY inputpoint, data";
                     var rows = conn.Query<(int User, DateTime Data, String Evento)>(sql, new { task = this.TaskProduzioneID }).ToList();
                     int idx = 0;
                     while (idx < rows.Count)
@@ -2593,7 +2656,7 @@ namespace KIS.App_Code
                             }
                         }
                     }
-                    conn.Close();
+                    }
                 }
                 else
                 {
@@ -2603,10 +2666,11 @@ namespace KIS.App_Code
                     List<IntervalliDiLavoroEffettivi> elenco = new List<IntervalliDiLavoroEffettivi>();
 
                     log = "ENTRO IN LOADINTERVALLI<br />";
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
-                         + " ORDER BY inputpoint, data";
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                    {
+                        conn.Open();
+                        string sql = "SELECT inputpoint, data, evento FROM registroeventitaskproduzione WHERE task = @task"
+                             + " ORDER BY inputpoint, data";
                     var rows = conn.Query<(int User, DateTime Data, String Evento)>(sql, new { task = this.TaskProduzioneID }).ToList();
                     int idx = 0;
                     while (idx < rows.Count)
@@ -2645,7 +2709,7 @@ namespace KIS.App_Code
                         }
 
                     }
-                    conn.Close();
+                    }
                     // piazzo qui la divisione!
                     // devo aggiungere le fasi a this.Intervalli
                     for (int i = 0; i < elenco.Count; i++)
@@ -2949,25 +3013,28 @@ namespace KIS.App_Code
         public Boolean deleteSegnalazioneRitardo()
         {
             Boolean ret = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            string sql = "DELETE FROM registroeventiproduzione WHERE taskID=@taskID"
-                + " AND TipoEvento LIKE 'Ritardo'";
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                conn.Execute(sql, new { taskID = this.TaskProduzioneID }, tr);
-                ret = true;
-                log = sql;
-                tr.Commit();
+                conn.Open();
+                string sql = "DELETE FROM registroeventiproduzione WHERE taskID=@taskID"
+                    + " AND TipoEvento LIKE 'Ritardo'";
+                using (var tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        conn.Execute(sql, new { taskID = this.TaskProduzioneID }, tr);
+                        ret = true;
+                        log = sql;
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message;
+                        ret = false;
+                        tr.Rollback();
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                log = ex.Message;
-                ret = false;
-                tr.Rollback();
-            }
-            conn.Close();
             return ret;
         }
 
@@ -2976,36 +3043,39 @@ namespace KIS.App_Code
             Boolean res = false;
             if (this.TaskProduzioneID != -1 && this.Status == 'F')
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute("UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
-                    + "task = @task"
-                    + " AND evento = 'F'",
-                    new { task = this.TaskProduzioneID }, tr);
-
-                    conn.Execute("UPDATE tasksproduzione SET status='P' WHERE taskID = @taskID",
-                        new { taskID = this.TaskProduzioneID }, tr);
-
-                    Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
-                    if (art.Status == 'F')
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                {
+                    try
                     {
-                        conn.Execute("UPDATE productionplan SET status='I' WHERE id = @articoloID AND anno = @articoloAnno",
-                            new { articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
-                    }
+                        conn.Execute("UPDATE registroeventitaskproduzione SET evento = 'P' WHERE "
+                        + "task = @task"
+                        + " AND evento = 'F'",
+                        new { task = this.TaskProduzioneID }, tr);
 
-                    tr.Commit();
-                    res = true;
+                        conn.Execute("UPDATE tasksproduzione SET status='P' WHERE taskID = @taskID",
+                            new { taskID = this.TaskProduzioneID }, tr);
+
+                        Articolo art = new Articolo(this.Tenant, this.ArticoloID, this.ArticoloAnno);
+                        if (art.Status == 'F')
+                        {
+                            conn.Execute("UPDATE productionplan SET status='I' WHERE id = @articoloID AND anno = @articoloAnno",
+                                new { articoloID = this.ArticoloID, articoloAnno = this.ArticoloAnno }, tr);
+                        }
+
+                        tr.Commit();
+                        res = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        this.log = ex.Message;
+                        res = false;
+                        tr.Rollback();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    this.log = ex.Message;
-                    res = false;
-                    tr.Rollback();
                 }
-                conn.Close();
             }
 
             return res;
@@ -3016,15 +3086,16 @@ namespace KIS.App_Code
             this.Parameters = new List<TaskParameter>();
             if (this.TaskProduzioneID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT paramID FROM taskparameters WHERE taskID = @taskID";
-                var rows = conn.Query<int>(sql, new { taskID = this.TaskProduzioneID });
-                foreach (var id in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.Parameters.Add(new TaskParameter(this.Tenant, this.TaskProduzioneID, id));
+                    conn.Open();
+                    string sql = "SELECT paramID FROM taskparameters WHERE taskID = @taskID";
+                    var rows = conn.Query<int>(sql, new { taskID = this.TaskProduzioneID });
+                    foreach (var id in rows)
+                    {
+                        this.Parameters.Add(new TaskParameter(this.Tenant, this.TaskProduzioneID, id));
+                    }
                 }
-                conn.Close();
             }
         }
 
@@ -3034,10 +3105,11 @@ namespace KIS.App_Code
             Boolean ret = false;
             if (this.TaskProduzioneID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                int maxID = 0;
-                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(paramID) FROM taskparameters WHERE TaskID = @taskID", new { taskID = this.TaskProduzioneID });
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    int maxID = 0;
+                    int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(paramID) FROM taskparameters WHERE TaskID = @taskID", new { taskID = this.TaskProduzioneID });
                 if (maxRow.HasValue)
                 {
                     maxID = maxRow.Value + 1;
@@ -3078,20 +3150,22 @@ namespace KIS.App_Code
                     prms["inputpoint"] = inputpoint;
                 }
                 prms["createdDate"] = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss");
-                MySqlTransaction tr = conn.BeginTransaction();
-                try
+                using (var tr = conn.BeginTransaction())
                 {
-                    conn.Execute(sql, prms, tr);
-                    tr.Commit();
-                    ret = true;
+                    try
+                    {
+                        conn.Execute(sql, prms, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        log = ex.Message + " " + sql;
+                        ret = false;
+                        tr.Rollback();
+                    }
                 }
-                catch (Exception ex)
-                {
-                    log = ex.Message + " " + sql;
-                    ret = false;
-                    tr.Rollback();
                 }
-                conn.Close();
             }
             return ret;
         }
@@ -3101,24 +3175,27 @@ namespace KIS.App_Code
             Boolean ret = false;
             if (this.TaskProduzioneID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "DELETE FROM taskparameters WHERE TaskID = @taskID"
-                    + " AND paramID = @paramID AND paramCategory = @categoryID";
-                MySqlTransaction tr = conn.BeginTransaction();
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute(sql, new { taskID = this.TaskProduzioneID, paramID = paramID, categoryID = CategoryID }, tr);
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    string sql = "DELETE FROM taskparameters WHERE TaskID = @taskID"
+                        + " AND paramID = @paramID AND paramCategory = @categoryID";
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute(sql, new { taskID = this.TaskProduzioneID, paramID = paramID, categoryID = CategoryID }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            log = ex.Message + " " + sql;
+                            ret = false;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    log = ex.Message + " " + sql;
-                    ret = false;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -3254,15 +3331,16 @@ namespace KIS.App_Code
                 Boolean ret = false;
                 if (this.TaskProduzioneID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    string sql = "SELECT * FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' and TaskID = @taskID";
-                    var row = conn.QueryFirstOrDefault<object>(sql, new { taskID = this.TaskProduzioneID });
-                    if (row != null)
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        ret = true;
+                        conn.Open();
+                        string sql = "SELECT * FROM registroeventiproduzione WHERE TipoEvento LIKE 'Ritardo' and TaskID = @taskID";
+                        var row = conn.QueryFirstOrDefault<object>(sql, new { taskID = this.TaskProduzioneID });
+                        if (row != null)
+                        {
+                            ret = true;
+                        }
                     }
-                    conn.Close();
                 }
                 return ret;
             }
@@ -3273,17 +3351,17 @@ namespace KIS.App_Code
             this.WorkInstructionActive = null;
             if (this.TaskProduzioneID != -1 && this.OriginalTask != -1 && this.OriginalTaskRevisione != -1 && this.VarianteID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT ManualID, ManualVersion FROM tasksmanuals WHERE taskid=@TaskID AND taskRev=@TaskVersion AND taskVarianti=@TaskVariant "
-                    + " AND isActive=true AND expiryDate >= @expiryDate AND validityInitialDate <= @validityDate";
-                var row = conn.QueryFirstOrDefault<(int? ManualID, int? ManualVersion)>(sql, new { expiryDate = DateTime.UtcNow.ToString("yyyy-MM-dd"), validityDate = DateTime.UtcNow.ToString("yyyy-MM-dd"), TaskID = this.OriginalTask, TaskVersion = this.OriginalTaskRevisione, TaskVariant = this.VarianteID });
-                if (row.ManualID.HasValue && row.ManualVersion.HasValue)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.WorkInstructionActive = new App_Sources.WorkInstructions.WorkInstruction(this.Tenant, row.ManualID.Value, row.ManualVersion.Value);
+                    conn.Open();
+                    string sql = "SELECT ManualID, ManualVersion FROM tasksmanuals WHERE taskid=@TaskID AND taskRev=@TaskVersion AND taskVarianti=@TaskVariant "
+                        + " AND isActive=true AND expiryDate >= @expiryDate AND validityInitialDate <= @validityDate";
+                    var row = conn.QueryFirstOrDefault<(int? ManualID, int? ManualVersion)>(sql, new { expiryDate = DateTime.UtcNow.ToString("yyyy-MM-dd"), validityDate = DateTime.UtcNow.ToString("yyyy-MM-dd"), TaskID = this.OriginalTask, TaskVersion = this.OriginalTaskRevisione, TaskVariant = this.VarianteID });
+                    if (row.ManualID.HasValue && row.ManualVersion.HasValue)
+                    {
+                        this.WorkInstructionActive = new App_Sources.WorkInstructions.WorkInstruction(this.Tenant, row.ManualID.Value, row.ManualVersion.Value);
+                    }
                 }
-
-                conn.Close();
             }
         }
 
@@ -3292,15 +3370,16 @@ namespace KIS.App_Code
             this._AssignedOperators = new List<string>();
             if (this.TaskProduzioneID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT user FROM taskuser WHERE taskid=@TaskID";
-                var rows = conn.Query<String>(sql, new { TaskID = this.TaskProduzioneID });
-                foreach (var usr in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._AssignedOperators.Add(usr);
+                    conn.Open();
+                    string sql = "SELECT user FROM taskuser WHERE taskid=@TaskID";
+                    var rows = conn.Query<String>(sql, new { TaskID = this.TaskProduzioneID });
+                    foreach (var usr in rows)
+                    {
+                        this._AssignedOperators.Add(usr);
+                    }
                 }
-                conn.Close();
             }
         }
 
@@ -3313,12 +3392,13 @@ namespace KIS.App_Code
             int ret = 0;
             if (this.TaskProduzioneID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "DELETE FROM taskuser WHERE taskid=@TaskID AND user=@User";
-                conn.Execute(sql, new { TaskID = this.TaskProduzioneID, User = defOp });
-                conn.Close();
-                ret = 1;
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "DELETE FROM taskuser WHERE taskid=@TaskID AND user=@User";
+                    conn.Execute(sql, new { TaskID = this.TaskProduzioneID, User = defOp });
+                    ret = 1;
+                }
             }
             return ret;
         }
@@ -3332,21 +3412,24 @@ namespace KIS.App_Code
             int ret = 0;
             if (this.TaskProduzioneID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "INSERT INTO taskuser(TaskID, user, exclusive) VALUES(@TaskID, @User, @Exclusive)";
-                MySqlTransaction tr = conn.BeginTransaction();
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    conn.Execute(sql, new { TaskID = this.TaskProduzioneID, User = defOp, Exclusive = false }, tr);
-                    tr.Commit();
+                    conn.Open();
+                    string sql = "INSERT INTO taskuser(TaskID, user, exclusive) VALUES(@TaskID, @User, @Exclusive)";
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute(sql, new { TaskID = this.TaskProduzioneID, User = defOp, Exclusive = false }, tr);
+                            tr.Commit();
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                    }
+                    ret = 1;
                 }
-                catch
-                {
-                    tr.Rollback();
-                }
-                conn.Close();
-                ret = 1;
             }
             return ret;
         }
@@ -3422,31 +3505,34 @@ namespace KIS.App_Code
 
         public void logRescheduledTasks(int taskID, DateTime oldstart, DateTime oldend, TimeSpan oldworkingtime, String userid)
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "INSERT INTO taskreschedulelog(task, rescheduledate, oldstart, oldend, oldworkingtime, userid) VALUES(@TaskID, @rescheduledate, "
-                + "@oldstart, @oldend, @oldworkingtime, @userid)";
-            MySqlTransaction tr = conn.BeginTransaction();
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                conn.Execute(sql, new
+                conn.Open();
+                string sql = "INSERT INTO taskreschedulelog(task, rescheduledate, oldstart, oldend, oldworkingtime, userid) VALUES(@TaskID, @rescheduledate, "
+                    + "@oldstart, @oldend, @oldworkingtime, @userid)";
+                using (var tr = conn.BeginTransaction())
                 {
-                    TaskID = taskID,
-                    rescheduledate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
-                    oldstart = oldstart.ToString("yyyy-MM-dd HH:mm:ss"),
-                    oldend = oldend.ToString("yyyy-MM-dd HH:mm:ss"),
-                    oldworkingtime = (Math.Truncate(oldworkingtime.TotalHours)).ToString() + ":"
-                        + oldworkingtime.Minutes.ToString() + ":" + oldworkingtime.Seconds.ToString(),
-                    userid = userid
-                }, tr);
-                tr.Commit();
+                    try
+                    {
+                        conn.Execute(sql, new
+                        {
+                            TaskID = taskID,
+                            rescheduledate = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss.fff"),
+                            oldstart = oldstart.ToString("yyyy-MM-dd HH:mm:ss"),
+                            oldend = oldend.ToString("yyyy-MM-dd HH:mm:ss"),
+                            oldworkingtime = (Math.Truncate(oldworkingtime.TotalHours)).ToString() + ":"
+                                + oldworkingtime.Minutes.ToString() + ":" + oldworkingtime.Seconds.ToString(),
+                            userid = userid
+                        }, tr);
+                        tr.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tr.Rollback();
+                        this.log = ex.Message;
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                tr.Rollback();
-                this.log = ex.Message;
-            }
-            conn.Close();
         }
 
         /* Returns:
@@ -3542,56 +3628,58 @@ namespace KIS.App_Code
             int ret = 0;
             if(this!=null && this.TaskProduzioneID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                // Check if a comment of the same user exists
-                Boolean exists = false;
-                var existing = conn.QueryFirstOrDefault<object>("SELECT * FROM tasksproduzioneoperatornotes WHERE taskid = @taskid"
-                    + " AND user LIKE @user", new { taskid = this.TaskProduzioneID, user = user });
-                if (existing != null)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    exists = true;
-                }
-
-                MySqlTransaction tr = conn.BeginTransaction();
-
-                string sql;
-                if (exists)
-                {
-                    sql = "UPDATE tasksproduzioneoperatornotes SET notes = @note WHERE "
-                        + " taskid = @taskid AND user LIKE @user";
-                    conn.Execute(sql, new { note = (object)(note ?? ""), taskid = this.TaskProduzioneID, user = user }, tr);
-                }
-                else
-                {
-                    int maxID = 0;
-                    int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(CommentID) FROM tasksproduzioneoperatornotes WHERE taskid=@taskid", new { taskid = this.TaskProduzioneID }, tr);
-                    if (maxRow.HasValue)
+                    conn.Open();
+                    // Check if a comment of the same user exists
+                    Boolean exists = false;
+                    var existing = conn.QueryFirstOrDefault<object>("SELECT * FROM tasksproduzioneoperatornotes WHERE taskid = @taskid"
+                        + " AND user LIKE @user", new { taskid = this.TaskProduzioneID, user = user });
+                    if (existing != null)
                     {
-                        maxID = maxRow.Value + 1;
+                        exists = true;
                     }
-                    sql = "INSERT INTO tasksproduzioneoperatornotes(taskid, commentid, date, user, notes) VALUES(@TaskID, @CommentID, @Date, @User, @Notes)";
-                    conn.Execute(sql, new
+
+                    using (var tr = conn.BeginTransaction())
                     {
-                        TaskID = this.TaskProduzioneID,
-                        CommentID = maxID,
-                        Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
-                        User = user,
-                        Notes = (object)(note ?? "")
-                    }, tr);
+                        string sql;
+                        if (exists)
+                        {
+                            sql = "UPDATE tasksproduzioneoperatornotes SET notes = @note WHERE "
+                                + " taskid = @taskid AND user LIKE @user";
+                            conn.Execute(sql, new { note = (object)(note ?? ""), taskid = this.TaskProduzioneID, user = user }, tr);
+                        }
+                        else
+                        {
+                            int maxID = 0;
+                            int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(CommentID) FROM tasksproduzioneoperatornotes WHERE taskid=@taskid", new { taskid = this.TaskProduzioneID }, tr);
+                            if (maxRow.HasValue)
+                            {
+                                maxID = maxRow.Value + 1;
+                            }
+                            sql = "INSERT INTO tasksproduzioneoperatornotes(taskid, commentid, date, user, notes) VALUES(@TaskID, @CommentID, @Date, @User, @Notes)";
+                            conn.Execute(sql, new
+                            {
+                                TaskID = this.TaskProduzioneID,
+                                CommentID = maxID,
+                                Date = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"),
+                                User = user,
+                                Notes = (object)(note ?? "")
+                            }, tr);
+                        }
+                        try
+                        {
+                            tr.Commit();
+                            ret = 1;
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
+                            tr.Rollback();
+                            ret = 4;
+                        }
+                    }
                 }
-                try
-                {
-                    tr.Commit();
-                    ret = 1;
-                }
-                catch (Exception ex)
-                {
-                    this.log = ex.Message;
-                    tr.Rollback();
-                    ret = 4;
-                }
-                conn.Close();
             }
             else
             {
@@ -3605,15 +3693,16 @@ namespace KIS.App_Code
             this.TaskOperatorNotes = new List<TaskOperatorNote>();
             if(this.TaskProduzioneID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT CommentID FROM tasksproduzioneoperatornotes WHERE TaskID=@TaskID ORDER BY date DESC";
-                var rows = conn.Query<int>(sql, new { TaskID = this.TaskProduzioneID });
-                foreach (var id in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.TaskOperatorNotes.Add(new TaskOperatorNote(this.Tenant, this.TaskProduzioneID, id));
+                    conn.Open();
+                    string sql = "SELECT CommentID FROM tasksproduzioneoperatornotes WHERE TaskID=@TaskID ORDER BY date DESC";
+                    var rows = conn.Query<int>(sql, new { TaskID = this.TaskProduzioneID });
+                    foreach (var id in rows)
+                    {
+                        this.TaskOperatorNotes.Add(new TaskOperatorNote(this.Tenant, this.TaskProduzioneID, id));
+                    }
                 }
-                conn.Close();
             }
         }
     }
@@ -3646,24 +3735,25 @@ namespace KIS.App_Code
             if (rp.id != -1)
             {
                 this._RepartoID = rp.id;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT matricola, processo, revisione, variante FROM ProductionPlan WHERE reparto = @reparto";
-                var rows = conn.Query<(String Matricola, int Processo, int Revisione, int Variante)>(sql, new { reparto = rp.id });
-                _ElencoCommesse = new List<prodotto>();
-                foreach (var row in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    processo prc = new processo(this.Tenant, row.Processo, row.Revisione);
-                    variante vr = new variante(this.Tenant, row.Variante);
-                    ProcessoVariante prvr = new ProcessoVariante(this.Tenant, prc, vr);
-                    prvr.loadReparto();
-                    prvr.process.loadFigli(prvr.variant);
-                    if (prvr.process != null && prvr.variant != null)
+                    conn.Open();
+                    string sql = "SELECT matricola, processo, revisione, variante FROM ProductionPlan WHERE reparto = @reparto";
+                    var rows = conn.Query<(String Matricola, int Processo, int Revisione, int Variante)>(sql, new { reparto = rp.id });
+                    _ElencoCommesse = new List<prodotto>();
+                    foreach (var row in rows)
                     {
-                        this._ElencoCommesse.Add(new prodotto(this.Tenant, row.Matricola, prvr));
+                        processo prc = new processo(this.Tenant, row.Processo, row.Revisione);
+                        variante vr = new variante(this.Tenant, row.Variante);
+                        ProcessoVariante prvr = new ProcessoVariante(this.Tenant, prc, vr);
+                        prvr.loadReparto();
+                        prvr.process.loadFigli(prvr.variant);
+                        if (prvr.process != null && prvr.variant != null)
+                        {
+                            this._ElencoCommesse.Add(new prodotto(this.Tenant, row.Matricola, prvr));
+                        }
                     }
                 }
-                conn.Close();
 
             }
         }
@@ -3673,36 +3763,39 @@ namespace KIS.App_Code
             bool rt = false;
             if (this.RepartoID != -1 && matricola.Length > 0 && vr.process != null && vr.variant != null)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction trans = conn.BeginTransaction();
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    using (var trans = conn.BeginTransaction())
+                    {
                 
-                // Ricerco la disponibilità della postazione per il primo processo del percorso critico per capire quando far partire il prodotto
-                vr.process.calculateCriticalPath(vr.variant);
+                        // Ricerco la disponibilità della postazione per il primo processo del percorso critico per capire quando far partire il prodotto
+                        vr.process.calculateCriticalPath(vr.variant);
 
-                RepartoProcessoPostazione p1 = new RepartoProcessoPostazione(this.Tenant, this.RepartoID, new TaskVariante(this.Tenant, vr.process.CriticalPath[0], vr.variant));
-                Postazione pst = p1.Pst;
-                /*DateTime inizio = pst.trovaDisponibilita(new Reparto(RepartoID));
-                err += pst.err;
-                cmd.CommandText = "INSERT INTO productionplan(processo, revisione, variante, matricola, status, reparto, startTime) VALUES("
-                    + vr.process.processID.ToString() + ", " + vr.process.revisione.ToString() + ", "
-                    + vr.variant.idVariante.ToString() + ", '" + matricola + "', "
-                + "'N', " + this.RepartoID.ToString() + ", '" + inizio.ToString("yyyy-MM-dd HH:mm:ss") + "')";
-                try
-                {
-                    cmd.ExecuteNonQuery();
-                    rt = true;
-                    trans.Commit();
+                        RepartoProcessoPostazione p1 = new RepartoProcessoPostazione(this.Tenant, this.RepartoID, new TaskVariante(this.Tenant, vr.process.CriticalPath[0], vr.variant));
+                        Postazione pst = p1.Pst;
+                        /*DateTime inizio = pst.trovaDisponibilita(new Reparto(RepartoID));
+                        err += pst.err;
+                        cmd.CommandText = "INSERT INTO productionplan(processo, revisione, variante, matricola, status, reparto, startTime) VALUES("
+                            + vr.process.processID.ToString() + ", " + vr.process.revisione.ToString() + ", "
+                            + vr.variant.idVariante.ToString() + ", '" + matricola + "', "
+                        + "'N', " + this.RepartoID.ToString() + ", '" + inizio.ToString("yyyy-MM-dd HH:mm:ss") + "')";
+                        try
+                        {
+                            cmd.ExecuteNonQuery();
+                            rt = true;
+                            trans.Commit();
+                        }
+                        catch
+                        {
+                            trans.Rollback();
+                            rt = false;
+                        }*/
+                        if (rt == true)
+                        {
+                        }
+                    }
                 }
-                catch
-                {
-                    trans.Rollback();
-                    rt = false;
-                }*/
-                if (rt == true)
-                {
-                }
-                conn.Close();
             }
             return rt;
         }
@@ -3716,9 +3809,10 @@ namespace KIS.App_Code
         public void loadProductionSchedule()
         {
             this.ScheduledProducts = new List<ProductionOrderStruct>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT anagraficaclienti.codice AS CustomerID, " //1
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+            {
+                conn.Open();
+                string sql = "SELECT anagraficaclienti.codice AS CustomerID, " //1
                 + " anagraficaclienti.ragsociale AS CustomerName,"//2
                 + " anagraficaclienti.partitaiva AS CustomerVATNumber,"//3
                 + " anagraficaclienti.codfiscale AS CustomerCodiceFiscale,"//4
@@ -4044,7 +4138,7 @@ namespace KIS.App_Code
                 }
                 this.ScheduledProducts.Add(curr);
             }
-            conn.Close();
+            }
         }
     }
     
@@ -4245,27 +4339,28 @@ namespace KIS.App_Code
                 }
 
                 //Carico la postazione di lavoro
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT postazione FROM repartipostazioniattivita WHERE processo = @processo"
-                 + " AND revProc = @revProc AND variante = @variante"
-                 + " AND reparto = @reparto";
-                int? postazione = conn.QueryFirstOrDefault<int?>(sql, new
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    processo = this.Task.Task.processID,
-                    revProc = this.Task.Task.revisione,
-                    variante = this.Task.variant.idVariante,
-                    reparto = repID
-                });
-                if (postazione.HasValue)
-                {
-                    this._PostazioneDiLavoro = new Postazione(this.Tenant, postazione.Value);
+                    conn.Open();
+                    string sql = "SELECT postazione FROM repartipostazioniattivita WHERE processo = @processo"
+                     + " AND revProc = @revProc AND variante = @variante"
+                     + " AND reparto = @reparto";
+                    int? postazione = conn.QueryFirstOrDefault<int?>(sql, new
+                    {
+                        processo = this.Task.Task.processID,
+                        revProc = this.Task.Task.revisione,
+                        variante = this.Task.variant.idVariante,
+                        reparto = repID
+                    });
+                    if (postazione.HasValue)
+                    {
+                        this._PostazioneDiLavoro = new Postazione(this.Tenant, postazione.Value);
+                    }
+                    else
+                    {
+                        this._PostazioneDiLavoro = null;
+                    }
                 }
-                else
-                {
-                    this._PostazioneDiLavoro = null;
-                }
-                conn.Close();
             }
             else
             {
@@ -4827,11 +4922,13 @@ namespace KIS.App_Code
             {
                 List<int[]> lstTaskIDOLDREVNEW = new List<int[]>();
                 log += "Inserisco i task in produzione<br/>";
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                int maxTaskID = 0;
-                int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(taskID) FROM tasksproduzione", null, tr);
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        int maxTaskID = 0;
+                        int? maxRow = conn.QueryFirstOrDefault<int?>("SELECT MAX(taskID) FROM tasksproduzione", null, tr);
                 if (maxRow.HasValue)
                 {
                     maxTaskID = maxRow.Value + 1;
@@ -4927,17 +5024,16 @@ namespace KIS.App_Code
                     log += sqlUpdate;
 
                     tr.Commit();
-                }
-                catch(Exception ex)
-                {
-                    log += ex.Message;
-                    tr.Rollback();
-                    rt = 0;
-                }
-                conn.Close();
-                conn.Open();
-                // Copy Default Operators
-                if(rt!=0)
+                    }
+                    catch(Exception ex)
+                    {
+                        log += ex.Message;
+                        tr.Rollback();
+                        rt = 0;
+                    }
+                    }
+                    // Copy Default Operators
+                    if(rt!=0)
                 { 
                 for(int i = 0; i < this.Processi.Count; i++)
                 {
@@ -5003,7 +5099,7 @@ namespace KIS.App_Code
                 }
 
 
-                conn.Close();
+                }
             }
 
             return rt;
@@ -5025,19 +5121,18 @@ namespace KIS.App_Code
         public ElencoTaskProduzione()
         {
             this._TaskAvviabili = new List<TaskProduzione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE status = 'N' OR status = 'I' OR status = 'P' ORDER BY lateStart";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
-                
-                this._TaskAvviabili.Add(tsk);
+                conn.Open();
+                string sql = "SELECT taskID FROM tasksproduzione WHERE status = 'N' OR status = 'I' OR status = 'P' ORDER BY lateStart";
+                var rows = conn.Query<int>(sql);
+                foreach (var id in rows)
+                {
+                    TaskProduzione tsk = new TaskProduzione(this.Tenant, id);
+
+                    this._TaskAvviabili.Add(tsk);
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         private List<TaskProduzione> _Tasks;
@@ -5055,18 +5150,19 @@ namespace KIS.App_Code
             this._Tasks = new List<TaskProduzione>();
             if (origProc.processID != -1 && origProc.revisione != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE 'F' "
-                    + " AND origTask = @origTask"
-                    + " AND revOrigTask = @revOrigTask"
-                    + " ORDER BY lateStart";
-                var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione });
-                foreach (var id in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    conn.Open();
+                    string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE 'F' "
+                        + " AND origTask = @origTask"
+                        + " AND revOrigTask = @revOrigTask"
+                        + " ORDER BY lateStart";
+                    var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione });
+                    foreach (var id in rows)
+                    {
+                        this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    }
                 }
-                conn.Close();
             }
         }
 
@@ -5076,20 +5172,21 @@ namespace KIS.App_Code
             this._Tasks = new List<TaskProduzione>();
             if (origProc.processID != -1 && origProc.revisione != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE 'F' "
-                    + " AND origTask = @origTask"
-                    + " AND revOrigTask = @revOrigTask"
-                    + " AND earlyStart > @startDate"
-                    + " AND earlyStart < @endDate"
-                    + " ORDER BY lateStart";
-                var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione, startDate = start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString(), endDate = end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString() });
-                foreach (var id in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    conn.Open();
+                    string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE 'F' "
+                        + " AND origTask = @origTask"
+                        + " AND revOrigTask = @revOrigTask"
+                        + " AND earlyStart > @startDate"
+                        + " AND earlyStart < @endDate"
+                        + " ORDER BY lateStart";
+                    var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione, startDate = start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString(), endDate = end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString() });
+                    foreach (var id in rows)
+                    {
+                        this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    }
                 }
-                conn.Close();
             }
         }
 
@@ -5099,23 +5196,24 @@ namespace KIS.App_Code
             this._Tasks = new List<TaskProduzione>();
             if (origProc.processID != -1 && origProc.revisione != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT taskID FROM tasksproduzione INNER JOIN productionplan ON"
-                    + "(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
-                    + " WHERE tasksproduzione.status LIKE 'F' "
-                    + " AND tasksproduzione.origTask = @origTask"
-                    + " AND tasksproduzione.revOrigTask = @revOrigTask"
-                    + " AND productionplan.processo = @processo"
-                    + " AND productionplan.revisione = @revisione"
-                    + " AND productionplan.variante = @variante"
-                    + " ORDER BY lateStart";
-                var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione, processo = ProdottoPadre.process.processID, revisione = ProdottoPadre.process.revisione, variante = ProdottoPadre.variant.idVariante });
-                foreach (var id in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    conn.Open();
+                    string sql = "SELECT taskID FROM tasksproduzione INNER JOIN productionplan ON"
+                        + "(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
+                        + " WHERE tasksproduzione.status LIKE 'F' "
+                        + " AND tasksproduzione.origTask = @origTask"
+                        + " AND tasksproduzione.revOrigTask = @revOrigTask"
+                        + " AND productionplan.processo = @processo"
+                        + " AND productionplan.revisione = @revisione"
+                        + " AND productionplan.variante = @variante"
+                        + " ORDER BY lateStart";
+                    var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione, processo = ProdottoPadre.process.processID, revisione = ProdottoPadre.process.revisione, variante = ProdottoPadre.variant.idVariante });
+                    foreach (var id in rows)
+                    {
+                        this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    }
                 }
-                conn.Close();
             }
         }
 
@@ -5125,25 +5223,26 @@ namespace KIS.App_Code
             this._Tasks = new List<TaskProduzione>();
             if (origProc.processID != -1 && origProc.revisione != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                string sql = "SELECT taskID FROM tasksproduzione INNER JOIN productionplan ON"
-                    + "(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
-                    + " WHERE tasksproduzione.status LIKE 'F' "
-                    + " AND tasksproduzione.origTask = @origTask"
-                    + " AND tasksproduzione.revOrigTask = @revOrigTask"
-                    + " AND earlyStart > @startDate"
-                    + " AND earlyStart < @endDate"
-                    + " AND productionplan.processo = @processo"
-                    + " AND productionplan.revisione = @revisione"
-                    + " AND productionplan.variante = @variante"
-                    + " ORDER BY lateStart";
-                var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione, startDate = start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString(), endDate = end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString(), processo = ProdottoPadre.process.processID, revisione = ProdottoPadre.process.revisione, variante = ProdottoPadre.variant.idVariante });
-                foreach (var id in rows)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    conn.Open();
+                    string sql = "SELECT taskID FROM tasksproduzione INNER JOIN productionplan ON"
+                        + "(tasksproduzione.idArticolo = productionplan.id AND tasksproduzione.annoArticolo = productionplan.anno)"
+                        + " WHERE tasksproduzione.status LIKE 'F' "
+                        + " AND tasksproduzione.origTask = @origTask"
+                        + " AND tasksproduzione.revOrigTask = @revOrigTask"
+                        + " AND earlyStart > @startDate"
+                        + " AND earlyStart < @endDate"
+                        + " AND productionplan.processo = @processo"
+                        + " AND productionplan.revisione = @revisione"
+                        + " AND productionplan.variante = @variante"
+                        + " ORDER BY lateStart";
+                    var rows = conn.Query<int>(sql, new { origTask = origProc.processID, revOrigTask = origProc.revisione, startDate = start.Year.ToString() + "/" + start.Month.ToString() + "/" + start.Day.ToString(), endDate = end.Year.ToString() + "/" + end.Month.ToString() + "/" + end.Day.ToString(), processo = ProdottoPadre.process.processID, revisione = ProdottoPadre.process.revisione, variante = ProdottoPadre.variant.idVariante });
+                    foreach (var id in rows)
+                    {
+                        this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    }
                 }
-                conn.Close();
             }
         }
 
@@ -5151,58 +5250,61 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
             this._Tasks = new List<TaskProduzione>();
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-            string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE @status "
-                + " AND ("
-                + "(earlyStart < @startFull AND lateFinish > @endFull)"
-                + "OR (earlyStart > @startFull AND lateFinish > @endFull AND @endDouble > lateStart)"
-                + "OR (earlyStart < @startFull AND lateFinish < @endFull AND @startDouble < lateFinish)"
-                + "OR (@startFull < earlyStart AND @endFull > lateFinish)"
-                + ")";
-            var rows = conn.Query<int>(sql, new
-            {
-                status = status.ToString(),
-                startFull = start.ToString("yyyy-MM-dd HH:mm:ss"),
-                endFull = end.ToString("yyyy-MM-dd HH:mm:ss"),
-                startDouble = start.ToString("yyyy-MM-dd  HH:mm:ss"),
-                endDouble = end.ToString("yyyy-MM-dd  HH:mm:ss")
-            });
-            foreach (var id in rows)
-            {
-                this._Tasks.Add(new TaskProduzione(this.Tenant, id));
-            }
-            conn.Close();
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE @status "
+                        + " AND ("
+                        + "(earlyStart < @startFull AND lateFinish > @endFull)"
+                        + "OR (earlyStart > @startFull AND lateFinish > @endFull AND @endDouble > lateStart)"
+                        + "OR (earlyStart < @startFull AND lateFinish < @endFull AND @startDouble < lateFinish)"
+                        + "OR (@startFull < earlyStart AND @endFull > lateFinish)"
+                        + ")";
+                    var rows = conn.Query<int>(sql, new
+                    {
+                        status = status.ToString(),
+                        startFull = start.ToString("yyyy-MM-dd HH:mm:ss"),
+                        endFull = end.ToString("yyyy-MM-dd HH:mm:ss"),
+                        startDouble = start.ToString("yyyy-MM-dd  HH:mm:ss"),
+                        endDouble = end.ToString("yyyy-MM-dd  HH:mm:ss")
+                    });
+                    foreach (var id in rows)
+                    {
+                        this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                    }
+                }
         }
 
         public ElencoTaskProduzione(String Tenant, char status)
         {
             this.Tenant = Tenant;
             this._Tasks = new List<TaskProduzione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE @status ";
-            var rows = conn.Query<int>(sql, new { status = status.ToString() });
-            foreach (var id in rows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                conn.Open();
+                string sql = "SELECT taskID FROM tasksproduzione WHERE status LIKE @status ";
+                var rows = conn.Query<int>(sql, new { status = status.ToString() });
+                foreach (var id in rows)
+                {
+                    this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                }
             }
-            conn.Close();
         }
 
         public ElencoTaskProduzione(String Tenant, Reparto dept, char status)
         {
             this.Tenant = Tenant;
             this._Tasks = new List<TaskProduzione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            string sql = "SELECT taskID FROM tasksproduzione WHERE reparto = @reparto AND status LIKE @status ";
-            var rows = conn.Query<int>(sql, new { reparto = dept.id, status = status.ToString() });
-            foreach (var id in rows)
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                conn.Open();
+                string sql = "SELECT taskID FROM tasksproduzione WHERE reparto = @reparto AND status LIKE @status ";
+                var rows = conn.Query<int>(sql, new { reparto = dept.id, status = status.ToString() });
+                foreach (var id in rows)
+                {
+                    this._Tasks.Add(new TaskProduzione(this.Tenant, id));
+                }
             }
-            conn.Close();
         }
 
         public TimeSpan MediaTempoLavoro
@@ -5288,31 +5390,38 @@ namespace KIS.App_Code
         public EventoTaskProduzione(String Tenant, int evID)
         {
             this.Tenant = Tenant;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT inputpoint, task, data, evento, note FROM registroeventitaskproduzione WHERE id = @id";
-            cmd.Parameters.AddWithValue("@id", evID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._IdEvento = evID;
-                this._InputPoint = rdr.GetInt32(0);
-                this._TaskProduzioneID = rdr.GetInt32(1);
-                this._Data = rdr.GetDateTime(2);
-                this._Evento = rdr.GetChar(3);
-                this._Note = "";
-                if(!rdr.IsDBNull(4))
-                { 
-                this._Note = rdr.GetString(4);
+                conn.Open();
+                string sql = "SELECT inputpoint, task, data, evento, note FROM registroeventitaskproduzione WHERE id = @id";
+                var row = conn.QueryFirstOrDefault<EventoTaskProduzioneRow>(sql, new { id = evID });
+                if (row != null)
+                {
+                    this._IdEvento = evID;
+                    this._InputPoint = row.Inputpoint;
+                    this._TaskProduzioneID = row.Task;
+                    this._Data = row.Data;
+                    this._Evento = row.Evento[0];
+                    this._Note = "";
+                    if (row.Note != null)
+                    {
+                        this._Note = row.Note;
+                    }
+                }
+                else
+                {
+                    this._IdEvento = -1;
                 }
             }
-            else
-            {
-                this._IdEvento = -1;
-            }
-            rdr.Close();
-            conn.Close();
+        }
+
+        private class EventoTaskProduzioneRow
+        {
+            public int Inputpoint { get; set; }
+            public int Task { get; set; }
+            public DateTime Data { get; set; }
+            public String Evento { get; set; }
+            public String Note { get; set; }
         }
 
     }
@@ -5362,25 +5471,24 @@ namespace KIS.App_Code
                 TaskProduzione tsk = new TaskProduzione(this.Tenant, this.TaskID);
                 Reparto rp = new Reparto(this.Tenant, tsk.RepartoID);
                 this._DataRisoluzione = DateTime.UtcNow;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET dataRisoluzione = @dataRisoluzione "
-                    + " WHERE id = @id";
-                cmd.Parameters.AddWithValue("@dataRisoluzione", DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"));
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("UPDATE warningproduzione SET dataRisoluzione = @dataRisoluzione "
+                                + " WHERE id = @id",
+                                new { dataRisoluzione = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss"), id = this.ID }, tr);
+                            tr.Commit();
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch
-                {
-                    tr.Rollback();
-                }
-                conn.Close();
             }
         }
 
@@ -5391,24 +5499,23 @@ namespace KIS.App_Code
             set
             {
                 this._MotivoChiamata = value;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET motivo = @motivo WHERE id = @id";
-                cmd.Parameters.AddWithValue("@motivo", (object)(value ?? ""));
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("UPDATE warningproduzione SET motivo = @motivo WHERE id = @id",
+                                new { motivo = (object)(value ?? ""), id = this.ID }, tr);
+                            tr.Commit();
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch
-                {
-                    tr.Rollback();
-                }
-                conn.Close();
             }
         }
 
@@ -5419,24 +5526,23 @@ namespace KIS.App_Code
             set 
             {
                 this._Risoluzione = value;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE warningproduzione SET risoluzione = @risoluzione WHERE id = @id";
-                cmd.Parameters.AddWithValue("@risoluzione", (object)(value ?? ""));
-                cmd.Parameters.AddWithValue("@id", this.ID);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("UPDATE warningproduzione SET risoluzione = @risoluzione WHERE id = @id",
+                                new { risoluzione = (object)(value ?? ""), id = this.ID }, tr);
+                            tr.Commit();
+                        }
+                        catch
+                        {
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch
-                {
-                    tr.Rollback();
-                }
-                conn.Close();
             }
         }
 
@@ -5458,46 +5564,41 @@ namespace KIS.App_Code
         public Warning(String Tenant, int wrnID)
         {
             this.Tenant = Tenant;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, dataChiamata, task, user, dataRisoluzione, motivo, risoluzione FROM warningproduzione "
-                + "WHERE id = @id";
-            cmd.Parameters.AddWithValue("@id", wrnID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._ID = rdr.GetInt32(0);
-                this._DataChiamata = rdr.GetDateTime(1);
-                this._TaskID = rdr.GetInt32(2);
-                this._User = rdr.GetString(3);
-                if (!rdr.IsDBNull(4))
+                conn.Open();
+                string sql = "SELECT id, dataChiamata, task, user, dataRisoluzione, motivo, risoluzione FROM warningproduzione "
+                    + "WHERE id = @id";
+                var row = conn.QueryFirstOrDefault<WarningRow>(sql, new { id = wrnID });
+                if (row != null)
                 {
-                    this._DataRisoluzione = rdr.GetDateTime(4);
-                }
-                else
-                {
-                    this._DataRisoluzione = new DateTime(1970, 1, 1);
-                }
-                if (!rdr.IsDBNull(5))
-                {
-                    this._MotivoChiamata = rdr.GetString(5);
-                }
-                else
-                {
-                    this._MotivoChiamata = null;
-                }
-                if (!rdr.IsDBNull(6))
-                {
-                    this._Risoluzione = rdr.GetString(6);
-                }
-                else
-                {
-                    this._Risoluzione = null;
+                    this._ID = row.ID;
+                    this._DataChiamata = row.DataChiamata;
+                    this._TaskID = row.Task;
+                    this._User = row.User;
+                    if (row.DataRisoluzione.HasValue)
+                    {
+                        this._DataRisoluzione = row.DataRisoluzione.Value;
+                    }
+                    else
+                    {
+                        this._DataRisoluzione = new DateTime(1970, 1, 1);
+                    }
+                    this._MotivoChiamata = row.Motivo;
+                    this._Risoluzione = row.Risoluzione;
                 }
             }
-            rdr.Close();
-            conn.Close();
+        }
+
+        private class WarningRow
+        {
+            public int ID { get; set; }
+            public DateTime DataChiamata { get; set; }
+            public int Task { get; set; }
+            public String User { get; set; }
+            public DateTime? DataRisoluzione { get; set; }
+            public String Motivo { get; set; }
+            public String Risoluzione { get; set; }
         }
 
         public String NomePostazione
@@ -5534,38 +5635,35 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
             this._Elenco = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM warningproduzione WHERE dataRisoluzione IS NULL ORDER BY dataChiamata";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._Elenco.Add(new Warning(this.Tenant, rdr.GetInt32(0)));
+                conn.Open();
+                string sql = "SELECT id FROM warningproduzione WHERE dataRisoluzione IS NULL ORDER BY dataChiamata";
+                var rows = conn.Query<int>(sql);
+                foreach (var id in rows)
+                {
+                    this._Elenco.Add(new Warning(this.Tenant, id));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         public WarningAperti(String Tenant, Reparto rp)
         {
             this.Tenant = Tenant;
             this._Elenco = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM warningproduzione INNER JOIN tasksproduzione ON(warningproduzione.task = tasksproduzione.taskID) "
-                + " WHERE dataRisoluzione IS NULL "
-                + " AND reparto = @reparto"
-                + " ORDER BY dataChiamata";
-            cmd.Parameters.AddWithValue("@reparto", rp.id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._Elenco.Add(new Warning(this.Tenant, rdr.GetInt32(0)));
+                conn.Open();
+                string sql = "SELECT id FROM warningproduzione INNER JOIN tasksproduzione ON(warningproduzione.task = tasksproduzione.taskID) "
+                    + " WHERE dataRisoluzione IS NULL "
+                    + " AND reparto = @reparto"
+                    + " ORDER BY dataChiamata";
+                var rows = conn.Query<int>(sql, new { reparto = rp.id });
+                foreach (var id in rows)
+                {
+                    this._Elenco.Add(new Warning(this.Tenant, id));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         
@@ -5585,37 +5683,34 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
             this._List = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM warningproduzione ORDER BY dataChiamata";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._List.Add(new Warning(this.Tenant, rdr.GetInt32(0)));
+                conn.Open();
+                string sql = "SELECT id FROM warningproduzione ORDER BY dataChiamata";
+                var rows = conn.Query<int>(sql);
+                foreach (var id in rows)
+                {
+                    this._List.Add(new Warning(this.Tenant, id));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         public Warnings(String Tenant, Reparto rp)
         {
             this.Tenant = Tenant;
             this._List = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id FROM warningproduzione INNER JOIN tasksproduzione ON(warningproduzione.task = tasksproduzione.taskID) "
-                + " WHERE reparto = @reparto"
-                + " ORDER BY dataChiamata";
-            cmd.Parameters.AddWithValue("@reparto", rp.id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._List.Add(new Warning(this.Tenant, rdr.GetInt32(0)));
+                conn.Open();
+                string sql = "SELECT id FROM warningproduzione INNER JOIN tasksproduzione ON(warningproduzione.task = tasksproduzione.taskID) "
+                    + " WHERE reparto = @reparto"
+                    + " ORDER BY dataChiamata";
+                var rows = conn.Query<int>(sql, new { reparto = rp.id });
+                foreach (var id in rows)
+                {
+                    this._List.Add(new Warning(this.Tenant, id));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
     }
 
@@ -5632,19 +5727,18 @@ namespace KIS.App_Code
         public ElencoArticoliInProduzione(String Tenant)
         {
             this.Tenant = Tenant;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT id, anno FROM productionplan WHERE status = 'I' OR status = 'P' "
-                +" ORDER BY status DESC, anno DESC, id DESC";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            this._ElencoArticoli = new List<Articolo>();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._ElencoArticoli.Add(new Articolo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                conn.Open();
+                string sql = "SELECT id, anno FROM productionplan WHERE status = 'I' OR status = 'P' "
+                    + " ORDER BY status DESC, anno DESC, id DESC";
+                var rows = conn.Query<(int ID, int Anno)>(sql);
+                this._ElencoArticoli = new List<Articolo>();
+                foreach (var row in rows)
+                {
+                    this._ElencoArticoli.Add(new Articolo(this.Tenant, row.ID, row.Anno));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
     }
 
@@ -5835,27 +5929,26 @@ namespace KIS.App_Code
             {
                 if (this.TaskID != -1 && value != null && value.ID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramCategory = @paramCategory WHERE "
-                        + " paramID = @paramID"
-                        + " AND TaskID = @taskID";
-                    cmd.Parameters.AddWithValue("@paramCategory", value.ID);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        this._ParameterCategory = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("UPDATE modelTaskparameters SET paramCategory = @paramCategory WHERE "
+                                    + " paramID = @paramID"
+                                    + " AND TaskID = @taskID",
+                                    new { paramCategory = value.ID, paramID = this.ParameterID, taskID = this.TaskID }, tr);
+                                tr.Commit();
+                                this._ParameterCategory = value;
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -5877,27 +5970,26 @@ namespace KIS.App_Code
             {
                 if (this.TaskID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE modelTaskparameters SET paramName = @paramName WHERE "
-                        + " paramID = @paramID"
-                        + " AND TaskID = @taskID";
-                    cmd.Parameters.AddWithValue("@paramName", (object)(value ?? ""));
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        this._Name = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("UPDATE modelTaskparameters SET paramName = @paramName WHERE "
+                                    + " paramID = @paramID"
+                                    + " AND TaskID = @taskID",
+                                    new { paramName = (object)(value ?? ""), paramID = this.ParameterID, taskID = this.TaskID }, tr);
+                                tr.Commit();
+                                this._Name = value;
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -5910,27 +6002,26 @@ namespace KIS.App_Code
             {
                 if (this.TaskID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE taskparameters SET paramDescription = @paramDescription WHERE "
-                        + " paramID = @paramID"
-                        + " AND TaskID = @taskID";
-                    cmd.Parameters.AddWithValue("@paramDescription", (object)(value ?? ""));
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        this._Description = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("UPDATE taskparameters SET paramDescription = @paramDescription WHERE "
+                                    + " paramID = @paramID"
+                                    + " AND TaskID = @taskID",
+                                    new { paramDescription = (object)(value ?? ""), paramID = this.ParameterID, taskID = this.TaskID }, tr);
+                                tr.Commit();
+                                this._Description = value;
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -5943,27 +6034,26 @@ namespace KIS.App_Code
             {
                 if (this.TaskID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE taskparameters SET isFixed = @isFixed WHERE "
-                        + " paramID = @paramID"
-                        + " AND TaskID = @taskID";
-                    cmd.Parameters.AddWithValue("@isFixed", value);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        this._isFixed = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("UPDATE taskparameters SET isFixed = @isFixed WHERE "
+                                    + " paramID = @paramID"
+                                    + " AND TaskID = @taskID",
+                                    new { isFixed = value, paramID = this.ParameterID, taskID = this.TaskID }, tr);
+                                tr.Commit();
+                                this._isFixed = value;
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -5976,27 +6066,26 @@ namespace KIS.App_Code
             {
                 if (this.TaskID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE taskparameters SET isRequired = @isRequired WHERE "
-                        + " paramID = @paramID"
-                        + " AND TaskID = @taskID";
-                    cmd.Parameters.AddWithValue("@isRequired", value);
-                    cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                    cmd.Parameters.AddWithValue("@taskID", this.TaskID);
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        this._isRequired = value;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("UPDATE taskparameters SET isRequired = @isRequired WHERE "
+                                    + " paramID = @paramID"
+                                    + " AND TaskID = @taskID",
+                                    new { isRequired = value, paramID = this.ParameterID, taskID = this.TaskID }, tr);
+                                tr.Commit();
+                                this._isRequired = value;
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -6027,53 +6116,55 @@ namespace KIS.App_Code
             this.Tenant = Tenant;
             this._ParameterID = -1;
             this._TaskID = -1;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT TaskID, paramID, paramCategory, paramName, "
-                + " paramDescription, isFixed, isRequired, sequence, CreatedBy, CreatedDate "
-                +" FROM taskparameters WHERE "
-                + " TaskID = @taskID"
-                + " AND paramID = @paramID";
-            cmd.Parameters.AddWithValue("@taskID", TaskID);
-            cmd.Parameters.AddWithValue("@paramID", parameterID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(3))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._TaskID = rdr.GetInt32(0);
-                this._ParameterID = rdr.GetInt32(1);
-                this.ParameterCategory = new ProductParametersCategory(this.Tenant, rdr.GetInt32(2));
-                if (!rdr.IsDBNull(3))
+                conn.Open();
+                string sql = "SELECT TaskID, paramID, paramCategory, paramName, "
+                    + " paramDescription, isFixed, isRequired, sequence, CreatedBy, CreatedDate "
+                    + " FROM taskparameters WHERE "
+                    + " TaskID = @taskID"
+                    + " AND paramID = @paramID";
+                var row = conn.QueryFirstOrDefault<TaskParameterRow>(sql, new { taskID = TaskID, paramID = parameterID });
+                if (row != null && row.ParamName != null)
                 {
-                    this._Name = rdr.GetString(3);
-                }
-                if (!rdr.IsDBNull(4))
-                {
-                    this._Description = rdr.GetString(4);
-                }
-                if (!rdr.IsDBNull(5))
-                {
-                    this._isFixed = rdr.GetBoolean(5);
-                }
-                if (!rdr.IsDBNull(6))
-                {
-                    this._isRequired = rdr.GetBoolean(6);
-                }
-                if (!rdr.IsDBNull(7))
-                {
-                    this._Sequence = rdr.GetInt32(7);
-                }
-                if (!rdr.IsDBNull(8))
-                {
-                    this._CreatedBy = rdr.GetString(8);
-                }
-                if (!rdr.IsDBNull(9))
-                {
-                    this._CreatedDate = rdr.GetDateTime(9);
+                    this._TaskID = row.TaskID;
+                    this._ParameterID = row.ParamID;
+                    this.ParameterCategory = new ProductParametersCategory(this.Tenant, row.ParamCategory);
+                    this._Name = row.ParamName;
+                    this._Description = row.ParamDescription;
+                    if (row.IsFixed.HasValue)
+                    {
+                        this._isFixed = row.IsFixed.Value;
+                    }
+                    if (row.IsRequired.HasValue)
+                    {
+                        this._isRequired = row.IsRequired.Value;
+                    }
+                    if (row.Sequence.HasValue)
+                    {
+                        this._Sequence = row.Sequence.Value;
+                    }
+                    this._CreatedBy = row.CreatedBy;
+                    if (row.CreatedDate.HasValue)
+                    {
+                        this._CreatedDate = row.CreatedDate.Value;
+                    }
                 }
             }
-            rdr.Close();
-            conn.Close();
+        }
+
+        private class TaskParameterRow
+        {
+            public int TaskID { get; set; }
+            public int ParamID { get; set; }
+            public int ParamCategory { get; set; }
+            public String ParamName { get; set; }
+            public String ParamDescription { get; set; }
+            public Boolean? IsFixed { get; set; }
+            public Boolean? IsRequired { get; set; }
+            public int? Sequence { get; set; }
+            public String CreatedBy { get; set; }
+            public DateTime? CreatedDate { get; set; }
         }
 
         public Boolean Delete()
@@ -6081,28 +6172,27 @@ namespace KIS.App_Code
             Boolean ret = false;
             if (this.ParameterID != -1 && this.TaskID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM taskparameters WHERE taskID = @taskID"
-                    + " AND paramID = @paramID";
-                cmd.Parameters.AddWithValue("@taskID", this.TaskID);
-                cmd.Parameters.AddWithValue("@paramID", this.ParameterID);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("DELETE FROM taskparameters WHERE taskID = @taskID"
+                                + " AND paramID = @paramID",
+                                new { taskID = this.TaskID, paramID = this.ParameterID }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
+                            ret = false;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    this.log = ex.Message;
-                    ret = false;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -6172,27 +6262,31 @@ namespace KIS.App_Code
             this._Date = new DateTime(1970, 1, 1);
             this._Note = "";
             if(TaskID!=-1 && CommentID!=-1)
-            { 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT date, user, notes FROM tasksproduzioneoperatornotes WHERE "
-                + " TaskID = @taskID"
-                + " AND CommentID = @commentID";
-            cmd.Parameters.AddWithValue("@taskID", TaskID);
-            cmd.Parameters.AddWithValue("@commentID", CommentID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read() && !rdr.IsDBNull(0))
             {
-                this._TaskID = TaskID;
-                this._CommentID = CommentID;
-                this._Date = rdr.GetDateTime(0);
-                this._User = rdr.GetString(1);
-                this._Note = rdr.GetString(2);
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT date, user, notes FROM tasksproduzioneoperatornotes WHERE "
+                        + " TaskID = @taskID"
+                        + " AND CommentID = @commentID";
+                    var row = conn.QueryFirstOrDefault<TaskOperatorNoteRow>(sql, new { taskID = TaskID, commentID = CommentID });
+                    if (row != null)
+                    {
+                        this._TaskID = TaskID;
+                        this._CommentID = CommentID;
+                        this._Date = row.Date;
+                        this._User = row.User;
+                        this._Note = row.Notes;
+                    }
+                }
             }
-            rdr.Close();
-            conn.Close();
-            }
+        }
+
+        private class TaskOperatorNoteRow
+        {
+            public DateTime Date { get; set; }
+            public String User { get; set; }
+            public String Notes { get; set; }
         }
     }
 

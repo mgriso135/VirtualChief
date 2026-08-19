@@ -1,16 +1,22 @@
-@inherits KIS.Commesse.commesse
 @{
-    // placeholder – markup reproduced from commesse.aspx
+    ViewBag.Title = "Virtual Chief";
+    Layout = "~/Site.cshtml";
 }
-<ul class="breadcrumb hidden-phone">
-    <li>
-        <a href="commesse.cshtml">
-            <label id="lblNavCommesse" />
-        </a>
-        <span class="divider">/</span>
-    </li>
-</ul>
-<h1><label id="lblTitleCommesse" /></h1>
-@Html.Partial("~/Commesse/addCommessa.cshtml")
-<br />
-@Html.Partial("~/Commesse/listCommesse.cshtml")
+
+@section HeadContent {
+}
+
+@section MainContent {
+    <ul class="breadcrumb hidden-phone">
+        <li>
+            <a href="commesse.aspx">
+                <label>Commesse</label>
+                <span class="divider">/</span>
+            </a>
+        </li>
+    </ul>
+    <h1>Nuova Commesse</h1>
+    <!-- User control: AddCommessa.ascx would be rendered here -->
+    <!-- User control: listCommesse.ascx would be rendered here -->
+    <br />
+}

@@ -21,12 +21,7 @@
 </tr>
 </table>
 
-<asp:chart ID="Chart1" runat="server" width="1000px" onload="Chart1_Load">
-
-<ChartAreas>
-    <asp:ChartArea Name="ChartArea1"></asp:ChartArea>
-  </ChartAreas>
-</asp:chart>
+<!-- Google Charts placeholder removed -->
 
 <asp:Repeater ID="rptKPIRecs" runat="server" OnItemCreated="rptKPIRecs_ItemCreated" Visible="false">
 <headertemplate>

@@ -1,36 +1,36 @@
-@inherits KIS.Commesse.addCommessa
-@{
-    // placeholder – markup reproduced from addCommessa.ascx
-}
-<a href="~/SalesOrders/SalesOrder/AddSalesOrder?OrderID=-1&OrderYear=-1">
-    <img class="img-rounded" id="btnShowFrmAddCommessa" height="40" src="~/img/iconAdd.jpg" title="Aggiungi una nuova commessa" />
-</a>
-<label id="lblTxtAddCommessa" /><br />
+@using KIS.Commesse
+@model dynamic
 
-<table id="frmAddCommessa" class="table table-bordered table-hover">
-    <tr><td><label id="lblCliente" /></td><td>
-        <select id="ddlCliente"></select>
-        <a href="../Clienti/AddCliente.cshtml"><label id="lblAddCliente" /></a>
-    </td></tr>
-    <tr><td><label id="lblExternalID" /></td><td><input type="text" id="txtExternalID" />
-    </td></tr>
-    <tr><td><label id="lblNote" /></td><td><textarea id="txtNote" rows="4"></textarea>
-    </td></tr>
-
-    <tr>
-        <td colspan="2" style="text-align:center;">
-            <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
-            <button type="button" id="btnUndo" class="btn">Annulla</button>
-        </td></tr>
-</table>
-<label id="lbl1" />
-
-<script type="text/javascript">
-    function doSave() {
-        if (!$("#ddlCliente").val()) {
-            alert("Selezionare un cliente");
-            return;
-        }
-        alert("Commessa aggiunta");
-    }
-</script>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Nuova Commesse</h3>
+    </div>
+    <div class="panel-body">
+        <div class="form-group">
+            <a href="/SalesOrders/SalesOrder/AddSalesOrder?OrderID=-1&OrderYear=-1" class="btn btn-primary">
+                <img class="img-rounded" src="/img/iconAdd.jpg" height="40" title="Aggiungi una nuova commessa" />
+            </a>
+            <label>Nuova Commesse</label>
+        </div>
+        
+        <table class="table table-bordered table-hover">
+            <tr><td><label>Cliente</label></td><td>
+                <!-- DropDown would be rendered here - placeholder -->
+                <select class="form-control">
+                    <option>Cliente placeholder</option>
+                </select>
+                <a href="/Clienti/AddCliente.aspx">Aggiungi Cliente</a>
+            </td></tr>
+            <tr><td><label>External ID</label></td><td><input type="text" class="form-control" placeholder="External ID" /></td></tr>
+            <tr><td><label>Note</label></td><td><textarea class="form-control" rows="3" placeholder="Note"></textarea></td></tr>
+            
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    <button type="button" class="btn btn-success" title="Salva">Salva</button>
+                    <button type="button" class="btn btn-warning" title="Reset">Reset</button>
+                </td>
+            </tr>
+        </table>
+        <label id="lbl1"></label>
+    </div>
+</div>

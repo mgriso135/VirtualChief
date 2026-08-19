@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using MySql.Data.MySqlClient; 
+using Dapper;
 //using KIS.Commesse;
 
 namespace KIS.App_Code
@@ -70,6 +71,12 @@ namespace KIS.App_Code
             this._FieldListTasks.Add("TaskFineEffettiva", 0);
         }
 
+        protected class ConfigurazioneValoreRow
+        {
+            public String Parametro { get; set; }
+            public String Valore { get; set; }
+        }
+
         /* Configurazione visualizzazione nomi utente su Andon:
          * 0 --> vedo username
          * 1 --> vedo il nome
@@ -81,73 +88,64 @@ namespace KIS.App_Code
             get
             {
                 char ret = '0';
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Andon Completo' "
-                    + "AND ID = -1 AND parametro LIKE 'FormatoUsername'";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String valore = rdr.GetString(0);
-                    if (valore.Length > 0)
+                    conn.Open();
+                    String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione = 'Andon Completo' "
+                        + "AND ID = -1 AND parametro LIKE 'FormatoUsername'");
+                    if (valore != null)
                     {
-                        ret = valore[0];
+                        if (valore.Length > 0)
+                        {
+                            ret = valore[0];
+                        }
                     }
                 }
-                rdr.Close();
-
-                conn.Close();
                 return ret;
             }
 
             set
             {
                     // Verifico che sia presente la configurazione
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Andon Completo' "
-                        + "AND ID = -1 AND parametro LIKE 'FormatoUsername'";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    bool add = false;
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        add = false;
-                    }
-                    else
-                    {
-                        add = true;
-                    }
-                    rdr.Close();
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione = 'Andon Completo' "
+                                + "AND ID = -1 AND parametro LIKE 'FormatoUsername'");
+                            bool add = false;
+                            if (valore != null)
+                            {
+                                add = false;
+                            }
+                            else
+                            {
+                                add = true;
+                            }
 
-                    cmd.Transaction = tr;
-                    if (add == true)
-                    {
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', "
-                            + "-1, 'FormatoUsername', @value)";
+                            try
+                            {
+                                if (add == true)
+                                {
+                                    conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', "
+                                        + "-1, 'FormatoUsername', @value)", new { @value = value.ToString() }, tr);
+                                }
+                                else
+                                {
+                                    conn.Execute("UPDATE configurazione SET valore = @value WHERE "
+                                        + " Sezione = 'Andon Completo' AND ID = -1" +
+                                        " AND parametro LIKE 'FormatoUsername'", new { @value = value.ToString() }, tr);
+                                }
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                log = ex.Message;
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    else
-                    {
-                        cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
-                        + " Sezione = 'Andon Completo' AND ID = -1" +
-                        " AND parametro LIKE 'FormatoUsername'";
-                    }
-                    cmd.Parameters.AddWithValue("@value", value.ToString());
-
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        log = ex.Message;
-                        tr.Rollback();
-                    }
-
-                    rdr.Close();
             }
         }
 
@@ -164,46 +162,43 @@ namespace KIS.App_Code
              */
         public void loadScrollType()
         {
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Completo' AND parametro LIKE 'ScrollType'";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this.log = rdr.GetString(0);
-                String val = rdr.GetString(0);
-                if(val[0] == '0')
+                conn.Open();
+                String val = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Completo' AND parametro LIKE 'ScrollType'");
+                if (val != null)
                 {
-                    this.ScrollType = 0;
-                    this.ContinuousScrollGoSpeed = 0.0;
-                    this.ContinuousScrollBackSpeed = 0.0;
-                }
-                else if(val[0] == '1')
-                {
-                    var valArr = val.Split(';');
-                    try
-                    {                    
-                    this.ScrollType = 1;
-                    this.ContinuousScrollGoSpeed = Double.Parse(valArr[1]);
-                    this.ContinuousScrollBackSpeed = Double.Parse(valArr[2]);
-                    }
-                    catch
+                    this.log = val;
+                    if (val[0] == '0')
                     {
                         this.ScrollType = 0;
                         this.ContinuousScrollGoSpeed = 0.0;
                         this.ContinuousScrollBackSpeed = 0.0;
                     }
+                    else if (val[0] == '1')
+                    {
+                        var valArr = val.Split(';');
+                        try
+                        {                    
+                        this.ScrollType = 1;
+                        this.ContinuousScrollGoSpeed = Double.Parse(valArr[1]);
+                        this.ContinuousScrollBackSpeed = Double.Parse(valArr[2]);
+                        }
+                        catch
+                        {
+                            this.ScrollType = 0;
+                            this.ContinuousScrollGoSpeed = 0.0;
+                            this.ContinuousScrollBackSpeed = 0.0;
+                        }
+                    }
+                }
+                else
+                {
+                    this.ScrollType = 0;
+                    this.ContinuousScrollGoSpeed = 0.0;
+                    this.ContinuousScrollBackSpeed = 0.0;
                 }
             }
-            else
-            {
-                this.ScrollType = 0;
-                this.ContinuousScrollGoSpeed = 0.0;
-                this.ContinuousScrollBackSpeed = 0.0;
-            }
-            rdr.Close();
-            conn.Clone();
         }
 
         /* 0 if generic error
@@ -212,54 +207,49 @@ namespace KIS.App_Code
         public int setScrollType(int ScrollType, String Params)
         {
             int ret = 0;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Completo' AND parametro LIKE 'ScrollType'";
-            bool CreateOrUpdate = false;
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if(rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                CreateOrUpdate = true;
-            }
-            else
-            {
-                CreateOrUpdate = false;
-            }
-            rdr.Close();
+                conn.Open();
+                bool CreateOrUpdate = false;
+                String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Completo' AND parametro LIKE 'ScrollType'");
+                if (valore != null)
+                {
+                    CreateOrUpdate = true;
+                }
+                else
+                {
+                    CreateOrUpdate = false;
+                }
 
-            MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
-            String val = "0";
-            if(ScrollType >0)
-            { 
-                val = ScrollType.ToString() + ";" + Params;
+                using (var tr = conn.BeginTransaction())
+                {
+                    String val = "0";
+                    if (ScrollType > 0)
+                    {
+                        val = ScrollType.ToString() + ";" + Params;
+                    }
+                    try
+                    {
+                        if (CreateOrUpdate)
+                        {
+                            // Update
+                            conn.Execute("UPDATE configurazione SET valore =@val WHERE Sezione = 'Andon Completo' AND parametro = 'ScrollType'", new { @val = val }, tr);
+                        }
+                        else
+                        {
+                            // Create
+                            conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', -1, 'ScrollType', @val)", new { @val = val }, tr);
+                        }
+                        tr.Commit();
+                        ret = 1;
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                        ret = 0;
+                    }
+                }
             }
-            if (CreateOrUpdate)
-            {
-                // Update
-                cmd.CommandText = "UPDATE configurazione SET valore =@val WHERE Sezione = 'Andon Completo' AND parametro = 'ScrollType'";
-            }
-            else
-            {
-                // Create
-                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Completo', -1, 'ScrollType', @val)";
-            }
-            cmd.Parameters.AddWithValue("@val", val);
-
-            try
-            {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = 1;
-            }
-            catch
-            {
-                tr.Rollback();
-                ret = 0;
-            }
-
-            conn.Close();
             return ret;
         }
 
@@ -291,33 +281,31 @@ namespace KIS.App_Code
         {
             this._CampiVisualizzati = new Dictionary<String, int>();
             Dictionary<String, int> swap = new Dictionary<string, int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
-                + " AND ID = -1 "
-                + " ORDER BY valore";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                String field = rdr.GetString(0);
-                String sOrdine = rdr.GetString(1);
-                int ord = -1;
-                try
+                conn.Open();
+                var rows = conn.Query<ConfigurazioneValoreRow>("SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
+                    + " AND ID = -1 "
+                    + " ORDER BY valore");
+                foreach (var r in rows)
                 {
-                    ord = Int32.Parse(sOrdine);
+                    String field = r.Parametro;
+                    String sOrdine = r.Valore;
+                    int ord = -1;
+                    try
+                    {
+                        ord = Int32.Parse(sOrdine);
+                    }
+                    catch (Exception ex)
+                    {
+                        ord = 0;
+                        log = ex.Message;
+                    }
+                    swap.Add(field, ord);
                 }
-                catch(Exception ex)
-                {
-                    ord = 0;
-                    log = ex.Message;
-                }
-                swap.Add(field, ord);
             }
 
             this._CampiVisualizzati = swap.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-            rdr.Close();
-            conn.Close();
         }
 
         public virtual Boolean addCampoVisualizzato(String field)
@@ -326,33 +314,30 @@ namespace KIS.App_Code
             this.loadCampiVisualizzati();
             int prog = this.CampiVisualizzati.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                + "'Andon ViewFields',"
-                + "-1, "
-                + "@field, "
-                + "@prog"
-                +")";
-            cmd.Parameters.AddWithValue("@field", field);
-            cmd.Parameters.AddWithValue("@prog", prog.ToString());
-
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = true;
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                            + "'Andon ViewFields',"
+                            + "-1, "
+                            + "@field, "
+                            + "@prog"
+                            + ")", new { @field = field, @prog = prog.ToString() }, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = false;
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                ret = false;
-                log = ex.Message;
-                tr.Rollback();
-            }
-            conn.Close();
             return ret;
         }
 
@@ -362,39 +347,38 @@ namespace KIS.App_Code
             this.loadCampiVisualizzati();
             int prog = this.CampiVisualizzati.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM configurazione WHERE "
-            + "Sezione='Andon ViewFields'"
-            + " AND ID=-1"
-            + " AND parametro = @field";
-            cmd.Parameters.AddWithValue("@field", field);
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = true;
-            }
-            catch (Exception ex)
-            {
-                ret = false;
-                log = ex.Message;
-                tr.Rollback();
-            }
-            if (ret == true)
-            {
-                this.loadCampiVisualizzati();
-                int i = 0; 
-                foreach (KeyValuePair<string, int> pair in this.CampiVisualizzati)
-	            {
-                    this.setOrdineCampoVisualizzato(pair.Key, i);
-                    i++;
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        conn.Execute("DELETE FROM configurazione WHERE "
+                            + "Sezione='Andon ViewFields'"
+                            + " AND ID=-1"
+                            + " AND parametro = @field", new { @field = field }, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = false;
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                }
+                if (ret == true)
+                {
+                    this.loadCampiVisualizzati();
+                    int i = 0; 
+                    foreach (KeyValuePair<string, int> pair in this.CampiVisualizzati)
+	                {
+                        this.setOrdineCampoVisualizzato(pair.Key, i);
+                        i++;
+                    }
                 }
             }
-            conn.Close();
             return ret;
         }
 
@@ -404,28 +388,26 @@ namespace KIS.App_Code
             this.loadCampiVisualizzati();
             int prog = this.CampiVisualizzati.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
-                + " WHERE Sezione='Andon ViewFields' AND ID=-1 AND parametro=@field";
-            cmd.Parameters.AddWithValue("@ordine", ordine);
-            cmd.Parameters.AddWithValue("@field", field);
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = true;
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        conn.Execute("UPDATE configurazione SET valore = @ordine"
+                            + " WHERE Sezione='Andon ViewFields' AND ID=-1 AND parametro=@field", new { @ordine = ordine, @field = field }, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = false;
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                ret = false;
-                log = ex.Message;
-                tr.Rollback();
-            }
-            conn.Close();
             return ret;
         }
 
@@ -457,33 +439,31 @@ namespace KIS.App_Code
         {
             this._CampiVisualizzatiTasks = new Dictionary<String, int>();
             Dictionary<String, int> swap = new Dictionary<string, int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
-                + " AND ID = -1 "
-                + " ORDER BY valore";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                String field = rdr.GetString(0);
-                String sOrdine = rdr.GetString(1);
-                int ord = -1;
-                try
+                conn.Open();
+                var rows = conn.Query<ConfigurazioneValoreRow>("SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
+                    + " AND ID = -1 "
+                    + " ORDER BY valore");
+                foreach (var r in rows)
                 {
-                    ord = Int32.Parse(sOrdine);
+                    String field = r.Parametro;
+                    String sOrdine = r.Valore;
+                    int ord = -1;
+                    try
+                    {
+                        ord = Int32.Parse(sOrdine);
+                    }
+                    catch (Exception ex)
+                    {
+                        ord = 0;
+                        log = ex.Message;
+                    }
+                    swap.Add(field, ord);
                 }
-                catch (Exception ex)
-                {
-                    ord = 0;
-                    log = ex.Message;
-                }
-                swap.Add(field, ord);
             }
 
             this._CampiVisualizzatiTasks = swap.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-            rdr.Close();
-            conn.Close();
         }
 
         public virtual Boolean addCampoVisualizzatoTasks(String field)
@@ -492,33 +472,30 @@ namespace KIS.App_Code
             this.loadCampiVisualizzatiTasks();
             int prog = this.CampiVisualizzatiTasks.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                + "'Andon ViewFieldsTasks',"
-                + "-1, "
-                + "@field, "
-                + "@prog"
-                + ")";
-            cmd.Parameters.AddWithValue("@field", field);
-            cmd.Parameters.AddWithValue("@prog", prog.ToString());
-
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = true;
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                            + "'Andon ViewFieldsTasks',"
+                            + "-1, "
+                            + "@field, "
+                            + "@prog"
+                            + ")", new { @field = field, @prog = prog.ToString() }, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = false;
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                ret = false;
-                log = ex.Message;
-                tr.Rollback();
-            }
-            conn.Close();
             return ret;
         }
 
@@ -528,39 +505,38 @@ namespace KIS.App_Code
             this.loadCampiVisualizzatiTasks();
             int prog = this.CampiVisualizzatiTasks.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "DELETE FROM configurazione WHERE "
-            + "Sezione='Andon ViewFieldsTasks'"
-            + " AND ID=-1"
-            + " AND parametro = @field";
-            cmd.Parameters.AddWithValue("@field", field);
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = true;
-            }
-            catch (Exception ex)
-            {
-                ret = false;
-                log = ex.Message;
-                tr.Rollback();
-            }
-            if (ret == true)
-            {
-                this.loadCampiVisualizzatiTasks();
-                int i = 0;
-                foreach (KeyValuePair<string, int> pair in this.CampiVisualizzatiTasks)
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
                 {
-                    this.setOrdineCampoVisualizzatoTasks(pair.Key, i);
-                    i++;
+                    try
+                    {
+                        conn.Execute("DELETE FROM configurazione WHERE "
+                            + "Sezione='Andon ViewFieldsTasks'"
+                            + " AND ID=-1"
+                            + " AND parametro = @field", new { @field = field }, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = false;
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                }
+                if (ret == true)
+                {
+                    this.loadCampiVisualizzatiTasks();
+                    int i = 0;
+                    foreach (KeyValuePair<string, int> pair in this.CampiVisualizzatiTasks)
+                    {
+                        this.setOrdineCampoVisualizzatoTasks(pair.Key, i);
+                        i++;
+                    }
                 }
             }
-            conn.Close();
             return ret;
         }
 
@@ -570,28 +546,26 @@ namespace KIS.App_Code
             this.loadCampiVisualizzatiTasks();
             int prog = this.CampiVisualizzatiTasks.Count;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlTransaction tr = conn.BeginTransaction();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.Transaction = tr;
-            cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
-                + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=-1 AND parametro=@field";
-            cmd.Parameters.AddWithValue("@ordine", ordine);
-            cmd.Parameters.AddWithValue("@field", field);
-            try
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = true;
+                conn.Open();
+                using (var tr = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        conn.Execute("UPDATE configurazione SET valore = @ordine"
+                            + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=-1 AND parametro=@field", new { @ordine = ordine, @field = field }, tr);
+                        tr.Commit();
+                        ret = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ret = false;
+                        log = ex.Message;
+                        tr.Rollback();
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                ret = false;
-                log = ex.Message;
-                tr.Rollback();
-            }
-            conn.Close();
             return ret;
         }
     }
@@ -716,88 +690,77 @@ namespace KIS.App_Code
             get
             {
                 int ret = 1;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
-                    + " AND ID = @repartoID"
-                    + " AND parametro LIKE 'MaxViewDays'";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String strDays = rdr.GetString(0);
-                    try
+                    conn.Open();
+                    String strDays = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
+                        + " AND ID = @repartoID"
+                        + " AND parametro LIKE 'MaxViewDays'", new { @repartoID = this.RepartoID });
+                    if (strDays != null)
                     {
-                        ret = Int32.Parse(strDays);
+                        try
+                        {
+                            ret = Int32.Parse(strDays);
+                        }
+                        catch
+                        {
+                            ret = 1;
+                        }
                     }
-                    catch
+                    else
                     {
                         ret = 1;
                     }
                 }
-                else
-                {
-                    ret = 1;
-                }
-                rdr.Close();
-                conn.Close();
                 return ret;
             }
             set
             {
                 if (this.RepartoID != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
-                        + " AND ID = @repartoID"
-                        + " AND parametro LIKE 'MaxViewDays'";
-                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    bool found = false;
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        found = true;
-                    }
-                    else
-                    {
-                        found = false;
-                    }
-                    rdr.Close();
+                        conn.Open();
+                        String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' "
+                            + " AND ID = @repartoID"
+                            + " AND parametro LIKE 'MaxViewDays'", new { @repartoID = this.RepartoID });
+                        bool found = false;
+                        if (valore != null)
+                        {
+                            found = true;
+                        }
+                        else
+                        {
+                            found = false;
+                        }
 
-                    if (found == true)
-                    {
-                        cmd.CommandText = "UPDATE configurazione SET valore = @value"
-                            +" WHERE Sezione LIKE 'Andon Reparto' "
-                        + " AND ID = @repartoID"
-                        + " AND parametro LIKE 'MaxViewDays'";
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                if (found == true)
+                                {
+                                    conn.Execute("UPDATE configurazione SET valore = @value"
+                                        + " WHERE Sezione LIKE 'Andon Reparto' "
+                                        + " AND ID = @repartoID"
+                                        + " AND parametro LIKE 'MaxViewDays'", new { @value = value.ToString(), @repartoID = this.RepartoID }, tr);
+                                }
+                                else
+                                {
+                                    conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('"
+                                        + "Andon Reparto', "
+                                        + "@repartoID"
+                                        + ", 'MaxViewDays', @value)", new { @repartoID = this.RepartoID, @value = value.ToString() }, tr);
+                                }
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                tr.Rollback();
+                                log = ex.Message;
+                            }
+                        }
                     }
-                    else
-                    {
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('"
-                        + "Andon Reparto', "
-                        + "@repartoID"
-                        + ", 'MaxViewDays', @value)";
-                    }
-                    cmd.Parameters.AddWithValue("@value", value.ToString());
-
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch(Exception ex)
-                    {
-                        tr.Rollback();
-                        log = ex.Message;
-                    }
-
-                    conn.Close();
                 }
             }
         }
@@ -819,48 +782,42 @@ namespace KIS.App_Code
                 if (this.RepartoID != -1)
                 {
                     Char cValue = value ? '1' : '0';
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = @repartoID";
-                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                    bool CreateOrUpdate = false;
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        CreateOrUpdate = true;
-                    }
-                    else
-                    {
-                        CreateOrUpdate = false;
-                    }
-                    rdr.Close();
+                        conn.Open();
+                        String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = @repartoID", new { @repartoID = this.RepartoID });
+                        bool CreateOrUpdate = false;
+                        if (valore != null)
+                        {
+                            CreateOrUpdate = true;
+                        }
+                        else
+                        {
+                            CreateOrUpdate = false;
+                        }
 
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.Parameters.AddWithValue("@cValue", cValue.ToString());
-                    if (CreateOrUpdate)
-                    {
-// Update
-                    cmd.CommandText = "UPDATE configurazione SET valore =@cValue WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowActiveUsers' AND ID = @repartoID";
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                if (CreateOrUpdate)
+                                {
+                                    // Update
+                                    conn.Execute("UPDATE configurazione SET valore =@cValue WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowActiveUsers' AND ID = @repartoID", new { @cValue = cValue.ToString(), @repartoID = this.RepartoID }, tr);
+                                }
+                                else
+                                {
+                                    // Create
+                                    conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ShowActiveUsers', @cValue)", new { @cValue = cValue.ToString(), @repartoID = this.RepartoID }, tr);
+                                }
+                                tr.Commit();
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    else
-                    {
-                        // Create
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ShowActiveUsers', @cValue)";
-                    }
-
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-
-                    conn.Close();
                 }
             }
         }
@@ -874,48 +831,42 @@ namespace KIS.App_Code
                 if (this.RepartoID != -1)
                 {
                     Char cValue = value ? '1' : '0';
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = @repartoID";
-                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                    bool CreateOrUpdate = false;
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        CreateOrUpdate = true;
-                    }
-                    else
-                    {
-                        CreateOrUpdate = false;
-                    }
-                    rdr.Close();
+                        conn.Open();
+                        String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = @repartoID", new { @repartoID = this.RepartoID });
+                        bool CreateOrUpdate = false;
+                        if (valore != null)
+                        {
+                            CreateOrUpdate = true;
+                        }
+                        else
+                        {
+                            CreateOrUpdate = false;
+                        }
 
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.Parameters.AddWithValue("@cValue", cValue.ToString());
-                    if (CreateOrUpdate)
-                    {
-                        // Update
-                        cmd.CommandText = "UPDATE configurazione SET valore =@cValue WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowProductionIndicator' AND ID = @repartoID";
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                if (CreateOrUpdate)
+                                {
+                                    // Update
+                                    conn.Execute("UPDATE configurazione SET valore =@cValue WHERE Sezione = 'Andon Reparto' AND parametro = 'ShowProductionIndicator' AND ID = @repartoID", new { @cValue = cValue.ToString(), @repartoID = this.RepartoID }, tr);
+                                }
+                                else
+                                {
+                                    // Create
+                                    conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ShowProductionIndicator', @cValue)", new { @cValue = cValue.ToString(), @repartoID = this.RepartoID }, tr);
+                                }
+                                tr.Commit();
+                            }
+                            catch
+                            {
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    else
-                    {
-                        // Create
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ShowProductionIndicator', @cValue)";
-                    }
-
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch
-                    {
-                        tr.Rollback();
-                    }
-
-                    conn.Close();
                 }
             }
         }
@@ -931,47 +882,43 @@ namespace KIS.App_Code
         {
             if(this.RepartoID!=-1)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = @repartoID";
-            cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this.log = rdr.GetString(0);
-                String val = rdr.GetString(0);
-                if (val[0] == '0')
+                conn.Open();
+                String val = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = @repartoID", new { @repartoID = this.RepartoID });
+                if (val != null)
                 {
-                    this.ScrollType = 0;
-                    this.ContinuousScrollGoSpeed = 0.0;
-                    this.ContinuousScrollBackSpeed = 0.0;
-                }
-                else if (val[0] == '1')
-                {
-                    var valArr = val.Split(';');
-                    try
-                    {
-                        this.ScrollType = 1;
-                        this.ContinuousScrollGoSpeed = Double.Parse(valArr[1]);
-                        this.ContinuousScrollBackSpeed = Double.Parse(valArr[2]);
-                    }
-                    catch
+                    this.log = val;
+                    if (val[0] == '0')
                     {
                         this.ScrollType = 0;
                         this.ContinuousScrollGoSpeed = 0.0;
                         this.ContinuousScrollBackSpeed = 0.0;
                     }
+                    else if (val[0] == '1')
+                    {
+                        var valArr = val.Split(';');
+                        try
+                        {
+                            this.ScrollType = 1;
+                            this.ContinuousScrollGoSpeed = Double.Parse(valArr[1]);
+                            this.ContinuousScrollBackSpeed = Double.Parse(valArr[2]);
+                        }
+                        catch
+                        {
+                            this.ScrollType = 0;
+                            this.ContinuousScrollGoSpeed = 0.0;
+                            this.ContinuousScrollBackSpeed = 0.0;
+                        }
+                    }
+                }
+                else
+                {
+                    this.ScrollType = 0;
+                    this.ContinuousScrollGoSpeed = 0.0;
+                    this.ContinuousScrollBackSpeed = 0.0;
                 }
             }
-            else
-            {
-                this.ScrollType = 0;
-                this.ContinuousScrollGoSpeed = 0.0;
-                this.ContinuousScrollBackSpeed = 0.0;
-            }
-            rdr.Close();
-            conn.Close();
             }
         }
 
@@ -983,55 +930,49 @@ namespace KIS.App_Code
             int ret = 0;
             if(this.RepartoID!=-1)
             { 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = @repartoID";
-            cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-            bool CreateOrUpdate = false;
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                CreateOrUpdate = true;
-            }
-            else
-            {
-                CreateOrUpdate = false;
-            }
-            rdr.Close();
+                conn.Open();
+                String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ScrollType' AND ID = @repartoID", new { @repartoID = this.RepartoID });
+                bool CreateOrUpdate = false;
+                if (valore != null)
+                {
+                    CreateOrUpdate = true;
+                }
+                else
+                {
+                    CreateOrUpdate = false;
+                }
 
-            MySqlTransaction tr = conn.BeginTransaction();
-            cmd.Transaction = tr;
-            String val = "0";
-            if (ScrollType > 0)
-            {
-                val = ScrollType.ToString() + ";" + Params;
+                using (var tr = conn.BeginTransaction())
+                {
+                    String val = "0";
+                    if (ScrollType > 0)
+                    {
+                        val = ScrollType.ToString() + ";" + Params;
+                    }
+                    try
+                    {
+                        if (CreateOrUpdate)
+                        {
+                            // Update
+                            conn.Execute("UPDATE configurazione SET valore =@val WHERE Sezione = 'Andon Reparto' AND parametro = 'ScrollType' AND ID = @repartoID", new { @val = val, @repartoID = this.RepartoID }, tr);
+                        }
+                        else
+                        {
+                            // Create
+                            conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ScrollType', @val)", new { @val = val, @repartoID = this.RepartoID }, tr);
+                        }
+                        tr.Commit();
+                        ret = 1;
+                    }
+                    catch
+                    {
+                        tr.Rollback();
+                        ret = 0;
+                    }
+                }
             }
-            cmd.Parameters.AddWithValue("@val", val);
-            if (CreateOrUpdate)
-            {
-                // Update
-                cmd.CommandText = "UPDATE configurazione SET valore =@val WHERE Sezione = 'Andon Reparto' AND parametro = 'ScrollType' AND ID = @repartoID";
-            }
-            else
-            {
-                // Create
-                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Andon Reparto', @repartoID, 'ScrollType', @val)";
-            }
-
-            try
-            {
-                cmd.ExecuteNonQuery();
-                tr.Commit();
-                ret = 1;
-            }
-            catch
-            {
-                tr.Rollback();
-                ret = 0;
-            }
-
-            conn.Close();
             }
             return ret;
         }
@@ -1042,34 +983,31 @@ namespace KIS.App_Code
             if (this.RepartoID != -1)
             {
                 Dictionary<String, int> swap = new Dictionary<string, int>();
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
-                    + " AND ID = @repartoID"
-                    + " ORDER BY valore";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String field = rdr.GetString(0);
-                    String sOrdine = rdr.GetString(1);
-                    int ord = -1;
-                    try
+                    conn.Open();
+                    var rows = conn.Query<ConfigurazioneValoreRow>("SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFields' "
+                        + " AND ID = @repartoID"
+                        + " ORDER BY valore", new { @repartoID = this.RepartoID });
+                    foreach (var r in rows)
                     {
-                        ord = Int32.Parse(sOrdine);
+                        String field = r.Parametro;
+                        String sOrdine = r.Valore;
+                        int ord = -1;
+                        try
+                        {
+                            ord = Int32.Parse(sOrdine);
+                        }
+                        catch (Exception ex)
+                        {
+                            ord = 0;
+                            log = ex.Message;
+                        }
+                        swap.Add(field, ord);
                     }
-                    catch (Exception ex)
-                    {
-                        ord = 0;
-                        log = ex.Message;
-                    }
-                    swap.Add(field, ord);
                 }
 
                 this._CampiVisualizzati = swap.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -1081,34 +1019,30 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzati();
                 int prog = this.CampiVisualizzati.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                    + "'Andon ViewFields',"
-                    + "@repartoID, "
-                    + "@field, "
-                    + "@prog"
-                    + ")";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@field", field);
-                cmd.Parameters.AddWithValue("@prog", prog.ToString());
-
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                                + "'Andon ViewFields',"
+                                + "@repartoID, "
+                                + "@field, "
+                                + "@prog"
+                                + ")", new { @repartoID = this.RepartoID, @field = field, @prog = prog.ToString() }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = false;
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    ret = false;
-                    log = ex.Message;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -1121,40 +1055,38 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzati();
                 int prog = this.CampiVisualizzati.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM configurazione WHERE "
-                + "Sezione='Andon ViewFields'"
-                + " AND ID=@repartoID"
-                + " AND parametro = @field";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@field", field);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
-                }
-                catch (Exception ex)
-                {
-                    ret = false;
-                    log = ex.Message;
-                    tr.Rollback();
-                }
-                if (ret == true)
-                {
-                    this.loadCampiVisualizzati();
-                    int i = 0;
-                    foreach (KeyValuePair<string, int> pair in this.CampiVisualizzati)
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
                     {
-                        this.setOrdineCampoVisualizzato(pair.Key, i);
-                        i++;
+                        try
+                        {
+                            conn.Execute("DELETE FROM configurazione WHERE "
+                                + "Sezione='Andon ViewFields'"
+                                + " AND ID=@repartoID"
+                                + " AND parametro = @field", new { @repartoID = this.RepartoID, @field = field }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = false;
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
+                    if (ret == true)
+                    {
+                        this.loadCampiVisualizzati();
+                        int i = 0;
+                        foreach (KeyValuePair<string, int> pair in this.CampiVisualizzati)
+                        {
+                            this.setOrdineCampoVisualizzato(pair.Key, i);
+                            i++;
+                        }
                     }
                 }
-                conn.Close();
             }
             return ret;
         }
@@ -1167,30 +1099,27 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzati();
                 int prog = this.CampiVisualizzati.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
-                    + " WHERE Sezione='Andon ViewFields' AND ID=@repartoID"
-                    + " AND parametro=@field";
-                cmd.Parameters.AddWithValue("@ordine", ordine);
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@field", field);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("UPDATE configurazione SET valore = @ordine"
+                                + " WHERE Sezione='Andon ViewFields' AND ID=@repartoID"
+                                + " AND parametro=@field", new { @ordine = ordine, @repartoID = this.RepartoID, @field = field }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = false;
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    ret = false;
-                    log = ex.Message;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -1201,34 +1130,31 @@ namespace KIS.App_Code
             if (this.RepartoID != -1)
             {
                 Dictionary<String, int> swap = new Dictionary<string, int>();
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
-                    + " AND ID = @repartoID"
-                    + " ORDER BY valore";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String field = rdr.GetString(0);
-                    String sOrdine = rdr.GetString(1);
-                    int ord = -1;
-                    try
+                    conn.Open();
+                    var rows = conn.Query<ConfigurazioneValoreRow>("SELECT parametro, valore FROM configurazione WHERE Sezione LIKE 'Andon ViewFieldsTasks' "
+                        + " AND ID = @repartoID"
+                        + " ORDER BY valore", new { @repartoID = this.RepartoID });
+                    foreach (var r in rows)
                     {
-                        ord = Int32.Parse(sOrdine);
+                        String field = r.Parametro;
+                        String sOrdine = r.Valore;
+                        int ord = -1;
+                        try
+                        {
+                            ord = Int32.Parse(sOrdine);
+                        }
+                        catch (Exception ex)
+                        {
+                            ord = 0;
+                            log = ex.Message;
+                        }
+                        swap.Add(field, ord);
                     }
-                    catch (Exception ex)
-                    {
-                        ord = 0;
-                        log = ex.Message;
-                    }
-                    swap.Add(field, ord);
                 }
 
                 this._CampiVisualizzatiTasks = swap.OrderBy(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -1240,34 +1166,30 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzatiTasks();
                 int prog = this.CampiVisualizzatiTasks.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
-                    + "'Andon ViewFieldsTasks',"
-                    + "@repartoID, "
-                    + "@field, "
-                    + "@prog"
-                    + ")";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@field", field);
-                cmd.Parameters.AddWithValue("@prog", prog.ToString());
-
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES("
+                                + "'Andon ViewFieldsTasks',"
+                                + "@repartoID, "
+                                + "@field, "
+                                + "@prog"
+                                + ")", new { @repartoID = this.RepartoID, @field = field, @prog = prog.ToString() }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = false;
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    ret = false;
-                    log = ex.Message;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -1280,40 +1202,38 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzatiTasks();
                 int prog = this.CampiVisualizzatiTasks.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM configurazione WHERE "
-                + "Sezione='Andon ViewFieldsTasks'"
-                + " AND ID=@repartoID"
-                + " AND parametro = @field";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@field", field);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
-                }
-                catch (Exception ex)
-                {
-                    ret = false;
-                    log = ex.Message;
-                    tr.Rollback();
-                }
-                if (ret == true)
-                {
-                    this.loadCampiVisualizzatiTasks();
-                    int i = 0;
-                    foreach (KeyValuePair<string, int> pair in this.CampiVisualizzatiTasks)
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
                     {
-                        this.setOrdineCampoVisualizzatoTasks(pair.Key, i);
-                        i++;
+                        try
+                        {
+                            conn.Execute("DELETE FROM configurazione WHERE "
+                                + "Sezione='Andon ViewFieldsTasks'"
+                                + " AND ID=@repartoID"
+                                + " AND parametro = @field", new { @repartoID = this.RepartoID, @field = field }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = false;
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
+                    if (ret == true)
+                    {
+                        this.loadCampiVisualizzatiTasks();
+                        int i = 0;
+                        foreach (KeyValuePair<string, int> pair in this.CampiVisualizzatiTasks)
+                        {
+                            this.setOrdineCampoVisualizzatoTasks(pair.Key, i);
+                            i++;
+                        }
                     }
                 }
-                conn.Close();
             }
             return ret;
         }
@@ -1326,29 +1246,26 @@ namespace KIS.App_Code
                 this.loadCampiVisualizzatiTasks();
                 int prog = this.CampiVisualizzatiTasks.Count;
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "UPDATE configurazione SET valore = @ordine"
-                    + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=@repartoID AND parametro=@field";
-                cmd.Parameters.AddWithValue("@ordine", ordine);
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@field", field);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = true;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("UPDATE configurazione SET valore = @ordine"
+                                + " WHERE Sezione='Andon ViewFieldsTasks' AND ID=@repartoID AND parametro=@field", new { @ordine = ordine, @repartoID = this.RepartoID, @field = field }, tr);
+                            tr.Commit();
+                            ret = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = false;
+                            log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    ret = false;
-                    log = ex.Message;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -1358,32 +1275,27 @@ namespace KIS.App_Code
             this._ShowActiveUsers = false;
             if (this.RepartoID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = @repartoID";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String sVal = rdr.GetString(0);
-                    if (sVal == "1")
+                    conn.Open();
+                    String sVal = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowActiveUsers' AND ID = @repartoID", new { @repartoID = this.RepartoID });
+
+                    if (sVal != null)
                     {
-                        this._ShowActiveUsers = true;
+                        if (sVal == "1")
+                        {
+                            this._ShowActiveUsers = true;
+                        }
+                        else
+                        {
+                            this._ShowActiveUsers = false;
+                        }
                     }
                     else
                     {
                         this._ShowActiveUsers = false;
                     }
                 }
-
-                else
-                {
-                    this._ShowActiveUsers = false;
-                }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -1392,31 +1304,27 @@ namespace KIS.App_Code
             this._ShowActiveUsers = false;
             if (this.RepartoID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = @repartoID";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String sVal = rdr.GetString(0);
-                    if (sVal == "1")
+                    conn.Open();
+                    String sVal = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione LIKE 'Andon Reparto' AND parametro LIKE 'ShowProductionIndicator' AND ID = @repartoID", new { @repartoID = this.RepartoID });
+                    if (sVal != null)
                     {
-                        this._ShowProductionIndicator = true;
+                        if (sVal == "1")
+                        {
+                            this._ShowProductionIndicator = true;
+                        }
+                        else
+                        {
+                            this._ShowProductionIndicator = false;
+                        }
                     }
+
                     else
                     {
                         this._ShowProductionIndicator = false;
                     }
                 }
-
-                else
-                {
-                    this._ShowProductionIndicator = false;
-                }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -1434,15 +1342,57 @@ namespace KIS.App_Code
             }
         }
         */
+        private class DepartmentAndonFullRow
+        {
+            public int SalesOrderID { get; set; }
+            public int SalesOrderYear { get; set; }
+            public String OrderExternalID { get; set; }
+            public String CustomerID { get; set; }
+            public String CustomerName { get; set; }
+            public DateTime SalesOrderDate { get; set; }
+            public String SalesOrderNotes { get; set; }
+            public String ProductExternalID { get; set; }
+            public int ProductionOrderID { get; set; }
+            public int ProductionOrderYear { get; set; }
+            public String ProductionOrderSerialNumber { get; set; }
+            public Char ProductionOrderStatus { get; set; }
+            public int? ProductionOrderDepartmentID { get; set; }
+            public DateTime ProductionOrderDeliveryDate { get; set; }
+            public DateTime ProductionOrderEndProductionDate { get; set; }
+            public double ProductionOrderQuantityOrdered { get; set; }
+            public double ProductionOrderQuantityProduced { get; set; }
+            public String MeasurementUnit { get; set; }
+            public String ProductTypeName { get; set; }
+            public String ProductName { get; set; }
+            public TimeSpan ProductRealWorkingTime { get; set; }
+            public TimeSpan ProductRealDelay { get; set; }
+            public int DepartmentID { get; set; }
+            public String DepartmentName { get; set; }
+            public int TaskID { get; set; }
+            public String TaskName { get; set; }
+            public String TaskDescription { get; set; }
+            public DateTime TaskEarlyStart { get; set; }
+            public DateTime TaskLateStart { get; set; }
+            public DateTime TaskEarlyFinish { get; set; }
+            public DateTime TaskLateFinish { get; set; }
+            public Char TaskStatus { get; set; }
+            public int TaskNumOperators { get; set; }
+            public double TaskQuantityOrdered { get; set; }
+            public double TaskQuantityProduced { get; set; }
+            public TimeSpan TaskCycleTimePlanned { get; set; }
+            public String WorkstationName { get; set; }
+            public String TaskUser { get; set; }
+        }
+
         public void loadWIP2()
         {
             this.WIP = new List<DepartmentAndonProductsStruct>();
             if (this.RepartoID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT "
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
+                {
+                    conn.Open();
+                    string sql = "SELECT "
 + "commesse.idcommesse AS SalesOrderID,"                        //0
 + "commesse.anno AS SalesOrderYear,"
 + "commesse.ExternalID AS OrderExternalID,"                     //2
@@ -1525,67 +1475,66 @@ namespace KIS.App_Code
  + " WHERE productionplan.status <> 'F' AND productionplan.status <> 'N' AND reparti.idreparto = @repartoID"
  + " order by productionplan.dataPrevistaFineProduzione";
 
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
+                var rows = conn.Query<DepartmentAndonFullRow>(sql, new { @repartoID = this.RepartoID });
                 List<DepartmentAndonFullStruct> fullList = new List<DepartmentAndonFullStruct>();
 
-                while(rdr.Read())
+                foreach (var r in rows)
                 {
                     DepartmentAndonFullStruct curr = new DepartmentAndonFullStruct();
-                    curr.CommessaID = rdr.GetInt32(0);
-                    curr.SalesOrderYear = rdr.GetInt32(1);
-                    curr.OrderExternalID = rdr.GetString(2);
-                    curr.CommessaCodiceCliente = rdr.GetString(3);
-                    curr.CommessaRagioneSocialeCliente = rdr.GetString(4);
-                    curr.CommessaDataInserimento = rdr.GetDateTime(5);
-                    if (!rdr.IsDBNull(6))
+                    curr.CommessaID = r.SalesOrderID;
+                    curr.SalesOrderYear = r.SalesOrderYear;
+                    curr.OrderExternalID = r.OrderExternalID;
+                    curr.CommessaCodiceCliente = r.CustomerID;
+                    curr.CommessaRagioneSocialeCliente = r.CustomerName;
+                    curr.CommessaDataInserimento = r.SalesOrderDate;
+                    if (r.SalesOrderNotes != null)
                     { 
-                        curr.CommessaNote = rdr.GetString(6);
+                        curr.CommessaNote = r.SalesOrderNotes;
                     }
-                    if (!rdr.IsDBNull(7))
+                    if (r.ProductExternalID != null)
                     { 
-                        curr.ProductExternalID = rdr.GetString(7);
+                        curr.ProductExternalID = r.ProductExternalID;
                     }
-                    curr.ProdottoID = rdr.GetInt32(8);
-                    curr.ProdottoYear = rdr.GetInt32(9);
-                    if(!rdr.IsDBNull(13))
+                    curr.ProdottoID = r.ProductionOrderID;
+                    curr.ProdottoYear = r.ProductionOrderYear;
+                    if(r.ProductionOrderSerialNumber != null)
                     { 
-                    curr.ProdottoMatricola = rdr.GetString(13);
+                    curr.ProdottoMatricola = r.ProductionOrderSerialNumber;
                     }
-                    curr.ProdottoStatus = rdr.GetChar(14);
-                    if(!rdr.IsDBNull(15))
+                    curr.ProdottoStatus = r.ProductionOrderStatus;
+                    if(r.ProductionOrderDepartmentID.HasValue)
                     { 
-                        curr.DepartmentID = rdr.GetInt32(15);
+                        curr.DepartmentID = r.ProductionOrderDepartmentID.Value;
                     }
-                    curr.Reparto = rdr.GetString(34);
-                    curr.DataPrevistaConsegna = rdr.GetDateTime(17);
-                    curr.DataPrevistaFineProduzione = rdr.GetDateTime(18);
-                    curr.ProdottoQuantita = rdr.GetDouble(20);
-                    curr.ProdottoQuantitaRealizzata = rdr.GetDouble(21);
-                    curr.MeasurementUnit = rdr.GetString(23);
-                    curr.ProdottoLineaProdotto = rdr.GetString(27);
-                    curr.ProdottoNomeProdotto = rdr.GetString(31);
-                    curr.ProdottoRitardo = rdr.GetTimeSpan(40);
-                    curr.ProdottoTempodiLavoroTotale = rdr.GetTimeSpan(39);
+                    curr.Reparto = r.DepartmentName;
+                    curr.DataPrevistaConsegna = r.ProductionOrderDeliveryDate;
+                    curr.DataPrevistaFineProduzione = r.ProductionOrderEndProductionDate;
+                    curr.ProdottoQuantita = r.ProductionOrderQuantityOrdered;
+                    curr.ProdottoQuantitaRealizzata = r.ProductionOrderQuantityProduced;
+                    curr.MeasurementUnit = r.MeasurementUnit;
+                    curr.ProdottoLineaProdotto = r.ProductTypeName;
+                    curr.ProdottoNomeProdotto = r.ProductName;
+                    curr.ProdottoRitardo = r.ProductRealDelay;
+                    curr.ProdottoTempodiLavoroTotale = r.ProductRealWorkingTime;
 
-                    curr.DepartmentID = rdr.GetInt32(33);
-                    curr.Reparto = rdr.GetString(34);
-                    curr.TaskID = rdr.GetInt32(42);
-                    curr.TaskNome = rdr.GetString(43);
-                    curr.TaskDescrizione = rdr.GetString(44);
-                    curr.TaskEarlyStart = rdr.GetDateTime(45);
-                    curr.TaskLateStart = rdr.GetDateTime(46);
-                    curr.TaskEarlyFinish = rdr.GetDateTime(47);
-                    curr.TaskLateFinish = rdr.GetDateTime(48);
-                    curr.TaskStatus = rdr.GetChar(49);
-                    curr.TaskNumeroOperatori = rdr.GetInt32(50);
-                    curr.TaskQuantitaPrevista = rdr.GetDouble(51);
-                    curr.TaskQuantitaProdotta = rdr.GetDouble(52);
-                    curr.TaskTempoCiclo = rdr.GetTimeSpan(54);
-                    curr.TaskPostazione = rdr.GetString(57);
-                    if (!rdr.IsDBNull(66))
+                    curr.DepartmentID = r.DepartmentID;
+                    curr.Reparto = r.DepartmentName;
+                    curr.TaskID = r.TaskID;
+                    curr.TaskNome = r.TaskName;
+                    curr.TaskDescrizione = r.TaskDescription;
+                    curr.TaskEarlyStart = r.TaskEarlyStart;
+                    curr.TaskLateStart = r.TaskLateStart;
+                    curr.TaskEarlyFinish = r.TaskEarlyFinish;
+                    curr.TaskLateFinish = r.TaskLateFinish;
+                    curr.TaskStatus = r.TaskStatus;
+                    curr.TaskNumeroOperatori = r.TaskNumOperators;
+                    curr.TaskQuantitaPrevista = r.TaskQuantityOrdered;
+                    curr.TaskQuantitaProdotta = r.TaskQuantityProduced;
+                    curr.TaskTempoCiclo = r.TaskCycleTimePlanned;
+                    curr.TaskPostazione = r.WorkstationName;
+                    if (r.TaskUser != null)
                     { 
-                    curr.AssignedUser = rdr.GetString(66);
+                    curr.AssignedUser = r.TaskUser;
                     }
 
                     /*
@@ -1691,8 +1640,7 @@ namespace KIS.App_Code
 
                     this.WIP.Add(currProd);
                 }
-
-                conn.Close();
+            }
             }
 
         }
@@ -1710,24 +1658,19 @@ namespace KIS.App_Code
                 char ret = '0';
                 if (this.RepartoID!=-1)
                 { 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-                    + "AND ID = @repartoID AND parametro LIKE 'Andon FormatoUsername'";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    String valore = rdr.GetString(0);
-                    if (valore.Length > 0)
+                    conn.Open();
+                    String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                        + "AND ID = @repartoID AND parametro LIKE 'Andon FormatoUsername'", new { @repartoID = this.RepartoID });
+                    if (valore != null)
                     {
-                        ret = valore[0];
+                        if (valore.Length > 0)
+                        {
+                            ret = valore[0];
+                        }
                     }
                 }
-                rdr.Close();
-
-                conn.Close();
                 }
                 return ret;
             }
@@ -1736,51 +1679,45 @@ namespace KIS.App_Code
                 if (this.RepartoID != -1)
                 {
                     // Verifico che sia presente la configurazione
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
-    + "AND ID = @repartoID AND parametro LIKE 'Andon FormatoUsername'";
-                    cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    bool add = false;
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        add = false;
-                    }
-                    else
-                    {
-                        add = true;
-                    }
-                    rdr.Close();
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            String valore = conn.QueryFirstOrDefault<String>("SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
+                                + "AND ID = @repartoID AND parametro LIKE 'Andon FormatoUsername'", new { @repartoID = this.RepartoID });
+                            bool add = false;
+                            if (valore != null)
+                            {
+                                add = false;
+                            }
+                            else
+                            {
+                                add = true;
+                            }
 
-                    cmd.Transaction = tr;
-                    cmd.Parameters.AddWithValue("@value", value.ToString());
-                    if (add == true)
-                    {
-                        cmd.CommandText = "INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
-                            + "@repartoID, 'Andon FormatoUsername', @value)";
+                            try
+                            {
+                                if (add == true)
+                                {
+                                    conn.Execute("INSERT INTO configurazione(Sezione, ID, parametro, valore) VALUES('Reparto', "
+                                        + "@repartoID, 'Andon FormatoUsername', @value)", new { @repartoID = this.RepartoID, @value = value.ToString() }, tr);
+                                }
+                                else
+                                {
+                                    conn.Execute("UPDATE configurazione SET valore = @value WHERE "
+                                        + " Sezione = 'Reparto' AND ID = @repartoID" +
+                                        " AND parametro LIKE 'Andon FormatoUsername'", new { @value = value.ToString(), @repartoID = this.RepartoID }, tr);
+                                }
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                log = ex.Message;
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    else
-                    {
-                        cmd.CommandText = "UPDATE configurazione SET valore = @value WHERE "
-                        + " Sezione = 'Reparto' AND ID = @repartoID" +
-                        " AND parametro LIKE 'Andon FormatoUsername'";
-                    }
-
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        log = ex.Message;
-                        tr.Rollback();
-                    }
-
-                    rdr.Close();
                 }
             }
         }
@@ -1810,19 +1747,16 @@ cmd.CommandText = "SELECT valore FROM configurazione WHERE Sezione = 'Reparto' "
             int ret = 0;
             if(this.RepartoID!=-1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT COUNT(id) FROM productionplan WHERE (status = 'I' OR status='P') AND reparto = @repartoID"
-                    +" AND dataPrevistaFineProduzione <= @endDate";
-                cmd.Parameters.AddWithValue("@repartoID", this.RepartoID);
-                cmd.Parameters.AddWithValue("@endDate", endDate.ToString("yyyy-MM-dd HH:mm:ss"));
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if(rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    ret = rdr.GetInt32(0);
+                    conn.Open();
+                    int? count = conn.QueryFirstOrDefault<int?>("SELECT COUNT(id) FROM productionplan WHERE (status = 'I' OR status='P') AND reparto = @repartoID"
+                        + " AND dataPrevistaFineProduzione <= @endDate", new { @repartoID = this.RepartoID, @endDate = endDate.ToString("yyyy-MM-dd HH:mm:ss") });
+                    if (count.HasValue)
+                    {
+                        ret = count.Value;
+                    }
                 }
-                conn.Close();
             }
             return ret;
         }

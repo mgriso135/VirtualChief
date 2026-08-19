@@ -58,17 +58,17 @@
       <div class="accordion-inner">
           <asp:label runat="server" id="lblMedia" meta:resourcekey="lblMedia" />:&nbsp;<asp:Label runat="server" ID="lblMediaTempoDiLavoro" />
         <br />
-            <asp:Chart runat="server" ID="chartTempiLavoro" Width="600">
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
+            
+                
+                    
+                    
                 </ChartAreas>
                 <Series>
                     <asp:Series Name="tempi" ChartType="Line">
 
                     </asp:Series>
                 </Series>
-            </asp:Chart>
+            
           <br />
           <asp:Repeater runat="server" ID="rptTempiLavoro">
               <HeaderTemplate><table class="table table-condensed table-striped table-hover">
@@ -108,17 +108,17 @@
       <div class="accordion-inner">
           
            <asp:label runat="server" id="lblMedia2" meta:resourcekey="lblMedia" />:&nbsp;<asp:Label runat="server" ID="lblMediaTempiCiclo" /><br />
-            <asp:Chart runat="server" ID="chartTempiCiclo" Width="600">
-                <ChartAreas>
-                    <asp:ChartArea Name="ChartArea1">
-                    </asp:ChartArea>
+            
+                
+                    
+                    
                 </ChartAreas>
                 <Series>
                     <asp:Series Name="TempiCiclo" ChartType="Line">
 
                     </asp:Series>
                 </Series>
-            </asp:Chart>
+            
           <br />
           <asp:Repeater runat="server" ID="rptTempiCiclo">
               <HeaderTemplate><table class="table table-condensed table-striped table-hover">

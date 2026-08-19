@@ -29,11 +29,11 @@
             </table>
     
     
-    <asp:Chart runat="server" ID="crt" Width="1000px" Height="160px">
-    <ChartAreas>
-    <asp:ChartArea Name="turni"></asp:ChartArea>
+    
+    
+    
   </ChartAreas>    
-        </asp:Chart>
+        
     <br />
     <asp:Label runat="server" ID="log" />
 </asp:Content>

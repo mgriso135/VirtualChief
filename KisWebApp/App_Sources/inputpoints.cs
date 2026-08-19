@@ -31,21 +31,18 @@ namespace KIS.App_Sources
         {
             if (this.Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT id FROM inputpoints";
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    InputPoint currip = new InputPoint(this.Tenant, rdr.GetInt32(0));
-                    if(currip!=null && currip.id>=0)
+                    var ids = conn.Query<int>("SELECT id FROM inputpoints");
+                    foreach (int id in ids)
                     {
-                        this.list.Add(currip);
+                        InputPoint currip = new InputPoint(this.Tenant, id);
+                        if(currip!=null && currip.id>=0)
+                        {
+                            this.list.Add(currip);
+                        }
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -59,37 +56,29 @@ namespace KIS.App_Sources
             int ret = -1;
             if(name.Length > 0 && this.Tenant.Length > 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "INSERT INTO inputpoints(name, description, creator) VALUES(@name, @description, @creator)";
-                cmd.Parameters.AddWithValue("@name", name);
-                cmd.Parameters.AddWithValue("@description", description);
-                cmd.Parameters.AddWithValue("@creator", creator);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = 1;
-                }
-                catch(Exception ex)
-                {
-                    this.log = ex.Message;
-                    tr.Rollback();
-                }
-                if(ret == 1)
-                {
-                    cmd.CommandText = "SELECT LAST_INSERT_ID()";
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if(rdr.Read())
-                    { 
-                        ret = rdr.GetInt32(0);
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("INSERT INTO inputpoints(name, description, creator) VALUES(@name, @description, @creator)",
+                                new { @name = name, @description = description, @creator = creator }, tr);
+                            tr.Commit();
+                            ret = 1;
+                        }
+                        catch(Exception ex)
+                        {
+                            this.log = ex.Message;
+                            tr.Rollback();
+                        }
                     }
-                    rdr.Close();
+                    if(ret == 1)
+                    {
+                        ret = conn.QueryFirstOrDefault<int>("SELECT LAST_INSERT_ID()");
+                    }
                 }
-                conn.Close();
             }
             else
             {
@@ -410,27 +399,26 @@ namespace KIS.App_Sources
 
                 if (!found)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    cmd.CommandText = "INSERT INTO inputpoints_workstations(inputpointid, workstationid) VALUES(@ipid, @wstid)";
-                    cmd.Parameters.AddWithValue("@ipid", this.id);
-                    cmd.Parameters.AddWithValue("@wstid", wst.id);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        tr.Commit();
-                        ret = 1;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("INSERT INTO inputpoints_workstations(inputpointid, workstationid) VALUES(@ipid, @wstid)",
+                                    new { @ipid = this.id, @wstid = wst.id }, tr);
+                                tr.Commit();
+                                ret = 1;
+                            }
+                            catch (Exception ex)
+                            {
+                                this.log = ex.Message;
+                                tr.Rollback();
+                                ret = 3;
+                            }
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                        tr.Rollback();
-                        ret = 3;
-                    }
-                    conn.Close();
                 }
                 else
                 {
@@ -460,29 +448,26 @@ namespace KIS.App_Sources
             int ret = 0;
             if (this.id >= 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT measurementid, taskid FROM "
-                    + " (SELECT DISTINCT(CONCAT(freemeasurements_tasks.measurementid, '_', freemeasurements_tasks.taskid)), freemeasurements_tasks.measurementid AS measurementid, freemeasurements_tasks.taskid AS taskid, "
-                    + " freemeasurements_tasks_events.eventtype FROM freemeasurements_tasks "
-                    + " INNER JOIN freemeasurements_tasks_events ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND "
-                    + " freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
-                    + " INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
-                    + " WHERE freemeasurements_tasks.status = 'I' "
-                    + " AND freemeasurements_tasks_events.inputpoint = @inputpoint "
-                    + " AND freemeasurements.departmentid = @deptid "
-                    + " ORDER BY freemeasurements_tasks_events.eventdate)  runningtasks "
-                    + " WHERE runningtasks.eventtype <> 'F' AND runningtasks.eventtype <> 'P'";
-                cmd.Parameters.AddWithValue("@inputpoint", this.id.ToString());
-                cmd.Parameters.AddWithValue("@deptid", dept.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    var rows = conn.Query<(int measurementid, int taskid)>(
+                        "SELECT measurementid, taskid FROM "
+                        + " (SELECT DISTINCT(CONCAT(freemeasurements_tasks.measurementid, '_', freemeasurements_tasks.taskid)), freemeasurements_tasks.measurementid AS measurementid, freemeasurements_tasks.taskid AS taskid, "
+                        + " freemeasurements_tasks_events.eventtype FROM freemeasurements_tasks "
+                        + " INNER JOIN freemeasurements_tasks_events ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND "
+                        + " freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                        + " INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
+                        + " WHERE freemeasurements_tasks.status = 'I' "
+                        + " AND freemeasurements_tasks_events.inputpoint = @inputpoint "
+                        + " AND freemeasurements.departmentid = @deptid "
+                        + " ORDER BY freemeasurements_tasks_events.eventdate)  runningtasks "
+                        + " WHERE runningtasks.eventtype <> 'F' AND runningtasks.eventtype <> 'P'",
+                        new { @inputpoint = this.id.ToString(), @deptid = dept.id });
+                    foreach (var r in rows)
+                    {
+                        this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, r.measurementid, r.taskid));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -492,105 +477,100 @@ namespace KIS.App_Sources
             int ret = 0;
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT "
-                 + " freemeasurements.id, "
-                + " freemeasurements_tasks.taskid, "
-                 + "   freemeasurements_tasks.name AS TaskName, "
-                  + "   postazioni.name AS WorkstationName, "
-                 + "    freemeasurements_tasks.quantity_planned, "
-                 + "    measurementunits.type"
-                 + "        FROM"
-                 + "    (SELECT MAX(runningtasks.id) AS runningtasksid "
-                + " FROM "
-                + " (SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype,"
-                + " freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate, "
-                + " freemeasurements_tasks_events.inputpoint AS inputpoint "
-                 + "            FROM freemeasurements_tasks "
-                 + "             INNER JOIN freemeasurements_tasks_events "
-                    + "         ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
-                       + "      INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
-                  + "           WHERE 1=1 "
-               // + " AND freemeasurements_tasks.status = 'I' "
-               + "               AND freemeasurements_tasks_events.inputpoint = @inputpoint "
-               //               + "               AND freemeasurements.departmentid = 0 "
-               + "              ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks "
-               + "              GROUP BY runningtasks.taskid, runningtasks.measurementid, runningtasks.inputpoint) AS runningtasks2 "
-               + " INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON(freemeasurements_tasks_events2.id = runningtasks2.runningtasksid) "
-               + " INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid) "
-               + " inner join freemeasurements ON(freemeasurements.id = freemeasurements_tasks.MeasurementId) "
-               + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
-               + " LEFT JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) "
-                + " WHERE eventtype = 'I'";
-
-                cmd.Parameters.AddWithValue("@inputpoint", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    var rows = conn.Query<(int measurementid, int taskid)>(
+                        "SELECT "
+                         + " freemeasurements.id, "
+                        + " freemeasurements_tasks.taskid, "
+                         + "   freemeasurements_tasks.name AS TaskName, "
+                          + "   postazioni.name AS WorkstationName, "
+                         + "    freemeasurements_tasks.quantity_planned, "
+                         + "    measurementunits.type"
+                         + "        FROM"
+                         + "    (SELECT MAX(runningtasks.id) AS runningtasksid "
+                        + " FROM "
+                        + " (SELECT freemeasurements_tasks_events.id, freemeasurements_tasks_events.eventtype,"
+                        + " freemeasurements_tasks.measurementid, freemeasurements_tasks.taskid, freemeasurements_tasks_events.eventdate, "
+                        + " freemeasurements_tasks_events.inputpoint AS inputpoint "
+                         + "            FROM freemeasurements_tasks "
+                         + "             INNER JOIN freemeasurements_tasks_events "
+                            + "         ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events.taskid) "
+                               + "      INNER JOIN freemeasurements ON(freemeasurements.id = freemeasurements_tasks.measurementid) "
+                          + "           WHERE 1=1 "
+                       // + " AND freemeasurements_tasks.status = 'I' "
+                       + "               AND freemeasurements_tasks_events.inputpoint = @inputpoint "
+                       //               + "               AND freemeasurements.departmentid = 0 "
+                       + "              ORDER BY freemeasurements_tasks_events.eventdate DESC) AS runningtasks "
+                       + "              GROUP BY runningtasks.taskid, runningtasks.measurementid, runningtasks.inputpoint) AS runningtasks2 "
+                       + " INNER JOIN freemeasurements_tasks_events AS freemeasurements_tasks_events2 ON(freemeasurements_tasks_events2.id = runningtasks2.runningtasksid) "
+                       + " INNER JOIN freemeasurements_tasks ON(freemeasurements_tasks.measurementid = freemeasurements_tasks_events2.freemeasurementid AND freemeasurements_tasks.taskid = freemeasurements_tasks_events2.taskid) "
+                       + " inner join freemeasurements ON(freemeasurements.id = freemeasurements_tasks.MeasurementId) "
+                       + " INNER JOIN measurementunits ON(measurementunits.id = freemeasurements.measurementUnit) "
+                       + " LEFT JOIN postazioni ON(postazioni.idpostazioni = freemeasurements_tasks.workstationid) "
+                        + " WHERE eventtype = 'I'",
+                        new { @inputpoint = this.id });
+                    foreach (var r in rows)
+                    {
+                        this.FreeMeasurementTasks.Add(new FreeMeasurement_Task(this.Tenant, r.measurementid, r.taskid));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
         public void loadTaskAvviati()
         {
             this._RunningTasks = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
-                + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' "
-                + " AND registroeventitaskproduzione.inputpoint=@ip ORDER BY registroeventitaskproduzione.data DESC";
-            cmd.Parameters.AddWithValue("@ip", this.id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            List<int> DaNonInserire = new List<int>();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                log += "Task: " + rdr.GetInt32(0).ToString() + " " + rdr.GetChar(1);
-                if (rdr.GetChar(1) == 'P' || rdr.GetChar(1) == 'F')
+                var rows = conn.Query<(int taskID, char evento)>(
+                    "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
+                    + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' "
+                    + " AND registroeventitaskproduzione.inputpoint=@ip ORDER BY registroeventitaskproduzione.data DESC",
+                    new { @ip = this.id });
+                List<int> DaNonInserire = new List<int>();
+                foreach (var r in rows)
                 {
-                    log += " da non inserire<br/>";
-                    DaNonInserire.Add(rdr.GetInt32(0));
-                }
-                else if (rdr.GetChar(1) == 'I')
-                {
-                    log += " da verificare --> ";
-                    // Verifico che non sia nella lista di quelli da non inserire, e nemmeno in quella dei già inseriti!
-                    bool checkN = false;
-                    bool checkI = false;
-                    for (int q = 0; q < DaNonInserire.Count; q++)
+                    log += "Task: " + r.taskID.ToString() + " " + r.evento;
+                    if (r.evento == 'P' || r.evento == 'F')
                     {
-                        if (DaNonInserire[q] == rdr.GetInt32(0))
+                        log += " da non inserire<br/>";
+                        DaNonInserire.Add(r.taskID);
+                    }
+                    else if (r.evento == 'I')
+                    {
+                        log += " da verificare --> ";
+                        // Verifico che non sia nella lista di quelli da non inserire, e nemmeno in quella dei già inseriti!
+                        bool checkN = false;
+                        bool checkI = false;
+                        for (int q = 0; q < DaNonInserire.Count; q++)
                         {
-                            log += " da non inserire";
-                            checkN = true;
+                            if (DaNonInserire[q] == r.taskID)
+                            {
+                                log += " da non inserire";
+                                checkN = true;
+                            }
                         }
-                    }
-                    for (int q = 0; q < this._RunningTasks.Count; q++)
-                    {
-                        if (this._RunningTasks[q] == rdr.GetInt32(0))
+                        for (int q = 0; q < this._RunningTasks.Count; q++)
                         {
-                            log += " già inserito";
-                            checkI = true;
+                            if (this._RunningTasks[q] == r.taskID)
+                            {
+                                log += " già inserito";
+                                checkI = true;
+                            }
                         }
-                    }
-                    if (checkN == false && checkI == false)
-                    {
-                        log += "aggiunto.<br/>";
-                        this._RunningTasks.Add(rdr.GetInt32(0));
-                    }
-                    else
-                    {
-                        log += "<br/>";
+                        if (checkN == false && checkI == false)
+                        {
+                            log += "aggiunto.<br/>";
+                            this._RunningTasks.Add(r.taskID);
+                        }
+                        else
+                        {
+                            log += "<br/>";
+                        }
                     }
                 }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         public void loadTaskProduzioneAvviabili()
@@ -598,51 +578,49 @@ namespace KIS.App_Sources
             this._RunnableTasks = new List<int>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT taskID FROM tasksproduzione " 
-                    + " INNER JOIN inputpoints_workstations ON(tasksproduzione.postazione = inputpoints_workstations.workstationid) "
-                + " WHERE(status = 'N' OR status = 'I' OR status = 'P') AND inputpoints_workstations.inputpointid=@ipid ORDER BY lateStart, earlyStart, idArticolo";
-                cmd.Parameters.AddWithValue("@ipid", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-
-                    // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
-                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
-
-                    if (tsk.TaskProduzioneID != -1)
+                    var ids = conn.Query<int>(
+                        "SELECT taskID FROM tasksproduzione "
+                        + " INNER JOIN inputpoints_workstations ON(tasksproduzione.postazione = inputpoints_workstations.workstationid) "
+                        + " WHERE(status = 'N' OR status = 'I' OR status = 'P') AND inputpoints_workstations.inputpointid=@ipid ORDER BY lateStart, earlyStart, idArticolo",
+                        new { @ipid = this.id });
+                    foreach (int taskId in ids)
                     {
 
-                        tsk.loadPrecedenti();
-                        bool controllo = true;
-                        for (int i = 0; i < tsk.PreviousTasks.Count; i++)
+                        // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
+                        TaskProduzione tsk = new TaskProduzione(this.Tenant, taskId);
+
+                        if (tsk.TaskProduzioneID != -1)
                         {
-                            TaskProduzione prec = new TaskProduzione(this.Tenant, tsk.PreviousTasks[i].NearTaskID);
-                            if (tsk.PreviousTasks[i].ConstraintType == 0)
+
+                            tsk.loadPrecedenti();
+                            bool controllo = true;
+                            for (int i = 0; i < tsk.PreviousTasks.Count; i++)
                             {
-                                if (prec.Status == 'N')
+                                TaskProduzione prec = new TaskProduzione(this.Tenant, tsk.PreviousTasks[i].NearTaskID);
+                                if (tsk.PreviousTasks[i].ConstraintType == 0)
                                 {
-                                    controllo = false;
+                                    if (prec.Status == 'N')
+                                    {
+                                        controllo = false;
+                                    }
+                                }
+                                else
+                                {
+                                    if (prec.Status != 'F')
+                                    {
+                                        controllo = false;
+                                    }
                                 }
                             }
-                            else
+                            if (controllo == true)
                             {
-                                if (prec.Status != 'F')
-                                {
-                                    controllo = false;
-                                }
+                                this._RunnableTasks.Add(taskId);
                             }
-                        }
-                        if (controllo == true)
-                        {
-                            this._RunnableTasks.Add(rdr.GetInt32(0));
                         }
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
     }
@@ -691,25 +669,36 @@ namespace KIS.App_Sources
             {
                 if (this.inputpointId > -1 && this.departmentId >- 1 && this.Tenant.Length > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE inputpoints_departments SET enabled=@enabled WHERE inputpointid=@ipid AND departmentid=@deptid";
-                    cmd.Parameters.AddWithValue("@ipid", this.inputpointId);
-                    cmd.Parameters.AddWithValue("@deptid", this.departmentId);
-                    cmd.Parameters.AddWithValue("@enabled", value);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        this._enabled = value;
+                        try
+                        {
+                            conn.Execute("UPDATE inputpoints_departments SET enabled=@enabled WHERE inputpointid=@ipid AND departmentid=@deptid",
+                                new { @ipid = this.inputpointId, @deptid = this.departmentId, @enabled = value });
+                            this._enabled = value;
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
             }
+        }
+        private class InputPointDepartmentRow
+        {
+            public int id { get; set; }
+            public string name { get; set; }
+            public string description { get; set; }
+            public DateTime? creationdate { get; set; }
+            public int? creator { get; set; }
+            public string notes { get; set; }
+            public DateTime? linkCreationDate { get; set; }
+            public int idreparto { get; set; }
+            public string nome { get; set; }
+            public string descrizione { get; set; }
+            public string timezone { get; set; }
+            public bool enabled { get; set; }
         }
         public InputPointDepartment(String tenant, int inputpointId, int departmentId)
         {
@@ -719,36 +708,33 @@ namespace KIS.App_Sources
             this._Tenant = tenant;
             if(this._Tenant.Length>0 && inputpointId >= 0 && departmentId >= 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT inputpoints.id, inputpoints.name, inputpoints.description, inputpoints.creationdate, "
-                    + "inputpoints.creator, inputpoints.notes, inputpoints_departments.creationdate as linkCreationDate, "
-                    + "reparti.idreparto, reparti.nome, reparti.descrizione, reparti.timezone, "
-                    + " inputpoints_departments.enabled "
-                    + " FROM inputpoints INNER JOIN inputpoints_departments ON(inputpoints.id = inputpoints_departments.inputpointid) "
-                    + " INNER JOIN reparti ON(inputpoints_departments.departmentId = reparti.idreparto) "
-                    + " WHERE reparti.idreparto = @idreparto AND inputpoints.id = @idinputpoint";
-                cmd.Parameters.AddWithValue("@idreparto", departmentId);
-                cmd.Parameters.AddWithValue("@idinputpoint", inputpointId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._inputpointId = rdr.GetInt32(0);
-                    this._inputpointName = rdr.IsDBNull(1) ? "" : rdr.GetString(1);
-                    this._departmentDescription = rdr.IsDBNull(2) ?"": rdr.GetString(2);
-                    this._inputpointCreationDate = rdr.IsDBNull(3) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(3);
-                    this._inputpointCreatorId = rdr.GetInt32(4);
-                    this._inputpointNotes = rdr.IsDBNull(5) ? "" : rdr.GetString(5);
-                    // linkCreationDate 6
-                    this._departmentId = rdr.GetInt32(7);
-                    this._departmentName = rdr.GetString(8);
-                    this._departmentDescription = rdr.IsDBNull(9) ? "" : rdr.GetString(9);
-                    this._departmentTimezone = rdr.IsDBNull(10) ? "" : rdr.GetString(10);
-                    this._enabled = rdr.IsDBNull(11) ? false : rdr.GetBoolean(11);
+                    var row = conn.QueryFirstOrDefault<InputPointDepartmentRow>(
+                        "SELECT inputpoints.id, inputpoints.name, inputpoints.description, inputpoints.creationdate, "
+                        + "inputpoints.creator, inputpoints.notes, inputpoints_departments.creationdate as linkCreationDate, "
+                        + "reparti.idreparto, reparti.nome, reparti.descrizione, reparti.timezone, "
+                        + " inputpoints_departments.enabled "
+                        + " FROM inputpoints INNER JOIN inputpoints_departments ON(inputpoints.id = inputpoints_departments.inputpointid) "
+                        + " INNER JOIN reparti ON(inputpoints_departments.departmentId = reparti.idreparto) "
+                        + " WHERE reparti.idreparto = @idreparto AND inputpoints.id = @idinputpoint",
+                        new { @idreparto = departmentId, @idinputpoint = inputpointId });
+                    if (row != null)
+                    {
+                        this._inputpointId = row.id;
+                        this._inputpointName = row.name ?? "";
+                        this._departmentDescription = row.description ?? "";
+                        this._inputpointCreationDate = row.creationdate ?? new DateTime(1970, 1, 1);
+                        this._inputpointCreatorId = row.creator ?? -1;
+                        this._inputpointNotes = row.notes ?? "";
+                        // linkCreationDate 6
+                        this._departmentId = row.idreparto;
+                        this._departmentName = row.nome ?? "";
+                        this._departmentDescription = row.descrizione ?? "";
+                        this._departmentTimezone = row.timezone ?? "";
+                        this._enabled = row.enabled;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -763,26 +749,25 @@ namespace KIS.App_Sources
             int ret = 0;
             if(this.Tenant.Length >0 && this.departmentId>=0 && this.inputpointId >=0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM inputpoints_departments WHERE inputpointid=@ipid AND departmentid=@deptid";
-                cmd.Parameters.AddWithValue("@ipid", this.inputpointId);
-                cmd.Parameters.AddWithValue("@deptid", this.departmentId);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = 1;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("DELETE FROM inputpoints_departments WHERE inputpointid=@ipid AND departmentid=@deptid",
+                                new { @ipid = this.inputpointId, @deptid = this.departmentId }, tr);
+                            tr.Commit();
+                            ret = 1;
+                        }
+                        catch(Exception ex)
+                        {
+                            ret = 3;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch(Exception ex)
-                {
-                    ret = 3;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             else
             {
@@ -832,23 +817,19 @@ namespace KIS.App_Sources
             {
                 if (this.inputpointId > -1 && this.workstationId > -1 && this.Tenant.Length > 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "UPDATE inputpoints_workstations SET enabled=@enabled WHERE inputpointid=@ipid AND workstationid=@wstid";
-                    cmd.Parameters.AddWithValue("@ipid", this.inputpointId);
-                    cmd.Parameters.AddWithValue("@wstid", this.workstationId);
-                    cmd.Parameters.AddWithValue("@enabled", value);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        this._enabled = value;
+                        try
+                        {
+                            conn.Execute("UPDATE inputpoints_workstations SET enabled=@enabled WHERE inputpointid=@ipid AND workstationid=@wstid",
+                                new { @ipid = this.inputpointId, @wstid = this.workstationId, @enabled = value });
+                            this._enabled = value;
+                        }
+                        catch (Exception ex)
+                        {
+                            this.log = ex.Message;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        this.log = ex.Message;
-                    }
-                    conn.Close();
                 }
             }
         }
@@ -861,36 +842,33 @@ namespace KIS.App_Sources
             this._Tenant = tenant;
             if (this._Tenant.Length > 0 && inputpointId >= 0 && workstationId >= 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT inputpoints.id, inputpoints.name, inputpoints.description, inputpoints.creationdate, "
-                    + " inputpoints.creator, inputpoints.notes, inputpoints_workstations.creationdate as linkCreationDate, "
-                    + " postazioni.idpostazioni, postazioni.name, postazioni.description, postazioni.barcodeAutoCheckIn, inputpoints_workstations.enabled "
-                    + " FROM "
-                    + " inputpoints INNER JOIN inputpoints_workstations ON(inputpoints.id = inputpoints_workstations.inputpointid) "
-                    + " INNER JOIN postazioni ON(inputpoints_workstations.workstationId = postazioni.idpostazioni) "
-                    + " WHERE postazioni.idpostazioni = @workstationid AND inputpoints.id = @idinputpoint";
-
-                cmd.Parameters.AddWithValue("@workstationid", workstationId);
-                cmd.Parameters.AddWithValue("@idinputpoint", inputpointId);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._inputpointId = rdr.GetInt32(0);
-                    this._inputpointName = rdr.IsDBNull(1) ? "" : rdr.GetString(1);
-                    this._workstationDescription = rdr.IsDBNull(2) ? "" : rdr.GetString(2);
-                    this._inputpointCreationDate = rdr.IsDBNull(3) ? new DateTime(1970, 1, 1) : rdr.GetDateTime(3);
-                    this._inputpointCreatorId = rdr.IsDBNull(4) ? -1 : rdr.GetInt32(4);
-                    this._inputpointNotes = rdr.IsDBNull(5)? "" : rdr.GetString(5);
-                    // linkCreationDate 6
-                    this._workstationId = rdr.GetInt32(7);
-                    this._workstationName = rdr.IsDBNull(8) ? "" : rdr.GetString(8);
-                    this._workstationDescription = rdr.IsDBNull(9) ? "" : rdr.GetString(9);
-                    this._enabled = rdr.IsDBNull(10) ? false : rdr.GetBoolean(10);
+                    var row = conn.QueryFirstOrDefault<(int id, string name, string description, DateTime? creationdate, int? creator, string notes, DateTime? linkCreationDate, int idpostazioni, string postname, string postdesc, bool barcodeAutoCheckIn, bool enabled)?>(
+                        "SELECT inputpoints.id, inputpoints.name, inputpoints.description, inputpoints.creationdate, "
+                        + " inputpoints.creator, inputpoints.notes, inputpoints_workstations.creationdate as linkCreationDate, "
+                        + " postazioni.idpostazioni, postazioni.name, postazioni.description, postazioni.barcodeAutoCheckIn, inputpoints_workstations.enabled "
+                        + " FROM "
+                        + " inputpoints INNER JOIN inputpoints_workstations ON(inputpoints.id = inputpoints_workstations.inputpointid) "
+                        + " INNER JOIN postazioni ON(inputpoints_workstations.workstationId = postazioni.idpostazioni) "
+                        + " WHERE postazioni.idpostazioni = @workstationid AND inputpoints.id = @idinputpoint",
+                        new { @workstationid = workstationId, @idinputpoint = inputpointId });
+                    if (row.HasValue)
+                    {
+                        var r = row.Value;
+                        this._inputpointId = r.id;
+                        this._inputpointName = r.name ?? "";
+                        this._workstationDescription = r.description ?? "";
+                        this._inputpointCreationDate = r.creationdate ?? new DateTime(1970, 1, 1);
+                        this._inputpointCreatorId = r.creator ?? -1;
+                        this._inputpointNotes = r.notes ?? "";
+                        // linkCreationDate 6
+                        this._workstationId = r.idpostazioni;
+                        this._workstationName = r.postname ?? "";
+                        this._workstationDescription = r.postdesc ?? "";
+                        this._enabled = r.enabled;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -905,27 +883,26 @@ namespace KIS.App_Sources
             int ret = 0;
             if (this.Tenant.Length > 0 && this.workstationId >= 0 && this.inputpointId >= 0)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM inputpoints_workstations WHERE inputpointid=@ipid AND workstationid=@wstid";
-                cmd.Parameters.AddWithValue("@ipid", this.inputpointId);
-                cmd.Parameters.AddWithValue("@wstid", this.workstationId);
-                MySqlTransaction tr = conn.BeginTransaction();
-                cmd.Transaction = tr;
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    ret = 1;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("DELETE FROM inputpoints_workstations WHERE inputpointid=@ipid AND workstationid=@wstid",
+                                new { @ipid = this.inputpointId, @wstid = this.workstationId }, tr);
+                            tr.Commit();
+                            ret = 1;
+                        }
+                        catch (Exception ex)
+                        {
+                            ret = 3;
+                            this.log = ex.Message;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    ret = 3;
-                    this.log = ex.Message;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             else
             {

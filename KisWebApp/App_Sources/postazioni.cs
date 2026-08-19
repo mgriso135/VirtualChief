@@ -119,29 +119,26 @@ namespace KIS.App_Code
             this._ElencoIDReparti = new List<int>();
             if (postID != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "SELECT idpostazioni, name, description, barcodeAutoCheckIn FROM postazioni WHERE idPostazioni = @p0";
-                cmd.Parameters.AddWithValue("@p0", postID);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._id = rdr.GetInt32(0);
-                    this._name = rdr.GetString(1);
-                    this._desc = rdr.GetString(2);
-                    this._barcodeAutoCheckIn = rdr.GetBoolean(3);
+                    var row = conn.QueryFirstOrDefault<PostazioneRow>(
+                        "SELECT idpostazioni, name, description, barcodeAutoCheckIn FROM postazioni WHERE idPostazioni = @p0",
+                        new { @p0 = postID });
+                    if (row != null)
+                    {
+                        this._id = row.idpostazioni;
+                        this._name = row.name;
+                        this._desc = row.description;
+                        this._barcodeAutoCheckIn = row.barcodeAutoCheckIn;
+                    }
+                    else
+                    {
+                        this._id = -1;
+                        this._name = "";
+                        this._desc = "";
+                        this._barcodeAutoCheckIn = false;
+                    }
                 }
-                else
-                {
-                    this._id = -1;
-                    this._name = "";
-                    this._desc = "";
-                    this._barcodeAutoCheckIn = false;
-                }
-                rdr.Close();
-                conn.Close();
             }
             else
             {
@@ -152,23 +149,30 @@ namespace KIS.App_Code
             }
         }
 
+        private class PostazioneRow
+        {
+            public int idpostazioni { get; set; }
+            public string name { get; set; }
+            public string description { get; set; }
+            public bool barcodeAutoCheckIn { get; set; }
+        }
+
         public bool loadTasks()
         {
             bool rt = false;
             if (this.id != -1)
             {
                 this._tasks = new List<processo>();
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT processo, revProc FROM repartipostazioniattivita WHERE postazione = @p0";
-                cmd.Parameters.AddWithValue("@p0", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._tasks.Add(new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)));
+                    var rows = conn.Query<(int processo, int revProc)>(
+                        "SELECT processo, revProc FROM repartipostazioniattivita WHERE postazione = @p0",
+                        new { @p0 = this.id });
+                    foreach (var r in rows)
+                    {
+                        this._tasks.Add(new processo(this.Tenant, r.processo, r.revProc));
+                    }
                 }
-                conn.Close();
             }
             return rt;
         }
@@ -177,33 +181,22 @@ namespace KIS.App_Code
         public bool add(String nome, String desc, Boolean barcodeAutoCheckIn)
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT MAX(idpostazioni) FROM postazioni";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            int newID = 20;
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                newID = rdr.GetInt32(0) + 1;
+                int? maxId = conn.QueryFirstOrDefault<int?>("SELECT MAX(idpostazioni) FROM postazioni");
+                int newID = (maxId ?? 19) + 1;
+                try
+                {
+                    conn.Execute("INSERT INTO postazioni(idpostazioni, name, description, barcodeAutoCheckIn) VALUES "
+                        + "(@p0, @p1, @p2, @p3)",
+                        new { @p0 = newID, @p1 = nome, @p2 = desc, @p3 = barcodeAutoCheckIn });
+                    rt = true;
+                }
+                catch
+                {
+                    rt = false;
+                }
             }
-            rdr.Close();
-            cmd.CommandText = "INSERT INTO postazioni(idpostazioni, name, description, barcodeAutoCheckIn) VALUES "
-                + "(@p0, @p1, @p2, @p3)";
-            cmd.Parameters.AddWithValue("@p0", newID);
-            cmd.Parameters.AddWithValue("@p1", nome);
-            cmd.Parameters.AddWithValue("@p2", desc);
-            cmd.Parameters.AddWithValue("@p3", barcodeAutoCheckIn);
-            try
-            {
-                cmd.ExecuteNonQuery();
-                rt = true;
-            }
-            catch
-            {
-                rt = false;
-            }
-            conn.Close();
             return rt;
         }
 
@@ -215,26 +208,26 @@ namespace KIS.App_Code
                 this.loadTasks();
                 if (this.tasks.Count == 0)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlTransaction trans = conn.BeginTransaction();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.Transaction = trans;
-                    cmd.CommandText = "DELETE FROM postazioni WHERE idPostazioni = @p0";
-                    cmd.Parameters.AddWithValue("@p0", this.id);
-                    try
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.ExecuteNonQuery();
-                        trans.Commit();
-                        rt = true;
+                        conn.Open();
+                        using (var trans = conn.BeginTransaction())
+                        {
+                            try
+                            {
+                                conn.Execute("DELETE FROM postazioni WHERE idPostazioni = @p0",
+                                    new { @p0 = this.id }, trans);
+                                trans.Commit();
+                                rt = true;
+                            }
+                            catch(Exception ex)
+                            {
+                                log = ex.Message;
+                                rt = false;
+                                trans.Rollback();
+                            }
+                        }
                     }
-                    catch(Exception ex)
-                    {
-                        log = ex.Message;
-                        rt = false;
-                        trans.Rollback();
-                    }
-                    conn.Close();
                 }
                 else
                 {
@@ -249,40 +242,24 @@ namespace KIS.App_Code
             TimeSpan carico = new TimeSpan(0);
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Parameters.AddWithValue("@p0", this.id);
-                cmd.Parameters.AddWithValue("@p1", 0);
-                cmd.Parameters.AddWithValue("@p2", 0);
-                cmd.Parameters.AddWithValue("@p3", 0);
-                for (int i = 0; i < prc.process.subProcessi.Count; i++)
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    /*cmd.CommandText = "SELECT * FROM repartipostazioniattivita INNER JOIN processo ON "
-                    + "(repartipostazioniattivita.processo = processo.processID AND repartipostazioniattivita.revProc = processo.revisione) "
-                    + "WHERE postazione = " + this.id.ToString()
-                        + " AND processo = " + prc.process.subProcessi[i].processID.ToString() + " AND revProc = "
-                        + prc.process.subProcessi[i].revisione.ToString() + " AND variante = " + prc.variant.idVariante
-                        + " AND processo.attivo = 1";*/
-
-                    cmd.Parameters["@p1"].Value = prc.process.subProcessi[i].processID;
-                    cmd.Parameters["@p2"].Value = prc.process.subProcessi[i].revisione;
-                    cmd.Parameters["@p3"].Value = prc.variant.idVariante;
-                    cmd.CommandText = "SELECT tempo FROM tempiciclo INNER JOIN repartipostazioniattivita ON (tempiciclo.processo = repartipostazioniattivita.processo"
-                    + " AND tempiciclo.revisione = repartipostazioniattivita.revProc AND tempiciclo.variante = repartipostazioniattivita.variante)"
-                    + " WHERE postazione = @p0 AND repartipostazioniattivita.processo = @p1"
-                    + " AND repartipostazioniattivita.revProc = @p2"
-                    + " AND repartipostazioniattivita.variante = @p3"
-                    + " AND tempiciclo.def = true";
-
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    if (rdr.Read() && !rdr.IsDBNull(0))
+                    for (int i = 0; i < prc.process.subProcessi.Count; i++)
                     {
-                        carico += rdr.GetTimeSpan(0);
+                        TimeSpan? tempo = conn.QueryFirstOrDefault<TimeSpan?>(
+                            "SELECT tempo FROM tempiciclo INNER JOIN repartipostazioniattivita ON (tempiciclo.processo = repartipostazioniattivita.processo"
+                            + " AND tempiciclo.revisione = repartipostazioniattivita.revProc AND tempiciclo.variante = repartipostazioniattivita.variante)"
+                            + " WHERE postazione = @p0 AND repartipostazioniattivita.processo = @p1"
+                            + " AND repartipostazioniattivita.revProc = @p2"
+                            + " AND repartipostazioniattivita.variante = @p3"
+                            + " AND tempiciclo.def = true",
+                            new { @p0 = this.id, @p1 = prc.process.subProcessi[i].processID, @p2 = prc.process.subProcessi[i].revisione, @p3 = prc.variant.idVariante });
+                        if (tempo.HasValue)
+                        {
+                            carico += tempo.Value;
+                        }
                     }
-                    rdr.Close();
                 }
-                conn.Close();
             }
             return carico;
         }
@@ -296,49 +273,46 @@ namespace KIS.App_Code
         public bool LoadMainProc()
         {
             bool rt = false;
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT processipadrifigli.padre, processipadrifigli.revPadre, repartipostazioniattivita.variante FROM "
-                + "repartipostazioniattivita INNER JOIN processipadrifigli ON (repartipostazioniattivita.processo = processipadrifigli.task AND "
-                + "repartipostazioniattivita.revProc = processipadrifigli.revTask) WHERE repartipostazioniattivita.postazione = @p0";
-                //+ " AND processo.attivo = 1";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            _MainProc = new List<ProcessoVariante>();
-            log = cmd.CommandText;
-            try
-            { 
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                    log += rdr.GetInt32(0) + " " + rdr.GetInt32(1) + " " + rdr.GetInt32(2) + "<br />";
-                ProcessoVariante daAggiungere = new ProcessoVariante(this.Tenant, new processo(this.Tenant, rdr.GetInt32(0), rdr.GetInt32(1)), new variante(this.Tenant, rdr.GetInt32(2)));
-                    daAggiungere.loadReparto();
-                    daAggiungere.process.loadFigli(daAggiungere.variant);
-                    if (daAggiungere.process != null && daAggiungere.variant != null)
-                {
-                    // inoltre controllo di non averlo già aggiunto.
-                    bool found = false;
-                    for (int j = 0; j < _MainProc.Count; j++)
+                string sql = "SELECT processipadrifigli.padre, processipadrifigli.revPadre, repartipostazioniattivita.variante FROM "
+                    + "repartipostazioniattivita INNER JOIN processipadrifigli ON (repartipostazioniattivita.processo = processipadrifigli.task AND "
+                    + "repartipostazioniattivita.revProc = processipadrifigli.revTask) WHERE repartipostazioniattivita.postazione = @p0";
+                var rows = conn.Query<(int padre, int revPadre, int variante)>(sql, new { @p0 = this.id });
+                _MainProc = new List<ProcessoVariante>();
+                log = sql;
+                try
+                { 
+                    foreach (var r in rows)
                     {
-                        if (this.MainProc[j].process.processID == daAggiungere.process.processID && this.MainProc[j].process.revisione == daAggiungere.process.revisione && this.MainProc[j].variant.idVariante == daAggiungere.variant.idVariante)
+                        log += r.padre + " " + r.revPadre + " " + r.variante + "<br />";
+                        ProcessoVariante daAggiungere = new ProcessoVariante(this.Tenant, new processo(this.Tenant, r.padre, r.revPadre), new variante(this.Tenant, r.variante));
+                        daAggiungere.loadReparto();
+                        daAggiungere.process.loadFigli(daAggiungere.variant);
+                        if (daAggiungere.process != null && daAggiungere.variant != null)
                         {
-                            found = true;
+                            // inoltre controllo di non averlo già aggiunto.
+                            bool found = false;
+                            for (int j = 0; j < _MainProc.Count; j++)
+                            {
+                                if (this.MainProc[j].process.processID == daAggiungere.process.processID && this.MainProc[j].process.revisione == daAggiungere.process.revisione && this.MainProc[j].variant.idVariante == daAggiungere.variant.idVariante)
+                                {
+                                    found = true;
+                                }
+                            }
+
+                            if (found == false)
+                            {
+                                _MainProc.Add(daAggiungere);
+                            }
                         }
                     }
-
-                    if (found == false)
-                    {
-                        _MainProc.Add(daAggiungere);
-                    }
+                }
+                catch(Exception ex)
+                {
+                    log += "<br />" + ex.Message;
                 }
             }
-            }
-            catch(Exception ex)
-            {
-                log += "<br />" + ex.Message;
-            }
-            rdr.Close();
-            conn.Close();
             return rt;
         }
 
@@ -354,18 +328,15 @@ namespace KIS.App_Code
             this._ElencoIDReparti = new List<int>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(reparto) FROM repartipostazioniattivita WHERE postazione = @p0";
-                cmd.Parameters.AddWithValue("@p0", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._ElencoIDReparti.Add(rdr.GetInt32(0));
+                    var ids = conn.Query<int>("SELECT DISTINCT(reparto) FROM repartipostazioniattivita WHERE postazione = @p0",
+                        new { @p0 = this.id });
+                    foreach (int idReparto in ids)
+                    {
+                        this._ElencoIDReparti.Add(idReparto);
+                    }
                 }
-                rdr.Close();
-                conn.Close();
                 rt = true;
             }
             return rt;
@@ -390,18 +361,15 @@ namespace KIS.App_Code
             this._UtentiLoggati = new List<String>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT username FROM registrooperatoripostazioni WHERE logout IS NULL AND postazione = @p0";
-                cmd.Parameters.AddWithValue("@p0", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._UtentiLoggati.Add(rdr.GetString(0));
+                    var usernames = conn.Query<string>("SELECT username FROM registrooperatoripostazioni WHERE logout IS NULL AND postazione = @p0",
+                        new { @p0 = this.id });
+                    foreach (string username in usernames)
+                    {
+                        this._UtentiLoggati.Add(username);
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -416,61 +384,58 @@ namespace KIS.App_Code
             this._IdTaskProduzioneAvviabili = new List<int>();
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE (status = 'N' OR status = 'I' OR status = 'P') "
-                 + "AND postazione = @p0 ORDER BY lateStart, earlyStart, idArticolo";
-                cmd.Parameters.AddWithValue("@p0", this.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-
-                    // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
-                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
-                    
-                    if (tsk.TaskProduzioneID != -1)
+                    var ids = conn.Query<int>("SELECT taskID FROM tasksproduzione WHERE (status = 'N' OR status = 'I' OR status = 'P') "
+                        + "AND postazione = @p0 ORDER BY lateStart, earlyStart, idArticolo",
+                        new { @p0 = this.id });
+                    foreach (int taskId in ids)
                     {
+
+                        // Verifico che tutti i precedenti siano terminati (se ConstraintType=1) oppure se siano avviati (se ConstraintType=0)
+                        TaskProduzione tsk = new TaskProduzione(this.Tenant, taskId);
                         
-                        tsk.loadPrecedenti();
-                        bool controllo = true;
-                        /*for (int i = 0; i < tsk.IdPrecedenti.Count; i++)
+                        if (tsk.TaskProduzioneID != -1)
                         {
-                            TaskProduzione prec = new TaskProduzione(tsk.IdPrecedenti[i]);
-                            if (prec.Status != 'F')
+                            
+                            tsk.loadPrecedenti();
+                            bool controllo = true;
+                            /*for (int i = 0; i < tsk.IdPrecedenti.Count; i++)
                             {
-                                controllo = false;
-                            }
-                            else
-                            {
-                            }
-                        }*/
-                        for(int i = 0; i < tsk.PreviousTasks.Count; i++)
-                        {
-                            TaskProduzione prec = new TaskProduzione(this.Tenant, tsk.PreviousTasks[i].NearTaskID);
-                            if(tsk.PreviousTasks[i].ConstraintType == 0)
-                            {
-                                if (prec.Status == 'N')
-                                {
-                                    controllo = false;
-                                }
-                            }
-                            else
-                            { 
+                                TaskProduzione prec = new TaskProduzione(tsk.IdPrecedenti[i]);
                                 if (prec.Status != 'F')
                                 {
                                     controllo = false;
                                 }
+                                else
+                                {
+                                }
+                            }*/
+                            for(int i = 0; i < tsk.PreviousTasks.Count; i++)
+                            {
+                                TaskProduzione prec = new TaskProduzione(this.Tenant, tsk.PreviousTasks[i].NearTaskID);
+                                if(tsk.PreviousTasks[i].ConstraintType == 0)
+                                {
+                                    if (prec.Status == 'N')
+                                    {
+                                        controllo = false;
+                                    }
+                                }
+                                else
+                                { 
+                                    if (prec.Status != 'F')
+                                    {
+                                        controllo = false;
+                                    }
+                                }
                             }
-                        }
-                        if (controllo == true)
-                        {
-                            this._IdTaskProduzioneAvviabili.Add(rdr.GetInt32(0));
+                            if (controllo == true)
+                            {
+                                this._IdTaskProduzioneAvviabili.Add(taskId);
+                            }
                         }
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -483,60 +448,57 @@ namespace KIS.App_Code
         public void loadTaskAvviati(User usr)
         {
             this._TaskAvviatiUtente = new List<int>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
-                + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' AND "
-                + "tasksproduzione.postazione = @p0"
-                + " AND registroeventitaskproduzione.user = @p1 ORDER BY registroeventitaskproduzione.data DESC";
-            cmd.Parameters.AddWithValue("@p0", this.id);
-            cmd.Parameters.AddWithValue("@p1", usr.username);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            List<int> DaNonInserire = new List<int>();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                log += "Task: " + rdr.GetInt32(0).ToString() + " " + rdr.GetChar(1);
-                if (rdr.GetChar(1) == 'P' || rdr.GetChar(1) == 'F')
+                var rows = conn.Query<(int taskID, char evento)>(
+                    "SELECT tasksproduzione.taskID, evento FROM tasksproduzione INNER JOIN registroeventitaskproduzione ON("
+                    + "tasksproduzione.taskID = registroeventitaskproduzione.task) WHERE tasksproduzione.status = 'I' AND "
+                    + "tasksproduzione.postazione = @p0"
+                    + " AND registroeventitaskproduzione.user = @p1 ORDER BY registroeventitaskproduzione.data DESC",
+                    new { @p0 = this.id, @p1 = usr.username });
+                List<int> DaNonInserire = new List<int>();
+                foreach (var r in rows)
                 {
-                    log += " da non inserire<br/>";
-                    DaNonInserire.Add(rdr.GetInt32(0));
-                }
-                else if (rdr.GetChar(1) == 'I')
-                {
-                    log += " da verificare --> ";
-                    // Verifico che non sia nella lista di quelli da non inserire, e nemmeno in quella dei già inseriti!
-                    bool checkN = false;
-                    bool checkI = false;
-                    for (int q = 0; q < DaNonInserire.Count; q++)
+                    log += "Task: " + r.taskID.ToString() + " " + r.evento;
+                    if (r.evento == 'P' || r.evento == 'F')
                     {
-                        if (DaNonInserire[q] == rdr.GetInt32(0))
+                        log += " da non inserire<br/>";
+                        DaNonInserire.Add(r.taskID);
+                    }
+                    else if (r.evento == 'I')
+                    {
+                        log += " da verificare --> ";
+                        // Verifico che non sia nella lista di quelli da non inserire, e nemmeno in quella dei già inseriti!
+                        bool checkN = false;
+                        bool checkI = false;
+                        for (int q = 0; q < DaNonInserire.Count; q++)
                         {
-                            log += " da non inserire";
-                            checkN = true;
+                            if (DaNonInserire[q] == r.taskID)
+                            {
+                                log += " da non inserire";
+                                checkN = true;
+                            }
                         }
-                    }
-                    for (int q = 0; q < this._TaskAvviatiUtente.Count; q++)
-                    {
-                        if (this._TaskAvviatiUtente[q] == rdr.GetInt32(0))
+                        for (int q = 0; q < this._TaskAvviatiUtente.Count; q++)
                         {
-                            log += " già inserito";
-                            checkI = true;
+                            if (this._TaskAvviatiUtente[q] == r.taskID)
+                            {
+                                log += " già inserito";
+                                checkI = true;
+                            }
                         }
-                    }
-                    if (checkN == false && checkI == false)
-                    {
-                        log += "aggiunto.<br/>";
-                        this._TaskAvviatiUtente.Add(rdr.GetInt32(0));
-                    }
-                    else
-                    {
-                        log += "<br/>";
+                        if (checkN == false && checkI == false)
+                        {
+                            log += "aggiunto.<br/>";
+                            this._TaskAvviatiUtente.Add(r.taskID);
+                        }
+                        else
+                        {
+                            log += "<br/>";
+                        }
                     }
                 }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         private List<Warning> _WarningAperti;
@@ -548,20 +510,17 @@ namespace KIS.App_Code
         public void loadWarningAperti()
         {
             this._WarningAperti = new List<Warning>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT warningproduzione.id FROM warningproduzione INNER JOIN tasksproduzione ON "
-                + "(warningproduzione.task = tasksproduzione.taskID) WHERE warningproduzione.dataRisoluzione IS NULL "
-                + " AND tasksproduzione.postazione = @p0 ORDER BY warningproduzione.dataChiamata";
-            cmd.Parameters.AddWithValue("@p0", this.id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._WarningAperti.Add(new Warning(this.Tenant, rdr.GetInt32(0)));
+                var ids = conn.Query<int>("SELECT warningproduzione.id FROM warningproduzione INNER JOIN tasksproduzione ON "
+                    + "(warningproduzione.task = tasksproduzione.taskID) WHERE warningproduzione.dataRisoluzione IS NULL "
+                    + " AND tasksproduzione.postazione = @p0 ORDER BY warningproduzione.dataChiamata",
+                    new { @p0 = this.id });
+                foreach (int id in ids)
+                {
+                    this._WarningAperti.Add(new Warning(this.Tenant, id));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         public TimeSpan getCaricoDiLavoroProgrammato(int reparto, DateTime inizio, DateTime fine)
@@ -569,105 +528,100 @@ namespace KIS.App_Code
             TimeSpan ret = new TimeSpan(0, 0, 0);
             if (this.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE postazione = @p0"
-                    + " AND reparto = @p1"
-                    + " AND ("
-                    + "(lateStart > @p2 AND lateFinish <= @p3)"
-                    + " OR (lateStart <= @p2 AND (lateFinish >= @p2 AND lateFinish <= @p3))"
-                    + " OR ((lateStart >= @p2 AND lateStart <= @p3) AND lateFinish <= @p3)"
-                    + " OR (lateStart <= @p2 AND lateFinish >= @p3)"
-                    + ") ORDER BY lateFinish ASC";
-                cmd.Parameters.AddWithValue("@p0", this.id);
-                cmd.Parameters.AddWithValue("@p1", reparto);
-                cmd.Parameters.AddWithValue("@p2", inizio.AddDays(-1).ToString("yyyy/MM/dd 00:00:00"));
-                cmd.Parameters.AddWithValue("@p3", fine.AddDays(1).ToString("yyyy/MM/dd 00:00:00"));
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                log = cmd.CommandText + "<br />";
-                Reparto rp = new Reparto(this.Tenant, reparto);
-                rp.loadCalendario(inizio.AddDays(-1), fine.AddDays(1));
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
-                    log += "Task " + tsk.TaskProduzioneID.ToString() + ", postazione " + tsk.PostazioneID.ToString() + " " + tsk.LateStart.ToString("dd/MM/yyyy HH:mm:ss") + " - " + tsk.LateFinish.ToString("dd/MM/yyyy HH:mm:ss") + " - " + tsk.TempoC.TotalHours.ToString() + "<br />";
-
-                    if (tsk.LateStart >= inizio && tsk.LateFinish <= fine)
+                    string sql = "SELECT taskID FROM tasksproduzione WHERE postazione = @p0"
+                        + " AND reparto = @p1"
+                        + " AND ("
+                        + "(lateStart > @p2 AND lateFinish <= @p3)"
+                        + " OR (lateStart <= @p2 AND (lateFinish >= @p2 AND lateFinish <= @p3))"
+                        + " OR ((lateStart >= @p2 AND lateStart <= @p3) AND lateFinish <= @p3)"
+                        + " OR (lateStart <= @p2 AND lateFinish >= @p3)"
+                        + ") ORDER BY lateFinish ASC";
+                    var ids = conn.Query<int>(sql, new { @p0 = this.id, @p1 = reparto, @p2 = inizio.AddDays(-1).ToString("yyyy/MM/dd 00:00:00"), @p3 = fine.AddDays(1).ToString("yyyy/MM/dd 00:00:00") });
+                    log = sql + "<br />";
+                    Reparto rp = new Reparto(this.Tenant, reparto);
+                    rp.loadCalendario(inizio.AddDays(-1), fine.AddDays(1));
+                    foreach (int taskId in ids)
                     {
-                        ret += tsk.TempoC;
-                    }
-                    else if(tsk.LateStart <= inizio && tsk.LateFinish >= inizio && tsk.LateFinish <= fine)
-                    {
-                        // Provvisorio
-                        //ret += tsk.TempoC;
+                        TaskProduzione tsk = new TaskProduzione(this.Tenant, taskId);
+                        log += "Task " + tsk.TaskProduzioneID.ToString() + ", postazione " + tsk.PostazioneID.ToString() + " " + tsk.LateStart.ToString("dd/MM/yyyy HH:mm:ss") + " - " + tsk.LateFinish.ToString("dd/MM/yyyy HH:mm:ss") + " - " + tsk.TempoC.TotalHours.ToString() + "<br />";
 
-                        for (int h = 0; h < rp.CalendarioRep.Intervalli.Count; h++)
+                        if (tsk.LateStart >= inizio && tsk.LateFinish <= fine)
                         {
-                            if (rp.CalendarioRep.Intervalli[h].Fine <= inizio)
-                            {
-                                // Non aggiunto niente
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio > tsk.LateFinish)
-                            {
-                                // Non aggiungo niente
-                            }
-                            else if (inizio >= rp.CalendarioRep.Intervalli[h].Inizio && rp.CalendarioRep.Intervalli[h].Fine >= inizio && rp.CalendarioRep.Intervalli[h].Fine <= tsk.LateFinish)
-                            {
-                                ret += rp.CalendarioRep.Intervalli[h].Fine - inizio;
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio >= inizio && rp.CalendarioRep.Intervalli[h].Fine <= tsk.LateFinish)
-                            {
-                                ret += rp.CalendarioRep.Intervalli[h].Fine - rp.CalendarioRep.Intervalli[h].Inizio;
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio >= inizio && rp.CalendarioRep.Intervalli[h].Inizio <= tsk.LateFinish && rp.CalendarioRep.Intervalli[h].Fine > tsk.LateFinish)
-                            {
-                                ret += tsk.LateFinish - rp.CalendarioRep.Intervalli[h].Inizio;
-                            }
+                            ret += tsk.TempoC;
                         }
-
-
-                    }
-                    else if (tsk.LateStart >= inizio && tsk.LateStart <= fine && tsk.LateFinish >= fine)
-                    {
-                        // Provvisorio
-                        //ret += tsk.TempoC;
-                        for (int h = 0; h < rp.CalendarioRep.Intervalli.Count; h++)
+                        else if(tsk.LateStart <= inizio && tsk.LateFinish >= inizio && tsk.LateFinish <= fine)
                         {
-                            if (rp.CalendarioRep.Intervalli[h].Fine < tsk.LateStart)
-                            {
-                                // Non aggiungo niente
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio >= fine)
-                            {
-                                // Non aggiungo niente
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio <= tsk.LateStart && tsk.LateStart <= rp.CalendarioRep.Intervalli[h].Fine && rp.CalendarioRep.Intervalli[h].Fine <= fine)
-                            {
-                                ret += rp.CalendarioRep.Intervalli[h].Fine - tsk.LateStart;
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio >= tsk.LateStart && rp.CalendarioRep.Intervalli[h].Fine <= fine)
-                            {
-                                ret += rp.CalendarioRep.Intervalli[h].Fine - rp.CalendarioRep.Intervalli[h].Inizio;
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio >= tsk.LateStart && fine <= rp.CalendarioRep.Intervalli[h].Fine && rp.CalendarioRep.Intervalli[h].Inizio <= fine)
-                            {
-                                ret += fine - rp.CalendarioRep.Intervalli[h].Inizio;
-                            }
-                            else if (rp.CalendarioRep.Intervalli[h].Inizio >= inizio && rp.CalendarioRep.Intervalli[h].Fine >= fine && tsk.LateStart >= rp.CalendarioRep.Intervalli[h].Inizio && tsk.LateFinish >= fine)
-                            {
-                                ret += fine - tsk.LateStart;
-                            }
-                        }
+                            // Provvisorio
+                            //ret += tsk.TempoC;
 
-                    }
-                    else if (tsk.LateStart <= inizio && tsk.LateFinish >= fine)
-                    {
-                        // Provvisorio
-                        ret += tsk.TempoC;
+                            for (int h = 0; h < rp.CalendarioRep.Intervalli.Count; h++)
+                            {
+                                if (rp.CalendarioRep.Intervalli[h].Fine <= inizio)
+                                {
+                                    // Non aggiunto niente
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio > tsk.LateFinish)
+                                {
+                                    // Non aggiungo niente
+                                }
+                                else if (inizio >= rp.CalendarioRep.Intervalli[h].Inizio && rp.CalendarioRep.Intervalli[h].Fine >= inizio && rp.CalendarioRep.Intervalli[h].Fine <= tsk.LateFinish)
+                                {
+                                    ret += rp.CalendarioRep.Intervalli[h].Fine - inizio;
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio >= inizio && rp.CalendarioRep.Intervalli[h].Fine <= tsk.LateFinish)
+                                {
+                                    ret += rp.CalendarioRep.Intervalli[h].Fine - rp.CalendarioRep.Intervalli[h].Inizio;
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio >= inizio && rp.CalendarioRep.Intervalli[h].Inizio <= tsk.LateFinish && rp.CalendarioRep.Intervalli[h].Fine > tsk.LateFinish)
+                                {
+                                    ret += tsk.LateFinish - rp.CalendarioRep.Intervalli[h].Inizio;
+                                }
+                            }
+
+
+                        }
+                        else if (tsk.LateStart >= inizio && tsk.LateStart <= fine && tsk.LateFinish >= fine)
+                        {
+                            // Provvisorio
+                            //ret += tsk.TempoC;
+                            for (int h = 0; h < rp.CalendarioRep.Intervalli.Count; h++)
+                            {
+                                if (rp.CalendarioRep.Intervalli[h].Fine < tsk.LateStart)
+                                {
+                                    // Non aggiungo niente
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio >= fine)
+                                {
+                                    // Non aggiungo niente
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio <= tsk.LateStart && tsk.LateStart <= rp.CalendarioRep.Intervalli[h].Fine && rp.CalendarioRep.Intervalli[h].Fine <= fine)
+                                {
+                                    ret += rp.CalendarioRep.Intervalli[h].Fine - tsk.LateStart;
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio >= tsk.LateStart && rp.CalendarioRep.Intervalli[h].Fine <= fine)
+                                {
+                                    ret += rp.CalendarioRep.Intervalli[h].Fine - rp.CalendarioRep.Intervalli[h].Inizio;
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio >= tsk.LateStart && fine <= rp.CalendarioRep.Intervalli[h].Fine && rp.CalendarioRep.Intervalli[h].Inizio <= fine)
+                                {
+                                    ret += fine - rp.CalendarioRep.Intervalli[h].Inizio;
+                                }
+                                else if (rp.CalendarioRep.Intervalli[h].Inizio >= inizio && rp.CalendarioRep.Intervalli[h].Fine >= fine && tsk.LateStart >= rp.CalendarioRep.Intervalli[h].Inizio && tsk.LateFinish >= fine)
+                                {
+                                    ret += fine - tsk.LateStart;
+                                }
+                            }
+
+                        }
+                        else if (tsk.LateStart <= inizio && tsk.LateFinish >= fine)
+                        {
+                            // Provvisorio
+                            ret += tsk.TempoC;
+                        }
                     }
                 }
-                conn.Close();
             }
             return ret;
         }
@@ -701,17 +655,14 @@ namespace KIS.App_Code
             this.Tenant = Tenant;
 
             elenco = new List<Postazione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT idpostazioni FROM postazioni ORDER BY name";
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                elenco.Add(new Postazione(this.Tenant, rdr.GetInt32(0)));
+                var ids = conn.Query<int>("SELECT idpostazioni FROM postazioni ORDER BY name");
+                foreach (int idPostazione in ids)
+                {
+                    elenco.Add(new Postazione(this.Tenant, idPostazione));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
         public ElencoPostazioni(String Tenant, Reparto rp)
@@ -719,18 +670,15 @@ namespace KIS.App_Code
             this.Tenant = Tenant;
 
             elenco = new List<Postazione>();
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT DISTINCT(postazione) FROM repartipostazioniattivita WHERE reparto = @p0";
-            cmd.Parameters.AddWithValue("@p0", rp.id);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            while (rdr.Read())
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                elenco.Add(new Postazione(this.Tenant, rdr.GetInt32(0)));
+                var ids = conn.Query<int>("SELECT DISTINCT(postazione) FROM repartipostazioniattivita WHERE reparto = @p0",
+                    new { @p0 = rp.id });
+                foreach (int idPostazione in ids)
+                {
+                    elenco.Add(new Postazione(this.Tenant, idPostazione));
+                }
             }
-            rdr.Close();
-            conn.Close();
         }
 
     }
@@ -839,33 +787,39 @@ namespace KIS.App_Code
         {
             this.Tenant = Tenant;
 
-            MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-            conn.Open();
-            MySqlCommand cmd = conn.CreateCommand();
-            cmd.CommandText = "SELECT taskID, postazione, reparto, defStart, defFinish, status FROM tasksproduzione WHERE taskID = @p0";
-            cmd.Parameters.AddWithValue("@p0", tskProd);
-            MySqlDataReader rdr = cmd.ExecuteReader();
-            if (rdr.Read() && !rdr.IsDBNull(0))
+            using (var conn = (new Dati.Dati()).mycon(this.Tenant))
             {
-                this._TaskProduzioneID = rdr.GetInt32(0);
-                this._idPostazione = rdr.GetInt32(1);
-                this._idReparto = rdr.GetInt32(2);
-                this._Inizio = start;
-                this._Fine = end;
-                this._Status = rdr.GetChar(5);
+                var row = conn.QueryFirstOrDefault<IntervalloTaskPostazioneRow>(
+                    "SELECT taskID, postazione, reparto, defStart, defFinish, status FROM tasksproduzione WHERE taskID = @p0",
+                    new { @p0 = tskProd });
+                if (row != null)
+                {
+                    this._TaskProduzioneID = row.taskID;
+                    this._idPostazione = row.postazione;
+                    this._idReparto = row.reparto;
+                    this._Inizio = start;
+                    this._Fine = end;
+                    this._Status = row.status;
+                }
+                else
+                {
+                    this._TaskProduzioneID = -1;
+                    this._idPostazione = -1;
+                    this._idReparto = -1;
+                    this._Inizio = DateTime.UtcNow;
+                    this._Fine = DateTime.UtcNow;
+                    this._Status = '\0';
+                }
             }
-            else
-            {
-                this._TaskProduzioneID = -1;
-                this._idPostazione = -1;
-                this._idReparto = -1;
-                this._Inizio = DateTime.UtcNow;
-                this._Fine = DateTime.UtcNow;
-                this._Status = '\0';
-            }
-            rdr.Close();
-            conn.Close();
         }
+    }
+
+    internal class IntervalloTaskPostazioneRow
+    {
+        public int taskID { get; set; }
+        public int postazione { get; set; }
+        public int reparto { get; set; }
+        public char status { get; set; }
     }
 
     public class IntervalloPostazione
@@ -952,19 +906,16 @@ namespace KIS.App_Code
                 //this._Fine = TimeZoneInfo.ConvertTimeToUtc(FineCal, fuso.tzFusoOrario);
                 this._Inizio = InizioCal;
                 this._Fine = FineCal;
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT DISTINCT(reparto) FROM repartipostazioniattivita WHERE postazione = @p0";
-                cmd.Parameters.AddWithValue("@p0", idPost);
-                MySqlDataReader rdr = cmd.ExecuteReader();
                 List<Reparto> rpList = new List<Reparto>();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    rpList.Add(new Reparto(this.Tenant, rdr.GetInt32(0)));
+                    var ids = conn.Query<int>("SELECT DISTINCT(reparto) FROM repartipostazioniattivita WHERE postazione = @p0",
+                        new { @p0 = idPost });
+                    foreach (int idReparto in ids)
+                    {
+                        rpList.Add(new Reparto(this.Tenant, idReparto));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
                 for (int i = 0; i < rpList.Count; i++)
                 {
                     rpList[i].loadCalendario(InizioCal, FineCal);
@@ -989,97 +940,77 @@ namespace KIS.App_Code
             IntervalliTaskProduzione = new List<IntervalloTaskPostazione>();
             if (this.idPostazione != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                
-                cmd.CommandText = "SELECT taskID FROM tasksproduzione WHERE postazione = @p0"
-                    + " AND status <> 'F' AND earlyStart > @p1 AND lateFinish <= @p2 ORDER BY lateFinish ASC";
-                cmd.Parameters.AddWithValue("@p0", this.idPostazione);
-                cmd.Parameters.AddWithValue("@p1", this.Inizio.ToString("yyyy/MM/dd 00:00:00"));
-                cmd.Parameters.AddWithValue("@p2", this.Fine.ToString("yyyy/MM/dd 00:00:00"));
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while (rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    TaskProduzione tsk = new TaskProduzione(this.Tenant, rdr.GetInt32(0));
-                    // Ricerco l'intervallo di lavoro corretto
-                    int intervalloIniziale = -1;
-                    for (int i = 0; i < this.Intervalli.Count && intervalloIniziale == -1; i++)
+                    var ids = conn.Query<int>(
+                        "SELECT taskID FROM tasksproduzione WHERE postazione = @p0"
+                        + " AND status <> 'F' AND earlyStart > @p1 AND lateFinish <= @p2 ORDER BY lateFinish ASC",
+                        new { @p0 = this.idPostazione, @p1 = this.Inizio.ToString("yyyy/MM/dd 00:00:00"), @p2 = this.Fine.ToString("yyyy/MM/dd 00:00:00") });
+                    foreach (int taskId in ids)
                     {
-                        /*log += "Intervallo: " + this.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - "
-                        + this.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss") + " " + this.Intervalli[i].idReparto.ToString();
-                         * */
-                        if (this.Intervalli[i].Inizio <= tsk.StartEffettivo && tsk.StartEffettivo <= this.Intervalli[i].Fine && this.Intervalli[i].idReparto == tsk.RepartoID)
+                        TaskProduzione tsk = new TaskProduzione(this.Tenant, taskId);
+                        // Ricerco l'intervallo di lavoro corretto
+                        int intervalloIniziale = -1;
+                        for (int i = 0; i < this.Intervalli.Count && intervalloIniziale == -1; i++)
                         {
-                            intervalloIniziale = i;
-                            //log += " TROVATO!";
-                        }
-                        //log += "<br/>";
-                    }
-                    
-
-                    // Se ho trovato l'intervallo, inizio a creare il primo intervalloTask
-                    if (intervalloIniziale != -1)
-                    {
-                        //log += "Entro nell'if!<br/>";
-                        DateTime minore;
-                        TimeSpan residuo;
-                        if (this.Intervalli[intervalloIniziale].Fine >= tsk.FinishEffettivo)
-                        {
-                            minore = tsk.FinishEffettivo;
-                            residuo = new TimeSpan(0, 0, 0);
-                        }
-                        else
-                        {
-                            minore = this.Intervalli[intervalloIniziale].Fine;
-                            residuo = tsk.FinishEffettivo - this.Intervalli[intervalloIniziale].Fine;
-                        }
-                        //log += "Minore: " + minore.ToString() + " Residuo: " + residuo.ToString();
-
-                        this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(this.Tenant, tsk.TaskProduzioneID, tsk.StartEffettivo, minore));
-                       // log += "Prima stringa: " + this.IntervalliTaskProduzione[0].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - "
-                        //    + this.IntervalliTaskProduzione[0].Fine.ToString("dd/MM/yyyy HH:mm:ss") + "<br/>";
-                        int nextInterv = intervalloIniziale;
-                        while (residuo.TotalSeconds > 0)
-                        {
-                            bool found = false;
-                            //log += "Ricerco il prossimo intervallo utile<br/>";
-                            // Ricerco il prossimo intervallo utile!
-                            for (int i = nextInterv + 1; i < this.Intervalli.Count && found == false; i++)
+                            if (this.Intervalli[i].Inizio <= tsk.StartEffettivo && tsk.StartEffettivo <= this.Intervalli[i].Fine && this.Intervalli[i].idReparto == tsk.RepartoID)
                             {
-                                //log += "nextInterv: " + nextInterv.ToString() + "<br/>";
-                                log += tsk.RepartoID.ToString() + " " + this.Intervalli[i].idReparto.ToString() + " "
-                                    + this.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - "
-                                    + this.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
-                                if (this.Intervalli[i].idReparto == tsk.RepartoID)
-                                {
-                                    found = true;
-                                  //  log += " FOUND";
-                                    nextInterv = i;
-                                }
-                                //log += "<br/>";
+                                intervalloIniziale = i;
                             }
+                        }
+                        
 
-                            // Trovo il minore tra fine task e fine intervallo e calcolo il residuo
-                            if (this.Intervalli[nextInterv].Fine >= tsk.FinishEffettivo)
+                        // Se ho trovato l'intervallo, inizio a creare il primo intervalloTask
+                        if (intervalloIniziale != -1)
+                        {
+                            DateTime minore;
+                            TimeSpan residuo;
+                            if (this.Intervalli[intervalloIniziale].Fine >= tsk.FinishEffettivo)
                             {
                                 minore = tsk.FinishEffettivo;
                                 residuo = new TimeSpan(0, 0, 0);
                             }
                             else
                             {
-                                minore = this.Intervalli[nextInterv].Fine;
-                                residuo = tsk.FinishEffettivo - this.Intervalli[nextInterv].Fine;
+                                minore = this.Intervalli[intervalloIniziale].Fine;
+                                residuo = tsk.FinishEffettivo - this.Intervalli[intervalloIniziale].Fine;
                             }
-                            //log += "Minore: " + minore.ToString() + " Residuo: " + residuo.ToString() + "<br/>";
-                            // Aggiungo l'intervallo alla lista
-                            this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(this.Tenant, tsk.TaskProduzioneID, this.Intervalli[nextInterv].Inizio, minore));
 
+                            this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(this.Tenant, tsk.TaskProduzioneID, tsk.StartEffettivo, minore));
+                            int nextInterv = intervalloIniziale;
+                            while (residuo.TotalSeconds > 0)
+                            {
+                                bool found = false;
+                                for (int i = nextInterv + 1; i < this.Intervalli.Count && found == false; i++)
+                                {
+                                    log += tsk.RepartoID.ToString() + " " + this.Intervalli[i].idReparto.ToString() + " "
+                                        + this.Intervalli[i].Inizio.ToString("dd/MM/yyyy HH:mm:ss") + " - "
+                                        + this.Intervalli[i].Fine.ToString("dd/MM/yyyy HH:mm:ss");
+                                    if (this.Intervalli[i].idReparto == tsk.RepartoID)
+                                    {
+                                        found = true;
+                                        nextInterv = i;
+                                    }
+                                }
+
+                                // Trovo il minore tra fine task e fine intervallo e calcolo il residuo
+                                if (this.Intervalli[nextInterv].Fine >= tsk.FinishEffettivo)
+                                {
+                                    minore = tsk.FinishEffettivo;
+                                    residuo = new TimeSpan(0, 0, 0);
+                                }
+                                else
+                                {
+                                    minore = this.Intervalli[nextInterv].Fine;
+                                    residuo = tsk.FinishEffettivo - this.Intervalli[nextInterv].Fine;
+                                }
+                                // Aggiungo l'intervallo alla lista
+                                this.IntervalliTaskProduzione.Add(new IntervalloTaskPostazione(this.Tenant, tsk.TaskProduzioneID, this.Intervalli[nextInterv].Inizio, minore));
+
+                            }
                         }
                     }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -1104,47 +1035,43 @@ namespace KIS.App_Code
             {
                 if (this.postazione!=null && this.turno!=null && this.postazione.id != -1 && this.turno.id != -1)
                 {
-                    MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                    conn.Open();
-                    MySqlCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "SELECT risorse FROM risorseturnopostazione WHERE "
-                        + " idTurno = @p0"
-                        + " AND idPostazione = @p1";
-                    cmd.Parameters.AddWithValue("@p0", this.turno.id);
-                    cmd.Parameters.AddWithValue("@p1", this.postazione.id);
-                    MySqlDataReader rdr = cmd.ExecuteReader();
-                    Boolean check = false;
-                    
-                    check = (rdr.Read() && !rdr.IsDBNull(0)) ? true : false;
-                    rdr.Close();
-                    cmd.Parameters.AddWithValue("@p2", value);
-                    if (check)
+                    using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                     {
-                        cmd.CommandText = "UPDATE risorseturnopostazione SET risorse = @p2"
-                            + " WHERE idTurno = @p0"
-                            + " AND idPostazione = @p1";
+                        int? risorse = conn.QueryFirstOrDefault<int?>(
+                            "SELECT risorse FROM risorseturnopostazione WHERE "
+                            + " idTurno = @p0"
+                            + " AND idPostazione = @p1",
+                            new { @p0 = this.turno.id, @p1 = this.postazione.id });
+                        Boolean check = risorse.HasValue;
+                        conn.Open();
+                        using (var tr = conn.BeginTransaction())
+                        {
+                            string sql;
+                            if (check)
+                            {
+                                sql = "UPDATE risorseturnopostazione SET risorse = @p2"
+                                    + " WHERE idTurno = @p0"
+                                    + " AND idPostazione = @p1";
+                            }
+                            else
+                            {
+                                sql = "INSERT INTO risorseturnopostazione(idTurno, idPostazione, risorse) "
+                                    + " VALUES(@p0, @p1, @p2)";
+                            }
+                            log = sql;
+                            try
+                            {
+                                conn.Execute(sql, new { @p0 = this.turno.id, @p1 = this.postazione.id, @p2 = value }, tr);
+                                this._NumRisorse = value;
+                                tr.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                log = ex.Message;
+                                tr.Rollback();
+                            }
+                        }
                     }
-                    else
-                    {
-                        cmd.CommandText = "INSERT INTO risorseturnopostazione(idTurno, idPostazione, risorse) "
-                            + " VALUES(@p0, @p1, @p2)";
-                    }
-                    log = cmd.CommandText;
-                    MySqlTransaction tr = conn.BeginTransaction();
-                    cmd.Transaction = tr;
-                    try
-                    {
-                        cmd.ExecuteNonQuery();
-                        this._NumRisorse = value;
-                        tr.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        log = ex.Message;
-                        tr.Rollback();
-                    }
-
-                    conn.Close();
                 }
             }
         }
@@ -1161,21 +1088,18 @@ namespace KIS.App_Code
                 this._postazione = new Postazione(this.Tenant, pst.id);
                 this._turno = new Turno(this.Tenant, trn.id);
 
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT risorse FROM risorseturnopostazione WHERE "
-                    + "idTurno = @p0"
-                    + " AND idPostazione = @p1";
-                cmd.Parameters.AddWithValue("@p0", trn.id);
-                cmd.Parameters.AddWithValue("@p1", pst.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read() && !rdr.IsDBNull(0))
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._NumRisorse = rdr.GetInt32(0);
+                    int? risorse = conn.QueryFirstOrDefault<int?>(
+                        "SELECT risorse FROM risorseturnopostazione WHERE "
+                        + "idTurno = @p0"
+                        + " AND idPostazione = @p1",
+                        new { @p0 = trn.id, @p1 = pst.id });
+                    if (risorse.HasValue)
+                    {
+                        this._NumRisorse = risorse.Value;
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
 
@@ -1186,31 +1110,30 @@ namespace KIS.App_Code
             Boolean ret = false;
             if (this.turno != null && this.postazione != null)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlTransaction tr = conn.BeginTransaction();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.Transaction = tr;
-                cmd.CommandText = "DELETE FROM risorseturnopostazione WHERE "
-                        + "idTurno = @p0"
-                        + " AND idPostazione = @p1";
-                cmd.Parameters.AddWithValue("@p0", this.turno.id);
-                cmd.Parameters.AddWithValue("@p1", this.postazione.id);
-                try
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    cmd.ExecuteNonQuery();
-                    tr.Commit();
-                    this._turno = null;
-                    this._postazione = null;
-                    this._NumRisorse = -1;
+                    conn.Open();
+                    using (var tr = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            conn.Execute("DELETE FROM risorseturnopostazione WHERE "
+                                    + "idTurno = @p0"
+                                    + " AND idPostazione = @p1",
+                                new { @p0 = this.turno.id, @p1 = this.postazione.id }, tr);
+                            tr.Commit();
+                            this._turno = null;
+                            this._postazione = null;
+                            this._NumRisorse = -1;
+                        }
+                        catch (Exception ex)
+                        {
+                            log = ex.Message;
+                            ret = false;
+                            tr.Rollback();
+                        }
+                    }
                 }
-                catch (Exception ex)
-                {
-                    log = ex.Message;
-                    ret = false;
-                    tr.Rollback();
-                }
-                conn.Close();
             }
             return ret;
         }
@@ -1232,18 +1155,15 @@ namespace KIS.App_Code
 
             if (pst.id != -1)
             {
-                MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
-                conn.Open();
-                MySqlCommand cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT idTurno FROM risorseturnopostazione WHERE idPostazione = @p0";
-                cmd.Parameters.AddWithValue("@p0", pst.id);
-                MySqlDataReader rdr = cmd.ExecuteReader();
-                while(rdr.Read())
+                using (var conn = (new Dati.Dati()).mycon(this.Tenant))
                 {
-                    this._Turni.Add(new RisorsePostazioneTurno(this.Tenant, pst, new Turno(this.Tenant, rdr.GetInt32(0))));
+                    var ids = conn.Query<int>("SELECT idTurno FROM risorseturnopostazione WHERE idPostazione = @p0",
+                        new { @p0 = pst.id });
+                    foreach (int idTurno in ids)
+                    {
+                        this._Turni.Add(new RisorsePostazioneTurno(this.Tenant, pst, new Turno(this.Tenant, idTurno)));
+                    }
                 }
-                rdr.Close();
-                conn.Close();
             }
         }
     }

@@ -1,83 +1,44 @@
-@inherits KIS.Commesse.wzAddCliente1
 @{
-    // placeholder – markup reproduced from wzAddCliente.ascx
+    ViewBag.Title = "Aggiungi Commessa";
+    Layout = "~/Site.cshtml";
 }
-<label id="lbl1" />
-<table id="frmAddcliente" class="table table-hover table-striped">
-    <tr>
-        <td><label id="lblCodiceCliente" /></td>
-        <td><input type="text" id="txtCodiceCliente" required />
-            <span style="color:red;"><label id="lblReqField" /></span>
-        </td>
-    </tr>
-    <tr>
-        <td><label id="lblRagioneSociale" /></td>
-        <td><input type="text" id="txtRagSoc" required />
-            <span style="color:red;"><label id="lblReqField2" /></span>
-        </td>
-    </tr>
-    <tr>
-        <td><label id="lblPartitaIVA" /></td>
-        <td><input type="text" id="txtPartitaIVA" maxlength="255" />
-        </td>
-    </tr>
-    <tr>
-        <td><label id="lblCodFiscale" /></td>
-        <td><input type="text" id="txtCodFiscale" maxlength="255" />
-        </td>
-    </tr>
-    <tr>
-        <td><label id="lblIndirizzo" /></td>
-        <td><input type="text" id="txtIndirizzo" maxlength="255" /></td>
-    </tr>
-    <tr>
-        <td><label id="lblCitta" /></td>
-        <td><input type="text" id="txtCitta" maxlength="255" /></td>
-    </tr>
-    <tr>
-        <td><label id="lblProvincia" /></td>
-        <td><input type="text" id="txtProvincia" />
-        </td>
-    </tr>
-    <tr>
-        <td><label id="lblCAP" /></td>
-        <td><input type="text" id="txtCAP" maxlength="10" /></td>
-    </tr>
-    <tr>
-        <td><label id="lblStato" /></td>
-        <td><input type="text" id="txtStato" maxlength="255" /></td>
-    </tr>
-    <tr>
-        <td><label id="lblTelefono" /></td>
-        <td><input type="text" id="txtTelefono" maxlength="45" /></td>
-    </tr>
-    <tr>
-        <td><label id="lblEmail" /></td>
-        <td><input type="text" id="txtEmail" maxlength="255" /></td>
-    </tr>
-    <tr>
-        <td><label id="lblKBBox" /></td>
-        <td>
-            <select id="ddlKanban">
-                <option value="0"></option>
-                <option value="1"></option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" style="text-align: center;">
-            <button type="button" id="btnSave" class="btn btn-success" onclick="doSave()">Salva</button>
-            <button type="button" id="btnUndo" class="btn">Annulla</button>
-        </td>
-    </tr>
-</table>
 
-<script type="text/javascript">
-    function doSave() {
-        if (!$("#txtCodiceCliente").val() || !$("#txtRagSoc").val()) {
-            alert("Compilare tutti i campi obbligatori");
-            return;
-        }
-        alert("Cliente aggiunto");
-    }
-</script>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Aggiungi Commessa</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="cliente">Cliente:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="cliente" placeholder="Nome cliente" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="ragioneSociale">Ragione Sociale:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="ragioneSociale" placeholder="Ragione sociale" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="esterno">External ID:</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="esterno" placeholder="External ID" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="note">Note:</label>
+                <div class="col-sm-10">
+                    <textarea class="form-control" rows="3" id="note"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-primary">Salva</button>
+                    <button type="button" class="btn btn-warning">Annulla</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

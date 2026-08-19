@@ -21,18 +21,18 @@
     <table>
         <tr>
             <td>
-    <asp:Calendar runat="server" ID="dtStartCal" OnSelectionChanged="dtStartCal_SelectionChanged"/></td>
+     runat="server" ID="dtStartCal" OnSelectionChanged="dtStartCal_SelectionChanged"/></td>
             <td>
-<asp:Calendar runat="server" ID="dtEndCal" OnSelectionChanged="dtEndCal_SelectionChanged" />
+ runat="server" ID="dtEndCal" OnSelectionChanged="dtEndCal_SelectionChanged" />
             </td>
         </tr>
             </table>
     
-    <asp:Chart runat="server" ID="crt" Width="1000px" Height="160px">
-    <ChartAreas>
-    <asp:ChartArea Name="turni"></asp:ChartArea>
+    
+    
+    
   </ChartAreas>    
-        </asp:Chart>
+        
     <br />
     <asp:Label runat="server" ID="log" />
     </asp:Content>

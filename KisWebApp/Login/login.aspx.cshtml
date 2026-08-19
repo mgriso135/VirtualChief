@@ -1,0 +1,41 @@
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Site.cshtml";
+}
+
+<div class="container-fluid">
+    <h1>Login</h1>
+    <p>Effettua l'accesso al sistema VirtualChief.</p>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Accesso Utente</h3>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="username">Username:</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="username" placeholder="Username" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-3" for="password">Password:</label>
+                    <div class="col-sm-9">
+                        <input type="password" class="form-control" id="password" placeholder="Password" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <button type="submit" class="btn btn-primary">Accedi</button>
+                        <button type="button" class="btn-link">Registrati</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <div class="well">
+                <h4>Informazioni</h4>
+                <p>Utilizza le credenziali fornite dal tuo amministratore per accedere al sistema.</p>
+                <p>In caso di problemi, contatta l'assistenza tecnica.</p>
+            </div>
+        </div>
+    </div>
+</div>

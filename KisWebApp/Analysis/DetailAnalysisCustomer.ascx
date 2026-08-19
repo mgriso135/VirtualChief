@@ -41,17 +41,7 @@
     </div>
 <div class="row-fluid">
     <div class="span12">
-        <asp:Chart runat="server" ID="Chart1" OnLoad="Chart1_Load">
-            <Titles> 
-      <asp:Title Text="<%$resources:lblOreLavoro %>"></asp:Title> 
-   </Titles> 
-            <Series>
-                <asp:Series Name="interv" ChartType="Line" ChartArea="ChartArea1" /></Series>
-            <chartareas> 
-      <asp:ChartArea Name="ChartArea1"> 
-      </asp:ChartArea> 
-   </chartareas> 
-        </asp:Chart>
+        <!-- Google Charts placeholder removed -->
         </div>
     </div>
 

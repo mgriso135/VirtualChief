@@ -123,20 +123,7 @@
     <td style="vertical-align: top;">
         
         <asp:UpdatePanel runat="server"><ContentTemplate>
-        <asp:chart ID="Chart1" runat="server" Width="1000" Height="400">
-            <Series>
-                <asp:Series ChartArea="ChartArea1" ChartType="StackedColumn" Name="Series1">
-                    <EmptyPointStyle BorderDashStyle="Dot" IsVisibleInLegend="False" />
-                </asp:Series>
-            </Series>
-<ChartAreas>
-    <asp:ChartArea Name="ChartArea1">
-        <AxisY Minimum="0">
-            
-        </AxisY>
-    </asp:ChartArea>
-  </ChartAreas>
-</asp:chart>
+        <!-- Google Charts placeholder removed -->
 
         <br />
 

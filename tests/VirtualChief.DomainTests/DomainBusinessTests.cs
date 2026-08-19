@@ -731,11 +731,131 @@ public class DomainBusinessTests
     }
 
     [Fact]
+    public void Postazione_ById_LoadsFromSeed()
+    {
+        var pst = new Postazione(Tenant, 20);
+        Assert.Equal(20, pst.id);
+        Assert.Equal("Magazzino", pst.name);
+    }
+
+    [Fact]
+    public void Postazione_UnknownId_ReturnsMinusOne()
+    {
+        var pst = new Postazione(Tenant, 99999);
+        Assert.Equal(-1, pst.id);
+        Assert.Equal("", pst.name);
+    }
+
+    [Fact]
+    public void ElencoPostazioni_LoadsFromSeed()
+    {
+        var el = new ElencoPostazioni(Tenant);
+        Assert.NotEmpty(el.elenco);
+        Assert.Contains(el.elenco, p => p.id == 20);
+    }
+
+    [Fact]
+    public void Postazione_LoadReparti_LoadsSeed()
+    {
+        var pst = new Postazione(Tenant, 20);
+        Assert.True(pst.loadReparti());
+        Assert.NotNull(pst.ElencoIDReparti);
+    }
+
+    [Fact]
+    public void Postazione_LoadTasks_LoadsProcesses()
+    {
+        var pst = new Postazione(Tenant, 20);
+        pst.loadTasks();
+        Assert.NotNull(pst.tasks);
+    }
+
+    [Fact]
+    public void TaskProduzione_ById_LoadsFromSeed()
+    {
+        var tsk = new TaskProduzione(Tenant, 95);
+        Assert.Equal(95, tsk.TaskProduzioneID);
+        Assert.Equal("Taglio Ferro", tsk.Name);
+        Assert.Equal(29, tsk.PostazioneID);
+        Assert.Equal(2, tsk.RepartoID);
+        Assert.Equal('F', tsk.Status);
+    }
+
+    [Fact]
+    public void TaskProduzione_UnknownId_ReturnsMinusOne()
+    {
+        var tsk = new TaskProduzione(Tenant, 9999999);
+        Assert.Equal(-1, tsk.TaskProduzioneID);
+        Assert.Equal("", tsk.Name);
+    }
+
+    [Fact]
+    public void WorkInstruction_ByIdAndVersion_LoadsFromSeed()
+    {
+        var wi = new KIS.App_Sources.WorkInstructions.WorkInstruction(Tenant, 0, 0);
+        Assert.Equal(0, wi.ID);
+        Assert.Equal(0, wi.Version);
+        Assert.Equal("Picking", wi.Name);
+    }
+
+    [Fact]
+    public void WorkInstruction_UnknownId_ReturnsMinusOne()
+    {
+        var wi = new KIS.App_Sources.WorkInstructions.WorkInstruction(Tenant, 999999, 0);
+        Assert.Equal(-1, wi.ID);
+        Assert.Equal(-1, wi.Version);
+        Assert.Equal("", wi.Name);
+    }
+
+    [Fact]
+    public void WorkInstruction_LatestVersion_LoadsFromSeed()
+    {
+        var wi = new KIS.App_Sources.WorkInstructions.WorkInstruction(Tenant, 1);
+        Assert.Equal(1, wi.ID);
+        Assert.Equal("DDD.pdf", wi.Name);
+    }
+
+    [Fact]
     public void ImprovementActions_LoadsEmptyListFromSeed()
     {
         var list = new ImprovementActions(Tenant);
         list.loadImprovementActions();
         Assert.NotNull(list.ImprovementActionsList);
         Assert.Empty(list.ImprovementActionsList);
+    }
+
+    [Fact]
+    public void InputPoints_EmptyTenant_ListStaysEmpty()
+    {
+        var ips = new InputPoints("");
+        Assert.Equal("", ips.Tenant);
+        Assert.Empty(ips.list);
+        ips.loadInputPoints();
+        Assert.Empty(ips.list);
+    }
+
+    [Fact]
+    public void InputPoint_EmptyTenant_ReturnsMinusOne()
+    {
+        var ip = new InputPoint("", 5);
+        Assert.Equal(-1, ip.id);
+    }
+
+    [Fact]
+    public void InputPointDepartment_EmptyTenant_ReturnsMinusOne()
+    {
+        var d = new InputPointDepartment("", 1, 2);
+        Assert.Equal(-1, d.inputpointId);
+        Assert.Equal(-1, d.departmentId);
+        Assert.Equal(2, d.delete());
+    }
+
+    [Fact]
+    public void InputPointWorkstation_EmptyTenant_ReturnsMinusOne()
+    {
+        var w = new InputPointWorkstation("", 1, 2);
+        Assert.Equal(-1, w.inputpointId);
+        Assert.Equal(-1, w.workstationId);
+        Assert.Equal(2, w.delete());
     }
 }
