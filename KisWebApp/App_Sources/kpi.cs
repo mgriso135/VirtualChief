@@ -116,6 +116,11 @@ namespace KIS.App_Code
             this._description = "";
         }
 
+        public Kpi(int kpiID)
+            : this(KIS.App_Code.WebEnv.ActiveWorkspaceName, kpiID)
+        {
+        }
+
         public Kpi(String Tenant, int kpiID)
         {
             this.Tenant = Tenant;

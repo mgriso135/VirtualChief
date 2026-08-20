@@ -257,31 +257,18 @@ namespace KIS.Produzione
                         }
                         else if (art.Status == 'P')
                         {
-                            art.loadTasksProduzione();
-                            bool checkYellow = false;
-                            bool checkRed = false;
-                            for (int i = 0; i < art.Tasks.Count; i++)
-                            {
-                                if (DateTime.Now >= art.Tasks[i].EarlyStart && DateTime.Now <= art.Tasks[i].LateStart)
-                                {
-                                    checkYellow = true;
-                                }
-                                else if (DateTime.Now >= art.Tasks[i].LateStart)
-                                {
-                                    checkRed = true;
-                                }
-                            }
-                            if (checkYellow == false && checkRed == false)
+                            KIS.App_Sources.StatoAvanzamentoArticolo stato = KIS.App_Sources.AvanzamentoProduzioneService.ClassificaStato(art, DateTime.Now);
+                            if (stato == KIS.App_Sources.StatoAvanzamentoArticolo.NonIniziato)
                             {
                                 tRow.BgColor = "#ADFF2F";
                                 tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#ADFF2F'");
                             }
-                            else if (checkRed == true)
+                            else if (stato == KIS.App_Sources.StatoAvanzamentoArticolo.InRitardo)
                             {
                                 tRow.BgColor = "#FF0000";
                                 tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#FF0000'");
                             }
-                            else if (checkYellow == true)
+                            else if (stato == KIS.App_Sources.StatoAvanzamentoArticolo.InCorso)
                             {
                                 tRow.BgColor = "#FFFF00";
                                 tRow.Attributes.Add("onMouseOut", "this.style.backgroundColor='#FFFF00'");
@@ -391,21 +378,7 @@ namespace KIS.Produzione
 
         protected void loadCommesse()
         {
-            ElencoCommesse elComm = new ElencoCommesse(Session["ActiveWorkspace_Name"].ToString());
-            elComm.loadCommesse();
-            for (int i = 0; i < elComm.Commesse.Count; i++)
-            {
-                elComm.Commesse[i].loadArticoli();
-                for (int j = 0; j < elComm.Commesse[i].Articoli.Count; j++)
-                {
-                    if (elComm.Commesse[i].Articoli[j].Status == 'N' || elComm.Commesse[i].Articoli[j].Status == 'P')
-                    {
-                        artNP.Add(elComm.Commesse[i].Articoli[j]);
-                        /*lbl1.Text += "Articolo: " + elComm.Commesse[i].Articoli[j].ID.ToString() + "/" + elComm.Commesse[i].Articoli[j].Year.ToString() 
-                            + elComm.Commesse[i].Articoli[j].LateStart.ToString("dd/MM/yyyy HH:mm:ss") + "<br />";*/
-                    }
-                }
-            }
+            artNP = KIS.App_Sources.AvanzamentoProduzioneService.CaricaArticoliNonPianificati(Session["ActiveWorkspace_Name"].ToString());
         }
 
         protected void btnSortID_Click(object sender, EventArgs e)

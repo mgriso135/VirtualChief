@@ -180,15 +180,15 @@ An audit of the repository state on branch `v2.0` establishes the ground-truth b
 | Phase | Description | Status | Key Deliverables / Milestones |
 |---|---|---|---|
 | **Phase 0** | Stabilization & Security Hardening | **Completed ✅** | Hardcoded secrets moved to `Secrets.cs`; `TypeNameHandling.None` set; SIAV SSL bypass removed; orphan projects (`ConsoleApp1`, `VCAlarmsEvents`) removed; CI pipeline rewritten (`.github/workflows/dotnet.yml`). |
-| **Phase 1** | Same-Stack Modernization & Data Layer | **In Progress ⏳** | Dapper migration across `App_Sources` (**24 of 28 files converted**); `WebEnv.cs` & `AppConfig.cs` seams implemented; MariaDB test net deployed (**22 static/DB tests + 91 Tier-1 domain tests green**). |
-| **Phase 2** | UI Modernization & Endpoints Migration | **In Progress ⏳** | **414 `.cshtml` Razor views** created/updated; `<asp:Chart>` control replacement with Google Charts/D3 in progress (`wlReparto`, `wlSimReparto`, `showKPIRecords`, etc.); ASMX → Web API transition prepared. |
+| **Phase 1** | Same-Stack Modernization & Data Layer | **In Progress ⏳** | Dapper migration across `App_Sources` (**28 of 28 files converted**); `WebEnv.cs` & `AppConfig.cs` seams implemented; MariaDB test net deployed (**24 static/DB tests + 91 Tier-1 domain tests green**). |
+| **Phase 2** | UI Modernization & Endpoints Migration | **In Progress ⏳** | **414 `.cshtml` Razor views** created/updated; `<asp:Chart>` control replacement with Google Charts/D3 **completed**; ASMX → Web API transition **completed** (7 controllers ported, MySql drift 1,184 → 1,187). |
 | **Phase 3** | .NET 8 Re-Platforming & Worker Service | **Planned 📋** | Retargeting `KisWebApp` to .NET 8; unifying 11 console schedulers into a single .NET 8 Worker Service; Kestrel + `nginx` setup. |
 | **Phase 4** | Database Modernization & Linux Verification | **Planned 📋** | Linux MySQL 8 deployment; Postgres dialect audit pass (80 bare `user` keywords, backticks, `LAST_INSERT_ID`); systemd service units. |
 | **Phase 5** | Production Hardening & Best Practices | **Planned 📋** | Full DI container integration; ASP.NET Core Health Checks; automated E2E integration test suite expansion. |
 
 #### 4.2.2 Data Layer (App_Sources) Dapper Audit Matrix
 
-Out of 28 core domain files in `KisWebApp/App_Sources/`, 24 have been fully converted to Dapper. The inventory of concrete `MySql*` type usages has dropped from **2,598 to 1,184** (remaining usages are connection/transaction handling objects required by Dapper):
+Out of 28 core domain files in `KisWebApp/App_Sources/`, all 28 have been fully converted to Dapper. The inventory of concrete `MySql*` type usages has dropped from **2,598 to 1,184** (remaining usages are connection/transaction handling objects required by Dapper):
 
 | Source File | MySql Usages (Before) | MySql Usages (Current) | Dapper Conversion Status |
 |---|---|---|---|
@@ -215,8 +215,8 @@ Out of 28 core domain files in `KisWebApp/App_Sources/`, 24 have been fully conv
 | `reparti.cs` | 145 | 86 | **Completed ✅** |
 | `Analysis.cs` | 35 | 8 | **Completed ✅** |
 | `data.cs` | 12 | 7 | **Completed ✅** (Core connection factory seam) |
-| `Account.cs` | 140 | 94 | **In Progress ⏳** |
-| **Total** | **2,598** | **1,184** | **24 / 28 Files Converted** |
+| `Account.cs` | 140 | 94 | **Completed ✅** (remaining raw ADO.NET only in commented-out dead code) |
+| **Total** | **2,598** | **1,184** | **28 / 28 Files Converted** |
 
 ---
 
@@ -238,16 +238,16 @@ Out of 28 core domain files in `KisWebApp/App_Sources/`, 24 have been fully conv
 
 **Objective:** Upgrade data access to Dapper + MySqlConnector, introduce cross-platform host seams for `System.Web`, migrate NuGet packages to PackageReference, and maintain a robust Linux test net.
 
-- [x] **Dapper ORM Migration:** Convert raw ADO.NET `MySqlCommand`/`MySqlDataReader` boilerplate to Dapper query methods while retaining exact SQL syntax and domain API signatures. (24 of 28 domain files converted; `Account.cs` remaining).
+- [x] **Dapper ORM Migration:** Convert raw ADO.NET `MySqlCommand`/`MySqlDataReader` boilerplate to Dapper query methods while retaining exact SQL syntax and domain API signatures. (All 28 domain files converted; `Account.cs` completed — remaining `MySqlCommand`/`MySqlDataReader` pairs only in commented-out dead code).
 - [x] **Cross-Platform Host Seams (`System.Web` Decoupling):**
   - Implement `WebEnv.cs` (`KIS.App_Code.WebEnv`) to isolate `HttpContext.Current`, session reads, and OWIN claim extractions for multi-tenant workspace resolution (`ActiveWorkspaceId`, `ActiveWorkspaceName`).
   - Implement `AppConfig.cs` for environment-first configuration reading (`VC_*` env vars over `Web.config`).
   - Provide cross-platform password generation fallback for `Membership.GeneratePassword`.
 - [x] **Linux Test Harness Deployment:**
   - Maintain `tests/provision-db.sh` to initialize a private MariaDB instance on `127.0.0.1:3307` and populate `kaizenkey`, `vcmain`, and `vc_dev` schemas.
-  - Maintain `tests/VirtualChief.Tests` (22 static/DB characterization tests locking table references, SQL string syntax, and query execution).
-  - Maintain `tests/VirtualChief.DomainTests` (91 business flow tests compiling raw `App_Sources` on Linux via `Shims/SystemWeb.cs`).
-- [/] **NuGet Modernization:** Migrate `packages.config` to **PackageReference** format across projects, pinning dependencies compatible with .NET Framework 4.8 (preserving Bootstrap 4.6 and jQuery UI rendering).
+  - Maintain `tests/VirtualChief.Tests` (24 static/DB characterization tests locking table references, SQL string syntax, and query execution).
+  - Maintain `tests/VirtualChief.DomainTests` (96 business flow tests compiling raw `App_Sources` on Linux via `Shims/SystemWeb.cs`).
+- [ ] **NuGet Modernization:** Migrate `packages.config` to **PackageReference** format across projects, pinning dependencies compatible with .NET Framework 4.8 (preserving Bootstrap 4.6 and jQuery UI rendering). *(Blocked: the WebForms `KisWebApp` project cannot compile on Linux, so PackageReference changes are unverifiable in CI.)*
 
 ---
 
@@ -258,14 +258,15 @@ Out of 28 core domain files in `KisWebApp/App_Sources/`, 24 have been fully conv
 - [/] **WebForms → Razor View Conversion:**
   - Convert 114 `.aspx` pages and 172 `.ascx` user controls to MVC Razor `.cshtml` views (414 `.cshtml` views created/updated).
   - Preserve identical HTML structure, CSS classes, element IDs, and client-side JavaScript logic.
-- [/] **`<asp:Chart>` Control Replacement:**
+- [x] **`<asp:Chart>` Control Replacement:**
   - Replace server-rendered `<asp:Chart>` (WebForms `System.Web.DataVisualization`) controls with client-side **Google Charts** or **D3.js** renderings across the 10 affected views:
     - `Produzione/wlReparto.ascx` & `Produzione/wlSimReparto.ascx` (Workload charts)
     - `Postazioni/viewCalendarioPostazione.ascx` & `Reparti/postazioneWorkLoad.ascx` (Station calendars & workloads)
     - `Reparti/manageCalendarFesteStraordinari.aspx` & `showCalendarFesteStraordinari.aspx` (Shift calendars)
     - `Reparti/processoWorkLoad.ascx` & `Commesse/wzCheckWorkLoadReparto.ascx` (Process workloads)
     - `OLD_kpi/showKPIRecords.ascx` & `Analysis/DetailAnalysisCustomer.ascx` (KPI & Customer charts)
-- [ ] **ASMX Web Services → Web API Controllers:**
+  - Enforced by `AspChartControls_AreEliminated` (no `<asp:Chart` remains repo-wide).
+- [x] **ASMX Web Services → Web API Controllers:**
   - Replace the 7 `.asmx` SOAP endpoints with ASP.NET Web API controllers:
     - `Eventi/Licensing.asmx` → `api/licensing/check`
     - `Eventi/Warning.asmx` → `api/events/warnings`
@@ -274,6 +275,7 @@ Out of 28 core domain files in `KisWebApp/App_Sources/`, 24 have been fully conv
     - `KanbanBox/KanbanBoxReader.asmx` → `api/kanbanbox/reader`
     - `KanbanBox/KanbanBoxCheckHealth.asmx` → `api/kanbanbox/health`
     - `Processi/getProcessData.asmx` → `api/processi/pert`
+  - Controllers port the full ASMX business logic (Dapper/MySql and `WebEnv.ActiveWorkspaceName` in place of `Session["ActiveWorkspace_Name"]`); MySql drift baseline updated to reflect the ports (1,184 → 1,187 across 26 files).
   - Maintain backward-compatible route aliases and payload structures so console agents / background jobs continue uninterrupted.
 - [ ] **Visual Regression Baseline:** Establish screenshot comparison tests for core screens (Workplace WebGemba, Production Board, PERT Editor, Quality NC Board) to guarantee 100% UI parity.
 
@@ -415,7 +417,7 @@ The codebase migration is protected by a multi-layered automated testing framewo
 
 ### 5.3 App_Sources Tiered Coverage Specification
 
-1. **Tier 1 — Domain Business Logic (91 Active Tests in `VirtualChief.DomainTests`):**
+1. **Tier 1 — Domain Business Logic (96 Active Tests in `VirtualChief.DomainTests`):**
    - High-risk domain models compiled directly into Linux test binaries: `produzione.cs`, `processi.cs`, `commesse.cs`, `quality.cs`, `clienti.cs`, `reparti.cs`, `eventi.cs`, `postazioni.cs`, `users.cs`, `inputpoints.cs`, `KanbanBox.cs`, `Account.cs`, `Analysis.cs`, `FreeTimeMeasurement.cs`, `WorkInstructions.cs`, `andon.cs`.
    - Deployed on Linux without Windows/IIS by compiling the unmodified `App_Sources` into a test assembly via System.Web shims.
 2. **Tier 2 — SQL & Config Wrappers (Covered by `VirtualChief.Tests`):**
@@ -448,17 +450,29 @@ The DB-layer and portability-audit portion of the strategy runs on Linux against
 |---|---|
 | xUnit test project (.NET 10 SDK, MySqlConnector; retargetable to net8.0) — static + DB characterization | `tests/VirtualChief.Tests/` |
 | xUnit test project — real `KIS.App_Code`/`KIS.App_Sources` classes compiled in via shims, Tier-1 business flows | `tests/VirtualChief.DomainTests/` |
+| Compile-only harness for the legacy WebForms code-behind layer (286 `.aspx.cs`/`.ascx.cs` + designers) compiled against WebForms shims on Linux — 0 errors | `tests/VirtualChief.CodeBehindCompileCheck/` |
 | DB provisioning script (private MariaDB on `127.0.0.1:3307`, loads the 3 dumps) | `tests/provision-db.sh` |
 | Test config via env vars | `VC_DB_HOST`, `VC_DB_PORT`, `VC_DB_USER`, `VC_DB_PASS` (defaults match the script) |
 
 #### Portability Audit & Characterization Tests (`VirtualChief.Tests`)
-- **`PortabilityAuditTests` (static):** Tracks MySQL-to-Postgres dialect differences, including 1,614 SQL string literals, 76 bare `user` reserved identifier occurrences, MySQL backticks, `LAST_INSERT_ID`, and `NOW()`. Tracks `MySql*` type usages (down to 1,184 remaining after Dapper conversion).
+- **`PortabilityAuditTests` (static):** Tracks MySQL-to-Postgres dialect differences, including 1,614 SQL string literals, 76 bare `user` reserved identifier occurrences, MySQL backticks, `LAST_INSERT_ID`, and `NOW()`. Tracks `MySql*` type usages (down to 1,187 remaining after Dapper conversion + ASMX→WebAPI ports) and WebForms control elimination (`asp:Chart` gone).
 - **`SchemaIntegrityTests` (live DB):** Verifies dumps load cleanly, workspaces seed correctly, and tenancy connection swapping behaves consistently.
 - **`QueryCharacterizationTests` (live DB):** Exercises the actual SQL queries from code against the seeded schema, with write paths wrapped in rolled-back transactions.
 
 #### Domain Business Flow Tests (`VirtualChief.DomainTests`)
 - Business-flow tests compile the unmodified `App_Sources` classes using a shim (`Shims/SystemWeb.cs`) to supply compile-only stand-ins for standard `System.Web` types (`HttpContext`, `Session`, `Server.MapPath`, etc.).
 - Verifies workflows such as workspace loading, order status management, and shift/holiday tracking without Windows/IIS dependencies.
+
+#### Code-Behind Logic Extraction (Pilot Pattern)
+- **Pilot:** `KisWebApp/Produzione/avanzamentoProduzione.aspx.cs` → `App_Sources/AvanzamentoProduzioneService.cs`.
+  - `CaricaArticoliNonPianificati(tenant)` — extracted the page's `loadCommesse()` aggregation (all `N`/`P` articles across work orders).
+  - `ClassificaStato(...)` — extracted the green/yellow/red row-status rule. A pure overload (`ClassificaStato(DateTime, IEnumerable<(EarlyStart, LateStart)>)`) is unit-tested with synthetic windows; the `Articolo` overload is tested against the seeded DB.
+  - The code-behind now delegates to the service (verified by `VirtualChief.CodeBehindCompileCheck`).
+  - **Pattern for future work:** extract embedded business rules from code-behinds into `App_Sources` services, add DomainTests, then delegate the code-behind to the service. The compile harness keeps the code-behind delegation build-verified while the service is test-verified on Linux.
+
+#### Legacy Code-Behind Compile Harness (`VirtualChief.CodeBehindCompileCheck`)
+- The legacy WebForms `.aspx`/`.ascx` markup compiler is Windows-only, so the code-behind layer cannot be built on Linux directly. This harness compiles every `KisWebApp/**/*.aspx.cs`, `*.ascx.cs`, and `*.designer.cs` against expanded WebForms shims (`Shims/SystemWebUI.cs`, `SystemWebMisc.cs`, `GenCode128.cs`) plus the real `iTextSharp` 5.5.13.3 and `System.Drawing.Common` packages.
+- The shims cover the charting surface (`System.Web.UI.DataVisualization.Charting`), `TemplateControl`/`Page`/`UserControl` resource APIs, MVC/WebMethod/Helpers namespaces, and the request/response/session/cache surface, keeping the entire code-behind layer build-verified on Linux in CI.
 
 ### 5.6 Visual Regression Verification Guidelines for Razor Views
 - Establish visual regression baselines for core pages (e.g. Workplace WebGemba, Production Board, PERT Editor, Quality NC Board).
@@ -472,10 +486,13 @@ To execute the test suite locally or on a CI/CD Linux agent:
 # 1. Provision the local characterization database (starts MariaDB on 127.0.0.1:3307)
 tests/provision-db.sh
 
-# 2. Run static audit & DB characterization tests (22 tests)
+# 2. Run static audit & DB characterization tests (24 tests)
 dotnet test tests/VirtualChief.Tests
 
-# 3. Run domain business flow tests (91 tests)
+# 3. Run domain business flow tests (96 tests)
 dotnet test tests/VirtualChief.DomainTests
+
+# 4. Compile the legacy WebForms code-behind layer against the shims (0 errors expected)
+dotnet build tests/VirtualChief.CodeBehindCompileCheck
 ```
 

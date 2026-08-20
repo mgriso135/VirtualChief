@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
-    <NoWarn>$(NoWarn);CS0618;CS0649;CS0169</NoWarn>
+    <NoWarn>$(NoWarn);CS0618;CS0649;CS0169;CA1416</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="MySql.Data" Version="26.7.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.11" />
+    <PackageReference Include="System.Drawing.Common" Version="10.0.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
   </ItemGroup>
@@ -54,6 +55,7 @@
     <Compile Include="..\..\KisWebApp\App_Sources\NoProductiveTasks.cs" Link="App_Sources\NoProductiveTasks.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\andon.cs" Link="App_Sources\andon.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\AppConfig.cs" Link="App_Sources\AppConfig.cs" />
+    <Compile Include="..\..\KisWebApp\App_Sources\AvanzamentoProduzioneService.cs" Link="App_Sources\AvanzamentoProduzioneService.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\WebEnv.cs" Link="App_Sources\WebEnv.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\quality.cs" Link="App_Sources\quality.cs" />
     <Compile Include="..\..\KisWebApp\App_Sources\parts.cs" Link="App_Sources\parts.cs" />

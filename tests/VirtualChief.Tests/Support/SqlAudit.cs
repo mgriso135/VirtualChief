@@ -201,4 +201,80 @@ public static class SqlAudit
         }
         return map;
     }
+
+    /// <summary>
+    /// WebForms server controls that must be replaced during the UI migration
+    /// (WebForms -> Razor). Keyed by the canonical tag name.
+    /// </summary>
+    public static readonly Dictionary<string, string> WebFormsControlPatterns = new()
+    {
+        ["asp:Chart"] = @"<asp:chart\b",
+        ["asp:UpdatePanel"] = @"<asp:UpdatePanel\b",
+        ["asp:ScriptManager"] = @"<asp:ScriptManager\b",
+        ["asp:Repeater"] = @"<asp:Repeater\b",
+    };
+
+    /// <summary>
+    /// Occurrences of WebForms server controls across the UI markup
+    /// (.ascx / .aspx / .cshtml). Returns a file -> control -> count map.
+    /// </summary>
+    public static Dictionary<string, Dictionary<string, int>> WebFormsControlUsage()
+    {
+        var map = new Dictionary<string, Dictionary<string, int>>(StringComparer.OrdinalIgnoreCase);
+        var root = RepoPaths.Root;
+        foreach (var file in Directory.EnumerateFiles(root, "*.*", SearchOption.AllDirectories))
+        {
+            var ext = Path.GetExtension(file).ToLowerInvariant();
+            if (ext != ".ascx" && ext != ".aspx" && ext != ".cshtml") continue;
+            var p = file.Replace('\\', '/');
+            if (p.Contains("/obj/") || p.Contains("/bin/") || p.Contains("/packages/")
+                || p.Contains("/.git/") || p.Contains("/tests/") || p.Contains("/.vs/"))
+                continue;
+            var text = File.ReadAllText(file);
+            Dictionary<string, int> perControl = null;
+            foreach (var kv in WebFormsControlPatterns)
+            {
+                var n = Regex.Matches(text, kv.Value, RegexOptions.IgnoreCase).Count;
+                if (n > 0)
+                    (perControl ??= new Dictionary<string, int>())[kv.Key] = n;
+            }
+            if (perControl != null)
+                map[Rel(file)] = perControl;
+        }
+        return map;
+    }
+
+    /// <summary>
+    /// WebForms pages/controls (..aspx/..ascx) that do NOT have a same-basename Razor
+    /// (.cshtml) counterpart. Empty = every WebForms file has been converted.
+    /// </summary>
+    public static List<string> WebFormsWithoutRazorCounterpart()
+    {
+        var root = RepoPaths.Root;
+        var cshtmlBases = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var f in Directory.EnumerateFiles(root, "*.cshtml", SearchOption.AllDirectories))
+        {
+            if (IsIgnoredPath(f)) continue;
+            cshtmlBases.Add(Path.GetFileNameWithoutExtension(f));
+        }
+
+        var missing = new List<string>();
+        foreach (var f in Directory.EnumerateFiles(root, "*.*", SearchOption.AllDirectories))
+        {
+            if (IsIgnoredPath(f)) continue;
+            var ext = Path.GetExtension(f).ToLowerInvariant();
+            if (ext != ".aspx" && ext != ".ascx") continue;
+            if (!cshtmlBases.Contains(Path.GetFileNameWithoutExtension(f)))
+                missing.Add(Rel(f));
+        }
+        missing.Sort(StringComparer.OrdinalIgnoreCase);
+        return missing;
+    }
+
+    static bool IsIgnoredPath(string file)
+    {
+        var p = file.Replace('\\', '/');
+        return p.Contains("/obj/") || p.Contains("/bin/") || p.Contains("/packages/")
+            || p.Contains("/.git/") || p.Contains("/tests/") || p.Contains("/.vs/");
+    }
 }

@@ -858,4 +858,61 @@ public class DomainBusinessTests
         Assert.Equal(-1, w.workstationId);
         Assert.Equal(2, w.delete());
     }
+
+    [Fact]
+    public void AvanzamentoProduzioneService_CaricaArticoliNonPianificati_ReturnsOnlyNP()
+    {
+        var articoli = AvanzamentoProduzioneService.CaricaArticoliNonPianificati(Tenant);
+        Assert.NotEmpty(articoli);
+        foreach (var art in articoli)
+        {
+            Assert.True(art.Status == 'N' || art.Status == 'P',
+                $"Articolo {art.ID}/{art.Year} ha status '{art.Status}' (atteso N o P)");
+        }
+        // Seed data contains article 276/2020 (status P).
+        Assert.Contains(articoli, a => a.ID == 276 && a.Year == 2020);
+    }
+
+    [Fact]
+    public void AvanzamentoProduzioneService_ClassificaStato_BeforeAllTasks_IsNonIniziato()
+    {
+        var art = new Articolo(Tenant, 276, 2020);
+        Assert.Equal('P', art.Status);
+        var stato = AvanzamentoProduzioneService.ClassificaStato(art, new DateTime(1970, 1, 1));
+        Assert.Equal(StatoAvanzamentoArticolo.NonIniziato, stato);
+    }
+
+    [Fact]
+    public void AvanzamentoProduzioneService_ClassificaStato_AfterAllTasks_IsInRitardo()
+    {
+        var art = new Articolo(Tenant, 276, 2020);
+        Assert.Equal('P', art.Status);
+        var stato = AvanzamentoProduzioneService.ClassificaStato(art, new DateTime(2100, 1, 1));
+        Assert.Equal(StatoAvanzamentoArticolo.InRitardo, stato);
+    }
+
+    [Fact]
+    public void AvanzamentoProduzioneService_ClassificaStato_InsideWindow_IsInCorso()
+    {
+        // Pure classification: a task window straddling the reference instant.
+        var finestre = new[]
+        {
+            (EarlyStart: new DateTime(2020, 2, 10, 8, 0, 0), LateStart: new DateTime(2020, 2, 12, 8, 0, 0))
+        };
+        var stato = AvanzamentoProduzioneService.ClassificaStato(new DateTime(2020, 2, 11, 12, 0, 0), finestre);
+        Assert.Equal(StatoAvanzamentoArticolo.InCorso, stato);
+    }
+
+    [Fact]
+    public void AvanzamentoProduzioneService_ClassificaStato_LateTaskWinsOverInProgress()
+    {
+        // Red wins over yellow: one task in progress, one already past LateStart.
+        var finestre = new[]
+        {
+            (EarlyStart: new DateTime(2020, 2, 10, 8, 0, 0), LateStart: new DateTime(2020, 2, 12, 8, 0, 0)),
+            (EarlyStart: new DateTime(2020, 1, 1, 0, 0, 0), LateStart: new DateTime(2020, 1, 2, 0, 0, 0))
+        };
+        var stato = AvanzamentoProduzioneService.ClassificaStato(new DateTime(2020, 2, 11, 12, 0, 0), finestre);
+        Assert.Equal(StatoAvanzamentoArticolo.InRitardo, stato);
+    }
 }

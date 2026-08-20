@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using System.Linq;
 using VirtualChief.Tests.Support;
 using Xunit;
@@ -73,8 +75,8 @@ public class PortabilityAuditTests
     {
         var mt = SqlAudit.MysqlTypeUsagePerFile();
 
-        Assert.Equal(24, mt.Count);
-        Assert.Equal(1184, mt.Values.Sum());
+        Assert.Equal(26, mt.Count);
+        Assert.Equal(1187, mt.Values.Sum());
 
         Assert.Equal(94, mt["KisWebApp/App_Sources/Account.cs"]);
         Assert.Equal(8, mt["KisWebApp/App_Sources/Analysis.cs"]);
@@ -97,6 +99,8 @@ public class PortabilityAuditTests
         Assert.Equal(86, mt["KisWebApp/App_Sources/reparti.cs"]);
         Assert.Equal(106, mt["KisWebApp/App_Sources/users.cs"]);
         Assert.Equal(2, mt["KisWebApp/Controllers/DelaysAlarmController.cs"]);
+        Assert.Equal(1, mt["KisWebApp/Controllers/WarningController.cs"]);
+        Assert.Equal(2, mt["KisWebApp/Controllers/RitardiController.cs"]);
         Assert.Equal(2, mt["KisWebApp/Eventi/Ritardi.asmx.cs"]);
         Assert.Equal(1, mt["KisWebApp/Eventi/Warning.asmx.cs"]);
         Assert.Equal(3, mt["VCProductionEventsExport-SIAV/Program.cs"]);
@@ -111,5 +115,64 @@ public class PortabilityAuditTests
         foreach (var core in new[] { "anagraficaclienti", "commesse", "productionplan",
                      "tasksproduzione", "configurazione", "processo", "varianti", "reparti" })
             Assert.True(tables.ContainsKey(core), $"expected {core} to be referenced");
+    }
+
+    [Fact]
+    public void AspChartControls_AreEliminated()
+    {
+        // Phase 2 milestone: all <asp:Chart> server-rendered chart controls have been
+        // replaced with client-side Google Charts / D3 renderings.
+        var usage = SqlAudit.WebFormsControlUsage();
+        var chartFiles = usage
+            .Where(kv => kv.Value.ContainsKey("asp:Chart"))
+            .Select(kv => kv.Key)
+            .OrderBy(f => f, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        Assert.Empty(chartFiles);
+    }
+
+    [Fact]
+    public void WebFormsPages_HaveRazorCounterpart()
+    {
+        // Phase 2 milestone: every WebForms page/control (..aspx/..ascx) must have a
+        // same-basename Razor (.cshtml) counterpart before the WebForms files are retired.
+        var missing = SqlAudit.WebFormsWithoutRazorCounterpart();
+        Assert.Empty(missing);
+    }
+
+    /// <summary>
+    /// Every legacy ASMX SOAP endpoint must have a ported Web API controller so that
+    /// scheduler/console agents keep a callable contract while the .asmx files are
+    /// retired during Phase 2.
+    /// </summary>
+    [Fact]
+    public void AsmxServices_HavePortingController()
+    {
+        var asmxToController = new[]
+        {
+            ("KisWebApp/Eventi/Licensing.asmx", "KisWebApp/Controllers/LicensingController.cs"),
+            ("KisWebApp/Eventi/Warning.asmx", "KisWebApp/Controllers/WarningController.cs"),
+            ("KisWebApp/Eventi/Ritardi.asmx", "KisWebApp/Controllers/RitardiController.cs"),
+            ("KisWebApp/Eventi/QualityModuleEvents.asmx", "KisWebApp/Controllers/QualityModuleEventsController.cs"),
+            ("KisWebApp/KanbanBox/KanbanBoxReader.asmx", "KisWebApp/Controllers/KanbanBoxReaderController.cs"),
+            ("KisWebApp/KanbanBox/KanbanBoxCheckHealth.asmx", "KisWebApp/Controllers/KanbanBoxCheckHealthController.cs"),
+            ("KisWebApp/Processi/getProcessData.asmx", "KisWebApp/Controllers/ProcessDataController.cs"),
+        };
+
+        var root = RepoPaths.Root;
+        foreach (var (asmx, controller) in asmxToController)
+        {
+            var asmxPath = Path.Combine(root, asmx);
+            var ctrlPath = Path.Combine(root, controller);
+
+            Assert.True(File.Exists(asmxPath), $"ASMX source missing: {asmx}");
+            Assert.True(File.Exists(ctrlPath), $"No Web API controller for {asmx}; expected {controller}");
+
+            // The controller must be a real ApiController (not an empty stub) that
+            // references the legacy service it replaces.
+            var src = File.ReadAllText(ctrlPath);
+            Assert.Contains("ApiController", src, StringComparison.Ordinal);
+            Assert.Contains(Path.GetFileName(asmx), src, StringComparison.Ordinal);
+        }
     }
 }

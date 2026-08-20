@@ -34,6 +34,13 @@ jobs:
       - name: Provision test database
         run: tests/provision-db.sh
 
+      # The legacy WebForms code-behind layer (KisWebApp/**/*.aspx.cs, *.ascx.cs)
+      # cannot compile on Linux via the .aspx/.ascx markup compiler; this
+      # compile-only harness compiles the code-behinds against WebForms shims
+      # (tests/VirtualChief.DomainTests/Shims) so the layer stays build-verified.
+      - name: Compile legacy code-behind layer (shim harness)
+        run: dotnet build tests/VirtualChief.CodeBehindCompileCheck
+
       - name: Test (characterization + domain)
         run: |
           dotnet test tests/VirtualChief.Tests

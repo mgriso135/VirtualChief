@@ -598,6 +598,16 @@ namespace KIS.App_Code
             this._processiSucc = new List<int>();
         }
 
+        public processo(int procID)
+            : this(KIS.App_Code.WebEnv.ActiveWorkspaceName, procID)
+        {
+        }
+
+        public processo(int procID, int rev)
+            : this(KIS.App_Code.WebEnv.ActiveWorkspaceName, procID, rev)
+        {
+        }
+
         public processo(String Tenant, int procID)
         {
             this.Tenant = Tenant;
