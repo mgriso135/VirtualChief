@@ -8,6 +8,8 @@
 > (2) a technological review of the current state, and (3) a phased roadmap to
 > modernize the platform **without changing the UI or any business function**.
 
+> **RUN THIS APP:** the migrated ASP.NET Core UI is `VirtualChief/` — `cd VirtualChief && dotnet run` → http://localhost:5030 (Auth0 login). `KisWebApp/` is legacy-only: it compiles on net10.0 via the allowlist in `Virtual Chief.csproj` but has no auth/menu; do not use it as the daily app.
+
 ---
 
 ## 1. Software Overview

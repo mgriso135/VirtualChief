@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace KisWebApp.Pages.Analysis
+namespace KisWebApp.Pages
 {
-    public class DetailAnalysisTaskModel : PageModel
+    public class IndexModel : PageModel
     {
         public void OnGet()
         {

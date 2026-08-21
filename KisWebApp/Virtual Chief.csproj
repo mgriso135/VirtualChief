@@ -5,7 +5,36 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
+
+    <!-- The legacy Properties/AssemblyInfo.cs is kept for the .NET Framework
+         build; SDK-style projects auto-generate these attributes, so disable
+         generation to avoid CS0579 duplicates. -->
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+    <!--
+      Compile allowlist (migration in progress):
+      legacy WebForms/MVC5/OWIN sources under this folder still target
+      System.Web / Katana and cannot build on net10.0. They stay compiled by:
+        - KisApp.App_Sources   -> App_Sources business layer (+ System.Web shims)
+        - VirtualChief.CodeBehindCompileCheck -> code-behind compile harness
+      Only files already ported to ASP.NET Core are compiled here; new ports
+      get added to this list one at a time.
+    -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Pages\**\*.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\**\*.cshtml" />
+    <Content Include="Content\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Styles\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="Scripts\**\*" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="img\**\*" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\KisApp.App_Sources\KisApp.App_Sources.csproj" />

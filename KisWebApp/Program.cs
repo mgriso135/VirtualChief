@@ -1,25 +1,13 @@
-using System;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Razor Pages support
 builder.Services.AddRazorPages();
+// NOTE: Pages/Index.cshtml is served at the site root ("/") automatically
+// by the Razor Pages routing convention - no AddPageRoute needed.
 
-// Add MVC support for .aspx pages via legacy handler
-builder.Services.AddControllersWithViews();
-
-// Configure the app
 var app = builder.Build();
 
-// Configure request pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -28,16 +16,26 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Legacy static assets (Content/, Styles/, Scripts/, img/) live outside
+// wwwroot; expose them without duplicating the files.
+var legacyAssetDirs = new[] { "Content", "Styles", "Scripts", "img" };
+foreach (var dir in legacyAssetDirs)
+{
+    var fullPath = Path.Combine(app.Environment.ContentRootPath, dir);
+    if (Directory.Exists(fullPath))
+    {
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(fullPath),
+            RequestPath = "/" + dir
+        });
+    }
+}
+
 app.UseRouting();
 
-// Map Razor Pages
 app.MapRazorPages();
-
-// MapControllers for API support
 app.MapControllers();
 
-// Map fallback for .aspx pages - serve them as content
-app.MapFallbackToFile("/{*path}", "index.html");
-
-// Run the app
 app.Run();
