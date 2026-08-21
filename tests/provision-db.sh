@@ -17,8 +17,8 @@ set -euo pipefail
 
 PORT="${VC_DB_PORT:-3307}"
 BASE="${VC_DB_DIR:-/tmp/opencode/mdb2}"
-USER="${VC_DB_USER:-vc}"
-PASS="${VC_DB_PASS:-vc}"
+USER="${VC_DB_USER:-matteo}"
+PASS="${VC_DB_PASS:-hellas}"
 SOCK="$BASE/run/mysqld.sock"
 DATA="$BASE/data"
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

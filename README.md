@@ -146,26 +146,45 @@ Check for test projects in the solution.
 
 
 From the repo root (/home/matteo/Documenti/projects/VirtualChief/VirtualChief):
-# 1. Start + seed the database (MariaDB on 127.0.0.1:3307, user vc/vc,
-#    databases kaizenkey/vcmain/vc_dev) — idempotent
-tests/provision-db.sh
 
-# 2. Point the legacy Dati connection seam at it
-export VC_MASTERDB_CONN="Server=127.0.0.1;Port=3307;Uid=matteo;Pwd=hellas;database="
-export VC_VCMAIN_CONN="Server=127.0.0.1;Port=3307;Uid=matteo;Pwd=hellas;Database=vcmain"
+## Standard startup (local real database)
 
-# 3. Run the new Razor Pages app
+```bash
+VirtualChief/run-dev.sh
+```
+
+That single script is the standard way to start the app. It:
+1. exports the connection seam against the local MariaDB/MySQL on **127.0.0.1:3306**,
+   merged database **`virtualchief`** (user `matteo`), re-applying the env vars from
+   scratch on every start so stale shell exports can never shadow them;
+2. runs `dotnet run` → **http://localhost:5030** (Auth0 login).
+
+Equivalent manual steps:
+
+```bash
+export VC_VCMAIN_CONN='Server=127.0.0.1;Port=3306;Uid=matteo;Pwd=hellas;Database=virtualchief'
+export VC_MASTERDB_CONN='Server=127.0.0.1;Port=3306;Uid=matteo;Pwd=hellas;database='
 cd VirtualChief && dotnet run
-Then open the URL printed by Kestrel (or force one with --urls http://localhost:5199). Pages:
-URL
-/
-/Clienti/Clienti
-/Commesse/commesse
-/Produzione/produzione
-/Reparti/listReparti
-/Users/listUsers
-/Analysis/analysis
+```
+
+Tenant databases are created manually on the same server; their names must match
+`virtualchief.workspaces.name` exactly (`kaizenkey`, `matteo`, `Testws`) because
+tenant connections resolve as `database=<workspace name>`. Grant them to
+`'matteo'@'localhost'`.
+
+Pages:
+| URL | |
+|---|---|
+| / | home + dynamic menu per user groups |
+| /Clienti/Clienti | |
+| /Commesse/commesse | |
+| /Produzione/produzione | |
+| /Reparti/listReparti | |
+| /Users/listUsers | |
+| /Analysis/analysis | |
+
 Notes:
-- Without the two env vars, connections fall back to Web.config-style lookup that doesn't exist here → pages return 200 but log errors and render empty tables.
 - The DB must be up before startup; domain classes open connections in their constructors/loaders.
+- Without the two env vars, connections fall back to `App.config` (points at the seeded dev DB on port 3307).
+- Self-contained test seed (no real data): `bash tests/provision-db.sh` starts a private MariaDB on 127.0.0.1:3307 — then point the two `VC_*CONN` vars at `Port=3307`.
 - Stop with Ctrl+C; re-running provision-db.sh is safe anytime.
