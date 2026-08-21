@@ -44,24 +44,36 @@ if ! mysqladmin --socket="$SOCK" -u root ping >/dev/null 2>&1; then
 fi
 
 # 3. Create the databases and the test user (root@socket controls the instance).
+#    vcmain workspaces reference tenant DBs by name: seed one schema per
+#    workspace (kaizenkey, matteo, Testws) so every selectable tenant works.
 mysql --socket="$SOCK" -u root <<SQL
 CREATE DATABASE IF NOT EXISTS kaizenkey CHARACTER SET utf8mb4;
 CREATE DATABASE IF NOT EXISTS vcmain    CHARACTER SET utf8mb4;
 CREATE DATABASE IF NOT EXISTS vc_dev    CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS matteo    CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS Testws    CHARACTER SET utf8mb4;
 CREATE USER IF NOT EXISTS '$USER'@'localhost' IDENTIFIED BY '$PASS';
 CREATE USER IF NOT EXISTS '$USER'@'127.0.0.1' IDENTIFIED BY '$PASS';
 GRANT ALL PRIVILEGES ON kaizenkey.* TO '$USER'@'localhost';
 GRANT ALL PRIVILEGES ON vcmain.*    TO '$USER'@'localhost';
 GRANT ALL PRIVILEGES ON vc_dev.*    TO '$USER'@'localhost';
+GRANT ALL PRIVILEGES ON matteo.*    TO '$USER'@'localhost';
+GRANT ALL PRIVILEGES ON Testws.*    TO '$USER'@'localhost';
 GRANT ALL PRIVILEGES ON kaizenkey.* TO '$USER'@'127.0.0.1';
 GRANT ALL PRIVILEGES ON vcmain.*    TO '$USER'@'127.0.0.1';
 GRANT ALL PRIVILEGES ON vc_dev.*    TO '$USER'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON matteo.*    TO '$USER'@'127.0.0.1';
+GRANT ALL PRIVILEGES ON Testws.*    TO '$USER'@'127.0.0.1';
 FLUSH PRIVILEGES;
 SQL
 
 # 4. Load the dumps as root (the dumps' views carry DEFINER=root@localhost).
+#    Tenant workspaces share the kaizenkey schema.
 for db in kaizenkey vcmain vc_dev; do
   mysql --socket="$SOCK" -u root "$db" < "$REPO/$db.sql"
 done
+for db in matteo Testws; do
+  mysql --socket="$SOCK" -u root "$db" < "$REPO/kaizenkey.sql"
+done
 
-echo "OK: MariaDB on 127.0.0.1:$PORT, user '$USER'/'$PASS', databases kaizenkey/vcmain/vc_dev loaded."
+echo "OK: MariaDB on 127.0.0.1:$PORT, user '$USER'/'$PASS', databases kaizenkey/vcmain/vc_dev + tenants matteo/Testws loaded."

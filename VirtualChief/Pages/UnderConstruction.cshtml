@@ -1,0 +1,18 @@
+@page
+@model VirtualChief.Pages.UnderConstructionModel
+@{
+    ViewData["Title"] = "In migrazione";
+}
+
+<div class="container">
+    <div class="alert alert-info mt-3" role="alert">
+        <h4 class="alert-heading">@Model.Title</h4>
+        <p>Questa sezione &egrave; in fase di migrazione da WebForms a Razor Pages.</p>
+        @if (!string.IsNullOrEmpty(Model.LegacyUrl))
+        {
+            <hr />
+            <p class="mb-0 text-muted small">Pagina originale: <code>@Model.LegacyUrl</code></p>
+        }
+    </div>
+    <a asp-page="/Index">&larr; Torna alla home</a>
+</div>

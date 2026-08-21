@@ -1,0 +1,105 @@
+@page
+@model VirtualChief.Pages.Postazioni.managePostazioniLavoroModel
+@{
+    ViewData["Title"] = "Gestione postazioni";
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li class="active">Gestione postazioni di lavoro</li>
+    </ul>
+
+    <h1>Gestione postazioni di lavoro</h1>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.Message.Contains("Impossibile") || Model.Message.Contains("Errore") || Model.Message.Contains("Permesso") ? "alert-danger" : "alert-info")">@Html.Raw(Model.Message)</div>
+    }
+
+    @if (!Model.CanRead)
+    {
+        <div class="alert alert-warning">Permesso "Postazione" (lettura) non disponibile.</div>
+    }
+    else
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Elenco postazioni</h5></div>
+            <div class="card-body">
+                @if (Model.Workstations.Count == 0)
+                {
+                    <p class="text-muted mb-0">Nessuna postazione configurata.</p>
+                }
+                else
+                {
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Descrizione</th>
+                                <th>Auto check-in</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.Workstations)
+                            {
+                                <tr>
+                                    <td>@p.Id</td>
+                                    <td>@p.Name</td>
+                                    <td>@p.Desc</td>
+                                    <td>@(p.BarcodeAutoCheckIn ? "Sì" : "No")</td>
+                                    <td class="text-end">
+                                        <a class="btn btn-outline-secondary btn-sm" asp-page-handler="Barcode"
+                                           asp-route-id="@p.Id" title="Stampa barcode">barcode</a>
+                                        @if (Model.CanWrite)
+                                        {
+                                            <form method="post" asp-page-handler="Delete" class="d-inline"
+                                                  onsubmit="return confirm('Eliminare la postazione @p.Name?');">
+                                                <input type="hidden" name="id" value="@p.Id" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                            </form>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+
+    @if (Model.CanWrite)
+    {
+        @* addPostazione.ascx *@
+        <div class="card mb-3">
+            <div class="card-header"><h5>Nuova postazione</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="Add" class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">Nome</label>
+                        <input type="text" name="nome" class="form-control form-control-sm" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Descrizione</label>
+                        <input type="text" name="desc" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small mb-1">Barcode auto check-in</label>
+                        <select name="autoCheckIn" class="form-select form-select-sm">
+                            <option value="0">No</option>
+                            <option value="1">Sì</option>
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm">Crea postazione</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    <a asp-page="/Index">&larr; Torna alla home</a>
+</div>

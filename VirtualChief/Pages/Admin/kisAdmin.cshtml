@@ -1,0 +1,168 @@
+@page
+@model VirtualChief.Pages.Admin.kisAdminModel
+@{
+    ViewData["Title"] = "KIS Admin";
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li class="active">KIS Admin</li>
+    </ul>
+
+    <h1>KIS Admin</h1>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
+    @* kisBilling.ascx — permesso "Billing" R *@
+    @if (Model.CanBilling)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Billing</h5></div>
+            <div class="card-body">
+                <p>Data di scadenza licenza: <strong>@Model.ExpiryDate.ToString("dd/MM/yyyy")</strong></p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Nuovi ordini per mese (ultimi 13 mesi)</h6>
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Anno</th><th>Mese</th><th>Ordini</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in Model.OrdersByMonth)
+                                {
+                                    <tr><td>@p.Year</td><td>@p.Month</td><td>@p.Value</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Task completati per mese (ultimi 13 mesi)</h6>
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Anno</th><th>Mese</th><th>Task</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in Model.TasksByMonth)
+                                {
+                                    <tr><td>@p.Year</td><td>@p.Month</td><td>@p.Value</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Ordini per anno</h6>
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Anno</th><th>Ordini</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in Model.OrdersByYear)
+                                {
+                                    <tr><td>@p.Year</td><td>@p.Value</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Task completati per anno</h6>
+                        <table class="table table-sm table-striped">
+                            <thead><tr><th>Anno</th><th>Task</th></tr></thead>
+                            <tbody>
+                                @foreach (var p in Model.TasksByYear)
+                                {
+                                    <tr><td>@p.Year</td><td>@p.Value</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        @* configLogo.ascx — permesso "Configurazione Logo" W *@
+        @if (Model.CanLogo)
+        {
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header"><h5>Logo</h5></div>
+                    <div class="card-body">
+                        @if (!string.IsNullOrEmpty(Model.LogoFilePath))
+                        {
+                            <p><img src="/Data/Logo/@Model.LogoFilePath" alt="Logo attuale" style="max-height:80px;" class="img-thumbnail" /></p>
+                        }
+                        <form method="post" enctype="multipart/form-data" asp-page-handler="Logo">
+                            <div class="mb-3">
+                                <input type="file" name="logoFile" class="form-control" accept=".bmp,.jpg,.png,.gif,.jpeg" required />
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Carica logo</button>
+                            <span class="text-muted small ms-2">Max 1 MB — BMP, JPG, PNG, GIF</span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @* configTimezone.ascx — permesso "Configurazione TimeZone" W *@
+        @if (Model.CanTimezone)
+        {
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header"><h5>Fuso orario</h5></div>
+                    <div class="card-body">
+                        <p>Attuale: <code>@Model.CurrentTimezone</code></p>
+                        <form method="post" asp-page-handler="Timezone">
+                            <div class="mb-3">
+                                <select name="timezone" class="form-select">
+                                    @foreach (var tz in Model.Timezones)
+                                    {
+                                        if (tz.Id == Model.CurrentTimezone)
+                                        {
+                                            <option value="@tz.Id" selected>@tz.DisplayName</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@tz.Id">@tz.DisplayName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm">Salva fuso orario</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @* configWizard_TipoPERT.ascx — permesso "Wizard TipoPERT" W *@
+    @if (Model.CanPert)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Wizard Tipo PERT</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="Pert">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="tipo" id="pertGraph" value="Graph"
+                               checked="@("Graph" == Model.PertType)" />
+                        <label class="form-check-label" for="pertGraph">PERT a grafo</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="tipo" id="pertTable" value="Table"
+                               checked="@("Table" == Model.PertType)" />
+                        <label class="form-check-label" for="pertTable">PERT a tabella</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Salva tipo PERT</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (!Model.CanBilling && !Model.CanLogo && !Model.CanTimezone && !Model.CanPert)
+    {
+        <div class="alert alert-warning">
+            Nessun permesso di amministrazione disponibile per il tuo account su questo workspace.
+        </div>
+    }
+</div>

@@ -4,11 +4,19 @@
     ViewData["Title"] = "Selezione workspace";
 }
 
-<div class="container" style="max-width: 480px;">
+<div class="container" style="max-width: 560px;">
     <h1>Selezione workspace</h1>
-    <p>Benvenuto <strong>@User.Identity.Name</strong>. Scegli il workspace su cui lavorare:</p>
 
-    @if (Model.Candidates.Count == 0)
+    <p>
+        Benvenuto <strong>@User.Identity.Name</strong>
+        @if (Model.UserAccountId != -1)
+        {
+            <span class="text-muted">(useraccount id: <strong>@Model.UserAccountId</strong>)</span>
+        }
+        . Scegli il workspace su cui lavorare:
+    </p>
+
+    @if (Model.Workspaces.Count == 0)
     {
         <div class="alert alert-warning">
             Nessun workspace disponibile per questo utente.
@@ -20,13 +28,14 @@
     else
     {
         <div class="list-group mb-3">
-            @foreach (var ws in Model.Candidates)
+            @foreach (var ws in Model.Workspaces)
             {
-                var isActive = ws == CurrentWorkspace.Of(User);
-                <form method="post" asp-page-handler="">
-                    <input type="hidden" name="workspace" value="@ws" />
-                    <button type="submit" class="list-group-item list-group-item-action @(isActive ? "active" : "")">
-                        @ws @(isActive ? "(attuale)" : "")
+                var isActive = ws.Name == Model.ActiveWorkspace;
+                <form method="post">
+                    <input type="hidden" name="workspace" value="@ws.Name" />
+                    <button type="submit" class="list-group-item list-group-item-action @(isActive ? "active" : "") d-flex justify-content-between">
+                        <span>@ws.Name @(isActive ? "(attuale)" : "")</span>
+                        <span class="text-muted small">id @ws.id</span>
                     </button>
                 </form>
             }

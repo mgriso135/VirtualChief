@@ -7,30 +7,91 @@
 <div class="container">
     <h1>Lista Reparti</h1>
 
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
     <div class="card mb-3">
-        <div class="card-header">
-            <h5>Elenco Reparti</h5>
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Elenco Reparti</h5>
+            @if (Model.CanWrite)
+            {
+                <a class="btn btn-primary btn-sm" href="#addReparto">+ Nuovo reparto</a>
+            }
         </div>
         <div class="card-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>ID Reparto</th>
-                        <th>Nome Reparto</th>
-                        <th>Descrizione</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var reparto in Model.ElencoReparti)
-                    {
+            @if (Model.ElencoReparti.Count == 0)
+            {
+                <p class="text-muted mb-0">Nessun reparto configurato.</p>
+            }
+            else
+            {
+                <table class="table table-striped align-middle">
+                    <thead>
                         <tr>
-                            <td>@reparto.id</td>
-                            <td>@reparto.name</td>
-                            <td>@reparto.description</td>
+                            <th>ID Reparto</th>
+                            <th>Nome Reparto</th>
+                            <th>Descrizione</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var reparto in Model.ElencoReparti)
+                        {
+                            <tr>
+                                <td>@reparto.id</td>
+                                <td>@reparto.name</td>
+                                <td>@reparto.description</td>
+                                <td class="text-end">
+                                    @* legacy listReparti.ascx: link a configReparto.aspx?id=... *@
+                                    <a class="btn btn-outline-primary btn-sm" asp-page="/Reparti/configReparto"
+                                       asp-route-id="@reparto.id" title="Gestisci reparto">&#9881; Gestisci</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
     </div>
+
+    @if (Model.CanWrite)
+    {
+        @* addReparto.ascx *@
+        <div class="card mb-3" id="addReparto">
+            <div class="card-header"><h5>Nuovo reparto</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="AddReparto">
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <label class="form-label small">Nome</label>
+                            <input type="text" name="nome" class="form-control form-control-sm" required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Descrizione</label>
+                            <input type="text" name="descrizione" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small">Fuso orario</label>
+                            <select name="timezone" class="form-select form-select-sm">
+                                @foreach (var tz in Model.Timezones)
+                                {
+                                    if (tz.Id == Model.CurrentTimezone)
+                                    {
+                                        <option value="@tz.Id" selected>@tz.DisplayName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@tz.Id">@tz.DisplayName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mt-2">Crea reparto</button>
+                </form>
+            </div>
+        </div>
+    }
 </div>

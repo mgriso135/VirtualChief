@@ -1,0 +1,258 @@
+@page
+@model VirtualChief.Pages.Andon.configAndonCompletoModel
+@{
+    ViewData["Title"] = "Configurazione Andon Completo";
+    // Legacy resx: configFormatoUsername.ascx radio labels
+    var fmtOptions = new[] {
+        ("0", "Visualizza username"),
+        ("1", "Visualizza nome"),
+        ("2", "Visualizza nome e iniziale cognome"),
+        ("3", "Visualizza nome e cognome"),
+    };
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li class="active">Configurazione Andon Completo</li>
+    </ul>
+
+    <h3>Configurazione Andon Completo</h3>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
+    @if (!Model.CanViewFields && !Model.CanUsernameFormat)
+    {
+        <div class="alert alert-warning">
+            Nessun permesso di configurazione dell'Andon disponibile per il tuo account su questo workspace.
+        </div>
+    }
+
+    @if (Model.CanUsernameFormat)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Formato di visualizzazione dei nomi utente</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="UsernameFormat">
+                    @foreach (var (value, label) in fmtOptions)
+                    {
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="fmt" id="fmt@(value)" value="@value"
+                                   checked="@Model.UsernameFormat.ToString() == value" />
+                            <label class="form-check-label" for="fmt@(value)">@label</label>
+                        </div>
+                    }
+                    <button type="submit" class="btn btn-primary btn-sm mt-2">Salva formato</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @if (Model.CanViewFields)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header"><h5>Campi visualizzati — Prodotti</h5></div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped align-middle">
+                            <tbody>
+                                @foreach (var f in Model.ShownFields)
+                                {
+                                    <tr>
+                                        <td>@f.Key</td>
+                                        <td class="text-end">
+                                            <form method="post" asp-page-handler="FieldUp" class="d-inline">
+                                                <input type="hidden" name="key" value="@f.Key" />
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm py-0">&uarr;</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="FieldDown" class="d-inline">
+                                                <input type="hidden" name="key" value="@f.Key" />
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm py-0">&darr;</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="FieldDelete" class="d-inline">
+                                                <input type="hidden" name="key" value="@f.Key" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @if (Model.AvailableFields.Count > 0)
+                        {
+                            <h6>Campi disponibili</h6>
+                            <table class="table table-sm table-striped align-middle">
+                                <tbody>
+                                    @foreach (var f in Model.AvailableFields)
+                                    {
+                                        <tr>
+                                            <td>@f.Key</td>
+                                            <td class="text-end">
+                                                <form method="post" asp-page-handler="FieldAdd" class="d-inline">
+                                                    <input type="hidden" name="key" value="@f.Key" />
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm py-0">+</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header"><h5>Campi visualizzati — Tasks</h5></div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped align-middle">
+                            <tbody>
+                                @foreach (var f in Model.ShownFieldsTasks)
+                                {
+                                    <tr>
+                                        <td>@f.Key</td>
+                                        <td class="text-end">
+                                            <form method="post" asp-page-handler="TaskUp" class="d-inline">
+                                                <input type="hidden" name="key" value="@f.Key" />
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm py-0">&uarr;</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="TaskDown" class="d-inline">
+                                                <input type="hidden" name="key" value="@f.Key" />
+                                                <button type="submit" class="btn btn-outline-secondary btn-sm py-0">&darr;</button>
+                                            </form>
+                                            <form method="post" asp-page-handler="TaskDelete" class="d-inline">
+                                                <input type="hidden" name="key" value="@f.Key" />
+                                                <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @if (Model.AvailableFieldsTasks.Count > 0)
+                        {
+                            <h6>Campi disponibili</h6>
+                            <table class="table table-sm table-striped align-middle">
+                                <tbody>
+                                    @foreach (var f in Model.AvailableFieldsTasks)
+                                    {
+                                        <tr>
+                                            <td>@f.Key</td>
+                                            <td class="text-end">
+                                                <form method="post" asp-page-handler="TaskAdd" class="d-inline">
+                                                    <input type="hidden" name="key" value="@f.Key" />
+                                                    <button type="submit" class="btn btn-outline-primary btn-sm py-0">+</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.CanScrollType)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Scroll type — Andon Completo</h5></div>
+            <div class="card-body">
+                @* Legacy ScrollTypeView.cshtml: radio 0/1 + parametri velocità *@
+                <form method="post" asp-page-handler="ScrollType">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="scrollType" id="st0" value="0"
+                               checked="@(Model.BoardScrollType.ScrollType == 0)" />
+                        <label class="form-check-label" for="st0">Scroll automatico disabilitato</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="scrollType" id="st1" value="1"
+                               checked="@(Model.BoardScrollType.ScrollType == 1)" />
+                        <label class="form-check-label" for="st1">Scroll continuo</label>
+                    </div>
+                    <div class="continuous-scroll-params mt-2" style="@(Model.BoardScrollType.ScrollType == 1 ? "" : "display:none;")">
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Tempo di avanzamento (da inizio a fine)</label>
+                            <input type="number" min="0" step="any" name="goSpeed" class="form-control form-control-sm"
+                                   value="@Model.BoardScrollType.GoSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label small mb-1">Tempo di scrolling (da fine a inizio)</label>
+                            <input type="number" min="0" step="any" name="backSpeed" class="form-control form-control-sm"
+                                   value="@Model.BoardScrollType.BackSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mt-2">Salva scroll type</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header"><h5>Scroll type per reparto</h5></div>
+            <div class="card-body">
+                @foreach (var dept in Model.DepartmentScrollTypes)
+                {
+                    <div class="border rounded p-2 mb-2">
+                        <h6 class="mb-2">@dept.DepartmentName <span class="text-muted small">(id @dept.DepartmentId)</span></h6>
+                        <form method="post" asp-page-handler="DepartmentScrollType">
+                            <input type="hidden" name="departmentId" value="@dept.DepartmentId" />
+                            <div class="d-flex flex-wrap align-items-center gap-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="scrollType" id="ds0-@dept.DepartmentId" value="0"
+                                           checked="@(dept.ScrollType == 0)" />
+                                    <label class="form-check-label" for="ds0-@dept.DepartmentId">Disabilitato</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="scrollType" id="ds1-@dept.DepartmentId" value="1"
+                                           checked="@(dept.ScrollType == 1)" />
+                                    <label class="form-check-label" for="ds1-@dept.DepartmentId">Scroll continuo</label>
+                                </div>
+                            </div>
+                            <div class="continuous-scroll-params mt-2 row g-2" style="@(dept.ScrollType == 1 ? "" : "display:none;")">
+                                <div class="col-md-3">
+                                    <label class="form-label small mb-1">Avanzamento</label>
+                                    <input type="number" min="0" step="any" name="goSpeed" class="form-control form-control-sm"
+                                           value="@dept.GoSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small mb-1">Ritorno</label>
+                                    <input type="number" min="0" step="any" name="backSpeed" class="form-control form-control-sm"
+                                           value="@dept.BackSpeed.ToString(System.Globalization.CultureInfo.InvariantCulture)" />
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary btn-sm mt-2">Salva</button>
+                        </form>
+                    </div>
+                }
+                @if (Model.DepartmentScrollTypes.Count == 0)
+                {
+                    <p class="text-muted mb-0">Nessun reparto configurato.</p>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+<script>
+    // Legacy ScrollTypeView.cshtml: mostra i parametri solo con scroll continuo.
+    document.addEventListener('change', function (e) {
+        if (e.target.matches('input[type=radio][name=scrollType], input[type=radio][name^="deptScrollType-"]')) {
+            var card = e.target.closest('.card-body');
+            if (card) {
+                var params = card.querySelector('.continuous-scroll-params');
+                if (params) params.style.display = e.target.value === '1' ? 'block' : 'none';
+            }
+        }
+    });
+</script>
+}

@@ -12,13 +12,30 @@
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-page="/Index">Virtual Chief</a>
+            @{
+                var menu = CurrentWorkspace.Of(User) != null ? UserMenu.Build(User) : new List<MenuItem>();
+            }
             <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" asp-page="/Clienti/Clienti">Clienti</a></li>
-                <li class="nav-item"><a class="nav-link" asp-page="/Commesse/commesse">Commesse</a></li>
-                <li class="nav-item"><a class="nav-link" asp-page="/Produzione/produzione">Produzione</a></li>
-                <li class="nav-item"><a class="nav-link" asp-page="/Reparti/listReparti">Reparti</a></li>
-                <li class="nav-item"><a class="nav-link" asp-page="/Users/listUsers">Utenti</a></li>
-                <li class="nav-item"><a class="nav-link" asp-page="/Analysis/analysis">Analysis</a></li>
+                @foreach (var item in menu)
+                {
+                    if (item.Children.Count > 0)
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="menu-@item.Title.Replace(" ", "")"
+                               role="button" data-bs-toggle="dropdown" aria-expanded="false">@item.Title</a>
+                            <ul class="dropdown-menu" aria-labelledby="menu-@item.Title.Replace(" ", "")">
+                                @foreach (var child in item.Children)
+                                {
+                                    <li><a class="dropdown-item" href="@child.Url">@child.Title</a></li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item"><a class="nav-link" href="@item.Url">@item.Title</a></li>
+                    }
+                }
             </ul>
             <ul class="navbar-nav">
                 @if (User.Identity?.IsAuthenticated == true)

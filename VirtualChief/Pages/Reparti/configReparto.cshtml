@@ -1,0 +1,471 @@
+@page
+@model VirtualChief.Pages.Reparti.configRepartoModel
+@{
+    ViewData["Title"] = "Configurazione reparto";
+    // Re-posted values for the holiday warning confirmation step
+    var fTurno = Request.HasFormContentType ? Request.Form["turnoId"].ToString() : "";
+    var fInizio = Request.HasFormContentType ? Request.Form["inizio"].ToString() : "";
+    var fFine = Request.HasFormContentType ? Request.Form["fine"].ToString() : "";
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/listReparti">Reparti</a> <span class="divider">/</span></li>
+        <li class="active">@Model.Dipartimento!.name</li>
+    </ul>
+
+    <h1>Gestione reparto: @Model.Dipartimento.name <small class="text-muted">(id @Model.Dipartimento.id)</small></h1>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
+    <div class="card mb-3">
+        <div class="card-header"><h5>Dati reparto</h5></div>
+        <div class="card-body">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">Nome</dt>
+                <dd class="col-sm-9">@Model.Dipartimento.name</dd>
+                <dt class="col-sm-3">Descrizione</dt>
+                <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Dipartimento.description) ? "—" : Model.Dipartimento.description)</dd>
+                <dt class="col-sm-3">Fuso orario</dt>
+                <dd class="col-sm-9">@Model.Dipartimento.tzFusoOrario.Id</dd>
+            </dl>
+        </div>
+    </div>
+
+    @* configCadenza.ascx — permesso "Reparto" W *@
+    <div class="card mb-3">
+        <div class="card-header"><h5>Configurazione cadenza</h5></div>
+        <div class="card-body">
+            <p class="text-muted small">
+                Intervallo di tempo tra l'uscita di un pezzo e il successivo sulla board di produzione.
+            </p>
+            @{
+                var cad = Model.Dipartimento.Cadenza;
+            }
+            @if (Model.CanWrite)
+            {
+                <form method="post" asp-page-handler="Cadenza" class="row g-2 align-items-end">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Ore</label>
+                        <input type="number" name="ore" min="0" max="23" class="form-control form-control-sm"
+                               value="@cad.Hours" style="width:90px;" required />
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Minuti</label>
+                        <input type="number" name="minuti" min="0" max="59" class="form-control form-control-sm"
+                               value="@cad.Minutes" style="width:90px;" required />
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Secondi</label>
+                        <input type="number" name="secondi" min="0" max="59" class="form-control form-control-sm"
+                               value="@cad.Seconds" style="width:90px;" required />
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm">Salva cadenza</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <p class="mb-0">Cadenza attuale: <strong>@cad.Hours:@cad.Minutes:@cad.Seconds</strong> — permesso di modifica non disponibile.</p>
+            }
+        </div>
+    </div>
+
+    @* configSplitTasksTurni.ascx — permesso "Reparto" W *@
+    <div class="card mb-3">
+        <div class="card-header"><h5>Split tasks sui turni</h5></div>
+        <div class="card-body">
+            <p class="text-muted small">
+                Se abilitato, i task che attraversano pi&ugrave; turni di produzione vengono suddivisi per turno.
+            </p>
+            @if (Model.CanWrite)
+            {
+                <form method="post" asp-page-handler="SplitTasks" class="d-flex align-items-center gap-3">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="splitTasks" id="split1" value="1"
+                               checked="@(Model.Dipartimento.splitTasks)" />
+                        <label class="form-check-label" for="split1">Abilitato</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="splitTasks" id="split0" value="0"
+                               checked="@(!Model.Dipartimento.splitTasks)" />
+                        <label class="form-check-label" for="split0">Disabilitato</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Salva</button>
+                </form>
+            }
+            else
+            {
+                <p class="mb-0"><strong>@(Model.Dipartimento.splitTasks ? "Abilitato" : "Disabilitato")</strong> — permesso di modifica non disponibile.</p>
+            }
+        </div>
+    </div>
+
+    @* configTurni.ascx — permesso "Turno" W *@
+    <div class="card mb-3">
+        <div class="card-header"><h5>Turni di produzione</h5></div>
+        <div class="card-body">
+            @if (Model.CanWriteTurni)
+            {
+                @if (Model.Shifts.Count == 0)
+                {
+                    <p class="text-muted">Nessun turno configurato.</p>
+                }
+                else
+                {
+                    <table class="table table-sm table-striped align-middle">
+                        <thead>
+                            <tr><th>Nome</th><th>Colore</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var t in Model.Shifts)
+                            {
+                                <tr>
+                                    <td>@t.Nome</td>
+                                    <td>
+                                        <span class="d-inline-block border rounded" style="width:16px;height:16px;background:@t.Colore"></span>
+                                        <code class="small">@t.Colore</code>
+                                    </td>
+                                    <td class="text-end">
+                                        <a class="btn btn-outline-secondary btn-sm" asp-page="/Reparti/configOrariTurno"
+                                           asp-route-id="@t.Id" title="Orari di lavoro">&#9200; Orari</a>
+                                        <form method="post" asp-page-handler="DeleteTurno" class="d-inline">
+                                            <input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                                            <input type="hidden" name="turnoId" value="@t.Id" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <h6>Nuovo turno</h6>
+                <form method="post" asp-page-handler="AddTurno" class="row g-2 align-items-end">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Nome turno</label>
+                        <input type="text" name="nomeTurno" class="form-control form-control-sm" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Colore</label>
+                        <select name="coloreTurno" class="form-select form-select-sm">
+                            @foreach (var (name, hex) in Model.ColorChoices)
+                            {
+                                <option value="@hex">@name (@hex)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm">Aggiungi turno</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <p class="text-muted mb-0">Permesso "Turno" (modifica) non disponibile: visualizzazione non consentita.</p>
+            }
+        </div>
+    </div>
+
+    @if (Model.PendingWarnProducts.Count > 0)
+    {
+        @* addFestivita.ascx first step: warn about planned tasks, then confirm *@
+        <div class="card border-warning mb-3">
+            <div class="card-header"><h5>@VirtualChief.Pages.Reparti.configRepartoModel.MsgWarnTasksPlanned</h5></div>
+            <div class="card-body">
+                <ul class="mb-2">
+                    @foreach (var p in Model.PendingWarnProducts)
+                    {
+                        <li>@p.ArticoloID/@p.ArticoloAnno — @p.Customer — consegna: @p.Delivery.ToString("dd/MM/yyyy")</li>
+                    }
+                </ul>
+                <p>@VirtualChief.Pages.Reparti.configRepartoModel.MsgWarnTasksPlanned4</p>
+                <form method="post" asp-page-handler="AddFest" class="d-inline">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                    <input type="hidden" name="turnoId" value="@fTurno" />
+                    <input type="hidden" name="inizio" value="@fInizio" />
+                    <input type="hidden" name="fine" value="@fFine" />
+                    <input type="hidden" name="confirmed" value="true" />
+                    <button type="submit" class="btn btn-warning btn-sm">S&igrave;, continua</button>
+                </form>
+                <a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento.id" class="btn btn-secondary btn-sm ms-2">Annulla</a>
+            </div>
+        </div>
+    }
+
+    @* elencoFestivita/elencoStraordinari/addFestivita/addStraordinario — permessi "Reparto Festivita" R/W *@
+    @if (Model.CanViewCalendar)
+    {
+        <div class="card mb-3" id="calendar">
+            <div class="card-header"><h5>Calendario festivit&agrave; e straordinari</h5></div>
+            <div class="card-body">
+                @foreach (var sc in Model.ShiftCalendars)
+                {
+                    <h6>Turno: @sc.ShiftName <span class="text-muted small">(id @sc.ShiftId)</span></h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong class="small">Festivit&agrave;</strong>
+                            @if (sc.Holidays.Count == 0)
+                            {
+                                <p class="text-muted small mb-1">Nessuna.</p>
+                            }
+                            else
+                            {
+                                <table class="table table-sm table-striped mb-2">
+                                    <tbody>
+                                        @foreach (var f in sc.Holidays)
+                                        {
+                                            <tr>
+                                                <td>@f.Start.ToString("dd/MM/yyyy HH:mm") &rarr; @f.End.ToString("dd/MM/yyyy HH:mm")</td>
+                                                @if (Model.CanWriteCalendar)
+                                                {
+                                                    <td class="text-end">
+                                                        <form method="post" asp-page-handler="DeleteFest" class="d-inline">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                                                            <input type="hidden" name="festId" value="@f.Id" />
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                                        </form>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <strong class="small">Straordinari</strong>
+                            @if (sc.Overtimes.Count == 0)
+                            {
+                                <p class="text-muted small mb-1">Nessuno.</p>
+                            }
+                            else
+                            {
+                                <table class="table table-sm table-striped mb-2">
+                                    <tbody>
+                                        @foreach (var s in sc.Overtimes)
+                                        {
+                                            <tr>
+                                                <td>@s.Start.ToString("dd/MM/yyyy HH:mm") &rarr; @s.End.ToString("dd/MM/yyyy HH:mm")</td>
+                                                @if (Model.CanWriteCalendar)
+                                                {
+                                                    <td class="text-end">
+                                                        <form method="post" asp-page-handler="DeleteStraord" class="d-inline">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                                                            <input type="hidden" name="straordId" value="@s.Id" />
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                                        </form>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+                    </div>
+
+                    @if (Model.CanWriteCalendar)
+                    {
+                        <form method="post" asp-page-handler="AddFest" class="row g-2 align-items-end mb-1">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                            <input type="hidden" name="turnoId" value="@sc.ShiftId" />
+                            <div class="col-auto"><label class="form-label small mb-0">Nuova festivit&agrave;</label></div>
+                            <div class="col-auto"><input type="datetime-local" name="inizio" class="form-control form-control-sm" required /></div>
+                            <div class="col-auto"><input type="datetime-local" name="fine" class="form-control form-control-sm" required /></div>
+                            <div class="col-auto"><button type="submit" class="btn btn-outline-primary btn-sm">Aggiungi festivit&agrave;</button></div>
+                        </form>
+                        <form method="post" asp-page-handler="AddStraord" class="row g-2 align-items-end">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                            <input type="hidden" name="turnoId" value="@sc.ShiftId" />
+                            <div class="col-auto"><label class="form-label small mb-0">Nuovo straordinario</label></div>
+                            <div class="col-auto"><input type="datetime-local" name="inizio" class="form-control form-control-sm" required /></div>
+                            <div class="col-auto"><input type="datetime-local" name="fine" class="form-control form-control-sm" required /></div>
+                            <div class="col-auto"><button type="submit" class="btn btn-outline-primary btn-sm">Aggiungi straordinario</button></div>
+                        </form>
+                    }
+                    <hr />
+                }
+            </div>
+        </div>
+    }
+
+    @* configAndonReparto.ascx — permesso "Reparto Andon VisualizzazioneNomiUtente" W *@
+    @if (Model.CanWriteAndon || Model.AndonUsernameFormat != '0')
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Configurazione andon reparto — formato nomi utente</h5></div>
+            <div class="card-body">
+                @{
+                    var andonOptions = new[] {
+                        ("0", "Visualizza username"),
+                        ("1", "Visualizza nome"),
+                        ("2", "Visualizza nome e iniziale cognome"),
+                        ("3", "Visualizza nome e cognome"),
+                    };
+                }
+                @if (Model.CanWriteAndon)
+                {
+                    <form method="post" asp-page-handler="AndonFormat">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                        @foreach (var (value, label) in andonOptions)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="fmt" id="af@(value)" value="@value"
+                                       checked="@(value[0] == Model.AndonUsernameFormat)" />
+                                <label class="form-check-label" for="af@(value)">@label</label>
+                            </div>
+                        }
+                        <button type="submit" class="btn btn-primary btn-sm mt-2">Salva formato andon</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="mb-0"><strong>@Model.AndonUsernameFormat</strong> — permesso di modifica non disponibile.</p>
+                }
+            </div>
+        </div>
+    }
+
+    @* configKanban.ascx — permesso "Reparto ConfigurazioneKanban" W *@
+    @if (Model.CanWriteKanban)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Kanban</h5></div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    Se abilitato, il reparto gestisce la produzione tramite sistema kanban.
+                </p>
+                <form method="post" asp-page-handler="Kanban" class="d-flex align-items-center gap-3">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="kanban" id="kb1" value="1"
+                               checked="@Model.KanbanManaged" />
+                        <label class="form-check-label" for="kb1">Abilitata</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="kanban" id="kb0" value="0"
+                               checked="@(!Model.KanbanManaged)" />
+                        <label class="form-check-label" for="kb0">Disabilitata</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Salva</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @* configModoCalcoloTC.ascx — permesso "Reparto ModoCalcoloTC" W *@
+    @if (Model.CanWriteModoCalcolo)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Modo di calcolo del tempo ciclico</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="ModoCalcolo" class="d-flex align-items-center gap-3">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modo" id="tc1" value="1"
+                               checked="@Model.ModoCalcoloTCEnabled" />
+                        <label class="form-check-label" for="tc1">Abilitato</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="modo" id="tc0" value="0"
+                               checked="@(!Model.ModoCalcoloTCEnabled)" />
+                        <label class="form-check-label" for="tc0">Disabilitato</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm">Salva</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    @* configRepartoTimezone.ascx — permesso "Reparto Timezone" W *@
+    @if (Model.CanWriteTimezone || !string.IsNullOrEmpty(Model.DeptTimezone))
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Fuso orario del reparto</h5></div>
+            <div class="card-body">
+                @if (Model.CanWriteTimezone)
+                {
+                    <form method="post" asp-page-handler="Timezone">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                        <div class="mb-2">
+                            <select name="timezone" class="form-select form-select-sm">
+                                @foreach (var tz in Model.Timezones)
+                                {
+                                    if (tz.Id == Model.DeptTimezone)
+                                    {
+                                        <option value="@tz.Id" selected>@tz.DisplayName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@tz.Id">@tz.DisplayName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Salva fuso orario</button>
+                    </form>
+                }
+                else
+                {
+                    <p class="mb-0">Fuso orario: <code>@Model.DeptTimezone</code> — permesso di modifica non disponibile.</p>
+                }
+            </div>
+        </div>
+    }
+
+    @* risorseTurno.ascx — permesso "Turno PostazioneRisorse" W *@
+    @if (Model.CanWriteRisorse && Model.ShiftResources.Count > 0)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Gestione personale / risorse turno</h5></div>
+            <div class="card-body">
+                <p class="text-muted small">Numero di operatori assegnati a ciascuna postazione per turno.</p>
+                @foreach (var sr in Model.ShiftResources)
+                {
+                    <h6>Turno: @sr.ShiftName <span class="text-muted small">(id @sr.ShiftId)</span></h6>
+                    <table class="table table-sm table-striped align-middle mb-3">
+                        <tbody>
+                            @foreach (var w in sr.Workstations)
+                            {
+                                <tr>
+                                    <td>@w.PostazioneName</td>
+                                    <td class="text-end" style="width:130px;">
+                                        <form method="post" asp-page-handler="SetResource" class="d-flex gap-1 justify-content-end">
+<input type="hidden" name="id" value="@Model.Dipartimento!.id" />
+                                            <input type="hidden" name="turnoId" value="@sr.ShiftId" />
+                                            <input type="hidden" name="postazioneId" value="@w.PostazioneId" />
+                                            <input type="number" name="numRisorse" min="0" max="1000"
+                                                   class="form-control form-control-sm" value="@w.NumRisorse" style="width:80px;" />
+                                            <button type="submit" class="btn btn-outline-primary btn-sm py-0">OK</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+
+    @if (!Model.CanWrite && !Model.CanViewCalendar && !Model.CanWriteTurni
+         && !Model.CanWriteRisorse && !Model.CanWriteAndon && !Model.CanWriteTimezone
+         && !Model.CanWriteKanban && !Model.CanWriteModoCalcolo)
+    {
+        <div class="alert alert-warning">
+            Nessun permesso di configurazione disponibile per il tuo account su questo reparto.
+        </div>
+    }
+
+    <a asp-page="/Reparti/listReparti">&larr; Torna all'elenco reparti</a>
+</div>

@@ -1,0 +1,159 @@
+@page
+@model VirtualChief.Pages.Reparti.configOrariTurnoModel
+@{
+    ViewData["Title"] = "Orari del turno";
+    string DayName(DayOfWeek d) => VirtualChief.Pages.Reparti.configOrariTurnoModel.DayNames[(int)d];
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/listReparti">Reparti</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/configReparto" asp-route-id="@Model.TurnoId">Configurazione reparto</a> <span class="divider">/</span></li>
+        <li class="active">Orari turno @Model.Nome</li>
+    </ul>
+
+    <h1>Orari del turno: @Model.Nome <small class="text-muted">(id @Model.TurnoId)</small></h1>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">@Model.Message</div>
+    }
+
+    @if (!Model.CanWrite)
+    {
+        <div class="alert alert-warning">Permesso "Turno" (modifica) non disponibile.</div>
+    }
+
+    @* saveNomeTurno_Click: rinomina + colore del turno *@
+    @if (Model.CanWrite)
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Turno</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="SaveTurno" class="row g-2 align-items-end">
+                    <input type="hidden" name="id" value="@Model.TurnoId" />
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Nome turno</label>
+                        <input type="text" name="nomeTurno" class="form-control form-control-sm" value="@Model.Nome" required />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small mb-1">Colore</label>
+                        <select name="coloreTurno" class="form-select form-select-sm">
+                            @foreach (var (name, hex) in Model.ColorChoices)
+                            {
+                                if (hex == Model.ColoreHex)
+                                {
+                                    <option value="@hex" selected>@name (@hex)</option>
+                                }
+                                else
+                                {
+                                    <option value="@hex">@name (@hex)</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm">Salva turno</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header"><h5>Orari di lavoro</h5></div>
+            <div class="card-body">
+                @if (Model.Orari.Count == 0)
+                {
+                    <p class="text-muted">Nessun orario configurato.</p>
+                }
+                else
+                {
+                    <table class="table table-sm table-striped align-middle">
+                        <thead>
+                            <tr><th>Da</th><th>A</th><th></th></tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var o in Model.Orari)
+                            {
+                                <tr>
+                                    <td>@DayName(o.GiornoInizio) @o.OraInizio.ToString(@"hh\:mm")</td>
+                                    <td>@DayName(o.GiornoFine) @o.OraFine.ToString(@"hh\:mm")</td>
+                                    <td class="text-end">
+                                        <form method="post" asp-page-handler="DeleteOrario" class="d-inline">
+                                            <input type="hidden" name="id" value="@Model.TurnoId" />
+                                            <input type="hidden" name="intervalloId" value="@o.Id" />
+                                            <button type="submit" class="btn btn-outline-danger btn-sm py-0">&times;</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                <h6>Nuovo orario di lavoro</h6>
+                <form method="post" asp-page-handler="AddOrario" class="row g-2 align-items-end">
+                    <input type="hidden" name="id" value="@Model.TurnoId" />
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Giorno inizio</label>
+                        <select name="dInizio" class="form-select form-select-sm">
+                            @for (var d = 0; d < 7; d++)
+                            {
+                                <option value="@d">@Html.Raw(DayName((DayOfWeek)d))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Ora inizio</label>
+                        <div class="d-flex gap-1">
+                            <select name="oInizioH" class="form-select form-select-sm" style="width:75px;">
+                                @for (var i = 0; i < 24; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                            <select name="oInizioM" class="form-select form-select-sm" style="width:75px;">
+                                @for (var i = 0; i < 60; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Giorno fine</label>
+                        <select name="dFine" class="form-select form-select-sm">
+                            @for (var d = 0; d < 7; d++)
+                            {
+                                <option value="@d">@Html.Raw(DayName((DayOfWeek)d))</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        <label class="form-label small mb-1">Ora fine</label>
+                        <div class="d-flex gap-1">
+                            <select name="oFineH" class="form-select form-select-sm" style="width:75px;">
+                                @for (var i = 0; i < 24; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                            <select name="oFineM" class="form-select form-select-sm" style="width:75px;">
+                                @for (var i = 0; i < 60; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary btn-sm">Aggiungi orario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+
+    <a asp-page="/Reparti/configReparto" asp-route-id="@Model.TurnoId">&larr; Torna alla configurazione del reparto</a>
+</div>

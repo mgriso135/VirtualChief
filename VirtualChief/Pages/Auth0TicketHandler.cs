@@ -107,6 +107,9 @@ namespace VirtualChief.Pages
 
                 if (curr.id != -1)
                 {
+                    // vcmain numeric id, used to resolve groups/menu/permissions per workspace.
+                    appClaims.Add(new Claim("uid", curr.id.ToString()));
+
                     curr.loadWorkspaces();
                     curr.loadDefaultWorkspace();
 
