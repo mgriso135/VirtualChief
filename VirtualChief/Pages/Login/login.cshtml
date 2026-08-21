@@ -1,0 +1,72 @@
+@page
+@model VirtualChief.Pages.Login.loginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container" style="max-width: 480px;">
+    <h1>Virtual Chief</h1>
+
+    @if (Model.Auth0Failed)
+    {
+        <div class="alert alert-danger">Autenticazione Auth0 non riuscita. Riprova.</div>
+    }
+
+    @if (Model.IsAuthenticated)
+    {
+        <!-- tblLogout: legacy loginbox logged-in state -->
+        <div class="card mb-3">
+            <div class="card-header"><h5>Accesso come</h5></div>
+            <div class="card-body">
+                <p>
+                    Accesso come: <strong>@(User.FindFirst("firstname")?.Value) @(User.FindFirst("lastname")?.Value)</strong><br />
+                    Username: @User.Identity.Name<br />
+                    Workspace: @(CurrentWorkspace.Of(User) ?? "(nessuno)")
+                </p>
+                <form method="post" asp-page-handler="Logout">
+                    <button type="submit" class="btn btn-secondary">Logout</button>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card mb-3">
+            <div class="card-header"><h5>Accesso</h5></div>
+            <div class="card-body">
+                <!-- Primary login: Auth0 Universal Login -->
+                <form method="post" asp-page-handler="Auth0">
+                    <input type="hidden" name="red" value="@Request.Query["red"]" />
+                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-2">Accedi con Virtual Chief (Auth0)</button>
+                </form>
+                <p class="text-muted small mb-0">Autenticazione tramite OpenID Connect / Auth0.</p>
+
+                <hr />
+                <p><a asp-page="/Login/forgot">Password dimenticata?</a></p>
+            </div>
+        </div>
+
+        <!-- Fallback: legacy forms login box -->
+        <div class="card mb-3">
+            <div class="card-header"><h6>Accesso locale (fallback)</h6></div>
+            <div class="card-body">
+                @if (!string.IsNullOrEmpty(Model.Message))
+                {
+                    <div class="alert alert-danger py-2">@Model.Message</div>
+                }
+                <form method="post" asp-page-handler="Login">
+                    <input type="hidden" name="red" value="@Request.Query["red"]" />
+                    <div class="mb-3">
+                        <label for="usr" class="form-label">Username</label>
+                        <input type="text" id="usr" name="Username" class="form-control form-control-sm" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label">Password</label>
+                        <input type="password" id="pwd" name="Password" class="form-control form-control-sm" required />
+                    </div>
+                    <button type="submit" class="btn btn-outline-secondary btn-sm">Accedi</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>

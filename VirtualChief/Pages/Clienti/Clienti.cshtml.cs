@@ -1,32 +1,43 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using KisApp.App_Sources;
+using Microsoft.Extensions.Logging;
+using KIS.App_Code;
 using System.Collections.Generic;
 
 namespace VirtualChief.Pages.Clienti
 {
+    /// <summary>
+    /// Migrated from WebForms Clienti/Clienti.aspx + listClienti.ascx:
+    /// customer master data list (anagraficaclienti).
+    /// </summary>
     public class ClientiModel : PageModel
     {
-        public List<Cliente> Clients { get; set; }
+        private readonly ILogger<ClientiModel> _logger;
 
-        private readonly clienti _clientiService;
-
-        public ClientiModel()
+        public ClientiModel(ILogger<ClientiModel> logger)
         {
-            _clientiService = new clienti("defaulttenant");
+            _logger = logger;
         }
+
+        public List<Cliente> Clients { get; set; }
 
         public void OnGet()
         {
+            var tenant = User.FindFirstValue(CurrentWorkspace.ClaimType);
+            if (string.IsNullOrEmpty(tenant))
+            {
+                RedirectToPage("/Login/selectWorkspace");
+                return;
+            }
+
             try
             {
-                Clients = _clientiService.GetAllClients();
+                Clients = new PortafoglioClienti(tenant).Elenco;
             }
-            catch
+            catch (Exception ex)
             {
-                Clients = new List<Cliente>
-                {
-                    new Cliente { CodiceCliente = "Errore", RagioneSociale = "Impossibile caricare i dati" }
-                };
+                _logger.LogError(ex, "Clienti/Clienti.cshtml.cs");
+                Clients = new List<Cliente>();
             }
         }
     }

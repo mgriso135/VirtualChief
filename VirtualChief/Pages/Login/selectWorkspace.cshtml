@@ -1,0 +1,35 @@
+@page
+@model VirtualChief.Pages.Login.selectWorkspaceModel
+@{
+    ViewData["Title"] = "Selezione workspace";
+}
+
+<div class="container" style="max-width: 480px;">
+    <h1>Selezione workspace</h1>
+    <p>Benvenuto <strong>@User.Identity.Name</strong>. Scegli il workspace su cui lavorare:</p>
+
+    @if (Model.Candidates.Count == 0)
+    {
+        <div class="alert alert-warning">
+            Nessun workspace disponibile per questo utente.
+        </div>
+        <form method="post" asp-page="/Login/Login" asp-page-handler="Logout">
+            <button type="submit" class="btn btn-secondary">Logout</button>
+        </form>
+    }
+    else
+    {
+        <div class="list-group mb-3">
+            @foreach (var ws in Model.Candidates)
+            {
+                var isActive = ws == CurrentWorkspace.Of(User);
+                <form method="post" asp-page-handler="">
+                    <input type="hidden" name="workspace" value="@ws" />
+                    <button type="submit" class="list-group-item list-group-item-action @(isActive ? "active" : "")">
+                        @ws @(isActive ? "(attuale)" : "")
+                    </button>
+                </form>
+            }
+        </div>
+    }
+</div>

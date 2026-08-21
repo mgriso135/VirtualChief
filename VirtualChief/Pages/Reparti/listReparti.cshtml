@@ -1,0 +1,36 @@
+@page
+@model VirtualChief.Pages.Reparti.listRepartiModel
+@{
+    ViewData["Title"] = "Reparti";
+}
+
+<div class="container">
+    <h1>Lista Reparti</h1>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Elenco Reparti</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID Reparto</th>
+                        <th>Nome Reparto</th>
+                        <th>Descrizione</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reparto in Model.ElencoReparti)
+                    {
+                        <tr>
+                            <td>@reparto.id</td>
+                            <td>@reparto.name</td>
+                            <td>@reparto.description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

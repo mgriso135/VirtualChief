@@ -4,22 +4,22 @@ using Microsoft.Extensions.Logging;
 using KIS.App_Code;
 using System.Collections.Generic;
 
-namespace VirtualChief.Pages.Commesse
+namespace VirtualChief.Pages.Reparti
 {
     /// <summary>
-    /// Migrated from WebForms Commesse/commesse.aspx + listCommesse.ascx:
-    /// sales order list (commesse), newest first.
+    /// Migrated from WebForms Reparti/listReparti.aspx + listReparti.ascx:
+    /// department list (reparti), ordered by name.
     /// </summary>
-    public class CommesseModel : PageModel
+    public class listRepartiModel : PageModel
     {
-        private readonly ILogger<CommesseModel> _logger;
+        private readonly ILogger<listRepartiModel> _logger;
 
-        public CommesseModel(ILogger<CommesseModel> logger)
+        public listRepartiModel(ILogger<listRepartiModel> logger)
         {
             _logger = logger;
         }
 
-        public List<Commessa> Commesse { get; set; }
+        public List<Reparto> ElencoReparti { get; set; }
 
         public void OnGet()
         {
@@ -32,14 +32,12 @@ namespace VirtualChief.Pages.Commesse
 
             try
             {
-                var elenco = new ElencoCommesse(tenant);
-                elenco.loadCommesse();
-                Commesse = elenco.Commesse;
+                ElencoReparti = new ElencoReparti(tenant).elenco;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Commesse/CommesseModel.cshtml.cs");
-                Commesse = new List<Commessa>();
+                _logger.LogError(ex, "Reparti/listReparti.cshtml.cs");
+                ElencoReparti = new List<Reparto>();
             }
         }
     }

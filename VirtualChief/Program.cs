@@ -1,6 +1,103 @@
+using System.Globalization;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using VirtualChief.Pages;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+
+// Authentication:
+//  - primary: Auth0 via OpenID Connect, porting the legacy OWIN Startup.cs
+//    (virtualchief.eu.auth0.com, scope openid profile email, audience param);
+//    the client secret comes from VC_AUTH0_CLIENT_SECRET (Phase 0 secrets policy).
+//  - fallback: forms login against the per-tenant users tables (legacy login.aspx),
+//    kept for environments without Auth0 connectivity.
+// Every page requires an authenticated user (fallback policy); the active
+// workspace travels in the "tenant" cookie claim — there is no default tenant.
+var auth0Domain = builder.Configuration["Auth0:Domain"] ?? "";
+var auth0ClientId = builder.Configuration["Auth0:ClientId"] ?? "";
+var auth0Audience = builder.Configuration["Auth0:Audience"] ?? "";
+var auth0ClientSecret = builder.Configuration["VC_AUTH0_CLIENT_SECRET"]
+    ?? Environment.GetEnvironmentVariable("VC_AUTH0_CLIENT_SECRET") ?? "";
+
+builder.Services
+    .AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    })
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login/login";
+        options.AccessDeniedPath = "/Login/login";
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.SlidingExpiration = true;
+    })
+    .AddOpenIdConnect("Auth0", options =>
+    {
+        options.Authority = $"https://{auth0Domain}";
+        options.ClientId = auth0ClientId;
+        options.ClientSecret = auth0ClientSecret;
+        options.ResponseType = OpenIdConnectResponseType.CodeIdTokenToken;
+        options.Scope.Clear();
+        options.Scope.Add("openid");
+        options.Scope.Add("profile");
+        options.Scope.Add("email");
+        options.SaveTokens = true;
+
+        // Legacy TokenValidationParameters.NameClaimType = "name"
+        options.TokenValidationParameters.NameClaimType = "name";
+
+        options.Events.OnRedirectToIdentityProvider = ctx =>
+        {
+            // Legacy RedirectToIdentityProvider: pass the API audience so the
+            // returned access token targets the Virtual Chief API.
+            if (!string.IsNullOrEmpty(auth0Audience))
+            {
+                ctx.ProtocolMessage.SetParameter("audience", auth0Audience);
+            }
+            return Task.CompletedTask;
+        };
+
+        options.Events.OnRedirectToIdentityProviderForSignOut = ctx =>
+        {
+            // Legacy RedirectToIdentityProvider (logout branch): terminate the
+            // session at Auth0 (/v2/logout) then come back to the app root.
+            var postLogoutUri = ctx.Properties?.RedirectUri ?? "/";
+            if (postLogoutUri.StartsWith("/"))
+            {
+                var req = ctx.Request;
+                postLogoutUri = $"{req.Scheme}://{req.Host}{req.PathBase}{postLogoutUri}";
+            }
+            var logoutUri = $"https://{auth0Domain}/v2/logout?client_id={auth0ClientId}"
+                + $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
+            ctx.Response.Redirect(logoutUri);
+            ctx.HandleResponse();
+            return Task.CompletedTask;
+        };
+
+        options.Events.OnRemoteFailure = ctx =>
+        {
+            var logger = ctx.HttpContext.RequestServices
+                .GetRequiredService<ILoggerFactory>().CreateLogger("Auth0");
+            logger.LogError(ctx.Failure, "Autenticazione Auth0 fallita");
+            ctx.Response.Redirect("/Login/login?error=auth0");
+            ctx.HandleResponse();
+            return Task.CompletedTask;
+        };
+
+        options.Events.OnTokenValidated = Auth0TicketHandler.OnTokenValidated;
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 var app = builder.Build();
 
@@ -13,6 +110,13 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapRazorPages();
+
+// Keep culture handling identical to legacy Global.asax (per-user language).
+CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
 app.Run();

@@ -1,0 +1,40 @@
+@page
+@model VirtualChief.Pages.Users.listUsersModel
+@{
+    ViewData["Title"] = "Utenti";
+}
+
+<div class="container">
+    <h1>Lista Utenti</h1>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Elenco Utenti</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Userid</th>
+                        <th>Nome</th>
+                        <th>Cognome</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>@user.id</td>
+                            <td>@user.userId</td>
+                            <td>@user.firstname</td>
+                            <td>@user.lastname</td>
+                            <td>@user.email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

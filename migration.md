@@ -145,6 +145,54 @@ Main domain areas (from `kaizenkey`):
 
 ---
 
+### 3.3 Target Repository & File Structure (End State)
+
+The end-state repository layout after completion of Phases 2–4 is shown below. It reflects the
+target architecture of §4.1: an ASP.NET Core (.NET 8) web app, `App_Sources` compiled as a class
+library consumed by all UI layers, one unified Worker Service replacing the 11 console agents,
+and a shared library for cross-host logic.
+
+```
+Virtual Chief.sln
+├── KisWebApp/                          # ASP.NET Core web app — retargeted to net8.0, SDK-style csproj
+│   ├── Program.cs                      # replaces Global.asax.cs + OWIN Startup.cs (Kestrel host)
+│   ├── appsettings.json                # replaces Web.config; secrets via VC_* env vars
+│   ├── Controllers/                    # MVC + Web API controllers (7 ASMX ports live here)
+│   ├── Areas/                          # MVC areas kept (AccountsMgm, Quality, Analysis, …)
+│   ├── Pages/                          # Razor Pages migrated from .aspx/.aspx.cs
+│   ├── Components/                     # Blazor components migrated from .ascx controls
+│   ├── Views/                          # Razor views (Site.Master → _Layout.cshtml)
+│   ├── App_Sources/                    # domain layer — compiled as a class library
+│   │                                   #   (code-behind/pages reference these classes only)
+│   ├── App_DB/                         # EF entities / DbContext
+│   └── wwwroot/                        # static assets (Styles/, Scripts/, img/)
+├── VirtualChief.Worker/                # NEW: ONE .NET 8 Worker Service replacing the 11 console agents
+│   │                                   #   (KISScheduler, KISLicenseCheck, KISQualityEventsCheck,
+│   │                                   #    KanbanBox*, VCAutoPauseTasks, Finestra3000, SIAV*)
+├── KIS.Shared/                         # shared library: agent logic + data seams used by web + worker
+├── tests/
+│   ├── VirtualChief.Tests/             # DB characterization + portability audit (MariaDB :3307)
+│   ├── VirtualChief.DomainTests/       # Tier-1 domain flows (App_Sources via System.Web shims)
+│   └── VirtualChief.CodeBehindCompileCheck/  # TRANSITIONAL — retired when last .aspx.cs is gone
+└── deploy/                             # runbook artifacts (Phase 4)
+    ├── virtualchief-web.service        # systemd → dotnet /var/www/virtualchief/KisWebApp.dll
+    ├── virtualchief-worker.service     # systemd → dotnet /opt/virtualchief-worker/…Worker.dll
+    └── nginx.conf                      # TLS-terminating reverse proxy in front of Kestrel
+```
+
+**Removed by the end state:** every `.aspx`, `.ascx`, `.aspx.cs`, `.ascx.cs`, `*.designer.cs`,
+`.asmx`, `Site.Master*`, `Web.config`, `packages.config`, OWIN/Katana middleware, the
+`System.Web` dependency, and the 11 separate console-app projects.
+
+**Unchanged:** MySQL 8 schema (~98 tables; optional PostgreSQL dialect pass per Phase 4),
+URLs, HTML/CSS rendering and client-side behavior, email contents.
+
+> **Current WIP mapping:** `KisApp.App_Sources/` (extracted domain library) and
+> `VirtualChief/Pages/` (migrated Razor Pages) are the seeds of the
+> `KisWebApp` + `App_Sources`-as-library layout above.
+
+---
+
 ## 4. Unified Modernization & Linux Migration Plan
 
 > **Guiding Principle**: Modernize the platform *underneath* the existing UI and business logic while enabling a native Linux deployment. Screens, workflows, URLs, emails, and DB schema (~98 tables) stay identical. Each phase is independently verifiable using automated characterization and domain test suites.
@@ -260,6 +308,25 @@ Migrate .ascx, .ascx.cs, .aspx, .aspx.cs files to razor and blazor. Do not forge
 - [/] **WebForms → Razor View Conversion:**
   - Convert 114 `.aspx` pages and 172 `.ascx` user controls to MVC Razor `.cshtml` views (414 `.cshtml` views created/updated).
   - Preserve identical HTML structure, CSS classes, element IDs, and client-side JavaScript logic.
+- [/] **New ASP.NET Core UI (`VirtualChief/`) with `App_Sources` as a class library:**
+  - `KisApp.App_Sources.csproj` (net10.0) compiles the **unmodified** domain layer
+    `KisWebApp/App_Sources/*.cs` via `<Compile Include>` links plus the System.Web shims —
+    **single source of truth, zero duplicated domain code** (the earlier hand-written
+    re-implementations and the `KisApp.App_Code` stub project were removed as drift).
+  - Razor Pages migrated so far (code-behind models consume only real `KIS.App_Code` /
+    `KIS.App_Sources` classes; exceptions are logged via `ILogger`, never swallowed):
+    - `Pages/Index` (tenant hub)
+    - `Pages/Clienti/Clienti` ← `Clienti.aspx` + `listClienti.ascx` (`PortafoglioClienti.Elenco`)
+    - `Pages/Commesse/commesse` ← `commesse.aspx` + `listCommesse.ascx` (`ElencoCommesse.loadCommesse`)
+    - `Pages/Produzione/produzione` ← `produzione.aspx` + `listArticoliINP.ascx` (`ElencoArticoli.loadProductList`)
+    - `Pages/Reparti/listReparti` ← `listReparti.aspx` + `.ascx` (`ElencoReparti.elenco`)
+    - `Pages/Users/listUsers` ← `manageUsers.aspx` + `listUsers.ascx` (`Workspace.loadUserAccounts`)
+    - `Pages/Analysis/analysis` ← `analysis.aspx` (`ProductionHistory.loadProductionAnalysis`)
+  - Shared `_Layout.cshtml` + `_ViewStart.cshtml` replace `Site.Master`; tenancy via
+    `VC_MASTERDB_CONN` / `VC_VCMAIN_CONN` env vars through the legacy `Dati.Dati` seam.
+  - Verified live against the provisioned MariaDB :3307: Reparti, Commesse, Produzione,
+    Users render seeded rows; Clienti correctly empty (`customer IS TRUE` filter, seed row
+    not flagged); Analysis empty (no task events in seed). All pages HTTP 200.
 - [x] **`<asp:Chart>` Control Replacement:**
   - Replace server-rendered `<asp:Chart>` (WebForms `System.Web.DataVisualization`) controls with client-side **Google Charts** or **D3.js** renderings across the 10 affected views:
     - `Produzione/wlReparto.ascx` & `Produzione/wlSimReparto.ascx` (Workload charts)

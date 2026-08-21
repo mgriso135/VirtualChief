@@ -142,3 +142,30 @@ Check for test projects in the solution.
 2. Create corresponding `.cshtml.cs` PageModel
 3. Add `using KisApp.App_Code;` and `using KisApp.App_Sources;` directives
 4. Build and run to verify
+
+
+
+From the repo root (/home/matteo/Documenti/projects/VirtualChief/VirtualChief):
+# 1. Start + seed the database (MariaDB on 127.0.0.1:3307, user vc/vc,
+#    databases kaizenkey/vcmain/vc_dev) — idempotent
+tests/provision-db.sh
+
+# 2. Point the legacy Dati connection seam at it
+export VC_MASTERDB_CONN="Server=127.0.0.1;Port=3307;Uid=matteo;Pwd=hellas;database="
+export VC_VCMAIN_CONN="Server=127.0.0.1;Port=3307;Uid=matteo;Pwd=hellas;Database=vcmain"
+
+# 3. Run the new Razor Pages app
+cd VirtualChief && dotnet run
+Then open the URL printed by Kestrel (or force one with --urls http://localhost:5199). Pages:
+URL
+/
+/Clienti/Clienti
+/Commesse/commesse
+/Produzione/produzione
+/Reparti/listReparti
+/Users/listUsers
+/Analysis/analysis
+Notes:
+- Without the two env vars, connections fall back to Web.config-style lookup that doesn't exist here → pages return 200 but log errors and render empty tables.
+- The DB must be up before startup; domain classes open connections in their constructors/loaders.
+- Stop with Ctrl+C; re-running provision-db.sh is safe anytime.

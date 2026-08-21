@@ -6,7 +6,7 @@
 
 <div class="container">
     <h1>Virtual Chief - Production Management</h1>
-    
+
     <div class="row">
         <div class="col-md-6">
             <div class="card mb-3">
@@ -18,6 +18,7 @@
                         <div class="mb-3">
                             <label asp-for="TenantName" class="form-label">Tenant Name</label>
                             <input type="text" asp-for="TenantName" class="form-control" required />
+                            <span asp-validation-for="TenantName" class="text-danger"></span>
                         </div>
                         <button type="submit" class="btn btn-primary">Create Tenant</button>
                     </form>
@@ -30,9 +31,41 @@
                     <h5>Existing Tenants</h5>
                 </div>
                 <div class="card-body">
-                    <p>No tenants found. <a asp-page="">Add a new tenant</a> to get started.</p>
+                    @if (Model.Tenants == null || Model.Tenants.Count == 0)
+                    {
+                        <p>No tenants found. Add a new tenant to get started.</p>
+                    }
+                    else
+                    {
+                        <table class="table table-sm table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var tenant in Model.Tenants)
+                                {
+                                    <tr>
+                                        <td>@tenant.id</td>
+                                        <td>@tenant.Name</td>
+                                        <td>@tenant.CreationDate.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
                 </div>
             </div>
         </div>
     </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.MessageIsError ? "alert-danger" : "alert-success")">
+            @Model.Message
+        </div>
+    }
 </div>

@@ -1,0 +1,42 @@
+@page
+@model VirtualChief.Pages.Produzione.produzioneModel
+@{
+    ViewData["Title"] = "Produzione";
+}
+
+<div class="container">
+    <h1>Produzione</h1>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Articoli</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Articolo</th>
+                        <th>Prodotto</th>
+                        <th>Processo</th>
+                        <th>Quantit&agrave;</th>
+                        <th>Cliente</th>
+                        <th>Stato</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var articolo in Model.Articoli)
+                    {
+                        <tr>
+                            <td>@articolo.ProductID/@articolo.ProductYear</td>
+                            <td>@articolo.varianteName</td>
+                            <td>@articolo.processName</td>
+                            <td>@articolo.Quantity</td>
+                            <td>@articolo.CustomerName</td>
+                            <td>@articolo.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

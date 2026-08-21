@@ -1,20 +1,44 @@
 @page
 @model VirtualChief.Pages.Analysis.analysisModel
 @{
-    ViewData["Title"] = "Analysis Dashboard";
+    ViewData["Title"] = "Analysis";
 }
 
 <div class="container">
-    <h1>Analysis Dashboard</h1>
-    
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Production Analysis</h4>
-            <p>Loading analysis data from KisApp.App_Sources...</p>
+    <h1>Analysis</h1>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5>Production Analysis</h5>
         </div>
-        <div class="col-md-6">
-            <h4>Customer Analysis</h4>
-            <p>Customer portfolio analysis loading...</p>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Commessa</th>
+                        <th>Articolo</th>
+                        <th>Prodotto</th>
+                        <th>Stato</th>
+                        <th>Q.t&agrave; ordinata</th>
+                        <th>Q.t&agrave; prodotta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.AnalysisData)
+                    {
+                        <tr>
+                            <td>@row.CustomerName</td>
+                            <td>@row.SalesOrderID/@row.SalesOrderYear</td>
+                            <td>@row.ProductionOrderID/@row.ProductionOrderYear</td>
+                            <td>@row.ProductTypeName</td>
+                            <td>@row.ProductionOrderStatus</td>
+                            <td>@row.ProductionOrderQuantityOrdered</td>
+                            <td>@row.ProductionOrderQuantityProduced</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

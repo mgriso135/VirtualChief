@@ -1,0 +1,62 @@
+@page
+@model VirtualChief.Pages.Login.forgotModel
+@{
+    ViewData["Title"] = "Recupero credenziali";
+    var mode = Request.Query["m"].ToString();
+    var showUsername = mode == "username";
+    var showPassword = mode == "password";
+}
+
+<div class="container" style="max-width: 560px;">
+    <h1>Recupero credenziali</h1>
+
+    <!-- frmScelta: legacy radio selection -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <p>Cosa vuoi recuperare?</p>
+            <a class="btn btn-outline-primary me-2" asp-page="/Login/forgot" asp-route-m="username">Username</a>
+            <a class="btn btn-outline-primary" asp-page="/Login/forgot" asp-route-m="password">Password</a>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert @(Model.Message == VirtualChief.Pages.Login.forgotModel.MsgMailSent ? "alert-success" : "alert-danger")">@Model.Message</div>
+    }
+
+    @if (showPassword)
+    {
+        <!-- frmPassword: legacy forgotPassword.ascx -->
+        <div class="card mb-3">
+            <div class="card-header"><h5>Recupero password</h5></div>
+            <div class="card-body">
+                <p class="text-muted small">@VirtualChief.Pages.Login.forgotModel.Disclaimer</p>
+                <form method="post" asp-page-handler="Password">
+                    <div class="mb-3">
+                        <label for="txtUsername" class="form-label">Username</label>
+                        <input type="text" id="txtUsername" name="Username" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Invia nuova password</button>
+                </form>
+            </div>
+        </div>
+    }
+    else if (showUsername)
+    {
+        <!-- frmUsername: legacy forgotUsername.ascx -->
+        <div class="card mb-3">
+            <div class="card-header"><h5>Recupero username</h5></div>
+            <div class="card-body">
+                <form method="post" asp-page-handler="Username">
+                    <div class="mb-3">
+                        <label for="txtEmail" class="form-label">Indirizzo e-mail</label>
+                        <input type="email" id="txtEmail" name="Email" class="form-control" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Invia username</button>
+                </form>
+            </div>
+        </div>
+    }
+
+    <a asp-page="/Login/login">&larr; Torna al login</a>
+</div>
