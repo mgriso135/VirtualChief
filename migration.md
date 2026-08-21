@@ -255,6 +255,8 @@ Out of 28 core domain files in `KisWebApp/App_Sources/`, all 28 have been fully 
 
 **Objective:** Migrate WebForms controls (`.ascx`) and pages (`.aspx`) to ASP.NET MVC Razor views (`.cshtml`), replace proprietary WebForms controls with cross-platform JS libraries, and convert ASMX SOAP services to Web API controllers.
 
+Migrate .ascx, .ascx.cs, .aspx, .aspx.cs files to razor and blazor. Do not forget CodeBehind that must use classes in App_Sources. .cs files in App_Sources will be compiled to a library.
+
 - [/] **WebForms → Razor View Conversion:**
   - Convert 114 `.aspx` pages and 172 `.ascx` user controls to MVC Razor `.cshtml` views (414 `.cshtml` views created/updated).
   - Preserve identical HTML structure, CSS classes, element IDs, and client-side JavaScript logic.

@@ -1,0 +1,36 @@
+@page
+@model KisWebApp.Pages.Produzione.avanzamentoProduzioneModel
+@{
+    ViewData["Title"] = "Production Progress";
+}
+
+<div class="container">
+    <h1>Production Progress</h1>
+    
+    @if (Model.ProductionProgress != null && Model.ProductionProgress.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Work Order ID</th>
+                    <th>Progress</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var progress in Model.ProductionProgress)
+                {
+                    <tr>
+                        <td>@progress.WorkOrderId</td>
+                        <td>@progress.Progress</td>
+                        <td>@progress.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No production progress data or permission denied</p>
+    }
+</div>

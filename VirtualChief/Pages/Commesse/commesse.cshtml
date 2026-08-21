@@ -1,0 +1,40 @@
+@page
+@model VirtualChief.Pages.Commesse.CommesseModel
+@{
+    ViewData["Title"] = "Commesse";
+}
+
+<div class="container">
+    <h1>Gestione Commesse</h1>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Lista Commesse</h4>
+            <p>Loading commesse from KisApp.App_Sources...</p>
+            <hr />
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Numero Commessa</th>
+                            <th>Descrizione</th>
+                            <th>Cliente</th>
+                            <th>Stato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var commessa in Model.Commesse)
+                        {
+                            <tr>
+                                <td>@commessa.Numero</td>
+                                <td>@commessa.Descrizione</td>
+                                <td>@commessa.ClienteNome</td>
+                                <td>@commessa.Stato</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+@page
+@model KisWebApp.Pages.Clienti.listClientiModel
+@{
+    ViewData["Title"] = "Client List";
+}
+
+<div class="container">
+    <h1>Client List</h1>
+    
+    @if (Model.Clients != null && Model.Clients.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var client in Model.Clients)
+                {
+                    <tr>
+                        <td>@client.Name</td>
+                        <td>@client.Contact</td>
+                        <td>@client.Status</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No clients or permission denied</p>
+    }
+</div>

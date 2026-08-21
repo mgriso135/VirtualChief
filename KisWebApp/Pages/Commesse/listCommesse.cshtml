@@ -1,0 +1,38 @@
+@page
+@model KisWebApp.Pages.Commesse.listCommesseModel
+@{
+    ViewData["Title"] = "Work Order List";
+}
+
+<div class="container">
+    <h1>Work Order List</h1>
+    
+    @if (Model.WorkOrders != null && Model.WorkOrders.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Status</th>
+                    <th>Deadline</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var workOrder in Model.WorkOrders)
+                {
+                    <tr>
+                        <td>@workOrder.Id</td>
+                        <td>@workOrder.Client</td>
+                        <td>@workOrder.Status</td>
+                        <td>@workOrder.Deadline.ToShortDateString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No work orders or permission denied</p>
+    }
+</div>

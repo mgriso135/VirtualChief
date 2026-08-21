@@ -1,0 +1,31 @@
+@page
+@model KisWebApp.Pages.Analysis.analysisModel
+@{
+    ViewData["Title"] = "Analysis Dashboard";
+}
+
+<div class="container">
+    <h1>Analysis Dashboard</h1>
+    
+    @if (Model.AnalysisData != null && Model.AnalysisData.Count > 0)
+    {
+        <div class="row">
+            @foreach (var item in Model.AnalysisData.Take(5))
+            {
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@item.CustomerName</h5>
+                            <p class="card-text">Productivity: @item.Productivity</p>
+                            <p class="card-text">Department: @item.DepartmentName</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p>No analysis data or permission denied</p>
+    }
+</div>

@@ -1,0 +1,124 @@
+﻿/* DEFAULTS
+----------------------------------------------------------*/
+BODY
+{
+    background-color: #FBFBFB;
+    font-family: Verdana;
+    font-size: 10px;
+}
+    
+.title
+{
+    font-family: Verdana;
+    text-align: left;
+    width: 400px;
+}
+
+
+.title h1
+{
+    font-family: Verdana;
+}
+
+/*.header
+{
+    background-color: #9999FF;
+    width: 1000px;
+    height: 60px;
+}*/
+
+.headMenu
+{
+    font-size: 14px;
+    color: #FFFFFF;
+        
+}
+
+.topMenu
+{
+    height: 40px;
+    width: 1000px;
+    top: 10px;
+    border-bottom: 1px solid black;
+    text-align: right;
+}
+
+ 
+
+.boxProcesso
+{
+    border: 1px dashed blue;
+}
+
+.boxProcesso A
+{
+    color: Blue;    
+}
+
+.boxProcesso A:hover
+{
+    text-decoration:none;
+    color: Lime;
+   
+}
+
+.boxProcesso:hover
+{
+    border: 2px dotted green;
+}
+
+
+
+
+div.hideSkiplink
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    background-color: transparent;
+    width:100%;
+}
+
+div.menu
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+}
+
+div.menu ul
+{
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    width: auto;
+}
+
+div.menu ul li a, div.menu ul li a:visited
+{
+    
+    font-size:14px;
+    font-family:Calibri;
+    background-color: #465c71;
+    border: 1px #D3D3D3 solid;
+    color: #dde4ec;
+    display: block;
+    line-height: 1.35em;
+    padding: 4px 20px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+div.menu ul li a:hover
+{ 
+    background-color: #bfcbd6;
+    color: #465c71;
+    text-decoration: none;
+}
+
+div.menu ul li a:active
+{
+    background-color: #465c71;
+    color: #cfdbe6;
+    text-decoration: none;
+}

@@ -1,0 +1,42 @@
+@page
+@model KisWebApp.Pages.Analysis.ListAnalysisOperatoriModel
+@{
+    ViewData["Title"] = "Operator Analysis";
+}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Operator Analysis</h5>
+        
+        @if (Model.Users != null && Model.Users.Count > 0)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Username</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.Users)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-page="DetailAnalysisOperatore" asp-route-usr="@user.username">
+                                    <img src="/img/iconView.png" height="40" />
+                                </a>
+                            </td>
+                            <td>@user.cognome @user.name</td>
+                            <td>@user.username</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Permission denied or no users found</p>
+        }
+    </div>
+</div>

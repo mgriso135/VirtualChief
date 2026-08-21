@@ -1,0 +1,12 @@
+@page
+@model KisWebApp.Pages.HomePage.UploadTooLargeModel
+@{
+    ViewData["Title"] = "Upload Too Large";
+}
+
+<div class="container">
+    <h1>Upload Too Large</h1>
+    <p>The file you are trying to upload exceeds the maximum allowed size.</p>
+    <p>Please try uploading a smaller file.</p>
+    <a asp-page="/HomePage/Default" class="btn btn-primary">Back to Home</a>
+</div>

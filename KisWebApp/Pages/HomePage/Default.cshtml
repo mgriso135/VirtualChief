@@ -1,0 +1,50 @@
+@page
+@model KisWebApp.Pages.HomePage.DefaultModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="container">
+    <h1>Welcome to the Home Page</h1>
+    <p>This is the default page for authenticated users.</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Links</h5>
+                    <ul class="list-group">
+                        <li class="list-group-item"><a asp-page="/Clienti/Clienti">Client Management</a></li>
+                        <li class="list-group-item"><a asp-page="/Commesse/commesse">Production & Work Orders</a></li>
+                        <li class="list-group-item"><a asp-page="/Analysis/analysis">Analysis & Reporting</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var activity in Model.RecentActivities)
+                            {
+                                <tr>
+                                    <td>@activity.Date</td>
+                                    <td>@activity.Action</td>
+                                    <td>@activity.Details</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

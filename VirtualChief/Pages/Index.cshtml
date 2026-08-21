@@ -1,0 +1,38 @@
+@page
+@model VirtualChief.Pages.IndexModel
+@{
+    ViewData["Title"] = "Virtual Chief";
+}
+
+<div class="container">
+    <h1>Virtual Chief - Production Management</h1>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Add Tenant</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="TenantName" class="form-label">Tenant Name</label>
+                            <input type="text" asp-for="TenantName" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Tenant</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Existing Tenants</h5>
+                </div>
+                <div class="card-body">
+                    <p>No tenants found. <a asp-page="">Add a new tenant</a> to get started.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

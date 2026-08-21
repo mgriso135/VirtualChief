@@ -1,0 +1,32 @@
+@page
+@model VirtualChief.Pages.Clienti.ClientiModel
+@{
+    ViewData["Title"] = "Clienti";
+}
+
+<div class="container">
+    <h1>Gestione Clienti</h1>
+    
+    <div class="row">
+        <div class="col-md-8">
+            <h4>Elenco Clienti</h4>
+            <p>Loading clients from KisApp.App_Sources...</p>
+            <hr />
+            <div class="list-group">
+                @foreach (var client in Model.Clients)
+                {
+                    <a href="#" class="list-group-item">
+                        <h5 class="mb-1">@client.RagioneSociale</h5>
+                        <p class="mb-1">Codice: @client.CodiceCliente</p>
+                        <p class="mb-1 small">Partita IVA: @client.PartitaIva</p>
+                    </a>
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h4>Aggiungi Cliente</h4>
+            <hr />
+            <p>Form per aggiungere nuovo cliente verrà visualizzato prossimamente.</p>
+        </div>
+    </div>
+</div>
