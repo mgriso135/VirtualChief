@@ -1,0 +1,259 @@
+@using System.Net
+@using KIS.App_Code
+@using KIS.App_Sources
+@inject ILogger<AddCustomer> Logger
+@inject NavigationManager Nav
+
+@* Migrated from WebForms Clienti/addCliente.ascx + addCliente.ascx.cs (hosted by
+   AddCliente.aspx): new-customer form. Labels mirror the control resx
+   (neutral culture = Italian). Save re-validates the "Anagrafica Clienti" W
+   permission, checks duplicates against PortafoglioClienti.Elenco and inserts
+   through PortafoglioClienti.Add (provider=customer=true, exactly as legacy);
+   on success it redirects back to the register page like the legacy
+   Response.Redirect("Clienti.aspx"). *@
+@if (!Authorized)
+{
+    <div class="alert alert-warning">@LblPermissionDenied</div>
+}
+else
+{
+    <label id="lbl1">@((MarkupString)Message)</label>
+    <table id="frmAddcliente" class="table table-hover table-striped align-middle">
+        <tr>
+            <td><label for="txtCodiceCliente">@LblCode</label></td>
+            <td>
+                <input type="text" id="txtCodiceCliente" @bind="Code" maxlength="255" />
+                <span class="text-danger"><label>@LblRequired</label></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="txtRagSoc">@LblBusinessName</label></td>
+            <td>
+                <input type="text" id="txtRagSoc" @bind="BusinessName" maxlength="255" />
+                <span class="text-danger"><label>@LblRequired</label></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="txtPartitaIVA">@LblVat</label></td>
+            <td><input type="text" id="txtPartitaIVA" @bind="VatNumber" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtCodFiscale">@LblFiscalCode</label></td>
+            <td><input type="text" id="txtCodFiscale" @bind="FiscalCode" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtIndirizzo">@LblAddress</label></td>
+            <td><input type="text" id="txtIndirizzo" @bind="Address" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtCitta">@LblTown</label></td>
+            <td><input type="text" id="txtCitta" @bind="Town" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtProvincia">@LblProvince</label></td>
+            <td><input type="text" id="txtProvincia" @bind="Province" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtCAP">@LblZip</label></td>
+            <td><input type="text" id="txtCAP" @bind="Zip" maxlength="10" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtStato">@LblState</label></td>
+            <td><input type="text" id="txtStato" @bind="State" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtTelefono">@LblPhone</label></td>
+            <td><input type="text" id="txtTelefono" @bind="Phone" maxlength="45" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtEmail">@LblEmail</label></td>
+            <td><input type="email" id="txtEmail" @bind="Email" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="ddlKanban">@LblKanban</label></td>
+            <td>
+                <select id="ddlKanban" @bind="Kanban">
+                    <option value="0">@LblKanbanDisabled</option>
+                    <option value="1">@LblKanbanEnabled</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center">
+                <button type="button" id="btnSave" class="btn btn-success" @onclick="Save">Salva</button>
+                <button type="button" id="btnUndo" class="btn btn-secondary" @onclick="Undo">Annulla</button>
+            </td>
+        </tr>
+    </table>
+}
+
+@code {
+    /// <summary>Active workspace name (legacy Session["ActiveWorkspace_Name"]).</summary>
+    [Parameter] public string Tenant { get; set; } = "";
+
+    /// <summary>vcmain numeric user id; 0 means unknown (no permission).</summary>
+    [Parameter] public int Uid { get; set; }
+
+    // Control resx labels (neutral culture = Italian).
+    private const string LblCode = "Codice cliente";
+    private const string LblBusinessName = "Ragione sociale";
+    private const string LblVat = "Partita IVA";
+    private const string LblFiscalCode = "Codice fiscale";
+    private const string LblAddress = "Indirizzo";
+    private const string LblTown = "Città";
+    private const string LblProvince = "Provincia";
+    private const string LblZip = "CAP";
+    private const string LblState = "Stato";
+    private const string LblPhone = "Telefono";
+    private const string LblEmail = "E-mail";
+    private const string LblKanban = "Abilitazione KanbanBox";
+    private const string LblKanbanDisabled = "Disabilitato";
+    private const string LblKanbanEnabled = "Abilitato";
+    private const string LblRequired = "* Campo obbligatorio";
+    private const string LblPermissionDenied = "Non hai il permesso di aggiungere un utente.";
+    private const string LblErrorData = "E' avvenuto un errore. Verifica i dati inseriti e riprova.";
+    private const string LblErrorCodeDuplicated = "Attenzione: esiste già un cliente con codice";
+    private const string LblErrorNameDuplicated = "Attenzione: esiste già un cliente con ragione sociale";
+    private const string LblErrorVatDuplicated = "Attenzione: esiste già un cliente con partita iva";
+    private const string LblErrorFiscalDuplicated = "Attenzione: esiste già un cliente con codice fiscale";
+
+    // addCliente.ascx field ids -> bound properties.
+    internal string Code { get; set; } = "";
+    internal string BusinessName { get; set; } = "";
+    internal string VatNumber { get; set; } = "";
+    internal string FiscalCode { get; set; } = "";
+    internal string Address { get; set; } = "";
+    internal string Town { get; set; } = "";
+    internal string Province { get; set; } = "";
+    internal string Zip { get; set; } = "";
+    internal string State { get; set; } = "";
+    internal string Phone { get; set; } = "";
+    internal string Email { get; set; } = "";
+    internal string Kanban { get; set; } = "0";
+
+    /// <summary>lblPermessoKo branch of addCliente.Page_Load.</summary>
+    internal bool Authorized { get; private set; }
+
+    /// <summary>Legacy lbl1 (HTML built by the code-behind).</summary>
+    internal string Message { get; private set; } = "";
+
+    protected override void OnInitialized()
+    {
+        Authorized = HasWritePermission();
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Re-evaluate once when the host page provides tenant/uid.
+        Authorized = HasWritePermission();
+    }
+
+    private bool HasWritePermission()
+    {
+        if (string.IsNullOrEmpty(Tenant) || Uid <= 0)
+        {
+            return false;
+        }
+        try
+        {
+            var prm = new List<string[]> { new[] { "Anagrafica Clienti", "W" } };
+            return new UserAccount(Uid).ValidatePermissions(Tenant, prm);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/AddCustomer: verifica permesso Anagrafica Clienti W");
+            return false;
+        }
+    }
+
+    /// <summary>addCliente.ascx.btnUndo_Click.</summary>
+    private void Undo()
+    {
+        Code = BusinessName = VatNumber = FiscalCode = "";
+        Address = Town = Province = Zip = "";
+        State = Phone = Email = "";
+        Kanban = "0";
+        Message = "";
+    }
+
+    /// <summary>addCliente.ascx.btnSave_Click.</summary>
+    private void Save()
+    {
+        Message = "";
+        if (!HasWritePermission())
+        {
+            Message = LblPermissionDenied;
+            return;
+        }
+
+        try
+        {
+            var elenco = new PortafoglioClienti(Tenant);
+            bool checkCod = false, checkRagSoc = false, checkPIva = false, checkCodFiscale = false;
+            var codCustomer = Code.Replace(" ", string.Empty);
+
+            foreach (var c in elenco.Elenco)
+            {
+                if (WebUtility.HtmlEncode(codCustomer) == c.CodiceCliente)
+                {
+                    checkCod = true;
+                }
+                if (WebUtility.HtmlEncode(BusinessName) == c.RagioneSociale)
+                {
+                    checkRagSoc = true;
+                }
+                if (WebUtility.HtmlEncode(VatNumber) == c.PartitaIVA && (c.PartitaIVA ?? "").Length > 1)
+                {
+                    checkPIva = true;
+                }
+                if (WebUtility.HtmlEncode(FiscalCode) == c.CodiceFiscale && (c.CodiceFiscale ?? "").Length > 1)
+                {
+                    checkCodFiscale = true;
+                }
+            }
+
+            if (checkCod || checkRagSoc || checkPIva || checkCodFiscale)
+            {
+                if (checkCod) { Message += LblErrorCodeDuplicated + " " + WebUtility.HtmlEncode(Code) + "<br />"; }
+                if (checkRagSoc) { Message += LblErrorNameDuplicated + " " + WebUtility.HtmlEncode(BusinessName) + "<br />"; }
+                if (checkPIva) { Message += LblErrorVatDuplicated + " " + WebUtility.HtmlEncode(VatNumber) + "<br />"; }
+                if (checkCodFiscale) { Message += LblErrorFiscalDuplicated + " " + WebUtility.HtmlEncode(FiscalCode) + "<br />"; }
+                return;
+            }
+
+            bool kanban = Kanban == "1";
+            bool rt = elenco.Add(
+                WebUtility.HtmlEncode(codCustomer),
+                WebUtility.HtmlEncode(BusinessName),
+                WebUtility.HtmlEncode(VatNumber),
+                WebUtility.HtmlEncode(FiscalCode),
+                WebUtility.HtmlEncode(Address),
+                WebUtility.HtmlEncode(Town),
+                WebUtility.HtmlEncode(Province),
+                WebUtility.HtmlEncode(Zip),
+                WebUtility.HtmlEncode(State),
+                WebUtility.HtmlEncode(Phone),
+                WebUtility.HtmlEncode(Email),
+                kanban, true, true);
+
+            if (rt)
+            {
+                Logger.LogInformation(
+                    "Nuovo cliente {Codice} creato sul workspace {Tenant}",
+                    codCustomer, Tenant);
+                // Legacy: Response.Redirect("Clienti.aspx")
+                Nav.NavigateTo("/Customers/Customer/List", forceLoad: true);
+            }
+            else
+            {
+                Logger.LogError("PortafoglioClienti.Add fallito: {Log}", elenco.log);
+                Message = LblErrorData;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/AddCustomer: salvataggio cliente");
+            Message = LblErrorData;
+        }
+    }
+}

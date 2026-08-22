@@ -8,6 +8,13 @@ using VirtualChief.Pages;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
+// Blazor Server circuits: embedded components inside Razor Pages
+// (e.g. Pages/Customers/Customer/List hosts Components/Customer/CustomerList).
+builder.Services.AddServerSideBlazor();
+
+// Workspace database gate: a workspace without its own database must not
+// serve any page (see Pages/TenantDatabaseGate.cs).
+builder.Services.AddSingleton<TenantDatabaseChecker>();
 
 // Authentication:
 //  - primary: Auth0 via OpenID Connect, porting the legacy OWIN Startup.cs
@@ -114,7 +121,12 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Workspace database gate: when the active workspace's tenant database does
+// not exist, every request is redirected to /Error — no page may work.
+app.UseMiddleware<TenantDatabaseGateMiddleware>();
+
 app.MapRazorPages();
+app.MapBlazorHub();
 
 // Keep culture handling identical to legacy Global.asax (per-user language).
 CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;

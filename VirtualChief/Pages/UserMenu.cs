@@ -37,6 +37,7 @@ namespace VirtualChief.Pages
                 ["clienti"] = "/Clienti/Clienti",
                 ["listreparti"] = "/Reparti/listReparti",
                 ["listusers"] = "/Users/listUsers",
+                ["customer/list"] = "/Customers/Customer/List",
                 ["analysis"] = "/Analysis/analysis",
                 ["kisAdmin"] = "/Admin/kisAdmin",
                 ["configandoncompleto"] = "/Andon/configAndonCompleto",
@@ -125,12 +126,23 @@ namespace VirtualChief.Pages
             }
 
             // "~/Produzione/produzione.aspx" | "~/Workplace/WebGemba/Index"
-            var lastSegment = legacyUrl.Split('/', StringSplitOptions.RemoveEmptyEntries)
-                                       .LastOrDefault() ?? "";
+            var segments = legacyUrl.Split('/', StringSplitOptions.RemoveEmptyEntries);
+            var lastSegment = segments.LastOrDefault() ?? "";
             lastSegment = lastSegment.Replace("~", "");
             if (lastSegment.EndsWith(".aspx", StringComparison.OrdinalIgnoreCase))
             {
                 lastSegment = lastSegment[..^5];
+            }
+
+            // Area-style MVC URLs match on "controller/action"
+            // (e.g. "~/Customers/Customer/List" -> "customer/list")
+            if (segments.Length >= 2)
+            {
+                var prevSegment = segments[^2].Replace("~", "");
+                if (PageMap.TryGetValue($"{prevSegment}/{lastSegment}", out var areaPage))
+                {
+                    return areaPage;
+                }
             }
 
             if (lastSegment.Equals("login", StringComparison.OrdinalIgnoreCase))

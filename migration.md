@@ -319,6 +319,15 @@ Migrate .ascx, .ascx.cs, .aspx, .aspx.cs files to razor and blazor. Do not forge
     `KIS.App_Sources` classes; exceptions are logged via `ILogger`, never swallowed):
     - `Pages/Index` (tenant hub)
     - `Pages/Clienti/Clienti` ← `Clienti.aspx` + `listClienti.ascx` (`PortafoglioClienti.Elenco`)
+    - `Pages/Customers/Customer/List` ← `Areas/Customers/Customer/List.cshtml`
+      + `CustomerController.List`: first Blazor-enabled page — Blazor Server
+      circuits wired (`AddServerSideBlazor`/`MapBlazorHub`), register grid in
+      `Components/Customer/CustomerList.razor`, new-customer form (legacy
+      `Clienti/addCliente.ascx`) in `Components/Customer/AddCustomer.razor`
+      (duplicate checks + `PortafoglioClienti.Add`, W permission re-validated
+      server-side); menu voce `~/Customers/Customer/List` mapped in
+      `UserMenu.Translate`; `PortafoglioClienti.Add` bit(1) binding fixed and
+      locked by `PortafoglioClienti_Add_RoundTrips` DomainTest
     - `Pages/Commesse/commesse` ← `commesse.aspx` + `listCommesse.ascx` (`ElencoCommesse.loadCommesse`)
     - `Pages/Produzione/produzione` ← `produzione.aspx` + `listArticoliINP.ascx` (`ElencoArticoli.loadProductList`)
     - `Pages/Reparti/listReparti` ← `listReparti.aspx` + `.ascx` (`ElencoReparti.elenco`)

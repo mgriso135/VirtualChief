@@ -819,10 +819,6 @@ namespace KIS.App_Code
 
             if (validateCodice == true && validatePIvacFisc == true && validateRagSociale == true && validateEmail == true)
             {
-                String strProvider = "false";
-                String strCustomer = "false";
-                strProvider = provider ? "true" : "false";
-                strCustomer = customer ? "true" : "false";
                 MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
                 conn.Open();
                 MySqlTransaction tr = conn.BeginTransaction();
@@ -845,7 +841,9 @@ namespace KIS.App_Code
                     + ")";
                 try
                 {
-                    conn.Execute(sql, new { codice = codice, ragSoc = ragSoc, pIva = pIva.Length > 0 ? pIva : (object)DBNull.Value, codFiscale = codFiscale.Length > 0 ? codFiscale : (object)DBNull.Value, indirizzo = indirizzo, citta = citta, provincia = provincia, CAP = CAP, stato = stato, telefono = telefono, email = strMail.Length > 0 ? email : (object)DBNull.Value, kanban = kanban.ToString(), customer = strCustomer, provider = strProvider }, tr);
+                    // kanbanManaged/customer/provider are bit(1) columns: bind real
+                    // booleans (MySqlConnector does not coerce "True"/"False" strings).
+                    conn.Execute(sql, new { codice = codice, ragSoc = ragSoc, pIva = pIva.Length > 0 ? pIva : (object)DBNull.Value, codFiscale = codFiscale.Length > 0 ? codFiscale : (object)DBNull.Value, indirizzo = indirizzo, citta = citta, provincia = provincia, CAP = CAP, stato = stato, telefono = telefono, email = strMail.Length > 0 ? email : (object)DBNull.Value, kanban = kanban, customer = customer, provider = provider }, tr);
                     rt = true;
                     tr.Commit();
                 }

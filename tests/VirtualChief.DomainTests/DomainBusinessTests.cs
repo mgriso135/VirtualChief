@@ -915,4 +915,27 @@ public class DomainBusinessTests
         var stato = AvanzamentoProduzioneService.ClassificaStato(new DateTime(2020, 2, 11, 12, 0, 0), finestre);
         Assert.Equal(StatoAvanzamentoArticolo.InRitardo, stato);
     }
+
+    [Fact]
+    public void PortafoglioClienti_Add_RoundTrips()
+    {
+        // addCliente.ascx.btnSave_Click path: insert a full customer row
+        // (kanbanManaged/customer/provider are bit(1) columns) then read it back.
+        const string codice = "DOMTEST_ADD";
+        // Cleanup leftovers from previous runs.
+        new Cliente(Tenant, codice).Delete();
+
+        var elenco = new PortafoglioClienti(Tenant);
+        Assert.True(elenco.Add(codice, "Domain Test RagSoc", "12345678901", "",
+            "Via Test 1", "Milano", "MI", "20100", "Italia", "+390212345678",
+            "domtest@example.com", kanban: true, provider: true, customer: true),
+            "Add fallito: " + elenco.log);
+
+        var ricaricato = new PortafoglioClienti(Tenant).Elenco
+            .FirstOrDefault(c => c.CodiceCliente == codice);
+        Assert.NotNull(ricaricato);
+        Assert.Equal("Domain Test RagSoc", ricaricato!.RagioneSociale);
+
+        Assert.True(new Cliente(Tenant, codice).Delete(), "Delete di pulizia fallito");
+    }
 }

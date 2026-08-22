@@ -1,0 +1,47 @@
+@using VirtualChief.Components.Customer
+
+@* Migrated from KisWebApp/Areas/Customers/Views/Customer/List.cshtml:
+   customer register table (edit icon, ID, business name, VAT number,
+   identification number, town, province, state, phone, email). *@
+@if (Customers.Count > 0)
+{
+    <table class="table table-striped table-hover align-middle">
+        <thead>
+            <tr>
+                <th></th>
+                <th>ID</th>
+                <th>Business Name</th>
+                <th>VAT Number</th>
+                <th>Identification Number</th>
+                <th>Town</th>
+                <th>Province</th>
+                <th>State</th>
+                <th>Phone number</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Customers)
+            {
+                <tr>
+                    <td><span title="Edit">&#9998;</span></td>
+                    <td>@m.Code</td>
+                    <td>@m.BusinessName</td>
+                    <td>@m.VatNumber</td>
+                    <td>@m.Identification</td>
+                    <td>@m.Town</td>
+                    <td>@m.Province</td>
+                    <td>@m.State</td>
+                    <td>@m.Phone</td>
+                    <td>@m.Email</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter] public IReadOnlyList<CustomerRow> Customers { get; set; } = Array.Empty<CustomerRow>();
+
+    [Parameter] public bool CanWrite { get; set; }
+}

@@ -1,0 +1,49 @@
+@page
+@model VirtualChief.Pages.Customers.Customer.ListModel
+@using VirtualChief.Components.Customer
+@{
+    // Legacy ResCustomer.List: neutral resx is English
+    ViewData["Title"] = "Customers management";
+}
+
+<h3>Customers management</h3>
+<ul class="breadcrumb">
+    <li>
+        <a href="~/Customers/Customer/List">Customers management</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (Model.Authorized)
+{
+    @* legacy ResCustomer.List.lblAddCustomer + Clienti/AddCliente.aspx (addCliente.ascx) *@
+    <div class="card mb-3" id="addCustomer">
+        <div class="card-header"><h5 class="mb-0">&#10133; Add a new customer</h5></div>
+        <div class="card-body">
+            @if (Model.CanWrite)
+            {
+                <component type="typeof(VirtualChief.Components.Customer.AddCustomer)"
+                           render-mode="ServerPrerendered"
+                           param-Tenant="@Model.Tenant"
+                           param-Uid="@Model.Uid" />
+            }
+        </div>
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            @* legacy list table rendered by the Blazor component *@
+            <component type="typeof(CustomerList)"
+                       render-mode="ServerPrerendered"
+                       param-Customers="@Model.Customers"
+                       param-CanWrite="@Model.CanWrite" />
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">User not authorized.</div>
+}
+
+@section Scripts {
+    <script src="_framework/blazor.server.js"></script>
+}

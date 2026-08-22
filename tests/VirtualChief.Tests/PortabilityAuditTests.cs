@@ -75,8 +75,8 @@ public class PortabilityAuditTests
     {
         var mt = SqlAudit.MysqlTypeUsagePerFile();
 
-        Assert.Equal(26, mt.Count);
-        Assert.Equal(1187, mt.Values.Sum());
+        Assert.Equal(27, mt.Count);
+        Assert.Equal(1189, mt.Values.Sum());
 
         Assert.Equal(94, mt["KisWebApp/App_Sources/Account.cs"]);
         Assert.Equal(8, mt["KisWebApp/App_Sources/Analysis.cs"]);
@@ -104,6 +104,8 @@ public class PortabilityAuditTests
         Assert.Equal(2, mt["KisWebApp/Eventi/Ritardi.asmx.cs"]);
         Assert.Equal(1, mt["KisWebApp/Eventi/Warning.asmx.cs"]);
         Assert.Equal(3, mt["VCProductionEventsExport-SIAV/Program.cs"]);
+        // TenantDatabaseGate: workspace existence probe (MySqlConnection + MySqlConnectionStringBuilder)
+        Assert.Equal(2, mt["VirtualChief/Pages/TenantDatabaseGate.cs"]);
     }
 
     [Fact]
