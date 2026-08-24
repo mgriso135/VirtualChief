@@ -45,5 +45,8 @@ else
 }
 
 @section Scripts {
-    <script src="_framework/blazor.server.js"></script>
+    @* Absolute path: a relative "_framework/..." would resolve against the
+       page's own directory (/Customers/Customer/_framework/...) and 404,
+       so blazor.server.js never loads and no circuit starts *@
+    <script src="/_framework/blazor.server.js"></script>
 }

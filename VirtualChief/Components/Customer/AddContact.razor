@@ -1,0 +1,163 @@
+@using System.Net
+@using KIS.App_Code
+@using KIS.App_Sources
+@inject ILogger<AddContact> Logger
+@inject NavigationManager Nav
+
+@* Migrated from WebForms Clienti/addContattoCliente.ascx + addContattoCliente.ascx.cs:
+    add-contact form for an existing customer (the legacy user-creation branch was
+    already commented out server-side). Requires "Anagrafica Clienti Contatti" W.
+    On success the legacy control called Response.Redirect(Request.RawUrl) so the
+    contacts list rebound: replicate with a full-page reload. *@
+@if (!Authorized)
+{
+    <div class="alert alert-warning">@LblPermissionDenied</div>
+}
+else
+{
+    <label id="lbl1">@Message</label>
+    <table id="tblAddContatto" class="table table-hover table-striped align-middle">
+        <tr>
+            <td><label for="txtFirstName">@LblFirstName</label></td>
+            <td>
+                <input type="text" id="txtFirstName" @bind="FirstName" />
+                <span class="text-danger"><label>@LblRequired</label></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="txtLastName">@LblLastName</label></td>
+            <td>
+                <input type="text" id="txtLastName" @bind="LastName" />
+                <span class="text-danger"><label>@LblRequired</label></span>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="txtRuolo">@LblRole</label></td>
+            <td><input type="text" id="txtRuolo" @bind="Role" /></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center">
+                <button type="button" id="btnSave" class="btn btn-success" @onclick="Save">Salva</button>
+                <button type="button" id="btnUndo" class="btn btn-secondary" @onclick="Undo">Annulla</button>
+            </td>
+        </tr>
+    </table>
+}
+
+@code {
+    /// <summary>Active workspace name (legacy Session["ActiveWorkspace_Name"]).</summary>
+    [Parameter] public string Tenant { get; set; } = "";
+
+    /// <summary>vcmain numeric user id; 0 means unknown (no permission).</summary>
+    [Parameter] public int Uid { get; set; }
+
+    /// <summary>Customer code (legacy QueryString["idCliente"]).</summary>
+    [Parameter] public string Code { get; set; } = "";
+
+    // Control resx labels (neutral culture = Italian).
+    private const string LblFirstName = "Nome";
+    private const string LblLastName = "Cognome";
+    private const string LblRole = "Ruolo";
+    private const string LblRequired = "* Campo obbligatorio";
+    private const string LblErrFirstName = "Errore: il nome \u00E9 un campo obbligatorio";
+    private const string LblErrLastName = "Errore: il cognome \u00E9 un campo obbligatorio";
+    private const string LblPermissionDenied = "Non hai il permesso di aggiungere contatti.";
+    private const string LblAddOk = "Contatto aggiunto correttamente.";
+    private const string LblError = "E' avvenuto un errore.";
+
+    internal string FirstName { get; set; } = "";
+    internal string LastName { get; set; } = "";
+    internal string Role { get; set; } = "";
+
+    /// <summary>imgViewTableAdd stays hidden branch of addContattoCliente.Page_Load.</summary>
+    internal bool Authorized { get; private set; }
+
+    /// <summary>Legacy lbl1.</summary>
+    internal string Message { get; private set; } = "";
+
+    protected override void OnInitialized()
+    {
+        Authorized = HasWritePermission();
+    }
+
+    protected override void OnParametersSet()
+    {
+        Authorized = HasWritePermission();
+    }
+
+    private bool HasWritePermission()
+    {
+        if (string.IsNullOrEmpty(Tenant) || Uid <= 0 || string.IsNullOrEmpty(Code))
+        {
+            return false;
+        }
+        try
+        {
+            var prm = new List<string[]> { new[] { "Anagrafica Clienti Contatti", "W" } };
+            return new UserAccount(Uid).ValidatePermissions(Tenant, prm);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/AddContact: verifica permesso Anagrafica Clienti Contatti W");
+            return false;
+        }
+    }
+
+    /// <summary>addContattoCliente.btnUndo_Click.</summary>
+    private void Undo()
+    {
+        FirstName = LastName = Role = "";
+        Message = "";
+    }
+
+    /// <summary>addContattoCliente.btnSave_Click.</summary>
+    private void Save()
+    {
+        Message = "";
+        if (!HasWritePermission())
+        {
+            Message = LblPermissionDenied;
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(FirstName))
+        {
+            Message = LblErrFirstName;
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(LastName))
+        {
+            Message = LblErrLastName;
+            return;
+        }
+        try
+        {
+            var cln = new Cliente(Tenant, Code);
+            if ((cln.CodiceCliente ?? "").Length == 0)
+            {
+                Message = "Errore: cliente non trovato.";
+                return;
+            }
+            int rt = cln.AddContatto(
+                WebUtility.HtmlEncode(FirstName),
+                WebUtility.HtmlEncode(LastName),
+                WebUtility.HtmlEncode(Role));
+            if (rt >= 0)
+            {
+                Logger.LogInformation("Nuovo contatto {Id} creato per il cliente {Codice} sul workspace {Tenant}",
+                    rt, Code, Tenant);
+                // Legacy: Response.Redirect(Request.RawUrl) rebinds the list.
+                Nav.NavigateTo(Nav.Uri, forceLoad: true);
+            }
+            else
+            {
+                Logger.LogError("Cliente.AddContatto fallito: {Log}", cln.log);
+                Message = LblError + cln.log;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/AddContact: salvataggio contatto cliente {Codice}", Code);
+            Message = LblError;
+        }
+    }
+}

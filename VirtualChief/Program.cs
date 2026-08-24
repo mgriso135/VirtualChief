@@ -116,6 +116,27 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+// Blazor Server circuits hosted by Razor Pages at NESTED urls (e.g.
+// /Customers/Customer/List): blazor.server.js resolves its SignalR hub url
+// against the document base URI ("<page>/_blazor"), but MapBlazorHub only
+// maps the hub at the root. Rewrite page-scoped circuit paths onto it,
+// otherwise no @onclick/@bind event ever reaches the components.
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value ?? "";
+    var idx = path.LastIndexOf("/_blazor", StringComparison.Ordinal);
+    if (idx > 0)
+    {
+        var rest = path[idx..];
+        if (rest.Length == "/_blazor".Length || rest["/_blazor".Length] == '/')
+        {
+            context.Request.Path = rest;
+        }
+    }
+    await next();
+});
+
 app.UseRouting();
 
 app.UseAuthentication();

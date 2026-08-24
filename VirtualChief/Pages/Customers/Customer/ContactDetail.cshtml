@@ -1,0 +1,44 @@
+@page
+@model VirtualChief.Pages.Customers.Customer.ContactDetailModel
+@using VirtualChief.Components.Customer
+@{
+    // Legacy EditContattoDetails.aspx resx: neutral culture is English
+    ViewData["Title"] = "Contact details";
+}
+
+<h3>Dettagli contatto</h3>
+<ul class="breadcrumb">
+    <li>
+        <a href="~/Customers/Customer/List">Anagrafica clienti</a><span class="divider">/</span>
+    </li>
+    <li>
+        <a href="~/Customers/Customer/Edit?idCliente=@Model.CustomerCode">Modifica cliente</a><span class="divider">/</span>
+    </li>
+    <li>
+        <span>Dettagli contatto</span>
+    </li>
+</ul>
+
+@if (Model.ContactId <= 0 || string.IsNullOrEmpty(Model.Tenant))
+{
+    <div class="alert alert-warning">Contatto non trovato.</div>
+}
+else
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <component type="typeof(ContactDetail)"
+                       render-mode="ServerPrerendered"
+                       param-Tenant="@Model.Tenant"
+                       param-Uid="@Model.Uid"
+                       param-ContactId="@Model.ContactId" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @* Absolute path: a relative "_framework/..." would resolve against the
+       page's own directory (/Customers/Customer/_framework/...) and 404,
+       so blazor.server.js never loads and no circuit starts *@
+    <script src="/_framework/blazor.server.js"></script>
+}

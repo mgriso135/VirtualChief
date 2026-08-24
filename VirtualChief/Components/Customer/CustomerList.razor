@@ -24,7 +24,7 @@
             @foreach (var m in Customers)
             {
                 <tr>
-                    <td><span title="Edit">&#9998;</span></td>
+                    <td><a title="Edit" href="/Customers/Customer/Edit?idCliente=@m.Code">&#9998;</a></td>
                     <td>@m.Code</td>
                     <td>@m.BusinessName</td>
                     <td>@m.VatNumber</td>

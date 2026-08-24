@@ -328,6 +328,20 @@ Migrate .ascx, .ascx.cs, .aspx, .aspx.cs files to razor and blazor. Do not forge
       server-side); menu voce `~/Customers/Customer/List` mapped in
       `UserMenu.Translate`; `PortafoglioClienti.Add` bit(1) binding fixed and
       locked by `PortafoglioClienti_Add_RoundTrips` DomainTest
+    - `Pages/Customers/Customer/Edit` ← `EditCliente.aspx` (host) +
+      `Clienti/EditCliente.ascx`: base-info editor in
+      `Components/Customer/EditCustomer.razor` ("Anagrafica Clienti" W,
+      immutable code, per-field setters of `Cliente`, undo re-reads the DB);
+      embedded contacts panels: list + delete (`ContattiClienti.ascx`) in
+      `Components/Customer/CustomerContacts.razor`, add form
+      (`addContattoCliente.ascx`) in `Components/Customer/AddContact.razor`
+      ("Anagrafica Clienti Contatti" R/W); reached from the register grid edit
+      icon; locked by `Cliente_Edit_Setters_RoundTrip` +
+      `Cliente_Contacts_RoundTrips` DomainTests
+    - `Pages/Customers/Customer/ContactDetail` ← `EditContattoDetails.aspx`
+      (`Clienti/EditContattoDetails.ascx`): contact detail editor (name/surname/
+      role, phones and emails CRUD, `MailAddress` validation) in
+      `Components/Customer/ContactDetail.razor` ("Anagrafica Clienti Contatti" W)
     - `Pages/Commesse/commesse` ← `commesse.aspx` + `listCommesse.ascx` (`ElencoCommesse.loadCommesse`)
     - `Pages/Produzione/produzione` ← `produzione.aspx` + `listArticoliINP.ascx` (`ElencoArticoli.loadProductList`)
     - `Pages/Reparti/listReparti` ← `listReparti.aspx` + `.ascx` (`ElencoReparti.elenco`)

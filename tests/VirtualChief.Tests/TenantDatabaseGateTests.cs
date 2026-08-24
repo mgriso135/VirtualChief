@@ -68,5 +68,15 @@ public class TenantDatabaseGateTests
         Assert.True(File.Exists(
                 Path.Combine(RepoPaths.Root, "VirtualChief", "Pages", "Error.cshtml")),
             "/Error must exist: UseExceptionHandler and the gate redirect target it");
+
+        // Blazor circuits are hosted by Razor Pages at nested urls (e.g.
+        // /Customers/Customer/List): blazor.server.js resolves "<page>/_blazor"
+        // against the document base URI while MapBlazorHub maps only the root,
+        // so the page-scoped circuit paths must be rewritten onto it — without
+        // that rewrite no @onclick event ever reaches any embedded component.
+        Assert.True(program.Contains("MapBlazorHub();", StringComparison.Ordinal),
+            "MapBlazorHub missing");
+        Assert.True(program.Contains("LastIndexOf(\"/_blazor\"", StringComparison.Ordinal),
+            "page-scoped /_blazor rewrite missing");
     }
 }

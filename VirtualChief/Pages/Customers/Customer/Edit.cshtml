@@ -1,0 +1,82 @@
+@page
+@model VirtualChief.Pages.Customers.Customer.EditModel
+@using VirtualChief.Components.Customer
+@{
+    // Legacy EditCliente.aspx resx: neutral culture is English
+    ViewData["Title"] = "Edit customer";
+}
+
+<h3>Edit customer</h3>
+<ul class="breadcrumb">
+    <li>
+        <a href="~/Customers/Customer/List">Anagrafica clienti</a><span class="divider">/</span>
+    </li>
+    <li>
+        <a href="~/Customers/Customer/Edit?idCliente=@Model.CustomerCode">Modifica cliente</a><span class="divider"></span>
+    </li>
+</ul>
+
+@if (string.IsNullOrEmpty(Model.Tenant) || Model.CustomerCode.Length == 0)
+{
+    @* legacy EditCliente.Page_Load: without idCliente every form stays hidden *@
+    <div class="alert alert-warning">Cliente non trovato.</div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            @* legacy lblTitleBaseInfo + Clienti:Edit control *@
+            <h4>Informazioni di base</h4>
+            <div class="card mb-3" id="frmEditCliente">
+                <div class="card-body">
+                    <component type="typeof(VirtualChief.Components.Customer.EditCustomer)"
+                               render-mode="ServerPrerendered"
+                               param-Tenant="@Model.Tenant"
+                               param-Uid="@Model.Uid"
+                               param-Code="@Model.CustomerCode" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @* legacy lblTitleContatti + Contatti:Add + Clienti:Contatti controls *@
+            <h4>Contatti</h4>
+            @if (Model.CanReadContacts)
+            {
+                if (Model.CanWrite)
+                {
+                    <div class="card mb-3" id="frmAddContatto">
+                        <div class="card-header"><h5 class="mb-0">&#10133; Aggiungi contatto cliente</h5></div>
+                        <div class="card-body">
+                            <component type="typeof(AddContact)"
+                                       render-mode="ServerPrerendered"
+                                       param-Tenant="@Model.Tenant"
+                                       param-Uid="@Model.Uid"
+                                       param-Code="@Model.CustomerCode" />
+                        </div>
+                    </div>
+                }
+
+                <div class="card mb-3" id="frmContattiClienti">
+                    <div class="card-body">
+                        <component type="typeof(CustomerContacts)"
+                                   render-mode="ServerPrerendered"
+                                   param-Tenant="@Model.Tenant"
+                                   param-Uid="@Model.Uid"
+                                   param-Code="@Model.CustomerCode" />
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">Non hai il permesso di visualizzare i contatti.</div>
+            }
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @* Absolute path: a relative "_framework/..." would resolve against the
+       page's own directory (/Customers/Customer/_framework/...) and 404,
+       so blazor.server.js never loads and no circuit starts *@
+    <script src="/_framework/blazor.server.js"></script>
+}

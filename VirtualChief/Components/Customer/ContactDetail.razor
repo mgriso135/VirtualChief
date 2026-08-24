@@ -1,0 +1,457 @@
+@using System.Net
+@using System.Net.Mail
+@using KIS.App_Code
+@using KIS.App_Sources
+@inject ILogger<ContactDetail> Logger
+
+@* Migrated from WebForms Clienti/EditContattoDetails.ascx + .ascx.cs (hosted by
+   EditContattoDetails.aspx?idContatto=...): detail editor of a customer contact
+   (name/surname/role + phones + emails). Requires "Anagrafica Clienti Contatti" W.
+   Deviations from legacy: btnUndo also restores the last name (legacy forgot
+   txtLastName), deletes/adds rebind locally instead of Response.Redirect. *@
+@if (!Authorized)
+{
+    <div class="alert alert-warning">@LblPermissionDenied</div>
+}
+else if (!Loaded)
+{
+    <div class="alert alert-warning">@LblContactNotFound</div>
+}
+else
+{
+    <label id="lbl1">@Message</label>
+
+    <table id="tblContatto" class="table table-hover table-striped align-middle">
+        <tr>
+            <td><label for="txtNominativo">@LblFirstName</label></td>
+            <td><input type="text" id="txtNominativo" @bind="FirstName" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtLastName">@LblLastName</label></td>
+            <td><input type="text" id="txtLastName" @bind="LastName" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtRuolo">@LblRole</label></td>
+            <td><input type="text" id="txtRuolo" @bind="Role" /></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center">
+                <button type="button" id="btnSave" class="btn btn-success" @onclick="Save">Salva</button>
+                <button type="button" id="btnUndo" class="btn btn-secondary" @onclick="Undo">Annulla</button>
+            </td>
+        </tr>
+    </table>
+
+    <h5>@LblTitlePhones</h5>
+    @if (Phones.Count > 0)
+    {
+        <table id="rptPhones" class="table table-hover table-striped table-condensed align-middle">
+            <thead>
+                <tr>
+                    <th>@LblPhone</th>
+                    <th>@LblNote</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Phones)
+                {
+                    <tr>
+                        <td>@p.Phone</td>
+                        <td>@p.Note</td>
+                        <td>
+                            <button type="button" class="btn btn-link p-0" title="@LblDeletePhone"
+                                    @onclick="() => DeletePhone(p.Phone)">
+                                &#10060;
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <button type="button" id="btnShowAddPhone" class="btn btn-outline-primary mb-2" @onclick="ToggleAddPhone">&#10133; @LblAddPhone</button>
+    @if (ShowAddPhone)
+    {
+        <table id="frmAddPhone" class="table table-striped align-middle">
+            <tr>
+                <td><label for="txtNewPhone">@LblNewPhone</label></td>
+                <td><input type="text" id="txtNewPhone" @bind="NewPhone" maxlength="45" /></td>
+            </tr>
+            <tr>
+                <td><label for="txtNoteNewPhone">@LblNote</label></td>
+                <td><input type="text" id="txtNoteNewPhone" @bind="NewPhoneNote" maxlength="255" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <button type="button" id="btnNewPhoneSave" class="btn btn-success" @onclick="SaveNewPhone">Salva</button>
+                    <button type="button" id="btnNewPhoneUndo" class="btn btn-secondary" @onclick="UndoNewPhone">Annulla</button>
+                </td>
+            </tr>
+        </table>
+    }
+
+    <h5>@LblTitleEmails</h5>
+    @if (Emails.Count > 0)
+    {
+        <table id="rptEmails" class="table table-hover table-striped table-condensed align-middle">
+            <thead>
+                <tr>
+                    <th>@LblEmailAddress</th>
+                    <th>@LblNote</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var e in Emails)
+                {
+                    <tr>
+                        <td>@e.Address</td>
+                        <td>@e.Note</td>
+                        <td>
+                            <button type="button" class="btn btn-link p-0" title="@LblDeleteEmail"
+                                    @onclick="() => DeleteEmail(e.Address)">
+                                &#10060;
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <button type="button" id="btnShowAddEmail" class="btn btn-outline-primary mb-2" @onclick="ToggleAddEmail">&#10133; @LblAddEmail</button>
+    @if (ShowAddEmail)
+    {
+        <table id="frmAddEmail" class="table table-striped align-middle">
+            <tr>
+                <td><label for="txtNewMail">@LblEmailAddress</label></td>
+                <td><input type="email" id="txtNewMail" @bind="NewMail" maxlength="255" /></td>
+            </tr>
+            <tr>
+                <td><label for="txtNoteNewMail">@LblNote</label></td>
+                <td><input type="text" id="txtNoteNewMail" @bind="NewMailNote" maxlength="255" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center">
+                    <button type="button" id="btnNewMailSave" class="btn btn-success" @onclick="SaveNewMail">Salva</button>
+                    <button type="button" id="btnNewMailUndo" class="btn btn-secondary" @onclick="UndoNewMail">Annulla</button>
+                </td>
+            </tr>
+        </table>
+    }
+}
+
+@code {
+    /// <summary>Active workspace name (legacy Session["ActiveWorkspace_Name"]).</summary>
+    [Parameter] public string Tenant { get; set; } = "";
+
+    /// <summary>vcmain numeric user id; 0 means unknown (no permission).</summary>
+    [Parameter] public int Uid { get; set; }
+
+    /// <summary>Contact id (legacy QueryString["idContatto"]).</summary>
+    [Parameter] public int ContactId { get; set; } = -1;
+
+    // Control resx labels (neutral culture = Italian).
+    private const string LblFirstName = "Nome";
+    private const string LblLastName = "Cognome";
+    private const string LblRole = "Ruolo";
+    private const string LblTitlePhones = "Numeri di telefono";
+    private const string LblPhone = "Numero di telefono";
+    private const string LblNewPhone = "Numero di telefono";
+    private const string LblAddPhone = "Aggiungi numero di telefono";
+    private const string LblDeletePhone = "Sei sicuro di voler eliminare questo numero di telefono?";
+    private const string LblTitleEmails = "E-mails";
+    private const string LblEmailAddress = "Indirizzo e-mail";
+    private const string LblAddEmail = "Aggiungi indirizzo e-mail";
+    private const string LblDeleteEmail = "Sei sicuro di voler eliminare questo indirizzo e-mail?";
+    private const string LblNote = "Note";
+    private const string LblErrore = "Errore.";
+    private const string LblMailFormatKo = "Formato indirizzo e-mail non corretto.";
+    private const string LblPermissionDenied = "Non hai il permesso di modificare i contatti.";
+    private const string LblContactNotFound = "Contatto non trovato.";
+
+    internal sealed record PhoneRow(string Phone, string Note);
+
+    internal sealed record EmailRow(string Address, string Note);
+
+    internal string FirstName { get; set; } = "";
+    internal string LastName { get; set; } = "";
+    internal string Role { get; set; } = "";
+
+    internal List<PhoneRow> Phones { get; private set; } = new();
+    internal List<EmailRow> Emails { get; private set; } = new();
+
+    internal bool ShowAddPhone { get; private set; }
+    internal bool ShowAddEmail { get; private set; }
+    internal string NewPhone { get; set; } = "";
+    internal string NewPhoneNote { get; set; } = "";
+    internal string NewMail { get; set; } = "";
+    internal string NewMailNote { get; set; } = "";
+
+    /// <summary>tblContatto stays hidden branch of EditContattoDetails1.Page_Load.</summary>
+    internal bool Authorized { get; private set; }
+
+    internal bool Loaded { get; private set; }
+
+    /// <summary>Legacy lbl1.</summary>
+    internal string Message { get; private set; } = "";
+
+    protected override void OnInitialized()
+    {
+        Authorized = HasWritePermission();
+        if (Authorized && !Loaded)
+        {
+            LoadFromDb();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        Authorized = HasWritePermission();
+        if (Authorized && !Loaded)
+        {
+            LoadFromDb();
+        }
+    }
+
+    private bool HasWritePermission()
+    {
+        if (string.IsNullOrEmpty(Tenant) || Uid <= 0 || ContactId <= 0)
+        {
+            return false;
+        }
+        try
+        {
+            var prm = new List<string[]> { new[] { "Anagrafica Clienti Contatti", "W" } };
+            return new UserAccount(Uid).ValidatePermissions(Tenant, prm);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: verifica permesso Anagrafica Clienti Contatti W");
+            return false;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.Page_Load (!IsPostBack branch).</summary>
+    private void LoadFromDb()
+    {
+        try
+        {
+            var contCln = new Contatto(Tenant, ContactId);
+            if (contCln.ID == -1)
+            {
+                Loaded = false;
+                return;
+            }
+            contCln.loadEmails();
+            contCln.loadPhones();
+            FirstName = WebUtility.HtmlDecode(contCln.FirstName ?? "");
+            LastName = WebUtility.HtmlDecode(contCln.LastName ?? "");
+            Role = WebUtility.HtmlDecode(contCln.Ruolo ?? "");
+            Phones = contCln.Phones
+                .Select(p => new PhoneRow(WebUtility.HtmlDecode(p.Phone ?? ""), WebUtility.HtmlDecode(p.Note ?? "")))
+                .ToList();
+            Emails = contCln.Emails
+                .Select(e => new EmailRow(e.Email?.Address ?? "", WebUtility.HtmlDecode(e.Note ?? "")))
+                .ToList();
+            Message = "";
+            Loaded = true;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: caricamento contatto {Id}", ContactId);
+            Loaded = false;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.btnUndo_Click (restores the last name too).</summary>
+    private void Undo()
+    {
+        LoadFromDb();
+    }
+
+    /// <summary>EditContattoDetails1.btnSave_Click.</summary>
+    private void Save()
+    {
+        Message = "";
+        try
+        {
+            var clnCont = new Contatto(Tenant, ContactId);
+            if (clnCont.ID == -1)
+            {
+                Message = LblErrore;
+                return;
+            }
+            clnCont.FirstName = WebUtility.HtmlEncode(FirstName);
+            clnCont.LastName = WebUtility.HtmlEncode(LastName);
+            clnCont.Ruolo = WebUtility.HtmlEncode(Role);
+            if (!string.IsNullOrEmpty(clnCont.log))
+            {
+                Logger.LogWarning("Components/Customer/ContactDetail: aggiornamento contatto {Id}: {Log}", ContactId, clnCont.log);
+            }
+            Message = LblErrore + " " + clnCont.log;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: salvataggio contatto {Id}", ContactId);
+            Message = LblErrore;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.rptPhones_ItemCommand ("Delete").</summary>
+    private void DeletePhone(string phone)
+    {
+        Message = "";
+        try
+        {
+            var cln = new Contatto(Tenant, ContactId);
+            if (cln.ID == -1)
+            {
+                Message = LblErrore;
+                return;
+            }
+            cln.loadPhones();
+            bool rt = false;
+            foreach (var p in cln.Phones)
+            {
+                if (p.Phone == phone)
+                {
+                    rt = p.Delete();
+                }
+            }
+            if (!rt)
+            {
+                Message = LblErrore + " " + cln.log;
+            }
+            LoadFromDb();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: eliminazione telefono contatto {Id}", ContactId);
+            Message = LblErrore;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.btnNewPhoneSave_Click.</summary>
+    private void SaveNewPhone()
+    {
+        Message = "";
+        try
+        {
+            var cnt = new Contatto(Tenant, ContactId);
+            if (cnt.ID == -1)
+            {
+                Message = LblErrore;
+                return;
+            }
+            bool rt = cnt.addPhone(WebUtility.HtmlEncode(NewPhone), WebUtility.HtmlEncode(NewPhoneNote));
+            if (!rt)
+            {
+                Message = LblErrore + " " + cnt.log;
+            }
+            UndoNewPhone();
+            ShowAddPhone = rt || ShowAddPhone;
+            LoadFromDb();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: aggiunta telefono contatto {Id}", ContactId);
+            Message = LblErrore;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.btnNewPhoneUndo_Click.</summary>
+    private void UndoNewPhone()
+    {
+        NewPhone = "";
+        NewPhoneNote = "";
+    }
+
+    private void ToggleAddPhone()
+    {
+        ShowAddPhone = !ShowAddPhone;
+    }
+
+    /// <summary>EditContattoDetails1.rptEmails_ItemCommand ("Delete").</summary>
+    private void DeleteEmail(string address)
+    {
+        Message = "";
+        try
+        {
+            var cln = new Contatto(Tenant, ContactId);
+            if (cln.ID == -1)
+            {
+                Message = LblErrore;
+                return;
+            }
+            cln.loadEmails();
+            bool rt = false;
+            foreach (var e in cln.Emails)
+            {
+                if (e.Email?.Address == address)
+                {
+                    rt = e.Delete();
+                }
+            }
+            if (!rt)
+            {
+                Message = LblErrore + " " + cln.log;
+            }
+            LoadFromDb();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: eliminazione email contatto {Id}", ContactId);
+            Message = LblErrore;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.btnNewMailSave_Click.</summary>
+    private void SaveNewMail()
+    {
+        Message = "";
+        try
+        {
+            var cnt = new Contatto(Tenant, ContactId);
+            if (cnt.ID == -1)
+            {
+                Message = LblErrore;
+                return;
+            }
+            MailAddress mailAddr;
+            try
+            {
+                mailAddr = new MailAddress(WebUtility.HtmlEncode(NewMail));
+            }
+            catch
+            {
+                Message = LblMailFormatKo;
+                return;
+            }
+            bool rt = cnt.addEmail(mailAddr, WebUtility.HtmlEncode(NewMailNote));
+            if (!rt)
+            {
+                Message = LblErrore + " " + cnt.log;
+            }
+            UndoNewMail();
+            LoadFromDb();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/ContactDetail: aggiunta email contatto {Id}", ContactId);
+            Message = LblErrore;
+        }
+    }
+
+    /// <summary>EditContattoDetails1.btnNewMailUndo_Click.</summary>
+    private void UndoNewMail()
+    {
+        NewMail = "";
+        NewMailNote = "";
+    }
+
+    private void ToggleAddEmail()
+    {
+        ShowAddEmail = !ShowAddEmail;
+    }
+}

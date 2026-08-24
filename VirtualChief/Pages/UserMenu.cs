@@ -38,6 +38,8 @@ namespace VirtualChief.Pages
                 ["listreparti"] = "/Reparti/listReparti",
                 ["listusers"] = "/Users/listUsers",
                 ["customer/list"] = "/Customers/Customer/List",
+                ["editcliente"] = "/Customers/Customer/Edit",
+                ["editcontattodetails"] = "/Customers/Customer/ContactDetail",
                 ["analysis"] = "/Analysis/analysis",
                 ["kisAdmin"] = "/Admin/kisAdmin",
                 ["configandoncompleto"] = "/Andon/configAndonCompleto",

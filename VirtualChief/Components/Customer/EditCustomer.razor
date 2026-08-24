@@ -1,0 +1,266 @@
+@using System.Net
+@using KIS.App_Code
+@using KIS.App_Sources
+@inject ILogger<EditCustomer> Logger
+
+@* Migrated from WebForms Clienti/EditCliente.ascx + EditCliente.ascx.cs (hosted by
+   EditCliente.aspx?idCliente=...): base-info editor of an existing customer.
+   Labels mirror the control resx (neutral culture = Italian). The customer code
+   is immutable (legacy txtCodCli Enabled="false"). Save re-validates the
+   "Anagrafica Clienti" W permission and assigns the fields on a freshly-loaded
+   Cliente: every property setter issues its own UPDATE (App_Sources/clienti.cs),
+   exactly like legacy btnSave_Click.
+   Deviation from legacy: values are stored HtmlEncoded uniformly. Legacy saved
+   RagioneSociale decoded (EditCliente.ascx.cs line 76) while every other field
+   was encoded; uniform encoding round-trips with the decode-on-load and keeps
+   the duplicate checks of PortafoglioClienti/AddCustomer consistent. *@
+@if (!Authorized)
+{
+    <div class="alert alert-warning">@LblPermissionDenied</div>
+}
+else if (!Loaded)
+{
+    <div class="alert alert-warning">@LblCustomerNotFound</div>
+}
+else
+{
+    <label id="lbl1">@Message</label>
+    <table id="tblData" class="table table-hover table-striped align-middle">
+        <tr>
+            <td><label for="txtCodCli">@LblCode</label></td>
+            <td><input type="text" id="txtCodCli" value="@DisplayCode" disabled="disabled" readonly="readonly" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtRagSoc">@LblBusinessName</label></td>
+            <td><input type="text" id="txtRagSoc" @bind="BusinessName" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtPIva">@LblVat</label></td>
+            <td><input type="text" id="txtPIva" @bind="VatNumber" maxlength="11" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtCodFiscale">@LblFiscalCode</label></td>
+            <td><input type="text" id="txtCodFiscale" @bind="FiscalCode" maxlength="16" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtIndirizzo">@LblAddress</label></td>
+            <td><input type="text" id="txtIndirizzo" @bind="Address" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtCitta">@LblTown</label></td>
+            <td><input type="text" id="txtCitta" @bind="Town" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtProvincia">@LblProvince</label></td>
+            <td><input type="text" id="txtProvincia" @bind="Province" maxlength="255" style="width:5em;" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtCAP">@LblZip</label></td>
+            <td><input type="text" id="txtCAP" @bind="Zip" maxlength="10" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtStato">@LblState</label></td>
+            <td><input type="text" id="txtStato" @bind="State" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtTelefono">@LblPhone</label></td>
+            <td><input type="text" id="txtTelefono" @bind="Phone" maxlength="45" /></td>
+        </tr>
+        <tr>
+            <td><label for="txtEmail">@LblEmail</label></td>
+            <td><input type="email" id="txtEmail" @bind="Email" maxlength="255" /></td>
+        </tr>
+        <tr>
+            <td><label for="ddlKanban">@LblKanban</label></td>
+            <td>
+                <select id="ddlKanban" @bind="Kanban">
+                    <option value="0">@LblKanbanDisabled</option>
+                    <option value="1">@LblKanbanEnabled</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="text-center">
+                <button type="button" id="btnSave" class="btn btn-success" @onclick="Save">Salva</button>
+                <button type="button" id="btnUndo" class="btn btn-secondary" @onclick="Undo">Annulla</button>
+            </td>
+        </tr>
+    </table>
+}
+
+@code {
+    /// <summary>Active workspace name (legacy Session["ActiveWorkspace_Name"]).</summary>
+    [Parameter] public string Tenant { get; set; } = "";
+
+    /// <summary>vcmain numeric user id; 0 means unknown (no permission).</summary>
+    [Parameter] public int Uid { get; set; }
+
+    /// <summary>Customer code (legacy QueryString["idCliente"] -> codCliente).</summary>
+    [Parameter] public string Code { get; set; } = "";
+
+    // Control resx labels (neutral culture = Italian).
+    private const string LblCode = "Codice cliente";
+    private const string LblBusinessName = "Ragione sociale";
+    private const string LblVat = "Partita IVA";
+    private const string LblFiscalCode = "Codice fiscale";
+    private const string LblAddress = "Indirizzo";
+    private const string LblTown = "Citt\u00E0";
+    private const string LblProvince = "Provincia";
+    private const string LblZip = "CAP";
+    private const string LblState = "Stato";
+    private const string LblPhone = "Numero di telefono";
+    private const string LblEmail = "E-mail";
+    private const string LblKanban = "Abilitazione KanbanBox";
+    private const string LblKanbanDisabled = "Disabilitato";
+    private const string LblKanbanEnabled = "Abilitato";
+    private const string LblUpdateOk = "Aggiornamento eseguito correttamente.";
+    private const string LblPermissionDenied = "Non hai il permesso di modificare i clienti.";
+    private const string LblCustomerNotFound = "Cliente non trovato.";
+
+    internal string DisplayCode { get; private set; } = "";
+    internal string BusinessName { get; set; } = "";
+    internal string VatNumber { get; set; } = "";
+    internal string FiscalCode { get; set; } = "";
+    internal string Address { get; set; } = "";
+    internal string Town { get; set; } = "";
+    internal string Province { get; set; } = "";
+    internal string Zip { get; set; } = "";
+    internal string State { get; set; } = "";
+    internal string Phone { get; set; } = "";
+    internal string Email { get; set; } = "";
+    internal string Kanban { get; set; } = "0";
+
+    /// <summary>tblData stays hidden branch of EditCliente1.Page_Load.</summary>
+    internal bool Authorized { get; private set; }
+
+    /// <summary>False when the requested customer does not exist.</summary>
+    internal bool Loaded { get; private set; }
+
+    /// <summary>Legacy lbl1.</summary>
+    internal string Message { get; private set; } = "";
+
+    protected override void OnInitialized()
+    {
+        Authorized = HasWritePermission();
+        if (Authorized && !Loaded)
+        {
+            LoadFromDb();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Re-evaluate once when the host page provides tenant/uid/code.
+        Authorized = HasWritePermission();
+        if (Authorized && !Loaded)
+        {
+            LoadFromDb();
+        }
+    }
+
+    private bool HasWritePermission()
+    {
+        if (string.IsNullOrEmpty(Tenant) || Uid <= 0 || string.IsNullOrEmpty(Code))
+        {
+            return false;
+        }
+        try
+        {
+            var prm = new List<string[]> { new[] { "Anagrafica Clienti", "W" } };
+            return new UserAccount(Uid).ValidatePermissions(Tenant, prm);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/EditCustomer: verifica permesso Anagrafica Clienti W");
+            return false;
+        }
+    }
+
+    /// <summary>EditCliente1.Page_Load (!IsPostBack branch): fill the textboxes.</summary>
+    private void LoadFromDb()
+    {
+        try
+        {
+            var cli = new Cliente(Tenant, Code);
+            if ((cli.CodiceCliente ?? "").Length == 0)
+            {
+                Loaded = false;
+                return;
+            }
+            DisplayCode = WebUtility.HtmlDecode(cli.CodiceCliente);
+            BusinessName = WebUtility.HtmlDecode(cli.RagioneSociale);
+            FiscalCode = WebUtility.HtmlDecode(cli.CodiceFiscale);
+            VatNumber = WebUtility.HtmlDecode(cli.PartitaIVA);
+            Address = WebUtility.HtmlDecode(cli.Indirizzo);
+            Town = WebUtility.HtmlDecode(cli.Citta);
+            Province = WebUtility.HtmlDecode(cli.Provincia);
+            Zip = WebUtility.HtmlDecode(cli.CAP);
+            State = WebUtility.HtmlDecode(cli.Stato);
+            Phone = WebUtility.HtmlDecode(cli.Telefono);
+            Email = WebUtility.HtmlDecode(cli.Email);
+            Kanban = cli.KanbanManaged ? "1" : "0";
+            Message = "";
+            Loaded = true;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/EditCustomer: caricamento cliente {Codice}", Code);
+            Loaded = false;
+        }
+    }
+
+    /// <summary>EditCliente1.btnUndo_Click.</summary>
+    private void Undo()
+    {
+        LoadFromDb();
+    }
+
+    /// <summary>EditCliente1.btnSave_Click.</summary>
+    private void Save()
+    {
+        Message = "";
+        if (!HasWritePermission())
+        {
+            Message = LblPermissionDenied;
+            return;
+        }
+        try
+        {
+            var cli = new Cliente(Tenant, Code);
+            if ((cli.CodiceCliente ?? "").Length == 0)
+            {
+                Message = LblCustomerNotFound;
+                return;
+            }
+            cli.RagioneSociale = WebUtility.HtmlEncode(BusinessName);
+            cli.CodiceFiscale = WebUtility.HtmlEncode(FiscalCode);
+            cli.PartitaIVA = WebUtility.HtmlEncode(VatNumber);
+            cli.Indirizzo = WebUtility.HtmlEncode(Address);
+            cli.Citta = WebUtility.HtmlEncode(Town);
+            cli.Provincia = WebUtility.HtmlEncode(Province);
+            cli.CAP = WebUtility.HtmlEncode(Zip);
+            cli.Stato = WebUtility.HtmlEncode(State);
+            cli.Telefono = WebUtility.HtmlEncode(Phone);
+            cli.Email = WebUtility.HtmlEncode(Email);
+            cli.KanbanManaged = Kanban == "1";
+
+            if (!string.IsNullOrEmpty(cli.log))
+            {
+                // Legacy always showed lblUpdateOk even when a setter refused the
+                // value (length guards write to Cliente.log only): surface it.
+                Logger.LogWarning("Components/Customer/EditCustomer: aggiornamento cliente {Codice}: {Log}", Code, cli.log);
+                Message = LblUpdateOk;
+            }
+            else
+            {
+                Logger.LogInformation("Cliente {Codice} aggiornato sul workspace {Tenant}", Code, Tenant);
+                Message = LblUpdateOk;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/EditCustomer: salvataggio cliente {Codice}", Code);
+            Message = "E' avvenuto un errore. Verifica i dati inseriti e riprova.";
+        }
+    }
+}

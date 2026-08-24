@@ -1,0 +1,181 @@
+@using System.Net
+@using KIS.App_Code
+@using KIS.App_Sources
+@inject ILogger<CustomerContacts> Logger
+
+@* Migrated from WebForms Clienti/ContattiClienti.ascx + ContattiClienti.ascx.cs:
+    contacts bound to a customer. List requires "Anagrafica Clienti Contatti" R;
+    delete re-checks W before calling Contatto.Delete (legacy allowed the delete
+    with the read permission only; destructive actions now require W).
+    Each row links to /Customers/Customer/ContactDetail?idContatto=... like the
+    legacy EditContattoDetails.aspx link. *@
+@if (!CanRead)
+{
+    <div class="alert alert-warning">@LblPermissionDenied</div>
+}
+else if (Rows.Count > 0)
+{
+    <label id="lbl1">@Message</label>
+    <table id="rptContattiClienti" class="table table-hover table-striped table-condensed align-middle">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Ruolo</th>
+                <th>E-mail</th>
+                <th>Telefono</th>
+                @if (CanWrite)
+                {
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in Rows)
+            {
+                var row = m;
+                <tr>
+                    <td>
+                        <a title="Dettagli contatto" href="/Customers/Customer/ContactDetail?idContatto=@row.Id">&#128065;</a>
+                    </td>
+                    <td>@row.FirstName</td>
+                    <td>@row.LastName</td>
+                    <td>@row.Role</td>
+                    <td>@row.Emails</td>
+                    <td>@row.Phones</td>
+                    @if (CanWrite)
+                    {
+                        <td>
+                            <button type="button" class="btn btn-link p-0" title="Elimina contatto"
+                                    @onclick="() => Delete(row)">
+                                &#10060;
+                            </button>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    /// <summary>Active workspace name (legacy Session["ActiveWorkspace_Name"]).</summary>
+    [Parameter] public string Tenant { get; set; } = "";
+
+    /// <summary>vcmain numeric user id; 0 means unknown (no permission).</summary>
+    [Parameter] public int Uid { get; set; }
+
+    /// <summary>Customer code (legacy QueryString["idCliente"]).</summary>
+    [Parameter] public string Code { get; set; } = "";
+
+    private const string LblPermissionDenied = "Non hai il permesso di visualizzare i contatti.";
+    private const string LblError = "Errore: impossibile trovare il contatto da cancellare.";
+
+    internal IReadOnlyList<ContactRow> Rows { get; private set; } = Array.Empty<ContactRow>();
+
+    internal bool CanRead { get; private set; }
+
+    internal bool CanWrite { get; private set; }
+
+    /// <summary>Legacy lbl1.</summary>
+    internal string Message { get; private set; } = "";
+
+    protected override void OnInitialized()
+    {
+        EvaluatePermissions();
+        if (CanRead)
+        {
+            LoadFromDb();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        EvaluatePermissions();
+        if (CanRead)
+        {
+            LoadFromDb();
+        }
+    }
+
+    private void EvaluatePermissions()
+    {
+        CanRead = HasPermission("R");
+        CanWrite = HasPermission("W");
+    }
+
+    private bool HasPermission(string perm)
+    {
+        if (string.IsNullOrEmpty(Tenant) || Uid <= 0 || string.IsNullOrEmpty(Code))
+        {
+            return false;
+        }
+        try
+        {
+            var prm = new List<string[]> { new[] { "Anagrafica Clienti Contatti", perm } };
+            return new UserAccount(Uid).ValidatePermissions(Tenant, prm);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/CustomerContacts: verifica permesso Anagrafica Clienti Contatti {Perm}", perm);
+            return false;
+        }
+    }
+
+    /// <summary>ContattiClienti.Page_Load: bind cln.ElencoContatti; phone/email
+    /// columns are joined like rptContattiClienti_ItemDataBound.</summary>
+    private void LoadFromDb()
+    {
+        try
+        {
+            var cln = new Cliente(Tenant, Code);
+            if ((cln.CodiceCliente ?? "").Length == 0)
+            {
+                Rows = Array.Empty<ContactRow>();
+                return;
+            }
+            cln.loadContatti();
+            Rows = cln.ElencoContatti.Select(c =>
+            {
+                c.loadPhones();
+                c.loadEmails();
+                return new ContactRow(
+                    c.ID,
+                    WebUtility.HtmlDecode(c.FirstName ?? ""),
+                    WebUtility.HtmlDecode(c.LastName ?? ""),
+                    WebUtility.HtmlDecode(c.Ruolo ?? ""),
+                    string.Join(", ", c.Phones.Select(p => WebUtility.HtmlDecode(p.Phone ?? ""))),
+                    string.Join(", ", c.Emails.Select(e => e.Email?.Address ?? "")));
+            }).ToList();
+            Message = "";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/CustomerContacts: caricamento contatti cliente {Codice}", Code);
+            Rows = Array.Empty<ContactRow>();
+        }
+    }
+
+    /// <summary>ContattiClienti.rptContattiClienti_ItemCommand ("delete").</summary>
+    private void Delete(ContactRow row)
+    {
+        Message = "";
+        try
+        {
+            var person = new Contatto(Tenant, row.Id);
+            if (person.ID == -1)
+            {
+                Message = LblError;
+                return;
+            }
+            person.Delete();
+            LoadFromDb();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Components/Customer/CustomerContacts: eliminazione contatto {Id}", row.Id);
+            Message = LblError;
+        }
+    }
+}

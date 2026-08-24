@@ -938,4 +938,114 @@ public class DomainBusinessTests
 
         Assert.True(new Cliente(Tenant, codice).Delete(), "Delete di pulizia fallito");
     }
+
+    [Fact]
+    public void Cliente_Edit_Setters_RoundTrip()
+    {
+        // EditCliente.ascx.btnSave_Click path: every property setter issues its
+        // own UPDATE (App_Sources/clienti.cs). Insert a customer, edit it through
+        // the setters used by the migrated EditCustomer.razor and read it back.
+        const string codice = "DOMTEST_EDIT";
+        new Cliente(Tenant, codice).Delete(); // cleanup leftovers from previous runs
+
+        var elenco = new PortafoglioClienti(Tenant);
+        Assert.True(elenco.Add(codice, "Domain Test Edit", "12345678901", "",
+            "Via Test 1", "Milano", "MI", "20100", "Italia", "+390212345678",
+            "domtestedit@example.com", kanban: false, provider: true, customer: true),
+            "Add fallito: " + elenco.log);
+
+        try
+        {
+            var cli = new Cliente(Tenant, codice);
+            Assert.NotEqual("", cli.CodiceCliente);
+
+            // Same setters (and value guards) as EditCustomer.razor Save():
+            // PIva only persists with length 11 or 0, CodFiscale 16 or 0,
+            // Provincia <= 2, Telefono <= 45.
+            cli.RagioneSociale = "Domain Test Edit Aggiornato";
+            cli.PartitaIVA = "09876543210";
+            cli.CodiceFiscale = "ABCDEF01G23H456I";
+            cli.Indirizzo = "Via Aggiornata 2";
+            cli.Citta = "Roma";
+            cli.Provincia = "RM";
+            cli.CAP = "00100";
+            cli.Stato = "Italia";
+            cli.Telefono = "+390298765432";
+            cli.Email = "aggiornato@example.com";
+
+            var ricaricato = new Cliente(Tenant, codice);
+            Assert.Equal("Domain Test Edit Aggiornato", ricaricato.RagioneSociale);
+            Assert.Equal("09876543210", ricaricato.PartitaIVA);
+            Assert.Equal("ABCDEF01G23H456I", ricaricato.CodiceFiscale);
+            Assert.Equal("Via Aggiornata 2", ricaricato.Indirizzo);
+            Assert.Equal("Roma", ricaricato.Citta);
+            Assert.Equal("RM", ricaricato.Provincia);
+            Assert.Equal("00100", ricaricato.CAP);
+            Assert.Equal("Italia", ricaricato.Stato);
+            Assert.Equal("+390298765432", ricaricato.Telefono);
+            Assert.Equal("aggiornato@example.com", ricaricato.Email);
+        }
+        finally
+        {
+            new Cliente(Tenant, codice).Delete();
+        }
+    }
+
+    [Fact]
+    public void Cliente_Contacts_RoundTrips()
+    {
+        // addContattoCliente.ascx + EditContattoDetails.ascx paths: AddContatto,
+        // Contatto name/role setters, addPhone/addEmail, Contatto.Delete.
+        const string codice = "DOMTEST_CONTATTI";
+        new Cliente(Tenant, codice).Delete();
+
+        var elenco = new PortafoglioClienti(Tenant);
+        Assert.True(elenco.Add(codice, "Domain Test Contatti", "", "", "", "", "", "", "", "", "",
+            kanban: false, provider: true, customer: true), "Add fallito: " + elenco.log);
+
+        try
+        {
+            var cln = new Cliente(Tenant, codice);
+            int idContatto = cln.AddContatto("Mario", "Rossi", "CEO");
+            Assert.True(idContatto >= 0, "AddContatto fallito: " + cln.log);
+
+            var contatto = new Contatto(Tenant, idContatto);
+            Assert.NotEqual(-1, contatto.ID);
+            Assert.Equal(codice, contatto.Cliente);
+
+            // EditContattoDetails.btnSave_Click setters (guarded: empty is ignored).
+            contatto.FirstName = "Luigi";
+            contatto.LastName = "Verdi";
+            contatto.Ruolo = "CTO";
+
+            Assert.True(contatto.addPhone("+390212345678", "ufficio"), "addPhone: " + contatto.log);
+            Assert.True(contatto.addEmail(new System.Net.Mail.MailAddress("contatto@example.com"), "lavoro"),
+                "addEmail: " + contatto.log);
+
+            var ricaricato = new Contatto(Tenant, idContatto);
+            ricaricato.loadPhones();
+            ricaricato.loadEmails();
+            Assert.Equal("Luigi", ricaricato.FirstName);
+            Assert.Equal("Verdi", ricaricato.LastName);
+            Assert.Equal("CTO", ricaricato.Ruolo);
+            Assert.Single(ricaricato.Phones);
+            Assert.Equal("+390212345678", ricaricato.Phones[0].Phone);
+            Assert.Single(ricaricato.Emails);
+            Assert.Equal("contatto@example.com", ricaricato.Emails[0].Email.Address);
+
+            // ContattiClienti.ascx ItemCommand "delete" path.
+            Assert.True(ricaricato.Delete(), "Contatto.Delete fallito");
+            Assert.Equal(-1, new Contatto(Tenant, idContatto).ID);
+        }
+        finally
+        {
+            var cleanup = new Cliente(Tenant, codice);
+            cleanup.loadContatti();
+            foreach (var c in cleanup.ElencoContatti)
+            {
+                c.Delete();
+            }
+            cleanup.Delete();
+        }
+    }
 }
