@@ -1,0 +1,187 @@
+@page "{id:int}/{anno:int}"
+@model VirtualChief.Pages.Commesse.ArticoliModel
+@{
+    ViewData["Title"] = "Articoli Commesa";
+}
+
+<div class="container">
+    @if (Model.Commessa != null)
+    {
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1>Commesa @Model.Commessa.ID/@Model.Commessa.Year</h1>
+                <hr />
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Cliente:</strong> @Model.Commessa.RagioneSocialeCliente
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Data Inserimento:</strong> @Model.Commessa.DataInserimento.ToShortDateString()
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Stato:</strong> 
+                        @{
+                            var statusText = Model.Commessa.Status switch {
+                                'N' => "Non iniziata",
+                                'P' => "Pianificata",
+                                'I' => "In corso",
+                                'F' => "Finita",
+                                _ => "Sconosciuto"
+                            };
+                            var statusClass = Model.Commessa.Status switch {
+                                'N' => "badge bg-secondary",
+                                'P' => "badge bg-info",
+                                'I' => "badge bg-warning text-dark",
+                                'F' => "badge bg-success",
+                                _ => "badge bg-dark"
+                            };
+                        }
+                        <span class="@statusClass">@statusText</span>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>External ID:</strong> @Model.Commessa.ExternalID
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.Commessa.Note))
+                {
+                    <div class="row mt-2">
+                        <div class="col-md-12">
+                            <strong>Note:</strong> @Model.Commessa.Note
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h4>Aggiungi Articolo</h4>
+                <hr />
+                <form method="post">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                    {
+                        <div class="alert alert-success">@Model.SuccessMessage</div>
+                    }
+                    <input type="hidden" name="id" value="@Model.CommessaID" />
+                    <input type="hidden" name="anno" value="@Model.CommessaYear" />
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="SelectedProdotto">Prodotto <span class="text-danger">*</span></label>
+                                <select class="form-control" id="SelectedProdotto" name="SelectedProdotto" required>
+                                    <option value="">Seleziona un prodotto...</option>
+                                    @foreach (var prod in Model.ProdottiDisponibili)
+                                    {
+                                        <option value="@prod.IDCombinato">
+                                            @prod.NomeCombinato (ID: @prod.IDCombinato)
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="Quantita">Quantità <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="Quantita" name="Quantita" value="@Model.Quantita" min="1" required />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="DataPrevistaConsegna">Data Prevista Consegna <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="DataPrevistaConsegna" name="DataPrevistaConsegna" value="@Model.DataPrevistaConsegna.ToString("yyyy-MM-dd")" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-primary">Aggiungi Articolo</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Articoli della Commesa</h4>
+                <hr />
+                @if (Model.Articoli.Count > 0)
+                {
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Articolo</th>
+                                    <th>Prodotto</th>
+                                    <th>Quantità</th>
+                                    <th>Data Prevista Consegna</th>
+                                    <th>Stato</th>
+                                    <th>Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var art in Model.Articoli)
+                                {
+                                    var artStatusText = art.Status switch {
+                                        'N' => "Non iniziato",
+                                        'P' => "Pianificato",
+                                        'I' => "In corso",
+                                        'F' => "Finito",
+                                        _ => "Sconosciuto"
+                                    };
+                                    var artStatusClass = art.Status switch {
+                                        'N' => "badge bg-secondary",
+                                        'P' => "badge bg-info",
+                                        'I' => "badge bg-warning text-dark",
+                                        'F' => "badge bg-success",
+                                        _ => "badge bg-dark"
+                                    };
+                                    <tr>
+                                        <td>@art.ID/@art.Year</td>
+                                        <td>@art.Proc.NomeCombinato</td>
+                                        <td>@art.Quantita</td>
+                                        <td>@art.DataPrevistaConsegna.ToShortDateString()</td>
+                                        <td><span class="@artStatusClass">@artStatusText</span></td>
+                                        <td>
+                                            @if (art.Status == 'N')
+                                            {
+                                                <form method="post" style="display:inline;">
+                                                    <input type="hidden" name="id" value="@Model.CommessaID" />
+                                                    <input type="hidden" name="anno" value="@Model.CommessaYear" />
+                                                    <input type="hidden" name="artId" value="@art.ID" />
+                                                    <input type="hidden" name="artAnno" value="@art.Year" />
+                                                    <button type="submit" formaction="/Commesse/Articoli?handler=Delete" class="btn btn-sm btn-danger" onclick="return confirm('Eliminare questo articolo?');">Elimina</button>
+                                                </form>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Non eliminabile</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-info">Nessun articolo presente in questa commessa.</div>
+                }
+                
+                <div class="mt-3">
+                    <a href="/Commesse/commesse" class="btn btn-secondary">Torna alla lista Commesse</a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">Commesa non trovata.</div>
+        <a href="/Commesse/commesse" class="btn btn-secondary">Torna alla lista Commesse</a>
+    }
+</div>

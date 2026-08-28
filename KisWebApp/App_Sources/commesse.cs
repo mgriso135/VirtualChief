@@ -390,7 +390,7 @@ namespace KIS.App_Code
             MySqlConnection conn = (new Dati.Dati()).mycon(this.Tenant);
             conn.Open();
             MySqlTransaction tr = conn.BeginTransaction();
-            int? maxID = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM productionPlan WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
+            int? maxID = conn.QueryFirstOrDefault<int?>("SELECT MAX(id) FROM productionplan WHERE anno = @anno", new { anno = DateTime.UtcNow.Year });
             int artID = 0;
             if (maxID.HasValue)
             {

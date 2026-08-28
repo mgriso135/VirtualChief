@@ -7,20 +7,15 @@ using System.Collections.Generic;
 
 namespace VirtualChief.Pages.Commesse
 {
-    /// <summary>
-    /// Migrated from WebForms Commesse/commesse.aspx + listCommesse.ascx:
-    /// sales order list (commesse), newest first.
-    /// </summary>
-    public class CommesseModel : PageModel
+    public class NuovoOrdineModel : PageModel
     {
-        private readonly ILogger<CommesseModel> _logger;
+        private readonly ILogger<NuovoOrdineModel> _logger;
 
-        public CommesseModel(ILogger<CommesseModel> logger)
+        public NuovoOrdineModel(ILogger<NuovoOrdineModel> logger)
         {
             _logger = logger;
         }
 
-        public List<Commessa> Commesse { get; set; }
         public List<Cliente> Clienti { get; set; }
 
         [BindProperty]
@@ -33,7 +28,6 @@ namespace VirtualChief.Pages.Commesse
         public string Note { get; set; }
 
         public string ErrorMessage { get; set; }
-        public string SuccessMessage { get; set; }
 
         public void OnGet()
         {
@@ -65,29 +59,29 @@ namespace VirtualChief.Pages.Commesse
             try
             {
                 var elenco = new ElencoCommesse(tenant);
-                _logger.LogInformation("Creating commessa for tenant={Tenant}, cliente={Cliente}, externalID={ExternalID}, note={Note}", tenant, SelectedCliente, ExternalID, Note);
                 int newId = elenco.Add(SelectedCliente, Note ?? "", ExternalID ?? "");
-                _logger.LogInformation("Add returned newId={NewId}, log={Log}", newId, elenco.log);
-                
+
                 if (newId > 0)
                 {
-                    SuccessMessage = $"Commesa {newId}/{DateTime.UtcNow.Year} creata con successo";
+                    var commessa = new Commessa(tenant, newId, DateTime.UtcNow.Year);
+                    if (commessa.ID != -1)
+                    {
+                        // Auto-confirm the commessa
+                        commessa.Confirmed = true;
+                        // Note: ConfirmedBy and ConfirmationDate would need setters in Commessa class
+                        
+                        return RedirectToPage("/Commesse/NuovoOrdineProdotti", new { id = newId, anno = DateTime.UtcNow.Year });
+                    }
                 }
                 else
                 {
-                    var errMsg = "Errore durante la creazione della commessa";
-                    if (!string.IsNullOrEmpty(elenco.log))
-                    {
-                        errMsg += ": " + elenco.log;
-                    }
-                    _logger.LogWarning("Add returned {NewId} with log: {Log}", newId, elenco.log);
-                    ErrorMessage = errMsg;
+                    ErrorMessage = "Errore durante la creazione: " + elenco.log;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Commesse/CommesseModel.cshtml.cs - OnPost, tenant={Tenant}, cliente={Cliente}", tenant, SelectedCliente);
-                ErrorMessage = "Errore durante la creazione della commessa: " + ex.Message;
+                _logger.LogError(ex, "Commesse/NuovoOrdineModel.cshtml.cs - OnPost");
+                ErrorMessage = "Errore durante la creazione: " + ex.Message;
             }
 
             LoadData(tenant);
@@ -98,17 +92,12 @@ namespace VirtualChief.Pages.Commesse
         {
             try
             {
-                var elenco = new ElencoCommesse(tenant);
-                elenco.loadCommesse();
-                Commesse = elenco.Commesse;
-
                 var portafoglio = new PortafoglioClienti(tenant);
                 Clienti = portafoglio.Elenco;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Commesse/CommesseModel.cshtml.cs - LoadData");
-                Commesse = new List<Commessa>();
+                _logger.LogError(ex, "Commesse/NuovoOrdineModel.cshtml.cs - LoadData");
                 Clienti = new List<Cliente>();
             }
         }

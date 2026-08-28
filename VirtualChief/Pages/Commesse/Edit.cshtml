@@ -1,0 +1,102 @@
+@page "{id:int}/{anno:int}"
+@model VirtualChief.Pages.Commesse.EditModel
+@{
+    ViewData["Title"] = "Modifica Commesa";
+}
+
+<div class="container">
+    @if (Model.Commessa != null)
+    {
+        <h1>Modifica Commesa @Model.Commessa.ID/@Model.Commessa.Year</h1>
+        <hr />
+        
+        <form method="post">
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger">@Model.ErrorMessage</div>
+            }
+            @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+            {
+                <div class="alert alert-success">@Model.SuccessMessage</div>
+            }
+            
+            <input type="hidden" name="id" value="@Model.CommessaID" />
+            <input type="hidden" name="anno" value="@Model.CommessaYear" />
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="SelectedCliente">Cliente <span class="text-danger">*</span></label>
+                        <select class="form-control" id="SelectedCliente" name="SelectedCliente" required>
+                            <option value="">Seleziona un cliente...</option>
+                            @foreach (var cliente in Model.Clienti)
+                            {
+                                if (Model.SelectedCliente == cliente.CodiceCliente)
+                                {
+                                    <option value="@cliente.CodiceCliente" selected>
+                                        @cliente.RagioneSociale (@cliente.CodiceCliente)
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@cliente.CodiceCliente">
+                                        @cliente.RagioneSociale (@cliente.CodiceCliente)
+                                    </option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="ExternalID">External ID</label>
+                        <input type="text" class="form-control" id="ExternalID" name="ExternalID" value="@Model.ExternalID" />
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="Note">Note</label>
+                        <textarea class="form-control" id="Note" name="Note" rows="3">@Model.Note</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <strong>Informazioni di sola lettura:</strong>
+                        <ul class="list-unstyled">
+                            <li><strong>Data Inserimento:</strong> @Model.Commessa.DataInserimento.ToString("dd/MM/yyyy HH:mm")</li>
+                            <li><strong>Stato:</strong> @(
+                                Model.Commessa.Status switch {
+                                    'N' => "Non iniziata",
+                                    'P' => "Pianificata",
+                                    'I' => "In corso",
+                                    'F' => "Finita",
+                                    _ => "Sconosciuto"
+                                }
+                            )</li>
+                            <li><strong>Confermata:</strong> @(Model.Commessa.Confirmed ? "Sì" : "No")</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary">Salva modifiche</button>
+                    <a href="/Commesse/commesse" class="btn btn-secondary">Annulla</a>
+                    <a href="/Commesse/Articoli/@Model.CommessaID/@Model.CommessaYear" class="btn btn-info">Gestisci Articoli</a>
+                </div>
+            </div>
+        </form>
+    }
+    else
+    {
+        <div class="alert alert-danger">Commesa non trovata.</div>
+        <a href="/Commesse/commesse" class="btn btn-secondary">Torna alla lista Commesse</a>
+    }
+</div>

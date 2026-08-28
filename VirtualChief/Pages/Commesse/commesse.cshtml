@@ -7,6 +7,70 @@
 <div class="container">
     <h1>Gestione Commesse</h1>
 
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h4>Nuova Commesa</h4>
+                <a href="/Commesse/NuovoOrdine" class="btn btn-success">
+                    <i class="fas fa-magic"></i> Wizard Nuovo Ordine Guidato
+                </a>
+            </div>
+            <hr />
+            <form method="post">
+                @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                {
+                    <div class="alert alert-danger">@Model.ErrorMessage</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+                {
+                    <div class="alert alert-success">@Model.SuccessMessage</div>
+                }
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="SelectedCliente">Cliente <span class="text-danger">*</span></label>
+                            <select class="form-control" id="SelectedCliente" name="SelectedCliente" required>
+                                <option value="">Seleziona un cliente...</option>
+                                @foreach (var cliente in Model.Clienti)
+                                {
+                                    if (Model.SelectedCliente == cliente.CodiceCliente)
+                                    {
+                                        <option value="@cliente.CodiceCliente" selected>
+                                            @cliente.RagioneSociale (@cliente.CodiceCliente)
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@cliente.CodiceCliente">
+                                            @cliente.RagioneSociale (@cliente.CodiceCliente)
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="ExternalID">External ID</label>
+                            <input type="text" class="form-control" id="ExternalID" name="ExternalID" value="@Model.ExternalID" placeholder="External ID" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Note">Note</label>
+                            <textarea class="form-control" id="Note" name="Note" rows="2" placeholder="Note">@Model.Note</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">Crea Commesa</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <h4>Lista Commesse</h4>
@@ -18,19 +82,47 @@
                             <th>Commessa</th>
                             <th>Cliente</th>
                             <th>Data Inserimento</th>
+                            <th>Stato</th>
                             <th>Note</th>
                             <th>Confermata</th>
+                            <th>Articoli</th>
+                            <th>Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var commessa in Model.Commesse)
                         {
+                            var statusText = commessa.Status switch {
+                                'N' => "Non iniziata",
+                                'P' => "Pianificata",
+                                'I' => "In corso",
+                                'F' => "Finita",
+                                _ => "Sconosciuto"
+                            };
+                            var statusClass = commessa.Status switch {
+                                'N' => "badge bg-secondary",
+                                'P' => "badge bg-info",
+                                'I' => "badge bg-warning text-dark",
+                                'F' => "badge bg-success",
+                                _ => "badge bg-dark"
+                            };
                             <tr>
                                 <td>@commessa.ID/@commessa.Year</td>
                                 <td>@commessa.RagioneSocialeCliente</td>
                                 <td>@commessa.DataInserimento.ToShortDateString()</td>
+                                <td><span class="@statusClass">@statusText</span></td>
                                 <td>@commessa.Note</td>
                                 <td>@(commessa.Confirmed ? "Sì" : "No")</td>
+                                <td>
+                                    <a href="/Commesse/Articoli/@commessa.ID/@commessa.Year" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-boxes"></i> Articoli
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/Commesse/Edit/@commessa.ID/@commessa.Year" class="btn btn-sm btn-outline-secondary">
+                                        <i class="fas fa-edit"></i> Modifica
+                                    </a>
+                                </td>
                             </tr>
                         }
                     </tbody>

@@ -1,0 +1,158 @@
+@page "{idCommessa:int}/{annoCommessa:int}/{idProc:int}/{revProc:int}/{idVariante:int}/{idProdotto:int}/{annoProdotto:int}/{quantita:int}/{matricola?}"
+@model VirtualChief.Pages.Commesse.NuovoOrdineRepartoModel
+@{
+    ViewData["Title"] = "Nuovo Ordine - Reparto";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <nav aria-label="Wizard steps">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/Commesse/NuovoOrdine">1. Dati Commesa</a></li>
+                    <li class="breadcrumb-item"><a href="/Commesse/NuovoOrdineProdotti/@Model.CommessaID/@Model.CommessaYear">2. Prodotti</a></li>
+                    <li class="breadcrumb-item active"><strong>3. Reparto</strong></li>
+                    <li class="breadcrumb-item"><span class="text-muted">4. Conferma</span></li>
+                </ol>
+            </nav>
+            <h1>Nuovo Ordine - Associa Reparto</h1>
+            <hr />
+            
+            @if (Model.Commessa != null)
+            {
+                <div class="alert alert-info">
+                    <strong>Commesa:</strong> @Model.Commessa.ID/@Model.Commessa.Year - 
+                    <strong>Cliente:</strong> @Model.Commessa.RagioneSocialeCliente
+                </div>
+            }
+            
+            @if (Model.Articolo != null)
+            {
+                <div class="alert alert-secondary">
+                    <strong>Prodotto:</strong> @Model.Articolo.Proc.NomeCombinato - 
+                    <strong>Quantità:</strong> @Model.Quantita
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success">@Model.SuccessMessage</div>
+    }
+
+    <form method="post">
+        <input type="hidden" name="idCommessa" value="@Model.CommessaID" />
+        <input type="hidden" name="annoCommessa" value="@Model.CommessaYear" />
+        <input type="hidden" name="idProc" value="@Model.ProcID" />
+        <input type="hidden" name="revProc" value="@Model.RevProc" />
+        <input type="hidden" name="idVariante" value="@Model.VarID" />
+        <input type="hidden" name="idProdotto" value="@Model.ProdottoID" />
+        <input type="hidden" name="annoProdotto" value="@Model.ProdottoYear" />
+        <input type="hidden" name="quantita" value="@Model.Quantita" />
+        <input type="hidden" name="matricola" value="@Model.Matricola" />
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Seleziona Reparto di Produzione</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Scegli il reparto in cui verrà prodotto questo articolo. I reparti già associati a questo prodotto sono evidenziati.</p>
+                        
+                        @if (Model.Reparti != null && Model.Reparti.Count > 0)
+                        {
+                            <div class="form-group">
+                                <label for="SelectedRepartoID">Reparto <span class="text-danger">*</span></label>
+                                <select class="form-control" id="SelectedRepartoID" name="SelectedRepartoID" required>
+                                    <option value="">Seleziona un reparto...</option>
+                                    @foreach (var rep in Model.Reparti)
+                                    {
+                                        bool isProduttivo = Model.RepartiProduttivi != null && Model.RepartiProduttivi.Any(r => r.id == rep.id);
+                                        var cssClass = isProduttivo ? "bg-light-green" : "";
+                                        if (Model.SelectedRepartoID == rep.id)
+                                        {
+                                            <option value="@rep.id" selected class="@cssClass">
+                                                @rep.name @(isProduttivo ? " ✓ (già associato)" : "")
+                                            </option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@rep.id" class="@cssClass">
+                                                @rep.name @(isProduttivo ? " ✓ (già associato)" : "")
+                                            </option>
+                                        }
+                                    }
+                                </select>
+                                @if (Model.RepartiProduttivi != null && Model.RepartiProduttivi.Count > 0)
+                                {
+                                    <small class="form-text text-muted">I reparti evidenziati sono già associati a questo prodotto/PERT.</small>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">Nessun reparto disponibile.</div>
+                        }
+                        
+                        <button type="submit" class="btn btn-primary">Continua <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Reparti già associati al prodotto</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.RepartiProduttivi != null && Model.RepartiProduttivi.Count > 0)
+                        {
+                            <ul class="list-group">
+                                @foreach (var rep in Model.RepartiProduttivi)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        @rep.name
+                                        <span class="badge bg-success">Associato</span>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <p class="text-muted">Nessun reparto associato a questo prodotto/PERT.</p>
+                        }
+                    </div>
+                </div>
+                
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5>Informazioni</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Dopo aver selezionato il reparto, potrai procedere alla conferma finale dell'ordine.</p>
+                        <p>Il reparto selezionato verrà associato al PERT (Processo-Variante) e l'articolo verrà aggiornato con il reparto di produzione.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <a href="/Commesse/NuovoOrdineProdotti/@Model.CommessaID/@Model.CommessaYear" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Indietro</a>
+                <a href="/Commesse/commesse" class="btn btn-outline-secondary">Annulla</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<style>
+    .bg-light-green {
+        background-color: #d4edda !important;
+    }
+</style>

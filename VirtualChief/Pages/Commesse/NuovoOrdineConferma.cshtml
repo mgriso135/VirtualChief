@@ -1,0 +1,205 @@
+@page "{idCommessa:int}/{annoCommessa:int}/{idProc:int}/{revProc:int}/{idVariante:int}/{idProdotto:int}/{annoProdotto:int}/{quantita:int}/{idReparto:int}/{matricola?}"
+@model VirtualChief.Pages.Commesse.NuovoOrdineConfermaModel
+@{
+    ViewData["Title"] = "Nuovo Ordine - Conferma";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <nav aria-label="Wizard steps">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/Commesse/NuovoOrdine">1. Dati Commesa</a></li>
+                    <li class="breadcrumb-item"><a href="/Commesse/NuovoOrdineProdotti/@Model.CommessaID/@Model.CommessaYear">2. Prodotti</a></li>
+                    <li class="breadcrumb-item"><a href="/Commesse/NuovoOrdineReparto/@Model.CommessaID/@Model.CommessaYear/@Model.ProcID/@Model.RevProc/@Model.VarID/@Model.ProdottoID/@Model.ProdottoYear/@Model.Quantita/@Model.Matricola">3. Reparto</a></li>
+                    <li class="breadcrumb-item active"><strong>4. Conferma</strong></li>
+                </ol>
+            </nav>
+            <h1>Nuovo Ordine - Riepilogo e Conferma</h1>
+            <hr />
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+
+    <form method="post">
+        <input type="hidden" name="idCommessa" value="@Model.CommessaID" />
+        <input type="hidden" name="annoCommessa" value="@Model.CommessaYear" />
+        <input type="hidden" name="idProc" value="@Model.ProcID" />
+        <input type="hidden" name="revProc" value="@Model.RevProc" />
+        <input type="hidden" name="idVariante" value="@Model.VarID" />
+        <input type="hidden" name="idProdotto" value="@Model.ProdottoID" />
+        <input type="hidden" name="annoProdotto" value="@Model.ProdottoYear" />
+        <input type="hidden" name="quantita" value="@Model.Quantita" />
+        <input type="hidden" name="matricola" value="@Model.Matricola" />
+        <input type="hidden" name="idReparto" value="@Model.RepartoID" />
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-file-alt"></i> Dati Commesa</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Commessa != null)
+                        {
+                            <dl class="row">
+                                <dt class="col-sm-3">ID Commesa</dt>
+                                <dd class="col-sm-9">@Model.Commessa.ID/@Model.Commessa.Year</dd>
+                                
+                                <dt class="col-sm-3">Cliente</dt>
+                                <dd class="col-sm-9">@Model.Commessa.RagioneSocialeCliente (@Model.Commessa.Cliente)</dd>
+                                
+                                <dt class="col-sm-3">Data Inserimento</dt>
+                                <dd class="col-sm-9">@Model.Commessa.DataInserimento.ToString("dd/MM/yyyy HH:mm")</dd>
+                                
+                                <dt class="col-sm-3">External ID</dt>
+                                <dd class="col-sm-9">@Model.Commessa.ExternalID</dd>
+                                
+                                <dt class="col-sm-3">Note</dt>
+                                <dd class="col-sm-9">@Model.Commessa.Note</dd>
+                                
+                                <dt class="col-sm-3">Stato</dt>
+                                <dd class="col-sm-9">
+                                    <span class="badge @(Model.Commessa.Status == 'N' ? "bg-secondary" : Model.Commessa.Status == 'P' ? "bg-info" : Model.Commessa.Status == 'I' ? "bg-warning text-dark" : "bg-success")">
+                                        @(Model.Commessa.Status == 'N' ? "Non iniziata" : Model.Commessa.Status == 'P' ? "Pianificata" : Model.Commessa.Status == 'I' ? "In corso" : "Finita")
+                                    </span>
+                                </dd>
+                            </dl>
+                        }
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-box"></i> Prodotto / Articolo</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Articolo != null)
+                        {
+                            <dl class="row">
+                                <dt class="col-sm-3">Articolo</dt>
+                                <dd class="col-sm-9">@Model.Articolo.ID/@Model.Articolo.Year</dd>
+                                
+                                <dt class="col-sm-3">Prodotto</dt>
+                                <dd class="col-sm-9">@Model.Articolo.Proc.NomeCombinato</dd>
+                                
+                                <dt class="col-sm-3">Quantità</dt>
+                                <dd class="col-sm-9">@Model.Quantita</dd>
+                                
+                                <dt class="col-sm-3">Matricola</dt>
+                                <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.Matricola) ? "-" : Model.Matricola)</dd>
+                                
+                                <dt class="col-sm-3">Data Prevista Consegna</dt>
+                                <dd class="col-sm-9">@Model.Articolo.DataPrevistaConsegna.ToShortDateString()</dd>
+                            </dl>
+                        }
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-industry"></i> Reparto di Produzione</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Reparto != null)
+                        {
+                            <dl class="row">
+                                <dt class="col-sm-3">Reparto</dt>
+                                <dd class="col-sm-9">@Model.Reparto.name</dd>
+                                
+                                <dt class="col-sm-3">Descrizione</dt>
+                                <dd class="col-sm-9">@Model.Reparto.description</dd>
+                                
+                                <dt class="col-sm-3">Fuso Orario</dt>
+                                <dd class="col-sm-9">@Model.Reparto.tzFusoOrario.DisplayName</dd>
+                            </dl>
+                        }
+                    </div>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-project-diagram"></i> PERT (Processo-Variante)</h5>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.ProcessoVariante != null)
+                        {
+                            <dl class="row">
+                                <dt class="col-sm-3">Processo</dt>
+                                <dd class="col-sm-9">@Model.ProcessoVariante.process.processName (ID: @Model.ProcessoVariante.process.processID, Rev: @Model.ProcessoVariante.process.revisione)</dd>
+                                
+                                <dt class="col-sm-3">Variante</dt>
+                                <dd class="col-sm-9">@Model.ProcessoVariante.variant.nomeVariante (ID: @Model.ProcessoVariante.variant.idVariante)</dd>
+                                
+                                <dt class="col-sm-3">Reparti produttivi</dt>
+                                <dd class="col-sm-9">
+                                    @if (Model.ProcessoVariante.RepartiProduttivi != null && Model.ProcessoVariante.RepartiProduttivi.Count > 0)
+                                    {
+                                        <ul class="mb-0">
+                                            @foreach (var rp in Model.ProcessoVariante.RepartiProduttivi)
+                                            {
+                                                <li>@rp.name @(rp.id == Model.RepartoID ? "<span class='badge bg-success'>Selezionato</span>" : "")</li>
+                                            }
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Nessuno</span>
+                                    }
+                                </dd>
+                            </dl>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0"><i class="fas fa-check-circle"></i> Ordine Pronto</h5>
+                    </div>
+                    <div class="card-body">
+                        <p>Tutti i dati sono stati inseriti correttamente. L'ordine è pronto per essere confermato.</p>
+                        <hr />
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Conferma e Vai agli Articoli
+                            </button>
+                            <a href="/Commesse/Articoli/@Model.CommessaID/@Model.CommessaYear" class="btn btn-primary">
+                                <i class="fas fa-boxes"></i> Gestisci Articoli
+                            </a>
+                            <a href="/Commesse/NuovoOrdineReparto/@Model.CommessaID/@Model.CommessaYear/@Model.ProcID/@Model.RevProc/@Model.VarID/@Model.ProdottoID/@Model.ProdottoYear/@Model.Quantita/@Model.Matricola" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Modifica Reparto
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h5><i class="fas fa-info-circle"></i> Prossimi Passi</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            <li>Modifica il PERT (tempi ciclo, precedenze)</li>
+                            <li>Associa task alle postazioni</li>
+                            <li>Pianifica la produzione</li>
+                            <li>Lancia in produzione</li>
+                        </ul>
+                        <hr />
+                        <a href="/Commesse/wzEditPERT/@Model.CommessaID/@Model.CommessaYear/@Model.ProcID/@Model.RevProc/@Model.VarID/@Model.ProdottoID/@Model.ProdottoYear/@Model.Quantita/@Model.Matricola" class="btn btn-sm btn-outline-primary w-100 mb-2">
+                            <i class="fas fa-edit"></i> Modifica PERT
+                        </a>
+                        <a href="/Commesse/Articoli/@Model.CommessaID/@Model.CommessaYear" class="btn btn-sm btn-outline-info w-100">
+                            <i class="fas fa-list"></i> Lista Articoli
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

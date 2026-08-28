@@ -1,0 +1,249 @@
+@page "{id:int}/{anno:int}"
+@model VirtualChief.Pages.Commesse.NuovoOrdineProdottiModel
+@{
+    ViewData["Title"] = "Nuovo Ordine - Prodotti";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <nav aria-label="Wizard steps">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/Commesse/NuovoOrdine">1. Dati Commesa</a></li>
+                    <li class="breadcrumb-item active"><strong>2. Prodotti</strong></li>
+                    <li class="breadcrumb-item"><span class="text-muted">3. Reparto</span></li>
+                    <li class="breadcrumb-item"><span class="text-muted">4. Conferma</span></li>
+                </ol>
+            </nav>
+            <h1>Nuovo Ordine - Aggiungi Prodotti</h1>
+            <hr />
+            
+            @if (Model.Commessa != null)
+            {
+                <div class="alert alert-info">
+                    <strong>Commesa:</strong> @Model.Commessa.ID/@Model.Commessa.Year - 
+                    <strong>Cliente:</strong> @Model.Commessa.RagioneSocialeCliente
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success">@Model.SuccessMessage</div>
+    }
+
+    <!-- Option 1: Add Standard Product -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-box"></i> Aggiungi Prodotto Standard</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" name="id" value="@Model.CommessaID" />
+                <input type="hidden" name="anno" value="@Model.CommessaYear" />
+                <input type="hidden" name="action" value="addStandard" />
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="SelectedProdotto">Prodotto <span class="text-danger">*</span></label>
+                            <select class="form-control" id="SelectedProdotto" name="SelectedProdotto" required>
+                                <option value="">Seleziona un prodotto standard...</option>
+                                @foreach (var prod in Model.ProdottiStandard)
+                                {
+                                    if (Model.SelectedProdotto == prod.IDCombinato)
+                                    {
+                                        <option value="@prod.IDCombinato" selected>
+                                            @prod.NomeCombinato (Proc: @prod.process.processID, Rev: @prod.process.revisione, Var: @prod.variant.idVariante)
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@prod.IDCombinato">
+                                            @prod.NomeCombinato (Proc: @prod.process.processID, Rev: @prod.process.revisione, Var: @prod.variant.idVariante)
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="Quantita">Quantità <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="Quantita" name="Quantita" value="@Model.Quantita" min="1" required />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="DataPrevistaConsegna">Data Prevista Consegna <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="DataPrevistaConsegna" name="DataPrevistaConsegna" value="@Model.DataPrevistaConsegna.ToString("yyyy-MM-dd")" required />
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Matricola">Matricola</label>
+                            <input type="text" class="form-control" id="Matricola" name="Matricola" value="@Model.Matricola" placeholder="Matricola (opzionale)" />
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Aggiungi Prodotto Standard</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Option 2: Copy Existing PERT -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="fas fa-copy"></i> Copia PERT Esistente</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" name="id" value="@Model.CommessaID" />
+                <input type="hidden" name="anno" value="@Model.CommessaYear" />
+                <input type="hidden" name="action" value="copyExisting" />
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="CopyProdottoID">Prodotto da copiare <span class="text-danger">*</span></label>
+                            <select class="form-control" id="CopyProdottoID" name="CopyProdottoID" required>
+                                <option value="">Seleziona un prodotto da copiare...</option>
+                                @foreach (var prod in Model.ProdottiStandard)
+                                {
+                                    if (Model.CopyProdottoID == prod.IDCombinato)
+                                    {
+                                        <option value="@prod.IDCombinato" data-nome="@prod.NomeCombinato" selected>
+                                            @prod.NomeCombinato
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@prod.IDCombinato" data-nome="@prod.NomeCombinato">
+                                            @prod.NomeCombinato
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="CopyProdottoNome">Nome nuovo prodotto <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="CopyProdottoNome" name="CopyProdottoNome" value="@Model.CopyProdottoNome" required placeholder="Nome per il nuovo prodotto" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="CopyQuantita">Quantità <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="CopyQuantita" name="CopyQuantita" value="@Model.CopyQuantita" min="1" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="CopyProdottoDesc">Descrizione</label>
+                            <textarea class="form-control" id="CopyProdottoDesc" name="CopyProdottoDesc" rows="2" placeholder="Descrizione del nuovo prodotto">@Model.CopyProdottoDesc</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="CopiaTC" name="CopiaTC" @(Model.CopiaTC ? "checked" : "") />
+                            <label class="form-check-label" for="CopiaTC">Copia Tempi Ciclo</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="CopiaReparto" name="CopiaReparto" @(Model.CopiaReparto ? "checked" : "") />
+                            <label class="form-check-label" for="CopiaReparto">Copia Reparto</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="CopiaPostazioni" name="CopiaPostazioni" @(Model.CopiaPostazioni ? "checked" : "") />
+                            <label class="form-check-label" for="CopiaPostazioni">Copia Postazioni</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="CopiaParametri" name="CopiaParametri" @(Model.CopiaParametri ? "checked" : "") />
+                            <label class="form-check-label" for="CopiaParametri">Copia Parametri</label>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="CopiaWorkInstructions" name="CopiaWorkInstructions" @(Model.CopiaWorkInstructions ? "checked" : "") />
+                            <label class="form-check-label" for="CopiaWorkInstructions">Copia Work Instructions</label>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-info">Copia e Aggiungi</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Option 3: Create New Variant -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Crea Nuovo Prodotto/Variante</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" name="id" value="@Model.CommessaID" />
+                <input type="hidden" name="anno" value="@Model.CommessaYear" />
+                <input type="hidden" name="action" value="createNew" />
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="NewProdottoNome">Nome Prodotto <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="NewProdottoNome" name="NewProdottoNome" value="@Model.NewProdottoNome" required placeholder="Nome del nuovo prodotto" />
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="NewQuantita">Quantità <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="NewQuantita" name="NewQuantita" value="@Model.NewQuantita" min="1" required />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="NewProdottoDesc">Descrizione</label>
+                            <textarea class="form-control" id="NewProdottoDesc" name="NewProdottoDesc" rows="2" placeholder="Descrizione del nuovo prodotto">@Model.NewProdottoDesc</textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success">Crea e Aggiungi</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/Commesse/NuovoOrdine" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Indietro</a>
+            <a href="/Commesse/commesse" class="btn btn-outline-secondary">Annulla</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-fill name when selecting product to copy
+        document.getElementById('CopyProdottoID').addEventListener('change', function() {
+            var selected = this.options[this.selectedIndex];
+            var nome = selected.getAttribute('data-nome');
+            if (nome && !document.getElementById('CopyProdottoNome').value) {
+                document.getElementById('CopyProdottoNome').value = 'Copia di ' + nome;
+            }
+        });
+    </script>
+}
