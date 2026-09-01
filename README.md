@@ -162,9 +162,10 @@ That single script is the standard way to start the app. It:
 Equivalent manual steps:
 
 ```bash
+cd Documenti/projects/VirtualChief/VirtualChief/VirtualChief 
 export VC_VCMAIN_CONN='Server=127.0.0.1;Port=3306;Uid=matteo;Pwd=hellas;Database=virtualchief'
 export VC_MASTERDB_CONN='Server=127.0.0.1;Port=3306;Uid=matteo;Pwd=hellas;database='
-cd VirtualChief && dotnet run
+dotnet run
 ```
 
 Tenant databases are created manually on the same server; their names must match

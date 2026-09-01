@@ -1,0 +1,33 @@
+@page "/Produzione/CommesseDaProdurre"
+@model VirtualChief.Pages.Produzione.CommesseDaProdurreModel
+@{
+    ViewData["Title"] = "Commesse da Produrre";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Produzione/produzione">@Model.NavProduzione</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavNuoveCommesse</li>
+        </ol>
+    </nav>
+
+    <h1>@Model.NavNuoveCommesse</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <component type="typeof(Components.Produzione.ListCommesseStatoN)" 
+                       param-Tenant="@Model.Tenant"
+                       param-HasPermission="@Model.HasPermission"
+                       param-Articoli="@Model.Articoli" 
+                       render-mode="ServerPrerendered" />
+            
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+            }
+        </div>
+    </div>
+</div>

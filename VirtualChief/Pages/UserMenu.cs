@@ -44,6 +44,8 @@ namespace VirtualChief.Pages
                 ["kisAdmin"] = "/Admin/kisAdmin",
                 ["configandoncompleto"] = "/Andon/configAndonCompleto",
                 ["managepostazionilavoro"] = "/Postazioni/managePostazioniLavoro",
+                ["wzAddCommessa"] = "/Commesse/NuovoOrdine",
+                ["commesseDaProdurre"] = "/Produzione/CommesseDaProdurre",
             };
 
         public static List<MenuItem> Build(ClaimsPrincipal user)

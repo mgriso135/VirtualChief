@@ -214,7 +214,7 @@ namespace KIS.App_Code
         {
             get {
                 FusoOrario fuso = new FusoOrario(this.Tenant);
-                return this._fusoOrario.Length > 0 ? this._fusoOrario : fuso.tzFusoOrario.Id; }
+                return !string.IsNullOrEmpty(this._fusoOrario) ? this._fusoOrario : fuso.tzFusoOrario.Id; }
             set
             {
                 if (this.id != -1)
