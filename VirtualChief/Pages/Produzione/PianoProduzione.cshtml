@@ -1,0 +1,44 @@
+@page "/Produzione/PianoProduzione"
+@model VirtualChief.Pages.Produzione.PianoProduzioneModel
+@{
+    ViewData["Title"] = "Piano Produzione";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Produzione/produzione">@Model.NavProduzione</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavPianoProduzione</li>
+        </ol>
+    </nav>
+
+    <h1>@Model.NavPianoProduzione</h1>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+
+    @if (Model.HasReparto)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>Reparto: @Model.RepName</h5>
+            </div>
+            <div class="card-body">
+                <component type="typeof(Components.Produzione.ShowProductionPlan)" 
+                           param-Tenant="@Model.Tenant" 
+                           param-RepId="@Model.RepId"
+                           render-mode="ServerPrerendered" />
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">
+            Seleziona un reparto per visualizzare il piano di produzione.
+        </div>
+    }
+</div>

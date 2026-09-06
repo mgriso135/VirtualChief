@@ -42,11 +42,11 @@ namespace VirtualChief.Pages.Produzione
                     user.loadGroups(CurrentWorkspace.Of(User) != null ? new Workspace(CurrentWorkspace.Of(User)).id : -1);
                     HasPermission = user.ValidatePermissions(Tenant, elencoPermessi);
 
-                    if (HasPermission)
-                    {
-                        var elArtAperti = new ElencoArticoli(Tenant, 'N');
-                        Articoli = elArtAperti.ListArticoli.Where(a => a.Status == 'N').ToList();
-                    }
+if (HasPermission)
+                {
+                    var elArtAperti = new ElencoArticoli(Tenant, 'N');
+                    Articoli = elArtAperti.ListArticoli;
+                }
                     else
                     {
                         ErrorMessage = "Non hai il permesso di visualizzare i prodotti da inserire in produzione";

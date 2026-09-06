@@ -12,6 +12,8 @@ builder.Services.AddRazorPages();
 // (e.g. Pages/Customers/Customer/List hosts Components/Customer/CustomerList).
 builder.Services.AddServerSideBlazor();
 
+builder.Services.AddHttpClient();
+
 // Workspace database gate: a workspace without its own database must not
 // serve any page (see Pages/TenantDatabaseGate.cs).
 builder.Services.AddSingleton<TenantDatabaseChecker>();

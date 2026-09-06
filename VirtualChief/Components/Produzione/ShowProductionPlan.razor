@@ -1,0 +1,144 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<ShowProductionPlan> Logger
+
+@if (Articoli == null || Articoli.Count == 0)
+{
+    <div class="alert alert-info">Nessun articolo in produzione per questo reparto.</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th>@IdLabel</th>
+                    <th>@CustomerLabel</th>
+                    <th>@ProductTypeLabel</th>
+                    <th>@QuantityLabel</th>
+                    <th>@StatusLabel</th>
+                    <th>@DeliveryDateLabel</th>
+                    <th>@ProductionEndDateLabel</th>
+                    <th>@ActionsLabel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var art in Articoli)
+                {
+                    var statusClass = GetStatusClass(art.Status);
+                    var statusText = GetStatusText(art.Status);
+                    <tr class="@statusClass">
+                        <td>@art.ID/@art.Year</td>
+                        <td>@art.RagioneSocialeCliente</td>
+                        <td>@(art.Proc?.process?.processName) - @(art.Proc?.variant?.nomeVariante)</td>
+                        <td>@art.Quantita</td>
+                        <td><span class="badge @GetStatusBadgeClass(art.Status)">@statusText</span></td>
+                        <td>@art.DataPrevistaConsegna.ToString("dd/MM/yyyy")</td>
+                        <td>@art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="@($"/configuraProcesso.aspx?ID={art.ID}&Year={art.Year}")" class="btn btn-link p-0" title="@ConfigureProcessTooltip">
+                                    <img src="~/img/iconProductionPlan.png" height="40" />
+                                </a>
+                                <a href="@($"/Produzione/avanzamentoProduzione?id={art.ID}&year={art.Year}")" class="btn btn-link p-0" title="@ViewProgressTooltip">
+                                    <img src="~/img/iconAdvancement.png" height="40" />
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int RepId { get; set; }
+
+    public List<Articolo> Articoli { get; set; } = new();
+
+    public string IdLabel { get; set; } = "ID";
+    public string CustomerLabel { get; set; } = "Cliente";
+    public string ProductTypeLabel { get; set; } = "Tipo prodotto";
+    public string QuantityLabel { get; set; } = "Quantità";
+    public string StatusLabel { get; set; } = "Stato";
+    public string DeliveryDateLabel { get; set; } = "Data consegna prevista";
+    public string ProductionEndDateLabel { get; set; } = "Data prevista fine produzione";
+    public string ActionsLabel { get; set; } = "Azioni";
+    public string ConfigureProcessTooltip { get; set; } = "Configura processo";
+    public string ViewProgressTooltip { get; set; } = "Visualizza avanzamento";
+
+    protected override void OnInitialized()
+    {
+        LoadData();
+    }
+
+    protected override void OnParametersSet()
+    {
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || RepId <= 0)
+        {
+            Articoli = new List<Articolo>();
+            return;
+        }
+
+        try
+        {
+            var elenco = new ElencoArticoliInProduzione(Tenant);
+            Articoli = elenco.ElencoArticoli
+                .Where(a => a.Reparto == RepId)
+                .OrderBy(a => a.Status)
+                .ThenBy(a => a.DataPrevistaFineProduzione)
+                .ThenBy(a => a.DataPrevistaConsegna)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ShowProductionPlan/LoadData");
+            Articoli = new List<Articolo>();
+        }
+    }
+
+    private string GetStatusClass(char status)
+    {
+        return status switch
+        {
+            'I' => "table-success",
+            'P' => "table-warning",
+            'F' => "table-secondary",
+            _ => ""
+        };
+    }
+
+    private string GetStatusText(char status)
+    {
+        return status switch
+        {
+            'N' => "Non pianificato",
+            'P' => "Pianificato",
+            'I' => "In produzione",
+            'F' => "Terminato",
+            _ => "Sconosciuto"
+        };
+    }
+
+    private string GetStatusBadgeClass(char status)
+    {
+        return status switch
+        {
+            'I' => "bg-success",
+            'P' => "bg-warning text-dark",
+            'F' => "bg-secondary",
+            _ => "bg-light text-dark"
+        };
+    }
+}

@@ -46,6 +46,8 @@ namespace VirtualChief.Pages
                 ["managepostazionilavoro"] = "/Postazioni/managePostazioniLavoro",
                 ["wzAddCommessa"] = "/Commesse/NuovoOrdine",
                 ["commesseDaProdurre"] = "/Produzione/CommesseDaProdurre",
+                ["pianoproduzione"] = "/Produzione/PianoProduzione",
+                ["pianoproduzionecompleto"] = "/Produzione/PianoProduzione",
             };
 
         public static List<MenuItem> Build(ClaimsPrincipal user)
