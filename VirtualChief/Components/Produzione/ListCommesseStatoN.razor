@@ -50,7 +50,7 @@ else
                 <tr>
                     <td>
                         <button class="btn btn-link p-0" @onclick="@(() => ToggleAssignSerialNumber(articolo))" title="@AssignSerialNumberTooltip">
-                            <img src="~/img/iconSerialNumber1.jpg" height="40" />
+                            <img src="/img/iconSerialNumber1.jpg" height="40" />
                         </button>
                     </td>
                     <td>@articolo.ID/@articolo.Year</td>
@@ -60,17 +60,17 @@ else
                         {
                             <input type="text" class="form-control" @bind="SerialNumberInputs[articolo.IDCombinato]" />
                             <button class="btn btn-sm btn-success mt-1" @onclick="@(() => SaveSerialNumber(articolo))" title="@SaveSerialNumberTooltip">
-                                <img src="~/img/iconSave.jpg" height="20" />
+                                <img src="/img/iconSave.jpg" height="20" />
                             </button>
                             <button class="btn btn-sm btn-secondary mt-1" @onclick="@(() => CancelSerialNumber(articolo))" title="@ResetSerialNumberTooltip">
-                                <img src="~/img/iconUndo.png" height="20" />
+                                <img src="/img/iconUndo.png" height="20" />
                             </button>
                         }
                         else
                         {
                             <span>@articolo.Matricola</span>
                             <button class="btn btn-link p-0 ms-2" @onclick="@(() => ToggleAssignSerialNumber(articolo))" title="@AssignSerialNumberTooltip">
-                                <img src="~/img/iconSerialNumber1.jpg" height="20" />
+                                <img src="/img/iconSerialNumber1.jpg" height="20" />
                             </button>
                         }
                     </td>
@@ -78,7 +78,7 @@ else
                     <td>@articolo.Quantita</td>
                     <td>
                         <button class="btn btn-link p-0" @onclick="@(() => ToggleChangeProductionEndDate(articolo))" title="@ChangeProductionEndDateTooltip">
-                            <img src="~/img/iconCalendar.png" height="40" />
+                            <img src="/img/iconCalendar.png" height="40" />
                         </button>
                         @articolo.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss")
 
@@ -108,10 +108,10 @@ else
                                     }
                                 </select>
                                 <button class="btn btn-sm btn-success ms-2" @onclick="@(() => SaveProductionEndDate(articolo))" title="@SaveTooltip">
-                                    <img src="~/img/iconSave.jpg" height="20" />
+<img src="/img/iconSave.jpg" height="20" />
                                 </button>
                                 <button class="btn btn-sm btn-secondary" @onclick="@(() => CancelProductionEndDate(articolo))" title="@UndoTooltip">
-                                    <img src="~/img/iconUndo.png" height="20" />
+<img src="/img/iconUndo.png" height="20" />
                                 </button>
                             </div>
                         }
@@ -129,12 +129,12 @@ else
                                     }
                                     else
                                     {
-                                        <img src="~/img/iconProductionLaunch.png" height="20" />
+                                        <img src="/img/iconProductionLaunch.png" height="20" />
                                     }
                                 </button>
                             }
                             <a href="@($"/configuraProcesso.aspx?ID={articolo.ID}&Year={articolo.Year}")" class="btn btn-link p-0" title="@ConfigureProcessTooltip">
-                                <img src="~/img/iconProductionPlan.png" height="40" />
+                                <img src="/img/iconProductionPlan.png" height="40" />
                             </a>
                         </div>
                     </td>

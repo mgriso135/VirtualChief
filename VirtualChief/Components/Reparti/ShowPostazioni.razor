@@ -1,0 +1,260 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ShowPostazioni> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Processo == null || Processo.processID == -1)
+{
+    <div class="alert alert-danger">@ErrorProcessNotFoundMessage</div>
+}
+else if (Processo.isVSM)
+{
+    <div class="alert alert-danger">@ErrorProcessTypeMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success">@SuccessMessage</div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>@TasksHeader</th>
+                    <th>@WorkstationsHeader</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < SubProcesses.Count; i++)
+                {
+                    var sub = SubProcesses[i];
+                    var rowClass = i % 2 == 0 ? "table-secondary" : "table-light";
+                    <tr class="@rowClass">
+                        <td>
+                            <strong>@sub.processName</strong>
+                            @if (sub.processID > 0)
+                            {
+                                <span class="badge bg-secondary ms-2">ID: @sub.processID</span>
+                            }
+                        </td>
+                        <td>
+                            <select class="form-select form-select-sm"
+                                    value="@GetSelectedWorkstationId(sub)"
+                                    @onchange="@(e => OnWorkstationChanged(sub.processID, e))">
+                                <option value="">@SelectWorkstationPlaceholder</option>
+                                @foreach (var pst in AvailableWorkstations)
+                                {
+                                    <option value="@pst.id">@pst.name</option>
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (SubProcesses.Count == 0)
+    {
+        <div class="alert alert-info">@NoSubProcessesMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int ProcessId { get; set; }
+
+    [Parameter]
+    public int VariantId { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string Title { get; set; } = "Assegnazione postazioni ai tasks";
+    public string TasksHeader { get; set; } = "Tasks";
+    public string WorkstationsHeader { get; set; } = "Postazioni";
+    public string SelectWorkstationPlaceholder { get; set; } = "Seleziona postazione...";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di gestire le postazioni";
+    public string ErrorProcessNotFoundMessage { get; set; } = "Processo non trovato";
+    public string ErrorProcessTypeMessage { get; set; } = "Errore: tipo di diagramma errato";
+    public string ErrorDbMessage { get; set; } = "Errore database";
+    public string ErrorTaskPostNotFoundMessage { get; set; } = "Task o postazione non trovati";
+    public string ErrorDelTaskMessage { get; set; } = "Errore: non riesco a cancellare l'associazione del task con la postazione";
+    public string NoSubProcessesMessage { get; set; } = "Nessun sottoprocesso trovato";
+    public string SuccessMessage { get; set; } = "";
+
+    public processo Processo { get; set; }
+    public List<processo> SubProcesses { get; set; } = new();
+    public List<Postazione> AvailableWorkstations { get; set; } = new();
+    public string ErrorMessage { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadData();
+    }
+
+    private void LoadResources()
+    {
+        Title = "Assegnazione postazioni ai tasks";
+        TasksHeader = "Tasks";
+        WorkstationsHeader = "Postazioni";
+        SelectWorkstationPlaceholder = "Seleziona postazione...";
+        PermissionDeniedMessage = "Non hai il permesso di gestire le postazioni";
+        ErrorProcessNotFoundMessage = "Processo non trovato";
+        ErrorProcessTypeMessage = "Errore: tipo di diagramma errato";
+        ErrorDbMessage = "Database error";
+        ErrorTaskPostNotFoundMessage = "Task o postazione non trovati";
+        ErrorDelTaskMessage = "Errore: non riesco a cancellare l'associazione del task con la postazione";
+        NoSubProcessesMessage = "Nessun sottoprocesso trovato";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || ProcessId <= 0)
+        {
+            ErrorMessage = "Parametri non validi";
+            return;
+        }
+
+        try
+        {
+            Processo = new processo(Tenant, ProcessId);
+            if (Processo.processID == -1)
+            {
+                return;
+            }
+
+            var varObj = new variante(Tenant, VariantId);
+            Processo.loadFigli(varObj);
+            Processo.loadPostazioniFigli();
+
+            if (Processo.isVSM)
+            {
+                return;
+            }
+
+            SubProcesses = Processo.subProcessi ?? new List<processo>();
+            if (Processo.elencoPostazioni != null)
+            {
+                AvailableWorkstations = new List<Postazione>(Processo.elencoPostazioni);
+            }
+
+            foreach (var sub in SubProcesses)
+            {
+                sub.loadPostazioniTask();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ShowPostazioni: errore caricamento dati");
+            ErrorMessage = ErrorDbMessage;
+        }
+    }
+
+    private string GetSelectedWorkstationId(processo sub)
+    {
+        sub.loadPostazioniTask();
+        if (sub.elencoPostazioniTask != null && sub.elencoPostazioniTask.Count > 0)
+        {
+            return sub.elencoPostazioniTask[0].id.ToString();
+        }
+        return "";
+    }
+
+    private async Task OnWorkstationChanged(int taskId, ChangeEventArgs e)
+    {
+        if (string.IsNullOrEmpty(Tenant))
+        {
+            ErrorMessage = "Tenant non disponibile";
+            return;
+        }
+
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        int postId;
+        bool hasPostId = int.TryParse(e.Value?.ToString(), out postId);
+
+        try
+        {
+            var task = new processo(Tenant, taskId);
+            if (task.processID == -1)
+            {
+                ErrorMessage = ErrorTaskPostNotFoundMessage;
+                return;
+            }
+
+            if (hasPostId && postId > 0)
+            {
+                var pst = new Postazione(Tenant, postId);
+                if (pst.id == -1)
+                {
+                    ErrorMessage = ErrorTaskPostNotFoundMessage;
+                    return;
+                }
+
+                task.loadPostazioniTask();
+                bool rt;
+                if (task.elencoPostazioniTask == null || task.elencoPostazioniTask.Count == 0)
+                {
+                    rt = task.addTaskToPostazione(pst);
+                }
+                else
+                {
+                    rt = task.changeTaskFromPostazione(pst);
+                }
+
+                if (rt)
+                {
+                    SuccessMessage = "Postazione assegnata con successo";
+                    NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+                }
+                else
+                {
+                    ErrorMessage = task.log ?? ErrorDbMessage;
+                }
+            }
+            else if (!hasPostId && task.elencoPostazioniTask != null && task.elencoPostazioniTask.Count > 0)
+            {
+                var pst = task.elencoPostazioniTask[0];
+                bool rt = task.deleteTaskFromPostazioni();
+                if (rt)
+                {
+                    SuccessMessage = "Assegnazione rimossa con successo";
+                    NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+                }
+                else
+                {
+                    ErrorMessage = ErrorDelTaskMessage;
+                }
+            }
+            else
+            {
+                ErrorMessage = ErrorTaskPostNotFoundMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ShowPostazioni: errore cambio postazione");
+            ErrorMessage = ErrorDbMessage;
+        }
+    }
+}

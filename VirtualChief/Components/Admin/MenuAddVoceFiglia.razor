@@ -1,0 +1,167 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+@inject ILogger<MenuAddVoceFiglia> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (ParentId <= 0)
+{
+    <div class="alert alert-warning">Voce padre non specificata.</div>
+}
+else
+{
+    <div class="mb-3">
+        <button type="button" class="btn btn-link p-0" @onclick="ToggleForm" title="@AddChildMenuTooltip">
+            <img src="/img/iconAdd2.png" height="50" />
+        </button>
+
+        @if (ShowForm)
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>@AddChildMenuTitle</h5>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@NewMenuItem" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label for="titolo" class="form-label">@TitoloLabel</label>
+                            <InputText id="titolo" class="form-control" @bind-Value="NewMenuItem.Titolo" required />
+                            <ValidationMessage For="@(() => NewMenuItem.Titolo)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descrizione" class="form-label">@DescrizioneLabel</label>
+                            <InputText id="descrizione" class="form-control" @bind-Value="NewMenuItem.Descrizione" required />
+                            <ValidationMessage For="@(() => NewMenuItem.Descrizione)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="url" class="form-label">@UrlLabel</label>
+                            <InputText id="url" class="form-control" @bind-Value="NewMenuItem.URL" required />
+                            <ValidationMessage For="@(() => NewMenuItem.URL)" />
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <img src="/img/iconSave.jpg" height="20" /> @SaveButtonText
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" @onclick="Cancel">
+                                <img src="/img/iconUndo.png" height="20" /> @CancelButtonText
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int ParentId { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string AddChildMenuTitle { get; set; } = "Aggiungi voce di menu figlia";
+    public string AddChildMenuTooltip { get; set; } = "Aggiungi una voce di menu figlia";
+    public string TitoloLabel { get; set; } = "Titolo";
+    public string DescrizioneLabel { get; set; } = "Descrizione";
+    public string UrlLabel { get; set; } = "URL";
+    public string SaveButtonText { get; set; } = "Salva";
+    public string CancelButtonText { get; set; } = "Annulla";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di aggiungere voci di menu figlie.";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public bool ShowForm { get; set; } = false;
+
+    public class MenuItemModel
+    {
+        public string Titolo { get; set; } = "";
+        public string Descrizione { get; set; } = "";
+        public string URL { get; set; } = "";
+    }
+
+    public MenuItemModel NewMenuItem { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+    }
+
+    private void LoadResources()
+    {
+        AddChildMenuTitle = "Aggiungi voce di menu figlia";
+        AddChildMenuTooltip = "Aggiungi una voce di menu figlia";
+        TitoloLabel = "Titolo";
+        DescrizioneLabel = "Descrizione";
+        UrlLabel = "URL";
+        SaveButtonText = "Salva";
+        CancelButtonText = "Annulla";
+        PermissionDeniedMessage = "Non hai il permesso di aggiungere voci di menu figlie.";
+    }
+
+    private void ToggleForm()
+    {
+        ShowForm = !ShowForm;
+        if (ShowForm)
+        {
+            NewMenuItem = new MenuItemModel();
+        }
+    }
+
+    private void Cancel()
+    {
+        ShowForm = false;
+        NewMenuItem = new MenuItemModel();
+        ErrorMessage = "";
+        SuccessMessage = "";
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (string.IsNullOrEmpty(Tenant) || ParentId <= 0)
+        {
+            ErrorMessage = "Parametri non validi.";
+            return;
+        }
+
+        try
+        {
+            var mn = new VoceMenu(ParentId);
+            bool rt = mn.AddFiglio(NewMenuItem.Titolo, NewMenuItem.Descrizione, NewMenuItem.URL);
+
+            if (rt)
+            {
+                SuccessMessage = "Voce di menu figlia aggiunta con successo.";
+                Logger.LogInformation("MenuAddVoceFiglia: Added child menu item {Titolo} to parent {ParentId}", NewMenuItem.Titolo, ParentId);
+                Cancel();
+            }
+            else
+            {
+                ErrorMessage = "Errore durante l'aggiunta: " + mn.log;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "MenuAddVoceFiglia: Error adding child menu item to parent {ParentId}", ParentId);
+            ErrorMessage = "Errore generico durante l'aggiunta.";
+        }
+    }
+}

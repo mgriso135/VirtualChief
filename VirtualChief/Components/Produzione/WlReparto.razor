@@ -1,0 +1,283 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using System.Text.Json
+@inject ILogger<WlReparto> Logger
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Reparto == null)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <h4>@Title</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">@InizioLabel</label>
+                    <input type="date" class="form-control" @bind="Inizio" @bind:event="onchange" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@FineLabel</label>
+                    <input type="date" class="form-control" @bind="Fine" @bind:event="onchange" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@ViewModeLabel</label>
+                    <select class="form-select" @bind="ViewMode" @bind:event="onchange">
+                        <option value="0">@AllPostazioniLabel</option>
+                        <option value="1">@SelectPostazioniLabel</option>
+                    </select>
+                </div>
+            </div>
+
+            @if (ViewMode == "1" && Postazioni != null)
+            {
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">@PostazioniLabel</label>
+                        <div class="row">
+                            @foreach (var pst in Postazioni)
+                            {
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                               checked="@GetPostazioneSelected(pst.id)" 
+                                               @onchange="@(() => OnPostazioneChanged(pst.id))" />
+                                        <label class="form-check-label">@pst.name</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (IsLoadingChart)
+            {
+                <div class="text-center py-4">
+                    <div class="spinner-border"></div>
+                    <p>@LoadingChartMessage</p>
+                </div>
+            }
+            else if (HasData)
+            {
+                <div class="text-muted mb-2">@TotalWorkloadLabel</div>
+                <canvas id="workloadChart" height="300"></canvas>
+            }
+            else
+            {
+                <div class="alert alert-info">@NoDataMessage</div>
+            }
+
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@ErrorMessage</div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int RepId { get; set; }
+
+    public string Title { get; set; } = "Carico di Lavoro Reparto";
+    public string InizioLabel { get; set; } = "Dal";
+    public string FineLabel { get; set; } = "Al";
+    public string ViewModeLabel { get; set; } = "Modalità";
+    public string AllPostazioniLabel { get; set; } = "Tutte le postazioni";
+    public string SelectPostazioniLabel { get; set; } = "Seleziona postazioni";
+    public string PostazioniLabel { get; set; } = "Postazioni";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string LoadingChartMessage { get; set; } = "Caricamento grafico...";
+    public string NoDataMessage { get; set; } = "Nessun dato per il periodo selezionato";
+    public string TotalWorkloadLabel { get; set; } = "";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare il carico di lavoro";
+    public string ErrorMessage { get; set; } = "";
+
+    public Reparto Reparto { get; set; }
+    public List<Postazione> Postazioni { get; set; } = new();
+    public DateTime Inizio { get; set; } = DateTime.Today;
+    public DateTime Fine { get; set; } = DateTime.Today;
+    
+    private string _viewMode = "0";
+    public string ViewMode
+    {
+        get => _viewMode;
+        set
+        {
+            if (_viewMode != value)
+            {
+                _viewMode = value;
+                _ = OnViewModeChanged();
+            }
+        }
+    }
+    
+    public List<int> SelectedPostazioniIds { get; set; } = new();
+    public bool IsLoadingChart { get; set; } = false;
+    public bool HasData { get; set; } = false;
+    public TimeSpan TotalWorkload { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (RepId != 0)
+        {
+            LoadReparto();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (RepId != 0)
+        {
+            LoadReparto();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Carico di Lavoro Reparto";
+        InizioLabel = "Dal";
+        FineLabel = "Al";
+        ViewModeLabel = "Modalità";
+        AllPostazioniLabel = "Tutte le postazioni";
+        SelectPostazioniLabel = "Seleziona postazioni";
+        PostazioniLabel = "Postazioni";
+        LoadingMessage = "Caricamento...";
+        LoadingChartMessage = "Caricamento grafico...";
+        NoDataMessage = "Nessun dato per il periodo selezionato";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare il carico di lavoro";
+    }
+
+    private void LoadReparto()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || RepId == 0)
+        {
+            Reparto = null;
+            return;
+        }
+
+        try
+        {
+            Reparto = new Reparto(Tenant, RepId);
+            if (Reparto.id != -1)
+            {
+                Reparto.loadPostazioni();
+                Postazioni = Reparto.Postazioni;
+                SelectedPostazioniIds = Postazioni.Select(p => p.id).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading reparto {RepId}", RepId);
+            Reparto = null;
+            ErrorMessage = "Errore durante il caricamento del reparto";
+        }
+    }
+
+    private async Task OnViewModeChanged()
+    {
+        if (ViewMode == "0")
+        {
+            SelectedPostazioniIds = Postazioni.Select(p => p.id).ToList();
+        }
+        await LoadChart();
+    }
+
+    private async Task OnPostazioneChanged(int postazioneId)
+    {
+        var isSelected = SelectedPostazioniIds.Contains(postazioneId);
+        if (isSelected)
+        {
+            SelectedPostazioniIds.Remove(postazioneId);
+        }
+        else
+        {
+            SelectedPostazioniIds.Add(postazioneId);
+        }
+        await LoadChart();
+    }
+
+    private bool GetPostazioneSelected(int postazioneId)
+    {
+        return SelectedPostazioniIds.Contains(postazioneId);
+    }
+
+    private async Task LoadChart()
+    {
+        if (Reparto == null || Inizio > Fine || SelectedPostazioniIds.Count == 0)
+        {
+            HasData = false;
+            return;
+        }
+
+        IsLoadingChart = true;
+        HasData = false;
+        ErrorMessage = "";
+        TotalWorkload = TimeSpan.Zero;
+
+        try
+        {
+            var chartData = new List<ChartPoint>();
+            TotalWorkload = TimeSpan.Zero;
+
+            foreach (var pst in Postazioni.Where(p => SelectedPostazioniIds.Contains(p.id)))
+            {
+                var carico = pst.getCaricoDiLavoroProgrammato(Reparto.id, Inizio, Fine.AddDays(1));
+                TotalWorkload += carico;
+                
+                if (ViewMode == "1")
+                {
+                    chartData.Add(new ChartPoint { Label = pst.name, Value = carico.TotalHours });
+                }
+            }
+
+            if (ViewMode == "0")
+            {
+                chartData.Add(new ChartPoint { Label = Reparto.name, Value = TotalWorkload.TotalHours });
+            }
+
+            HasData = chartData.Count > 0;
+            TotalWorkloadLabel = $"{TotalWorkloadLabel} {Reparto.name} nel periodo {Inizio:dd/MM/yyyy} - {Fine:dd/MM/yyyy}: <b>{TotalWorkload.TotalHours:F2} ore</b>";
+
+            if (HasData)
+            {
+                await JSRuntime.InvokeVoidAsync("renderWorkloadChart", "workloadChart", chartData);
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading chart for reparto {RepId}", RepId);
+            ErrorMessage = "Errore durante il caricamento del grafico";
+            HasData = false;
+        }
+        finally
+        {
+            IsLoadingChart = false;
+        }
+    }
+
+    private class ChartPoint
+    {
+        public string Label { get; set; }
+        public double Value { get; set; }
+    }
+}

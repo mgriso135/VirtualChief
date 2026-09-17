@@ -1,0 +1,203 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<FrmSolveProblem> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Warning == null)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (!Warning.isOpen)
+{
+    <div class="alert alert-info">@WarningClosedMessage</div>
+}
+else
+{
+    <h1>@SolveWarningLabel</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">@CausaLabel</label>
+                <textarea class="form-control" rows="4" @bind="Causa" required></textarea>
+                @if (ShowValidation && string.IsNullOrWhiteSpace(Causa))
+                {
+                    <div class="text-danger">@RequiredFieldMessage</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@RisoluzioneLabel</label>
+                <textarea class="form-control" rows="4" @bind="Risoluzione" required></textarea>
+                @if (ShowValidation && string.IsNullOrWhiteSpace(Risoluzione))
+                {
+                    <div class="text-danger">@RequiredFieldMessage</div>
+                }
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" @onclick="Save" disabled="@IsSaving">
+                    @if (IsSaving)
+                    {
+                        <span class="spinner-border spinner-border-sm"></span>
+                    }
+                    <img src="/img/iconSave.jpg" height="30" /> @SaveLabel
+                </button>
+                <button class="btn btn-secondary" @onclick="Reset" disabled="@IsSaving">
+                    <img src="/img/iconUndo.png" height="30" /> @UndoLabel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success mt-3">@SuccessMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int IdWarning { get; set; }
+
+    public string SolveWarningLabel { get; set; } = "Risolvi Warning";
+    public string CausaLabel { get; set; } = "Causa";
+    public string RisoluzioneLabel { get; set; } = "Risoluzione";
+    public string RequiredFieldMessage { get; set; } = "Campo obbligatorio";
+    public string SaveLabel { get; set; } = "Salva";
+    public string UndoLabel { get; set; } = "Annulla";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string WarningClosedMessage { get; set; } = "Questo warning è già stato risolto";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di risolvere i warning";
+    public string SaveSuccessMessage { get; set; } = "Warning risolto con successo";
+    public string SaveErrorMessage { get; set; } = "Errore durante il salvataggio";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public Warning Warning { get; set; }
+    public string Causa { get; set; } = "";
+    public string Risoluzione { get; set; } = "";
+    public bool IsSaving { get; set; } = false;
+    public bool ShowValidation { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (IdWarning != 0)
+        {
+            LoadWarning();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (IdWarning != 0)
+        {
+            LoadWarning();
+        }
+    }
+
+    private void LoadResources()
+    {
+        SolveWarningLabel = "Risolvi Warning";
+        CausaLabel = "Causa";
+        RisoluzioneLabel = "Risoluzione";
+        RequiredFieldMessage = "Campo obbligatorio";
+        SaveLabel = "Salva";
+        UndoLabel = "Annulla";
+        LoadingMessage = "Caricamento...";
+        WarningClosedMessage = "Questo warning è già stato risolto";
+        PermissionDeniedMessage = "Non hai il permesso di risolvere i warning";
+        SaveSuccessMessage = "Warning risolto con successo";
+        SaveErrorMessage = "Errore durante il salvataggio";
+    }
+
+    private void LoadWarning()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || IdWarning == 0)
+        {
+            Warning = null;
+            return;
+        }
+
+        try
+        {
+            Warning = new Warning(Tenant, IdWarning);
+            if (Warning.ID == -1 || !Warning.isOpen)
+            {
+                Warning = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading warning {IdWarning}", IdWarning);
+            Warning = null;
+            ErrorMessage = "Errore durante il caricamento del warning";
+        }
+    }
+
+    private void Save()
+    {
+        ShowValidation = true;
+        
+        if (string.IsNullOrWhiteSpace(Causa) || string.IsNullOrWhiteSpace(Risoluzione))
+        {
+            ErrorMessage = "Compilare tutti i campi obbligatori";
+            return;
+        }
+
+        if (Warning == null || string.IsNullOrEmpty(Tenant))
+        {
+            ErrorMessage = "Warning non valido";
+            return;
+        }
+
+        IsSaving = true;
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var fuso = new FusoOrario(Tenant);
+            Warning.DataRisoluzione = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, fuso.tzFusoOrario);
+            Warning.MotivoChiamata = Causa;
+            Warning.Risoluzione = Risoluzione;
+            
+            SuccessMessage = SaveSuccessMessage;
+            LoadWarning(); // Reload to show closed state
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error saving warning resolution");
+            ErrorMessage = SaveErrorMessage;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    private void Reset()
+    {
+        Causa = "";
+        Risoluzione = "";
+        ShowValidation = false;
+        ErrorMessage = "";
+        SuccessMessage = "";
+    }
+}

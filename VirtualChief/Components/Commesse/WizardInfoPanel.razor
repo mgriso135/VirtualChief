@@ -1,0 +1,140 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<WizardInfoPanel> Logger
+
+@if (Commessa == null)
+{
+    <span class="text-muted">Caricamento...</span>
+}
+else
+{
+    <div class="d-flex flex-wrap gap-2">
+        <span class="badge bg-info text-dark">@($"Commessa: {Commessa.ID}/{Commessa.Year}")</span>
+        <span class="badge bg-secondary">@($"Cliente: {Commessa.Cliente}")</span>
+        
+        @if (!string.IsNullOrEmpty(Commessa.Note))
+        {
+            <span class="badge bg-light text-dark">@($"Note: {Commessa.Note}")</span>
+        }
+
+        @if (ProcVariante != null && ProcVariante.process != null && ProcVariante.variant != null)
+        {
+            <span class="badge bg-primary">@($"Prodotto: {ProcVariante.variant.nomeVariante}")</span>
+            @if (!string.IsNullOrEmpty(ProcVariante.variant.descrizioneVariante))
+            {
+                <span class="badge bg-light text-dark">@ProcVariante.variant.descrizioneVariante</span>
+            }
+        }
+
+        @if (Reparto != null)
+        {
+            <span class="badge bg-success">@($"Reparto: {Reparto.name}")</span>
+        }
+
+        @if (Quantita > 0)
+        {
+            <span class="badge bg-warning text-dark">@($"Quantità: {Quantita}")</span>
+        }
+
+        @if (Articolo != null)
+        {
+            if (Articolo.DataPrevistaConsegna > DateTime.Now)
+            {
+                <span class="badge bg-info text-dark">@($"Consegna: {Articolo.DataPrevistaConsegna:dd/MM/yyyy}")</span>
+            }
+            if (Articolo.DataPrevistaFineProduzione > DateTime.Now)
+            {
+                <span class="badge bg-dark">@($"Fine Produzione: {Articolo.DataPrevistaFineProduzione:dd/MM/yyyy HH:mm:ss}")</span>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int IdCommessa { get; set; }
+
+    [Parameter]
+    public int AnnoCommessa { get; set; }
+
+    [Parameter]
+    public int IdProc { get; set; }
+
+    [Parameter]
+    public int RevProc { get; set; }
+
+    [Parameter]
+    public int IdVariante { get; set; }
+
+    [Parameter]
+    public int IdProdotto { get; set; }
+
+    [Parameter]
+    public int AnnoProdotto { get; set; }
+
+    [Parameter]
+    public int IdReparto { get; set; }
+
+    [Parameter]
+    public int Quantita { get; set; }
+
+    public Commessa Commessa { get; set; }
+    public ProcessoVariante ProcVariante { get; set; }
+    public Reparto Reparto { get; set; }
+    public Articolo Articolo { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LoadData();
+    }
+
+    protected override void OnParametersSet()
+    {
+        LoadData();
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant))
+        {
+            return;
+        }
+
+        try
+        {
+            Commessa = new Commessa(Tenant, IdCommessa, AnnoCommessa);
+
+            if (IdProc != -1 && RevProc != -1 && IdVariante != -1)
+            {
+                ProcVariante = new ProcessoVariante(Tenant, new processo(Tenant, IdProc, RevProc), new variante(Tenant, IdVariante));
+                ProcVariante.loadReparto();
+                if (ProcVariante.process != null)
+                {
+                    ProcVariante.process.loadFigli(ProcVariante.variant);
+                }
+            }
+
+            if (IdReparto != -1)
+            {
+                Reparto = new Reparto(Tenant, IdReparto);
+            }
+
+            if (IdProdotto != -1 && AnnoProdotto != -1)
+            {
+                Articolo = new Articolo(Tenant, IdProdotto, AnnoProdotto);
+                if (Articolo.ID != -1 && Articolo.Year != -1 && Quantita > 0)
+                {
+                    // Use article's quantity if available
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "WizardInfoPanel: Error loading data for commessa {IdCommessa}/{AnnoCommessa}", IdCommessa, AnnoCommessa);
+        }
+    }
+}

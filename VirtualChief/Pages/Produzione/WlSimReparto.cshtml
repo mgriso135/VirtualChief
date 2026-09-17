@@ -1,0 +1,85 @@
+@page "/Produzione/WlSimReparto"
+@model VirtualChief.Pages.Produzione.WlSimRepartoModel
+@{
+    ViewData["Title"] = "Simulazione Carico di Lavoro Reparto";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Produzione/produzione">@Model.NavProduzione</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavWlSimReparto</li>
+        </ol>
+    </nav>
+
+    <h1>@Model.NavWlSimReparto</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <component type="typeof(Components.Produzione.WlSimReparto)" 
+                       param-Tenant="@Model.Tenant"
+                       param-HasPermission="@Model.HasPermission"
+                       param-RepId="@Model.RepId"
+                       render-mode="ServerPrerendered" />
+             
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        window.renderWorkloadSimChart = (canvasId, seriesData, isByPostazione) => {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            
+            if (window.workloadSimChart) {
+                window.workloadSimChart.destroy();
+            }
+            
+            const labels = isByPostazione 
+                ? seriesData[0]?.Data?.map((_, i) => `Pst ${i}`) || []
+                : ['Carico'];
+            
+            const datasets = seriesData.map(s => ({
+                label: s.Label,
+                data: s.Data,
+                backgroundColor: s.BackgroundColor,
+                borderColor: s.BorderColor || s.BackgroundColor,
+                borderWidth: s.BorderColor ? 2 : 1,
+                stack: 'workload'
+            }));
+            
+            window.workloadSimChart = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true },
+                        y: { 
+                            stacked: true,
+                            beginAtZero: true,
+                            title: { display: true, text: 'Ore' }
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw.toFixed(2) + ' ore';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+}

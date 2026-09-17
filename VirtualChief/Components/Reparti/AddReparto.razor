@@ -1,0 +1,166 @@
+@using KIS.App_Code
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<AddReparto> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label">@NomeLabel</label>
+                <input type="text" class="form-control" @bind="Nome" required />
+                @if (ShowValidation && string.IsNullOrWhiteSpace(Nome))
+                {
+                    <div class="text-danger">@RequiredFieldMessage</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@DescrizioneLabel</label>
+                <textarea class="form-control" rows="3" @bind="Descrizione" required></textarea>
+                @if (ShowValidation && string.IsNullOrWhiteSpace(Descrizione))
+                {
+                    <div class="text-danger">@RequiredFieldMessage</div>
+                }
+            </div>
+            <div class="mb-3">
+                <label class="form-label">@FusoLabel</label>
+                <select class="form-select" @bind="SelectedTimeZoneId">
+                    @foreach (var tz in TimeZones)
+                    {
+                        <option value="@tz.Id">@tz.DisplayName</option>
+                    }
+                </select>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-success" @onclick="Save" disabled="@IsSaving">
+                    @if (IsSaving) { <span class="spinner-border spinner-border-sm"></span> }
+                    <img src="/img/iconSave.jpg" height="30" /> @SaveLabel
+                </button>
+                <button class="btn btn-secondary" @onclick="Reset" disabled="@IsSaving">
+                    <img src="/img/iconUndo.png" height="30" /> @ResetLabel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success mt-3">@SuccessMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string Title { get; set; } = "Aggiungi Reparto";
+    public string NomeLabel { get; set; } = "Nome";
+    public string DescrizioneLabel { get; set; } = "Descrizione";
+    public string FusoLabel { get; set; } = "Fuso orario";
+    public string SaveLabel { get; set; } = "Salva";
+    public string ResetLabel { get; set; } = "Annulla";
+    public string RequiredFieldMessage { get; set; } = "Campo obbligatorio";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di aggiungere reparti";
+    public string SaveSuccessMessage { get; set; } = "Reparto aggiunto con successo";
+    public string SaveErrorMessage { get; set; } = "Errore durante il salvataggio";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public string Nome { get; set; } = "";
+    public string Descrizione { get; set; } = "";
+    public string SelectedTimeZoneId { get; set; } = "W. Europe Standard Time";
+    public List<TimeZoneInfo> TimeZones { get; set; } = new();
+    public bool IsSaving { get; set; } = false;
+    public bool ShowValidation { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        TimeZones = TimeZoneInfo.GetSystemTimeZones().ToList();
+        SelectedTimeZoneId = "W. Europe Standard Time";
+    }
+
+    private void LoadResources()
+    {
+        Title = "Aggiungi Reparto";
+        NomeLabel = "Nome";
+        DescrizioneLabel = "Descrizione";
+        FusoLabel = "Fuso orario";
+        SaveLabel = "Salva";
+        ResetLabel = "Annulla";
+        RequiredFieldMessage = "Campo obbligatorio";
+        PermissionDeniedMessage = "Non hai il permesso di aggiungere reparti";
+        SaveSuccessMessage = "Reparto aggiunto con successo";
+        SaveErrorMessage = "Errore durante il salvataggio";
+    }
+
+    private async Task Save()
+    {
+        ShowValidation = true;
+
+        if (string.IsNullOrWhiteSpace(Nome) || string.IsNullOrWhiteSpace(Descrizione))
+        {
+            ErrorMessage = "Compilare tutti i campi obbligatori";
+            return;
+        }
+
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission)
+        {
+            ErrorMessage = PermissionDeniedMessage;
+            return;
+        }
+
+        IsSaving = true;
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var rp = new Reparto(Tenant);
+            int rt = rp.Add(Nome, Descrizione, SelectedTimeZoneId);
+            if (rt != -1)
+            {
+                SuccessMessage = SaveSuccessMessage;
+                NavigationManager.NavigateTo($"/Reparti/ListReparti", forceLoad: true);
+            }
+            else
+            {
+                ErrorMessage = rp.err ?? SaveErrorMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error adding reparto");
+            ErrorMessage = SaveErrorMessage;
+        }
+        finally
+        {
+            IsSaving = false;
+        }
+    }
+
+    private void Reset()
+    {
+        Nome = "";
+        Descrizione = "";
+        SelectedTimeZoneId = "W. Europe Standard Time";
+        ShowValidation = false;
+        ErrorMessage = "";
+        SuccessMessage = "";
+    }
+}

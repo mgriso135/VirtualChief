@@ -1,0 +1,45 @@
+@page
+@model VirtualChief.Pages.Admin.menuShowVoceModel
+@{
+    ViewData["Title"] = "Gestione Voce Menu";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Admin/kisAdmin">KIS Admin</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Admin/manageMenu">@Model.NavManageMenu</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavGestioneVoce</li>
+        </ol>
+    </nav>
+
+    @if (Model.MenuItem == null)
+    {
+        <div class="alert alert-warning">Voce di menu non trovata.</div>
+    }
+    else
+    {
+        <h3>@Model.MenuItem.Titolo</h3>
+        <h5>@Model.MenuItem.Descrizione</h5>
+        <p>URL: <code>@Model.MenuItem.URL</code></p>
+
+        <component type="typeof(Components.Admin.MenuAddVoceFiglia)" 
+                   param-Tenant="@Model.Tenant" 
+                   param-ParentId="@Model.MenuItem.ID"
+                   param-HasPermission="@Model.CanWriteChildMenu"
+                   render-mode="ServerPrerendered" />
+
+        <component type="typeof(Components.Admin.MenuShowFigli)" 
+                   param-Tenant="@Model.Tenant" 
+                   param-ParentId="@Model.MenuItem.ID"
+                   param-HasPermission="@Model.CanReadChildMenu"
+                   render-mode="ServerPrerendered" />
+    }
+</div>

@@ -1,0 +1,105 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<HomeBoxNextProgrammedProducts> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Products == null || Products.Count == 0)
+{
+    <div class="text-muted">@NoProductsMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+    <ul class="list-group">
+        @foreach (var prod in Products.Take(5))
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    @prod.Proc?.process?.processName &nbsp;-&nbsp; @prod.Proc?.variant?.nomeVariante
+                </span>
+                <span class="badge bg-primary rounded-pill">@prod.ID/@prod.Year</span>
+            </li>
+        }
+    </ul>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string Title { get; set; } = "Piano Produzione";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoProductsMessage { get; set; } = "Nessun prodotto programmato";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare il piano produzione";
+    public string ErrorMessage { get; set; } = "";
+
+    public List<Articolo> Products { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadProducts();
+    }
+
+    protected override void OnParametersSet()
+    {
+        LoadProducts();
+    }
+
+    private void LoadResources()
+    {
+        Title = "Piano Produzione";
+        LoadingMessage = "Caricamento...";
+        NoProductsMessage = "Nessun prodotto programmato";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare il piano produzione";
+    }
+
+    private void LoadProducts()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission)
+        {
+            Products = new List<Articolo>();
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            // TODO: Implement when UserAccount.loadNextProgrammedProducts is available
+            // var user = new UserAccount(userId);
+            // user.loadNextProgrammedProducts();
+            // Products = user.NextProgrammedProducts;
+            Products = new List<Articolo>();
+            ErrorMessage = "Componente in fase di sviluppo - richiede UserAccount.loadNextProgrammedProducts";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading next programmed products");
+            ErrorMessage = "Errore durante il caricamento";
+            Products = new List<Articolo>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+}

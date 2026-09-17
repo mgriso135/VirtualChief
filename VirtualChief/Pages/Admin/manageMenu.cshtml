@@ -1,0 +1,36 @@
+@page
+@model VirtualChief.Pages.Admin.manageMenuModel
+@{
+    ViewData["Title"] = "Gestione Menu";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Index">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Admin/kisAdmin">KIS Admin</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavManageMenu</li>
+        </ol>
+    </nav>
+
+    <h1>@Model.NavManageMenu</h1>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-@Model.MessageType">@Model.Message</div>
+    }
+
+    <component type="typeof(Components.Admin.MenuAddMainVoce)" 
+               param-Tenant="@Model.Tenant" 
+               param-HasPermission="@Model.CanWriteMainMenu"
+               render-mode="ServerPrerendered" />
+
+    <component type="typeof(Components.Admin.MenuMainVociList)" 
+               param-Tenant="@Model.Tenant" 
+               param-HasPermission="@Model.CanReadMainMenu"
+               render-mode="ServerPrerendered" />
+</div>

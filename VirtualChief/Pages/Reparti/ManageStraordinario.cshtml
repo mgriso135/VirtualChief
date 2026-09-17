@@ -1,0 +1,45 @@
+@page "{id:int}"
+@model VirtualChief.Pages.Reparti.ManageStraordinarioModel
+@{
+    ViewData["Title"] = "Gestisci straordinari";
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/listReparti">Reparti</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento?.id">@Model.Dipartimento?.name</a> <span class="divider">/</span></li>
+        <li class="active">Straordinari turno: @Model.TurnoCorrente?.Nome</li>
+    </ul>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    else if (Model.TurnoCorrente != null && Model.Dipartimento != null)
+    {
+        <h3>@Model.Dipartimento.name - @Model.TurnoCorrente.Nome</h3>
+
+        <h4>Aggiungi straordinario</h4>
+        <component type="typeof(VirtualChief.Components.Reparti.AddStraordinario)"
+                   render-mode="Server"
+                   param-Tenant="@CurrentWorkspace.Of(User)"
+                   param-ShiftId="@Model.TurnoCorrente.id"
+                   param-HasPermission="@Model.CanWrite" />
+
+        <hr />
+
+        <h4>Elenco straordinari</h4>
+        <component type="typeof(VirtualChief.Components.Reparti.ElencoStraordinari)"
+                   render-mode="Server"
+                   param-Tenant="@CurrentWorkspace.Of(User)"
+                   param-ShiftId="@Model.TurnoCorrente.id"
+                   param-CanWrite="@Model.CanWrite" />
+    }
+    else
+    {
+        <div class="alert alert-warning">Seleziona un turno valido.</div>
+    }
+
+    <a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento?.id" class="btn btn-secondary mt-3">&larr; Torna alla configurazione reparto</a>
+</div>

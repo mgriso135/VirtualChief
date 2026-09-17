@@ -1,0 +1,501 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<ArticoloWarningConfig> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Articolo == null)
+{
+    <div class="alert alert-danger">Articolo non trovato.</div>
+}
+else
+{
+    <h3>
+        <img src="/img/iconEmail.png" height="50" class="me-2" />
+        @TitleLabel
+    </h3>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success">@SuccessMessage</div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">@GroupsLabel</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary" @onclick="ToggleAddGroupForm">
+                        <img src="/img/iconAdd2.png" height="20" /> @AddGroupLabel
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (ShowAddGroupForm)
+                    {
+                        <div class="mb-3">
+                            <label for="ddlAddGroup" class="form-label">@SelectGroupLabel</label>
+                            <select id="ddlAddGroup" class="form-select" @bind="SelectedGroupId">
+                                <option value="">@SelectGroupLabel</option>
+                                @foreach (var g in AvailableGroups)
+                                {
+                                    <option value="@g.ID">@g.Nome</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-primary btn-sm" @onclick="AddGroup" disabled="@(string.IsNullOrEmpty(SelectedGroupId))">
+                                <img src="/img/iconSave.jpg" height="20" /> @SaveButton
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" @onclick="CancelAddGroup">
+                                <img src="/img/iconUndo.png" height="20" /> @CancelButton
+                            </button>
+                        </div>
+                    }
+
+                    @if (ConfiguredGroups.Count == 0)
+                    {
+                        <div class="text-muted">@NoGroupsMessage</div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>@GroupNameHeader</th>
+                                        <th>@GroupDescriptionHeader</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var g in ConfiguredGroups)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <button type="button" class="btn btn-link p-0 text-danger" @onclick="@(() => ConfirmDeleteGroup(g.ID))" title="@DeleteTooltip">
+                                                    <img src="/img/iconDelete.png" height="30" />
+                                                </button>
+                                            </td>
+                                            <td>@g.Nome</td>
+                                            <td>@g.Descrizione</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">@UsersLabel</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary" @onclick="ToggleAddUserForm">
+                        <img src="/img/iconAdd2.png" height="20" /> @AddUserLabel
+                    </button>
+                </div>
+                <div class="card-body">
+                    @if (ShowAddUserForm)
+                    {
+                        <div class="mb-3">
+                            <label for="ddlAddUser" class="form-label">@SelectUserLabel</label>
+                            <select id="ddlAddUser" class="form-select" @bind="SelectedUsername">
+                                <option value="">@SelectUserLabel</option>
+                                @foreach (var u in AvailableUsers)
+                                {
+                                    <option value="@u.username">@u.FullName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-primary btn-sm" @onclick="AddUser" disabled="@(string.IsNullOrEmpty(SelectedUsername))">
+                                <img src="/img/iconSave.jpg" height="20" /> @SaveButton
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" @onclick="CancelAddUser">
+                                <img src="/img/iconUndo.png" height="20" /> @CancelButton
+                            </button>
+                        </div>
+                    }
+
+                    @if (ConfiguredUsers.Count == 0)
+                    {
+                        <div class="text-muted">@NoUsersMessage</div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>@UsernameHeader</th>
+                                        <th>@FullNameHeader</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var u in ConfiguredUsers)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <button type="button" class="btn btn-link p-0 text-danger" @onclick="@(() => ConfirmDeleteUser(u.username))" title="@DeleteTooltip">
+                                                    <img src="/img/iconDelete.png" height="30" />
+                                                </button>
+                                            </td>
+                                            <td>@u.username</td>
+                                            <td>@u.FullName</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (ShowDeleteGroupConfirm)
+    {
+        <div class="alert alert-warning">
+            @DeleteGroupConfirmMessage
+            <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="DeleteGroupConfirmed">@ConfirmButton</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" @onclick="CancelDeleteGroup">@CancelButton</button>
+        </div>
+    }
+
+    @if (ShowDeleteUserConfirm)
+    {
+        <div class="alert alert-warning">
+            @DeleteUserConfirmMessage
+            <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="DeleteUserConfirmed">@ConfirmButton</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" @onclick="CancelDeleteUser">@CancelButton</button>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int ArticoloId { get; set; }
+
+    [Parameter]
+    public int ArticoloAnno { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string TitleLabel { get; set; } = "Configurazione Warning Articolo";
+    public string GroupsLabel { get; set; } = "Gruppi";
+    public string UsersLabel { get; set; } = "Utenti";
+    public string AddGroupLabel { get; set; } = "Aggiungi Gruppo";
+    public string AddUserLabel { get; set; } = "Aggiungi Utente";
+    public string SelectGroupLabel { get; set; } = "Seleziona Gruppo";
+    public string SelectUserLabel { get; set; } = "Seleziona Utente";
+    public string GroupNameHeader { get; set; } = "Nome";
+    public string GroupDescriptionHeader { get; set; } = "Descrizione";
+    public string UsernameHeader { get; set; } = "Username";
+    public string FullNameHeader { get; set; } = "Nome Completo";
+    public string NoGroupsMessage { get; set; } = "Nessun gruppo configurato.";
+    public string NoUsersMessage { get; set; } = "Nessun utente configurato.";
+    public string DeleteTooltip { get; set; } = "Elimina";
+    public string DeleteGroupConfirmMessage { get; set; } = "Sei sicuro di voler rimuovere questo gruppo?";
+    public string DeleteUserConfirmMessage { get; set; } = "Sei sicuro di voler rimuovere questo utente?";
+    public string ConfirmButton { get; set; } = "Conferma";
+    public string CancelButton { get; set; } = "Annulla";
+    public string SaveButton { get; set; } = "Salva";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di configurare i warning per questo articolo.";
+
+    public Articolo Articolo { get; set; }
+
+    public List<Group> AvailableGroups { get; set; } = new();
+    public List<Group> ConfiguredGroups { get; set; } = new();
+    public string SelectedGroupId { get; set; } = "";
+    public bool ShowAddGroupForm { get; set; } = false;
+    public bool ShowDeleteGroupConfirm { get; set; } = false;
+    public int DeleteGroupId { get; set; } = -1;
+
+    public List<User> AvailableUsers { get; set; } = new();
+    public List<User> ConfiguredUsers { get; set; } = new();
+    public string SelectedUsername { get; set; } = "";
+    public bool ShowAddUserForm { get; set; } = false;
+    public bool ShowDeleteUserConfirm { get; set; } = false;
+    public string DeleteUsername { get; set; } = "";
+
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadData();
+    }
+
+    protected override void OnParametersSet()
+    {
+        LoadData();
+    }
+
+    private void LoadResources()
+    {
+        TitleLabel = "Configurazione Warning Articolo";
+        GroupsLabel = "Gruppi";
+        UsersLabel = "Utenti";
+        AddGroupLabel = "Aggiungi Gruppo";
+        AddUserLabel = "Aggiungi Utente";
+        SelectGroupLabel = "Seleziona Gruppo";
+        SelectUserLabel = "Seleziona Utente";
+        GroupNameHeader = "Nome";
+        GroupDescriptionHeader = "Descrizione";
+        UsernameHeader = "Username";
+        FullNameHeader = "Nome Completo";
+        NoGroupsMessage = "Nessun gruppo configurato.";
+        NoUsersMessage = "Nessun utente configurato.";
+        DeleteTooltip = "Elimina";
+        DeleteGroupConfirmMessage = "Sei sicuro di voler rimuovere questo gruppo?";
+        DeleteUserConfirmMessage = "Sei sicuro di voler rimuovere questo utente?";
+        ConfirmButton = "Conferma";
+        CancelButton = "Annulla";
+        SaveButton = "Salva";
+        PermissionDeniedMessage = "Non hai il permesso di configurare i warning per questo articolo.";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || ArticoloId <= 0 || ArticoloAnno <= 0 || !HasPermission)
+        {
+            Articolo = null;
+            return;
+        }
+
+        try
+        {
+            Articolo = new Articolo(Tenant, ArticoloId, ArticoloAnno);
+            if (Articolo.ID == -1)
+                return;
+
+            var cfg = new ConfigurazioneWarningArticolo(Tenant, Articolo);
+
+            cfg.loadGruppi();
+            ConfiguredGroups = new List<Group>();
+            foreach (var gid in cfg.ListGroupsID)
+            {
+                var g = new Group(gid);
+                if (g.ID != -1)
+                    ConfiguredGroups.Add(g);
+            }
+
+            cfg.loadUsers();
+            ConfiguredUsers = new List<User>();
+            foreach (var username in cfg.ListUsers)
+            {
+                var u = new User(username);
+                if (!string.IsNullOrEmpty(u.username))
+                    ConfiguredUsers.Add(u);
+            }
+
+            var allGroups = new GroupList();
+            AvailableGroups = allGroups.Elenco?
+                .Where(g => !ConfiguredGroups.Any(cg => cg.ID == g.ID))
+                .ToList() ?? new List<Group>();
+
+            var allUsers = new UserList(Tenant);
+            AvailableUsers = allUsers.elencoUtenti?
+                .Where(u => !ConfiguredUsers.Any(cu => cu.username == u.username))
+                .ToList() ?? new List<User>();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ArticoloWarningConfig: Error loading data for article {Id}/{Year}", ArticoloId, ArticoloAnno);
+            ErrorMessage = "Errore durante il caricamento della configurazione.";
+        }
+    }
+
+    private void ToggleAddGroupForm()
+    {
+        ShowAddGroupForm = !ShowAddGroupForm;
+        if (ShowAddGroupForm)
+            SelectedGroupId = "";
+    }
+
+    private void CancelAddGroup()
+    {
+        ShowAddGroupForm = false;
+        SelectedGroupId = "";
+    }
+
+    private void AddGroup()
+    {
+        if (string.IsNullOrEmpty(Tenant) || string.IsNullOrEmpty(SelectedGroupId) || Articolo == null)
+            return;
+
+        try
+        {
+            var cfg = new ConfigurazioneWarningArticolo(Tenant, Articolo);
+            int idGrp = int.Parse(SelectedGroupId);
+            var grp = new Group(idGrp);
+            if (grp.ID != -1)
+            {
+                bool rt = cfg.addGruppo(grp);
+                if (rt)
+                {
+                    SuccessMessage = "Gruppo aggiunto. " + cfg.log;
+                    Logger.LogInformation("ArticoloWarningConfig: Added group {GroupId} to article {Id}/{Year}", idGrp, ArticoloId, ArticoloAnno);
+                    LoadData();
+                }
+                else
+                {
+                    ErrorMessage = "Errore: " + cfg.log;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ArticoloWarningConfig: Error adding group");
+            ErrorMessage = "Errore generico.";
+        }
+    }
+
+    private void ConfirmDeleteGroup(int id)
+    {
+        DeleteGroupId = id;
+        ShowDeleteGroupConfirm = true;
+    }
+
+    private void CancelDeleteGroup()
+    {
+        ShowDeleteGroupConfirm = false;
+        DeleteGroupId = -1;
+    }
+
+    private void DeleteGroupConfirmed()
+    {
+        if (string.IsNullOrEmpty(Tenant) || DeleteGroupId == -1 || Articolo == null)
+            return;
+
+        try
+        {
+            var cfg = new ConfigurazioneWarningArticolo(Tenant, Articolo);
+            bool rt = cfg.deleteGruppo(new Group(DeleteGroupId));
+            if (rt)
+            {
+                SuccessMessage = "Gruppo rimosso. " + cfg.log;
+                Logger.LogInformation("ArticoloWarningConfig: Removed group {GroupId} from article {Id}/{Year}", DeleteGroupId, ArticoloId, ArticoloAnno);
+                LoadData();
+            }
+            else
+            {
+                ErrorMessage = "Errore durante la rimozione.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ArticoloWarningConfig: Error removing group");
+            ErrorMessage = "Errore generico.";
+        }
+        finally
+        {
+            ShowDeleteGroupConfirm = false;
+            DeleteGroupId = -1;
+        }
+    }
+
+    private void ToggleAddUserForm()
+    {
+        ShowAddUserForm = !ShowAddUserForm;
+        if (ShowAddUserForm)
+            SelectedUsername = "";
+    }
+
+    private void CancelAddUser()
+    {
+        ShowAddUserForm = false;
+        SelectedUsername = "";
+    }
+
+    private void AddUser()
+    {
+        if (string.IsNullOrEmpty(Tenant) || string.IsNullOrEmpty(SelectedUsername) || Articolo == null)
+            return;
+
+        try
+        {
+            var cfg = new ConfigurazioneWarningArticolo(Tenant, Articolo);
+            var usr = new User(SelectedUsername);
+            if (!string.IsNullOrEmpty(usr.username))
+            {
+                bool rt = cfg.addUser(usr);
+                if (rt)
+                {
+                    SuccessMessage = "Utente aggiunto. " + cfg.log;
+                    Logger.LogInformation("ArticoloWarningConfig: Added user {Username} to article {Id}/{Year}", SelectedUsername, ArticoloId, ArticoloAnno);
+                    LoadData();
+                }
+                else
+                {
+                    ErrorMessage = "Errore: " + cfg.log;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ArticoloWarningConfig: Error adding user");
+            ErrorMessage = "Errore generico.";
+        }
+    }
+
+    private void ConfirmDeleteUser(string username)
+    {
+        DeleteUsername = username;
+        ShowDeleteUserConfirm = true;
+    }
+
+    private void CancelDeleteUser()
+    {
+        ShowDeleteUserConfirm = false;
+        DeleteUsername = "";
+    }
+
+    private void DeleteUserConfirmed()
+    {
+        if (string.IsNullOrEmpty(Tenant) || string.IsNullOrEmpty(DeleteUsername) || Articolo == null)
+            return;
+
+        try
+        {
+            var cfg = new ConfigurazioneWarningArticolo(Tenant, Articolo);
+            bool rt = cfg.deleteUtente(new User(DeleteUsername));
+            if (rt)
+            {
+                SuccessMessage = "Utente rimosso. " + cfg.log;
+                Logger.LogInformation("ArticoloWarningConfig: Removed user {Username} from article {Id}/{Year}", DeleteUsername, ArticoloId, ArticoloAnno);
+                LoadData();
+            }
+            else
+            {
+                ErrorMessage = "Errore durante la rimozione.";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ArticoloWarningConfig: Error removing user");
+            ErrorMessage = "Errore generico.";
+        }
+        finally
+        {
+            ShowDeleteUserConfirm = false;
+            DeleteUsername = "";
+        }
+    }
+}

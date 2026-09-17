@@ -1,0 +1,44 @@
+@page "/Produzione/ConfiguraProcesso"
+@model VirtualChief.Pages.Produzione.ConfiguraProcessoModel
+@{
+    ViewData["Title"] = "Configurazione Processo";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Produzione/produzione">@Model.NavProduzione</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Produzione/CommesseDaProdurre">@Model.NavCommesseDaProdurre</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavConfiguraProcesso</li>
+        </ol>
+    </nav>
+
+    <h1>@Model.NavConfiguraProcesso</h1>
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model.HasPermission && Model.ArtId != -1 && Model.ArtYear != -1)
+            {
+                <component type="typeof(Components.Produzione.ConfigProcessoPerProduzione)" 
+                           param-Tenant="@Model.Tenant"
+                           param-HasPermission="@Model.HasPermission"
+                           param-ArtId="@Model.ArtId"
+                           param-ArtYear="@Model.ArtYear"
+                           render-mode="ServerPrerendered" />
+            }
+            else
+            {
+                <div class="alert alert-warning">@Model.ErrorMessage</div>
+            }
+             
+            @if (!string.IsNullOrEmpty(Model.ErrorMessage) && Model.HasPermission)
+            {
+                <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,152 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ListWarningAperti> Logger
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<h3>@Title</h3>
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Warnings == null || Warnings.Count == 0)
+{
+    <div class="alert alert-success">@NoWarningsMessage</div>
+}
+else
+{
+    <div class="text-muted mb-2">@LastUpdateLabel</div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th></th>
+                <th>@IdLabel</th>
+                <th>@RepartoLabel</th>
+                <th>@PostazioneLabel</th>
+                <th>@UserLabel</th>
+                <th>@DataChiamataLabel</th>
+                <th>@ActionsLabel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var warning in Warnings)
+            {
+                <tr style="font-size:18px; font-family:Calibri; background-color:#ffcccc;">
+                    <td>
+                        <img src="/img/problemIcon.jpg" height="80" />
+                    </td>
+                    <td>@warning.ID</td>
+                    <td>@warning.NomeReparto</td>
+                    <td>@warning.NomePostazione</td>
+                    <td>@warning.User</td>
+                    <td>@warning.DataChiamata.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    <td style="background-color:white">
+                        <a href="@($"/Produzione/SolveProblem?id={warning.ID}")" target="_blank" title="@SolveTooltip">
+                            <img src="/img/iconRubik.png" height="80" />
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string Title { get; set; } = "Warning Aperti";
+    public string IdLabel { get; set; } = "ID";
+    public string RepartoLabel { get; set; } = "Reparto";
+    public string PostazioneLabel { get; set; } = "Postazione";
+    public string UserLabel { get; set; } = "Utente";
+    public string DataChiamataLabel { get; set; } = "Data Chiamata";
+    public string ActionsLabel { get; set; } = "Azioni";
+    public string SolveTooltip { get; set; } = "Risolvi problema";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoWarningsMessage { get; set; } = "Nessun warning aperto";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare gli warning aperti";
+    public string LastUpdateLabel { get; set; } = "";
+    public string ErrorMessage { get; set; } = "";
+
+    public List<Warning> Warnings { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    private System.Timers.Timer _timer;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadWarnings();
+        
+        _timer = new System.Timers.Timer(10000); // 10 seconds
+        _timer.Elapsed += async (sender, e) => await InvokeAsync(LoadWarnings);
+        _timer.AutoReset = true;
+        _timer.Start();
+    }
+
+    private void LoadResources()
+    {
+        Title = "Warning Aperti";
+        IdLabel = "ID";
+        RepartoLabel = "Reparto";
+        PostazioneLabel = "Postazione";
+        UserLabel = "Utente";
+        DataChiamataLabel = "Data Chiamata";
+        ActionsLabel = "Azioni";
+        SolveTooltip = "Risolvi problema";
+        LoadingMessage = "Caricamento...";
+        NoWarningsMessage = "Nessun warning aperto";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare gli warning aperti";
+    }
+
+    private async Task LoadWarnings()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission)
+        {
+            Warnings = new List<Warning>();
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            var elenco = new WarningAperti(Tenant);
+            Warnings = elenco.Elenco;
+            LastUpdateLabel = $"Last update: {DateTime.Now:yyyy/MM/dd HH:mm:ss}";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading open warnings");
+            ErrorMessage = "Errore durante il caricamento degli warning";
+            Warnings = new List<Warning>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
+    }
+}

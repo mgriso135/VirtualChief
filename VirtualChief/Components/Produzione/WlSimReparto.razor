@@ -1,0 +1,615 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using System.Text.Json
+@inject ILogger<WlSimReparto> Logger
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Reparto == null)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            <h4>@Title</h4>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">@InizioLabel</label>
+                    <input type="date" class="form-control" @bind="Inizio" @bind:event="onchange" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@FineLabel</label>
+                    <input type="date" class="form-control" @bind="Fine" @bind:event="onchange" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">@ViewModeLabel</label>
+                    <select class="form-select" @bind="ViewMode" @bind:event="onchange">
+                        <option value="0">@AllPostazioniLabel</option>
+                        <option value="1">@SelectPostazioniLabel</option>
+                    </select>
+                </div>
+            </div>
+
+            @if (ViewMode == "1" && Postazioni != null)
+            {
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label class="form-label">@PostazioniLabel</label>
+                        <div class="row">
+                            @foreach (var pst in Postazioni)
+                            {
+                                <div class="col-md-3 mb-2">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                               checked="@GetPostazioneSelected(pst.id)" 
+                                               @onchange="@(() => OnPostazioneChanged(pst.id))" />
+                                        <label class="form-check-label">@pst.name</label>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <h5>@AvailableProductsLabel</h5>
+            @if (IsLoadingProducts)
+            {
+                <div class="text-center py-2">
+                    <div class="spinner-border spinner-border-sm"></div>
+                </div>
+            }
+            else if (AvailableProducts != null && AvailableProducts.Count > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;">@SelectLabel</th>
+                                <th>@ProductLabel</th>
+                                <th>@ClienteLabel</th>
+                                <th>@ProcessLabel</th>
+                                <th>@QtyLabel</th>
+                                <th>@EndDateLabel</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var prod in AvailableProducts)
+                            {
+                                var isSelected = SelectedProducts.Contains(prod);
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" checked="@isSelected" 
+                                               @onchange="@((e) => OnProductSelectionChanged(prod, (bool)e.Value))" />
+                                    </td>
+                                    <td>@prod.ID/@prod.Year</td>
+                                    <td>@prod.Cliente</td>
+                                    <td>@prod.Proc?.process?.processName - @prod.Proc?.variant?.nomeVariante</td>
+                                    <td>@prod.Quantita</td>
+                                    <td>
+                                        <input type="date" class="form-control form-control-sm" 
+                                               value="@prod.DataPrevistaFineProduzione.ToString("yyyy-MM-dd")"
+                                               @onchange="@((e) => OnProductDateChanged(prod, e.Value?.ToString()))" />
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-info">@NoAvailableProductsMessage</div>
+            }
+
+            <hr />
+
+            @if (IsLoadingChart)
+            {
+                <div class="text-center py-4">
+                    <div class="spinner-border"></div>
+                    <p>@LoadingChartMessage</p>
+                </div>
+            }
+            else if (HasData)
+            {
+                <div class="text-muted mb-2">@TotalWorkloadLabel</div>
+                <canvas id="workloadSimChart" height="400"></canvas>
+            }
+            else
+            {
+                <div class="alert alert-info">@NoDataMessage</div>
+            }
+
+            @if (!string.IsNullOrEmpty(InfoMessage))
+            {
+                <div class="alert alert-info mt-3">@InfoMessage</div>
+            }
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@ErrorMessage</div>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int RepId { get; set; }
+
+    public string Title { get; set; } = "Simulazione Carico di Lavoro Reparto";
+    public string InizioLabel { get; set; } = "Dal";
+    public string FineLabel { get; set; } = "Al";
+    public string ViewModeLabel { get; set; } = "Modalità";
+    public string AllPostazioniLabel { get; set; } = "Tutte le postazioni";
+    public string SelectPostazioniLabel { get; set; } = "Seleziona postazioni";
+    public string PostazioniLabel { get; set; } = "Postazioni";
+    public string AvailableProductsLabel { get; set; } = "Prodotti da Programmare";
+    public string SelectLabel { get; set; } = "Sel.";
+    public string ProductLabel { get; set; } = "Prodotto";
+    public string ClienteLabel { get; set; } = "Cliente";
+    public string ProcessLabel { get; set; } = "Processo";
+    public string QtyLabel { get; set; } = "Qtà";
+    public string EndDateLabel { get; set; } = "Data Fine Prevista";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string LoadingProductsMessage { get; set; } = "Caricamento prodotti...";
+    public string LoadingChartMessage { get; set; } = "Caricamento simulazione...";
+    public string NoAvailableProductsMessage { get; set; } = "Nessun prodotto da programmare per questo reparto";
+    public string NoDataMessage { get; set; } = "Nessun dato per il periodo selezionato";
+    public string TotalWorkloadLabel { get; set; } = "";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare la simulazione carico di lavoro";
+    public string ErrorMessage { get; set; } = "";
+    public string InfoMessage { get; set; } = "";
+
+    public Reparto Reparto { get; set; }
+    public List<Postazione> Postazioni { get; set; } = new();
+    public List<Articolo> AvailableProducts { get; set; } = new();
+    public List<Articolo> SelectedProducts { get; set; } = new();
+    
+    private DateTime _inizio = DateTime.Today;
+    private DateTime _fine = DateTime.Today.AddDays(7);
+    
+    public DateTime Inizio
+    {
+        get => _inizio;
+        set
+        {
+            if (_inizio != value)
+            {
+                _inizio = value;
+                _ = OnDateChanged();
+            }
+        }
+    }
+    
+    public DateTime Fine
+    {
+        get => _fine;
+        set
+        {
+            if (_fine != value)
+            {
+                _fine = value;
+                _ = OnDateChanged();
+            }
+        }
+    }
+    private string _viewMode = "0";
+    public string ViewMode
+    {
+        get => _viewMode;
+        set
+        {
+            if (_viewMode != value)
+            {
+                _viewMode = value;
+                _ = OnViewModeChanged();
+            }
+        }
+    }
+    
+    public List<int> SelectedPostazioniIds { get; set; } = new();
+    public bool IsLoadingProducts { get; set; } = false;
+    public bool IsLoadingChart { get; set; } = false;
+    public bool HasData { get; set; } = false;
+    public TimeSpan TotalWorkload { get; set; }
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (RepId != 0)
+        {
+            LoadReparto();
+            LoadAvailableProducts();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (RepId != 0)
+        {
+            LoadReparto();
+            LoadAvailableProducts();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Simulazione Carico di Lavoro Reparto";
+        InizioLabel = "Dal";
+        FineLabel = "Al";
+        ViewModeLabel = "Modalità";
+        AllPostazioniLabel = "Tutte le postazioni";
+        SelectPostazioniLabel = "Seleziona postazioni";
+        PostazioniLabel = "Postazioni";
+        AvailableProductsLabel = "Prodotti da Programmare";
+        SelectLabel = "Sel.";
+        ProductLabel = "Prodotto";
+        ClienteLabel = "Cliente";
+        ProcessLabel = "Processo";
+        QtyLabel = "Qtà";
+        EndDateLabel = "Data Fine Prevista";
+        LoadingMessage = "Caricamento...";
+        LoadingProductsMessage = "Caricamento prodotti...";
+        LoadingChartMessage = "Caricamento simulazione...";
+        NoAvailableProductsMessage = "Nessun prodotto da programmare per questo reparto";
+        NoDataMessage = "Nessun dato per il periodo selezionato";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare la simulazione carico di lavoro";
+    }
+
+    private void LoadReparto()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || RepId == 0)
+        {
+            Reparto = null;
+            return;
+        }
+
+        try
+        {
+            Reparto = new Reparto(Tenant, RepId);
+            if (Reparto.id != -1)
+            {
+                Reparto.loadPostazioni();
+                Postazioni = Reparto.Postazioni;
+                SelectedPostazioniIds = Postazioni.Select(p => p.id).ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading reparto {RepId}", RepId);
+            Reparto = null;
+            ErrorMessage = "Errore durante il caricamento del reparto";
+        }
+    }
+
+    private void LoadAvailableProducts()
+    {
+        if (Reparto == null) return;
+
+        IsLoadingProducts = true;
+        try
+        {
+            var elencoStatoN = new List<Articolo>();
+            var elComm = new ElencoCommesse(Tenant);
+            elComm.loadCommesse();
+            
+            for (int i = 0; i < elComm.Commesse.Count; i++)
+            {
+                elComm.Commesse[i].loadArticoli();
+                for (int j = 0; j < elComm.Commesse[i].Articoli.Count; j++)
+                {
+                    bool found = false;
+                    if (elComm.Commesse[i].Articoli[j].Reparto == Reparto.id)
+                    {
+                        found = true;
+                    }
+                    else
+                    {
+                        elComm.Commesse[i].Articoli[j].Proc.loadReparto();
+                        for (int q = 0; q < elComm.Commesse[i].Articoli[j].Proc.RepartiProduttivi.Count; q++)
+                        {
+                            if (elComm.Commesse[i].Articoli[j].Proc.RepartiProduttivi[q].id == Reparto.id)
+                            {
+                                found = true;
+                            }
+                        }
+                    }
+
+                    if (elComm.Commesse[i].Articoli[j].Status == 'N' && found)
+                    {
+                        elencoStatoN.Add(elComm.Commesse[i].Articoli[j]);
+                    }
+                }
+            }
+            
+            elencoStatoN.Sort((p1, p2) => p1.DataPrevistaConsegna.CompareTo(p2.DataPrevistaConsegna));
+            AvailableProducts = elencoStatoN;
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading available products for reparto {RepId}", RepId);
+            AvailableProducts = new List<Articolo>();
+        }
+        finally
+        {
+            IsLoadingProducts = false;
+        }
+    }
+
+    private async Task OnDateChanged()
+    {
+        if (Inizio < Fine)
+        {
+            await LoadChart();
+        }
+    }
+
+    private async Task OnViewModeChanged()
+    {
+        if (ViewMode == "0")
+        {
+            SelectedPostazioniIds = Postazioni.Select(p => p.id).ToList();
+        }
+        await LoadChart();
+    }
+
+    private async Task OnPostazioneChanged(int postazioneId)
+    {
+        var isSelected = SelectedPostazioniIds.Contains(postazioneId);
+        if (isSelected)
+        {
+            SelectedPostazioniIds.Remove(postazioneId);
+        }
+        else
+        {
+            SelectedPostazioniIds.Add(postazioneId);
+        }
+        await LoadChart();
+    }
+
+    private bool GetPostazioneSelected(int postazioneId)
+    {
+        return SelectedPostazioniIds.Contains(postazioneId);
+    }
+
+    private void OnProductSelectionChanged(Articolo prod, bool isSelected)
+    {
+        if (isSelected)
+        {
+            if (!SelectedProducts.Contains(prod))
+            {
+                prod.Reparto = Reparto.id;
+                SelectedProducts.Add(prod);
+            }
+        }
+        else
+        {
+            SelectedProducts.Remove(prod);
+            prod.Reparto = -1;
+        }
+        _ = LoadChart();
+    }
+
+    private void OnProductDateChanged(Articolo prod, string dateStr)
+    {
+        if (DateTime.TryParse(dateStr, out var newDate))
+        {
+            if (newDate >= DateTime.Now && newDate <= prod.DataPrevistaConsegna)
+            {
+                prod.DataPrevistaFineProduzione = newDate;
+                ErrorMessage = "";
+            }
+            else
+            {
+                ErrorMessage = "Data non valida: deve essere futura e non successiva alla data di consegna";
+            }
+        }
+        _ = LoadChart();
+    }
+
+    private async Task LoadChart()
+    {
+        if (Reparto == null || Inizio >= Fine || SelectedPostazioniIds.Count == 0)
+        {
+            HasData = false;
+            return;
+        }
+
+        IsLoadingChart = true;
+        HasData = false;
+        ErrorMessage = "";
+        TotalWorkload = TimeSpan.Zero;
+
+        try
+        {
+            // Load current workload
+            var carichi = new List<CaricoDiLavoroDto>();
+            TimeSpan somma = TimeSpan.Zero;
+
+            foreach (var pst in Postazioni.Where(p => SelectedPostazioniIds.Contains(p.id)))
+            {
+                var carico = pst.getCaricoDiLavoroProgrammato(Reparto.id, Inizio, Fine.AddDays(1));
+                somma += carico;
+                
+                carichi.Add(new CaricoDiLavoroDto 
+                { 
+                    PostazioneId = pst.id,
+                    PostazioneName = pst.name,
+                    Carico = carico,
+                    CaricoOre = carico.TotalHours,
+                    ArticoloId = -1,
+                    ArticoloAnno = -1,
+                    DaProgrammare = false,
+                    Colore = "#FFFF00" // Yellow for existing
+                });
+            }
+
+            // Add selected products simulation
+            foreach (var prod in SelectedProducts)
+            {
+                if (prod.Proc != null && prod.Proc.process != null && prod.Proc.variant != null)
+                {
+                    var tskLst = new List<TaskConfigurato>();
+                    var prcVar = prod.Proc;
+                    prcVar.process.loadFigli(prod.Proc.variant);
+                    bool check = true;
+                    
+                    for (int j = 0; j < prcVar.process.subProcessi.Count; j++)
+                    {
+                        var tskVar = new TaskVariante(Tenant, prcVar.process.subProcessi[j], prcVar.variant);
+                        var tc = tskVar.getDefaultTempo();
+                        
+                        if (tc != null)
+                        {
+                            tskLst.Add(new TaskConfigurato(Tenant, tskVar, tc, prod.Reparto, prod.Quantita));
+                        }
+                        else
+                        {
+                            check = false;
+                        }
+                    }
+                    
+                    if (check)
+                    {
+                        var cfgPrc = new ConfigurazioneProcesso(Tenant, prod, tskLst, 
+                            new Reparto(Tenant, prod.Reparto), prod.Quantita);
+                        int retSim = cfgPrc.SimulaIntroduzioneInProduzione();
+                        
+                        if (retSim == 1)
+                        {
+                            foreach (var taskConfig in cfgPrc.Processi)
+                            {
+                                TimeSpan cdl = TimeSpan.Zero;
+                                // Simplified: just use the task time
+                                cdl = taskConfig.Tempo?.Tempo ?? TimeSpan.Zero;
+                                
+                                var found = SelectedPostazioniIds.Contains(taskConfig.PostazioneDiLavoro.id);
+                                if (found || ViewMode == "0")
+                                {
+                                    somma += cdl;
+                                    
+                                    var color = $"hsl({(prod.ID * prod.Year) % 360}, 70%, 50%)";
+                                    carichi.Add(new CaricoDiLavoroDto 
+                                    { 
+                                        PostazioneId = taskConfig.PostazioneDiLavoro.id,
+                                        PostazioneName = taskConfig.PostazioneDiLavoro.name,
+                                        Carico = cdl,
+                                        CaricoOre = cdl.TotalHours,
+                                        ArticoloId = prod.ID,
+                                        ArticoloAnno = prod.Year,
+                                        DaProgrammare = true,
+                                        Colore = color
+                                    });
+                                }
+                            }
+                        }
+                        else
+                        {
+                            InfoMessage = $"Errore simulazione per articolo {prod.ID}/{prod.Year}: tempo ciclo mancante";
+                        }
+                    }
+                }
+            }
+
+            TotalWorkload = somma;
+            TotalWorkloadLabel = $"Carico complessivo {Reparto.name} nel periodo {Inizio:dd/MM/yyyy} - {Fine:dd/MM/yyyy}: <b>{TotalWorkload.TotalHours:F2} ore</b>";
+
+            // Prepare chart data
+            var chartData = new List<ChartSeries>();
+            
+            if (ViewMode == "0")
+            {
+                // Stacked by article
+                var grouped = carichi.GroupBy(c => c.ArticoloId)
+                    .Select(g => new ChartSeries 
+                    { 
+                        Label = g.Key == -1 ? "Carico Fissato" : $"Art. {g.First().ArticoloId}/{g.First().ArticoloAnno}",
+                        Data = new List<double> { g.Sum(x => x.CaricoOre) },
+                        BackgroundColor = g.First().Colore,
+                        BorderColor = g.Key == -1 ? "#CCCCCC" : "transparent"
+                    }).ToList();
+                
+                chartData = grouped;
+            }
+            else
+            {
+                // By postazione
+                var postazioniGroups = carichi.GroupBy(c => c.PostazioneId);
+                var allArticles = carichi.Where(c => c.ArticoloId != -1).Select(c => c.ArticoloId).Distinct().ToList();
+                allArticles.Add(-1); // Existing workload
+                
+                foreach (var artId in allArticles)
+                {
+                    var series = new ChartSeries 
+                    { 
+                        Label = artId == -1 ? "Carico Fissato" : $"Art. {artId}",
+                        Data = new List<double>(),
+                        BackgroundColor = carichi.FirstOrDefault(c => c.ArticoloId == artId)?.Colore ?? "#CCCCCC"
+                    };
+                    
+                    foreach (var pstGroup in postazioniGroups.OrderBy(g => g.Key))
+                    {
+                        var value = pstGroup.Where(c => c.ArticoloId == artId).Sum(c => c.CaricoOre);
+                        series.Data.Add(value);
+                    }
+                    
+                    chartData.Add(series);
+                }
+            }
+
+            HasData = chartData.Count > 0 && chartData.Any(s => s.Data.Any(d => d > 0));
+            
+            if (HasData)
+            {
+                await JSRuntime.InvokeVoidAsync("renderWorkloadSimChart", "workloadSimChart", chartData, ViewMode == "1");
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading simulation chart for reparto {RepId}", RepId);
+            ErrorMessage = "Errore durante il caricamento della simulazione";
+            HasData = false;
+        }
+        finally
+        {
+            IsLoadingChart = false;
+        }
+    }
+
+    private class CaricoDiLavoroDto
+    {
+        public int PostazioneId { get; set; }
+        public string PostazioneName { get; set; }
+        public TimeSpan Carico { get; set; }
+        public double CaricoOre { get; set; }
+        public int ArticoloId { get; set; }
+        public int ArticoloAnno { get; set; }
+        public bool DaProgrammare { get; set; }
+        public string Colore { get; set; }
+    }
+
+    private class ChartSeries
+    {
+        public string Label { get; set; }
+        public List<double> Data { get; set; } = new();
+        public string BackgroundColor { get; set; }
+        public string BorderColor { get; set; } = "transparent";
+    }
+}

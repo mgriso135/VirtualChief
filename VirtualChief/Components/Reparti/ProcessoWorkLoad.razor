@@ -1,0 +1,174 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<ProcessoWorkLoad> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (ProcessoVariante == null)
+{
+    <div class="alert alert-danger">@ErrorNotFoundMessage</div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>@Title</h3>
+        <small class="text-muted">@LastUpdateLabel: @DateTime.Now.ToString("HH:mm:ss")</small>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+    else if (WorkloadData.Count == 0)
+    {
+        <div class="alert alert-info">@NoDataMessage</div>
+    }
+    else
+    {
+        @foreach (var warning in OverloadWarnings)
+        {
+            <div class="alert alert-danger">@warning</div>
+        }
+
+        <div class="card">
+            <div class="card-body">
+                <canvas id="workloadChart" height="300"></canvas>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int ProcessId { get; set; }
+
+    [Parameter]
+    public int VariantId { get; set; }
+
+    [Parameter]
+    public int RepartoId { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string Title { get; set; } = "Carico di lavoro per postazione";
+    public string LastUpdateLabel { get; set; } = "Ultimo aggiornamento";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare il carico di lavoro della postazione";
+    public string ErrorNotFoundMessage { get; set; } = "Processo, variante o reparto non trovati";
+    public string NoDataMessage { get; set; } = "Nessun dato di carico di lavoro disponibile";
+    public string CycleTimeLabel { get; set; } = "Tempo ciclo";
+    public string HoursLabel { get; set; } = "ore";
+    public string OverloadWarning1 { get; set; } = "Attenzione: per il prodotto";
+    public string OverloadWarning2 { get; set; } = "il carico di lavoro della postazione";
+    public string OverloadWarning3 { get; set; } = "è superiore al takt-time.";
+
+    public ProcessoVariante ProcessoVariante { get; set; }
+    public Reparto Reparto { get; set; }
+    public List<WorkloadItem> WorkloadData { get; set; } = new();
+    public List<string> OverloadWarnings { get; set; } = new();
+    public string ErrorMessage { get; set; } = "";
+
+    public class WorkloadItem
+    {
+        public string PostazioneName { get; set; } = "";
+        public double WorkloadHours { get; set; }
+        public double? CadenzaHours { get; set; }
+        public bool IsOverload { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadData();
+    }
+
+    private void LoadResources()
+    {
+        Title = "Carico di lavoro per postazione";
+        LastUpdateLabel = "Ultimo aggiornamento";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare il carico di lavoro della postazione";
+        ErrorNotFoundMessage = "Processo, variante o reparto non trovati";
+        NoDataMessage = "Nessun dato di carico di lavoro disponibile";
+        CycleTimeLabel = "Tempo ciclo";
+        HoursLabel = "ore";
+        OverloadWarning1 = "Attenzione: per il prodotto";
+        OverloadWarning2 = "il carico di lavoro della postazione";
+        OverloadWarning3 = "è superiore al takt-time.";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || ProcessId <= 0 || VariantId <= 0 || RepartoId <= 0)
+        {
+            ErrorMessage = "Parametri non validi";
+            return;
+        }
+
+        try
+        {
+            var rep = new Reparto(Tenant, RepartoId);
+            var curr = new processo(Tenant, ProcessId);
+            var vr1 = new variante(Tenant, VariantId);
+            var prc = new ProcessoVariante(Tenant, curr, vr1);
+            
+            prc.loadReparto();
+            prc.process.loadFigli(prc.variant);
+            bool rt = rep.loadPostazioniTask(prc);
+
+            if (rep != null && rep.id != -1 && rep.PostazioniTask != null && rep.PostazioniTask.Count > 0)
+            {
+                Reparto = rep;
+                ProcessoVariante = prc;
+
+                var posts = new List<int>();
+                foreach (var pt in rep.PostazioniTask)
+                {
+                    if (!posts.Contains(pt.Pst.id))
+                    {
+                        posts.Add(pt.Pst.id);
+                    }
+                }
+
+                foreach (var postId in posts)
+                {
+                    var pst = new Postazione(Tenant, postId);
+                    if (pst.id != -1)
+                    {
+                        var carico = pst.calculateWorkLoad(prc);
+                        double? cadenzaHours = null;
+                        bool isOverload = false;
+
+                        if (rep.Cadenza != null && rep.Cadenza.TotalSeconds > 0)
+                        {
+                            cadenzaHours = rep.Cadenza.TotalHours;
+                            if (carico > rep.Cadenza)
+                            {
+                                isOverload = true;
+                                OverloadWarnings.Add($"{OverloadWarning1} {prc.process.processName} - {prc.variant.nomeVariante} {OverloadWarning2} {pst.name} {OverloadWarning3}");
+                            }
+                        }
+
+                        WorkloadData.Add(new WorkloadItem
+                        {
+                            PostazioneName = pst.name,
+                            WorkloadHours = Math.Round(carico.TotalHours, 2),
+                            CadenzaHours = cadenzaHours.HasValue ? Math.Round(cadenzaHours.Value, 2) : null,
+                            IsOverload = isOverload
+                        });
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "ProcessoWorkLoad: errore caricamento dati");
+            ErrorMessage = "Errore durante il caricamento dei dati";
+        }
+    }
+}

@@ -1,0 +1,434 @@
+@using KIS.App_Code
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@using Dapper
+@using MySql.Data.MySqlClient
+@inject ILogger<AddFestivita> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Turno == null)
+{
+    <div class="alert alert-danger">@TurnoNotFoundMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label">@InizioFestLabel</label>
+                    <input type="date" class="form-control" @bind="InizioDate" @bind:event="onchange" />
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label class="form-label">@OraLabel</label>
+                            <select class="form-select" @bind="InizioOra">
+                                @for (int i = 0; i < 24; i++)
+                                {
+                                    <option value="@i">@i.ToString("D2")</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">@MinutoLabel</label>
+                            <select class="form-select" @bind="InizioMinuto">
+                                @for (int i = 0; i < 60; i++)
+                                {
+                                    <option value="@i">@i.ToString("D2")</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">@FineFestLabel</label>
+                    <input type="date" class="form-control" @bind="FineDate" @bind:event="onchange" />
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <label class="form-label">@OraLabel</label>
+                            <select class="form-select" @bind="FineOra">
+                                @for (int i = 0; i < 24; i++)
+                                {
+                                    <option value="@i">@i.ToString("D2")</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">@MinutoLabel</label>
+                            <select class="form-select" @bind="FineMinuto">
+                                @for (int i = 0; i < 60; i++)
+                                {
+                                    <option value="@i">@i.ToString("D2")</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-success" @onclick="CheckAndSave" disabled="@IsSaving">
+                    @if (IsSaving) { <span class="spinner-border spinner-border-sm"></span> }
+                    <img src="/img/iconSave.jpg" height="40" /> @SaveLabel
+                </button>
+                <button class="btn btn-secondary" @onclick="Reset" disabled="@IsSaving">
+                    <img src="/img/iconUndo.png" height="40" /> @ResetLabel
+                </button>
+            </div>
+
+            @if (ShowWarning)
+            {
+                <div class="alert alert-warning">
+                    <h5>@WarningTitle</h5>
+                    @WarningMessage
+                    <div class="mt-2">
+                        <button class="btn btn-primary me-2" @onclick="ConfirmSave" disabled="@IsSaving">
+                            <img src="/img/iconComplete.png" height="30" /> @ConfirmSaveLabel
+                        </button>
+                        <button class="btn btn-secondary" @onclick="CancelSave">
+                            <img src="/img/iconUndo.png" height="30" /> @CancelSaveLabel
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success mt-3">@SuccessMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int TurnoId { get; set; }
+
+    public string Title { get; set; } = "Aggiungi Festività";
+    public string InizioFestLabel { get; set; } = "Inizio";
+    public string FineFestLabel { get; set; } = "Fine";
+    public string OraLabel { get; set; } = "Ora";
+    public string MinutoLabel { get; set; } = "Minuto";
+    public string SaveLabel { get; set; } = "Verifica e Salva";
+    public string ResetLabel { get; set; } = "Annulla";
+    public string ConfirmSaveLabel { get; set; } = "Conferma Salvataggio";
+    public string CancelSaveLabel { get; set; } = "Annulla";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di aggiungere festività";
+    public string TurnoNotFoundMessage { get; set; } = "Turno non trovato";
+    public string ErrorInputMessage { get; set; } = "Data/ora non valida: l'inizio deve essere prima della fine e nel futuro";
+    public string ErrorOrarioMessage { get; set; } = "Errore nell'orario: sovrapposizione con altra festività";
+    public string WarningTitle { get; set; } = "Attenzione: Task pianificati nel periodo";
+    public string WarningMessage { get; set; } = "";
+    public string WarningTasksPlanned { get; set; } = "Ci sono task pianificati nel periodo selezionato:";
+    public string WarningTasksPlanned2 { get; set; } = "Cliente";
+    public string WarningTasksPlanned3 { get; set; } = "Consegna prevista";
+    public string WarningTasksPlanned4 { get; set; } = "Vuoi comunque salvare la festività?";
+    public string SaveSuccessMessage { get; set; } = "Festività aggiunta con successo";
+    public string SaveErrorMessage { get; set; } = "Errore durante il salvataggio";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public Turno Turno { get; set; }
+    public Reparto Reparto { get; set; }
+
+    public DateTime InizioDate { get; set; } = DateTime.Today.AddDays(1);
+    public DateTime FineDate { get; set; } = DateTime.Today.AddDays(1);
+    public int InizioOra { get; set; } = 0;
+    public int InizioMinuto { get; set; } = 0;
+    public int FineOra { get; set; } = 0;
+    public int FineMinuto { get; set; } = 0;
+
+    public bool IsSaving { get; set; } = false;
+    public bool ShowWarning { get; set; } = false;
+    public List<Articolo> WarningProducts { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (TurnoId != 0)
+        {
+            LoadTurno();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (TurnoId != 0)
+        {
+            LoadTurno();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Aggiungi Festività";
+        InizioFestLabel = "Inizio";
+        FineFestLabel = "Fine";
+        OraLabel = "Ora";
+        MinutoLabel = "Minuto";
+        SaveLabel = "Verifica e Salva";
+        ResetLabel = "Annulla";
+        ConfirmSaveLabel = "Conferma Salvataggio";
+        CancelSaveLabel = "Annulla";
+        PermissionDeniedMessage = "Non hai il permesso di aggiungere festività";
+        TurnoNotFoundMessage = "Turno non trovato";
+        ErrorInputMessage = "Data/ora non valida: l'inizio deve essere prima della fine e nel futuro";
+        ErrorOrarioMessage = "Errore nell'orario: sovrapposizione con altra festività";
+        WarningTitle = "Attenzione: Task pianificati nel periodo";
+        WarningTasksPlanned = "Ci sono task pianificati nel periodo selezionato:";
+        WarningTasksPlanned2 = "Cliente";
+        WarningTasksPlanned3 = "Consegna prevista";
+        WarningTasksPlanned4 = "Vuoi comunque salvare la festività?";
+        SaveSuccessMessage = "Festività aggiunta con successo";
+        SaveErrorMessage = "Errore durante il salvataggio";
+    }
+
+    private void LoadTurno()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || TurnoId == 0)
+        {
+            Turno = null;
+            return;
+        }
+
+        try
+        {
+            Turno = new Turno(Tenant, TurnoId);
+            if (Turno.id != -1)
+            {
+                Reparto = new Reparto(Tenant, Turno.idReparto);
+            }
+            else
+            {
+                Turno = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading turno {TurnoId}", TurnoId);
+            Turno = null;
+        }
+    }
+
+    private void CheckAndSave()
+    {
+        ShowWarning = false;
+        WarningProducts.Clear();
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        var inizio = new DateTime(InizioDate.Year, InizioDate.Month, InizioDate.Day, InizioOra, InizioMinuto, 0);
+        var fine = new DateTime(FineDate.Year, FineDate.Month, FineDate.Day, FineOra, FineMinuto, 0);
+
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, Reparto?.tzFusoOrario ?? TimeZoneInfo.Utc);
+        
+        if (inizio >= fine || inizio <= now)
+        {
+            ErrorMessage = ErrorInputMessage;
+            return;
+        }
+
+        // Check for tasks in the period
+        var lstTasks = new List<TaskProduzione>();
+        
+        try
+        {
+            var elTasksI = new ElencoTaskProduzione(Tenant, inizio, fine, 'I');
+            var elTasksN = new ElencoTaskProduzione(Tenant, inizio, fine, 'N');
+            var elTasksP = new ElencoTaskProduzione(Tenant, inizio, fine, 'P');
+
+            lstTasks.AddRange(elTasksI.Tasks);
+            lstTasks.AddRange(elTasksN.Tasks);
+            lstTasks.AddRange(elTasksP.Tasks);
+
+            if (lstTasks.Count > 0)
+            {
+                var prodotti = lstTasks
+                    .GroupBy(t => new { t.ArticoloID, t.ArticoloAnno })
+                    .Select(g => new { g.Key.ArticoloID, g.Key.ArticoloAnno })
+                    .ToList();
+
+                foreach (var p in prodotti)
+                {
+                    var art = new Articolo(Tenant, p.ArticoloID, p.ArticoloAnno);
+                    if (art.ID != -1)
+                    {
+                        WarningProducts.Add(art);
+                    }
+                }
+
+                if (WarningProducts.Count > 0)
+                {
+                    ShowWarning = true;
+                    BuildWarningMessage();
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error checking tasks for festivita");
+        }
+
+        // No tasks or user confirmed - proceed to save
+        SaveFestivita(inizio, fine);
+    }
+
+    private void BuildWarningMessage()
+    {
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine(WarningTasksPlanned);
+        sb.AppendLine("<br />");
+        
+        foreach (var art in WarningProducts)
+        {
+            sb.Append($"{art.ID}/{art.Year} - {WarningTasksPlanned2}: {art.RagioneSocialeCliente} - {WarningTasksPlanned3}: {art.DataPrevistaConsegna:dd/MM/yyyy}<br />");
+        }
+        
+        sb.AppendLine("<br />");
+        sb.AppendLine(WarningTasksPlanned4);
+        WarningMessage = sb.ToString();
+    }
+
+    private void ConfirmSave()
+    {
+        var inizio = new DateTime(InizioDate.Year, InizioDate.Month, InizioDate.Day, InizioOra, InizioMinuto, 0);
+        var fine = new DateTime(FineDate.Year, FineDate.Month, FineDate.Day, FineOra, FineMinuto, 0);
+        
+        ShowWarning = false;
+        SaveFestivita(inizio, fine);
+    }
+
+    private void CancelSave()
+    {
+        ShowWarning = false;
+    }
+
+private void SaveFestivita(DateTime inizio, DateTime fine)
+        {
+            IsSaving = true;
+            ErrorMessage = "";
+            SuccessMessage = "";
+
+            try
+            {
+                if (Turno == null || Reparto == null)
+                {
+                    ErrorMessage = "Turno o reparto non valido";
+                    return;
+                }
+
+                // Convert to UTC using reparto timezone
+                var rp = new Reparto(Tenant, Reparto.id);
+                var i = TimeZoneInfo.ConvertTimeToUtc(inizio, rp.tzFusoOrario);
+                var f = TimeZoneInfo.ConvertTimeToUtc(fine, rp.tzFusoOrario);
+
+                if (i >= f)
+                {
+                    ErrorMessage = ErrorInputMessage;
+                    return;
+                }
+
+                // Check for overlaps with existing festivita/straordinari for this turno
+                using (var conn = (new Dati.Dati()).mycon(Tenant))
+                {
+                    conn.Open();
+
+                    // Check overlap with existing festivita/straordinari
+                    var overlap = conn.Query<int>(@"
+                        SELECT sfi.id 
+                        FROM straordinarifestivita sfi
+                        INNER JOIN turniproduzione tp ON tp.id = sfi.turno
+                        WHERE tp.reparto = @idReparto 
+                        AND sfi.turno = @idTurno
+                        AND ((sfi.datainizio < @i AND @i < sfi.datafine)
+                            OR (sfi.datainizio < @f AND @f < sfi.datafine)
+                            OR (@i < sfi.datainizio AND sfi.datafine < @f))", 
+                        new { idReparto = Reparto.id, idTurno = Turno.id, i = i.ToString("yyyy-MM-dd HH:mm:ss"), f = f.ToString("yyyy-MM-dd HH:mm:ss") });
+
+                    if (overlap.Any())
+                    {
+                        ErrorMessage = ErrorOrarioMessage;
+                        return;
+                    }
+
+                    // Check overlap with turni calendar
+                    var crp = new CalendarioReparto(Tenant, Reparto.id, i.AddDays(-3), f.AddDays(3));
+                    bool check2 = false;
+                    foreach (var turnoCal in crp.Turni)
+                    {
+                        var inizioTurno = TimeZoneInfo.ConvertTimeToUtc(turnoCal.Inizio, rp.tzFusoOrario);
+                        var fineTurno = TimeZoneInfo.ConvertTimeToUtc(turnoCal.Fine, rp.tzFusoOrario);
+                        if (inizioTurno <= i && i <= fineTurno && inizioTurno <= f && f <= fineTurno)
+                        {
+                            check2 = true;
+                            break;
+                        }
+                    }
+
+                    if (!check2)
+                    {
+                        ErrorMessage = ErrorOrarioMessage;
+                        return;
+                    }
+
+                    // Insert the festivita
+                    var maxId = conn.ExecuteScalar<int?>("SELECT MAX(id) FROM straordinarifestivita");
+                    int newId = (maxId ?? 0) + 1;
+
+                    int ret = conn.Execute(@"
+                        INSERT INTO straordinarifestivita (id, turno, datainizio, datafine, azione)
+                        VALUES (@id, @turno, @datainizio, @datafine, 'F')",
+                        new { id = newId, turno = Turno.id, datainizio = i.ToString("yyyy-MM-dd HH:mm:ss"), datafine = f.ToString("yyyy-MM-dd HH:mm:ss") });
+
+                    if (ret > 0)
+                    {
+                        SuccessMessage = SaveSuccessMessage;
+                        NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
+                    }
+                    else
+                    {
+                        ErrorMessage = ErrorOrarioMessage;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Error saving festivita for turno {TurnoId}", TurnoId);
+                ErrorMessage = SaveErrorMessage;
+            }
+            finally
+            {
+                IsSaving = false;
+            }
+        }
+
+    private void Reset()
+    {
+        InizioDate = DateTime.Today.AddDays(1);
+        FineDate = DateTime.Today.AddDays(1);
+        InizioOra = 0;
+        InizioMinuto = 0;
+        FineOra = 0;
+        FineMinuto = 0;
+        ShowWarning = false;
+        WarningProducts.Clear();
+        ErrorMessage = "";
+        SuccessMessage = "";
+    }
+}

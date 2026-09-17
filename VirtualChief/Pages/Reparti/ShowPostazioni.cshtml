@@ -1,0 +1,42 @@
+@page "{processId:int}/{variantId:int}"
+@model VirtualChief.Pages.Reparti.ShowPostazioniModel
+@{
+    ViewData["Title"] = "Assegnazione postazioni";
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/listReparti">Reparti</a> <span class="divider">/</span></li>
+        @if (Model.Dipartimento != null)
+        {
+            <li><a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento.id">@Model.Dipartimento.name</a> <span class="divider">/</span></li>
+        }
+        <li class="active">Postazioni processo: @Model.Processo?.processName</li>
+    </ul>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    else if (Model.Processo != null)
+    {
+        <h3>@Model.Processo.processName <small class="text-muted">(Variante: @Model.Variante?.nomeVariante)</small></h3>
+
+        <component type="typeof(VirtualChief.Components.Reparti.ShowPostazioni)"
+                   render-mode="Server"
+                   param-Tenant="@CurrentWorkspace.Of(User)"
+                   param-ProcessId="@Model.ProcessId"
+                   param-VariantId="@Model.VariantId"
+                   param-HasPermission="@Model.CanWrite" />
+    }
+    else
+    {
+        <div class="alert alert-warning">Processo non valido.</div>
+    }
+
+    @if (Model.Dipartimento != null)
+    {
+        <a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento.id" class="btn btn-secondary mt-3">&larr; Torna alla configurazione reparto</a>
+    }
+</div>

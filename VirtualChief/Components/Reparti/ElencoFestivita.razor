@@ -1,0 +1,194 @@
+@using KIS.App_Code
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ElencoFestivita> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Turno == null)
+{
+    <div class="alert alert-danger">@TurnoNotFoundMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (FestivitaList == null || FestivitaList.Count == 0)
+{
+    <div class="alert alert-info">@NoFestivitaMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>@InizioFestLabel</th>
+                <th>@FineFestLabel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fs in FestivitaList)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-link p-0" @onclick="@(() => DeleteFestivita(fs))" title="@DeleteTooltip">
+                            <img src="/img/iconCancel.jpg" height="30px" />
+                        </button>
+                    </td>
+                    <td>@fs.Inizio.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@fs.Fine.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end">
+        <a href="/Reparti/AddFestivita?id=@TurnoId" class="btn btn-primary">
+            <img src="/img/iconUserAdd.jpg" height="30" /> @AddFestivitaLabel
+        </a>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success mt-3">@SuccessMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int TurnoId { get; set; }
+
+    public string Title { get; set; } = "Elenco Festività";
+    public string InizioFestLabel { get; set; } = "Inizio";
+    public string FineFestLabel { get; set; } = "Fine";
+    public string DeleteTooltip { get; set; } = "Elimina festività";
+    public string AddFestivitaLabel { get; set; } = "Aggiungi festività";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoFestivitaMessage { get; set; } = "Nessuna festività configurata";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare le festività";
+    public string TurnoNotFoundMessage { get; set; } = "Turno non trovato";
+    public string DeleteErrorMessage { get; set; } = "Errore durante l'eliminazione";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public Turno Turno { get; set; }
+    public List<Festivita> FestivitaList { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (TurnoId != 0)
+        {
+            LoadData();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (TurnoId != 0)
+        {
+            LoadData();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Elenco Festività";
+        InizioFestLabel = "Inizio";
+        FineFestLabel = "Fine";
+        DeleteTooltip = "Elimina festività";
+        AddFestivitaLabel = "Aggiungi festività";
+        LoadingMessage = "Caricamento...";
+        NoFestivitaMessage = "Nessuna festività configurata";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare le festività";
+        TurnoNotFoundMessage = "Turno non trovato";
+        DeleteErrorMessage = "Errore durante l'eliminazione";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || TurnoId == 0)
+        {
+            Turno = null;
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            Turno = new Turno(Tenant, TurnoId);
+            if (Turno.id != -1)
+            {
+                Turno.loadFestivita();
+                FestivitaList = Turno.festivita ?? new List<Festivita>();
+            }
+            else
+            {
+                Turno = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading festivita for turno {TurnoId}", TurnoId);
+            Turno = null;
+            ErrorMessage = "Errore durante il caricamento";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task DeleteFestivita(Festivita fs)
+    {
+        if (Turno == null)
+        {
+            ErrorMessage = TurnoNotFoundMessage;
+            return;
+        }
+
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var festivita = new Festivita(Tenant, fs.idFestivita);
+            if (festivita.idFestivita != -1)
+            {
+                bool rt = festivita.delete();
+                if (rt)
+                {
+                    SuccessMessage = "Festività eliminata con successo";
+                    LoadData();
+                }
+                else
+                {
+                    ErrorMessage = festivita.log ?? DeleteErrorMessage;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error deleting festivita {IdFestivita}", fs.idFestivita);
+            ErrorMessage = DeleteErrorMessage;
+        }
+    }
+}

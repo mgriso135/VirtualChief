@@ -1,0 +1,121 @@
+@page "/Produzione/AvanzamentoProduzione"
+@model VirtualChief.Pages.Produzione.AvanzamentoProduzioneModel
+@{
+    ViewData["Title"] = "Avanzamento Produzione";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Produzione/produzione">@Model.NavProduzione</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavAndonCompleto</li>
+        </ol>
+    </nav>
+
+    <h3>@Model.NavAndonCompleto</h3>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <component type="typeof(Components.Produzione.ListWarningAperti)" 
+                       param-Tenant="@Model.Tenant"
+                       param-HasPermission="@Model.HasPermission"
+                       render-mode="ServerPrerendered" />
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-12">
+            <component type="typeof(Components.Produzione.ArticoliStatoI)" 
+                       param-Tenant="@Model.Tenant"
+                       param-HasPermission="@Model.HasPermission"
+                       render-mode="ServerPrerendered" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <h5>@Model.TitleArticoliDaAvviare</h5>
+            
+            @if (!Model.HasPermission)
+            {
+                <div class="alert alert-warning">@Model.PermissionDeniedMessage</div>
+            }
+            else if (Model.IsLoading)
+            {
+                <div class="alert alert-info">@Model.LoadingMessage</div>
+            }
+            else if (Model.ArticoliDaAvviare == null || Model.ArticoliDaAvviare.Count == 0)
+            {
+                <div class="alert alert-info">@Model.NoProductsMessage</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                            <tr style="font-size:18px; font-family:Calibri; text-align:center;">
+                                <th></th>
+                                @foreach (var field in Model.VisibleFields)
+                                {
+                                    <th>@field</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var art in Model.ArticoliDaAvviare)
+                            {
+                                var rowClass = Model.GetRowClass(art);
+                                <tr class="@rowClass" style="font-size:20px; font-family:Calibri; font-weight:bold; border-radius: 5px; background-color: #CFD8DC;">
+                                    <td>
+                                        <a href="@($"/Produzione/StatoAvanzamentoArticolo?id={art.ID}&anno={art.Year}")" target="_blank" title="@Model.ViewArticoloTooltip">
+                                            <img src="/img/iconView.png" style="min-width:20px; max-width:30px;" />
+                                        </a>
+                                    </td>
+                                    @foreach (var field in Model.VisibleFields)
+                                    {
+                                        <td>@Model.GetFieldValue(art, field)</td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-3">
+            <br /><br /><br /><br />
+            @* TODO: Migrate Postazioni.ListPostazioniOperatoriLoggati component *@
+            <div class="alert alert-info">Operatori loggati (da implementare)</div>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@Model.ErrorMessage</div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(window).on('load', function () {
+            var goSpeed = parseInt($("#txtScrollTypeContinuousGoSpeed").val());
+            var backSpeed = parseInt($("#txtScrollTypeContinuousBackSpeed").val());
+
+            function continuousScroll() {
+                $('html, body').animate({ scrollTop: $(document).height() - $(window).height() }, goSpeed, 'linear', function () {
+                }).promise().then(function () {
+                    $(this).animate({ scrollTop: 0 }, backSpeed, 'linear');
+                    continuousScroll();
+                });
+            }
+
+            if ($("#txtScrollType").val() == "1") {
+                continuousScroll();
+            }
+        });
+    </script>
+}

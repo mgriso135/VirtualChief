@@ -1,0 +1,285 @@
+@using KIS.App_Code
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ListRepartoUtenti> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Reparto == null)
+{
+    <div class="alert alert-danger">@RepartoNotFoundMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div></div>
+        <button class="btn btn-link" @onclick="ToggleAddForm">
+            <img src="/img/@(ShowAddForm ? "iconUserAdd.jpg" : "iconUserAdd.jpg")" height="40" title="@(ShowAddForm ? HideAddFormTooltip : ShowAddFormTooltip)" />
+        </button>
+    </div>
+
+    @if (ShowAddForm)
+    {
+        <div class="card mb-3">
+            <div class="card-body">
+                <div class="row align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">@UserLabel</label>
+                        <select class="form-select" @bind="SelectedUserUsername">
+                            <option value="">@SelectUserLabel</option>
+                            @foreach (var usr in AllUsers)
+                            {
+                                <option value="@usr.username">@usr.FullName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button class="btn btn-success w-100" @onclick="AddUser" disabled="@IsAdding">
+                            @if (IsAdding) { <span class="spinner-border spinner-border-sm"></span> }
+                            <img src="/img/iconSave.jpg" height="30" /> @AddUserLabel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Operatori == null || Operatori.Count == 0)
+    {
+        <div class="alert alert-info">@NoOperatoriMessage</div>
+    }
+    else
+    {
+        <table class="table table-bordered" style="border:1px dotted blue">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@OperatoreLabel</th>
+                    <th>@NomeLabel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var op in Operatori)
+                {
+                    <tr>
+                        <td>
+                            <button class="btn btn-link p-0" @onclick="@(() => DeleteUser(op))" title="@DeleteTooltip">
+                                <img src="/img/iconDelete.png" height="30px" />
+                            </button>
+                        </td>
+                        <td>@op.username</td>
+                        <td>@op.FullName</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success mt-3">@SuccessMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int RepId { get; set; }
+
+    public string Title { get; set; } = "Elenco utenti";
+    public string OperatoreLabel { get; set; } = "Operatore";
+    public string NomeLabel { get; set; } = "Nome";
+    public string UserLabel { get; set; } = "Utente";
+    public string SelectUserLabel { get; set; } = "Seleziona utente";
+    public string AddUserLabel { get; set; } = "Aggiungi";
+    public string ShowAddFormTooltip { get; set; } = "Aggiungi operatore";
+    public string HideAddFormTooltip { get; set; } = "Nascondi form";
+    public string DeleteTooltip { get; set; } = "Elimina operatore";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoOperatoriMessage { get; set; } = "Nessun operatore associato";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di gestire gli operatori del reparto";
+    public string RepartoNotFoundMessage { get; set; } = "Reparto non trovato";
+    public string DeleteErrorMessage { get; set; } = "Errore durante l'eliminazione";
+    public string AddErrorMessage { get; set; } = "Errore durante l'aggiunta";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public Reparto Reparto { get; set; }
+    public List<User> Operatori { get; set; } = new();
+    public List<User> AllUsers { get; set; } = new();
+    public string SelectedUserUsername { get; set; } = "";
+    public bool ShowAddForm { get; set; } = false;
+    public bool IsLoading { get; set; } = false;
+    public bool IsAdding { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (RepId != 0)
+        {
+            LoadData();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (RepId != 0)
+        {
+            LoadData();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Elenco utenti";
+        OperatoreLabel = "Operatore";
+        NomeLabel = "Nome";
+        UserLabel = "Utente";
+        SelectUserLabel = "Seleziona utente";
+        AddUserLabel = "Aggiungi";
+        ShowAddFormTooltip = "Aggiungi operatore";
+        HideAddFormTooltip = "Nascondi form";
+        DeleteTooltip = "Elimina operatore";
+        LoadingMessage = "Caricamento...";
+        NoOperatoriMessage = "Nessun operatore associato";
+        PermissionDeniedMessage = "Non hai il permesso di gestire gli operatori del reparto";
+        RepartoNotFoundMessage = "Reparto non trovato";
+        DeleteErrorMessage = "Errore durante l'eliminazione";
+        AddErrorMessage = "Errore durante l'aggiunta";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || RepId == 0)
+        {
+            Reparto = null;
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            Reparto = new Reparto(Tenant, RepId);
+            if (Reparto.id != -1)
+            {
+                Reparto.loadOperatori();
+                Operatori = Reparto.Operatori?.Elenco?.ToList() ?? new List<User>();
+
+                var elUsr = new UserList(Tenant);
+                AllUsers = elUsr.elencoUtenti?.ToList() ?? new List<User>();
+            }
+            else
+            {
+                Reparto = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading reparto utenti {RepId}", RepId);
+            Reparto = null;
+            ErrorMessage = "Errore durante il caricamento";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void ToggleAddForm()
+    {
+        ShowAddForm = !ShowAddForm;
+        if (ShowAddForm)
+        {
+            SelectedUserUsername = "";
+        }
+    }
+
+    private async Task AddUser()
+    {
+        if (string.IsNullOrEmpty(SelectedUserUsername) || Reparto == null)
+        {
+            ErrorMessage = "Selezionare un utente";
+            return;
+        }
+
+        IsAdding = true;
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var rt = Reparto.Operatori.Add(new User(SelectedUserUsername));
+            if (rt)
+            {
+                SuccessMessage = "Operatore aggiunto con successo";
+                ShowAddForm = false;
+                LoadData();
+            }
+            else
+            {
+                ErrorMessage = Reparto.Operatori.log ?? AddErrorMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error adding user to reparto {RepId}", RepId);
+            ErrorMessage = AddErrorMessage;
+        }
+        finally
+        {
+            IsAdding = false;
+        }
+    }
+
+    private async Task DeleteUser(User op)
+    {
+        if (Reparto == null)
+        {
+            ErrorMessage = RepartoNotFoundMessage;
+            return;
+        }
+
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            Reparto.loadOperatori();
+            var rt = Reparto.Operatori.Delete(op);
+            if (rt)
+            {
+                SuccessMessage = "Operatore eliminato con successo";
+                LoadData();
+            }
+            else
+            {
+                ErrorMessage = DeleteErrorMessage;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error deleting user from reparto {RepId}", RepId);
+            ErrorMessage = DeleteErrorMessage;
+        }
+    }
+}

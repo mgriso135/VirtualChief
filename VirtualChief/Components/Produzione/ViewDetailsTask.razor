@@ -1,0 +1,157 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<ViewDetailsTask> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Task == null)
+{
+    <div class="alert alert-danger">@TaskNotFoundMessage</div>
+}
+else
+{
+    <h3>@Task.Name</h3>
+
+    @if (Events == null || Events.Count == 0)
+    {
+        <div class="alert alert-info">@NoEventsMessage</div>
+    }
+    else
+    {
+        <div class="text-muted mb-2">@LegendaLabel</div>
+        <table class="table table-condensed table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>@DataLabel</th>
+                    <th>@TipoEventoLabel</th>
+                    <th>@UtenteLabel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var evt in Events)
+                {
+                    <tr>
+                        <td>@evt.Data.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@evt.Evento</td>
+                        <td>@GetUserName(evt.InputPoint.ToString())</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int TaskId { get; set; }
+
+    public string DataLabel { get; set; } = "Data";
+    public string TipoEventoLabel { get; set; } = "Tipo Evento";
+    public string UtenteLabel { get; set; } = "Utente";
+    public string LegendaLabel { get; set; } = "Legenda";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string TaskNotFoundMessage { get; set; } = "Task non trovato";
+    public string NoEventsMessage { get; set; } = "Nessun evento per questo task";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare i dettagli del task";
+    public string ErrorMessage { get; set; } = "";
+
+    public TaskProduzione Task { get; set; }
+    public List<EventoTaskProduzione> Events { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (TaskId != 0)
+        {
+            LoadTask();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (TaskId != 0)
+        {
+            LoadTask();
+        }
+    }
+
+    private void LoadResources()
+    {
+        DataLabel = "Data";
+        TipoEventoLabel = "Tipo Evento";
+        UtenteLabel = "Utente";
+        LegendaLabel = "Legenda";
+        LoadingMessage = "Caricamento...";
+        TaskNotFoundMessage = "Task non trovato";
+        NoEventsMessage = "Nessun evento per questo task";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare i dettagli del task";
+    }
+
+    private void LoadTask()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || TaskId == 0)
+        {
+            Task = null;
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            Task = new TaskProduzione(Tenant, TaskId);
+            if (Task.TaskProduzioneID != -1)
+            {
+                Task.loadEventi();
+                Events = Task.Eventi;
+            }
+            else
+            {
+                Task = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading task details {TaskId}", TaskId);
+            Task = null;
+            ErrorMessage = "Errore durante il caricamento del task";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetUserName(string inputPoint)
+    {
+        try
+        {
+            var user = new User(Tenant, inputPoint);
+            return $"({user.name} {user.cognome})";
+        }
+        catch
+        {
+            return "";
+        }
+    }
+}

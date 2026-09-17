@@ -1,0 +1,201 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<StatoTasksArticolo> Logger
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Tasks == null || Tasks.Count == 0)
+{
+    <div class="alert alert-info">@NoTasksMessage</div>
+}
+else
+{
+    <div class="text-muted mb-2">@LastUpdateLabel</div>
+    <table class="table table-striped table-hover" style="border:1px dashed blue">
+        <thead>
+            <tr style="font-family: Calibri; font-size: 18px; font-weight: bold;">
+                <th>@TDIDLabel</th>
+                <th>@TDNomeLabel</th>
+                <th>@TDStatusLabel</th>
+                <th>@TDPostazioneLabel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tsk in Tasks)
+            {
+                var rowClass = GetTaskRowClass(tsk);
+                <tr class="@rowClass" style="font-family: Calibri; font-size: 14px;">
+                    <td>@tsk.TaskProduzioneID</td>
+                    <td>@tsk.Name</td>
+                    <td><span class="badge @GetTaskStatusBadgeClass(tsk.Status)">@tsk.Status</span></td>
+                    <td>@GetPostazioneName(tsk.PostazioneID)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int ArtId { get; set; }
+
+    [Parameter]
+    public int ArtYear { get; set; }
+
+    public string TDIDLabel { get; set; } = "ID";
+    public string TDNomeLabel { get; set; } = "Nome";
+    public string TDStatusLabel { get; set; } = "Stato";
+    public string TDPostazioneLabel { get; set; } = "Postazione";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoTasksMessage { get; set; } = "Nessun task associato";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare i task";
+    public string LastUpdateLabel { get; set; } = "";
+    public string ErrorMessage { get; set; } = "";
+
+    public List<TaskProduzione> Tasks { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    private Dictionary<int, string> _postazioneCache = new();
+    private TimeZoneInfo _timeZone;
+    private System.Timers.Timer _timer;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (ArtId != -1 && ArtYear != -1)
+        {
+            LoadTasks();
+            
+            _timer = new System.Timers.Timer(6000000); // 100 minutes (original interval)
+            _timer.Elapsed += async (sender, e) => await InvokeAsync(LoadTasks);
+            _timer.AutoReset = true;
+            _timer.Start();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (ArtId != -1 && ArtYear != -1)
+        {
+            LoadTasks();
+        }
+    }
+
+    private void LoadResources()
+    {
+        TDIDLabel = "ID";
+        TDNomeLabel = "Nome";
+        TDStatusLabel = "Stato";
+        TDPostazioneLabel = "Postazione";
+        LoadingMessage = "Caricamento...";
+        NoTasksMessage = "Nessun task associato";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare i task";
+    }
+
+    private async Task LoadTasks()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || ArtId == -1 || ArtYear == -1)
+        {
+            Tasks = new List<TaskProduzione>();
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            var art = new Articolo(Tenant, ArtId, ArtYear);
+            if (art.ID != -1)
+            {
+                art.loadTasksProduzione();
+                Tasks = art.Tasks ?? new List<TaskProduzione>();
+                
+                var reparto = new Reparto(Tenant, art.Reparto);
+                _timeZone = reparto.tzFusoOrario;
+            }
+            
+            LastUpdateLabel = $"Last update: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading tasks for articolo {ArtId}/{ArtYear}", ArtId, ArtYear);
+            ErrorMessage = "Errore durante il caricamento dei task";
+            Tasks = new List<TaskProduzione>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetTaskStatusBadgeClass(char status)
+    {
+        return status switch
+        {
+            'F' => "bg-success",
+            'I' => "bg-primary",
+            'N' => "bg-warning text-dark",
+            _ => "bg-secondary"
+        };
+    }
+
+    private string GetTaskRowClass(TaskProduzione tsk)
+    {
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _timeZone);
+        
+        return tsk.Status switch
+        {
+            'F' => "table-success",
+            'N' when tsk.EarlyStart >= now => "table-light",
+            'N' when tsk.EarlyStart <= now && tsk.LateStart >= now => "table-warning",
+            'N' => "table-danger",
+            'I' => "table-info",
+            _ => "table-secondary"
+        };
+    }
+
+    private string GetPostazioneName(int postazioneId)
+    {
+        if (!_postazioneCache.ContainsKey(postazioneId))
+        {
+            try
+            {
+                var pst = new Postazione(Tenant, postazioneId);
+                _postazioneCache[postazioneId] = pst.name;
+            }
+            catch
+            {
+                _postazioneCache[postazioneId] = "#ERROR!";
+            }
+        }
+        return _postazioneCache[postazioneId];
+    }
+
+    public void Dispose()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
+    }
+}

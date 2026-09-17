@@ -1,0 +1,280 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<MenuMainVociList> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (MenuItems == null || MenuItems.Count == 0)
+{
+    <div class="alert alert-info">@NoItemsMessage</div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>@IdHeader</th>
+                    <th>@TitoloHeader</th>
+                    <th>@DescrizioneHeader</th>
+                    <th>@UrlHeader</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in MenuItems)
+                {
+                    var id = item.ID;
+                    <tr>
+                        <td>
+                            <a href="@($"/Admin/menuShowVoce?id={id}")" class="btn btn-link p-0" title="@ViewTooltip">
+                                <img src="/img/iconView.png" height="40" />
+                            </a>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link p-0" @onclick="@(() => ToggleEdit(id))" title="@EditTooltip">
+                                <img src="/img/edit.png" height="40" />
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-link p-0 text-danger" @onclick="@(() => ConfirmDelete(id))" title="@DeleteTooltip">
+                                <img src="/img/iconDelete.png" height="40" />
+                            </button>
+                        </td>
+                        <td>@id</td>
+                        @if (EditingId == id)
+                        {
+                            <td><input type="text" class="form-control" @bind="EditItems[id].Titolo" /></td>
+                            <td><input type="text" class="form-control" @bind="EditItems[id].Descrizione" /></td>
+                            <td><input type="text" class="form-control" @bind="EditItems[id].URL" /></td>
+                            <td>
+                                <button type="button" class="btn btn-link p-0" @onclick="@(() => SaveEdit(id))" title="@SaveTooltip">
+                                    <img src="/img/iconSave.jpg" height="20" />
+                                </button>
+                                <button type="button" class="btn btn-link p-0" @onclick="@(() => CancelEdit(id))" title="@UndoTooltip">
+                                    <img src="/img/iconUndo.png" height="20" />
+                                </button>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@item.Titolo</td>
+                            <td>@item.Descrizione</td>
+                            <td>@item.URL</td>
+                            <td></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (ShowDeleteConfirm)
+    {
+        <div class="alert alert-warning">
+            @DeleteConfirmMessage
+            <button type="button" class="btn btn-danger btn-sm ms-2" @onclick="ExecuteDelete">@ConfirmButtonText</button>
+            <button type="button" class="btn btn-secondary btn-sm ms-2" @onclick="CancelDelete">@CancelButtonText</button>
+        </div>
+    }
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger">@ErrorMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success">@SuccessMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string IdHeader { get; set; } = "ID";
+    public string TitoloHeader { get; set; } = "Titolo";
+    public string DescrizioneHeader { get; set; } = "Descrizione";
+    public string UrlHeader { get; set; } = "URL";
+    public string ViewTooltip { get; set; } = "Visualizza dettagli";
+    public string EditTooltip { get; set; } = "Modifica";
+    public string DeleteTooltip { get; set; } = "Elimina";
+    public string SaveTooltip { get; set; } = "Salva";
+    public string UndoTooltip { get; set; } = "Annulla";
+    public string NoItemsMessage { get; set; } = "Nessuna voce di menu principale presente.";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare le voci di menu.";
+    public string DeleteConfirmMessage { get; set; } = "Sei sicuro di voler eliminare questa voce? Verranno eliminati anche i figli e le associazioni ai gruppi.";
+    public string ConfirmButtonText { get; set; } = "Conferma eliminazione";
+    public string CancelButtonText { get; set; } = "Annulla";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public List<VoceMenu> MenuItems { get; set; } = new();
+
+    public int EditingId { get; set; } = -1;
+    public Dictionary<int, VoceMenu> EditItems { get; set; } = new();
+
+    public bool ShowDeleteConfirm { get; set; } = false;
+    public int DeleteConfirmId { get; set; } = -1;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadData();
+    }
+
+    protected override void OnParametersSet()
+    {
+        LoadData();
+    }
+
+    private void LoadResources()
+    {
+        IdHeader = "ID";
+        TitoloHeader = "Titolo";
+        DescrizioneHeader = "Descrizione";
+        UrlHeader = "URL";
+        ViewTooltip = "Visualizza dettagli";
+        EditTooltip = "Modifica";
+        DeleteTooltip = "Elimina";
+        SaveTooltip = "Salva";
+        UndoTooltip = "Annulla";
+        NoItemsMessage = "Nessuna voce di menu principale presente.";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare le voci di menu.";
+        DeleteConfirmMessage = "Sei sicuro di voler eliminare questa voce? Verranno eliminati anche i figli e le associazioni ai gruppi.";
+        ConfirmButtonText = "Conferma eliminazione";
+        CancelButtonText = "Annulla";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission)
+        {
+            MenuItems = new List<VoceMenu>();
+            return;
+        }
+
+        try
+        {
+            var lst = new MainMenu(Tenant);
+            MenuItems = lst.Elenco?.ToList() ?? new List<VoceMenu>();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "MenuMainVociList: Error loading menu items");
+            MenuItems = new List<VoceMenu>();
+            ErrorMessage = "Errore durante il caricamento delle voci di menu.";
+        }
+    }
+
+    private void ToggleEdit(int id)
+    {
+        if (EditingId == id)
+        {
+            EditingId = -1;
+            EditItems.Remove(id);
+        }
+        else
+        {
+            var item = MenuItems.FirstOrDefault(m => m.ID == id);
+            if (item != null)
+            {
+                EditingId = id;
+                EditItems[id] = new VoceMenu(item.ID)
+                {
+                    Titolo = item.Titolo,
+                    Descrizione = item.Descrizione,
+                    URL = item.URL
+                };
+            }
+        }
+    }
+
+    private void SaveEdit(int id)
+    {
+        if (!EditItems.ContainsKey(id))
+            return;
+
+        try
+        {
+            var vm = new VoceMenu(id)
+            {
+                Titolo = EditItems[id].Titolo,
+                Descrizione = EditItems[id].Descrizione,
+                URL = EditItems[id].URL
+            };
+
+            SuccessMessage = "Voce aggiornata. " + vm.log;
+            Logger.LogInformation("MenuMainVociList: Updated menu item {Id}", id);
+            LoadData();
+            EditingId = -1;
+            EditItems.Remove(id);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "MenuMainVociList: Error saving menu item {Id}", id);
+            ErrorMessage = "Errore durante il salvataggio.";
+        }
+    }
+
+    private void CancelEdit(int id)
+    {
+        EditingId = -1;
+        EditItems.Remove(id);
+    }
+
+    private void ConfirmDelete(int id)
+    {
+        DeleteConfirmId = id;
+        ShowDeleteConfirm = true;
+    }
+
+    private void CancelDelete()
+    {
+        ShowDeleteConfirm = false;
+        DeleteConfirmId = -1;
+    }
+
+    private void ExecuteDelete()
+    {
+        if (DeleteConfirmId == -1)
+            return;
+
+        try
+        {
+            var vm = new VoceMenu(DeleteConfirmId);
+            bool rt = vm.Delete();
+
+            if (rt)
+            {
+                SuccessMessage = "Voce eliminata con successo.";
+                Logger.LogInformation("MenuMainVociList: Deleted menu item {Id}", DeleteConfirmId);
+                LoadData();
+            }
+            else
+            {
+                ErrorMessage = "Errore: " + vm.log;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "MenuMainVociList: Error deleting menu item {Id}", DeleteConfirmId);
+            ErrorMessage = "Errore generico durante l'eliminazione.";
+        }
+        finally
+        {
+            ShowDeleteConfirm = false;
+            DeleteConfirmId = -1;
+        }
+    }
+}

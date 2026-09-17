@@ -1,0 +1,166 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ListStatusUtentiReparto> Logger
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<h3>@Title</h3>
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Users == null || Users.Count == 0)
+{
+    <div class="alert alert-info">@NoUsersMessage</div>
+}
+else
+{
+    <div class="text-muted mb-2">@LastUpdateLabel</div>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>@UserLabel</th>
+                <th>@StatusLabel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Users)
+            {
+                var hasActiveTasks = user.TaskAvviati != null && user.TaskAvviati.Count > 0;
+                var rowClass = hasActiveTasks ? "table-success" : "table-light";
+                var displayName = GetDisplayName(user);
+                
+                <tr class="@rowClass" style="font-size:16px;">
+                    <td>@displayName</td>
+                    <td>@(hasActiveTasks ? ActiveStatusLabel : InactiveStatusLabel)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int? RepId { get; set; }
+
+    public string Title { get; set; } = "Stato Utenti Reparto";
+    public string UserLabel { get; set; } = "Utente";
+    public string StatusLabel { get; set; } = "Stato";
+    public string ActiveStatusLabel { get; set; } = "Attivo";
+    public string InactiveStatusLabel { get; set; } = "Inattivo";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoUsersMessage { get; set; } = "Nessun utente configurato per questo reparto";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare lo stato utenti";
+    public string LastUpdateLabel { get; set; } = "";
+    public string ErrorMessage { get; set; } = "";
+
+    public List<User> Users { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    private Reparto _reparto;
+    private char _andonConfig;
+
+    private System.Timers.Timer _timer;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (RepId.HasValue)
+        {
+            LoadUsers();
+            
+            _timer = new System.Timers.Timer(100000); // 100 seconds
+            _timer.Elapsed += async (sender, e) => await InvokeAsync(LoadUsers);
+            _timer.AutoReset = true;
+            _timer.Start();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Stato Utenti Reparto";
+        UserLabel = "Utente";
+        StatusLabel = "Stato";
+        ActiveStatusLabel = "Attivo";
+        InactiveStatusLabel = "Inattivo";
+        LoadingMessage = "Caricamento...";
+        NoUsersMessage = "Nessun utente configurato per questo reparto";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare lo stato utenti";
+    }
+
+    private async Task LoadUsers()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || !RepId.HasValue)
+        {
+            Users = new List<User>();
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            _reparto = new Reparto(Tenant, RepId.Value);
+            _andonConfig = _reparto.AndonPostazioniFormatoUsername;
+            
+            var ws = new Workspace(Tenant);
+            var perm = new Permission("Task Produzione");
+            var usrList = new UserList(ws.id, perm);
+            Users = usrList.listUsers;
+            
+            // Load active tasks for each user
+            foreach (var user in Users)
+            {
+                user.loadTaskAvviati();
+            }
+            
+            LastUpdateLabel = $"Last update: {DateTime.Now:yyyy/MM/dd HH:mm:ss}";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading user status for reparto {RepId}", RepId);
+            ErrorMessage = "Errore durante il caricamento dello stato utenti";
+            Users = new List<User>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetDisplayName(User user)
+    {
+        return _andonConfig switch
+        {
+            '0' => user.username,
+            '1' => user.name,
+            '2' => $"{user.name} {user.cognome?.Substring(0, 1)}",
+            _ => $"{user.name} {user.cognome}"
+        };
+    }
+
+    public void Dispose()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
+    }
+}

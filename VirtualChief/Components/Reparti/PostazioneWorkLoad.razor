@@ -1,0 +1,119 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@inject ILogger<PostazioneWorkLoad> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Postazione == null || Postazione.id == -1)
+{
+    <div class="alert alert-danger">@ErrorPostNotFoundMessage</div>
+}
+else
+{
+    <h3>@WorkstationLabel &nbsp;@Postazione.name&nbsp;-&nbsp;@WorkloadPerProductLabel</h3>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+    else if (WorkloadData.Count == 0)
+    {
+        <div class="alert alert-info">@NoDataMessage</div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-body">
+                <canvas id="workloadChart" height="300"></canvas>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public int PostId { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string WorkstationLabel { get; set; } = "Postazione";
+    public string WorkloadPerProductLabel { get; set; } = "carico di lavoro per prodotto";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare il carico di lavoro della postazione";
+    public string ErrorPostNotFoundMessage { get; set; } = "Postazione non trovata";
+    public string NoDataMessage { get; set; } = "Nessun dato di carico di lavoro disponibile";
+    public string CycleTimeLabel { get; set; } = "Tempo ciclo";
+
+    public Postazione Postazione { get; set; }
+    public List<WorkloadItem> WorkloadData { get; set; } = new();
+    public string ErrorMessage { get; set; } = "";
+
+    public class WorkloadItem
+    {
+        public string ProcessName { get; set; } = "";
+        public string VariantName { get; set; } = "";
+        public double Hours { get; set; }
+    }
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadData();
+    }
+
+    private void LoadResources()
+    {
+        WorkstationLabel = "Postazione";
+        WorkloadPerProductLabel = "carico di lavoro per prodotto";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare il carico di lavoro della postazione";
+        ErrorPostNotFoundMessage = "Postazione non trovata";
+        NoDataMessage = "Nessun dato di carico di lavoro disponibile";
+        CycleTimeLabel = "Tempo ciclo";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || PostId <= 0)
+        {
+            ErrorMessage = "Parametri non validi";
+            return;
+        }
+
+        try
+        {
+            var pst = new Postazione(Tenant, PostId);
+            if (pst.id == -1)
+            {
+                return;
+            }
+
+            Postazione = pst;
+            pst.LoadMainProc();
+
+            if (pst.MainProc != null && pst.MainProc.Count > 0)
+            {
+                foreach (var mp in pst.MainProc)
+                {
+                    var carico = pst.calculateWorkLoad(mp);
+                    WorkloadData.Add(new WorkloadItem
+                    {
+                        ProcessName = mp.process?.processName ?? "",
+                        VariantName = mp.variant?.nomeVariante ?? "",
+                        Hours = Math.Round(carico.TotalHours, 2)
+                    });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "PostazioneWorkLoad: errore caricamento dati");
+            ErrorMessage = "Errore durante il caricamento dei dati";
+        }
+    }
+}

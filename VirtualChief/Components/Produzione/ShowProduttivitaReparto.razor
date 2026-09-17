@@ -1,0 +1,226 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ShowProduttivitaReparto> Logger
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+<h3>@Title</h3>
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (!HasCurrentInterval)
+{
+    <div class="alert alert-info">@NoTimeSpanMessage</div>
+}
+else
+{
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <small>@ExpectedProductionLabel</small>
+                    <h2 class="text-primary">@ExpectedProductionCount</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <small>@CurrentProductionLabel</small>
+                    <h2 class="text-success">@CurrentProductionCount</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-muted mb-2">@IntervalLabel</div>
+
+    @if (CompletedArticles != null && CompletedArticles.Count > 0)
+    {
+        <table class="table table-striped table-hover table-condensed">
+            <thead>
+                <tr style="font-size:12px; font-family:Calibri">
+                    <th>@OrdineLabel</th>
+                    <th>@ProdottoLabel</th>
+                    <th>@ClienteLabel</th>
+                    <th>@NomeProdottoLabel</th>
+                    <th>@SerialNumberLabel</th>
+                    <th>@DeliveryDateLabel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var art in CompletedArticles)
+                {
+                    <tr style="font-size:10px; font-family:Calibri; background-color:silver;">
+                        <td>@art.Commessa/@art.AnnoCommessa</td>
+                        <td>@art.ID/@art.Year</td>
+                        <td>@art.Cliente</td>
+                        <td>@art.Proc?.process?.processName - @art.Proc?.variant?.nomeVariante</td>
+                        <td>@art.Matricola</td>
+                        <td>@art.DataPrevistaConsegna.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="alert alert-info">@NoCompletedArticlesMessage</div>
+    }
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int? RepId { get; set; }
+
+    public string Title { get; set; } = "Produttività Reparto";
+    public string ExpectedProductionLabel { get; set; } = "Produzione Prevista";
+    public string CurrentProductionLabel { get; set; } = "Produzione Attuale";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoTimeSpanMessage { get; set; } = "Nessun turno attivo in questo momento";
+    public string IntervalLabel { get; set; } = "";
+    public string NoCompletedArticlesMessage { get; set; } = "Nessun articolo terminato in questo turno";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare la produttività del reparto";
+    public string OrdineLabel { get; set; } = "Ordine";
+    public string ProdottoLabel { get; set; } = "Prodotto";
+    public string ClienteLabel { get; set; } = "Cliente";
+    public string NomeProdottoLabel { get; set; } = "Nome Prodotto";
+    public string SerialNumberLabel { get; set; } = "Matricola";
+    public string DeliveryDateLabel { get; set; } = "Data Consegna";
+    public string ErrorMessage { get; set; } = "";
+
+    public int ExpectedProductionCount { get; set; } = 0;
+    public int CurrentProductionCount { get; set; } = 0;
+    public List<Articolo> CompletedArticles { get; set; } = new();
+    public bool HasCurrentInterval { get; set; } = false;
+    public bool IsLoading { get; set; } = false;
+
+    private Reparto _reparto;
+    private System.Timers.Timer _timer;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (RepId.HasValue)
+        {
+            LoadData();
+            
+            _timer = new System.Timers.Timer(600000); // 10 minutes
+            _timer.Elapsed += async (sender, e) => await InvokeAsync(LoadData);
+            _timer.AutoReset = true;
+            _timer.Start();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Produttività Reparto";
+        ExpectedProductionLabel = "Produzione Prevista";
+        CurrentProductionLabel = "Produzione Attuale";
+        LoadingMessage = "Caricamento...";
+        NoTimeSpanMessage = "Nessun turno attivo in questo momento";
+        NoCompletedArticlesMessage = "Nessun articolo terminato in questo turno";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare la produttività del reparto";
+        OrdineLabel = "Ordine";
+        ProdottoLabel = "Prodotto";
+        ClienteLabel = "Cliente";
+        NomeProdottoLabel = "Nome Prodotto";
+        SerialNumberLabel = "Matricola";
+        DeliveryDateLabel = "Data Consegna";
+    }
+
+    private async Task LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || !RepId.HasValue)
+        {
+            HasCurrentInterval = false;
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            _reparto = new Reparto(Tenant, RepId.Value);
+            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, _reparto.tzFusoOrario);
+            var weekAgo = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(-7), _reparto.tzFusoOrario);
+            var tenDaysLater = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.AddDays(10), _reparto.tzFusoOrario);
+            
+            _reparto.loadCalendario(weekAgo, tenDaysLater);
+            
+            int curr = -1;
+            for (int i = 0; i < _reparto.CalendarioRep.Intervalli.Count; i++)
+            {
+                if (_reparto.CalendarioRep.Intervalli[i].Inizio <= now && now <= _reparto.CalendarioRep.Intervalli[i].Fine)
+                {
+                    curr = i;
+                    break;
+                }
+            }
+
+            if (curr != -1)
+            {
+                HasCurrentInterval = true;
+                var interval = _reparto.CalendarioRep.Intervalli[curr];
+                
+                var elArtOpen = new ElencoArticoliAperti(_reparto.id);
+                int finePrevista = 0;
+                for (int i = 0; i < elArtOpen.ArticoliAperti.Count; i++)
+                {
+                    if (elArtOpen.ArticoliAperti[i].DataFineUltimoTask <= interval.Inizio)
+                    {
+                        finePrevista++;
+                    }
+                }
+
+                interval.loadArticoliDaTerminare(_reparto);
+                interval.loadArticoliTerminati(_reparto);
+
+                ExpectedProductionCount = finePrevista + interval.NumArticoliDaTerminare;
+                CurrentProductionCount = interval.ArticoliTerminati.Count;
+                CompletedArticles = interval.ArticoliTerminati;
+                IntervalLabel = $"Turno: {interval.Inizio:dd/MM/yyyy HH:mm:ss} - {interval.Fine:dd/MM/yyyy HH:mm:ss}";
+            }
+            else
+            {
+                HasCurrentInterval = false;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading productivity for reparto {RepId}", RepId);
+            ErrorMessage = "Errore durante il caricamento della produttività";
+            HasCurrentInterval = false;
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
+    }
+}

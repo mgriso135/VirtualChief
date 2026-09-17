@@ -231,7 +231,7 @@ An audit of the repository state on branch `v2.0` establishes the ground-truth b
 |---|---|---|---|
 | **Phase 0** | Stabilization & Security Hardening | **Completed ✅** | Hardcoded secrets moved to `Secrets.cs`; `TypeNameHandling.None` set; SIAV SSL bypass removed; orphan projects (`ConsoleApp1`, `VCAlarmsEvents`) removed; CI pipeline rewritten (`.github/workflows/dotnet.yml`). |
 | **Phase 1** | Same-Stack Modernization & Data Layer | **In Progress ⏳** | Dapper migration across `App_Sources` (**28 of 28 files converted**); `WebEnv.cs` & `AppConfig.cs` seams implemented; MariaDB test net deployed (**24 static/DB tests + 91 Tier-1 domain tests green**). |
-| **Phase 2** | UI Modernization & Endpoints Migration | **In Progress ⏳** | **414 `.cshtml` Razor views** created/updated; `<asp:Chart>` control replacement with Google Charts/D3 **completed**; ASMX → Web API transition **completed** (7 controllers ported, MySql drift 1,184 → 1,187). |
+| **Phase 2** | UI Modernization & Endpoints Migration | **In Progress ⏳** | **414 `.cshtml` Razor views** created/updated; `<asp:Chart>` control replacement with Google Charts/D3 **completed**; ASMX → Web API transition **completed** (7 controllers ported, MySql drift 1,184 → 1,187). **Razor/Blazor migration: ~29 of ~190 Archive files migrated (15%)** — Admin menu management, Clienti, Commesse (partial), Produzione (partial), Reparti (partial), Users (partial), Login (partial). |
 | **Phase 3** | .NET 8 Re-Platforming & Worker Service | **Planned 📋** | Retargeting `KisWebApp` to .NET 8; unifying 11 console schedulers into a single .NET 8 Worker Service; Kestrel + `nginx` setup. |
 | **Phase 4** | Database Modernization & Linux Verification | **Planned 📋** | Linux MySQL 8 deployment; Postgres dialect audit pass (80 bare `user` keywords, backticks, `LAST_INSERT_ID`); systemd service units. |
 | **Phase 5** | Production Hardening & Best Practices | **Planned 📋** | Full DI container integration; ASP.NET Core Health Checks; automated E2E integration test suite expansion. |
@@ -371,7 +371,94 @@ Migrate .ascx, .ascx.cs, .aspx, .aspx.cs files to razor and blazor. Do not forge
     - `Processi/getProcessData.asmx` → `api/processi/pert`
   - Controllers port the full ASMX business logic (Dapper/MySql and `WebEnv.ActiveWorkspaceName` in place of `Session["ActiveWorkspace_Name"]`); MySql drift baseline updated to reflect the ports (1,184 → 1,187 across 26 files).
   - Maintain backward-compatible route aliases and payload structures so console agents / background jobs continue uninterrupted.
-- [ ] **Visual Regression Baseline:** Establish screenshot comparison tests for core screens (Workplace WebGemba, Production Board, PERT Editor, Quality NC Board) to guarantee 100% UI parity.
+- [/] **Visual Regression Baseline:** Establish screenshot comparison tests for core screens (Workplace WebGemba, Production Board, PERT Editor, Quality NC Board) to guarantee 100% UI parity.
+
+---
+
+### 4.3.1 Phase 2 Progress Detail — WebForms → Razor/Blazor Migration (In Progress ⏳)
+
+**Objective:** Migrate all 114 `.aspx` pages and 172 `.ascx` user controls from `Archive/` to `VirtualChief/Pages/` (Razor Pages) and `VirtualChief/Components/` (Blazor Components).
+
+#### 4.3.1.1 Migration Status by Area (as of 2026-09-09)
+
+| Area | Archive Files | Migrated Files | Status |
+|------|--------------|----------------|--------|
+| **Admin** | 16 | 4 (kisAdmin, manageMenu, menuShowVoce) | 🔄 In Progress |
+| **Analysis** | 25 | 1 (analysis) | ⏳ Pending |
+| **Andon** | 5 | 1 (configAndonCompleto) | ⏳ Pending |
+| **Clienti** | 4 | 4 (Clienti, Edit, ContactDetail, Add) | ✅ Done |
+| **Commesse** | 20 | **20** (7 wizard + 13 new) | ✅ **Done** |
+| **Configuration** | 10 | 0 | ⏳ Pending |
+| **Eventi** | 6 | 0 | ⏳ Pending |
+| **Login** | 4 | 3 (login, forgot, selectWorkspace) | 🔄 In Progress |
+| **OLD_kpi** | 4 | 0 | ⏳ Pending |
+| **Operatori** | 3 | 0 | ⏳ Pending |
+| **Personal** | 10 | 0 | ⏳ Pending |
+| **Postazioni** | 8 | 1 (managePostazioniLavoro) | ⏳ Pending |
+| **Processi** | 14 | 0 | ⏳ Pending |
+| **Produzione** | 20 | 4 (produzione, CommesseDaProdurre, PianoProduzione, ShowProductionPlan*) | 🔄 In Progress |
+| **Reparti** | 25 | 3 (listReparti, configReparto, configOrariTurno) | ⏳ Pending |
+| **Users** | 18 | 1 (listUsers) | ⏳ Pending |
+| **Views/Shared** | 2 | 0 | ⏳ Pending |
+| **Total** | **~190** | **~29** | **~15% Complete** |
+
+> *ShowProductionPlan migrated as Blazor Component `Components/Produzione/ShowProductionPlan.razor`
+
+#### 4.3.1.2 Completed Today (2026-09-09)
+
+**Admin Area — Menu Management (4 files):**
+- `Pages/Admin/manageMenu.cshtml` + `.cshtml.cs` — Host page for menu management
+- `Pages/Admin/menuShowVoce.cshtml` + `.cshtml.cs` — View/edit main menu item + child items
+- `Components/Admin/MenuAddMainVoce.razor` — Add main menu item (Blazor Server)
+- `Components/Admin/MenuMainVociList.razor` — List/edit/delete main menu items (Blazor Server)
+- `Components/Admin/MenuShowFigli.razor` — List/edit/delete/move child menu items (Blazor Server)
+- `Components/Admin/MenuAddVoceFiglia.razor` — Add child menu item (Blazor Server)
+
+**Fixes:**
+- Fixed `~/img/` → `/img/` in Blazor components (`ListCommesseStatoN.razor`, `ShowProductionPlan.razor`) to resolve 404 image errors on localhost:5030.
+
+#### 4.3.1.2.1 Completed 2026-09-11
+
+**Commesse Area — New Order Wizard (13 Archive files migrated to 9 VirtualChief files):**
+- `Pages/Commesse/NuovoOrdineDataConsegna.cshtml` + `.cshtml.cs` — Delivery date selection (was `wzInserisciDataConsegna.ascx`)
+- `Pages/Commesse/NuovoOrdineCaricoLavoro.cshtml` + `.cshtml.cs` — Workload check question (was `wzQuestionWorkLoad.ascx`)
+- `Pages/Commesse/NuovoOrdineDataFineProduzione.cshtml` + `.cshtml.cs` — Production end date + launch (was `wzCheckDeliveryDate.ascx`)
+- `Pages/Commesse/NuovoOrdineAllarmi.cshtml` + `.cshtml.cs` — Delay/warning alarms + barcode print (was `wzImpostaAllarmiArticolo.aspx`)
+- `Components/Commesse/WizardInfoPanel.razor` — Shared info panel (was `wzInfoPanel.ascx`)
+- `Components/Commesse/PrintBarcodes.razor` — Barcode PDF generation (was `wzPrintBarcordes.ascx`)
+- `Components/Eventi/ArticoloRitardoConfig.razor` — Delay alarm config (was `Eventi/ArticoloRitardo.ascx`)
+- `Components/Eventi/ArticoloWarningConfig.razor` — Warning alarm config (was `Eventi/ArticoloWarning.ascx`)
+
+#### 4.3.1.3 Next Priority Areas (Recommended Order)
+
+1. **Commesse** ✅ **COMPLETED (2026-09-11)** — Wizard steps migrated:
+   - `NuovoOrdineDataConsegna` — Delivery date selection (was `wzInserisciDataConsegna`)
+   - `NuovoOrdineCaricoLavoro` — Workload check question (was `wzQuestionWorkLoad`)
+   - `NuovoOrdineDataFineProduzione` — Production end date + launch (was `wzCheckDeliveryDate`)
+   - `NuovoOrdineAllarmi` — Delay/warning alarms + barcode print (was `wzImpostaAllarmiArticolo`)
+   - Components: `WizardInfoPanel`, `PrintBarcodes`
+2. **Produzione** — Remaining views (articoliStatoI, listArticoliTerminati, listCommesseStatoN, ListRepartiAndon, listStatusUtentiReparto, listWarningAperti, listWarningApertiReparto, showProduttivitaReparto, statoAvanzamentoArticolo, StatoTasksArticolo, viewDetailsTask, viewDetailsTaskProduzione, wlListReparti, wlReparto, wlSimReparto, workLoadListReparti, configProcessoPerProduzione, frmSolveProblem, HomeBoxNextProgrammedProducts)
+3. **Reparti** — Calendar/config (manageCalendarFesteStraordinari, manageFestivita, manageStraordinario, configOrariTurno, configTurni, configCadenza, configAndonReparto, configKanban, configRepartoTimezone, configSplitTasksTurni, configModoCalcoloTC, configAvvioTasks, configProcessiVarianti_OLD, configAnticipoMinimo_OLD, elencoFestivita, elencoStraordinari, listRepartoUtenti, showPostazioni, postazioneWorkLoad, processoWorkLoad, risorseTurno, addFestivita, addReparto, addStraordinario)
+4. **Analysis** — Reports & charts (CustomerPareto, CustomerPortfolio, DetailAnalysisCustomer, DetailAnalysisTask, DetailAnalysisTipoProdotto, DetailCostCommessa, DetailTaskProduct, ListAnalysisOperatori, ListAnalysisTasks, ListAnalysisTipoProdotto, ListCommesseChiuse, OperatoreTempoTasks, ReportCustomerProdProgress_*, viewKPI, CostificazioneProdottiTerminatiRicerca)
+5. **Processi** — PERT editor (showPert, managePrecedenzePERT, managePrecedenzePERT2, pertManagePrecedenze, pertManagePrecedenze2, addTempoCiclo, editTask, editVariante, linkSubProcessVariante, listTempiCiclo, addMacroProcesso, CreateSubProcess_OLD)
+6. **Configuration** — Wizard (MainWizConfig, wizConfigAndon, wizConfigLogo, wizConfigReparti_Main, WizConfigTimezone, wizConfigUsers_Main, wizCustomerReport, configurationStatus)
+7. **Eventi** — Warning/delay config (ArticoloRitardo, ArticoloWarning, CommessaRitardo, CommessaWarning, RepartoRitardo, RepartoWarning)
+8. **Postazioni** — Station management (addPostazione, editPostazione, viewElencoPostazioni, viewCalendarioPostazione, risorsePostazione, listPostazioniOperatoriLoggati, barCodeCheckIn)
+9. **Users** — User/group/permesso management (manageUsers, manageGruppi, managePermessi, addUser, editUser, addGruppo, addPermesso, listUsers, listGruppi, listPermessi, listUserEmails, listUserPhoneNumber, PermessiGruppi)
+10. **Personal** — User profile (my, myChangePassword, myEmail, myPhone, myLanguage, myListEventoRitardo, myListEventoWarning, baseInfo, listGruppiUtente, HomeBoxUser)
+11. **Andon** — Board config (AndonCompletoViewFields, AndonRepartoViewFields, configFormatoUsername, configMaxViewDaysAndonReparto_OLD)
+12. **OLD_kpi, Operatori, Login (forgotPassword, forgotUsername), Views/Shared** — Lower priority / legacy
+
+#### 4.3.1.4 Migration Pattern Established
+
+Each Archive `.aspx`/`.ascx` pair maps to:
+- **Razor Page** (`Pages/{Area}/{Name}.cshtml` + `.cshtml.cs`) — Host, permissions, data loading
+- **Blazor Component(s)** (`Components/{Area}/{Function}.razor`) — Interactive UI, CRUD operations
+- **Permissions** — Checked via `UserAccount.ValidatePermissions(tenant, permissions)` in PageModel `OnGet` and passed as `[Parameter] bool HasPermission` to components
+- **Tenancy** — Resolved via `CurrentWorkspace.Of(User)` extension method
+- **Resources** — Italian strings inlined in `LoadResources()` method (future: move to `.resx`)
+- **Images** — Use `/img/` (absolute from wwwroot) not `~/img/`
+- **Navigation** — `NavigationManager.NavigateTo(uri, forceLoad: true)` for full reload after mutations
 
 ---
 

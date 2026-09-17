@@ -1,0 +1,590 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ConfigProcessoPerProduzione> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Articolo == null)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (ConfigProcesso == null)
+{
+    <div class="alert alert-danger">@ConfigErrorMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+
+    <div class="alert alert-info">
+        <strong>Componente in fase di sviluppo</strong><br />
+        Questo componente richiede la verifica del modello di dominio per ConfigurazioneProcesso.
+        Le proprietà come Proc, Processi, Tempo, EarlyStartTime, LateStartTime, EarlyFinishTime, LateFinishTime
+        devono essere verificate rispetto alle classi reali in App_Sources.
+    </div>
+
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>@ProcessName</h5>
+            <small>@RevisionLabel @ConfigProcessoRevisione</small>
+            <h5>@VarianteName</h5>
+            <p>
+                @QuantitaLabel @Articolo.Quantita<br />
+                @DataFineLabel @Articolo.DataPrevistaFineProduzione.ToString("dd/MM/yyyy HH:mm:ss")<br />
+                @DataConsegnaLabel @Articolo.DataPrevistaConsegna.ToString("dd/MM/yyyy")<br />
+                @RepartoLabel
+                <select class="form-control d-inline-block w-auto" @bind="SelectedRepartoId" @bind:event="onchange">
+                    <option value="-1">@SelectRepartoLabel</option>
+                    @foreach (var r in RepartiProduttivi)
+                    {
+                        <option value="@r.id">@r.name</option>
+                    }
+                </select>
+            </p>
+        </div>
+    </div>
+
+    @* TODO: Fix domain model mismatches for ConfigurazioneProcesso
+    @if (false && ConfigProcesso != null && ConfigProcesso.Processi != null && ConfigProcesso.Processi.Count > 0)
+    {
+        <h4>@TasksConfigLabel</h4>
+        <table class="table table-condensed table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>@TaskIDLabel</th>
+                    <th>@NomeTaskLabel</th>
+                    <th>@NumOpLabel</th>
+                    <th>@SetupLabel</th>
+                    <th>@TempoCicloLabel</th>
+                    <th>@PostazioneLabel</th>
+                    <th>@TaskPrecedentiLabel</th>
+                    <th>@TaskSuccessiviLabel</th>
+                    <th>@EarlyStartLabel</th>
+                    <th>@LateStartLabel</th>
+                    <th>@EarlyFinishLabel</th>
+                    <th>@LateFinishLabel</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var taskConfig in ConfigProcesso.Processi)
+                {
+                    <tr>
+                        <td>@taskConfig.Task.Task.processID</td>
+                        <td>@taskConfig.Task.Task.processName</td>
+                        <td>
+                            <select class="form-control" value="@GetTaskOperatori(taskConfig)" @onchange="@((e) => OnTempoChanged(taskConfig, e))">
+                                @foreach (var tempo in GetTempiForTask(taskConfig))
+                                {
+                                    <option value="@tempo.NumeroOperatori">@tempo.NumeroOperatori</option>
+                                }
+                            </select>
+                        </td>
+                        <td>@taskConfig.Tempo?.TempoSetup.ToString(@"hh\:mm\:ss")</td>
+                        <td>@taskConfig.Tempo?.Tempo.ToString(@"hh\:mm\:ss")</td>
+                        <td>@taskConfig.PostazioneDiLavoro?.name</td>
+                        <td>@GetPredecessorsString(taskConfig)</td>
+                        <td>@GetSuccessorsString(taskConfig)</td>
+                        <td>@taskConfig.EarlyStartTime?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@taskConfig.LateStartTime?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@taskConfig.EarlyFinishTime?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@taskConfig.LateFinishTime?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="10" style="text-align: center;">
+                        <button class="btn btn-primary" @onclick="VerifyConfiguration" disabled="@IsVerifying">@VerifyConfigLabel</button>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    }
+*@
+
+    @* TODO: Fix domain model mismatches for VerificationResult
+    @if (ShowVerification && VerificationResult != null)
+    {
+        <h4>@VerificationResultLabel</h4>
+        <div class="alert @(VerificationResult.Success ? "alert-success" : "alert-danger")">
+            @VerificationResult.Message
+        </div>
+        
+        @if (VerificationResult.Success && VerificationResult.Processi != null)
+        {
+            <table class="table table-condensed table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>@TaskIDLabel</th>
+                        <th>@NomeTaskLabel</th>
+                        <th>@PostazioneLabel</th>
+                        <th>@NumOpLabel</th>
+                        <th>@SetupLabel</th>
+                        <th>@TempoCicloLabel</th>
+                        <th>@EarlyStartLabel</th>
+                        <th>@LateStartLabel</th>
+                        <th>@EarlyFinishLabel</th>
+                        <th>@LateFinishLabel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var taskConfig in VerificationResult.Processi)
+                    {
+                        <tr>
+                            <td>@taskConfig.Task.Task.processID</td>
+                            <td>@taskConfig.Task.Task.processName</td>
+                            <td>@taskConfig.PostazioneDiLavoro?.name</td>
+                            <td>@taskConfig.Tempo?.NumeroOperatori</td>
+                            <td>@taskConfig.Tempo?.TempoSetup.ToString(@"hh\:mm\:ss")</td>
+                            <td>@taskConfig.Tempo?.Tempo.ToString(@"hh\:mm\:ss")</td>
+                            <td>@taskConfig.EarlyStartDate?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@taskConfig.LateStartDate?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@taskConfig.EarlyFinishDate?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                            <td>@taskConfig.LateFinishDate?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9" style="text-align:center;">
+                            <button class="btn btn-success btn-lg" @onclick="LaunchInProduction" disabled="@IsLaunching">
+                                @if (IsLaunching)
+                                {
+                                    <span class="spinner-border spinner-border-sm"></span>
+                                }
+                                <img src="/img/iconComplete.png" height="50" />
+                            </button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+    }
+*@
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@ErrorMessage</div>
+    }
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <div class="alert alert-success mt-3">@SuccessMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int ArtId { get; set; }
+
+    [Parameter]
+    public int ArtYear { get; set; }
+
+    public string Title { get; set; } = "Configurazione Processo per Produzione";
+    public string ProcessName { get; set; } = "";
+    public string RevisionLabel { get; set; } = "Revisione:";
+    public string ConfigProcessoRevisione { get; set; } = "";
+    public string VarianteName { get; set; } = "";
+    public string QuantitaLabel { get; set; } = "Quantità:";
+    public string DataFineLabel { get; set; } = "Data Fine Prevista:";
+    public string DataConsegnaLabel { get; set; } = "Data Consegna:";
+    public string RepartoLabel { get; set; } = "Reparto:";
+    public string SelectRepartoLabel { get; set; } = "Seleziona un reparto produttivo";
+    public string TasksConfigLabel { get; set; } = "Configurazione Task";
+    public string TaskIDLabel { get; set; } = "ID Task";
+    public string NomeTaskLabel { get; set; } = "Nome Task";
+    public string NumOpLabel { get; set; } = "Num Op";
+    public string SetupLabel { get; set; } = "Setup";
+    public string TempoCicloLabel { get; set; } = "Tempo Ciclo";
+    public string PostazioneLabel { get; set; } = "Postazione";
+    public string TaskPrecedentiLabel { get; set; } = "Task Precedenti";
+    public string TaskSuccessiviLabel { get; set; } = "Task Successivi";
+    public string EarlyStartLabel { get; set; } = "Early Start";
+    public string LateStartLabel { get; set; } = "Late Start";
+    public string EarlyFinishLabel { get; set; } = "Early Finish";
+    public string LateFinishLabel { get; set; } = "Late Finish";
+    public string VerifyConfigLabel { get; set; } = "Verifica Configurazione";
+    public string VerificationResultLabel { get; set; } = "Risultato Verifica";
+    public string LaunchButtonTooltip { get; set; } = "Lancia in Produzione";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di configurare il processo";
+    public string ConfigErrorMessage { get; set; } = "Errore nella configurazione del processo";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public Articolo Articolo { get; set; }
+    public ConfigurazioneProcesso ConfigProcesso { get; set; }
+    public List<Reparto> RepartiProduttivi { get; set; } = new();
+    
+    private int _selectedRepartoId = -1;
+    public int SelectedRepartoId
+    {
+        get => _selectedRepartoId;
+        set
+        {
+            if (_selectedRepartoId != value)
+            {
+                _selectedRepartoId = value;
+                _ = OnRepartoChanged();
+            }
+        }
+    }
+    
+    public bool ShowVerification { get; set; } = false;
+    public VerificationResultDto VerificationResult { get; set; }
+    public bool IsVerifying { get; set; } = false;
+    public bool IsLaunching { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (ArtId != -1 && ArtYear != -1)
+        {
+            LoadData();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (ArtId != -1 && ArtYear != -1)
+        {
+            LoadData();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Configurazione Processo per Produzione";
+        ProcessName = "";
+        RevisionLabel = "Revisione:";
+        VarianteName = "";
+        QuantitaLabel = "Quantità:";
+        DataFineLabel = "Data Fine Prevista:";
+        DataConsegnaLabel = "Data Consegna:";
+        RepartoLabel = "Reparto:";
+        SelectRepartoLabel = "Seleziona un reparto produttivo";
+        TasksConfigLabel = "Configurazione Task";
+        TaskIDLabel = "ID Task";
+        NomeTaskLabel = "Nome Task";
+        NumOpLabel = "Num Op";
+        SetupLabel = "Setup";
+        TempoCicloLabel = "Tempo Ciclo";
+        PostazioneLabel = "Postazione";
+        TaskPrecedentiLabel = "Task Precedenti";
+        TaskSuccessiviLabel = "Task Successivi";
+        EarlyStartLabel = "Early Start";
+        LateStartLabel = "Late Start";
+        EarlyFinishLabel = "Early Finish";
+        LateFinishLabel = "Late Finish";
+        VerifyConfigLabel = "Verifica Configurazione";
+        VerificationResultLabel = "Risultato Verifica";
+        LaunchButtonTooltip = "Lancia in Produzione";
+        LoadingMessage = "Caricamento...";
+        PermissionDeniedMessage = "Non hai il permesso di configurare il processo";
+        ConfigErrorMessage = "Errore nella configurazione del processo";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || ArtId == -1 || ArtYear == -1)
+        {
+            Articolo = null;
+            return;
+        }
+
+        try
+        {
+            Articolo = new Articolo(Tenant, ArtId, ArtYear);
+            if (Articolo.ID != -1 && Articolo.Proc != null)
+            {
+                var procID = Articolo.Proc.process.processID;
+                var varID = Articolo.Proc.variant.idVariante;
+
+                var prc = new ProcessoVariante(Tenant, new processo(Tenant, procID), new variante(Tenant, varID));
+                prc.loadReparto();
+                prc.process.loadFigli(prc.variant);
+
+                if (prc.process != null && prc.variant != null && prc.RepartoProduttivo != null && !prc.process.isVSM)
+                {
+                    ProcessName = prc.process.processName;
+                    ConfigProcessoRevisione = prc.process.revisione.ToString();
+                    VarianteName = prc.variant.nomeVariante;
+                    RepartiProduttivi = prc.RepartiProduttivi;
+                }
+                else
+                {
+                    ConfigErrorMessage = "Tipo prodotto non supportato o reparto non configurato";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading config processo for articolo {ArtId}/{ArtYear}", ArtId, ArtYear);
+            ConfigErrorMessage = "Errore durante il caricamento";
+        }
+    }
+
+    private async Task OnRepartoChanged()
+    {
+        if (SelectedRepartoId == -1 || Articolo == null) return;
+
+        try
+        {
+            var rp = new Reparto(Tenant, SelectedRepartoId);
+            if (rp.id == -1) return;
+
+            var procID = Articolo.Proc.process.processID;
+            var varID = Articolo.Proc.variant.idVariante;
+
+            var prc = new ProcessoVariante(Tenant, new processo(Tenant, procID), new variante(Tenant, varID));
+            prc.loadReparto();
+            prc.process.loadFigli(prc.variant);
+
+            bool checkReparto = false;
+            for (int i = 0; i < prc.RepartiProduttivi.Count; i++)
+            {
+                if (prc.RepartiProduttivi[i].id == rp.id)
+                {
+                    checkReparto = true;
+                    break;
+                }
+            }
+
+            if (!checkReparto) return;
+
+            Articolo.Reparto = SelectedRepartoId;
+            
+            var lst = new List<TaskConfigurato>();
+            for (int i = 0; i < prc.process.subProcessi.Count; i++)
+            {
+                var tskVar = new TaskVariante(Tenant, prc.process.subProcessi[i], prc.variant);
+                if (tskVar.getDefaultTempo() != null)
+                {
+                    lst.Add(new TaskConfigurato(Tenant, tskVar, tskVar.getDefaultTempo(), rp.id, Articolo.Quantita));
+                }
+                else
+                {
+                    ErrorMessage = $"Errore: task {tskVar.Task.processName} senza tempo ciclo";
+                    return;
+                }
+            }
+
+            ConfigProcesso = new ConfigurazioneProcesso(Tenant, Articolo, lst, new Reparto(Tenant, SelectedRepartoId), Articolo.Quantita);
+            int consistenza = ConfigProcesso.checkConsistency();
+            
+            if (consistenza == 1)
+            {
+                ConfigProcesso.Processi.Sort((p1, p2) => p1.EarlyStartTime.CompareTo(p2.EarlyStartTime));
+                ConfigProcesso.calculateCriticalPath();
+                ErrorMessage = "";
+            }
+            else
+            {
+                ConfigErrorMessage = consistenza switch
+                {
+                    0 => "Errore generico",
+                    2 => "Task senza collegamenti",
+                    3 => "Tipo VSM non supportato",
+                    6 => "Postazione mancante",
+                    _ => "Errore sconosciuto"
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error changing reparto for articolo {ArtId}/{ArtYear}", ArtId, ArtYear);
+            ConfigErrorMessage = "Errore durante il cambio reparto";
+        }
+    }
+
+    private int GetTaskOperatori(TaskConfigurato taskConfig) => taskConfig.Tempo?.NumeroOperatori ?? 0;
+
+    private List<TempoCiclo> GetTempiForTask(TaskConfigurato taskConfig)
+    {
+        var tskVar = new TaskVariante(Tenant, new processo(Tenant, taskConfig.Task.Task.processID), new variante(Tenant, Articolo?.Proc?.variant?.idVariante ?? 0));
+        tskVar.loadTempiCiclo();
+        return tskVar.Tempi?.Tempi ?? new List<TempoCiclo>();
+    }
+
+    private async Task OnTempoChanged(TaskConfigurato taskConfig, ChangeEventArgs e)
+    {
+        if (Articolo == null || ConfigProcesso == null) return;
+
+        int numOps = int.TryParse(e.Value?.ToString(), out var n) ? n : 0;
+        int task = taskConfig.Task.Task.processID;
+        int varID = Articolo.Proc.variant.idVariante;
+
+        var tc = new TempoCiclo(Tenant, task, taskConfig.Task.Task.revisione, varID, numOps);
+        if (tc.Tempo != null)
+        {
+            ConfigProcesso.Processi.First(p => p.Task.Task.processID == task).Tempo = tc;
+            
+            var prc = new ProcessoVariante(Tenant, new processo(Tenant, Articolo.Proc.process.processID), new variante(Tenant, varID));
+            prc.loadReparto();
+            prc.process.loadFigli(prc.variant);
+            ConfigProcesso = new ConfigurazioneProcesso(Tenant, Articolo, ConfigProcesso.Processi, new Reparto(Tenant, SelectedRepartoId), Articolo.Quantita);
+            ConfigProcesso.calculateCriticalPath();
+        }
+    }
+
+    private string GetPredecessorsString(TaskConfigurato taskConfig)
+    {
+        var sb = new System.Text.StringBuilder();
+        for (int i = 0; i < taskConfig.Precedenti.Count; i++)
+        {
+            var s = new processo(Tenant, taskConfig.Precedenti[i]);
+            sb.Append($"{s.processID} {s.processName} ({taskConfig.PrecedentiPausa[i].TotalHours}h)<br/>");
+        }
+        return sb.ToString();
+    }
+
+    private string GetSuccessorsString(TaskConfigurato taskConfig)
+    {
+        var sb = new System.Text.StringBuilder();
+        for (int i = 0; i < taskConfig.Successivi.Count; i++)
+        {
+            var s = new processo(Tenant, taskConfig.Successivi[i]);
+            sb.Append($"{s.processID} {s.processName}<br/>");
+        }
+        return sb.ToString();
+    }
+
+    private async Task VerifyConfiguration()
+    {
+        IsVerifying = true;
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var lstTasks = new List<TaskConfigurato>();
+            foreach (var taskConfig in ConfigProcesso.Processi)
+            {
+                int tskID = taskConfig.Task.Task.processID;
+                int opsID = taskConfig.Tempo?.NumeroOperatori ?? 0;
+                
+                var tskVar = new TaskVariante(Tenant, new processo(Tenant, tskID), new variante(Tenant, Articolo.Proc.variant.idVariante));
+                tskVar.loadTempiCiclo();
+                var tc = new TempoCiclo(Tenant, tskVar.Task.processID, tskVar.Task.revisione, Articolo.Proc.variant.idVariante, opsID);
+                if (tc.Tempo != null)
+                {
+                    lstTasks.Add(new TaskConfigurato(Tenant, tskVar, tc, SelectedRepartoId, Articolo.Quantita));
+                }
+            }
+
+            var prcCfg = new ConfigurazioneProcesso(Tenant, Articolo, lstTasks, new Reparto(Tenant, SelectedRepartoId), Articolo.Quantita);
+            int rt = prcCfg.SimulaIntroduzioneInProduzione();
+            
+            if (rt == 1)
+            {
+                VerificationResult = new VerificationResultDto 
+                { 
+                    Success = true, 
+                    Message = "Configurazione valida", 
+                    Processi = prcCfg.Processi 
+                };
+                ShowVerification = true;
+            }
+            else
+            {
+                VerificationResult = new VerificationResultDto 
+                { 
+                    Success = false, 
+                    Message = rt switch
+                    {
+                        2 => "Tempo insufficiente",
+                        3 => "Errore binding date",
+                        _ => "Errore generico"
+                    }
+                };
+                ShowVerification = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error verifying configuration");
+            ErrorMessage = "Errore durante la verifica";
+        }
+        finally
+        {
+            IsVerifying = false;
+        }
+    }
+
+    private async Task LaunchInProduction()
+    {
+        IsLaunching = true;
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var lstTasks = new List<TaskConfigurato>();
+            foreach (var taskConfig in VerificationResult.Processi)
+            {
+                int tskID = taskConfig.Task.Task.processID;
+                int opsID = taskConfig.Tempo?.NumeroOperatori ?? 0;
+                
+                var tskVar = new TaskVariante(Tenant, new processo(Tenant, tskID), new variante(Tenant, Articolo.Proc.variant.idVariante));
+                tskVar.loadTempiCiclo();
+                var tc = new TempoCiclo(Tenant, tskVar.Task.processID, tskVar.Task.revisione, Articolo.Proc.variant.idVariante, opsID);
+                if (tc.Tempo != null)
+                {
+                    lstTasks.Add(new TaskConfigurato(Tenant, tskVar, tc, SelectedRepartoId, Articolo.Quantita));
+                }
+            }
+
+            var prcCfg = new ConfigurazioneProcesso(Tenant, Articolo, lstTasks, new Reparto(Tenant, SelectedRepartoId), Articolo.Quantita);
+            int rt1 = prcCfg.SimulaIntroduzioneInProduzione();
+            
+            if (rt1 == 1)
+            {
+                Articolo.Planner = new UserAccount(0); // Would need actual user
+                int rt = prcCfg.LanciaInProduzione();
+                if (rt == 1)
+                {
+                    SuccessMessage = "Articolo lanciato in produzione con successo";
+                    ShowVerification = false;
+                }
+                else if (rt == 3)
+                {
+                    ErrorMessage = "Articolo già lanciato";
+                }
+                else
+                {
+                    ErrorMessage = "Errore generico: " + prcCfg.log;
+                }
+            }
+            else
+            {
+                ErrorMessage = "Errore generico nella simulazione";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error launching in production");
+            ErrorMessage = "Errore durante il lancio in produzione";
+        }
+        finally
+        {
+            IsLaunching = false;
+        }
+    }
+
+    public class VerificationResultDto
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public List<TaskConfigurato> Processi { get; set; }
+    }
+}

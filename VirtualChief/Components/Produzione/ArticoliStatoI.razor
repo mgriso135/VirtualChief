@@ -1,0 +1,237 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ArticoliStatoI> Logger
+@inject NavigationManager NavigationManager
+@implements IDisposable
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (Articoli == null || Articoli.Count == 0)
+{
+    <div class="alert alert-success">@NoArticoliMessage</div>
+}
+else
+{
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>@Title</h3>
+        <small class="text-muted">@LastUpdateLabel</small>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered" style="text-align:center; width: 100%;">
+            <thead>
+                <tr style="font-size:18px; font-family:Calibri; text-align:center;">
+                    <th></th>
+                    @foreach (var field in VisibleFields)
+                    {
+                        <th>@field</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var art in Articoli)
+                {
+                    <tr style="font-size:20px; font-family:Calibri; font-weight:bold; border-radius: 5px; background-color: #CFD8DC;">
+                        <td>
+                            <a href="@($"/Produzione/StatoAvanzamentoArticolo?id={art.ID}&anno={art.Year}")" target="_blank" title="@ViewArticoloTooltip">
+                                <img src="/img/iconView.png" style="min-width:20px; max-width:30px;" />
+                            </a>
+                        </td>
+                        @foreach (var field in VisibleFields)
+                        {
+                            <td>@GetFieldValue(art, field)</td>
+                        }
+                    </tr>
+                    <tr style="border-radius: 5px;">
+                        <td colspan="@(VisibleFields.Count + 1)">
+                            <div style="border-radius:10px; width:100%; border-collapse:separate; border-spacing:1px;">
+                                @if (art.Tasks != null && art.Tasks.Count > 0)
+                                {
+                                    <component type="typeof(Components.Produzione.StatoTasksArticolo)" 
+                                               param-Tenant="@Tenant"
+                                               param-HasPermission="@HasPermission"
+                                               param-ArtId="@art.ID"
+                                               param-ArtYear="@art.Year"
+                                               render-mode="ServerPrerendered" />
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="@(VisibleFields.Count + 1)">&nbsp;</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string Title { get; set; } = "Articoli Avviati in Produzione";
+    public string ViewArticoloTooltip { get; set; } = "Visualizza avanzamento";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoArticoliMessage { get; set; } = "Nessun articolo avviato in produzione";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare gli articoli avviati";
+    public string LastUpdateLabel { get; set; } = "";
+    public string ErrorMessage { get; set; } = "";
+
+    public List<Articolo> Articoli { get; set; } = new();
+    public List<string> VisibleFields { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    private AndonCompleto _andonCfg;
+    private TimeZoneInfo _timeZone;
+    private System.Timers.Timer _timer;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        LoadData();
+        
+        _timer = new System.Timers.Timer(3600000); // 1 hour
+        _timer.Elapsed += async (sender, e) => await InvokeAsync(LoadData);
+        _timer.AutoReset = true;
+        _timer.Start();
+    }
+
+    private void LoadResources()
+    {
+        Title = "Articoli Avviati in Produzione";
+        ViewArticoloTooltip = "Visualizza avanzamento";
+        LoadingMessage = "Caricamento...";
+        NoArticoliMessage = "Nessun articolo avviato in produzione";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare gli articoli avviati";
+    }
+
+    private async Task LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission)
+        {
+            Articoli = new List<Articolo>();
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            var fuso = new FusoOrario(Tenant);
+            _timeZone = fuso.tzFusoOrario;
+
+            _andonCfg = new AndonCompleto(Tenant);
+            _andonCfg.loadCampiVisualizzati();
+            _andonCfg.loadCampiVisualizzatiTasks();
+            
+            VisibleFields = _andonCfg.CampiVisualizzati?.Keys?.ToList() ?? new List<string>();
+
+            var elComm = new ElencoCommesse(Tenant);
+            elComm.loadCommesse();
+            Articoli = new List<Articolo>();
+
+            for (int i = 0; i < elComm.Commesse.Count; i++)
+            {
+                elComm.Commesse[i].loadArticoli();
+                for (int j = 0; j < elComm.Commesse[j].Articoli.Count; j++)
+                {
+                    if (elComm.Commesse[i].Articoli[j].Status == 'I')
+                    {
+                        Articoli.Add(elComm.Commesse[i].Articoli[j]);
+                    }
+                }
+            }
+
+            Articoli.Sort((p1, p2) => p1.DataPrevistaFineProduzione.CompareTo(p2.DataPrevistaFineProduzione));
+            
+            LastUpdateLabel = $"Last update: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading articoli stato I");
+            ErrorMessage = "Errore durante il caricamento degli articoli";
+            Articoli = new List<Articolo>();
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private string GetFieldValue(Articolo art, string field)
+    {
+        try
+        {
+            return field switch
+            {
+                "CommessaID" => $"{art.Commessa}/{art.AnnoCommessa}",
+                "OrderExternalID" => new Commessa(Tenant, art.Commessa, art.AnnoCommessa).ExternalID,
+                "CommessaCodiceCliente" => art.Cliente,
+                "CommessaRagioneSocialeCliente" => art.RagioneSocialeCliente,
+                "CommessaDataInserimento" => new Commessa(Tenant, art.Commessa, art.AnnoCommessa).DataInserimento.ToString("dd/MM/yyyy"),
+                "CommessaNote" => new Commessa(Tenant, art.Commessa, art.AnnoCommessa).Note,
+                "ProdottoID" => $"{art.ID}/{art.Year}",
+                "ProdottoLineaProdotto" => art.Proc?.process?.processName,
+                "ProdottoNomeProdotto" => art.Proc?.variant?.nomeVariante,
+                "ProdottoMatricola" => art.Matricola,
+                "ProdottoStatus" => art.Status.ToString(),
+                "Reparto" => art.RepartoNome,
+                "DataPrevistaConsegna" => art.DataPrevistaConsegna.ToString("dd/MM/yyyy"),
+                "DataPrevistaFineProduzione" => art.DataPrevistaFineProduzione.ToString("dd/MM/yyyy"),
+                "EarlyStart" => art.EarlyStart.ToString("dd/MM/yyyy HH:mm:ss"),
+                "LateStart" => art.LateStart.ToString("dd/MM/yyyy HH:mm:ss"),
+                "EarlyFinish" => art.EarlyFinish.ToString("dd/MM/yyyy HH:mm:ss"),
+                "LateFinish" => art.LateFinish.ToString("dd/MM/yyyy HH:mm:ss"),
+                "ProdottoQuantita" => art.Quantita.ToString(),
+                "ProdottoQuantitaRealizzata" => art.QuantitaProdotta.ToString(),
+                "ProdottoRitardo" => Math.Round(art.Ritardo.TotalHours, 2).ToString(),
+                "ProdottoTempodiLavoroTotale" => GetTempoDiLavoroTotale(art),
+                "ProdottoIndicatoreCompletamentoTasks" => Math.Round(art.IndicatoreCompletamentoTasks, 1).ToString() + "%",
+                "ProdottoIndicatoreCompletamentoTempoPrevisto" => Math.Round(art.IndicatoreCompletamentoTempoPrevisto, 1).ToString() + "%",
+                "ProductExternalID" => art.Proc?.ExternalID?.ToString() ?? "",
+                "MeasurementUnit" => GetMeasurementUnit(art),
+                _ => ""
+            };
+        }
+catch
+            {
+                return "#ERROR";
+            }
+        }
+
+        private string GetTempoDiLavoroTotale(Articolo art)
+        {
+            art.loadTempoDiLavoroTotale();
+            return Math.Round(art.TempoDiLavoroTotale.TotalHours, 2).ToString();
+        }
+
+        private string GetMeasurementUnit(Articolo art)
+        {
+            art.Proc?.loadMeasurementUnit();
+            return art.Proc?.measurementUnit?.Type?.ToString() ?? "";
+        }
+
+        public void Dispose()
+    {
+        _timer?.Stop();
+        _timer?.Dispose();
+    }
+}

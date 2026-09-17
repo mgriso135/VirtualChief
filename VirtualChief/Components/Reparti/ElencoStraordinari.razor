@@ -1,0 +1,194 @@
+@using KIS.App_Code
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Web
+@inject ILogger<ElencoStraordinari> Logger
+@inject NavigationManager NavigationManager
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else if (Turno == null)
+{
+    <div class="alert alert-danger">@TurnoNotFoundMessage</div>
+}
+else if (IsLoading)
+{
+    <div class="alert alert-info">@LoadingMessage</div>
+}
+else if (StraordinariList == null || StraordinariList.Count == 0)
+{
+    <div class="alert alert-info">@NoStraordinariMessage</div>
+}
+else
+{
+    <h3>@Title</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>@InizioLabel</th>
+                <th>@FineLabel</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var str in StraordinariList)
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-link p-0" @onclick="@(() => DeleteStraordinario(str))" title="@DeleteTooltip">
+                            <img src="/img/iconCancel.jpg" height="30px" />
+                        </button>
+                    </td>
+                    <td>@str.Inizio.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@str.Fine.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-end">
+        <a href="/Reparti/AddStraordinario?id=@TurnoId" class="btn btn-primary">
+            <img src="/img/iconUserAdd.jpg" height="30" /> @AddStraordinarioLabel
+        </a>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+@if (!string.IsNullOrEmpty(SuccessMessage))
+{
+    <div class="alert alert-success mt-3">@SuccessMessage</div>
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    [Parameter]
+    public int TurnoId { get; set; }
+
+    public string Title { get; set; } = "Elenco Straordinari";
+    public string InizioLabel { get; set; } = "Inizio";
+    public string FineLabel { get; set; } = "Fine";
+    public string DeleteTooltip { get; set; } = "Elimina straordinario";
+    public string AddStraordinarioLabel { get; set; } = "Aggiungi straordinario";
+    public string LoadingMessage { get; set; } = "Caricamento...";
+    public string NoStraordinariMessage { get; set; } = "Nessuno straordinario configurato";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di visualizzare gli straordinari";
+    public string TurnoNotFoundMessage { get; set; } = "Turno non trovato";
+    public string DeleteErrorMessage { get; set; } = "Errore durante l'eliminazione";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public Turno Turno { get; set; }
+    public List<Straordinario> StraordinariList { get; set; } = new();
+    public bool IsLoading { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+        if (TurnoId != 0)
+        {
+            LoadData();
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        if (TurnoId != 0)
+        {
+            LoadData();
+        }
+    }
+
+    private void LoadResources()
+    {
+        Title = "Elenco Straordinari";
+        InizioLabel = "Inizio";
+        FineLabel = "Fine";
+        DeleteTooltip = "Elimina straordinario";
+        AddStraordinarioLabel = "Aggiungi straordinario";
+        LoadingMessage = "Caricamento...";
+        NoStraordinariMessage = "Nessuno straordinario configurato";
+        PermissionDeniedMessage = "Non hai il permesso di visualizzare gli straordinari";
+        TurnoNotFoundMessage = "Turno non trovato";
+        DeleteErrorMessage = "Errore durante l'eliminazione";
+    }
+
+    private void LoadData()
+    {
+        if (string.IsNullOrEmpty(Tenant) || !HasPermission || TurnoId == 0)
+        {
+            Turno = null;
+            return;
+        }
+
+        IsLoading = true;
+        ErrorMessage = "";
+
+        try
+        {
+            Turno = new Turno(Tenant, TurnoId);
+            if (Turno.id != -1)
+            {
+                Turno.loadStraordinari();
+                StraordinariList = Turno.straordinari ?? new List<Straordinario>();
+            }
+            else
+            {
+                Turno = null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error loading straordinari for turno {TurnoId}", TurnoId);
+            Turno = null;
+            ErrorMessage = "Errore durante il caricamento";
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private async Task DeleteStraordinario(Straordinario str)
+    {
+        if (Turno == null)
+        {
+            ErrorMessage = TurnoNotFoundMessage;
+            return;
+        }
+
+        ErrorMessage = "";
+        SuccessMessage = "";
+
+        try
+        {
+            var straordinario = new Straordinario(Tenant, str.idStraordinario);
+            if (straordinario.idStraordinario != -1)
+            {
+                bool rt = straordinario.delete();
+                if (rt)
+                {
+                    SuccessMessage = "Straordinario eliminato con successo";
+                    LoadData();
+                }
+                else
+                {
+                    ErrorMessage = straordinario.log ?? DeleteErrorMessage;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error deleting straordinario {IdStraordinario}", str.idStraordinario);
+            ErrorMessage = DeleteErrorMessage;
+        }
+    }
+}

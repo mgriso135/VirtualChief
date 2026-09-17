@@ -1,0 +1,160 @@
+@using KIS.App_Code
+@using KIS.App_Sources
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Forms
+@inject ILogger<MenuAddMainVoce> Logger
+
+@if (!HasPermission)
+{
+    <div class="alert alert-warning">@PermissionDeniedMessage</div>
+}
+else
+{
+    <div class="mb-3">
+        <button type="button" class="btn btn-link p-0" @onclick="ToggleForm" title="@AddMainMenuTooltip">
+            <img src="/img/iconAdd2.png" height="50" />
+        </button>
+
+        @if (ShowForm)
+        {
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>@AddMainMenuTitle</h5>
+                </div>
+                <div class="card-body">
+                    <EditForm Model="@NewMenuItem" OnValidSubmit="HandleValidSubmit">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="mb-3">
+                            <label for="titolo" class="form-label">@TitoloLabel</label>
+                            <InputText id="titolo" class="form-control" @bind-Value="NewMenuItem.Titolo" required />
+                            <ValidationMessage For="@(() => NewMenuItem.Titolo)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descrizione" class="form-label">@DescrizioneLabel</label>
+                            <InputText id="descrizione" class="form-control" @bind-Value="NewMenuItem.Descrizione" required />
+                            <ValidationMessage For="@(() => NewMenuItem.Descrizione)" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="url" class="form-label">@UrlLabel</label>
+                            <InputText id="url" class="form-control" @bind-Value="NewMenuItem.URL" required />
+                            <ValidationMessage For="@(() => NewMenuItem.URL)" />
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                <img src="/img/iconSave.jpg" height="20" /> @SaveButtonText
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-sm" @onclick="Cancel">
+                                <img src="/img/iconUndo.png" height="20" /> @CancelButtonText
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <div class="alert alert-danger">@ErrorMessage</div>
+    }
+}
+
+@code {
+    [Parameter]
+    public string Tenant { get; set; }
+
+    [Parameter]
+    public bool HasPermission { get; set; } = false;
+
+    public string AddMainMenuTitle { get; set; } = "Aggiungi voce di menu principale";
+    public string AddMainMenuTooltip { get; set; } = "Aggiungi una voce di menu principale";
+    public string TitoloLabel { get; set; } = "Titolo";
+    public string DescrizioneLabel { get; set; } = "Descrizione";
+    public string UrlLabel { get; set; } = "URL";
+    public string SaveButtonText { get; set; } = "Salva";
+    public string CancelButtonText { get; set; } = "Annulla";
+    public string PermissionDeniedMessage { get; set; } = "Non hai il permesso di aggiungere voci di menu.";
+    public string ErrorMessage { get; set; } = "";
+    public string SuccessMessage { get; set; } = "";
+
+    public bool ShowForm { get; set; } = false;
+
+    public class MenuItemModel
+    {
+        public string Titolo { get; set; } = "";
+        public string Descrizione { get; set; } = "";
+        public string URL { get; set; } = "";
+    }
+
+    public MenuItemModel NewMenuItem { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        LoadResources();
+    }
+
+    private void LoadResources()
+    {
+        AddMainMenuTitle = "Aggiungi voce di menu principale";
+        AddMainMenuTooltip = "Aggiungi una voce di menu principale";
+        TitoloLabel = "Titolo";
+        DescrizioneLabel = "Descrizione";
+        UrlLabel = "URL";
+        SaveButtonText = "Salva";
+        CancelButtonText = "Annulla";
+        PermissionDeniedMessage = "Non hai il permesso di aggiungere voci di menu.";
+    }
+
+    private void ToggleForm()
+    {
+        ShowForm = !ShowForm;
+        if (ShowForm)
+        {
+            NewMenuItem = new MenuItemModel();
+        }
+    }
+
+    private void Cancel()
+    {
+        ShowForm = false;
+        NewMenuItem = new MenuItemModel();
+        ErrorMessage = "";
+        SuccessMessage = "";
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        if (string.IsNullOrEmpty(Tenant))
+        {
+            ErrorMessage = "Tenant non disponibile.";
+            return;
+        }
+
+        try
+        {
+            var mn = new MainMenu(Tenant);
+            bool rt = mn.Add(NewMenuItem.Titolo, NewMenuItem.Descrizione, NewMenuItem.URL);
+
+            if (rt)
+            {
+                SuccessMessage = "Voce di menu aggiunta con successo.";
+                Logger.LogInformation("MenuAddMainVoce: Added main menu item {Titolo}", NewMenuItem.Titolo);
+                Cancel();
+            }
+            else
+            {
+                ErrorMessage = "Errore durante l'aggiunta: " + mn.log;
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "MenuAddMainVoce: Error adding main menu item");
+            ErrorMessage = "Errore generico durante l'aggiunta.";
+        }
+    }
+}

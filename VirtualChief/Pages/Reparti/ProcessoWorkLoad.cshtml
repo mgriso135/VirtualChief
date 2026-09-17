@@ -1,0 +1,45 @@
+@page "{processId:int}/{variantId:int}/{repId:int}"
+@model VirtualChief.Pages.Reparti.ProcessoWorkLoadModel
+@{
+    ViewData["Title"] = "Carico processo";
+}
+
+<div class="container">
+    <ul class="breadcrumb" style="background:none; padding-left:0;">
+        <li><a asp-page="/Index">Home</a> <span class="divider">/</span></li>
+        <li><a asp-page="/Reparti/listReparti">Reparti</a> <span class="divider">/</span></li>
+        @if (Model.Dipartimento != null)
+        {
+            <li><a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento.id">@Model.Dipartimento.name</a> <span class="divider">/</span></li>
+        }
+        <li class="active">Carico processo: @Model.Processo?.processName</li>
+    </ul>
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger">@Model.ErrorMessage</div>
+    }
+    else if (Model.CanView && Model.Processo != null && Model.Variante != null && Model.Dipartimento != null)
+    {
+        <component type="typeof(VirtualChief.Components.Reparti.ProcessoWorkLoad)"
+                   render-mode="Server"
+                   param-Tenant="@CurrentWorkspace.Of(User)"
+                   param-ProcessId="@Model.ProcessId"
+                   param-VariantId="@Model.VariantId"
+                   param-RepartoId="@Model.RepartoId"
+                   param-HasPermission="@Model.CanView" />
+    }
+    else
+    {
+        <div class="alert alert-warning">Seleziona parametri validi o non hai i permessi necessari.</div>
+    }
+
+    @if (Model.Dipartimento != null)
+    {
+        <a asp-page="/Reparti/configReparto" asp-route-id="@Model.Dipartimento.id" class="btn btn-secondary mt-3">&larr; Torna alla configurazione reparto</a>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+}

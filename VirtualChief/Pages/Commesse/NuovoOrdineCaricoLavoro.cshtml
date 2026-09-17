@@ -1,0 +1,96 @@
+@page
+@model VirtualChief.Pages.Commesse.NuovoOrdineCaricoLavoroModel
+@{
+    ViewData["Title"] = "Verifica Carico di Lavoro";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mt-3 mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="/Commesse/commesse">@Model.NavCommesse</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Commesse/NuovoOrdine">@Model.NavNuovoOrdine</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Commesse/NuovoOrdineProdotti?idCommessa=@Model.IdCommessa&annoCommessa=@Model.AnnoCommessa">@Model.NavProdotti</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Commesse/NuovoOrdineReparto?idCommessa=@Model.IdCommessa&annoCommessa=@Model.AnnoCommessa&idProdotto=@Model.IdProdotto&annoProdotto=@Model.AnnoProdotto">@Model.NavReparto</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Commesse/NuovoOrdineTasks?idCommessa=@Model.IdCommessa&annoCommessa=@Model.AnnoCommessa&idProdotto=@Model.IdProdotto&annoProdotto=@Model.AnnoProdotto">@Model.NavTasks</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="/Commesse/NuovoOrdineDataConsegna?idCommessa=@Model.IdCommessa&annoCommessa=@Model.AnnoCommessa&idProc=@Model.IdProc&revProc=@Model.RevProc&idVariante=@Model.IdVariante&idReparto=@Model.IdReparto&idProdotto=@Model.IdProdotto&annoProdotto=@Model.AnnoProdotto&quantita=@Model.Quantita">@Model.NavDataConsegna</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.NavCaricoLavoro</li>
+        </ol>
+    </nav>
+
+    <h1>@Model.NavCaricoLavoro</h1>
+
+    @if (!Model.HasPermission)
+    {
+        <div class="alert alert-warning">@Model.PermissionDeniedMessage</div>
+    }
+    else if (Model.Commessa == null)
+    {
+        <div class="alert alert-danger">Commessa non trovata.</div>
+    }
+    else
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Model.InfoPanelTitle</h5>
+            </div>
+            <div class="card-body">
+                <component type="typeof(Components.Commesse.WizardInfoPanel)" 
+                           param-Tenant="@Model.Tenant"
+                           param-IdCommessa="@Model.IdCommessa"
+                           param-AnnoCommessa="@Model.AnnoCommessa"
+                           param-IdProc="@Model.IdProc"
+                           param-RevProc="@Model.RevProc"
+                           param-IdVariante="@Model.IdVariante"
+                           param-IdProdotto="@Model.IdProdotto"
+                           param-AnnoProdotto="@Model.AnnoProdotto"
+                           param-IdReparto="@Model.IdReparto"
+                           render-mode="ServerPrerendered" />
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5>@Model.VerificaCaricoTitle</h5>
+            </div>
+            <div class="card-body text-center py-5">
+                <div class="mb-4">
+                    <i class="bi bi-question-circle text-primary" style="font-size: 3rem;"></i>
+                </div>
+                <h4>@Model.VerificaCaricoLabel</h4>
+                <p class="text-muted">@Model.VerificaCaricoDescription</p>
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-5">
+                        <a href="@Model.UrlCheckWorkLoad" class="btn btn-outline-primary btn-lg w-100 mb-2 py-3">
+                            <i class="bi bi-graph-up"></i> @Model.CheckWorkLoadButton
+                        </a>
+                    </div>
+                    <div class="col-md-5">
+                        <a href="@Model.UrlPianificaDiretto" class="btn btn-primary btn-lg w-100 mb-2 py-3">
+                            <i class="bi bi-lightning"></i> @Model.PianificaDirettoButton
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <a href="@Model.BackUrl" class="btn btn-link">
+                        <img src="/img/iconArrowLeft.png" height="40" />
+                        <span class="ms-2">@Model.BackLabel</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
