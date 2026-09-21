@@ -195,6 +195,7 @@ else
 
     protected override void OnParametersSet()
     {
+        Logger.LogInformation($"OnParametersSet called, Articoli count: {Articoli?.Count ?? 0}");
         InitializeState();
     }
 
@@ -243,6 +244,7 @@ else
 
     private void ToggleAssignSerialNumber(Articolo art)
     {
+        Logger.LogInformation($"ToggleAssignSerialNumber called for {art.IDCombinato}");
         ShowSerialNumberInput[art.IDCombinato] = !ShowSerialNumberInput.GetValueOrDefault(art.IDCombinato, false);
         if (ShowSerialNumberInput[art.IDCombinato])
         {
@@ -252,10 +254,13 @@ else
 
     private void SaveSerialNumber(Articolo art)
     {
+        Logger.LogInformation($"SaveSerialNumber called for {art.IDCombinato}");
         try
         {
-            art.Matricola = SerialNumberInputs.GetValueOrDefault(art.IDCombinato, "");
-            ErrorMessage = art.log;
+            var artToSave = new Articolo(Tenant, art.ID, art.Year);
+            artToSave.Matricola = SerialNumberInputs.GetValueOrDefault(art.IDCombinato, "");
+            ErrorMessage = artToSave.log;
+            art.Matricola = artToSave.Matricola;
             ShowSerialNumberInput[art.IDCombinato] = false;
         }
         catch (Exception ex)
@@ -297,8 +302,10 @@ else
 
             if (fineProd > DateTime.Now && fineProd <= art.DataPrevistaConsegna)
             {
-                art.DataPrevistaFineProduzione = fineProd;
-                ErrorMessage = art.log;
+                var artToSave = new Articolo(Tenant, art.ID, art.Year);
+                artToSave.DataPrevistaFineProduzione = fineProd;
+                ErrorMessage = artToSave.log;
+                art.DataPrevistaFineProduzione = artToSave.DataPrevistaFineProduzione;
                 NavigationManager.NavigateTo(NavigationManager.Uri, forceLoad: true);
             }
             else

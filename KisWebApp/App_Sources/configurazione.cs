@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Dapper;
 using MySql.Data.MySqlClient;
 using System.Configuration;
@@ -529,7 +530,7 @@ namespace KIS.App_Code
         {
             get
             {
-                return TimeZoneInfo.FindSystemTimeZoneById(this._fusoOrario);
+                return KIS.App_Sources.TimeZoneHelper.FindTimeZone(this._fusoOrario);
             }
         }
 
@@ -546,7 +547,7 @@ namespace KIS.App_Code
             }
             else
             {
-                this._fusoOrario = "W. Europe Standard Time";
+                this._fusoOrario = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "W. Europe Standard Time" : "Europe/Berlin";
             }
             conn.Close();
         }

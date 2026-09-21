@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using MySql.Data.MySqlClient;
 using Dapper;
 
@@ -243,16 +244,7 @@ namespace KIS.App_Code
         {
             get
             {
-                TimeZoneInfo ret;
-                try
-                {
-                    ret=TimeZoneInfo.FindSystemTimeZoneById(this._fusoOrario);
-                }
-                catch
-                {
-                    ret = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
-                }
-                return ret;
+                return KIS.App_Sources.TimeZoneHelper.FindTimeZone(this._fusoOrario);
             }
         }
 
